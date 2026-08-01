@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import LibraryEventCard from '../components/LibraryEventCard.astro';
+import events from '../data/library-events.json';
+const days = [...new Set(events.map((event) => event.day))];
+const libraries = [...new Set(events.map((event) => event.library))].sort();
+const ages = [...new Set(events.map((event) => event.ageGroup))];
+---
+<BaseLayout title="Library Activities | Family Hub" description="Browse 18 nearby library activities by weekday, library, age, and drive time.">
+  <SiteHeader kicker="Nearby libraries · weekly view" title="Library Activities" description="Storytimes, movement, free play, and crafts for young children. Recurring schedules are shown as published, without invented calendar dates.">
+    <div class="summary-row summary-row--blue"><span>18 activities</span><span>5 nearby library systems</span><span>Schedule details need rechecking</span></div>
+  </SiteHeader>
+  <section class="controls controls--blue" aria-label="Library activity filters"><div class="shell controls-inner">
+    <div class="primary-controls"><label class="search-label"><span>Search</span><input id="event-search" type="search" placeholder="Storytime, music, crafts…" /></label><label><span>Sort</span><select id="event-sort"><option value="schedule">Schedule</option><option value="drive">Drive time</option><option value="library">Library</option></select></label></div>
+    <div class="filter-grid filter-grid--three"><label><span>Weekday</span><select id="event-day"><option value="">All days</option>{days.map((item) => <option value={item}>{item}</option>)}</select></label><label><span>Library</span><select id="event-library"><option value="">All libraries</option>{libraries.map((item) => <option value={item}>{item}</option>)}</select></label><label><span>Age status</span><select id="event-age"><option value="">All age groups</option>{ages.map((item) => <option value={item}>{item}</option>)}</select></label></div>
+    <div class="filter-footer"><p id="event-count" aria-live="polite">Showing 18 of 18 activities</p><button id="event-clear" class="clear-button clear-button--blue" type="button">Clear filters</button></div>
+  </div></section>
+  <main class="shell listing-main"><div id="event-list" class="event-list">{events.map((event) => <LibraryEventCard event={event} />)}</div><p id="event-empty" class="empty-state" hidden>No activities match those filters.</p></main>
+  <footer><div class="shell note-box"><strong>Check before attending.</strong> Registration, residency rules, age limits, seasonal dates, and cancellations may change. Use the official activity or library link.</div></footer>
+  <script>
+    const cards = [...document.querySelectorAll<HTMLElement>('[data-event]')];
+    const search = document.querySelector<HTMLInputElement>('#event-search')!;
+    const sort = document.querySelector<HTMLSelectElement>('#event-sort')!;
+    const day = document.querySelector<HTMLSelectElement>('#event-day')!;
+    const library = document.querySelector<HTMLSelectElement>('#event-library')!;
+    const age = document.querySelector<HTMLSelectElement>('#event-age')!;
+    const list = document.querySelector<HTMLElement>('#event-list')!;
+    const count = document.querySelector<HTMLElement>('#event-count')!;
+    const empty = document.querySelector<HTMLElement>('#event-empty')!;
+    const number = (card: HTMLElement, key: string) => Number(card.dataset[key]);
+    function renderEvents() {
+      const query = search.value.trim().toLocaleLowerCase();
+      const visible = cards.filter((card) => (!query || card.dataset.search!.includes(query)) && (!day.value || card.dataset.day === day.value) && (!library.value || card.dataset.library === library.value) && (!age.value || card.dataset.age === age.value));
+      const schedule = (a: HTMLElement, b: HTMLElement) => number(a, 'dayOrder') - number(b, 'dayOrder') || number(a, 'timeOrder') - number(b, 'timeOrder');
+      const sorter: Record<string, (a: HTMLElement, b: HTMLElement) => number> = { schedule, drive: (a, b) => number(a, 'drive') - number(b, 'drive') || schedule(a, b), library: (a, b) => a.dataset.library!.localeCompare(b.dataset.library!) || schedule(a, b) };
+      cards.forEach((card) => card.hidden = !visible.includes(card));
+      visible.sort(sorter[sort.value]).forEach((card) => list.append(card));
+      count.textContent = `Showing ${visible.length} of ${cards.length} activities`;
+      empty.hidden = visible.length > 0;
+    }
+    [search, sort, day, library, age].forEach((control) => { control.addEventListener('input', renderEvents); control.addEventListener('change', renderEvents); });
+    document.querySelector('#event-clear')!.addEventListener('click', () => { [search, day, library, age].forEach((control) => control.value = ''); sort.value = 'schedule'; renderEvents(); });
+    renderEvents();
+  </script>
+</BaseLayout>

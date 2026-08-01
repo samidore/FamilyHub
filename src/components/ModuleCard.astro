@@ -1,0 +1,10 @@
+---
+interface Props { title: string; description: string; href: string; count: number; label: string; accent: string; symbol: string; updated: string; }
+const { title, description, href, count, label, accent, symbol, updated } = Astro.props;
+---
+<a class:list={["module-card", `module-card--${accent}`]} href={href}>
+  <span class="module-symbol" aria-hidden="true">{symbol}</span>
+  <h2>{title}</h2>
+  <p>{description}</p>
+  <div class="module-meta"><strong>{count} {label}</strong><span>{updated}</span></div>
+</a>

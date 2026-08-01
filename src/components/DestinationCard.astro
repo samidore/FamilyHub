@@ -1,0 +1,30 @@
+---
+interface RatingSet { indoor: number | null; outdoor: number | null; stroller: number | null; weather: number | null; toddler: number | null; parent: number | null; }
+interface Destination {
+  name: string; shortName: string; location: string; category: string; driveMin: number; driveMax: number; status: string;
+  ratings: RatingSet; tags: string[]; conditions: string[]; verifiedFacts: string; familyFit: string; risks: string;
+  beforeYouGo: string; googleMapsUrl: string; officialUrl: string; recommendationScore: number;
+}
+const { destination: d } = Astro.props as { destination: Destination };
+const rating = (value: number | null) => value === null ? 'Not confirmed' : `${value.toFixed(1)} / 5`;
+const searchable = [d.name, d.shortName, d.location, d.category, d.status, ...d.tags, ...d.conditions, d.verifiedFacts, d.familyFit].join(' ').toLocaleLowerCase();
+---
+<article class="destination-card" data-destination data-search={searchable} data-category={d.category} data-drive-min={d.driveMin} data-drive-max={d.driveMax} data-status={d.status} data-conditions={d.conditions.join('|')} data-indoor={d.ratings.indoor ?? ''} data-outdoor={d.ratings.outdoor ?? ''} data-stroller={d.ratings.stroller ?? ''} data-weather={d.ratings.weather ?? ''} data-toddler={d.ratings.toddler ?? ''} data-parent={d.ratings.parent ?? ''} data-score={d.recommendationScore} data-name={d.name}>
+  <div class="card-heading">
+    <div class="badges"><span class="badge">{d.category}</span><span class="badge badge--warm">{d.status}</span></div>
+    <h2>{d.name}</h2>
+    <p class="location">{d.location} · {d.driveMin}–{d.driveMax} min drive</p>
+    <dl class="ratings">
+      <div><dt>Toddler</dt><dd>{rating(d.ratings.toddler)}</dd></div><div><dt>Parent</dt><dd>{rating(d.ratings.parent)}</dd></div>
+      <div><dt>Stroller</dt><dd>{rating(d.ratings.stroller)}</dd></div><div><dt>Weather tolerance</dt><dd>{rating(d.ratings.weather)}</dd></div>
+    </dl>
+  </div>
+  <div class="card-content">
+    <div class="tags">{d.tags.map((tag) => <span>{tag}</span>)}</div>
+    <section class="info-block info-block--fact"><h3>Verified facts</h3><p>{d.verifiedFacts}</p></section>
+    <section class="info-block"><h3>Family fit</h3><p>{d.familyFit}</p></section>
+    <section class="info-block info-block--risk"><h3>Risks / limitations</h3><p>{d.risks}</p></section>
+    <aside class="before"><strong>Before you go</strong><span>{d.beforeYouGo}</span></aside>
+    <div class="actions"><a class="button button--primary" href={d.googleMapsUrl} target="_blank" rel="noreferrer">Google Maps / Photos</a><a class="button button--secondary" href={d.officialUrl} target="_blank" rel="noreferrer">Official website</a></div>
+  </div>
+</article>

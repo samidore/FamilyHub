@@ -1,0 +1,1029 @@
+[
+  {
+    "name": "J.A. McFaul Environmental Center",
+    "shortName": "J.A. McFaul",
+    "location": "Wyckoff, NJ",
+    "category": "室内外结合",
+    "driveMin": 15,
+    "driveMax": 25,
+    "status": "已验证基准",
+    "ratings": {
+      "indoor": 3,
+      "outdoor": 4.5,
+      "stroller": 4.5,
+      "weather": 4,
+      "toddler": 5,
+      "parent": 4
+    },
+    "tags": [
+      "自然中心",
+      "动物",
+      "短途",
+      "免费"
+    ],
+    "conditions": [
+      "普通天气",
+      "天气不稳定"
+    ],
+    "verifiedFacts": "Bergen County 官方将其描述为由 81 英亩旧农场改建的 wildlife sanctuary，设有自然步道、花园和 educational science exhibits；公园每日开放，博物馆另有时段；入场免费。",
+    "familyFit": "最贴合你们的现有偏好：内容密度高，又不依赖完成正式 hike。",
+    "risks": "池塘和自然小径附近仍需正常看护；开放时间随季节变化。",
+    "beforeYouGo": "复核 park hours 与 museum hours。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=J.A.+McFaul+Environmental+Center",
+    "officialUrl": "https://bergencountynj.gov/bergen-county-department-of-parks/j-a-mcfaul-environmental-center/",
+    "verifiedDate": "",
+    "recommendationScore": 4.45
+  },
+  {
+    "name": "Trailside Nature & Science Center",
+    "shortName": "Trailside",
+    "location": "Mountainside, NJ",
+    "category": "室内外结合",
+    "driveMin": 35,
+    "driveMax": 50,
+    "status": "去过并喜欢",
+    "ratings": {
+      "indoor": 4.5,
+      "outdoor": 4.5,
+      "stroller": 4.5,
+      "weather": 4.5,
+      "toddler": 5,
+      "parent": 4.5
+    },
+    "tags": [
+      "自然中心",
+      "科学",
+      "步道",
+      "雨天备选"
+    ],
+    "conditions": [
+      "雨天",
+      "普通天气",
+      "天气不稳定"
+    ],
+    "verifiedFacts": "Union County 官方说明中心位于 2,065 英亩 Watchung Reservation 内，室内有约 4,500 平方英尺互动展览、Children’s Discovery Room、图书馆和礼堂；开放日与时段以官网为准。",
+    "familyFit": "室内不是附属，室外也能独立成行，是你们偏好的最佳模板。",
+    "risks": "Watchung Reservation 全部步道不能一概视为 stroller-friendly。",
+    "beforeYouGo": "复核开放日，并考虑组合 Loop Picnic Area / Playground。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Trailside+Nature+and+Science+Center",
+    "officialUrl": "https://ucnj.org/trailside-nature-and-science-center/welcome/",
+    "verifiedDate": "",
+    "recommendationScore": 4.67
+  },
+  {
+    "name": "Flat Rock Brook Nature Center",
+    "shortName": "Flat Rock Brook",
+    "location": "Englewood, NJ",
+    "category": "室内外结合",
+    "driveMin": 20,
+    "driveMax": 35,
+    "status": "优先新地点",
+    "ratings": {
+      "indoor": 3,
+      "outdoor": 4.5,
+      "stroller": 3.5,
+      "weather": 4,
+      "toddler": 4.5,
+      "parent": 4.5
+    },
+    "tags": [
+      "自然中心",
+      "猛禽",
+      "池塘",
+      "步道"
+    ],
+    "conditions": [
+      "普通天气",
+      "凉爽天",
+      "天气不稳定"
+    ],
+    "verifiedFacts": "官方资料显示其为 150 英亩 preserve 和 environmental education center，有 3.6 英里步道通往溪流、湿地、池塘和草甸；自然中心有互动展览，另有猛禽馆。",
+    "familyFit": "比 McFaul 更野，但又有明确节点。第一次建议自然中心＋猛禽＋Jones Road，而不是追求完整 trail。",
+    "risks": "土路、树根、溪边与池塘降低自由跑程度；季节性卫生间可能关闭。",
+    "beforeYouGo": "查看 Jones Road 与 Orange Loop 最新状态。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Flat+Rock+Brook+Nature+Center",
+    "officialUrl": "https://www.flatrockbrook.org/visit",
+    "verifiedDate": "",
+    "recommendationScore": 4.2
+  },
+  {
+    "name": "Essex County Environmental Center",
+    "shortName": "Essex Environmental Center",
+    "location": "Roseland, NJ",
+    "category": "室内外结合",
+    "driveMin": 30,
+    "driveMax": 45,
+    "status": "同类候选",
+    "ratings": {
+      "indoor": 3,
+      "outdoor": 4,
+      "stroller": null,
+      "weather": 4,
+      "toddler": 4,
+      "parent": 4
+    },
+    "tags": [
+      "自然中心",
+      "湿地",
+      "教育活动"
+    ],
+    "conditions": [
+      "普通天气",
+      "天气不稳定"
+    ],
+    "verifiedFacts": "Essex County 官方将其定义为环境教育中心，提供 hands-on activities、nature exploration 和公共项目；trails dawn to dusk 开放，设两个停车场。",
+    "familyFit": "定位高度符合你们需求，适合天气不稳定但仍想接触自然的日子。",
+    "risks": "官方页面没有充分说明无预约到访时室内展项的开放范围。",
+    "beforeYouGo": "确认当日 building hours 与无需注册展区。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Essex+County+Environmental+Center",
+    "officialUrl": "https://essexcountyparks.org/index.php/facilities/environmental-center",
+    "verifiedDate": "",
+    "recommendationScore": 3.8
+  },
+  {
+    "name": "Nature Center at Greenburgh",
+    "shortName": "Greenburgh Nature Center",
+    "location": "Scarsdale, NY",
+    "category": "室内外结合",
+    "driveMin": 35,
+    "driveMax": 50,
+    "status": "活体动物候选",
+    "ratings": {
+      "indoor": 3,
+      "outdoor": 4,
+      "stroller": null,
+      "weather": 4,
+      "toddler": 4.5,
+      "parent": 4
+    },
+    "tags": [
+      "动物",
+      "自然中心",
+      "游乐场",
+      "花园"
+    ],
+    "conditions": [
+      "普通天气",
+      "天气不稳定"
+    ],
+    "verifiedFacts": "官方页面列明 Manor House / Live Animal Museum 有固定开放时段；场地可免费进入，另有 family trails、wooded playground、meadow、gardens 和多种动物。",
+    "familyFit": "两岁孩子不必依赖长距离行走，也有室内救场。",
+    "risks": "两岁起通常收费；宠物、自行车和 scooter 禁止进入。",
+    "beforeYouGo": "复核节假日闭馆、门票和季节活动。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Greenburgh+Nature+Center",
+    "officialUrl": "https://naturecentergb.org/hours-admission/",
+    "verifiedDate": "",
+    "recommendationScore": 3.98
+  },
+  {
+    "name": "Teatown Lake Reservation",
+    "shortName": "Teatown",
+    "location": "Ossining, NY",
+    "category": "室内外结合",
+    "driveMin": 45,
+    "driveMax": 65,
+    "status": "施工期降级",
+    "ratings": {
+      "indoor": 0,
+      "outdoor": 4.5,
+      "stroller": 3,
+      "weather": 1.5,
+      "toddler": 3.5,
+      "parent": 4.5
+    },
+    "tags": [
+      "湖",
+      "自然保护区",
+      "长步道",
+      "停车费"
+    ],
+    "conditions": [
+      "晴天",
+      "凉爽天"
+    ],
+    "verifiedFacts": "官方资料显示有近 15 英里 trails，覆盖田野、森林、湖、溪流和湿地；trails 每日开放。Nature Center 翻修期间以临时服务设施为主，停车政策以官网为准。",
+    "familyFit": "自然内容很强，但施工期间不再是室内外切换型。",
+    "risks": "湖边、树根、泥土与坡度并存；允许 stroller 不代表普通 stroller 适合所有路线。",
+    "beforeYouGo": "确认 Nature Center 是否重新开放，以及停车政策。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatown+Lake+Reservation",
+    "officialUrl": "https://www.teatown.org/visitors/",
+    "verifiedDate": "",
+    "recommendationScore": 3.25
+  },
+  {
+    "name": "Dunkerhook Picnic Area + Saddle River County Park",
+    "shortName": "Dunkerhook / Saddle River",
+    "location": "Fair Lawn–Paramus, NJ",
+    "category": "纯户外自然",
+    "driveMin": 5,
+    "driveMax": 15,
+    "status": "常去",
+    "ratings": {
+      "indoor": 0,
+      "outdoor": 4.5,
+      "stroller": 4.5,
+      "weather": 1.5,
+      "toddler": 4.5,
+      "parent": 4
+    },
+    "tags": [
+      "绿道",
+      "溪流",
+      "野餐",
+      "超近"
+    ],
+    "conditions": [
+      "普通天气",
+      "短时出行"
+    ],
+    "verifiedFacts": "属于 Bergen County Saddle River County Park 体系，核心环境为铺装多用途路径、林荫、溪流和野餐区域。",
+    "familyFit": "最可靠的日常两小时模板。",
+    "risks": "自行车和溪流是主要风险；绿道不是完全自由跑空间。",
+    "beforeYouGo": "查看积水、施工和停车。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Dunkerhook+Picnic+Area",
+    "officialUrl": "https://bergencountynj.gov/parks-recreation-areas/saddle-river-county-park/",
+    "verifiedDate": "",
+    "recommendationScore": 3.77
+  },
+  {
+    "name": "Glen Rock Duck Pond",
+    "shortName": "Glen Rock Duck Pond",
+    "location": "Glen Rock, NJ",
+    "category": "纯户外自然",
+    "driveMin": 5,
+    "driveMax": 15,
+    "status": "常去",
+    "ratings": {
+      "indoor": 0,
+      "outdoor": 4.5,
+      "stroller": 4.5,
+      "weather": 1.5,
+      "toddler": 4,
+      "parent": 3.5
+    },
+    "tags": [
+      "池塘",
+      "鸭子",
+      "铺装路",
+      "超近"
+    ],
+    "conditions": [
+      "普通天气",
+      "短时出行"
+    ],
+    "verifiedFacts": "位于 Saddle River County Park 绿道系统内，以池塘、草地和铺装路径为主要环境。",
+    "familyFit": "适合短途放风和观察鸭子，不需要长距离行走。",
+    "risks": "连续临水不能按最高自由跑标准处理；绿道仍有人骑车。",
+    "beforeYouGo": "雨后注意泥泞与积水。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Glen+Rock+Duck+Pond",
+    "officialUrl": "https://bergencountynj.gov/parks-recreation-areas/saddle-river-county-park/",
+    "verifiedDate": "",
+    "recommendationScore": 3.48
+  },
+  {
+    "name": "Bergen County Zoo / Van Saun County Park",
+    "shortName": "Bergen County Zoo",
+    "location": "Paramus, NJ",
+    "category": "动物与农场",
+    "driveMin": 10,
+    "driveMax": 20,
+    "status": "常去",
+    "ratings": {
+      "indoor": 0,
+      "outdoor": 3,
+      "stroller": 4.5,
+      "weather": 1.5,
+      "toddler": 5,
+      "parent": 4
+    },
+    "tags": [
+      "动物园",
+      "火车",
+      "旋转木马",
+      "游乐场"
+    ],
+    "conditions": [
+      "普通天气",
+      "短时出行"
+    ],
+    "verifiedFacts": "动物园位于 Van Saun County Park，动物、步道、草坪和家庭设施集中在同一园区；季节设施以县政府页面为准。",
+    "familyFit": "稳定性高，不必赌孩子是否愿意走纯树林。",
+    "risks": "热门周末人流、停车和季节设施影响体验。",
+    "beforeYouGo": "复核动物园时间、票价及 train / carousel。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Bergen+County+Zoo",
+    "officialUrl": "https://bergencountynj.gov/bergen-county-department-of-parks/bergen-county-zoo/",
+    "verifiedDate": "",
+    "recommendationScore": 3.95
+  },
+  {
+    "name": "Thielke Arboretum",
+    "shortName": "Thielke Arboretum",
+    "location": "Glen Rock, NJ",
+    "category": "纯户外自然",
+    "driveMin": 5,
+    "driveMax": 15,
+    "status": "本地候选",
+    "ratings": {
+      "indoor": 2,
+      "outdoor": 4.5,
+      "stroller": 4.5,
+      "weather": 2.5,
+      "toddler": 4,
+      "parent": 4
+    },
+    "tags": [
+      "植物园",
+      "池塘",
+      "短路径",
+      "超近"
+    ],
+    "conditions": [
+      "普通天气",
+      "短时出行"
+    ],
+    "verifiedFacts": "位于 Glen Rock 的社区 arboretum，以树林、池塘、花园和短路径为主要环境。",
+    "familyFit": "比 Duck Pond 更像小型自然探索，适合一小时左右。",
+    "risks": "规模小；池边和自然路面需要近看护。",
+    "beforeYouGo": "查看场地公告与活动。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Thielke+Arboretum",
+    "officialUrl": "https://www.thielkearboretum.org/",
+    "verifiedDate": "",
+    "recommendationScore": 3.8
+  },
+  {
+    "name": "New Jersey Botanical Garden at Skylands",
+    "shortName": "NJ Botanical Garden",
+    "location": "Ringwood, NJ",
+    "category": "花园与植物园",
+    "driveMin": 30,
+    "driveMax": 45,
+    "status": "高匹配",
+    "ratings": {
+      "indoor": 2,
+      "outdoor": 4,
+      "stroller": 3.5,
+      "weather": 1.5,
+      "toddler": 4,
+      "parent": 4.5
+    },
+    "tags": [
+      "花园",
+      "草坪",
+      "庄园",
+      "季节"
+    ],
+    "conditions": [
+      "晴天",
+      "春秋"
+    ],
+    "verifiedFacts": "位于 Ringwood State Park 的 Skylands 区域，核心为正式花园、草坪、树木收藏和历史庄园环境。",
+    "familyFit": "自然可控度高，成人也有观赏价值；只做花园核心区最符合你们需求。",
+    "risks": "外围山径与核心花园路况不同。",
+    "beforeYouGo": "确认停车、开放区域与活动限制。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=New+Jersey+Botanical+Garden+Skylands",
+    "officialUrl": "https://www.njbg.org/",
+    "verifiedDate": "",
+    "recommendationScore": 3.53
+  },
+  {
+    "name": "Frelinghuysen Arboretum",
+    "shortName": "Frelinghuysen Arboretum",
+    "location": "Morristown, NJ",
+    "category": "花园与植物园",
+    "driveMin": 40,
+    "driveMax": 55,
+    "status": "高匹配",
+    "ratings": {
+      "indoor": 2,
+      "outdoor": 4.5,
+      "stroller": 4.5,
+      "weather": 1.5,
+      "toddler": 4.5,
+      "parent": 4.5
+    },
+    "tags": [
+      "花园",
+      "草甸",
+      "树林",
+      "野餐"
+    ],
+    "conditions": [
+      "晴天",
+      "春秋",
+      "普通天气"
+    ],
+    "verifiedFacts": "Morris County Parks 官方说明园区约 124 英亩，包含 specimen plants、formal gardens、woodlands、meadows 和 walking trails；允许在指定草坪野餐。",
+    "familyFit": "比纯花园更有空间和路线变化，又比自然保护区更可控。",
+    "risks": "不同 trail 的路面和坡度不一致。",
+    "beforeYouGo": "复核开放时间和当天活动。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Frelinghuysen+Arboretum",
+    "officialUrl": "https://www.morrisparks.net/parks_trails/frelinghuysen-arboretum/",
+    "verifiedDate": "",
+    "recommendationScore": 3.9
+  },
+  {
+    "name": "Rockefeller State Park Preserve",
+    "shortName": "Rockefeller Preserve",
+    "location": "Pleasantville, NY",
+    "category": "纯户外自然",
+    "driveMin": 45,
+    "driveMax": 65,
+    "status": "长散步首选",
+    "ratings": {
+      "indoor": 2,
+      "outdoor": 4.5,
+      "stroller": 4.5,
+      "weather": 1.5,
+      "toddler": 4,
+      "parent": 5
+    },
+    "tags": [
+      "宽路",
+      "推车",
+      "森林",
+      "长散步"
+    ],
+    "conditions": [
+      "晴天",
+      "凉爽天",
+      "普通天气"
+    ],
+    "verifiedFacts": "NY State Parks 官方资料显示 preserve 包含森林、田野、溪流和湿地，以 historic carriage roads 为主要路径网络。",
+    "familyFit": "宽路让普通 stroller 的可用性明显优于多数 preserve。",
+    "risks": "碎石 carriage road 并非柏油；靠水路线仍需单独判断。",
+    "beforeYouGo": "第一次选择短环线。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Rockefeller+State+Park+Preserve",
+    "officialUrl": "https://parks.ny.gov/parks/rockefeller/",
+    "verifiedDate": "",
+    "recommendationScore": 3.85
+  },
+  {
+    "name": "Bear Mountain State Park — Hessian Lake",
+    "shortName": "Bear Mountain / Hessian Lake",
+    "location": "Bear Mountain, NY",
+    "category": "纯户外自然",
+    "driveMin": 50,
+    "driveMax": 70,
+    "status": "去过并喜欢",
+    "ratings": {
+      "indoor": 2,
+      "outdoor": 4.5,
+      "stroller": 4.5,
+      "weather": 1.5,
+      "toddler": 4.5,
+      "parent": 5
+    },
+    "tags": [
+      "湖",
+      "草坪",
+      "野餐",
+      "景观"
+    ],
+    "conditions": [
+      "晴天",
+      "秋天",
+      "普通天气"
+    ],
+    "verifiedFacts": "Bear Mountain 核心休闲区围绕 Hessian Lake、草坪、野餐和园内设施展开；季节设施和收费以 NY State Parks 为准。",
+    "familyFit": "你们已实测验证，是值得开远一点的标准样本。",
+    "risks": "湖岸、码头、周末人流和停车是主要限制。",
+    "beforeYouGo": "避开大型活动日，复核停车和季节设施。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Hessian+Lake+Bear+Mountain",
+    "officialUrl": "https://parks.ny.gov/parks/bearmountain/",
+    "verifiedDate": "",
+    "recommendationScore": 4.03
+  },
+  {
+    "name": "Duke Farms",
+    "shortName": "Duke Farms",
+    "location": "Hillsborough, NJ",
+    "category": "纯户外自然",
+    "driveMin": 55,
+    "driveMax": 75,
+    "status": "完整 day trip",
+    "ratings": {
+      "indoor": 2,
+      "outdoor": 5,
+      "stroller": 4.5,
+      "weather": 2.5,
+      "toddler": 4,
+      "parent": 5
+    },
+    "tags": [
+      "生态园区",
+      "湖",
+      "花园",
+      "全天"
+    ],
+    "conditions": [
+      "晴天",
+      "春秋",
+      "全天出行"
+    ],
+    "verifiedFacts": "大型生态与可持续发展园区，设广泛道路、花园、湖泊、草地和教育内容；访问政策、停车预约及开放区域按季节调整。",
+    "familyFit": "适合推车为主、孩子多次下来探索的完整一天。",
+    "risks": "尺度很大；路线选错会变成单纯赶路，夏季暴晒明显。",
+    "beforeYouGo": "提前选短路线并核实停车预约。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Duke+Farms",
+    "officialUrl": "https://www.dukefarms.org/",
+    "verifiedDate": "",
+    "recommendationScore": 4.05
+  },
+  {
+    "name": "Liberty Science Center",
+    "shortName": "Liberty Science Center",
+    "location": "Jersey City, NJ",
+    "category": "纯室内科学",
+    "driveMin": 35,
+    "driveMax": 55,
+    "status": "两岁强推荐",
+    "ratings": {
+      "indoor": 5,
+      "outdoor": 1,
+      "stroller": 4.5,
+      "weather": 5,
+      "toddler": 4.5,
+      "parent": 4.5
+    },
+    "tags": [
+      "科学馆",
+      "动物",
+      "互动",
+      "雨天"
+    ],
+    "conditions": [
+      "雨天",
+      "酷热",
+      "严寒"
+    ],
+    "verifiedFacts": "官方展览包含面向最小年龄段的互动空间，以及动物、Hudson River 生态、能源、火车模型和 planetarium 等内容；具体开放项目以官网为准。",
+    "familyFit": "两岁孩子无需理解展板即可参与，属于真正能靠室内撑起半天到一天的 science 场馆。",
+    "risks": "票价高、周末人多；部分大型攀爬设施不适合两岁单独使用。",
+    "beforeYouGo": "查看当天展览、planetarium 节目和票价。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Liberty+Science+Center",
+    "officialUrl": "https://lsc.org/explore/exhibitions",
+    "verifiedDate": "",
+    "recommendationScore": 4.6
+  },
+  {
+    "name": "New York Hall of Science (NYSCI)",
+    "shortName": "NY Hall of Science",
+    "location": "Queens, NY",
+    "category": "纯室内科学",
+    "driveMin": 40,
+    "driveMax": 65,
+    "status": "互动科学强",
+    "ratings": {
+      "indoor": 5,
+      "outdoor": 3,
+      "stroller": 4.5,
+      "weather": 5,
+      "toddler": 4.5,
+      "parent": 4.5
+    },
+    "tags": [
+      "科学馆",
+      "互动",
+      "幼儿区",
+      "工程"
+    ],
+    "conditions": [
+      "雨天",
+      "酷热",
+      "严寒"
+    ],
+    "verifiedFacts": "官方称馆内有大量 permanent exhibits；幼龄儿童区、bubbles、engineering、energy 和生态互动是核心内容。户外设施受季节和天气影响。",
+    "familyFit": "比自然历史博物馆更强调动手，对两岁孩子的即时参与度更高。",
+    "risks": "交通波动大；周末噪声和刺激强度较高。",
+    "beforeYouGo": "复核幼儿区、户外设施和停车。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=New+York+Hall+of+Science",
+    "officialUrl": "https://nysci.org/exhibits/",
+    "verifiedDate": "",
+    "recommendationScore": 4.6
+  },
+  {
+    "name": "Morris Museum — Spark!Lab Junior",
+    "shortName": "Morris Museum",
+    "location": "Morristown, NJ",
+    "category": "纯室内科学",
+    "driveMin": 40,
+    "driveMax": 55,
+    "status": "半日型",
+    "ratings": {
+      "indoor": 4.5,
+      "outdoor": 0,
+      "stroller": 4.5,
+      "weather": 5,
+      "toddler": 3.5,
+      "parent": 4
+    },
+    "tags": [
+      "工程",
+      "发明",
+      "火车模型",
+      "幼儿区"
+    ],
+    "conditions": [
+      "雨天",
+      "酷热",
+      "严寒"
+    ],
+    "verifiedFacts": "Spark!Lab 是 Smithsonian hands-on invention workspace；馆内另设面向 5 岁以下的 Junior 区，含 train table、building blocks 和 puzzles。开放与 timed session 规则以官网为准。",
+    "familyFit": "两岁阶段真正相关的是 Junior 区和机械/模型内容；可与 Frelinghuysen Arboretum 组合。",
+    "risks": "主体并非为两岁设计，且 timed ticket 可能拿不到；馆内也有艺术内容，可主动跳过。",
+    "beforeYouGo": "确认 Spark!Lab 开放和当日名额。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Morris+Museum",
+    "officialUrl": "https://morrismuseum.org/learn/spark-lab/details",
+    "verifiedDate": "",
+    "recommendationScore": 4.12
+  },
+  {
+    "name": "American Museum of Natural History",
+    "shortName": "AMNH",
+    "location": "New York, NY",
+    "category": "纯室内科学",
+    "driveMin": 35,
+    "driveMax": 65,
+    "status": "视觉冲击强",
+    "ratings": {
+      "indoor": 5,
+      "outdoor": 0,
+      "stroller": 4,
+      "weather": 5,
+      "toddler": 4,
+      "parent": 5
+    },
+    "tags": [
+      "恐龙",
+      "动物",
+      "海洋",
+      "太空"
+    ],
+    "conditions": [
+      "雨天",
+      "酷热",
+      "严寒"
+    ],
+    "verifiedFacts": "场馆以恐龙、哺乳动物、海洋生命、地球与太空科学等大型自然历史展厅为核心；票务和特别展览以官方 visit 页面为准。",
+    "familyFit": "两岁阶段价值来自大型动物、鲸、恐龙和空间尺度；只选 2–3 个展厅即可。",
+    "risks": "场馆巨大、人流密集、停车困难。",
+    "beforeYouGo": "预先确定入口、停车和目标展厅。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=American+Museum+of+Natural+History",
+    "officialUrl": "https://www.amnh.org/plan-your-visit",
+    "verifiedDate": "",
+    "recommendationScore": 4.45
+  },
+  {
+    "name": "Intrepid Museum",
+    "shortName": "Intrepid Museum",
+    "location": "New York, NY",
+    "category": "纯室内科学",
+    "driveMin": 35,
+    "driveMax": 65,
+    "status": "实物型科学",
+    "ratings": {
+      "indoor": 4,
+      "outdoor": 2,
+      "stroller": 3,
+      "weather": 4,
+      "toddler": 3.5,
+      "parent": 4.5
+    },
+    "tags": [
+      "飞机",
+      "航母",
+      "航天",
+      "工程"
+    ],
+    "conditions": [
+      "普通天气",
+      "天气不稳定"
+    ],
+    "verifiedFacts": "以航空母舰、飞机、Space Shuttle Enterprise、Concorde 和 Growler submarine 等实物为核心；部分狭窄体验区对 stroller 和幼儿有限制。",
+    "familyFit": "适合已经明显喜欢飞机、船或大型机械的孩子。",
+    "risks": "舰内路径、电梯、开放甲板天气和狭窄舱室增加家长操作成本。",
+    "beforeYouGo": "核实 stroller access，并准备跳过潜艇 / Concorde 内部。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Intrepid+Museum",
+    "officialUrl": "https://intrepidmuseum.org/plan-your-visit",
+    "verifiedDate": "",
+    "recommendationScore": 3.75
+  },
+  {
+    "name": "New Jersey State Museum — Natural History / Planetarium",
+    "shortName": "NJ State Museum",
+    "location": "Trenton, NJ",
+    "category": "纯室内科学",
+    "driveMin": 60,
+    "driveMax": 85,
+    "status": "远端候选",
+    "ratings": {
+      "indoor": 4.5,
+      "outdoor": 0,
+      "stroller": 4.5,
+      "weather": 5,
+      "toddler": 3.5,
+      "parent": 4
+    },
+    "tags": [
+      "自然历史",
+      "天文",
+      "恐龙",
+      "远途"
+    ],
+    "conditions": [
+      "雨天",
+      "酷热",
+      "严寒",
+      "全天出行"
+    ],
+    "verifiedFacts": "NJ State Museum 设自然历史与科学内容；planetarium 使用大型数字投影。公开场次、预约、票价和适龄说明以官方页面为准。",
+    "familyFit": "自然历史展厅比 planetarium 对两岁孩子更稳妥。",
+    "risks": "车程长；黑暗穹顶、声音和必须安坐存在不确定性。",
+    "beforeYouGo": "确认公众场次、建议年龄和中途离场规则。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=New+Jersey+State+Museum",
+    "officialUrl": "https://www.nj.gov/state/museum/",
+    "verifiedDate": "",
+    "recommendationScore": 4.12
+  },
+  {
+    "name": "Memorial Park Playground",
+    "shortName": "Memorial Park",
+    "location": "Fair Lawn, NJ",
+    "category": "优秀 Playground",
+    "driveMin": 5,
+    "driveMax": 10,
+    "status": "本地常备",
+    "ratings": {
+      "indoor": 0,
+      "outdoor": 4.5,
+      "stroller": 4.5,
+      "weather": 1,
+      "toddler": 4,
+      "parent": 3.5
+    },
+    "tags": [
+      "Playground",
+      "球场",
+      "草地",
+      "超近"
+    ],
+    "conditions": [
+      "短时出行",
+      "普通天气"
+    ],
+    "verifiedFacts": "Fair Lawn 官方 parks/facilities 页面列出 Memorial Park 的 playground、网球场、fitness park、球场和其他户外设施；泳池与 spray park 属季节性设施。",
+    "familyFit": "适合不值得开远路的 45–90 分钟放电；停车和撤退成本低。",
+    "risks": "游具未必全部针对两岁儿童；夏令营、球赛和泳池季会影响停车与拥挤度。",
+    "beforeYouGo": "查看 Recreation & Parks 公告以及 Memorial Pool / Spray Park 当季规则。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Memorial+Park+Fair+Lawn+NJ",
+    "officialUrl": "https://www.fairlawn.org/parks-facilities",
+    "verifiedDate": "",
+    "recommendationScore": 3.38
+  },
+  {
+    "name": "Berdan Grove Park Playground",
+    "shortName": "Berdan Grove",
+    "location": "Fair Lawn, NJ",
+    "category": "优秀 Playground",
+    "driveMin": 5,
+    "driveMax": 10,
+    "status": "本地优先",
+    "ratings": {
+      "indoor": 0,
+      "outdoor": 4.5,
+      "stroller": 4.5,
+      "weather": 1,
+      "toddler": 4.5,
+      "parent": 3.5
+    },
+    "tags": [
+      "Playground",
+      "无障碍游具",
+      "球场",
+      "超近"
+    ],
+    "conditions": [
+      "短时出行",
+      "普通天气"
+    ],
+    "verifiedFacts": "公开场地资料列出 playground、special-needs / accessible play elements、fitness park、篮球、网球、手球和棒球设施；属于 Fair Lawn 市政公园体系。",
+    "familyFit": "本地 playground 中内容密度较高，适合专门为孩子放电，而不是为了景观。",
+    "risks": "多种球场共存，繁忙时段动线较杂；现场游具状态仍应目测确认。",
+    "beforeYouGo": "查看 Fair Lawn Recreation 公告；第一次到场观察两岁区是否合适。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Berdan+Grove+Park+Fair+Lawn+NJ",
+    "officialUrl": "https://www.fairlawn.org/parks-facilities",
+    "verifiedDate": "",
+    "recommendationScore": 3.55
+  },
+  {
+    "name": "Gregory Park Playground",
+    "shortName": "Gregory Park",
+    "location": "Fair Lawn, NJ",
+    "category": "Local Park",
+    "driveMin": 5,
+    "driveMax": 10,
+    "status": "本地补充",
+    "ratings": {
+      "indoor": 0,
+      "outdoor": 4,
+      "stroller": 4.5,
+      "weather": 1,
+      "toddler": 4,
+      "parent": 3
+    },
+    "tags": [
+      "Playground",
+      "步道",
+      "球场",
+      "超近"
+    ],
+    "conditions": [
+      "短时出行",
+      "普通天气"
+    ],
+    "verifiedFacts": "Fair Lawn 公园资料将 Gregory Park 列为社区公园；公开资料显示其包含 playground、篮球、棒球和 walking path。",
+    "familyFit": "适合低准备、短停留；比大型目的地更适合作为工作日常规轮换。",
+    "risks": "社区型公园规模有限；大型儿童与球类活动可能挤压幼儿空间。",
+    "beforeYouGo": "现场确认 toddler 适配和遮阴情况。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Gregory+Park+Fair+Lawn+NJ",
+    "officialUrl": "https://www.fairlawn.org/parks-facilities",
+    "verifiedDate": "",
+    "recommendationScore": 3.25
+  },
+  {
+    "name": "Cresthill Park Playground",
+    "shortName": "Cresthill Park",
+    "location": "Fair Lawn, NJ",
+    "category": "Local Park",
+    "driveMin": 5,
+    "driveMax": 12,
+    "status": "本地补充",
+    "ratings": {
+      "indoor": 0,
+      "outdoor": 3.5,
+      "stroller": 4.5,
+      "weather": 1,
+      "toddler": 3.5,
+      "parent": 3
+    },
+    "tags": [
+      "Playground",
+      "篮球",
+      "社区公园",
+      "超近"
+    ],
+    "conditions": [
+      "短时出行",
+      "普通天气"
+    ],
+    "verifiedFacts": "Fair Lawn 的社区公园资料列有 Cresthill Park；公开设施描述包括 playground 和篮球场。",
+    "familyFit": "功能简单，但能增加本地轮换，避免每次都去同一个 playground。",
+    "risks": "内容少，不适合专程安排半天；遮阴、围栏与地面状态需现场判断。",
+    "beforeYouGo": "第一次先安排短访。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Cresthill+Park+Fair+Lawn+NJ",
+    "officialUrl": "https://www.fairlawn.org/parks-facilities",
+    "verifiedDate": "",
+    "recommendationScore": 3.07
+  },
+  {
+    "name": "Van Saun Harmony Playground & Splash Pad",
+    "shortName": "Van Saun Playground",
+    "location": "Paramus, NJ",
+    "category": "优秀 Playground",
+    "driveMin": 10,
+    "driveMax": 18,
+    "status": "区域强项",
+    "ratings": {
+      "indoor": 0,
+      "outdoor": 5,
+      "stroller": 5,
+      "weather": 1.5,
+      "toddler": 5,
+      "parent": 4
+    },
+    "tags": [
+      "大型 Playground",
+      "无障碍",
+      "Splash Pad",
+      "野餐"
+    ],
+    "conditions": [
+      "普通天气",
+      "夏天",
+      "短时出行"
+    ],
+    "verifiedFacts": "Bergen County 官方列明 Van Saun 有 ADA-accessible Harmony Playground、季节性 water sprinkler / splash feature、步行路径、野餐区及其他家庭设施。",
+    "familyFit": "不进入动物园也能独立成行；对两岁孩子的即时可玩性通常高于正式景点。",
+    "risks": "周末和暑期非常拥挤；Splash Pad 有季节与时段限制。",
+    "beforeYouGo": "查看县政府当天 splash pad 与停车信息。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Harmony+Playground+Van+Saun+County+Park",
+    "officialUrl": "https://bergencountynj.gov/bergen-county-department-of-parks/van-saun-county-park/",
+    "verifiedDate": "",
+    "recommendationScore": 4.05
+  },
+  {
+    "name": "Wild Duck Pond Playground",
+    "shortName": "Wild Duck Pond",
+    "location": "Ridgewood, NJ",
+    "category": "Local Park",
+    "driveMin": 10,
+    "driveMax": 18,
+    "status": "近距离组合型",
+    "ratings": {
+      "indoor": 0,
+      "outdoor": 4.5,
+      "stroller": 4.5,
+      "weather": 1,
+      "toddler": 4.5,
+      "parent": 4
+    },
+    "tags": [
+      "Playground",
+      "池塘",
+      "绿道",
+      "野餐"
+    ],
+    "conditions": [
+      "普通天气",
+      "短时出行"
+    ],
+    "verifiedFacts": "属于 Saddle River County Park 北段；县公园资料显示该系统由铺装多用途路径连接，Wild Duck Pond 区域提供池塘、野餐和 playground 等设施。",
+    "familyFit": "兼有 playground 与看水散步，比纯游具场更适合家长。",
+    "risks": "临水且绿道有自行车；孩子不能按封闭 playground 的方式完全放开。",
+    "beforeYouGo": "查看施工、积水和停车情况。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Wild+Duck+Pond+Ridgewood+NJ",
+    "officialUrl": "https://bergencountynj.gov/bergen-county-department-of-parks/saddle-river-county-park/",
+    "verifiedDate": "",
+    "recommendationScore": 3.68
+  },
+  {
+    "name": "Irene Habernickel Family Park",
+    "shortName": "Habernickel Park",
+    "location": "Ridgewood, NJ",
+    "category": "Local Park",
+    "driveMin": 12,
+    "driveMax": 20,
+    "status": "高质量本地公园",
+    "ratings": {
+      "indoor": 0,
+      "outdoor": 4.5,
+      "stroller": 4,
+      "weather": 1,
+      "toddler": 4.5,
+      "parent": 4.5
+    },
+    "tags": [
+      "Playground",
+      "池塘",
+      "短步道",
+      "草地"
+    ],
+    "conditions": [
+      "普通天气",
+      "短时出行"
+    ],
+    "verifiedFacts": "Ridgewood 官方页面说明该 10 英亩公园有 walking trails、athletic field、playground 和 pond，并设 HealthBarn USA。",
+    "familyFit": "playground、自然和短步道组合较均衡，家长体验明显好于纯社区游具场。",
+    "risks": "池塘和自然步道需要近看护；项目或活动时段可能更忙。",
+    "beforeYouGo": "查看 Ridgewood facility 页面和活动安排。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Irene+Habernickel+Family+Park",
+    "officialUrl": "https://www.ridgewoodnj.net/Facilities/Facility/Details/Irene-Habernickel-Family-Park-3",
+    "verifiedDate": "",
+    "recommendationScore": 3.7
+  },
+  {
+    "name": "Ridgewood YMCA Community Playground",
+    "shortName": "Ridgewood YMCA Playground",
+    "location": "Ridgewood, NJ",
+    "category": "优秀 Playground",
+    "driveMin": 12,
+    "driveMax": 20,
+    "status": "包容性候选",
+    "ratings": {
+      "indoor": 0,
+      "outdoor": 4,
+      "stroller": 4.5,
+      "weather": 1,
+      "toddler": 4,
+      "parent": 3.5
+    },
+    "tags": [
+      "Playground",
+      "包容性",
+      "社区开放",
+      "短途"
+    ],
+    "conditions": [
+      "普通天气",
+      "短时出行"
+    ],
+    "verifiedFacts": "Ridgewood YMCA 将其描述为面向不同能力儿童的 community playground，并说明对社区开放，通常从 dawn to dusk 使用。",
+    "familyFit": "适合把包容性游具纳入本地轮换；路线短、撤退容易。",
+    "risks": "属于 YMCA 场地，开放规则和课程活动可能变化；出发前应复核。",
+    "beforeYouGo": "查看 YMCA 最新开放信息。",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Ridgewood+YMCA+Community+Playground",
+    "officialUrl": "https://www.ridgewoodymca.org/ridgewood-ymca-new-community-playground/",
+    "verifiedDate": "",
+    "recommendationScore": 3.38
+  }
+]

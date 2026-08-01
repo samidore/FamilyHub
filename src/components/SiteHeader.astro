@@ -1,0 +1,14 @@
+---
+interface Props { kicker: string; title: string; description: string; home?: boolean; }
+const { kicker, title, description, home = false } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+<header class:list={["hero", home && "home-hero"]}>
+  <div class="shell">
+    {!home && <a class="back-link" href={base}>← Family Hub</a>}
+    <p class="kicker">{kicker}</p>
+    <h1>{title}</h1>
+    <p class="hero-copy">{description}</p>
+    <slot />
+  </div>
+</header>

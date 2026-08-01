@@ -1,0 +1,16 @@
+[
+  {
+    "id": "day-trips",
+    "title": "Day Trips",
+    "description": "Nature centers, science museums, parks, playgrounds, animals, and family destinations within about an hour.",
+    "href": "/day-trips/",
+    "accent": "green"
+  },
+  {
+    "id": "library-activities",
+    "title": "Library Activities",
+    "description": "Storytimes, music, free play, and crafts organized by weekday and time.",
+    "href": "/library-activities/",
+    "accent": "blue"
+  }
+]

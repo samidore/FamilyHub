@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import ModuleCard from '../components/ModuleCard.astro';
+import modules from '../data/modules.json';
+import destinations from '../data/day-trips.json';
+import events from '../data/library-events.json';
+
+const base = import.meta.env.BASE_URL;
+const moduleCounts: Record<string, number> = { 'day-trips': destinations.length, 'library-activities': events.length };
+const moduleLabels: Record<string, string> = { 'day-trips': 'places', 'library-activities': 'activities' };
+const symbols: Record<string, string> = { 'day-trips': 'DT', 'library-activities': 'LA' };
+const latestDate = (records: Array<{ verifiedDate: string }>) => {
+  const dates = records.map((item) => item.verifiedDate).filter(Boolean).sort();
+  return dates.length ? `Updated ${dates.at(-1)}` : 'Verification date not recorded';
+};
+const updatedLabels: Record<string, string> = { 'day-trips': latestDate(destinations), 'library-activities': latestDate(events) };
+---
+<BaseLayout title="Family Hub" description="One shared entrance for family day trips and library activities.">
+  <main class="home-page">
+    <SiteHeader home kicker="One family · one shared entrance" title="Family Hub" description="A calm, shared starting point for choosing a day trip or finding a nearby library activity." />
+    <section class="module-grid shell" aria-label="Family Hub modules">
+      {modules.map((module) => (
+        <ModuleCard title={module.title} description={module.description} href={`${base}${module.href.replace(/^\//, '')}`} count={moduleCounts[module.id]} label={moduleLabels[module.id]} accent={module.accent} symbol={symbols[module.id]} updated={updatedLabels[module.id]} />
+      ))}
+    </section>
+  </main>
+</BaseLayout>
