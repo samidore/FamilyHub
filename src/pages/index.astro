@@ -7,6 +7,7 @@ import destinations from '../data/day-trips.json';
 import events from '../data/library-events.json';
 
 const base = import.meta.env.BASE_URL;
+const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
 const moduleCounts: Record<string, number> = { 'day-trips': destinations.length, 'library-activities': events.length };
 const moduleLabels: Record<string, string> = { 'day-trips': 'places', 'library-activities': 'activities' };
 const symbols: Record<string, string> = { 'day-trips': 'DT', 'library-activities': 'LA' };
@@ -21,7 +22,7 @@ const updatedLabels: Record<string, string> = { 'day-trips': latestDate(destinat
     <SiteHeader home kicker="One family · one shared entrance" title="Family Hub" description="A calm, shared starting point for choosing a day trip or finding a nearby library activity." />
     <section class="module-grid shell" aria-label="Family Hub modules">
       {modules.map((module) => (
-        <ModuleCard title={module.title} description={module.description} href={`${base}${module.href.replace(/^\//, '')}`} count={moduleCounts[module.id]} label={moduleLabels[module.id]} accent={module.accent} symbol={symbols[module.id]} updated={updatedLabels[module.id]} />
+        <ModuleCard title={module.title} description={module.description} href={withBase(module.href)} count={moduleCounts[module.id]} label={moduleLabels[module.id]} accent={module.accent} symbol={symbols[module.id]} updated={updatedLabels[module.id]} />
       ))}
     </section>
   </main>
