@@ -5,9 +5,11 @@ import FilterShell from '../components/FilterShell.astro';
 import PediatricDentistCard from '../modules/pediatric-dentists/PediatricDentistCard.astro';
 import { pediatricDentists } from '../data/catalog';
 const concerns = [...new Set(pediatricDentists.map((item) => item.concernLevel))];
+const confidences = [...new Set(pediatricDentists.map((item) => item.reviewConfidence))];
+const reviewLabels: Record<string, string> = { 'very-limited': 'very limited', limited: 'limited', moderate: 'moderate', stronger: 'stronger', unavailable: 'unavailable' };
 ---
-<BaseLayout title="Pediatric Dentists | Family Hub" description="按 provider、Healthgrades 证据、训练、路程和长期适配度比较附近儿童牙医。" pageClass="module-page theme-ochre" themeColor="#F4EDE0">
-  <SiteHeader eyebrow="健康与照护 · 公开资料比较" title="Pediatric Dentists" description="按路程、医生背景、公开评价和长期就诊需求，比较附近的儿童牙医，并查看预约前需要向诊所确认的信息。" accent="ochre" icon="care">
+<BaseLayout title="Pediatric Dentists | Family Hub" description="按 pediatric specialty、幼儿照护、安全、Healthgrades 评价可信度和长期连续性比较附近儿童牙医。" pageClass="module-page theme-ochre" themeColor="#F4EDE0">
+  <SiteHeader eyebrow="健康与照护 · 公开资料比较" title="Pediatric Dentists" description="Healthgrades 主要用于 patient-experience 证据；整体 Tier 还要看 pediatric specialty、幼儿照护、安全与 consent、长期 dental-home 连续性，以及预约前需要确认的未知信息。Tier 是家庭比较工具，不是医疗质量评级。" accent="ochre" icon="care">
     <div class="summary-row"><span>10 家诊所</span><span>约 5–30 分钟车程</span><span>Healthgrades 优先</span></div>
   </SiteHeader>
 
@@ -19,19 +21,20 @@ const concerns = [...new Set(pediatricDentists.map((item) => item.concernLevel))
     <div slot="filters" class="contents">
       <label><span>家庭比较 Tier</span><select id="dentist-tier"><option value="">全部 Tier</option><option value="1">Tier 1 · strongest choices</option><option value="2">Tier 2 · good alternatives</option><option value="3">Tier 3 · meaningful tradeoffs</option></select></label>
       <label><span>车程</span><select id="dentist-drive"><option value="">不限车程</option><option value="15">15 分钟内</option><option value="20">20 分钟内</option><option value="30">30 分钟内</option></select></label>
-      <label><span>Healthgrades 评分</span><select id="dentist-rating"><option value="">不限 / 无评分</option><option value="4">4.0+</option><option value="4.5">4.5+</option><option value="5">5.0</option></select></label>
+      <label><span>评价可信度</span><select id="dentist-confidence"><option value="">全部可信度</option>{confidences.map((item) => <option value={item}>{reviewLabels[item]}</option>)}</select></label>
+      <label><span>证据状态</span><select id="dentist-status"><option value="">全部状态</option><option value="qualified">qualified</option><option value="conditional">conditional</option></select></label>
       <label><span>证据关注程度</span><select id="dentist-concern"><option value="">全部程度</option>{concerns.map((item) => <option value={item}>{item}</option>)}</select></label>
     </div>
   </FilterShell>
 
   <main id="main-content" class="shell listing-main"><div id="dentist-list" class="record-grid">{pediatricDentists.map((dentist) => <PediatricDentistCard dentist={dentist} />)}</div><p id="dentist-empty" class="empty-state" hidden>没有符合这些条件的诊所。清除部分筛选后再试。</p></main>
-  <footer class="module-footer"><div class="shell note-box"><strong>预约前直接确认。</strong> 指定 provider，确认 current board status、新患者、insurance 和家长陪同规则。Healthgrades 样本经常很小；本页不会把不同平台分数混在一起。</div></footer>
+  <footer class="module-footer"><div class="shell note-box"><strong>预约前直接确认。</strong> 指定 provider，确认 current NJ license / pediatric specialty permit / ABPD status；询问两岁儿童的 first-visit approach、parent presence、consent before restraint or sedation、treatment alternatives、after-hours emergency、provider continuity、insurance 和费用。Healthgrades 样本经常很小；本页不把不同平台的分数混在一起。</div></footer>
 
   <script>
     import { bindListState, clearListState, restoreListState } from '../lib/listState';
     const cards = [...document.querySelectorAll<HTMLElement>('[data-dentist]')];
     const controls = {
-      q: document.querySelector<HTMLInputElement>('#dentist-search')!, sort: document.querySelector<HTMLSelectElement>('#dentist-sort')!, tier: document.querySelector<HTMLSelectElement>('#dentist-tier')!, drive: document.querySelector<HTMLSelectElement>('#dentist-drive')!, rating: document.querySelector<HTMLSelectElement>('#dentist-rating')!, concern: document.querySelector<HTMLSelectElement>('#dentist-concern')!,
+      q: document.querySelector<HTMLInputElement>('#dentist-search')!, sort: document.querySelector<HTMLSelectElement>('#dentist-sort')!, tier: document.querySelector<HTMLSelectElement>('#dentist-tier')!, drive: document.querySelector<HTMLSelectElement>('#dentist-drive')!, confidence: document.querySelector<HTMLSelectElement>('#dentist-confidence')!, status: document.querySelector<HTMLSelectElement>('#dentist-status')!, concern: document.querySelector<HTMLSelectElement>('#dentist-concern')!,
     };
     const list = document.querySelector<HTMLElement>('#dentist-list')!;
     const count = document.querySelector<HTMLElement>('#dentist-count')!;
@@ -39,9 +42,9 @@ const concerns = [...new Set(pediatricDentists.map((item) => item.concernLevel))
     const number = (card: HTMLElement, key: string) => Number(card.dataset[key] ?? -1);
     const render = () => {
       const query = controls.q.value.trim().toLocaleLowerCase();
-      const visible = cards.filter((card) => (!query || card.dataset.search!.includes(query)) && (!controls.tier.value || card.dataset.tier === controls.tier.value) && (!controls.drive.value || number(card, 'driveMax') <= Number(controls.drive.value)) && (!controls.rating.value || number(card, 'hgRating') >= Number(controls.rating.value)) && (!controls.concern.value || card.dataset.concern === controls.concern.value));
+      const visible = cards.filter((card) => (!query || card.dataset.search!.includes(query)) && (!controls.tier.value || card.dataset.tier === controls.tier.value) && (!controls.drive.value || number(card, 'driveMax') <= Number(controls.drive.value)) && (!controls.confidence.value || card.dataset.reviewConfidence === controls.confidence.value) && (!controls.status.value || card.dataset.decision === controls.status.value) && (!controls.concern.value || card.dataset.concern === controls.concern.value));
       const sorters: Record<string, (a: HTMLElement, b: HTMLElement) => number> = { rank: (a, b) => number(a, 'rank') - number(b, 'rank'), drive: (a, b) => number(a, 'driveMax') - number(b, 'driveMax'), rating: (a, b) => number(b, 'hgRating') - number(a, 'hgRating') || number(b, 'reviews') - number(a, 'reviews'), reviews: (a, b) => number(b, 'reviews') - number(a, 'reviews'), name: (a, b) => a.dataset.name!.localeCompare(b.dataset.name!) };
-      cards.forEach((card) => card.hidden = !visible.includes(card));
+      cards.forEach((card) => { card.hidden = !visible.includes(card); });
       visible.sort(sorters[controls.sort.value]).forEach((card) => list.append(card));
       count.textContent = `显示 ${visible.length} / ${cards.length} 家诊所`;
       empty.hidden = visible.length > 0;

@@ -197,6 +197,7 @@ a { color: inherit; }
 .badges, .tags { display: flex; flex-wrap: wrap; gap: 7px; }
 .badge, .tags span { display: inline-flex; min-height: 28px; align-items: center; padding: 4px 9px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 13px; font-weight: 700; line-height: 1.25; }
 .badge--caution { background: #f3eadb; color: #7b4e16; }
+.badge--status { background: #e5eee8; color: #2e674a; }
 .metric-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 18px 0 0; }
 .metric-grid > div { min-width: 0; padding: 9px 10px; border: 1px solid var(--line); border-radius: 9px; background: rgb(255 255 255 / 82%); }
 .metric-grid dt { color: var(--muted); font-size: 13px; }
@@ -218,6 +219,14 @@ a { color: inherit; }
 .record-details[open] summary::after { content: "−"; }
 .record-details__content { padding: 6px 0 18px; }
 .record-details__content > p { margin: 0; color: #35433a; }
+.evidence-bands, .finding-list, .question-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.evidence-bands li { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; background: #fbfcfa; }
+.evidence-bands li strong { color: #315f49; font-size: 14px; }
+.evidence-bands li[data-band="concern"] { border-color: #d9b27c; background: #fff8ed; }
+.evidence-bands li[data-band="concern"] strong { color: #8a5419; }
+.evidence-bands li[data-band="unknown"] { border-style: dashed; background: #f5f6f3; }
+.evidence-bands li[data-band="unknown"] strong { color: var(--muted); }
+.finding-list, .question-list { margin-top: 12px; padding-left: 20px; list-style: disc; color: #4f5d55; }
 .verification-note { color: var(--muted) !important; font-size: 14px !important; }
 .actions { display: grid; grid-template-columns: 1fr; gap: 9px; margin-top: 20px; }
 .button { display: inline-flex; min-height: 50px; align-items: center; justify-content: center; padding: 10px 13px; border-radius: 9px; font-size: 16px; font-weight: 700; line-height: 1.25; text-align: center; text-decoration: none; }

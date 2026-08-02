@@ -53,6 +53,8 @@ export interface LibraryEvent {
 export interface PediatricDentist {
   name: string;
   provider: string;
+  eligibility: DentistEligibility;
+  evidenceBands: DentistEvidenceBands;
   tier: number;
   rank: number;
   location: string;
@@ -64,6 +66,7 @@ export interface PediatricDentist {
   healthgradesRating: number | null;
   healthgradesReviewCount: number;
   healthgradesWrittenCount: number;
+  reviewConfidence: DentistReviewConfidence;
   healthgradesEvidence: string;
   healthgradesTags: string[];
   healthgradesNegativeSummary: string;
@@ -76,9 +79,39 @@ export interface PediatricDentist {
   strengths: string[];
   concernLevel: string;
   secondaryReviewSummary: string;
+  negativeFindings: DentistNegativeFinding[];
+  verificationQuestions: string[];
   reviewSources: string[];
   healthgradesUrl: string;
   officialUrl: string;
   googleMapsUrl: string;
   verifiedDate: string;
+}
+
+export type DentistBand = 'strong' | 'adequate' | 'concern' | 'unknown';
+export type DentistReviewConfidence = 'very-limited' | 'limited' | 'moderate' | 'stronger' | 'unavailable';
+
+export interface DentistEligibility {
+  license: 'verified' | 'screened' | 'unknown' | 'concern';
+  pediatricSpecialty: 'verified' | 'partial' | 'unknown' | 'concern';
+  currentProvider: 'verified' | 'unknown';
+  ageTwoAndNewPatients: 'verified' | 'partial' | 'unknown';
+  discipline: 'screened-no-match' | 'unknown' | 'concern';
+  decision: 'qualified' | 'conditional' | 'excluded';
+}
+
+export interface DentistEvidenceBands {
+  clinicalFoundation: DentistBand;
+  toddlerCare: DentistBand;
+  continuity: DentistBand;
+  patientExperience: DentistBand;
+  practicalAccess: DentistBand;
+}
+
+export interface DentistNegativeFinding {
+  category: 'child-interaction' | 'consent-restraint' | 'diagnosis-treatment' | 'clinical-safety' | 'billing-administration' | 'access-waiting';
+  severity: 'none' | 'low' | 'moderate' | 'high' | 'unexplained';
+  pattern: 'none' | 'isolated' | 'repeated' | 'unexplained' | 'not-available';
+  scope: 'provider' | 'associate' | 'office' | 'unknown';
+  summary: string;
 }

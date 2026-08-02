@@ -4,16 +4,26 @@ const { dentist: d } = Astro.props as { dentist: PediatricDentist };
 const searchable = [d.name, d.provider, d.location, d.acceptsNewPatients, d.longTermFit, d.concernLevel, d.negativeClassification, d.trainingSummary, d.schoolContext, d.certificationsAwards, ...d.strengths, ...d.healthgradesTags, ...d.reviewSources].join(' ').toLocaleLowerCase();
 const healthgrades = d.healthgradesRating === null ? '无当前评分' : `${d.healthgradesRating.toFixed(1)} / 5`;
 const drive = `${d.driveMin}–${d.driveMax} 分钟${d.distanceMiles != null ? ` · ${d.distanceMiles} miles` : ''}`;
+const bandLabels: Record<string, string> = { strong: 'Strong', adequate: 'Adequate', concern: 'Concern', unknown: 'Unknown' };
+const reviewLabels: Record<string, string> = { 'very-limited': 'very limited', limited: 'limited', moderate: 'moderate', stronger: 'stronger', unavailable: 'unavailable' };
+const bandItems = [
+  ['Clinical foundation', d.evidenceBands.clinicalFoundation],
+  ['Toddler care', d.evidenceBands.toddlerCare],
+  ['Continuity', d.evidenceBands.continuity],
+  ['Patient experience', d.evidenceBands.patientExperience],
+  ['Practical access', d.evidenceBands.practicalAccess],
+] as const;
 ---
-<article class="record-card dentist-card" data-dentist data-search={searchable} data-tier={d.tier} data-drive-max={d.driveMax} data-hg-rating={d.healthgradesRating ?? -1} data-concern={d.concernLevel} data-rank={d.rank} data-reviews={d.healthgradesReviewCount} data-name={d.name}>
+<article class="record-card dentist-card" data-dentist data-search={searchable} data-tier={d.tier} data-drive-max={d.driveMax} data-hg-rating={d.healthgradesRating ?? -1} data-review-confidence={d.reviewConfidence} data-decision={d.eligibility.decision} data-concern={d.concernLevel} data-rank={d.rank} data-reviews={d.healthgradesReviewCount} data-name={d.name}>
   <div class="record-card__top">
-    <div class="badges"><span class="badge">家庭比较 Tier {d.tier}</span><span class="badge badge--caution">证据关注：{d.concernLevel}</span></div>
+    <div class="badges"><span class="badge">家庭比较 Tier {d.tier}</span><span class="badge badge--caution">证据关注：{d.concernLevel}</span><span class="badge badge--status">{d.eligibility.decision}</span></div>
     <h2>{d.name}</h2>
     <p class="provider-line">指定 provider：<strong>{d.provider}</strong></p>
     <p class="location-line">{d.location} <span aria-hidden="true">·</span> {drive}</p>
     <dl class="metric-grid dentist-metrics">
       <div><dt>Healthgrades</dt><dd>{healthgrades}</dd></div>
       <div><dt>评分 / 文字评价</dt><dd>{d.healthgradesReviewCount} / {d.healthgradesWrittenCount}</dd></div>
+      <div><dt>评分可信度</dt><dd>{reviewLabels[d.reviewConfidence]}</dd></div>
       <div><dt>次级资料</dt><dd>{d.rating.toFixed(1)} · {d.reviewCount.toLocaleString()}</dd></div>
     </dl>
   </div>
@@ -21,15 +31,18 @@ const drive = `${d.driveMin}–${d.driveMax} 分钟${d.distanceMiles != null ? `
     <div class="tags" aria-label="诊所优势">{d.strengths.map((strength) => <span>{strength}</span>)}</div>
     <section class="info-block info-block--assessment"><h3>长期适配判断</h3><p>{d.longTermFit}</p></section>
     <section class="info-block info-block--fact"><h3>Healthgrades 证据</h3><p>{d.healthgradesEvidence}</p></section>
+    <section class="info-block"><h3>Evidence bands</h3><ul class="evidence-bands">{bandItems.map(([label, value]) => <li data-band={value}><span>{label}</span><strong>{bandLabels[value]}</strong></li>)}</ul></section>
     <details class="record-details">
-      <summary>查看训练、证书与评价分析</summary>
+      <summary>查看训练、资格与评价分析</summary>
       <div class="record-details__content">
-        <section class="info-block"><h3>新患者</h3><p>{d.acceptsNewPatients}</p></section>
+        <section class="info-block"><h3>新患者与年龄</h3><p>{d.acceptsNewPatients}</p></section>
+        <section class="info-block"><h3>Eligibility gates</h3><p>License: {d.eligibility.license}; pediatric specialty: {d.eligibility.pediatricSpecialty}; current provider: {d.eligibility.currentProvider}; age-two/new-patient fit: {d.eligibility.ageTwoAndNewPatients}; discipline screen: {d.eligibility.discipline}.</p></section>
         <section class="info-block"><h3>训练背景</h3><p>{d.trainingSummary}</p></section>
         <section class="info-block"><h3>学校与 residency 背景</h3><p>{d.schoolContext}</p></section>
         <section class="info-block"><h3>认证与奖项</h3><p>{d.certificationsAwards}</p></section>
-        <section class="info-block info-block--risk"><h3>负面证据怎么理解</h3><p><strong>{d.negativeClassification}.</strong> {d.healthgradesNegativeSummary}</p></section>
+        <section class="info-block info-block--risk"><h3>负面证据怎么理解</h3><p><strong>{d.negativeClassification}。</strong> {d.healthgradesNegativeSummary}</p><ul class="finding-list">{d.negativeFindings.map((finding) => <li><strong>{finding.category}</strong> · {finding.severity} · {finding.pattern} · {finding.scope}: {finding.summary}</li>)}</ul></section>
         <section class="info-block"><h3>次级评价资料</h3><p>{d.secondaryReviewSummary}</p></section>
+        <section class="info-block"><h3>预约前确认问题</h3><ul class="question-list">{d.verificationQuestions.map((question) => <li>{question}</li>)}</ul></section>
         <p class="verification-note">资料来源：{d.reviewSources.join(' · ')}<br />资料核实：{d.verifiedDate || '未记录'}</p>
       </div>
     </details>

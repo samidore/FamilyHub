@@ -6,7 +6,7 @@ const privateFieldNames = new Set([
 
 const dayTripKeys = ['name', 'shortName', 'location', 'category', 'driveMin', 'driveMax', 'status', 'ratings', 'tags', 'conditions', 'verifiedFacts', 'familyFit', 'risks', 'beforeYouGo', 'googleMapsUrl', 'officialUrl', 'verifiedDate', 'recommendationScore'];
 const eventKeys = ['day', 'dayOrder', 'time', 'timeOrder', 'name', 'library', 'location', 'drive', 'age', 'ageGroup', 'description', 'registration', 'badges', 'googleMapsUrl', 'officialUrl', 'verifiedDate', 'dateRange'];
-const dentistKeys = ['name', 'provider', 'tier', 'rank', 'location', 'driveMin', 'driveMax', 'rating', 'reviewCount', 'healthgradesRating', 'healthgradesReviewCount', 'healthgradesWrittenCount', 'healthgradesEvidence', 'healthgradesTags', 'healthgradesNegativeSummary', 'negativeClassification', 'acceptsNewPatients', 'trainingSummary', 'schoolContext', 'certificationsAwards', 'longTermFit', 'strengths', 'concernLevel', 'secondaryReviewSummary', 'reviewSources', 'healthgradesUrl', 'officialUrl', 'googleMapsUrl', 'verifiedDate'];
+const dentistKeys = ['name', 'provider', 'eligibility', 'evidenceBands', 'tier', 'rank', 'location', 'driveMin', 'driveMax', 'rating', 'reviewCount', 'healthgradesRating', 'healthgradesReviewCount', 'healthgradesWrittenCount', 'reviewConfidence', 'healthgradesEvidence', 'healthgradesTags', 'healthgradesNegativeSummary', 'negativeClassification', 'acceptsNewPatients', 'trainingSummary', 'schoolContext', 'certificationsAwards', 'longTermFit', 'strengths', 'concernLevel', 'secondaryReviewSummary', 'negativeFindings', 'verificationQuestions', 'reviewSources', 'healthgradesUrl', 'officialUrl', 'googleMapsUrl', 'verifiedDate'];
 const ratingKeys = ['indoor', 'outdoor', 'stroller', 'weather', 'toddler', 'parent'];
 
 const fail = (path, message) => { throw new Error(`${path}: ${message}`); };
@@ -39,6 +39,10 @@ function nullableNumber(value, path, min = 0, max = Number.POSITIVE_INFINITY) {
 function strings(value, path) {
   if (!Array.isArray(value)) fail(path, 'expected a text array');
   value.forEach((item, index) => text(item, `${path}[${index}]`));
+}
+
+function enumValue(value, allowed, path) {
+  if (!allowed.includes(value)) fail(path, `expected one of ${allowed.join(', ')}`);
 }
 
 function https(value, path, host) {
@@ -100,12 +104,32 @@ export function parseLibraryEvents(value) {
 export function parsePediatricDentists(value) {
   return parseList(value, 'pediatric-dentists', (record, path) => {
     exactObject(record, dentistKeys, ['distanceMiles'], path);
-    ['name', 'provider', 'location', 'healthgradesEvidence', 'healthgradesNegativeSummary', 'negativeClassification', 'acceptsNewPatients', 'trainingSummary', 'schoolContext', 'certificationsAwards', 'longTermFit', 'concernLevel', 'secondaryReviewSummary'].forEach((key) => text(record[key], `${path}.${key}`));
+    ['name', 'provider', 'location', 'healthgradesEvidence', 'healthgradesNegativeSummary', 'negativeClassification', 'acceptsNewPatients', 'trainingSummary', 'schoolContext', 'certificationsAwards', 'longTermFit', 'concernLevel', 'secondaryReviewSummary', 'reviewConfidence'].forEach((key) => text(record[key], `${path}.${key}`));
+    exactObject(record.eligibility, ['license', 'pediatricSpecialty', 'currentProvider', 'ageTwoAndNewPatients', 'discipline', 'decision'], [], `${path}.eligibility`);
+    enumValue(record.eligibility.license, ['verified', 'screened', 'unknown', 'concern'], `${path}.eligibility.license`);
+    enumValue(record.eligibility.pediatricSpecialty, ['verified', 'partial', 'unknown', 'concern'], `${path}.eligibility.pediatricSpecialty`);
+    enumValue(record.eligibility.currentProvider, ['verified', 'unknown'], `${path}.eligibility.currentProvider`);
+    enumValue(record.eligibility.ageTwoAndNewPatients, ['verified', 'partial', 'unknown'], `${path}.eligibility.ageTwoAndNewPatients`);
+    enumValue(record.eligibility.discipline, ['screened-no-match', 'unknown', 'concern'], `${path}.eligibility.discipline`);
+    enumValue(record.eligibility.decision, ['qualified', 'conditional', 'excluded'], `${path}.eligibility.decision`);
+    exactObject(record.evidenceBands, ['clinicalFoundation', 'toddlerCare', 'continuity', 'patientExperience', 'practicalAccess'], [], `${path}.evidenceBands`);
+    ['clinicalFoundation', 'toddlerCare', 'continuity', 'patientExperience', 'practicalAccess'].forEach((key) => enumValue(record.evidenceBands[key], ['strong', 'adequate', 'concern', 'unknown'], `${path}.evidenceBands.${key}`));
+    enumValue(record.reviewConfidence, ['very-limited', 'limited', 'moderate', 'stronger', 'unavailable'], `${path}.reviewConfidence`);
     integer(record.tier, `${path}.tier`, 1); if (record.tier > 3) fail(`${path}.tier`, 'expected tier 1–3');
     integer(record.rank, `${path}.rank`, 1); number(record.driveMin, `${path}.driveMin`, 0, 300); number(record.driveMax, `${path}.driveMax`, record.driveMin, 300); distance(record.distanceMiles, `${path}.distanceMiles`);
     number(record.rating, `${path}.rating`, 0, 5); integer(record.reviewCount, `${path}.reviewCount`, 0); nullableNumber(record.healthgradesRating, `${path}.healthgradesRating`, 0, 5);
     integer(record.healthgradesReviewCount, `${path}.healthgradesReviewCount`, 0); integer(record.healthgradesWrittenCount, `${path}.healthgradesWrittenCount`, 0);
-    strings(record.healthgradesTags, `${path}.healthgradesTags`); strings(record.strengths, `${path}.strengths`); strings(record.reviewSources, `${path}.reviewSources`);
+    strings(record.healthgradesTags, `${path}.healthgradesTags`); strings(record.strengths, `${path}.strengths`); strings(record.reviewSources, `${path}.reviewSources`); strings(record.verificationQuestions, `${path}.verificationQuestions`);
+    if (!Array.isArray(record.negativeFindings)) fail(`${path}.negativeFindings`, 'expected an array');
+    record.negativeFindings.forEach((finding, index) => {
+      const findingPath = `${path}.negativeFindings[${index}]`;
+      exactObject(finding, ['category', 'severity', 'pattern', 'scope', 'summary'], [], findingPath);
+      enumValue(finding.category, ['child-interaction', 'consent-restraint', 'diagnosis-treatment', 'clinical-safety', 'billing-administration', 'access-waiting'], `${findingPath}.category`);
+      enumValue(finding.severity, ['none', 'low', 'moderate', 'high', 'unexplained'], `${findingPath}.severity`);
+      enumValue(finding.pattern, ['none', 'isolated', 'repeated', 'unexplained', 'not-available'], `${findingPath}.pattern`);
+      enumValue(finding.scope, ['provider', 'associate', 'office', 'unknown'], `${findingPath}.scope`);
+      text(finding.summary, `${findingPath}.summary`);
+    });
     https(record.healthgradesUrl, `${path}.healthgradesUrl`, 'www.healthgrades.com'); https(record.officialUrl, `${path}.officialUrl`); https(record.googleMapsUrl, `${path}.googleMapsUrl`);
     verifiedDate(record.verifiedDate, `${path}.verifiedDate`);
   });

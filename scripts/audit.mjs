@@ -36,6 +36,9 @@ assert(dentists.length === 10, 'Pediatric dentist migration count is not 10');
 assert(events.every((item, index, all) => !index || all[index - 1].dayOrder < item.dayOrder || (all[index - 1].dayOrder === item.dayOrder && all[index - 1].timeOrder <= item.timeOrder)), 'Events are not stored in weekday/time order');
 assert(dentists.every((item) => item.healthgradesUrl.startsWith('https://www.healthgrades.com/')), 'A Healthgrades URL is missing or invalid');
 assert(dentists.every((item) => item.healthgradesRating === null || (item.healthgradesRating >= 0 && item.healthgradesRating <= 5)), 'A Healthgrades rating is invalid');
+assert(dentists.every((item) => item.eligibility.decision !== 'excluded'), 'An excluded dentist is present in the published candidate set');
+assert(dentists.filter((item) => item.tier === 1).every((item) => Object.values(item.evidenceBands).every((band) => band === 'strong' || band === 'adequate')), 'Tier 1 contains a concern or unknown evidence band');
+assert(dentists.every((item) => item.healthgradesReviewCount < 10 || item.reviewConfidence === 'moderate' || item.reviewConfidence === 'stronger' || item.reviewConfidence === 'unavailable'), 'Review confidence does not match the Healthgrades sample size');
 
 const htmlFiles = [home, ...(await Promise.all(moduleRegistry.map((module) => readFile(`dist${module.route}index.html`, 'utf8'))))];
 assert(htmlFiles.every((html) => !/<iframe|google-analytics|googletagmanager|fonts\.googleapis/i.test(html)), 'A forbidden embed, analytics script, or remote font was found');
