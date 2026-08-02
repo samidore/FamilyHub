@@ -6,6 +6,7 @@ A mobile-first Astro reference hub for family lists that benefit from search, fi
 - 18 Library Activities
 - 10 Pediatric Dentists
 - 10 Adult Dermatologists
+- 18 Colonoscopy Specialists
 
 The published GitHub Pages URL is public. Read [`PROJECT.md`](PROJECT.md) before changing data, design, privacy boundaries, language, or units.
 
@@ -42,6 +43,7 @@ Install Playwright Chromium once on a new machine with `pnpm exec playwright ins
 - Library Activities: `src/data/library-events.json`
 - Pediatric Dentists: `src/data/pediatric-dentists.json`
 - Adult Dermatologists: `src/data/adult-dermatologists.json`
+- Colonoscopy Specialists: `src/data/colonoscopy-specialists.json`
 - Active module metadata and home categories: `src/config/modules.ts`
 - Strict public-data rules: `src/data/schemas.mjs`
 

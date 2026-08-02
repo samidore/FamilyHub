@@ -1,0 +1,62 @@
+---
+import type { ColonoscopySpecialist } from '../../data/types';
+
+const { specialist: s } = Astro.props as { specialist: ColonoscopySpecialist };
+const searchable = [
+  s.name, s.provider, s.system, s.facility, s.location, s.clinicalFit, s.facilityEvidence,
+  s.acceptsNewPatients, s.trainingSummary, s.schoolContext, s.certificationsAwards,
+  s.healthgradesEvidence, s.healthgradesNegativeSummary, s.negativeClassification,
+  s.safetyScreen, s.secondaryReviewSummary, ...s.capabilities, ...s.healthgradesTags, ...s.strengths,
+].join(' ').toLocaleLowerCase();
+const drive = `${s.driveMin}–${s.driveMax} 分钟`;
+const bandLabels: Record<string, string> = { strong: 'Strong', adequate: 'Adequate', concern: 'Concern', unknown: 'Unknown' };
+const confidenceLabels: Record<string, string> = { 'very-limited': 'very-limited', limited: 'limited', moderate: 'moderate', strong: 'strong', 'very-strong': 'very-strong', unavailable: 'unavailable' };
+const statusLabels: Record<string, string> = { verified: '已核实', conditional: '需确认', unknown: '未知' };
+const bandItems = [
+  ['Complex-polyp fit', s.evidenceBands.complexPolypFit],
+  ['Facility safety / backup', s.evidenceBands.facilitySafety],
+  ['Patient experience', s.evidenceBands.patientExperience],
+  ['Practical access', s.evidenceBands.practicalAccess],
+] as const;
+const safetyLinks = [
+  ['NY Physician Profile', s.nyProfileUrl],
+  ['NY OPMC / discipline', s.opmcUrl],
+] as const;
+---
+<article class="record-card colonoscopy-card" data-colonoscopy data-search={searchable} data-tier={s.tier} data-drive-max={s.driveMax} data-hg-rating={s.healthgradesRating ?? -1} data-reviews={s.healthgradesReviewCount} data-review-confidence={s.reviewConfidence} data-system={s.system} data-facility={s.facility} data-advanced-polyp={s.evidenceBands.complexPolypFit} data-capabilities={s.capabilities.join('|')} data-current-provider={s.eligibility.currentProvider} data-concern={s.concernLevel} data-rank={s.rank} data-name={s.name}>
+  <div class="record-card__top">
+    <div class="badges"><span class="badge">Tier {s.tier}</span><span class="badge badge--caution">关注：{s.concernLevel}</span><span class="badge badge--status">{statusLabels[s.eligibility.currentProvider]}</span></div>
+    <h2>{s.name}</h2>
+    <p class="provider-line">Provider：<strong>{s.provider}</strong></p>
+    <p class="provider-line">Facility：{s.facility} · {s.system}</p>
+    <p class="location-line">{s.location} <span aria-hidden="true">·</span> 约 {drive}</p>
+    <dl class="metric-grid colonoscopy-metrics">
+      <div><dt>Healthgrades</dt><dd>{s.healthgradesRating === null ? '未显示' : `${s.healthgradesRating.toFixed(1)} / 5`}</dd></div>
+      <div><dt>HG ratings / written</dt><dd>{s.healthgradesReviewCount} / {s.healthgradesWrittenCount}</dd></div>
+      <div><dt>Review confidence</dt><dd>{confidenceLabels[s.reviewConfidence]}</dd></div>
+      <div><dt>Complex-polyp fit</dt><dd>{bandLabels[s.evidenceBands.complexPolypFit]}</dd></div>
+    </dl>
+  </div>
+  <div class="record-card__body">
+    <div class="tags" aria-label="主要优势">{s.strengths.map((strength) => <span>{strength}</span>)}</div>
+    <section class="info-block info-block--assessment"><h3>为什么适合这类肠镜</h3><p>{s.clinicalFit}</p></section>
+    <section class="info-block info-block--fact"><h3>Facility 证据</h3><p>{s.facilityEvidence}</p></section>
+    <section class="info-block"><h3>Evidence bands（等权）</h3><ul class="evidence-bands">{bandItems.map(([label, value]) => <li data-band={value}><span>{label}</span><strong>{bandLabels[value]}</strong></li>)}</ul></section>
+    <details class="record-details">
+      <summary>查看 Healthgrades 负面分类、安全筛查与预约问题</summary>
+      <div class="record-details__content">
+        <section class="info-block"><h3>新患者与当前状态</h3><p>{s.acceptsNewPatients}</p></section>
+        <section class="info-block"><h3>Eligibility gates</h3><p>License: {s.eligibility.license}; board certification: {s.eligibility.boardCertification}; advanced endoscopy: {s.eligibility.advancedEndoscopy}; current provider: {s.eligibility.currentProvider}; discipline: {s.eligibility.discipline}; decision: {s.eligibility.decision}.</p></section>
+        <section class="info-block"><h3>能力范围</h3><div class="tags">{s.capabilities.map((capability) => <span>{capability}</span>)}</div></section>
+        <section class="info-block"><h3>Training / school context</h3><p>{s.trainingSummary} {s.schoolContext}</p></section>
+        <section class="info-block"><h3>相关认证与荣誉</h3><p>{s.certificationsAwards}</p></section>
+        <section class="info-block info-block--risk"><h3>Healthgrades 负面评论分类</h3><p><strong>{s.negativeClassification}</strong> {s.healthgradesNegativeSummary}</p><p>{s.healthgradesEvidence}</p>{s.healthgradesTags.length > 0 && <div class="tags" aria-label="Healthgrades tags">{s.healthgradesTags.map((tag) => <span>{tag}</span>)}</div>}<ul class="finding-list">{s.negativeFindings.map((finding) => <li><strong>{finding.category}</strong> · {finding.severity} · {finding.pattern} · {finding.scope}: {finding.summary}</li>)}</ul></section>
+        <section class="info-block"><h3>正式安全记录筛查</h3><p>{s.safetyScreen}</p><div class="tags safety-links">{safetyLinks.map(([label, url]) => <a href={url} target="_blank" rel="noopener noreferrer">{label}</a>)}</div></section>
+        <section class="info-block"><h3>次级评论边界</h3><p>{s.secondaryReviewSummary}</p></section>
+        <section class="info-block"><h3>预约前要问</h3><ul class="question-list">{s.verificationQuestions.map((question) => <li>{question}</li>)}</ul></section>
+        <p class="verification-note">资料核实：{s.verifiedDate || '未记录'} · Healthgrades 评分、tags 和文字评论保持独立；缺少 provider-level 数据不等于安全证明。页面不保存诊断、病理、影像、保险或预约记录。</p>
+      </div>
+    </details>
+    <div class="actions actions--four"><a class="button button--primary" href={s.healthgradesUrl} target="_blank" rel="noopener noreferrer">Healthgrades</a><a class="button button--secondary" href={s.officialUrl} target="_blank" rel="noopener noreferrer">Official doctor</a><a class="button button--secondary" href={s.facilityUrl} target="_blank" rel="noopener noreferrer">Facility</a><a class="button button--secondary" href={s.googleMapsUrl} target="_blank" rel="noopener noreferrer">Google Maps</a></div>
+  </div>
+</article>

@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import FilterShell from '../components/FilterShell.astro';
+import ColonoscopySpecialistCard from '../modules/colonoscopy-specialists/ColonoscopySpecialistCard.astro';
+import { colonoscopySpecialists } from '../data/catalog';
+
+const tiers = [...new Set(colonoscopySpecialists.map((item) => item.tier))].sort((a, b) => a - b);
+const systems = [...new Set(colonoscopySpecialists.map((item) => item.system))].sort();
+const confidences = [...new Set(colonoscopySpecialists.map((item) => item.reviewConfidence))].sort();
+const concerns = [...new Set(colonoscopySpecialists.map((item) => item.concernLevel))].sort();
+const rankedSpecialists = [...colonoscopySpecialists].sort((a, b) => a.rank - b.rank);
+const reviewLabels: Record<string, string> = { 'very-limited': 'very-limited', limited: 'limited', moderate: 'moderate', strong: 'strong', 'very-strong': 'very-strong', unavailable: 'unavailable' };
+---
+<BaseLayout title="Colonoscopy Specialists | Family Hub" description="按复杂息肉切除能力、医院级 Facility、Healthgrades 负面证据和 NY 正式安全记录比较 NYC 肠镜专家。" pageClass="module-page theme-ochre" themeColor="#F4EDE0">
+  <SiteHeader eyebrow="健康与照护 · 公开资料比较" title="Colonoscopy Specialists" description="这是一份面向复杂息肉情境的 NYC 肠镜医生–Facility 清单。复杂息肉切除能力、医院级备援和正式安全记录是核心；Healthgrades 作为主要患者体验来源，负面评论按临床安全、切除/残留、沟通、行政与未核实指控分开标记。Tier 是比较工具，不是医疗质量评级。" accent="ochre" icon="care">
+    <div class="summary-row"><span>18 位医生–Facility</span><span>约 45–90 分钟非高峰车程</span><span>复杂息肉优先</span><span>Healthgrades + NY safety screen</span></div>
+  </SiteHeader>
+
+  <FilterShell accent="ochre" filterId="colonoscopy-filter-panel" countId="colonoscopy-count" clearId="colonoscopy-clear" countText="显示 18 / 18 位医生">
+    <div slot="primary" class="filter-primary__grid">
+      <label><span>搜索医生、Facility 或能力</span><input id="colonoscopy-search" type="search" placeholder="例如：ESD、EMR、Mount Sinai、complex polyp" autocomplete="off" /></label>
+      <label><span>排序</span><select id="colonoscopy-sort" data-default="rank"><option value="rank">家庭比较顺序</option><option value="drive">车程较短</option><option value="rating">Healthgrades 评分</option><option value="reviews">Healthgrades reviews</option><option value="name">姓名</option></select></label>
+    </div>
+    <div slot="filters" class="contents">
+      <label><span>比较 Tier</span><select id="colonoscopy-tier"><option value="">全部 Tier</option>{tiers.map((tier) => <option value={tier}>Tier {tier}</option>)}</select></label>
+      <label><span>车程上限</span><select id="colonoscopy-drive"><option value="">不限制车程</option><option value="45">45 分钟内</option><option value="60">60 分钟内</option><option value="90">90 分钟内</option></select></label>
+      <label><span>Hospital system</span><select id="colonoscopy-system"><option value="">全部系统</option>{systems.map((system) => <option value={system}>{system}</option>)}</select></label>
+      <label><span>复杂息肉能力</span><select id="colonoscopy-polyp-fit"><option value="">全部 evidence</option><option value="strong">Strong</option><option value="adequate">Adequate</option><option value="concern">Concern</option><option value="unknown">Unknown</option></select></label>
+      <label><span>能力关键词</span><select id="colonoscopy-capability"><option value="">全部能力</option><option value="EMR">EMR</option><option value="ESD">ESD</option><option value="FTR">FTR</option><option value="surgical">surgical / CELS</option></select></label>
+      <label><span>Review confidence</span><select id="colonoscopy-confidence"><option value="">全部 confidence</option>{confidences.map((item) => <option value={item}>{reviewLabels[item]}</option>)}</select></label>
+      <label><span>当前 provider 状态</span><select id="colonoscopy-current"><option value="">全部状态</option><option value="verified">已核实 current</option><option value="conditional">需确认</option><option value="unknown">未知</option></select></label>
+      <label><span>关注程度</span><select id="colonoscopy-concern"><option value="">全部程度</option>{concerns.map((item) => <option value={item}>{item}</option>)}</select></label>
+    </div>
+  </FilterShell>
+
+  <main id="main-content" class="shell listing-main"><div id="colonoscopy-list" class="record-grid">{rankedSpecialists.map((specialist) => <ColonoscopySpecialistCard specialist={specialist} />)}</div><p id="colonoscopy-empty" class="empty-state" hidden>没有符合这些条件的医生。清除部分筛选后再试。</p></main>
+  <footer class="module-footer"><div class="shell note-box"><strong>预约前把旧资料带齐：</strong>旧肠镜报告、病理报告、照片/影像和既往手术记录。直接确认操作者是否本人、是否有 EMR/ESD/FTR 或 CELS 经验、是否需要分期切除、麻醉与病理安排、外科备援以及大息肉切除后的复查间隔。Healthgrades 的患者评论不等同于正式医疗事故记录；请打开每位医生的 NY Physician Profile 与 OPMC 页面复核当前执照、malpractice、纪律和医院 privileges。本页不保存姓名、地址、诊断、病理、影像、保险或预约信息。</div></footer>
+
+  <script>
+    import { bindListState, clearListState, restoreListState } from '../lib/listState';
+    const cards = [...document.querySelectorAll<HTMLElement>('[data-colonoscopy]')];
+    const controls = {
+      q: document.querySelector<HTMLInputElement>('#colonoscopy-search')!,
+      sort: document.querySelector<HTMLSelectElement>('#colonoscopy-sort')!,
+      tier: document.querySelector<HTMLSelectElement>('#colonoscopy-tier')!,
+      drive: document.querySelector<HTMLSelectElement>('#colonoscopy-drive')!,
+      system: document.querySelector<HTMLSelectElement>('#colonoscopy-system')!,
+      polypFit: document.querySelector<HTMLSelectElement>('#colonoscopy-polyp-fit')!,
+      capability: document.querySelector<HTMLSelectElement>('#colonoscopy-capability')!,
+      confidence: document.querySelector<HTMLSelectElement>('#colonoscopy-confidence')!,
+      current: document.querySelector<HTMLSelectElement>('#colonoscopy-current')!,
+      concern: document.querySelector<HTMLSelectElement>('#colonoscopy-concern')!,
+    };
+    const list = document.querySelector<HTMLElement>('#colonoscopy-list')!;
+    const count = document.querySelector<HTMLElement>('#colonoscopy-count')!;
+    const empty = document.querySelector<HTMLElement>('#colonoscopy-empty')!;
+    const number = (card: HTMLElement, key: string) => Number(card.dataset[key] ?? -1);
+    const render = () => {
+      const query = controls.q.value.trim().toLocaleLowerCase();
+      const capability = controls.capability.value.toLocaleLowerCase();
+      const visible = cards.filter((card) => (!query || card.dataset.search!.includes(query)) && (!controls.tier.value || card.dataset.tier === controls.tier.value) && (!controls.drive.value || number(card, 'driveMax') <= Number(controls.drive.value)) && (!controls.system.value || card.dataset.system === controls.system.value) && (!controls.polypFit.value || card.dataset.advancedPolyp === controls.polypFit.value) && (!capability || card.dataset.capabilities!.toLocaleLowerCase().includes(capability)) && (!controls.confidence.value || card.dataset.reviewConfidence === controls.confidence.value) && (!controls.current.value || card.dataset.currentProvider === controls.current.value) && (!controls.concern.value || card.dataset.concern === controls.concern.value));
+      const sorters: Record<string, (a: HTMLElement, b: HTMLElement) => number> = {
+        rank: (a, b) => number(a, 'rank') - number(b, 'rank'),
+        drive: (a, b) => number(a, 'driveMax') - number(b, 'driveMax') || number(a, 'rank') - number(b, 'rank'),
+        rating: (a, b) => number(b, 'hgRating') - number(a, 'hgRating') || number(b, 'reviews') - number(a, 'reviews') || number(a, 'rank') - number(b, 'rank'),
+        reviews: (a, b) => number(b, 'reviews') - number(a, 'reviews') || number(b, 'hgRating') - number(a, 'hgRating') || number(a, 'rank') - number(b, 'rank'),
+        name: (a, b) => a.dataset.name!.localeCompare(b.dataset.name!),
+      };
+      cards.forEach((card) => { card.hidden = !visible.includes(card); });
+      visible.sort(sorters[controls.sort.value]).forEach((card) => list.append(card));
+      count.textContent = `显示 ${visible.length} / ${cards.length} 位医生`;
+      empty.hidden = visible.length > 0;
+    };
+    restoreListState(controls);
+    if (Object.values(controls).slice(2).some((control) => control.value)) document.querySelector<HTMLDetailsElement>('.filter-disclosure')!.open = true;
+    bindListState(controls, render);
+    document.querySelector('#colonoscopy-clear')!.addEventListener('click', () => clearListState(controls, render));
+    render();
+  </script>
+</BaseLayout>

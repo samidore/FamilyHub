@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ModuleCard from '../components/ModuleCard.astro';
 import { categoryDefinitions, moduleRegistry } from '../config/modules';
-import { adultDermatologists, dayTrips, libraryEvents, pediatricDentists, latestVerifiedDate, moduleRecords } from '../data/catalog';
+import { adultDermatologists, colonoscopySpecialists, dayTrips, libraryEvents, pediatricDentists, latestVerifiedDate, moduleRecords } from '../data/catalog';
 
 const base = import.meta.env.BASE_URL;
 const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
@@ -11,6 +11,7 @@ const verifiedDates = {
   'library-activities': latestVerifiedDate(libraryEvents),
   'pediatric-dentists': latestVerifiedDate(pediatricDentists),
   'adult-dermatologists': latestVerifiedDate(adultDermatologists),
+  'colonoscopy-specialists': latestVerifiedDate(colonoscopySpecialists),
 };
 const visibleCategories = categoryDefinitions.filter((category) => moduleRegistry.some((module) => module.categoryId === category.id));
 ---
@@ -24,7 +25,7 @@ const visibleCategories = categoryDefinitions.filter((category) => moduleRegistr
         <span>查找一个工具</span>
         <input id="module-search" type="search" placeholder="例如：公园、storytime、牙医…" autocomplete="off" />
       </label>
-      <p id="module-search-status" class="search-status" aria-live="polite">4 个可用工具</p>
+      <p id="module-search-status" class="search-status" aria-live="polite">5 个可用工具</p>
     </header>
 
     <div class="home-directory shell">

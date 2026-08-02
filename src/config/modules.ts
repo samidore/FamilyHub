@@ -5,7 +5,7 @@ export const categoryDefinitions = [
 ] as const;
 
 export type CategoryId = (typeof categoryDefinitions)[number]['id'];
-export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists' | 'adult-dermatologists';
+export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists' | 'adult-dermatologists' | 'colonoscopy-specialists';
 export type ModuleAccent = 'evergreen' | 'lake' | 'ochre';
 export type ModuleIcon = 'compass' | 'calendar' | 'care';
 
@@ -71,6 +71,19 @@ export const moduleRegistry = [
     summary: '按 board certification、成人痤疮适配、患者体验和预约前需要确认的事项比较附近皮肤科医生。',
     keywords: ['健康', '照护', '皮肤科', '成人痤疮', '痤疮', 'dermatologist', 'adult acne', 'healthgrades', 'board certified'],
     itemLabel: '位医生',
+    accent: 'ochre',
+    icon: 'care',
+    privacyClass: 'public-reference',
+    status: 'active',
+  },
+  {
+    id: 'colonoscopy-specialists',
+    route: '/colonoscopy-specialists/',
+    categoryId: 'health-care',
+    title: 'Colonoscopy Specialists',
+    summary: '按复杂息肉切除能力、医院级 Facility、Healthgrades 负面证据和 NY 正式安全记录比较 NYC 肠镜专家。',
+    keywords: ['健康', '照护', '肠镜', '息肉', 'colonoscopy', 'polyp', 'EMR', 'ESD', 'advanced endoscopy', 'Healthgrades'],
+    itemLabel: '位专家',
     accent: 'ochre',
     icon: 'care',
     privacyClass: 'public-reference',

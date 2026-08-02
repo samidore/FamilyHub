@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test('home groups and searches the active modules', async ({ page }) => {
   await page.goto('./');
-  await expect(page.locator('[data-module]')).toHaveCount(4);
+  await expect(page.locator('[data-module]')).toHaveCount(5);
   await expect(page.getByRole('heading', { name: '出行与玩乐' })).toBeVisible();
   await expect(page.getByRole('heading', { name: '健康与照护' })).toBeVisible();
   await page.getByLabel('查找一个工具').fill('牙医');
@@ -30,7 +30,7 @@ test('day-trip filters combine, persist in the URL, and clear', async ({ page })
   await expect(page).not.toHaveURL(/drive=/);
 });
 
-test('library, dentist, and dermatologist domain filters work', async ({ page }) => {
+test('library, dentist, dermatologist, and colonoscopy domain filters work', async ({ page }) => {
   await page.goto('library-activities/');
   await page.getByText('更多筛选').click();
   await page.getByLabel('活动类型').selectOption('story');
@@ -48,6 +48,12 @@ test('library, dentist, and dermatologist domain filters work', async ({ page })
   await page.getByLabel('Adult acne fit').selectOption('strong');
   expect(await page.locator('[data-dermatologist]:visible').count()).toBeGreaterThan(0);
   expect(await page.locator('[data-dermatologist]:visible').count()).toBeLessThan(10);
+
+  await page.goto('colonoscopy-specialists/');
+  await page.getByText('更多筛选').click();
+  await page.getByLabel('复杂息肉能力').selectOption('strong');
+  expect(await page.locator('[data-colonoscopy]:visible').count()).toBeGreaterThan(0);
+  expect(await page.locator('[data-colonoscopy]:visible').count()).toBeLessThan(18);
 });
 
 test('complete records remain available without JavaScript', async ({ browser }) => {
@@ -61,6 +67,8 @@ test('complete records remain available without JavaScript', async ({ browser })
   await expect(page.locator('[data-dentist]')).toHaveCount(10);
   await page.goto('adult-dermatologists/');
   await expect(page.locator('[data-dermatologist]')).toHaveCount(10);
+  await page.goto('colonoscopy-specialists/');
+  await expect(page.locator('[data-colonoscopy]')).toHaveCount(18);
   await context.close();
 });
 
@@ -78,7 +86,7 @@ test('external links are HTTPS and safely opened', async ({ page }) => {
 for (const width of [375, 390, 430, 768, 1024, 1440]) {
   test(`responsive foundation at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
-    for (const route of ['./', 'day-trips/', 'library-activities/', 'pediatric-dentists/', 'adult-dermatologists/']) {
+    for (const route of ['./', 'day-trips/', 'library-activities/', 'pediatric-dentists/', 'adult-dermatologists/', 'colonoscopy-specialists/']) {
       await page.goto(route);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       expect(overflow).toBeLessThanOrEqual(1);

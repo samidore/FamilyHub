@@ -190,3 +190,76 @@ export interface DermatologistNegativeFinding {
   scope: 'provider' | 'office' | 'unknown';
   summary: string;
 }
+
+export type ColonoscopyBand = 'strong' | 'adequate' | 'concern' | 'unknown';
+export type ColonoscopyReviewConfidence = 'very-limited' | 'limited' | 'moderate' | 'strong' | 'very-strong' | 'unavailable';
+export type ColonoscopyConcernLevel = 'none' | 'low' | 'moderate' | 'high';
+
+export interface ColonoscopySpecialist {
+  name: string;
+  provider: string;
+  system: string;
+  facility: string;
+  facilityClass: 'academic-hospital' | 'cancer-center';
+  location: string;
+  driveMin: number;
+  driveMax: number;
+  distanceMiles?: number | null;
+  tier: number;
+  rank: number;
+  eligibility: ColonoscopyEligibility;
+  evidenceBands: ColonoscopyEvidenceBands;
+  capabilities: string[];
+  clinicalFit: string;
+  facilityEvidence: string;
+  acceptsNewPatients: string;
+  trainingSummary: string;
+  schoolContext: string;
+  certificationsAwards: string;
+  primaryReviewSource: 'Healthgrades';
+  healthgradesRating: number | null;
+  healthgradesReviewCount: number;
+  healthgradesWrittenCount: number;
+  reviewConfidence: ColonoscopyReviewConfidence;
+  healthgradesEvidence: string;
+  healthgradesTags: string[];
+  healthgradesNegativeSummary: string;
+  negativeClassification: string;
+  safetyScreen: string;
+  secondaryReviewSummary: string;
+  negativeFindings: ColonoscopyNegativeFinding[];
+  concernLevel: ColonoscopyConcernLevel;
+  strengths: string[];
+  verificationQuestions: string[];
+  healthgradesUrl: string;
+  officialUrl: string;
+  facilityUrl: string;
+  googleMapsUrl: string;
+  nyProfileUrl: string;
+  opmcUrl: string;
+  verifiedDate: string;
+}
+
+export interface ColonoscopyEligibility {
+  license: 'verified' | 'screened' | 'unknown' | 'concern';
+  boardCertification: 'verified' | 'partial' | 'unknown' | 'concern';
+  advancedEndoscopy: 'verified' | 'partial' | 'unknown' | 'concern';
+  currentProvider: 'verified' | 'conditional' | 'unknown';
+  discipline: 'screened-no-match' | 'unknown' | 'concern';
+  decision: 'qualified' | 'conditional' | 'excluded';
+}
+
+export interface ColonoscopyEvidenceBands {
+  complexPolypFit: ColonoscopyBand;
+  facilitySafety: ColonoscopyBand;
+  patientExperience: ColonoscopyBand;
+  practicalAccess: ColonoscopyBand;
+}
+
+export interface ColonoscopyNegativeFinding {
+  category: 'clinical-safety' | 'missed-lesion-resection' | 'consent-sedation' | 'communication-care' | 'billing-administration' | 'access-waiting' | 'unverified-allegation';
+  severity: 'none' | 'low' | 'moderate' | 'high' | 'unexplained';
+  pattern: 'none' | 'isolated' | 'repeated' | 'unexplained' | 'not-available';
+  scope: 'provider' | 'facility' | 'office' | 'unknown';
+  summary: string;
+}

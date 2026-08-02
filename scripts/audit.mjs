@@ -1,12 +1,13 @@
 import { readFile } from 'node:fs/promises';
 import { moduleRegistry } from '../src/config/modules.ts';
-import { parseAdultDermatologists, parseDayTrips, parseLibraryEvents, parsePediatricDentists } from '../src/data/schemas.mjs';
+import { parseAdultDermatologists, parseColonoscopySpecialists, parseDayTrips, parseLibraryEvents, parsePediatricDentists } from '../src/data/schemas.mjs';
 
 const readJson = async (file) => JSON.parse(await readFile(file, 'utf8'));
 const trips = parseDayTrips(await readJson('src/data/day-trips.json'));
 const events = parseLibraryEvents(await readJson('src/data/library-events.json'));
 const dentists = parsePediatricDentists(await readJson('src/data/pediatric-dentists.json'));
 const dermatologists = parseAdultDermatologists(await readJson('src/data/adult-dermatologists.json'));
+const colonoscopy = parseColonoscopySpecialists(await readJson('src/data/colonoscopy-specialists.json'));
 const home = await readFile('dist/index.html', 'utf8');
 const project = await readFile('PROJECT.md', 'utf8');
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
@@ -16,16 +17,18 @@ const records = {
   'library-activities': events,
   'pediatric-dentists': dentists,
   'adult-dermatologists': dermatologists,
+  'colonoscopy-specialists': colonoscopy,
 };
 const cardAttributes = {
   'day-trips': 'data-destination',
   'library-activities': 'data-event',
   'pediatric-dentists': 'data-dentist',
   'adult-dermatologists': 'data-dermatologist',
+  'colonoscopy-specialists': 'data-colonoscopy',
 };
 const cardCount = (html, attribute) => (html.match(new RegExp(`<article[^>]+${attribute}`, 'g')) ?? []).length;
 
-assert(moduleRegistry.length === 4, 'The active module registry must contain exactly four release-one modules');
+assert(moduleRegistry.length === 5, 'The active module registry must contain exactly five release-one modules');
 assert((home.match(/<a\b[^>]+data-module/g) ?? []).length === moduleRegistry.length, 'Home module cards do not match the active registry');
 for (const module of moduleRegistry) {
   const output = await readFile(`dist${module.route}index.html`, 'utf8');
@@ -37,6 +40,7 @@ assert(trips.length === 29, 'Trip migration count is not 29');
 assert(events.length === 18, 'Library activity migration count is not 18');
 assert(dentists.length === 10, 'Pediatric dentist migration count is not 10');
 assert(dermatologists.length === 10, 'Adult dermatologist migration count is not 10');
+assert(colonoscopy.length === 18, 'Colonoscopy specialist migration count is not 18');
 assert(events.every((item, index, all) => !index || all[index - 1].dayOrder < item.dayOrder || (all[index - 1].dayOrder === item.dayOrder && all[index - 1].timeOrder <= item.timeOrder)), 'Events are not stored in weekday/time order');
 assert(dentists.every((item) => item.healthgradesUrl.startsWith('https://www.healthgrades.com/')), 'A Healthgrades URL is missing or invalid');
 assert(dentists.every((item) => item.healthgradesRating === null || (item.healthgradesRating >= 0 && item.healthgradesRating <= 5)), 'A Healthgrades rating is invalid');
@@ -49,6 +53,12 @@ assert(dermatologists.every((item) => item.eligibility.discipline === 'verified'
 assert(dermatologists.filter((item) => item.tier === 1).every((item) => item.availability === 'verified' && Object.values(item.evidenceBands).every((band) => band === 'strong' || band === 'adequate')), 'Tier 1 dermatologist contains an availability or evidence gap');
 assert(dermatologists.every((item) => item.reviewConfidence === 'moderate' ? item.primaryReviewCount >= 10 && item.primaryReviewCount < 25 : item.reviewConfidence === 'strong' ? item.primaryReviewCount >= 25 && item.primaryReviewCount < 100 : item.reviewConfidence === 'very-strong' ? item.primaryReviewCount >= 100 : true), 'Dermatologist review confidence does not match sample size');
 assert([...dermatologists].sort((a, b) => a.rank - b.rank).every((item, index) => item.rank === index + 1), 'Dermatologist ranks are not a complete deterministic order');
+assert(colonoscopy.every((item) => item.healthgradesUrl.startsWith('https://www.healthgrades.com/')), 'A colonoscopy Healthgrades URL is missing or invalid');
+assert(colonoscopy.every((item) => item.driveMax <= 90), 'A colonoscopy candidate exceeds the 90-minute scope');
+assert(colonoscopy.every((item) => item.eligibility.decision !== 'excluded'), 'An excluded colonoscopy specialist is present in the published candidate set');
+assert(colonoscopy.filter((item) => item.tier === 1).every((item) => Object.values(item.evidenceBands).every((band) => band === 'strong' || band === 'adequate')), 'Tier 1 colonoscopy specialist contains a concern or unknown evidence band');
+assert([...colonoscopy].sort((a, b) => a.rank - b.rank).every((item, index) => item.rank === index + 1), 'Colonoscopy specialist ranks are not a complete deterministic order');
+assert(colonoscopy.every((item) => item.facilityUrl.startsWith('https://') && item.nyProfileUrl.startsWith('https://') && item.opmcUrl.startsWith('https://')), 'A colonoscopy safety or facility link is missing');
 
 const htmlFiles = [home, ...(await Promise.all(moduleRegistry.map((module) => readFile(`dist${module.route}index.html`, 'utf8'))))];
 assert(htmlFiles.every((html) => !/<iframe|google-analytics|googletagmanager|fonts\.googleapis/i.test(html)), 'A forbidden embed, analytics script, or remote font was found');
@@ -62,4 +72,4 @@ assert(project.includes('Weather: degrees Celsius'), 'PROJECT.md is missing the 
 assert(project.includes('Recipe liquids: cups plus mL'), 'PROJECT.md is missing the liquid-unit policy');
 assert(project.includes('public-reference'), 'PROJECT.md is missing the public data classification');
 
-console.log(`Registry audit passed: ${moduleRegistry.length} modules, ${trips.length} trips, ${events.length} activities, ${dentists.length} dentists, ${dermatologists.length} dermatologists.`);
+console.log(`Registry audit passed: ${moduleRegistry.length} modules, ${trips.length} trips, ${events.length} activities, ${dentists.length} dentists, ${dermatologists.length} dermatologists, ${colonoscopy.length} colonoscopy specialists.`);

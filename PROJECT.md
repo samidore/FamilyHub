@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Family Hub is a mobile-first reference site for recurring family decisions that benefit from structured lists, search, filtering, and comparison. The first foundation release contains Day Trips, Library Activities, Pediatric Dentists, and Adult Dermatologists. Future public modules may include play ideas and recipes; private calendars, appointments, and personal notes require a separately authenticated system.
+Family Hub is a mobile-first reference site for recurring family decisions that benefit from structured lists, search, filtering, and comparison. The first foundation release contains Day Trips, Library Activities, Pediatric Dentists, Adult Dermatologists, and Colonoscopy Specialists. Future public modules may include play ideas and recipes; private calendars, appointments, and personal notes require a separately authenticated system.
 
 This file is the current product and data authority. `HANDOFF_Family_Hub.md` and `family_outing_hub_combined_prototype.html` are historical migration references only.
 
@@ -89,8 +89,8 @@ Planned categories and modules remain absent from navigation until they have a w
 
 ## Release-one acceptance
 
-- The home groups and searches the four working modules.
-- Exactly 29 trips, 18 library activities, 10 pediatric dentists, and 10 adult dermatologists are preserved.
+- The home groups and searches the five working modules.
+- Exactly 29 trips, 18 library activities, 10 pediatric dentists, 10 adult dermatologists, and 18 colonoscopy specialists are preserved.
 - Every module works without client JavaScript and gains combined search/filter/sort behavior with it.
 - Query state is bookmarkable, empty states are recoverable, and external links are safe.
 - Layouts work without horizontal overflow at 375, 390, 430, 768, 1024, and 1440 pixels.

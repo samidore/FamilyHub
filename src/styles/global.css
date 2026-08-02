@@ -203,6 +203,7 @@ a { color: inherit; }
 .metric-grid dt { color: var(--muted); font-size: 13px; }
 .metric-grid dd { margin: 2px 0 0; color: var(--accent); font-size: 16px; font-weight: 700; overflow-wrap: anywhere; }
 .dentist-metrics > div:last-child { grid-column: 1 / -1; }
+.colonoscopy-metrics > div:last-child { grid-column: 1 / -1; }
 .record-card__body { padding: 20px 19px 22px; }
 .tags { margin-bottom: 18px; }
 .tags span { border: 1px solid var(--line); background: #fafbf9; color: #48564e; font-weight: 400; }
@@ -251,6 +252,7 @@ a { color: inherit; }
   .shell { width: min(calc(100% - 48px), 1120px); }
   .actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .actions--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .actions--four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .event-details > div { grid-template-columns: 130px minmax(0, 1fr); gap: 12px; }
 }
