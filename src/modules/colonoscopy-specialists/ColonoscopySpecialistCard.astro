@@ -6,12 +6,15 @@ const searchable = [
   s.name, s.provider, s.system, s.facility, s.location, s.clinicalFit, s.facilityEvidence,
   s.acceptsNewPatients, s.trainingSummary, s.schoolContext, s.certificationsAwards,
   s.healthgradesEvidence, s.healthgradesNegativeSummary, s.negativeClassification,
-  s.safetyScreen, s.secondaryReviewSummary, ...s.capabilities, ...s.healthgradesTags, ...s.strengths,
+  s.safetyScreen, s.secondaryReviewSummary, s.networkVerification.planLabel, s.networkVerification.summary,
+  ...s.capabilities, ...s.healthgradesTags, ...s.strengths,
 ].join(' ').toLocaleLowerCase();
 const drive = `${s.driveMin}–${s.driveMax} 分钟`;
 const bandLabels: Record<string, string> = { strong: 'Strong', adequate: 'Adequate', concern: 'Concern', unknown: 'Unknown' };
 const confidenceLabels: Record<string, string> = { 'very-limited': 'very-limited', limited: 'limited', moderate: 'moderate', strong: 'strong', 'very-strong': 'very-strong', unavailable: 'unavailable' };
 const statusLabels: Record<string, string> = { verified: '已核实', conditional: '需确认', unknown: '未知' };
+const networkStatusLabels: Record<string, string> = { 'publicly-supported': '公开 Facility 证据', 'requires-confirmation': '网络需确认' };
+const professionalStatusLabels: Record<string, string> = { 'requires-confirmation': '需预约前确认' };
 const bandItems = [
   ['Complex-polyp fit', s.evidenceBands.complexPolypFit],
   ['Facility safety / backup', s.evidenceBands.facilitySafety],
@@ -23,8 +26,9 @@ const safetyLinks = [
   ['NY OPMC / discipline', s.opmcUrl],
 ] as const;
 ---
-<article class="record-card colonoscopy-card" data-colonoscopy data-search={searchable} data-tier={s.tier} data-drive-max={s.driveMax} data-hg-rating={s.healthgradesRating ?? -1} data-reviews={s.healthgradesReviewCount} data-review-confidence={s.reviewConfidence} data-system={s.system} data-facility={s.facility} data-advanced-polyp={s.evidenceBands.complexPolypFit} data-capabilities={s.capabilities.join('|')} data-current-provider={s.eligibility.currentProvider} data-concern={s.concernLevel} data-rank={s.rank} data-name={s.name}>
+<article class="record-card colonoscopy-card" data-colonoscopy data-search={searchable} data-tier={s.tier} data-drive-max={s.driveMax} data-hg-rating={s.healthgradesRating ?? -1} data-reviews={s.healthgradesReviewCount} data-review-confidence={s.reviewConfidence} data-system={s.system} data-facility={s.facility} data-advanced-polyp={s.evidenceBands.complexPolypFit} data-capabilities={s.capabilities.join('|')} data-current-provider={s.eligibility.currentProvider} data-concern={s.concernLevel} data-network-status={s.networkVerification.facilityStatus} data-network-priority={s.networkVerification.facilityStatus === 'publicly-supported' ? 0 : 1} data-rank={s.rank} data-name={s.name}>
   <div class="record-card__top">
+    <p class="provider-line"><strong>{s.networkVerification.planLabel}</strong> · {networkStatusLabels[s.networkVerification.facilityStatus]}</p>
     <div class="badges"><span class="badge">Tier {s.tier}</span><span class="badge badge--caution">关注：{s.concernLevel}</span><span class="badge badge--status">{statusLabels[s.eligibility.currentProvider]}</span></div>
     <h2>{s.name}</h2>
     <p class="provider-line">Provider：<strong>{s.provider}</strong></p>
@@ -46,6 +50,7 @@ const safetyLinks = [
       <summary>查看 Healthgrades 负面分类、安全筛查与预约问题</summary>
       <div class="record-details__content">
         <section class="info-block"><h3>新患者与当前状态</h3><p>{s.acceptsNewPatients}</p></section>
+        <section class="info-block"><h3>计划网络核验</h3><p><strong>{s.networkVerification.planLabel}</strong> · {networkStatusLabels[s.networkVerification.facilityStatus]}</p><p>{s.networkVerification.summary}</p><p>医生/专业服务状态：{professionalStatusLabels[s.networkVerification.professionalStatus]}。预约前请确认医生、Facility、麻醉、病理、具体 procedure 与 prior authorization。资料核验日期：{s.networkVerification.verifiedDate}。</p><div class="tags safety-links">{s.networkVerification.sourceUrls.map((url) => <a href={url} target="_blank" rel="noopener noreferrer">官方网络资料</a>)}</div></section>
         <section class="info-block"><h3>Eligibility gates</h3><p>License: {s.eligibility.license}; board certification: {s.eligibility.boardCertification}; advanced endoscopy: {s.eligibility.advancedEndoscopy}; current provider: {s.eligibility.currentProvider}; discipline: {s.eligibility.discipline}; decision: {s.eligibility.decision}.</p></section>
         <section class="info-block"><h3>能力范围</h3><div class="tags">{s.capabilities.map((capability) => <span>{capability}</span>)}</div></section>
         <section class="info-block"><h3>Training / school context</h3><p>{s.trainingSummary} {s.schoolContext}</p></section>

@@ -213,6 +213,7 @@ export interface ColonoscopySpecialist {
   clinicalFit: string;
   facilityEvidence: string;
   acceptsNewPatients: string;
+  networkVerification: ColonoscopyNetworkVerification;
   trainingSummary: string;
   schoolContext: string;
   certificationsAwards: string;
@@ -254,6 +255,15 @@ export interface ColonoscopyEvidenceBands {
   facilitySafety: ColonoscopyBand;
   patientExperience: ColonoscopyBand;
   practicalAccess: ColonoscopyBand;
+}
+
+export interface ColonoscopyNetworkVerification {
+  planLabel: string;
+  facilityStatus: 'publicly-supported' | 'requires-confirmation';
+  professionalStatus: 'requires-confirmation';
+  summary: string;
+  sourceUrls: string[];
+  verifiedDate: string;
 }
 
 export interface ColonoscopyNegativeFinding {

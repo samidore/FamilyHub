@@ -59,8 +59,13 @@ assert(colonoscopy.every((item) => item.eligibility.decision !== 'excluded'), 'A
 assert(colonoscopy.filter((item) => item.tier === 1).every((item) => Object.values(item.evidenceBands).every((band) => band === 'strong' || band === 'adequate')), 'Tier 1 colonoscopy specialist contains a concern or unknown evidence band');
 assert([...colonoscopy].sort((a, b) => a.rank - b.rank).every((item, index) => item.rank === index + 1), 'Colonoscopy specialist ranks are not a complete deterministic order');
 assert(colonoscopy.every((item) => item.facilityUrl.startsWith('https://') && item.nyProfileUrl.startsWith('https://') && item.opmcUrl.startsWith('https://')), 'A colonoscopy safety or facility link is missing');
+assert(colonoscopy.every((item) => item.networkVerification.planLabel === 'BlueCard PPO'), 'A colonoscopy plan label is missing or unexpected');
+assert(colonoscopy.every((item) => item.networkVerification.professionalStatus === 'requires-confirmation'), 'A colonoscopy professional network status must remain conditional');
+assert(colonoscopy.every((item) => item.networkVerification.sourceUrls.every((url) => url.startsWith('https://'))), 'A colonoscopy network source is missing or insecure');
+assert(!/(memberId|groupNumber|insuranceId|insuranceCard|cardImage|codex-remote-attachments)/i.test(JSON.stringify(colonoscopy)), 'Private insurance fields or attachment paths were found in colonoscopy data');
 
 const htmlFiles = [home, ...(await Promise.all(moduleRegistry.map((module) => readFile(`dist${module.route}index.html`, 'utf8'))))];
+assert(htmlFiles.every((html) => !/(memberId|groupNumber|insuranceId|insuranceCard|cardImage|codex-remote-attachments)/i.test(html)), 'Private insurance fields or attachment paths were found in build output');
 assert(htmlFiles.every((html) => !/<iframe|google-analytics|googletagmanager|fonts\.googleapis/i.test(html)), 'A forbidden embed, analytics script, or remote font was found');
 for (const html of htmlFiles) {
   const externalLinks = [...html.matchAll(/<a\b[^>]*href="(https:[^"]+)"[^>]*>/g)];

@@ -56,6 +56,16 @@ test('library, dentist, dermatologist, and colonoscopy domain filters work', asy
   expect(await page.locator('[data-colonoscopy]:visible').count()).toBeLessThan(18);
 });
 
+test('colonoscopy network plan filter preserves candidates without private fields', async ({ page }) => {
+  await page.goto('colonoscopy-specialists/');
+  await page.locator('.filter-disclosure summary').click();
+  await page.getByLabel('Network evidence').selectOption('publicly-supported');
+  await expect(page.locator('[data-colonoscopy]:visible')).toHaveCount(13);
+  await expect(page.getByText('BlueCard PPO').first()).toBeVisible();
+  await expect(page.locator('body')).not.toContainText('groupNumber');
+  await expect(page.locator('body')).not.toContainText('memberId');
+});
+
 test('complete records remain available without JavaScript', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
