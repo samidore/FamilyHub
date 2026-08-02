@@ -1,6 +1,6 @@
 # Family Hub
 
-A mobile-first Astro site with two modules: 29 family day trips and 18 nearby library activities. The published GitHub Pages URL is public; do not add family photos, names, addresses, private schedules, or contact details.
+A mobile-first Astro site with three modules: 29 family day trips, 18 nearby library activities, and 10 researched pediatric dentist practices. The published GitHub Pages URL is public; do not add family photos, names, addresses, private schedules, or contact details.
 
 ## Run locally
 
@@ -23,6 +23,7 @@ npm run build
 - Home cards: `src/data/modules.json`
 - Day trips: `src/data/day-trips.json`
 - Library activities: `src/data/library-events.json`
+- Pediatric dentists: `src/data/pediatric-dentists.json`
 
 Keep verified facts, family assessment, risks, and before-you-go checks separate. Use an ISO date (`YYYY-MM-DD`) in `verifiedDate` only when the underlying information was actually checked. Do not infer missing hours, prices, accessibility, parking, bathrooms, or registration rules.
 

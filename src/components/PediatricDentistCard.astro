@@ -1,0 +1,33 @@
+---
+interface Dentist {
+  name: string; tier: number; rank: number; location: string; driveMin: number; driveMax: number; rating: number;
+  reviewCount: number; acceptsNewPatients: string; toddlerFit: string; strengths: string[]; concernLevel: string;
+  concernCategory: string; negativeReviewSummary: string; reviewSources: string[]; healthgradesUrl: string;
+  officialUrl: string; googleMapsUrl: string;
+}
+const { dentist: d } = Astro.props as { dentist: Dentist };
+const searchable = [d.name, d.location, d.acceptsNewPatients, d.toddlerFit, d.concernLevel, d.concernCategory, ...d.strengths, ...d.reviewSources].join(' ').toLocaleLowerCase();
+---
+<article class="destination-card dentist-card" data-dentist data-search={searchable} data-tier={d.tier} data-drive-max={d.driveMax} data-rating={d.rating} data-concern={d.concernLevel} data-rank={d.rank} data-reviews={d.reviewCount} data-name={d.name}>
+  <div class="card-heading">
+    <div class="badges"><span class="badge">Tier {d.tier}</span><span class="badge badge--warm">{d.concernLevel} review concern</span></div>
+    <h2>{d.name}</h2>
+    <p class="location">{d.location} · about {d.driveMin}–{d.driveMax} min drive</p>
+    <dl class="ratings dentist-ratings">
+      <div><dt>Google rating</dt><dd>{d.rating.toFixed(1)} / 5</dd></div>
+      <div><dt>Google-derived reviews</dt><dd>{d.reviewCount.toLocaleString()}</dd></div>
+    </dl>
+  </div>
+  <div class="card-content">
+    <div class="tags">{d.strengths.map((strength) => <span>{strength}</span>)}</div>
+    <section class="info-block info-block--fact"><h3>New patients</h3><p>{d.acceptsNewPatients}</p></section>
+    <section class="info-block"><h3>Why it may fit a two-year-old</h3><p>{d.toddlerFit}</p></section>
+    <section class="info-block info-block--risk"><h3>Negative-review check · {d.concernCategory}</h3><p>{d.negativeReviewSummary}</p></section>
+    <aside class="before"><strong>Review sources checked</strong><span>{d.reviewSources.join(' · ')}</span></aside>
+    <div class="actions actions--three">
+      <a class="button button--primary" href={d.googleMapsUrl} target="_blank" rel="noreferrer">Google Maps</a>
+      <a class="button button--secondary" href={d.healthgradesUrl} target="_blank" rel="noreferrer">Healthgrades</a>
+      <a class="button button--secondary" href={d.officialUrl} target="_blank" rel="noreferrer">Official website</a>
+    </div>
+  </div>
+</article>

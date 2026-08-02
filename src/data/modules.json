@@ -12,5 +12,12 @@
     "description": "Storytimes, music, free play, and crafts organized by weekday and time.",
     "href": "/library-activities/",
     "accent": "blue"
+  },
+  {
+    "id": "pediatric-dentists",
+    "title": "Pediatric Dentist",
+    "description": "Nearby pediatric dental practices ranked for toddler fit, reviews, and practical concerns.",
+    "href": "/pediatric-dentists/",
+    "accent": "warm"
   }
 ]
