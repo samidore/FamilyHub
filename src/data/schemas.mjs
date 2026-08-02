@@ -7,6 +7,7 @@ const privateFieldNames = new Set([
 const dayTripKeys = ['name', 'shortName', 'location', 'category', 'driveMin', 'driveMax', 'status', 'ratings', 'tags', 'conditions', 'verifiedFacts', 'familyFit', 'risks', 'beforeYouGo', 'googleMapsUrl', 'officialUrl', 'verifiedDate', 'recommendationScore'];
 const eventKeys = ['day', 'dayOrder', 'time', 'timeOrder', 'name', 'library', 'location', 'drive', 'age', 'ageGroup', 'description', 'registration', 'badges', 'googleMapsUrl', 'officialUrl', 'verifiedDate', 'dateRange'];
 const dentistKeys = ['name', 'provider', 'eligibility', 'evidenceBands', 'tier', 'rank', 'location', 'driveMin', 'driveMax', 'rating', 'reviewCount', 'healthgradesRating', 'healthgradesReviewCount', 'healthgradesWrittenCount', 'reviewConfidence', 'healthgradesEvidence', 'healthgradesTags', 'healthgradesNegativeSummary', 'negativeClassification', 'acceptsNewPatients', 'trainingSummary', 'schoolContext', 'certificationsAwards', 'longTermFit', 'strengths', 'concernLevel', 'secondaryReviewSummary', 'negativeFindings', 'verificationQuestions', 'reviewSources', 'healthgradesUrl', 'officialUrl', 'googleMapsUrl', 'verifiedDate'];
+const adultDermatologistKeys = ['name', 'provider', 'practice', 'location', 'driveMin', 'driveMax', 'tier', 'rank', 'eligibility', 'evidenceBands', 'adultAcneSummary', 'primaryReviewSource', 'primaryRating', 'primaryReviewCount', 'primaryWrittenCount', 'healthgradesRating', 'healthgradesReviewCount', 'healthgradesWrittenCount', 'reviewConfidence', 'reviewEvidence', 'acceptsNewPatients', 'availability', 'trainingSummary', 'schoolContext', 'certificationsAwards', 'strengths', 'concernLevel', 'negativeSummary', 'negativeClassification', 'negativeFindings', 'verificationQuestions', 'healthgradesUrl', 'officialUrl', 'googleMapsUrl', 'verifiedDate'];
 const ratingKeys = ['indoor', 'outdoor', 'stroller', 'weather', 'toddler', 'parent'];
 
 const fail = (path, message) => { throw new Error(`${path}: ${message}`); };
@@ -128,6 +129,57 @@ export function parsePediatricDentists(value) {
       enumValue(finding.severity, ['none', 'low', 'moderate', 'high', 'unexplained'], `${findingPath}.severity`);
       enumValue(finding.pattern, ['none', 'isolated', 'repeated', 'unexplained', 'not-available'], `${findingPath}.pattern`);
       enumValue(finding.scope, ['provider', 'associate', 'office', 'unknown'], `${findingPath}.scope`);
+      text(finding.summary, `${findingPath}.summary`);
+    });
+    https(record.healthgradesUrl, `${path}.healthgradesUrl`, 'www.healthgrades.com'); https(record.officialUrl, `${path}.officialUrl`); https(record.googleMapsUrl, `${path}.googleMapsUrl`);
+    verifiedDate(record.verifiedDate, `${path}.verifiedDate`);
+  });
+}
+
+export function parseAdultDermatologists(value) {
+  return parseList(value, 'adult-dermatologists', (record, path) => {
+    exactObject(record, adultDermatologistKeys, ['distanceMiles'], path);
+    ['name', 'provider', 'practice', 'location', 'adultAcneSummary', 'acceptsNewPatients', 'trainingSummary', 'schoolContext', 'certificationsAwards', 'negativeSummary', 'negativeClassification'].forEach((key) => text(record[key], `${path}.${key}`));
+    exactObject(record.eligibility, ['license', 'discipline', 'boardCertification', 'decision'], [], `${path}.eligibility`);
+    enumValue(record.eligibility.license, ['verified', 'screened', 'unknown', 'concern'], `${path}.eligibility.license`);
+    enumValue(record.eligibility.discipline, ['verified', 'screened-no-match', 'unknown', 'concern'], `${path}.eligibility.discipline`);
+    enumValue(record.eligibility.boardCertification, ['verified', 'partial', 'unknown', 'concern'], `${path}.eligibility.boardCertification`);
+    enumValue(record.eligibility.decision, ['qualified', 'conditional', 'excluded'], `${path}.eligibility.decision`);
+    exactObject(record.evidenceBands, ['clinicalQuality', 'adultAcneFit', 'patientExperience'], [], `${path}.evidenceBands`);
+    ['clinicalQuality', 'adultAcneFit', 'patientExperience'].forEach((key) => enumValue(record.evidenceBands[key], ['strong', 'adequate', 'concern', 'unknown'], `${path}.evidenceBands.${key}`));
+    enumValue(record.primaryReviewSource, ['Healthgrades', 'Health system'], `${path}.primaryReviewSource`);
+    enumValue(record.reviewConfidence, ['moderate', 'strong', 'very-strong', 'unavailable'], `${path}.reviewConfidence`);
+    enumValue(record.availability, ['verified', 'conditional', 'unknown'], `${path}.availability`);
+    enumValue(record.concernLevel, ['none', 'low', 'moderate', 'high'], `${path}.concernLevel`);
+    integer(record.tier, `${path}.tier`, 1); if (record.tier > 3) fail(`${path}.tier`, 'expected tier 1–3');
+    integer(record.rank, `${path}.rank`, 1); number(record.driveMin, `${path}.driveMin`, 0, 300); number(record.driveMax, `${path}.driveMax`, record.driveMin, 300); distance(record.distanceMiles, `${path}.distanceMiles`);
+    number(record.primaryRating, `${path}.primaryRating`, 0, 5); integer(record.primaryReviewCount, `${path}.primaryReviewCount`, 0); integer(record.primaryWrittenCount, `${path}.primaryWrittenCount`, 0); nullableNumber(record.healthgradesRating, `${path}.healthgradesRating`, 0, 5);
+    integer(record.healthgradesReviewCount, `${path}.healthgradesReviewCount`, 0); integer(record.healthgradesWrittenCount, `${path}.healthgradesWrittenCount`, 0);
+    strings(record.strengths, `${path}.strengths`); strings(record.verificationQuestions, `${path}.verificationQuestions`);
+    if (!Array.isArray(record.reviewEvidence)) fail(`${path}.reviewEvidence`, 'expected an array');
+    record.reviewEvidence.forEach((evidence, index) => {
+      const evidencePath = `${path}.reviewEvidence[${index}]`;
+      exactObject(evidence, ['source', 'scope', 'rating', 'reviewCount', 'writtenCount', 'confidence', 'summary', 'url'], [], evidencePath);
+      enumValue(evidence.source, ['Healthgrades', 'Health system', 'Official practice', 'Google Maps', 'Yelp'], `${evidencePath}.source`);
+      enumValue(evidence.scope, ['provider', 'office'], `${evidencePath}.scope`);
+      nullableNumber(evidence.rating, `${evidencePath}.rating`, 0, 5); integer(evidence.reviewCount, `${evidencePath}.reviewCount`, 0); if (evidence.writtenCount !== null) integer(evidence.writtenCount, `${evidencePath}.writtenCount`, 0);
+      enumValue(evidence.confidence, ['moderate', 'strong', 'very-strong', 'unavailable'], `${evidencePath}.confidence`);
+      text(evidence.summary, `${evidencePath}.summary`); https(evidence.url, `${evidencePath}.url`);
+    });
+    if (!record.reviewEvidence.some((evidence) => evidence.scope === 'provider' && evidence.rating !== null && evidence.rating >= 4 && evidence.reviewCount >= 10)) fail(`${path}.reviewEvidence`, 'a provider-level review source with at least 10 reviews and a rating of at least 4.0 is required');
+    if (record.primaryReviewCount < 10 || record.primaryRating < 4) fail(path, 'the primary review source must meet the 4.0 / 10 review floor');
+    if (record.eligibility.decision === 'excluded') fail(path, 'excluded providers cannot be published');
+    if (record.evidenceBands.clinicalQuality === 'concern' || record.evidenceBands.clinicalQuality === 'unknown') fail(path, 'clinical quality must pass before publication');
+    if (record.evidenceBands.adultAcneFit === 'concern' || record.evidenceBands.adultAcneFit === 'unknown') fail(path, 'adult acne fit must pass before publication');
+    if (record.eligibility.discipline !== 'verified') fail(path, 'only MD/DO dermatologist records may be published');
+    if (!Array.isArray(record.negativeFindings)) fail(`${path}.negativeFindings`, 'expected an array');
+    record.negativeFindings.forEach((finding, index) => {
+      const findingPath = `${path}.negativeFindings[${index}]`;
+      exactObject(finding, ['category', 'severity', 'pattern', 'scope', 'summary'], [], findingPath);
+      enumValue(finding.category, ['communication', 'diagnosis-treatment', 'medication-monitoring', 'safety', 'access-waiting', 'billing-administration'], `${findingPath}.category`);
+      enumValue(finding.severity, ['none', 'low', 'moderate', 'high', 'unexplained'], `${findingPath}.severity`);
+      enumValue(finding.pattern, ['none', 'isolated', 'repeated', 'unexplained', 'not-available'], `${findingPath}.pattern`);
+      enumValue(finding.scope, ['provider', 'office', 'unknown'], `${findingPath}.scope`);
       text(finding.summary, `${findingPath}.summary`);
     });
     https(record.healthgradesUrl, `${path}.healthgradesUrl`, 'www.healthgrades.com'); https(record.officialUrl, `${path}.officialUrl`); https(record.googleMapsUrl, `${path}.googleMapsUrl`);

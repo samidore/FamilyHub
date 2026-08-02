@@ -5,7 +5,7 @@ export const categoryDefinitions = [
 ] as const;
 
 export type CategoryId = (typeof categoryDefinitions)[number]['id'];
-export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists';
+export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists' | 'adult-dermatologists';
 export type ModuleAccent = 'evergreen' | 'lake' | 'ochre';
 export type ModuleIcon = 'compass' | 'calendar' | 'care';
 
@@ -58,6 +58,19 @@ export const moduleRegistry = [
     summary: '按 provider、训练、Healthgrades 证据、路程和长期适配度比较附近儿童牙医。',
     keywords: ['健康', '照护', '牙医', '儿童牙医', 'dentist', 'pediatric', 'healthgrades', 'provider'],
     itemLabel: '家诊所',
+    accent: 'ochre',
+    icon: 'care',
+    privacyClass: 'public-reference',
+    status: 'active',
+  },
+  {
+    id: 'adult-dermatologists',
+    route: '/adult-dermatologists/',
+    categoryId: 'health-care',
+    title: 'Adult Dermatologists',
+    summary: '按 board certification、成人痤疮适配、患者体验和预约前需要确认的事项比较附近皮肤科医生。',
+    keywords: ['健康', '照护', '皮肤科', '成人痤疮', '痤疮', 'dermatologist', 'adult acne', 'healthgrades', 'board certified'],
+    itemLabel: '位医生',
     accent: 'ochre',
     icon: 'care',
     privacyClass: 'public-reference',

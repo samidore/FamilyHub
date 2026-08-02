@@ -115,3 +115,78 @@ export interface DentistNegativeFinding {
   scope: 'provider' | 'associate' | 'office' | 'unknown';
   summary: string;
 }
+
+export type DermatologyBand = 'strong' | 'adequate' | 'concern' | 'unknown';
+export type DermatologyReviewConfidence = 'moderate' | 'strong' | 'very-strong' | 'unavailable';
+export type DermatologyAvailability = 'verified' | 'conditional' | 'unknown';
+export type DermatologyConcernLevel = 'none' | 'low' | 'moderate' | 'high';
+
+export interface AdultDermatologist {
+  name: string;
+  provider: string;
+  practice: string;
+  location: string;
+  driveMin: number;
+  driveMax: number;
+  tier: number;
+  rank: number;
+  eligibility: DermatologistEligibility;
+  evidenceBands: DermatologistEvidenceBands;
+  adultAcneSummary: string;
+  primaryReviewSource: 'Healthgrades' | 'Health system';
+  primaryRating: number;
+  primaryReviewCount: number;
+  primaryWrittenCount: number;
+  healthgradesRating: number | null;
+  healthgradesReviewCount: number;
+  healthgradesWrittenCount: number;
+  reviewConfidence: DermatologyReviewConfidence;
+  reviewEvidence: DermatologistReviewEvidence[];
+  acceptsNewPatients: string;
+  availability: DermatologyAvailability;
+  trainingSummary: string;
+  schoolContext: string;
+  certificationsAwards: string;
+  strengths: string[];
+  concernLevel: DermatologyConcernLevel;
+  negativeSummary: string;
+  negativeClassification: string;
+  negativeFindings: DermatologistNegativeFinding[];
+  verificationQuestions: string[];
+  healthgradesUrl: string;
+  officialUrl: string;
+  googleMapsUrl: string;
+  verifiedDate: string;
+}
+
+export interface DermatologistEligibility {
+  license: 'verified' | 'screened' | 'unknown' | 'concern';
+  discipline: 'verified' | 'screened-no-match' | 'unknown' | 'concern';
+  boardCertification: 'verified' | 'partial' | 'unknown' | 'concern';
+  decision: 'qualified' | 'conditional' | 'excluded';
+}
+
+export interface DermatologistEvidenceBands {
+  clinicalQuality: DermatologyBand;
+  adultAcneFit: DermatologyBand;
+  patientExperience: DermatologyBand;
+}
+
+export interface DermatologistReviewEvidence {
+  source: 'Healthgrades' | 'Health system' | 'Official practice' | 'Google Maps' | 'Yelp';
+  scope: 'provider' | 'office';
+  rating: number | null;
+  reviewCount: number;
+  writtenCount: number | null;
+  confidence: DermatologyReviewConfidence;
+  summary: string;
+  url: string;
+}
+
+export interface DermatologistNegativeFinding {
+  category: 'communication' | 'diagnosis-treatment' | 'medication-monitoring' | 'safety' | 'access-waiting' | 'billing-administration';
+  severity: 'none' | 'low' | 'moderate' | 'high' | 'unexplained';
+  pattern: 'none' | 'isolated' | 'repeated' | 'unexplained' | 'not-available';
+  scope: 'provider' | 'office' | 'unknown';
+  summary: string;
+}
