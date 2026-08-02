@@ -12,7 +12,7 @@ const ratingOptions = [3, 3.5, 4, 4.5, 5];
 ---
 <BaseLayout title="Day Trips | Family Hub" description="按车程、天气、家庭适配与使用场景筛选 29 个家庭目的地。" pageClass="module-page theme-evergreen" themeColor="#E7EFE8">
   <SiteHeader eyebrow="出行与玩乐 · 目的地" title="Day Trips" description="按车程、天气和孩子当天的活动需求，筛选附近的公园、playground、自然中心、动物园和其他适合全家出门的地方。" accent="evergreen" icon="compass">
-    <div class="summary-row"><span>29 个地点</span><span>约 5–65 分钟车程</span><span>无目的地图片</span></div>
+    <div class="summary-row"><span>29 个地点</span><span>约 5–60 分钟车程</span><span>无目的地图片</span></div>
   </SiteHeader>
 
   <FilterShell accent="evergreen" filterId="trip-filter-panel" countId="trip-count" clearId="trip-clear" countText="显示 29 / 29 个地点">
@@ -22,7 +22,7 @@ const ratingOptions = [3, 3.5, 4, 4.5, 5];
     </div>
     <div slot="filters" class="contents">
       <label><span>类别</span><select id="trip-category"><option value="">全部类别</option>{categories.map((item) => <option value={item}>{item}</option>)}</select></label>
-      <label><span>车程</span><select id="trip-drive"><option value="">不限车程</option><option value="20">20 分钟内</option><option value="40">21–40 分钟</option><option value="60">41–60 分钟</option><option value="61">60 分钟以上</option></select></label>
+      <label><span>车程</span><select id="trip-drive"><option value="">不限车程</option><option value="20">20 分钟内</option><option value="40">21–40 分钟</option><option value="60">41–60 分钟</option></select></label>
       <label><span>天气 / 使用场景</span><select id="trip-condition"><option value="">全部场景</option>{conditions.map((item) => <option value={item}>{item}</option>)}</select></label>
       <label><span>家庭状态</span><select id="trip-status"><option value="">全部状态</option>{statuses.map((item) => <option value={item}>{item}</option>)}</select></label>
       {['indoor', 'outdoor', 'stroller', 'weather'].map((key) => <label><span>最低 {key === 'weather' ? '天气容错' : key} 评分</span><select id={`trip-${key}`} data-rating-filter={key}><option value="">不限评分</option>{ratingOptions.map((value) => <option value={value}>{value}+</option>)}</select></label>)}
@@ -52,8 +52,8 @@ const ratingOptions = [3, 3.5, 4, 4.5, 5];
     const render = () => {
       const query = controls.q.value.trim().toLocaleLowerCase();
       const visible = cards.filter((card) => {
-        const max = number(card, 'driveMax');
-        const driveMatches = !controls.drive.value || (controls.drive.value === '20' && max <= 20) || (controls.drive.value === '40' && max > 20 && max <= 40) || (controls.drive.value === '60' && max > 40 && max <= 60) || (controls.drive.value === '61' && max > 60);
+        const drive = number(card, 'driveMin');
+        const driveMatches = !controls.drive.value || (controls.drive.value === '20' && drive <= 20) || (controls.drive.value === '40' && drive > 20 && drive <= 40) || (controls.drive.value === '60' && drive > 40 && drive <= 60);
         return (!query || card.dataset.search!.includes(query)) && (!controls.category.value || card.dataset.category === controls.category.value) && driveMatches && (!controls.condition.value || card.dataset.conditions!.split('|').includes(controls.condition.value)) && (!controls.status.value || card.dataset.status === controls.status.value) && ['indoor', 'outdoor', 'stroller', 'weather'].every((key) => !controls[key as keyof typeof controls].value || number(card, key) >= Number(controls[key as keyof typeof controls].value));
       });
       const sorters: Record<string, (a: HTMLElement, b: HTMLElement) => number> = {

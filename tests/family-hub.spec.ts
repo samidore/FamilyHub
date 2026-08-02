@@ -15,11 +15,13 @@ test('home groups and searches the active modules', async ({ page }) => {
 test('day-trip filters combine, persist in the URL, and clear', async ({ page }) => {
   await page.goto('day-trips/');
   await expect(page.locator('[data-destination]')).toHaveCount(29);
+  const mcfaul = page.locator('[data-destination]').filter({ hasText: 'J.A. McFaul Environmental Center' });
+  await expect(mcfaul.locator('.location-line')).toHaveText('Wyckoff, NJ · 15 分钟');
   await page.getByText('更多筛选').click();
   await page.locator('#trip-drive').selectOption('20');
   const filtered = page.locator('[data-destination]:visible');
-  expect(await filtered.count()).toBeGreaterThan(0);
-  expect(await filtered.count()).toBeLessThan(29);
+  await expect(filtered).toHaveCount(14);
+  await expect(mcfaul).toBeVisible();
   await expect(page).toHaveURL(/drive=20/);
   await page.reload();
   await expect(page.locator('#trip-drive')).toHaveValue('20');

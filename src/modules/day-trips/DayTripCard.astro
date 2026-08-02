@@ -3,9 +3,9 @@ import type { DayTrip } from '../../data/types';
 const { destination: d } = Astro.props as { destination: DayTrip };
 const rating = (value: number | null) => value === null ? '待确认' : `${value.toFixed(1)} / 5`;
 const searchable = [d.name, d.shortName, d.location, d.category, d.status, ...d.tags, ...d.conditions, d.verifiedFacts, d.familyFit, d.risks].join(' ').toLocaleLowerCase();
-const drive = `${d.driveMin}–${d.driveMax} 分钟${d.distanceMiles != null ? ` · ${d.distanceMiles} miles` : ''}`;
+const drive = `${d.driveMin} 分钟${d.distanceMiles != null ? ` · ${d.distanceMiles} miles` : ''}`;
 ---
-<article class="record-card trip-card" data-destination data-search={searchable} data-category={d.category} data-drive-min={d.driveMin} data-drive-max={d.driveMax} data-status={d.status} data-conditions={d.conditions.join('|')} data-indoor={d.ratings.indoor ?? ''} data-outdoor={d.ratings.outdoor ?? ''} data-stroller={d.ratings.stroller ?? ''} data-weather={d.ratings.weather ?? ''} data-toddler={d.ratings.toddler ?? ''} data-parent={d.ratings.parent ?? ''} data-score={d.recommendationScore} data-name={d.name}>
+<article class="record-card trip-card" data-destination data-search={searchable} data-category={d.category} data-drive-min={d.driveMin} data-status={d.status} data-conditions={d.conditions.join('|')} data-indoor={d.ratings.indoor ?? ''} data-outdoor={d.ratings.outdoor ?? ''} data-stroller={d.ratings.stroller ?? ''} data-weather={d.ratings.weather ?? ''} data-toddler={d.ratings.toddler ?? ''} data-parent={d.ratings.parent ?? ''} data-score={d.recommendationScore} data-name={d.name}>
   <div class="record-card__top">
     <div class="badges"><span class="badge">{d.category}</span><span class="badge badge--caution">{d.status}</span></div>
     <h2>{d.name}</h2>
