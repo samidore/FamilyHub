@@ -1,0 +1,34 @@
+---
+import type { DayTrip } from '../../data/types';
+const { destination: d } = Astro.props as { destination: DayTrip };
+const rating = (value: number | null) => value === null ? '待确认' : `${value.toFixed(1)} / 5`;
+const searchable = [d.name, d.shortName, d.location, d.category, d.status, ...d.tags, ...d.conditions, d.verifiedFacts, d.familyFit, d.risks].join(' ').toLocaleLowerCase();
+const drive = `${d.driveMin}–${d.driveMax} 分钟${d.distanceMiles != null ? ` · ${d.distanceMiles} miles` : ''}`;
+---
+<article class="record-card trip-card" data-destination data-search={searchable} data-category={d.category} data-drive-min={d.driveMin} data-drive-max={d.driveMax} data-status={d.status} data-conditions={d.conditions.join('|')} data-indoor={d.ratings.indoor ?? ''} data-outdoor={d.ratings.outdoor ?? ''} data-stroller={d.ratings.stroller ?? ''} data-weather={d.ratings.weather ?? ''} data-toddler={d.ratings.toddler ?? ''} data-parent={d.ratings.parent ?? ''} data-score={d.recommendationScore} data-name={d.name}>
+  <div class="record-card__top">
+    <div class="badges"><span class="badge">{d.category}</span><span class="badge badge--caution">{d.status}</span></div>
+    <h2>{d.name}</h2>
+    <p class="location-line">{d.location} <span aria-hidden="true">·</span> {drive}</p>
+    <dl class="metric-grid">
+      <div><dt>Toddler</dt><dd>{rating(d.ratings.toddler)}</dd></div>
+      <div><dt>家长体验</dt><dd>{rating(d.ratings.parent)}</dd></div>
+      <div><dt>Stroller</dt><dd>{rating(d.ratings.stroller)}</dd></div>
+      <div><dt>天气容错</dt><dd>{rating(d.ratings.weather)}</dd></div>
+    </dl>
+  </div>
+  <div class="record-card__body">
+    <div class="tags" aria-label="地点标签">{d.tags.map((tag) => <span>{tag}</span>)}</div>
+    <section class="info-block info-block--assessment"><h3>家庭适配判断</h3><p>{d.familyFit}</p></section>
+    <details class="record-details">
+      <summary>查看事实、限制和出发前检查</summary>
+      <div class="record-details__content">
+        <section class="info-block info-block--fact"><h3>资料事实</h3><p>{d.verifiedFacts}</p></section>
+        <section class="info-block info-block--risk"><h3>风险与限制</h3><p>{d.risks}</p></section>
+        <section class="info-block info-block--before"><h3>出发前确认</h3><p>{d.beforeYouGo}</p></section>
+        <p class="verification-note">{d.verifiedDate ? `资料核实：${d.verifiedDate}` : '资料核实日期未记录'}</p>
+      </div>
+    </details>
+    <div class="actions"><a class="button button--primary" href={d.googleMapsUrl} target="_blank" rel="noopener noreferrer">Google Maps / Photos</a><a class="button button--secondary" href={d.officialUrl} target="_blank" rel="noopener noreferrer">Official website</a></div>
+  </div>
+</article>

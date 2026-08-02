@@ -1,0 +1,66 @@
+export const categoryDefinitions = [
+  { id: 'explore-play', title: '出行与玩乐', description: '找一个适合今天的去处、活动或轻松安排。', accent: 'evergreen', order: 1 },
+  { id: 'health-care', title: '健康与照护', description: '把公开资料、家庭判断和需要确认的事项分开比较。', accent: 'ochre', order: 2 },
+  { id: 'food-home', title: '饮食与家庭', description: '为未来的食谱和家庭日常清单预留。', accent: 'berry', order: 3 },
+] as const;
+
+export type CategoryId = (typeof categoryDefinitions)[number]['id'];
+export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists';
+export type ModuleAccent = 'evergreen' | 'lake' | 'ochre';
+export type ModuleIcon = 'compass' | 'calendar' | 'care';
+
+export interface ModuleDefinition {
+  id: ModuleId;
+  route: `/${string}/`;
+  categoryId: CategoryId;
+  title: string;
+  summary: string;
+  keywords: readonly string[];
+  itemLabel: string;
+  accent: ModuleAccent;
+  icon: ModuleIcon;
+  privacyClass: 'public-reference';
+  status: 'active';
+}
+
+export const moduleRegistry = [
+  {
+    id: 'day-trips',
+    route: '/day-trips/',
+    categoryId: 'explore-play',
+    title: 'Day Trips',
+    summary: '自然中心、科学馆、公园、playground、动物和一小时左右车程的家庭目的地。',
+    keywords: ['出行', '玩乐', '户外', '室内', '公园', 'nature', 'science', 'playground', 'animals'],
+    itemLabel: '个地点',
+    accent: 'evergreen',
+    icon: 'compass',
+    privacyClass: 'public-reference',
+    status: 'active',
+  },
+  {
+    id: 'library-activities',
+    route: '/library-activities/',
+    categoryId: 'explore-play',
+    title: 'Library Activities',
+    summary: '附近 library 的 storytime、音乐、自由玩耍和手工活动，按星期与时间浏览。',
+    keywords: ['图书馆', '活动', '故事', '音乐', '手工', 'library', 'storytime', 'crafts', 'schedule'],
+    itemLabel: '个活动',
+    accent: 'lake',
+    icon: 'calendar',
+    privacyClass: 'public-reference',
+    status: 'active',
+  },
+  {
+    id: 'pediatric-dentists',
+    route: '/pediatric-dentists/',
+    categoryId: 'health-care',
+    title: 'Pediatric Dentists',
+    summary: '按 provider、训练、Healthgrades 证据、路程和长期适配度比较附近儿童牙医。',
+    keywords: ['健康', '照护', '牙医', '儿童牙医', 'dentist', 'pediatric', 'healthgrades', 'provider'],
+    itemLabel: '家诊所',
+    accent: 'ochre',
+    icon: 'care',
+    privacyClass: 'public-reference',
+    status: 'active',
+  },
+] as const satisfies readonly ModuleDefinition[];

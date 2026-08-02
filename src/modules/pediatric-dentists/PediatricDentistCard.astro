@@ -1,0 +1,38 @@
+---
+import type { PediatricDentist } from '../../data/types';
+const { dentist: d } = Astro.props as { dentist: PediatricDentist };
+const searchable = [d.name, d.provider, d.location, d.acceptsNewPatients, d.longTermFit, d.concernLevel, d.negativeClassification, d.trainingSummary, d.schoolContext, d.certificationsAwards, ...d.strengths, ...d.healthgradesTags, ...d.reviewSources].join(' ').toLocaleLowerCase();
+const healthgrades = d.healthgradesRating === null ? '无当前评分' : `${d.healthgradesRating.toFixed(1)} / 5`;
+const drive = `${d.driveMin}–${d.driveMax} 分钟${d.distanceMiles != null ? ` · ${d.distanceMiles} miles` : ''}`;
+---
+<article class="record-card dentist-card" data-dentist data-search={searchable} data-tier={d.tier} data-drive-max={d.driveMax} data-hg-rating={d.healthgradesRating ?? -1} data-concern={d.concernLevel} data-rank={d.rank} data-reviews={d.healthgradesReviewCount} data-name={d.name}>
+  <div class="record-card__top">
+    <div class="badges"><span class="badge">家庭比较 Tier {d.tier}</span><span class="badge badge--caution">证据关注：{d.concernLevel}</span></div>
+    <h2>{d.name}</h2>
+    <p class="provider-line">指定 provider：<strong>{d.provider}</strong></p>
+    <p class="location-line">{d.location} <span aria-hidden="true">·</span> {drive}</p>
+    <dl class="metric-grid dentist-metrics">
+      <div><dt>Healthgrades</dt><dd>{healthgrades}</dd></div>
+      <div><dt>评分 / 文字评价</dt><dd>{d.healthgradesReviewCount} / {d.healthgradesWrittenCount}</dd></div>
+      <div><dt>次级资料</dt><dd>{d.rating.toFixed(1)} · {d.reviewCount.toLocaleString()}</dd></div>
+    </dl>
+  </div>
+  <div class="record-card__body">
+    <div class="tags" aria-label="诊所优势">{d.strengths.map((strength) => <span>{strength}</span>)}</div>
+    <section class="info-block info-block--assessment"><h3>长期适配判断</h3><p>{d.longTermFit}</p></section>
+    <section class="info-block info-block--fact"><h3>Healthgrades 证据</h3><p>{d.healthgradesEvidence}</p></section>
+    <details class="record-details">
+      <summary>查看训练、证书与评价分析</summary>
+      <div class="record-details__content">
+        <section class="info-block"><h3>新患者</h3><p>{d.acceptsNewPatients}</p></section>
+        <section class="info-block"><h3>训练背景</h3><p>{d.trainingSummary}</p></section>
+        <section class="info-block"><h3>学校与 residency 背景</h3><p>{d.schoolContext}</p></section>
+        <section class="info-block"><h3>认证与奖项</h3><p>{d.certificationsAwards}</p></section>
+        <section class="info-block info-block--risk"><h3>负面证据怎么理解</h3><p><strong>{d.negativeClassification}.</strong> {d.healthgradesNegativeSummary}</p></section>
+        <section class="info-block"><h3>次级评价资料</h3><p>{d.secondaryReviewSummary}</p></section>
+        <p class="verification-note">资料来源：{d.reviewSources.join(' · ')}<br />资料核实：{d.verifiedDate || '未记录'}</p>
+      </div>
+    </details>
+    <div class="actions actions--three"><a class="button button--primary" href={d.healthgradesUrl} target="_blank" rel="noopener noreferrer">Healthgrades</a><a class="button button--secondary" href={d.officialUrl} target="_blank" rel="noopener noreferrer">Official site</a><a class="button button--secondary" href={d.googleMapsUrl} target="_blank" rel="noopener noreferrer">Google Maps</a></div>
+  </div>
+</article>

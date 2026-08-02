@@ -2,6 +2,9 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
+// Historical one-time migration helper. It is intentionally not exposed as a package script;
+// current public data must be edited through the validated workflow in PROJECT.md.
+
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const source = await readFile(path.join(root, 'family_outing_hub_combined_prototype.html'), 'utf8');
 

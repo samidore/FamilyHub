@@ -1,16 +1,21 @@
 ---
+import '@fontsource/atkinson-hyperlegible/400.css';
+import '@fontsource/atkinson-hyperlegible/700.css';
 import '../styles/global.css';
-interface Props { title: string; description: string; }
-const { title, description } = Astro.props;
+interface Props { title: string; description: string; pageClass?: string; themeColor?: string; }
+const { title, description, pageClass = '', themeColor = '#F4F6F1' } = Astro.props;
 ---
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#dfe9df" />
+    <meta name="theme-color" content={themeColor} />
     <title>{title}</title>
   </head>
-  <body><slot /></body>
+  <body class={pageClass}>
+    <a class="skip-link" href="#main-content">跳到主要内容</a>
+    <slot />
+  </body>
 </html>

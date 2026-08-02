@@ -1,64 +1,55 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
-import PediatricDentistCard from '../components/PediatricDentistCard.astro';
-import dentists from '../data/pediatric-dentists.json';
-
-const concerns = [...new Set(dentists.map((item) => item.concernLevel))];
+import FilterShell from '../components/FilterShell.astro';
+import PediatricDentistCard from '../modules/pediatric-dentists/PediatricDentistCard.astro';
+import { pediatricDentists } from '../data/catalog';
+const concerns = [...new Set(pediatricDentists.map((item) => item.concernLevel))];
 ---
-<BaseLayout title="Pediatric Dentist | Family Hub" description="Compare nearby pediatric dentists by tier, drive time, reviews, toddler fit, and negative-review concerns.">
-  <SiteHeader kicker="Fair Lawn · Pediatric specialists · Toddler focused" title="Pediatric Dentist" description="Nearby pediatric specialists with at least 10 reviews and a 4.0+ rating. Tier placement considers toddler fit, distance, review strength, and whether negative reviews show an isolated frustration or a meaningful pattern.">
-    <div class="summary-row"><span>10 practices</span><span>5–30 minute drives</span><span>Google Maps and Yelp checked</span></div>
+<BaseLayout title="Pediatric Dentists | Family Hub" description="按 provider、Healthgrades 证据、训练、路程和长期适配度比较附近儿童牙医。" pageClass="module-page theme-ochre" themeColor="#F4EDE0">
+  <SiteHeader eyebrow="健康与照护 · 公开资料比较" title="Pediatric Dentists" description="以 Healthgrades provider profiles 为主要评价来源，同时分开呈现训练、board status、长期适配、次级评价和证据缺口。这里的 Tier 是家庭比较，不是医疗质量评级。" accent="ochre" icon="care">
+    <div class="summary-row"><span>10 家诊所</span><span>约 5–30 分钟车程</span><span>Healthgrades 优先</span></div>
   </SiteHeader>
-  <section class="controls" aria-label="Pediatric dentist filters">
-    <div class="shell controls-inner">
-      <div class="primary-controls">
-        <label class="search-label"><span>Search</span><input id="dentist-search" type="search" placeholder="Toddler, Saturday, special needs…" /></label>
-        <label><span>Sort</span><select id="dentist-sort"><option value="rank">Recommended</option><option value="drive">Shortest drive</option><option value="rating">Highest rating</option><option value="reviews">Most reviews</option><option value="name">Name</option></select></label>
-      </div>
-      <div class="filter-grid filter-grid--four">
-        <label><span>Tier</span><select id="dentist-tier"><option value="">All tiers</option><option value="1">Tier 1 · strongest choices</option><option value="2">Tier 2 · excellent alternatives</option><option value="3">Tier 3 · good with tradeoffs</option></select></label>
-        <label><span>Drive time</span><select id="dentist-drive"><option value="">Any drive</option><option value="15">Up to 15 min</option><option value="20">Up to 20 min</option><option value="30">Up to 30 min</option></select></label>
-        <label><span>Minimum rating</span><select id="dentist-rating"><option value="">Any rating</option><option value="4.5">4.5+</option><option value="4.8">4.8+</option><option value="5">5.0</option></select></label>
-        <label><span>Review concern</span><select id="dentist-concern"><option value="">Any concern level</option>{concerns.map((item) => <option value={item}>{item}</option>)}</select></label>
-      </div>
-      <div class="filter-footer"><p id="dentist-count" aria-live="polite">Showing 10 of 10 practices</p><button id="dentist-clear" class="clear-button" type="button">Clear filters</button></div>
+
+  <FilterShell accent="ochre" filterId="dentist-filter-panel" countId="dentist-count" clearId="dentist-clear" countText="显示 10 / 10 家诊所">
+    <div slot="primary" class="filter-primary__grid">
+      <label><span>搜索 provider 或证据</span><input id="dentist-search" type="search" placeholder="board certified、toddler、Columbia…" autocomplete="off" /></label>
+      <label><span>排序</span><select id="dentist-sort" data-default="rank"><option value="rank">家庭比较顺序</option><option value="drive">最短车程</option><option value="rating">Healthgrades 评分</option><option value="reviews">Healthgrades 评分数量</option><option value="name">名称</option></select></label>
     </div>
-  </section>
-  <main class="shell listing-main">
-    <div id="dentist-list" class="destination-grid">{dentists.map((dentist) => <PediatricDentistCard dentist={dentist} />)}</div>
-    <p id="dentist-empty" class="empty-state" hidden>No pediatric dentists match those filters.</p>
-  </main>
-  <footer><div class="shell note-box"><strong>Call before booking.</strong> Confirm that the practice is still accepting new two-year-old patients, participates in your exact insurance plan, and allows a parent to stay in the room. Ratings and availability can change. Review summaries categorize the substance and repetition of complaints; they do not determine which party was right.</div></footer>
+    <div slot="filters" class="contents">
+      <label><span>家庭比较 Tier</span><select id="dentist-tier"><option value="">全部 Tier</option><option value="1">Tier 1 · strongest choices</option><option value="2">Tier 2 · good alternatives</option><option value="3">Tier 3 · meaningful tradeoffs</option></select></label>
+      <label><span>车程</span><select id="dentist-drive"><option value="">不限车程</option><option value="15">15 分钟内</option><option value="20">20 分钟内</option><option value="30">30 分钟内</option></select></label>
+      <label><span>Healthgrades 评分</span><select id="dentist-rating"><option value="">不限 / 无评分</option><option value="4">4.0+</option><option value="4.5">4.5+</option><option value="5">5.0</option></select></label>
+      <label><span>证据关注程度</span><select id="dentist-concern"><option value="">全部程度</option>{concerns.map((item) => <option value={item}>{item}</option>)}</select></label>
+    </div>
+  </FilterShell>
+
+  <main id="main-content" class="shell listing-main"><div id="dentist-list" class="record-grid">{pediatricDentists.map((dentist) => <PediatricDentistCard dentist={dentist} />)}</div><p id="dentist-empty" class="empty-state" hidden>没有符合这些条件的诊所。清除部分筛选后再试。</p></main>
+  <footer class="module-footer"><div class="shell note-box"><strong>预约前直接确认。</strong> 指定 provider，确认 current board status、新患者、insurance 和家长陪同规则。Healthgrades 样本经常很小；本页不会把不同平台分数混在一起。</div></footer>
+
   <script>
+    import { bindListState, clearListState, restoreListState } from '../lib/listState';
     const cards = [...document.querySelectorAll<HTMLElement>('[data-dentist]')];
-    const search = document.querySelector<HTMLInputElement>('#dentist-search')!;
-    const sort = document.querySelector<HTMLSelectElement>('#dentist-sort')!;
-    const tier = document.querySelector<HTMLSelectElement>('#dentist-tier')!;
-    const drive = document.querySelector<HTMLSelectElement>('#dentist-drive')!;
-    const rating = document.querySelector<HTMLSelectElement>('#dentist-rating')!;
-    const concern = document.querySelector<HTMLSelectElement>('#dentist-concern')!;
+    const controls = {
+      q: document.querySelector<HTMLInputElement>('#dentist-search')!, sort: document.querySelector<HTMLSelectElement>('#dentist-sort')!, tier: document.querySelector<HTMLSelectElement>('#dentist-tier')!, drive: document.querySelector<HTMLSelectElement>('#dentist-drive')!, rating: document.querySelector<HTMLSelectElement>('#dentist-rating')!, concern: document.querySelector<HTMLSelectElement>('#dentist-concern')!,
+    };
     const list = document.querySelector<HTMLElement>('#dentist-list')!;
     const count = document.querySelector<HTMLElement>('#dentist-count')!;
     const empty = document.querySelector<HTMLElement>('#dentist-empty')!;
-    const number = (card: HTMLElement, key: string) => Number(card.dataset[key] || 0);
-    function renderDentists() {
-      const query = search.value.trim().toLocaleLowerCase();
-      const visible = cards.filter((card) => (!query || card.dataset.search!.includes(query)) && (!tier.value || card.dataset.tier === tier.value) && (!drive.value || number(card, 'driveMax') <= Number(drive.value)) && (!rating.value || number(card, 'rating') >= Number(rating.value)) && (!concern.value || card.dataset.concern === concern.value));
-      const sorter: Record<string, (a: HTMLElement, b: HTMLElement) => number> = {
-        rank: (a, b) => number(a, 'rank') - number(b, 'rank'),
-        drive: (a, b) => number(a, 'driveMax') - number(b, 'driveMax'),
-        rating: (a, b) => number(b, 'rating') - number(a, 'rating') || number(b, 'reviews') - number(a, 'reviews'),
-        reviews: (a, b) => number(b, 'reviews') - number(a, 'reviews'),
-        name: (a, b) => a.dataset.name!.localeCompare(b.dataset.name!),
-      };
+    const number = (card: HTMLElement, key: string) => Number(card.dataset[key] ?? -1);
+    const render = () => {
+      const query = controls.q.value.trim().toLocaleLowerCase();
+      const visible = cards.filter((card) => (!query || card.dataset.search!.includes(query)) && (!controls.tier.value || card.dataset.tier === controls.tier.value) && (!controls.drive.value || number(card, 'driveMax') <= Number(controls.drive.value)) && (!controls.rating.value || number(card, 'hgRating') >= Number(controls.rating.value)) && (!controls.concern.value || card.dataset.concern === controls.concern.value));
+      const sorters: Record<string, (a: HTMLElement, b: HTMLElement) => number> = { rank: (a, b) => number(a, 'rank') - number(b, 'rank'), drive: (a, b) => number(a, 'driveMax') - number(b, 'driveMax'), rating: (a, b) => number(b, 'hgRating') - number(a, 'hgRating') || number(b, 'reviews') - number(a, 'reviews'), reviews: (a, b) => number(b, 'reviews') - number(a, 'reviews'), name: (a, b) => a.dataset.name!.localeCompare(b.dataset.name!) };
       cards.forEach((card) => card.hidden = !visible.includes(card));
-      visible.sort(sorter[sort.value]).forEach((card) => list.append(card));
-      count.textContent = `Showing ${visible.length} of ${cards.length} practices`;
+      visible.sort(sorters[controls.sort.value]).forEach((card) => list.append(card));
+      count.textContent = `显示 ${visible.length} / ${cards.length} 家诊所`;
       empty.hidden = visible.length > 0;
-    }
-    [search, sort, tier, drive, rating, concern].forEach((control) => { control.addEventListener('input', renderDentists); control.addEventListener('change', renderDentists); });
-    document.querySelector('#dentist-clear')!.addEventListener('click', () => { [search, tier, drive, rating, concern].forEach((control) => control.value = ''); sort.value = 'rank'; renderDentists(); });
-    renderDentists();
+    };
+    restoreListState(controls);
+    if (Object.values(controls).slice(2).some((control) => control.value)) document.querySelector<HTMLDetailsElement>('.filter-disclosure')!.open = true;
+    bindListState(controls, render);
+    document.querySelector('#dentist-clear')!.addEventListener('click', () => clearListState(controls, render));
+    render();
   </script>
 </BaseLayout>

@@ -1,0 +1,10 @@
+---
+import type { ModuleIcon } from '../config/modules';
+interface Props { icon: ModuleIcon; }
+const { icon } = Astro.props;
+---
+<svg class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  {icon === 'compass' && <><circle cx="12" cy="12" r="8.5"/><path d="m15.4 8.6-2.1 4.7-4.7 2.1 2.1-4.7 4.7-2.1Z"/></>}
+  {icon === 'calendar' && <><rect x="4" y="5.5" width="16" height="14" rx="2"/><path d="M8 3.5v4M16 3.5v4M4 10h16M8 14h2M14 14h2"/></>}
+  {icon === 'care' && <><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/><path d="M9 12h6M12 9v6"/></>}
+</svg>

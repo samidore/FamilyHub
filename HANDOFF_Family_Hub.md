@@ -1,5 +1,7 @@
 # Family Hub — Codex Handoff
 
+> Superseded historical reference. `PROJECT.md` is the current authority. This handoff documents the original two-module migration and must not limit the current three-module foundation or visual system.
+
 ## 1. Goal
 
 Create one mobile-first family website with one stable URL and a simple home page.

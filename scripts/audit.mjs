@@ -1,27 +1,52 @@
 import { readFile } from 'node:fs/promises';
+import { moduleRegistry } from '../src/config/modules.ts';
+import { parseDayTrips, parseLibraryEvents, parsePediatricDentists } from '../src/data/schemas.mjs';
 
-const trips = JSON.parse(await readFile('src/data/day-trips.json', 'utf8'));
-const events = JSON.parse(await readFile('src/data/library-events.json', 'utf8'));
-const dentists = JSON.parse(await readFile('src/data/pediatric-dentists.json', 'utf8'));
+const readJson = async (file) => JSON.parse(await readFile(file, 'utf8'));
+const trips = parseDayTrips(await readJson('src/data/day-trips.json'));
+const events = parseLibraryEvents(await readJson('src/data/library-events.json'));
+const dentists = parsePediatricDentists(await readJson('src/data/pediatric-dentists.json'));
 const home = await readFile('dist/index.html', 'utf8');
-const tripHtml = await readFile('dist/day-trips/index.html', 'utf8');
-const eventHtml = await readFile('dist/library-activities/index.html', 'utf8');
-const dentistHtml = await readFile('dist/pediatric-dentists/index.html', 'utf8');
+const project = await readFile('PROJECT.md', 'utf8');
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
+
+const records = {
+  'day-trips': trips,
+  'library-activities': events,
+  'pediatric-dentists': dentists,
+};
+const cardAttributes = {
+  'day-trips': 'data-destination',
+  'library-activities': 'data-event',
+  'pediatric-dentists': 'data-dentist',
+};
 const cardCount = (html, attribute) => (html.match(new RegExp(`<article[^>]+${attribute}`, 'g')) ?? []).length;
 
-assert(trips.length === 29, 'Trip data count is not 29');
-assert(events.length === 18, 'Event data count is not 18');
-assert(dentists.length === 10, 'Pediatric dentist data count is not 10');
-assert((home.match(/<a[^>]+class="module-card/g) ?? []).length === 3, 'Home does not render three modules');
-assert(cardCount(tripHtml, 'data-destination') === 29, 'Day Trips does not render 29 cards');
-assert(cardCount(eventHtml, 'data-event') === 18, 'Library Activities does not render 18 cards');
-assert(cardCount(dentistHtml, 'data-dentist') === 10, 'Pediatric Dentist does not render 10 cards');
-assert([...trips, ...events, ...dentists].every((item) => item.googleMapsUrl.startsWith('https://') && item.officialUrl.startsWith('https://')), 'An external URL is not HTTPS');
-assert(dentists.every((item) => item.healthgradesUrl.startsWith('https://www.healthgrades.com/')), 'A dentist Healthgrades URL is missing or invalid');
-assert(dentists.every((item) => item.rating >= 4 && item.reviewCount >= 10 && item.tier >= 1 && item.tier <= 3), 'A dentist does not meet rating, review, or tier requirements');
-assert(events.every((item, index, all) => !index || all[index - 1].dayOrder < item.dayOrder || (all[index - 1].dayOrder === item.dayOrder && all[index - 1].timeOrder <= item.timeOrder)), 'Events are not in schedule order');
-const requiredTripKeys = ['name', 'shortName', 'location', 'category', 'driveMin', 'driveMax', 'status', 'ratings', 'tags', 'conditions', 'verifiedFacts', 'familyFit', 'risks', 'beforeYouGo', 'googleMapsUrl', 'officialUrl', 'verifiedDate'];
-assert(trips.every((item) => requiredTripKeys.every((key) => key in item)), 'A trip is missing a required field');
+assert(moduleRegistry.length === 3, 'The active module registry must contain exactly three release-one modules');
+assert((home.match(/<a\b[^>]+data-module/g) ?? []).length === moduleRegistry.length, 'Home module cards do not match the active registry');
+for (const module of moduleRegistry) {
+  const output = await readFile(`dist${module.route}index.html`, 'utf8');
+  assert(cardCount(output, cardAttributes[module.id]) === records[module.id].length, `${module.id} rendered card count does not match validated data`);
+  assert(output.includes('id="main-content"'), `${module.id} is missing the main-content target`);
+}
 
-console.log('Acceptance audit passed: 3 modules, 29 trips, 18 events, 10 pediatric dentists, HTTPS links, schemas, and schedule order.');
+assert(trips.length === 29, 'Trip migration count is not 29');
+assert(events.length === 18, 'Library activity migration count is not 18');
+assert(dentists.length === 10, 'Pediatric dentist migration count is not 10');
+assert(events.every((item, index, all) => !index || all[index - 1].dayOrder < item.dayOrder || (all[index - 1].dayOrder === item.dayOrder && all[index - 1].timeOrder <= item.timeOrder)), 'Events are not stored in weekday/time order');
+assert(dentists.every((item) => item.healthgradesUrl.startsWith('https://www.healthgrades.com/')), 'A Healthgrades URL is missing or invalid');
+assert(dentists.every((item) => item.healthgradesRating === null || (item.healthgradesRating >= 0 && item.healthgradesRating <= 5)), 'A Healthgrades rating is invalid');
+
+const htmlFiles = [home, ...(await Promise.all(moduleRegistry.map((module) => readFile(`dist${module.route}index.html`, 'utf8'))))];
+assert(htmlFiles.every((html) => !/<iframe|google-analytics|googletagmanager|fonts\.googleapis/i.test(html)), 'A forbidden embed, analytics script, or remote font was found');
+for (const html of htmlFiles) {
+  const externalLinks = [...html.matchAll(/<a\b[^>]*href="(https:[^"]+)"[^>]*>/g)];
+  assert(externalLinks.every((match) => /target="_blank"/.test(match[0]) && /rel="[^"]*noopener[^"]*noreferrer[^"]*"/.test(match[0])), 'An external link is missing safe new-tab attributes');
+}
+
+assert(project.includes('Road travel: minutes and miles'), 'PROJECT.md is missing the road-unit policy');
+assert(project.includes('Weather: degrees Celsius'), 'PROJECT.md is missing the weather-unit policy');
+assert(project.includes('Recipe liquids: cups plus mL'), 'PROJECT.md is missing the liquid-unit policy');
+assert(project.includes('public-reference'), 'PROJECT.md is missing the public data classification');
+
+console.log(`Registry audit passed: ${moduleRegistry.length} modules, ${trips.length} trips, ${events.length} activities, ${dentists.length} dentists.`);

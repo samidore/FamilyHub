@@ -1,0 +1,28 @@
+---
+import type { LibraryEvent } from '../../data/types';
+const { event } = Astro.props as { event: LibraryEvent };
+const searchable = [event.name, event.library, event.location, event.age, event.ageGroup, event.description, event.registration, ...event.badges].join(' ').toLocaleLowerCase();
+const driveMin = Number(event.drive.match(/\d+/)?.[0] ?? 999);
+const typeText = `${event.name} ${event.description}`.toLocaleLowerCase();
+const activityType = /story|goose|librarian/.test(typeText) ? 'story' : /craft|artist/.test(typeText) ? 'craft' : /music|move|jamboree|shake|groove/.test(typeText) ? 'movement' : /play/.test(typeText) ? 'play' : 'other';
+const registrationType = /无需|drop-in|先到先得|前\d+名/i.test(`${event.registration} ${event.badges.join(' ')}`) ? 'drop-in' : 'registration';
+const drive = `${event.drive}${event.distanceMiles != null ? ` · ${event.distanceMiles} miles` : ''}`;
+---
+<article class="record-card event-card" data-event data-search={searchable} data-day={event.day} data-day-order={event.dayOrder} data-time-order={event.timeOrder} data-library={event.library} data-age={event.ageGroup} data-drive={driveMin} data-type={activityType} data-registration={registrationType}>
+  <div class="event-time"><span>{event.day}</span><strong>{event.time}</strong></div>
+  <div class="record-card__body event-body">
+    <h2>{event.name}</h2>
+    <p class="event-library">{event.library}</p>
+    <dl class="event-details">
+      <div><dt>地点与车程</dt><dd>{event.location} <span aria-hidden="true">·</span> {drive}</dd></div>
+      <div><dt>年龄</dt><dd>{event.age}</dd></div>
+      <div><dt>报名</dt><dd>{event.registration}</dd></div>
+    </dl>
+    {event.badges.length > 0 && <div class="badges event-badges" aria-label="活动注意事项">{event.badges.map((badge) => <span class="badge badge--caution">{badge}</span>)}</div>}
+    <details class="record-details">
+      <summary>查看活动说明</summary>
+      <div class="record-details__content"><p>{event.description}</p><p class="verification-note">{event.verifiedDate ? `资料核实：${event.verifiedDate}` : '活动时间与规则需要出发前复核'}</p></div>
+    </details>
+    <div class="actions"><a class="button button--primary" href={event.googleMapsUrl} target="_blank" rel="noopener noreferrer">Google Maps</a><a class="button button--secondary" href={event.officialUrl} target="_blank" rel="noopener noreferrer">Activity / library site</a></div>
+  </div>
+</article>

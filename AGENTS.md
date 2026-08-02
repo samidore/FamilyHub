@@ -2,8 +2,8 @@
 
 Before making any change:
 
-1. Read `gpt.md`.
-2. Read `HANDOFF_Family_Hub.md`.
-3. Treat `family_outing_hub_combined_prototype.html` as the authoritative visual and migration reference.
-4. Follow the minimum-scope, verification, privacy, and acceptance rules in those files.
-5. If the files conflict, report the conflict before implementing.
+1. Read `PROJECT.md` as the current product, privacy, data, unit, design, and acceptance authority.
+2. Read `gpt.md` for coding behavior rules.
+3. Consult `HANDOFF_Family_Hub.md` and `family_outing_hub_combined_prototype.html` only as historical migration references.
+4. Preserve existing research and uncommitted user work unless the user explicitly asks to replace it.
+5. If current user instructions conflict with `PROJECT.md`, report the conflict before implementing.

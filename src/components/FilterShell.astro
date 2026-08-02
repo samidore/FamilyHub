@@ -1,0 +1,23 @@
+---
+interface Props {
+  accent: 'evergreen' | 'lake' | 'ochre';
+  filterId: string;
+  countId: string;
+  clearId: string;
+  countText: string;
+}
+const { accent, filterId, countId, clearId, countText } = Astro.props;
+---
+<section class:list={['filter-shell', `theme-${accent}`]} aria-label="筛选与排序">
+  <div class="shell filter-shell__inner">
+    <div class="filter-primary"><slot name="primary" /></div>
+    <details class="filter-disclosure">
+      <summary><span>更多筛选</span><span class="filter-summary-state" aria-hidden="true">展开</span></summary>
+      <div class="filter-grid" id={filterId}><slot name="filters" /></div>
+    </details>
+    <div class="filter-footer">
+      <p id={countId} aria-live="polite">{countText}</p>
+      <button id={clearId} class="clear-button" type="button">清除筛选</button>
+    </div>
+  </div>
+</section>

@@ -1,30 +1,66 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import SiteHeader from '../components/SiteHeader.astro';
 import ModuleCard from '../components/ModuleCard.astro';
-import modules from '../data/modules.json';
-import destinations from '../data/day-trips.json';
-import events from '../data/library-events.json';
-import dentists from '../data/pediatric-dentists.json';
+import { categoryDefinitions, moduleRegistry } from '../config/modules';
+import { dayTrips, libraryEvents, pediatricDentists, latestVerifiedDate, moduleRecords } from '../data/catalog';
 
 const base = import.meta.env.BASE_URL;
 const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
-const moduleCounts: Record<string, number> = { 'day-trips': destinations.length, 'library-activities': events.length, 'pediatric-dentists': dentists.length };
-const moduleLabels: Record<string, string> = { 'day-trips': 'places', 'library-activities': 'activities', 'pediatric-dentists': 'practices' };
-const symbols: Record<string, string> = { 'day-trips': 'DT', 'library-activities': 'LA', 'pediatric-dentists': 'PD' };
-const latestDate = (records: Array<{ verifiedDate: string }>) => {
-  const dates = records.map((item) => item.verifiedDate).filter(Boolean).sort();
-  return dates.length ? `Updated ${dates.at(-1)}` : 'Verification date not recorded';
+const verifiedDates = {
+  'day-trips': latestVerifiedDate(dayTrips),
+  'library-activities': latestVerifiedDate(libraryEvents),
+  'pediatric-dentists': latestVerifiedDate(pediatricDentists),
 };
-const updatedLabels: Record<string, string> = { 'day-trips': latestDate(destinations), 'library-activities': latestDate(events), 'pediatric-dentists': latestDate(dentists) };
+const visibleCategories = categoryDefinitions.filter((category) => moduleRegistry.some((module) => module.categoryId === category.id));
 ---
-<BaseLayout title="Family Hub" description="One shared entrance for family day trips, library activities, and pediatric dentist research.">
-  <main class="home-page">
-    <SiteHeader home kicker="One family · one shared entrance" title="Family Hub" description="A calm, shared starting point for choosing a day trip, finding a library activity, or comparing pediatric dentists." />
-    <section class="module-grid shell" aria-label="Family Hub modules">
-      {modules.map((module) => (
-        <ModuleCard title={module.title} description={module.description} href={withBase(module.href)} count={moduleCounts[module.id]} label={moduleLabels[module.id]} accent={module.accent} symbol={symbols[module.id]} updated={updatedLabels[module.id]} />
-      ))}
-    </section>
+<BaseLayout title="Family Hub" description="适合手机使用的家庭出行、活动与照护资料入口。" pageClass="home-page">
+  <main id="main-content">
+    <header class="home-hero shell">
+      <p class="eyebrow">A shared family field guide</p>
+      <h1>Family Hub</h1>
+      <p class="home-lead">把经常需要查找、筛选和比较的家庭资料放在一个清楚的入口里。先选择需要解决的问题，再进入适合它的列表。</p>
+      <label class="home-search">
+        <span>查找一个工具</span>
+        <input id="module-search" type="search" placeholder="例如：公园、storytime、牙医…" autocomplete="off" />
+      </label>
+      <p id="module-search-status" class="search-status" aria-live="polite">3 个可用工具</p>
+    </header>
+
+    <div class="home-directory shell">
+      {visibleCategories.map((category) => {
+        const modules = moduleRegistry.filter((module) => module.categoryId === category.id);
+        return <section class:list={['category-section', `theme-${category.accent}`]} data-category-section={category.id}>
+          <div class="category-heading">
+            <span class="category-index" aria-hidden="true">{String(category.order).padStart(2, '0')}</span>
+            <div><h2>{category.title}</h2><p>{category.description}</p></div>
+          </div>
+          <div class="module-list">
+            {modules.map((module) => <ModuleCard module={module} href={withBase(module.route)} count={moduleRecords[module.id].length} verifiedDate={verifiedDates[module.id]} />)}
+          </div>
+        </section>;
+      })}
+      <p id="module-empty" class="empty-state" hidden>没有找到对应工具。试试“出行”、“library”或“牙医”。</p>
+    </div>
   </main>
+  <footer class="site-footer"><div class="shell"><p>这是公开网站。请不要加入家庭姓名、住址、私人日程、医疗记录或其他可识别信息。</p></div></footer>
+  <script>
+    const search = document.querySelector<HTMLInputElement>('#module-search')!;
+    const modules = [...document.querySelectorAll<HTMLElement>('[data-module]')];
+    const sections = [...document.querySelectorAll<HTMLElement>('[data-category-section]')];
+    const status = document.querySelector<HTMLElement>('#module-search-status')!;
+    const empty = document.querySelector<HTMLElement>('#module-empty')!;
+    const render = () => {
+      const query = search.value.trim().toLocaleLowerCase();
+      let visibleCount = 0;
+      modules.forEach((module) => {
+        const visible = !query || module.dataset.search!.includes(query);
+        module.hidden = !visible;
+        if (visible) visibleCount += 1;
+      });
+      sections.forEach((section) => section.hidden = ![...section.querySelectorAll<HTMLElement>('[data-module]')].some((module) => !module.hidden));
+      status.textContent = query ? `找到 ${visibleCount} 个工具` : `${modules.length} 个可用工具`;
+      empty.hidden = visibleCount > 0;
+    };
+    search.addEventListener('input', render);
+  </script>
 </BaseLayout>

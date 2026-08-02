@@ -5,14 +5,21 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
+    "validate": "node scripts/validate.mjs",
     "check": "astro check",
     "build": "astro build",
-    "preview": "astro preview",
-    "migrate": "node scripts/extract-prototype.mjs"
+    "audit": "node scripts/audit.mjs",
+    "test:browser": "playwright test",
+    "verify": "pnpm run validate && pnpm run check && pnpm run build && pnpm run audit && pnpm run test:browser",
+    "preview": "astro preview"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
+    "@fontsource/atkinson-hyperlegible": "^5.3.0",
     "astro": "^5.12.8",
     "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1"
   }
 }

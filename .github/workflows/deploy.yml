@@ -28,8 +28,12 @@ jobs:
           node-version: 24
           package-manager-cache: false
       - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm run validate
       - run: pnpm run check
       - run: pnpm run build
+      - run: pnpm run audit
+      - run: pnpm run test:browser
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

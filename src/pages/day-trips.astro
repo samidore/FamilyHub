@@ -1,70 +1,73 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
-import DestinationCard from '../components/DestinationCard.astro';
-import destinations from '../data/day-trips.json';
+import FilterShell from '../components/FilterShell.astro';
+import DayTripCard from '../modules/day-trips/DayTripCard.astro';
+import { dayTrips } from '../data/catalog';
 
-const categories = [...new Set(destinations.map((item) => item.category))].sort();
-const statuses = [...new Set(destinations.map((item) => item.status))].sort();
-const conditions = [...new Set(destinations.flatMap((item) => item.conditions))].sort();
+const categories = [...new Set(dayTrips.map((item) => item.category))].sort();
+const statuses = [...new Set(dayTrips.map((item) => item.status))].sort();
+const conditions = [...new Set(dayTrips.flatMap((item) => item.conditions))].sort();
 const ratingOptions = [3, 3.5, 4, 4.5, 5];
 ---
-<BaseLayout title="Day Trips | Family Hub" description="Filter and compare 29 family day-trip destinations.">
-  <SiteHeader kicker="Fair Lawn · Northern NJ · Lower Hudson Valley" title="Day Trips" description="Nature, science, local parks, playgrounds, animals, and gardens. Verified facts are kept separate from our family-specific assessment." >
-    <div class="summary-row"><span>29 places</span><span>5–70 minute drives</span><span>No destination photos</span></div>
+<BaseLayout title="Day Trips | Family Hub" description="按车程、天气、家庭适配与使用场景筛选 29 个家庭目的地。" pageClass="module-page theme-evergreen" themeColor="#E7EFE8">
+  <SiteHeader eyebrow="出行与玩乐 · 目的地" title="Day Trips" description="自然、科学、local park、playground、动物和花园。官方资料与家庭适配判断分开呈现，方便在手机上快速排除不适合今天的选择。" accent="evergreen" icon="compass">
+    <div class="summary-row"><span>29 个地点</span><span>约 5–65 分钟车程</span><span>无目的地图片</span></div>
   </SiteHeader>
-  <section class="controls" aria-label="Day trip filters">
-    <div class="shell controls-inner">
-      <div class="primary-controls">
-        <label class="search-label"><span>Search</span><input id="trip-search" type="search" placeholder="Animals, rain, ponds, science…" /></label>
-        <label><span>Sort</span><select id="trip-sort"><option value="recommended">Recommended</option><option value="drive">Shortest drive</option><option value="toddler">Toddler rating</option><option value="parent">Parent rating</option><option value="name">Name</option></select></label>
-      </div>
-      <button class="filter-toggle" id="trip-filter-toggle" type="button" aria-expanded="false" aria-controls="trip-filter-panel">Show filters</button>
-      <div class="filter-grid" id="trip-filter-panel">
-        <label><span>Category</span><select id="trip-category"><option value="">All categories</option>{categories.map((item) => <option value={item}>{item}</option>)}</select></label>
-        <label><span>Drive time</span><select id="trip-drive"><option value="">Any drive</option><option value="20">Up to 20 min</option><option value="40">21–40 min</option><option value="60">41–60 min</option><option value="61">60+ min</option></select></label>
-        <label><span>Weather / use case</span><select id="trip-condition"><option value="">Any condition</option>{conditions.map((item) => <option value={item}>{item}</option>)}</select></label>
-        <label><span>Family status</span><select id="trip-status"><option value="">Any status</option>{statuses.map((item) => <option value={item}>{item}</option>)}</select></label>
-        {['indoor', 'outdoor', 'stroller', 'weather'].map((key) => <label><span>Min. {key === 'weather' ? 'weather tolerance' : key}</span><select id={`trip-${key}`} data-rating-filter={key}><option value="">Any rating</option>{ratingOptions.map((value) => <option value={value}>{value}+</option>)}</select></label>)}
-      </div>
-      <div class="filter-footer"><p id="trip-count" aria-live="polite">Showing 29 of 29 places</p><button id="trip-clear" class="clear-button" type="button">Clear filters</button></div>
+
+  <FilterShell accent="evergreen" filterId="trip-filter-panel" countId="trip-count" clearId="trip-clear" countText="显示 29 / 29 个地点">
+    <div slot="primary" class="filter-primary__grid">
+      <label><span>搜索地点</span><input id="trip-search" type="search" placeholder="动物、雨天、池塘、science…" autocomplete="off" /></label>
+      <label><span>排序</span><select id="trip-sort" data-default="recommended"><option value="recommended">家庭推荐</option><option value="drive">最短车程</option><option value="toddler">Toddler 评分</option><option value="parent">家长评分</option><option value="name">名称</option></select></label>
     </div>
-  </section>
-  <main class="shell listing-main"><div id="trip-list" class="destination-grid">{destinations.map((destination) => <DestinationCard destination={destination} />)}</div><p id="trip-empty" class="empty-state" hidden>No destinations match those filters.</p></main>
-  <footer><div class="shell note-box"><strong>Plan with current sources.</strong> Opening hours, fees, registration, construction, and seasonal facilities can change. Use each official link before leaving.</div></footer>
+    <div slot="filters" class="contents">
+      <label><span>类别</span><select id="trip-category"><option value="">全部类别</option>{categories.map((item) => <option value={item}>{item}</option>)}</select></label>
+      <label><span>车程</span><select id="trip-drive"><option value="">不限车程</option><option value="20">20 分钟内</option><option value="40">21–40 分钟</option><option value="60">41–60 分钟</option><option value="61">60 分钟以上</option></select></label>
+      <label><span>天气 / 使用场景</span><select id="trip-condition"><option value="">全部场景</option>{conditions.map((item) => <option value={item}>{item}</option>)}</select></label>
+      <label><span>家庭状态</span><select id="trip-status"><option value="">全部状态</option>{statuses.map((item) => <option value={item}>{item}</option>)}</select></label>
+      {['indoor', 'outdoor', 'stroller', 'weather'].map((key) => <label><span>最低 {key === 'weather' ? '天气容错' : key} 评分</span><select id={`trip-${key}`} data-rating-filter={key}><option value="">不限评分</option>{ratingOptions.map((value) => <option value={value}>{value}+</option>)}</select></label>)}
+    </div>
+  </FilterShell>
+
+  <main id="main-content" class="shell listing-main">
+    <div id="trip-list" class="record-grid">{dayTrips.map((destination) => <DayTripCard destination={destination} />)}</div>
+    <p id="trip-empty" class="empty-state" hidden>没有符合这些条件的地点。清除部分筛选后再试。</p>
+  </main>
+  <footer class="module-footer"><div class="shell note-box"><strong>出发前使用最新官方资料。</strong> 开放时间、费用、registration、施工和季节性设施都可能变化。这里的家庭评分是判断，不是官方评级。</div></footer>
+
   <script>
+    import { bindListState, clearListState, restoreListState } from '../lib/listState';
     const cards = [...document.querySelectorAll<HTMLElement>('[data-destination]')];
-    const search = document.querySelector<HTMLInputElement>('#trip-search')!;
-    const sort = document.querySelector<HTMLSelectElement>('#trip-sort')!;
-    const category = document.querySelector<HTMLSelectElement>('#trip-category')!;
-    const drive = document.querySelector<HTMLSelectElement>('#trip-drive')!;
-    const condition = document.querySelector<HTMLSelectElement>('#trip-condition')!;
-    const status = document.querySelector<HTMLSelectElement>('#trip-status')!;
-    const ratingFilters = [...document.querySelectorAll<HTMLSelectElement>('[data-rating-filter]')];
+    const controls = {
+      q: document.querySelector<HTMLInputElement>('#trip-search')!, sort: document.querySelector<HTMLSelectElement>('#trip-sort')!,
+      category: document.querySelector<HTMLSelectElement>('#trip-category')!, drive: document.querySelector<HTMLSelectElement>('#trip-drive')!,
+      condition: document.querySelector<HTMLSelectElement>('#trip-condition')!, status: document.querySelector<HTMLSelectElement>('#trip-status')!,
+      indoor: document.querySelector<HTMLSelectElement>('#trip-indoor')!, outdoor: document.querySelector<HTMLSelectElement>('#trip-outdoor')!,
+      stroller: document.querySelector<HTMLSelectElement>('#trip-stroller')!, weather: document.querySelector<HTMLSelectElement>('#trip-weather')!,
+    };
     const list = document.querySelector<HTMLElement>('#trip-list')!;
     const count = document.querySelector<HTMLElement>('#trip-count')!;
     const empty = document.querySelector<HTMLElement>('#trip-empty')!;
-    const number = (card: HTMLElement, key: string) => Number(card.dataset[key] || -1);
-    function renderTrips() {
-      const query = search.value.trim().toLocaleLowerCase();
+    const number = (card: HTMLElement, key: string) => card.dataset[key] === '' ? -1 : Number(card.dataset[key] ?? -1);
+    const render = () => {
+      const query = controls.q.value.trim().toLocaleLowerCase();
       const visible = cards.filter((card) => {
         const max = number(card, 'driveMax');
-        const driveMatches = !drive.value || (drive.value === '20' && max <= 20) || (drive.value === '40' && max > 20 && max <= 40) || (drive.value === '60' && max > 40 && max <= 60) || (drive.value === '61' && max > 60);
-        return (!query || card.dataset.search!.includes(query)) && (!category.value || card.dataset.category === category.value) && driveMatches && (!condition.value || card.dataset.conditions!.split('|').includes(condition.value)) && (!status.value || card.dataset.status === status.value) && ratingFilters.every((filter) => !filter.value || number(card, filter.dataset.ratingFilter!) >= Number(filter.value));
+        const driveMatches = !controls.drive.value || (controls.drive.value === '20' && max <= 20) || (controls.drive.value === '40' && max > 20 && max <= 40) || (controls.drive.value === '60' && max > 40 && max <= 60) || (controls.drive.value === '61' && max > 60);
+        return (!query || card.dataset.search!.includes(query)) && (!controls.category.value || card.dataset.category === controls.category.value) && driveMatches && (!controls.condition.value || card.dataset.conditions!.split('|').includes(controls.condition.value)) && (!controls.status.value || card.dataset.status === controls.status.value) && ['indoor', 'outdoor', 'stroller', 'weather'].every((key) => !controls[key as keyof typeof controls].value || number(card, key) >= Number(controls[key as keyof typeof controls].value));
       });
-      const sorter: Record<string, (a: HTMLElement, b: HTMLElement) => number> = {
+      const sorters: Record<string, (a: HTMLElement, b: HTMLElement) => number> = {
         recommended: (a, b) => number(b, 'score') - number(a, 'score'), drive: (a, b) => number(a, 'driveMin') - number(b, 'driveMin'), toddler: (a, b) => number(b, 'toddler') - number(a, 'toddler'), parent: (a, b) => number(b, 'parent') - number(a, 'parent'), name: (a, b) => a.dataset.name!.localeCompare(b.dataset.name!),
       };
       cards.forEach((card) => card.hidden = !visible.includes(card));
-      visible.sort(sorter[sort.value]).forEach((card) => list.append(card));
-      count.textContent = `Showing ${visible.length} of ${cards.length} places`;
+      visible.sort(sorters[controls.sort.value]).forEach((card) => list.append(card));
+      count.textContent = `显示 ${visible.length} / ${cards.length} 个地点`;
       empty.hidden = visible.length > 0;
-    }
-    [search, sort, category, drive, condition, status, ...ratingFilters].forEach((control) => { control.addEventListener('input', renderTrips); control.addEventListener('change', renderTrips); });
-    document.querySelector('#trip-clear')!.addEventListener('click', () => { [search, category, drive, condition, status, ...ratingFilters].forEach((control) => control.value = ''); sort.value = 'recommended'; renderTrips(); });
-    const toggle = document.querySelector<HTMLButtonElement>('#trip-filter-toggle')!;
-    const panel = document.querySelector<HTMLElement>('#trip-filter-panel')!;
-    toggle.addEventListener('click', () => { const open = panel.classList.toggle('is-open'); toggle.setAttribute('aria-expanded', String(open)); toggle.textContent = open ? 'Hide filters' : 'Show filters'; });
-    renderTrips();
+    };
+    restoreListState(controls);
+    if (Object.values(controls).slice(2).some((control) => control.value)) document.querySelector<HTMLDetailsElement>('.filter-disclosure')!.open = true;
+    bindListState(controls, render);
+    document.querySelector('#trip-clear')!.addEventListener('click', () => clearListState(controls, render));
+    render();
   </script>
 </BaseLayout>

@@ -1,46 +1,59 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
-import LibraryEventCard from '../components/LibraryEventCard.astro';
-import events from '../data/library-events.json';
-const days = [...new Set(events.map((event) => event.day))];
-const libraries = [...new Set(events.map((event) => event.library))].sort();
-const ages = [...new Set(events.map((event) => event.ageGroup))];
+import FilterShell from '../components/FilterShell.astro';
+import LibraryEventCard from '../modules/library-activities/LibraryEventCard.astro';
+import { libraryEvents } from '../data/catalog';
+const days = [...new Set(libraryEvents.map((event) => event.day))];
+const libraries = [...new Set(libraryEvents.map((event) => event.library))].sort();
+const ages = [...new Set(libraryEvents.map((event) => event.ageGroup))];
 ---
-<BaseLayout title="Library Activities | Family Hub" description="Browse 18 nearby library activities by weekday, library, age, and drive time.">
-  <SiteHeader kicker="Nearby libraries · weekly view" title="Library Activities" description="Storytimes, movement, free play, and crafts for young children. Recurring schedules are shown as published, without invented calendar dates.">
-    <div class="summary-row summary-row--blue"><span>18 activities</span><span>5 nearby library systems</span><span>Schedule details need rechecking</span></div>
+<BaseLayout title="Library Activities | Family Hub" description="按星期、library、年龄和活动类型浏览附近儿童活动。" pageClass="module-page theme-lake" themeColor="#E7F0F3">
+  <SiteHeader eyebrow="出行与玩乐 · 每周活动" title="Library Activities" description="附近 library 的 storytime、音乐、自由玩耍和手工活动。按公开的重复时间呈现，不把 recurring schedule 改造成并不存在的日历日期。" accent="lake" icon="calendar">
+    <div class="summary-row"><span>18 个活动</span><span>5 个附近 library systems</span><span>时间与资格需复核</span></div>
   </SiteHeader>
-  <section class="controls controls--blue" aria-label="Library activity filters"><div class="shell controls-inner">
-    <div class="primary-controls"><label class="search-label"><span>Search</span><input id="event-search" type="search" placeholder="Storytime, music, crafts…" /></label><label><span>Sort</span><select id="event-sort"><option value="schedule">Schedule</option><option value="drive">Drive time</option><option value="library">Library</option></select></label></div>
-    <div class="filter-grid filter-grid--three"><label><span>Weekday</span><select id="event-day"><option value="">All days</option>{days.map((item) => <option value={item}>{item}</option>)}</select></label><label><span>Library</span><select id="event-library"><option value="">All libraries</option>{libraries.map((item) => <option value={item}>{item}</option>)}</select></label><label><span>Age status</span><select id="event-age"><option value="">All age groups</option>{ages.map((item) => <option value={item}>{item}</option>)}</select></label></div>
-    <div class="filter-footer"><p id="event-count" aria-live="polite">Showing 18 of 18 activities</p><button id="event-clear" class="clear-button clear-button--blue" type="button">Clear filters</button></div>
-  </div></section>
-  <main class="shell listing-main"><div id="event-list" class="event-list">{events.map((event) => <LibraryEventCard event={event} />)}</div><p id="event-empty" class="empty-state" hidden>No activities match those filters.</p></main>
-  <footer><div class="shell note-box"><strong>Check before attending.</strong> Registration, residency rules, age limits, seasonal dates, and cancellations may change. Use the official activity or library link.</div></footer>
+
+  <FilterShell accent="lake" filterId="event-filter-panel" countId="event-count" clearId="event-clear" countText="显示 18 / 18 个活动">
+    <div slot="primary" class="filter-primary__grid">
+      <label><span>搜索活动</span><input id="event-search" type="search" placeholder="storytime、音乐、手工…" autocomplete="off" /></label>
+      <label><span>排序</span><select id="event-sort" data-default="schedule"><option value="schedule">星期与时间</option><option value="drive">最短车程</option><option value="library">Library 名称</option></select></label>
+    </div>
+    <div slot="filters" class="contents">
+      <label><span>星期</span><select id="event-day"><option value="">全部日期</option>{days.map((item) => <option value={item}>{item}</option>)}</select></label>
+      <label><span>Library</span><select id="event-library"><option value="">全部 libraries</option>{libraries.map((item) => <option value={item}>{item}</option>)}</select></label>
+      <label><span>年龄状态</span><select id="event-age"><option value="">全部年龄</option>{ages.map((item) => <option value={item}>{item}</option>)}</select></label>
+      <label><span>活动类型</span><select id="event-type"><option value="">全部类型</option><option value="story">Storytime</option><option value="movement">音乐与运动</option><option value="craft">手工</option><option value="play">自由玩耍</option><option value="other">其他</option></select></label>
+      <label><span>报名方式</span><select id="event-registration"><option value="">全部方式</option><option value="drop-in">无需预先报名 / 先到先得</option><option value="registration">需要报名或确认</option></select></label>
+    </div>
+  </FilterShell>
+
+  <main id="main-content" class="shell listing-main"><div id="event-list" class="event-list">{libraryEvents.map((event) => <LibraryEventCard event={event} />)}</div><p id="event-empty" class="empty-state" hidden>没有符合这些条件的活动。清除部分筛选后再试。</p></main>
+  <footer class="module-footer"><div class="shell note-box"><strong>参加前复核。</strong> Registration、居民资格、年龄限制、季节日期和取消安排会变化。请使用活动或 library 官方页面。</div></footer>
+
   <script>
+    import { bindListState, clearListState, restoreListState } from '../lib/listState';
     const cards = [...document.querySelectorAll<HTMLElement>('[data-event]')];
-    const search = document.querySelector<HTMLInputElement>('#event-search')!;
-    const sort = document.querySelector<HTMLSelectElement>('#event-sort')!;
-    const day = document.querySelector<HTMLSelectElement>('#event-day')!;
-    const library = document.querySelector<HTMLSelectElement>('#event-library')!;
-    const age = document.querySelector<HTMLSelectElement>('#event-age')!;
+    const controls = {
+      q: document.querySelector<HTMLInputElement>('#event-search')!, sort: document.querySelector<HTMLSelectElement>('#event-sort')!, day: document.querySelector<HTMLSelectElement>('#event-day')!, library: document.querySelector<HTMLSelectElement>('#event-library')!, age: document.querySelector<HTMLSelectElement>('#event-age')!, type: document.querySelector<HTMLSelectElement>('#event-type')!, registration: document.querySelector<HTMLSelectElement>('#event-registration')!,
+    };
     const list = document.querySelector<HTMLElement>('#event-list')!;
     const count = document.querySelector<HTMLElement>('#event-count')!;
     const empty = document.querySelector<HTMLElement>('#event-empty')!;
     const number = (card: HTMLElement, key: string) => Number(card.dataset[key]);
-    function renderEvents() {
-      const query = search.value.trim().toLocaleLowerCase();
-      const visible = cards.filter((card) => (!query || card.dataset.search!.includes(query)) && (!day.value || card.dataset.day === day.value) && (!library.value || card.dataset.library === library.value) && (!age.value || card.dataset.age === age.value));
-      const schedule = (a: HTMLElement, b: HTMLElement) => number(a, 'dayOrder') - number(b, 'dayOrder') || number(a, 'timeOrder') - number(b, 'timeOrder');
-      const sorter: Record<string, (a: HTMLElement, b: HTMLElement) => number> = { schedule, drive: (a, b) => number(a, 'drive') - number(b, 'drive') || schedule(a, b), library: (a, b) => a.dataset.library!.localeCompare(b.dataset.library!) || schedule(a, b) };
+    const schedule = (a: HTMLElement, b: HTMLElement) => number(a, 'dayOrder') - number(b, 'dayOrder') || number(a, 'timeOrder') - number(b, 'timeOrder');
+    const render = () => {
+      const query = controls.q.value.trim().toLocaleLowerCase();
+      const visible = cards.filter((card) => (!query || card.dataset.search!.includes(query)) && (!controls.day.value || card.dataset.day === controls.day.value) && (!controls.library.value || card.dataset.library === controls.library.value) && (!controls.age.value || card.dataset.age === controls.age.value) && (!controls.type.value || card.dataset.type === controls.type.value) && (!controls.registration.value || card.dataset.registration === controls.registration.value));
+      const sorters: Record<string, (a: HTMLElement, b: HTMLElement) => number> = { schedule, drive: (a, b) => number(a, 'drive') - number(b, 'drive') || schedule(a, b), library: (a, b) => a.dataset.library!.localeCompare(b.dataset.library!) || schedule(a, b) };
       cards.forEach((card) => card.hidden = !visible.includes(card));
-      visible.sort(sorter[sort.value]).forEach((card) => list.append(card));
-      count.textContent = `Showing ${visible.length} of ${cards.length} activities`;
+      visible.sort(sorters[controls.sort.value]).forEach((card) => list.append(card));
+      count.textContent = `显示 ${visible.length} / ${cards.length} 个活动`;
       empty.hidden = visible.length > 0;
-    }
-    [search, sort, day, library, age].forEach((control) => { control.addEventListener('input', renderEvents); control.addEventListener('change', renderEvents); });
-    document.querySelector('#event-clear')!.addEventListener('click', () => { [search, day, library, age].forEach((control) => control.value = ''); sort.value = 'schedule'; renderEvents(); });
-    renderEvents();
+    };
+    restoreListState(controls);
+    if (Object.values(controls).slice(2).some((control) => control.value)) document.querySelector<HTMLDetailsElement>('.filter-disclosure')!.open = true;
+    bindListState(controls, render);
+    document.querySelector('#event-clear')!.addEventListener('click', () => clearListState(controls, render));
+    render();
   </script>
 </BaseLayout>
