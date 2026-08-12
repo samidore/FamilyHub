@@ -48,7 +48,7 @@ test('time preference ranks without hiding and flags borderline ranges', () => {
   assert.deepEqual(timeFit(item, '60'), { rank: 2, label: '需提前开始' });
 });
 
-test('v1.5 KB keeps strict counts, Vegetable structures, and controlled add-ons', async () => {
+test('v1.6 KB keeps strict counts, Vegetable structures, and controlled add-ons', async () => {
   const kb = parseMealKb(await readFile('FAMILY_MEAL_KB.md', 'utf8'));
   assert.equal(kb.ingredients.length, 132);
   assert.equal(kb.ingredients.filter((item) => item.visible).length, 129);

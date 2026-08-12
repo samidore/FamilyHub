@@ -1,5 +1,5 @@
 ---
-kb_version: 1.5
+kb_version: 1.6
 last_updated: 2026-08-12
 language: zh-CN
 status: active
@@ -18,7 +18,7 @@ status: active
 
 ## 1.2 当前阶段
 
-当前阶段：**Vegetable Recipe Library v1.5 + finish-with-leafy-vegetable add-on formalization**。
+当前阶段：**Shared household inventory workflow v1.6**（基于 Vegetable Recipe Library v1.5 + finish-with-leafy-vegetable add-on formalization）。
 
 - Ingredient Library 保持 132 条 Candidate Ingredient records 与 v1.4 Starter/UI schema；stable ID 不变。
 - Recipe Library 从 139 条扩展到 **162 条**：新增 23 条去重后的 Vegetable-centered Recipe structures，全部为 `candidate`。
@@ -128,7 +128,7 @@ Preparation/method: `low-prep`, `medium-prep`, `high-prep`, `minimal-cutting`, `
 
 Ingredient capability: `finish-wilt-compatible` (only for Ingredients explicitly validated for the `finish-with-leafy-vegetable` add-on).
 
-## 3.3 Candidate Recipe record shape — v1.5
+## 3.3 Candidate Recipe record shape — v1.6
 
 ```yaml
 id:
@@ -194,7 +194,7 @@ substitutions:
 - `meal_contribution` 是家庭组餐 planning slot，不是营养学 serving 或克数。常用粒度为 `0`, `0.5`, `1`；只有明确需要时才使用更大 Vegetable contribution。
 - `primary_role` 只用于 UI 分类/排序；真正的 slot 计算只读取 `meal_contribution`。
 - `child_coverage.protein` / `.vegetable` 表示该 Recipe 按正常家庭 serving 与 child-serving 路线是否能实际承担相应儿童 coverage。值可为 `true`, `false`, `ingredient-dependent`。已知当前接受度优先；缺少直接家庭事实时使用保守的质地 / 可分食 workflow inference，不把“理论可吃”自动写成 true。`ingredient-dependent` 时运行时读取实际选中 Ingredient 的对应 coverage；Ingredient 为 `unknown` 时不计为满足 hard coverage。
-- `meal_addons` 只用于已正式定义的 Recipe add-on；v1.5 首个受控 add-on 为 `finish-with-leafy-vegetable`。Add-on contribution 与 child coverage 参与 Meal Builder 聚合，但不改变主 Recipe stable ID。
+- `meal_addons` 只用于已正式定义的 Recipe add-on；v1.6 延续受控 add-on `finish-with-leafy-vegetable`。Add-on contribution 与 child coverage 参与 Meal Builder 聚合，但不改变主 Recipe stable ID。
 - `child_suitable` / `child_texture` / `child_serving` 继续记录更细的儿童事实；旧 `child_support_protein_needed` 已废弃，因为 Meal Builder 可由当前 meal state + `child_coverage` 动态推出。
 - `integral_staple_ingredient_ids` 表示 Recipe 本身包含的 Staple；`recommended_staple_ingredient_ids` 只是搭配建议。旧 `staple_pairings` 已废弃。
 - `vegetable_ingredient_ids` 只列真正的 Vegetable / fungi；项目定义为 Staple 的 potato / sweet-potato / taro / lotus-root / kabocha / corn 等不再混入此字段。旧 `vegetable_count` 已废弃，Builder 只读取 `meal_contribution.vegetable`。
@@ -204,7 +204,7 @@ substitutions:
 
 **Candidate quantity rule:** 不为尚未家庭测试的 Recipe 虚构精确克数/酱汁比例。`ingredients` 负责结构与 availability；具体比例由引用来源支持并在 Cook View / 首次家庭实做时校准。这不影响 Recipe identity / fit / Meal Builder 使用。
 
-## 3.4 Candidate Ingredient record shape — v1.5
+## 3.4 Candidate Ingredient record shape — v1.6
 
 ```yaml
 id:
@@ -273,6 +273,7 @@ starter_sections:
 ```yaml
 id: whole-pork-tenderloin
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 猪里脊
 name_en: Whole Pork Tenderloin
@@ -301,6 +302,7 @@ notes: 家庭高价值食材；household-observed preference favors tenderloin d
 ```yaml
 id: pork-shoulder-chunks
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 梅花肉块
 name_en: Pork Shoulder Chunks
@@ -329,6 +331,7 @@ notes: ''
 ```yaml
 id: thin-sliced-pork-belly
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 薄切五花肉
 name_en: Thin-Sliced Pork Belly
@@ -357,6 +360,7 @@ notes: ''
 ```yaml
 id: extra-thin-sliced-pork-belly
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 超薄切五花肉
 name_en: Extra-Thin-Sliced Pork Belly
@@ -385,6 +389,7 @@ notes: ''
 ```yaml
 id: ground-pork
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 猪绞肉
 name_en: Ground Pork
@@ -413,6 +418,7 @@ notes: 家庭接受度高；家庭认为味道优于牛绞肉。
 ```yaml
 id: soft-pork-ribs
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 软排骨
 name_en: Soft Pork Ribs
@@ -442,6 +448,7 @@ notes: 现有 stable ID 保留；具体 butcher cut 尚未严格核实，不在�
 ```yaml
 id: pork-feet
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 猪脚
 name_en: Pork Feet
@@ -471,6 +478,7 @@ notes: 孩子可以吃；总耗时通常较长。
 ```yaml
 id: pork-chops
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 猪排
 name_en: Pork Chops
@@ -499,6 +507,7 @@ notes: ''
 ```yaml
 id: pork-liver
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 猪肝
 name_en: Pork Liver
@@ -529,6 +538,7 @@ notes: 用户已明确降为低优先度。
 ```yaml
 id: white-oil-sausage
 type: ingredient
+inventory_tracking: presence-only
 status: candidate
 name_zh: 白油肠
 name_en: White Oil Sausage
@@ -560,6 +570,7 @@ notes: Processed / supporting ingredient。
 ```yaml
 id: chinese-sausage
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 中式香肠
 name_en: Chinese Sausage
@@ -591,6 +602,7 @@ notes: Processed / supporting ingredient。
 ```yaml
 id: pork-meatballs
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 贡丸
 name_en: Pork Meatballs
@@ -625,6 +637,7 @@ notes: Processed / supporting ingredient。
 ```yaml
 id: boneless-skinless-chicken-thighs
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 无骨去皮鸡腿肉
 name_en: Boneless Skinless Chicken Thighs
@@ -653,6 +666,7 @@ notes: ''
 ```yaml
 id: chicken-breast
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 鸡胸
 name_en: Chicken Breast
@@ -681,6 +695,7 @@ notes: ''
 ```yaml
 id: whole-chicken-wings
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 整鸡翅
 name_en: Whole Chicken Wings
@@ -709,6 +724,7 @@ notes: ''
 ```yaml
 id: party-wings
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: Party Wings
 name_en: Party Wings
@@ -737,6 +753,7 @@ notes: ''
 ```yaml
 id: chicken-drumsticks
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 鸡小腿
 name_en: Chicken Drumsticks
@@ -765,6 +782,7 @@ notes: ''
 ```yaml
 id: bone-in-chicken-thighs
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 带骨鸡腿
 name_en: Bone-In Chicken Thighs
@@ -793,6 +811,7 @@ notes: ''
 ```yaml
 id: frozen-chicken-patties
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 冷冻鸡肉饼
 name_en: Frozen Chicken Patties
@@ -823,6 +842,7 @@ notes: ''
 ```yaml
 id: whole-chicken
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 整鸡
 name_en: Whole Chicken
@@ -851,6 +871,7 @@ notes: ''
 ```yaml
 id: chicken-gizzards
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 鸡胗
 name_en: Chicken Gizzards
@@ -881,6 +902,7 @@ notes: 低优先度。
 ```yaml
 id: chicken-hearts
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 鸡心
 name_en: Chicken Hearts
@@ -911,6 +933,7 @@ notes: 低优先度。
 ```yaml
 id: chicken-liver
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 鸡肝
 name_en: Chicken Liver
@@ -944,6 +967,7 @@ notes: 低优先度 / 计划尝试。
 ```yaml
 id: whole-beef-brisket
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 整块牛腩
 name_en: Whole Beef Brisket
@@ -972,6 +996,7 @@ notes: ''
 ```yaml
 id: sliced-beef-brisket
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 牛腩片
 name_en: Sliced Beef Brisket
@@ -1000,6 +1025,7 @@ notes: ''
 ```yaml
 id: hot-pot-beef-slices
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 火锅牛肉片
 name_en: Hot-Pot Beef Slices
@@ -1028,6 +1054,7 @@ notes: ''
 ```yaml
 id: beef-shank
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 牛腱
 name_en: Beef Shank
@@ -1056,6 +1083,7 @@ notes: ''
 ```yaml
 id: chuck-roast
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 牛肩肉大块
 name_en: Chuck Roast
@@ -1084,6 +1112,7 @@ notes: ''
 ```yaml
 id: oxtail
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 牛尾
 name_en: Oxtail
@@ -1112,6 +1141,7 @@ notes: ''
 ```yaml
 id: cross-cut-beef-short-ribs
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 横切牛小排
 name_en: Cross-Cut Beef Short Ribs
@@ -1140,6 +1170,7 @@ notes: ''
 ```yaml
 id: ground-beef
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 牛绞肉
 name_en: Ground Beef
@@ -1168,6 +1199,7 @@ notes: ''
 ```yaml
 id: frozen-beef-patties
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 冷冻牛肉饼
 name_en: Frozen Beef Patties
@@ -1198,6 +1230,7 @@ notes: ''
 ```yaml
 id: beef-rib-fingers
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 牛肋条
 name_en: Beef Rib Fingers
@@ -1228,6 +1261,7 @@ notes: 用户已明确降为低优先度。
 ```yaml
 id: flat-iron-steak
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 板腱牛排
 name_en: Flat Iron Steak
@@ -1256,6 +1290,7 @@ notes: ''
 ```yaml
 id: denver-steak
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 丹佛牛排
 name_en: Denver Steak
@@ -1284,6 +1319,7 @@ notes: ''
 ```yaml
 id: boneless-beef-short-ribs
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 无骨牛小排
 name_en: Boneless Beef Short Ribs
@@ -1312,6 +1348,7 @@ notes: ''
 ```yaml
 id: beef-steak
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 牛排
 name_en: Beef Steak
@@ -1343,6 +1380,7 @@ notes: ''
 ```yaml
 id: hot-pot-lamb-slices
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 火锅羊肉片
 name_en: Hot-Pot Lamb Slices
@@ -1371,6 +1409,7 @@ notes: ''
 ```yaml
 id: lamb-shoulder-chunks
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 羊肩肉块
 name_en: Lamb Shoulder Chunks
@@ -1399,6 +1438,7 @@ notes: ''
 ```yaml
 id: lamb-leg-chunks
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 羊腿肉块
 name_en: Lamb Leg Chunks
@@ -1427,6 +1467,7 @@ notes: ''
 ```yaml
 id: bone-in-lamb-chops
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 带骨羊排
 name_en: Bone-In Lamb Chops
@@ -1455,6 +1496,7 @@ notes: ''
 ```yaml
 id: boneless-lamb-chops
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 无骨羊排
 name_en: Boneless Lamb Chops
@@ -1483,6 +1525,7 @@ notes: ''
 ```yaml
 id: lamb-shanks
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 羊腱
 name_en: Lamb Shanks
@@ -1511,6 +1554,7 @@ notes: ''
 ```yaml
 id: lamb-riblets
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 羊肋排
 name_en: Lamb Riblets
@@ -1539,6 +1583,7 @@ notes: ''
 ```yaml
 id: skin-on-bone-in-goat-pieces
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 带皮带骨山羊肉块
 name_en: Skin-On Bone-In Goat Pieces
@@ -1567,6 +1612,7 @@ notes: ''
 ```yaml
 id: lamb-spine-sections
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 羊蝎子
 name_en: Lamb Spine Sections
@@ -1602,6 +1648,7 @@ notes: 低频候选。
 ```yaml
 id: salmon
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 三文鱼
 name_en: Salmon
@@ -1630,6 +1677,7 @@ notes: ''
 ```yaml
 id: chilean-sea-bass
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 智利海鲈
 name_en: Chilean Sea Bass
@@ -1658,6 +1706,7 @@ notes: ''
 ```yaml
 id: live-freshwater-bass
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 活淡水鲈鱼
 name_en: Live Freshwater Bass
@@ -1686,6 +1735,7 @@ notes: ''
 ```yaml
 id: branzino
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: Branzino（欧洲海鲈）
 name_en: Branzino
@@ -1714,6 +1764,7 @@ notes: ''
 ```yaml
 id: sablefish
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: Sablefish（黑鳕）
 name_en: Sablefish
@@ -1744,6 +1795,7 @@ notes: 探索性鱼类候选。
 ```yaml
 id: halibut
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 大比目鱼
 name_en: Halibut
@@ -1774,6 +1826,7 @@ notes: 探索性鱼类候选。
 ```yaml
 id: black-sea-bass
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 黑海鲈
 name_en: Black Sea Bass
@@ -1804,6 +1857,7 @@ notes: 探索性鱼类候选。
 ```yaml
 id: grouper
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 石斑鱼
 name_en: Grouper
@@ -1839,6 +1893,7 @@ notes: 探索性鱼类候选。
 ```yaml
 id: peeled-shrimp
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 虾仁
 name_en: Peeled Shrimp
@@ -1867,6 +1922,7 @@ notes: ''
 ```yaml
 id: shell-on-shrimp
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 带壳虾
 name_en: Shell-On Shrimp
@@ -1895,6 +1951,7 @@ notes: ''
 ```yaml
 id: scallops
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 扇贝
 name_en: Scallops
@@ -1923,6 +1980,7 @@ notes: ''
 ```yaml
 id: squid
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 鱿鱼
 name_en: Squid
@@ -1951,6 +2009,7 @@ notes: ''
 ```yaml
 id: oysters
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 生蚝
 name_en: Oysters
@@ -1981,6 +2040,7 @@ notes: 低优先度。
 ```yaml
 id: shrimp-paste
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 虾滑
 name_en: Shrimp Paste
@@ -2012,6 +2072,7 @@ notes: Processed seafood；默认 supporting use。
 ```yaml
 id: fish-paste
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 鱼滑
 name_en: Fish Paste
@@ -2043,6 +2104,7 @@ notes: Processed seafood；默认 supporting use。
 ```yaml
 id: fish-balls
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 鱼丸
 name_en: Fish Balls
@@ -2074,6 +2136,7 @@ notes: Processed seafood；默认 supporting use。
 ```yaml
 id: assorted-seafood-balls
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 综合海鲜丸
 name_en: Assorted Seafood Balls
@@ -2110,6 +2173,7 @@ notes: Processed seafood；默认 supporting use。
 ```yaml
 id: eggs
 type: ingredient
+inventory_tracking: presence-only
 status: candidate
 name_zh: 鸡蛋
 name_en: Eggs
@@ -2138,6 +2202,7 @@ notes: ''
 ```yaml
 id: soft-tofu
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 嫩豆腐
 name_en: Soft Tofu
@@ -2167,6 +2232,7 @@ notes: 孩子明确喜欢；软质地。
 ```yaml
 id: firm-tofu
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 老豆腐 / 硬豆腐
 name_en: Firm Tofu
@@ -2196,6 +2262,7 @@ notes: 成人偏好；孩子当前不稳定接受。
 ```yaml
 id: egg-tofu
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 鸡蛋豆腐（日本豆腐）
 name_en: Egg Tofu
@@ -2225,6 +2292,7 @@ notes: 当前修正规则：质地软，孩子会吃。
 ```yaml
 id: pressed-tofu
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 香干
 name_en: Pressed Tofu
@@ -2255,6 +2323,7 @@ notes: 用户喜欢；作为 supporting ingredient，不自动成为 tofu-main b
 ```yaml
 id: tofu-sheets
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 豆皮
 name_en: Tofu Sheets
@@ -2285,6 +2354,7 @@ notes: 用户喜欢；作为 supporting ingredient。
 ```yaml
 id: dried-yuba-sticks
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 腐竹
 name_en: Dried Yuba Sticks
@@ -2316,6 +2386,7 @@ notes: 需要泡发；advance-start；作为 supporting ingredient。
 ```yaml
 id: fried-tofu-puffs
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 油豆腐 / 豆泡
 name_en: Fried Tofu Puffs
@@ -2351,6 +2422,7 @@ notes: 用户很喜欢但低频；作为 supporting ingredient。
 ```yaml
 id: baby-napa-cabbage
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 娃娃菜
 name_en: Baby Napa Cabbage
@@ -2383,6 +2455,7 @@ child_coverage:
 ```yaml
 id: napa-cabbage
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 大白菜
 name_en: Napa Cabbage
@@ -2411,6 +2484,7 @@ notes: ''
 ```yaml
 id: chinese-greens
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 青菜
 name_en: Chinese Greens
@@ -2443,6 +2517,7 @@ child_coverage:
 ```yaml
 id: spinach
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 菠菜
 name_en: Spinach
@@ -2471,6 +2546,7 @@ notes: ''
 ```yaml
 id: lettuce
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 生菜
 name_en: Lettuce
@@ -2503,6 +2579,7 @@ child_coverage:
 ```yaml
 id: youmai-cai
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 油麦菜
 name_en: Youmai Cai
@@ -2535,6 +2612,7 @@ child_coverage:
 ```yaml
 id: choy-sum
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 菜心
 name_en: Choy Sum
@@ -2567,6 +2645,7 @@ child_coverage:
 ```yaml
 id: gai-lan
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 芥兰
 name_en: Gai Lan
@@ -2598,6 +2677,7 @@ child_coverage:
 ```yaml
 id: water-spinach
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 空心菜
 name_en: Water Spinach
@@ -2626,6 +2706,7 @@ notes: ''
 ```yaml
 id: pea-shoots
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 豆苗
 name_en: Pea Shoots
@@ -2657,6 +2738,7 @@ child_coverage:
 ```yaml
 id: amaranth-greens
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 苋菜
 name_en: Amaranth Greens
@@ -2688,6 +2770,7 @@ child_coverage:
 ```yaml
 id: tong-hao
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 茼蒿
 name_en: Tong Hao
@@ -2719,6 +2802,7 @@ child_coverage:
 ```yaml
 id: mustard-greens
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 芥菜
 name_en: Mustard Greens
@@ -2747,6 +2831,7 @@ notes: ''
 ```yaml
 id: frozen-shepherds-purse
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 冷冻荠菜末
 name_en: Frozen Shepherd’s Purse
@@ -2781,6 +2866,7 @@ notes: 只使用冷冻荠菜末；可临时解冻/直接进入家庭 workflow。
 ```yaml
 id: broccoli
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 西兰花
 name_en: Broccoli
@@ -2809,6 +2895,7 @@ notes: ''
 ```yaml
 id: cauliflower
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 花菜
 name_en: Cauliflower
@@ -2837,6 +2924,7 @@ notes: ''
 ```yaml
 id: green-cabbage
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 卷心菜
 name_en: Green Cabbage
@@ -2865,6 +2953,7 @@ notes: ''
 ```yaml
 id: winter-melon
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 冬瓜
 name_en: Winter Melon
@@ -2893,6 +2982,7 @@ notes: ''
 ```yaml
 id: luffa
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 丝瓜
 name_en: Luffa
@@ -2921,6 +3011,7 @@ notes: ''
 ```yaml
 id: zucchini
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 西葫芦
 name_en: Zucchini
@@ -2949,6 +3040,7 @@ notes: ''
 ```yaml
 id: cucumber
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 黄瓜
 name_en: Cucumber
@@ -2977,6 +3069,7 @@ notes: ''
 ```yaml
 id: bitter-melon
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 苦瓜
 name_en: Bitter Melon
@@ -3007,6 +3100,7 @@ notes: 用户已明确降为低优先度。
 ```yaml
 id: tomato
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 番茄
 name_en: Tomato
@@ -3035,6 +3129,7 @@ notes: ''
 ```yaml
 id: eggplant
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 茄子
 name_en: Eggplant
@@ -3063,6 +3158,7 @@ notes: ''
 ```yaml
 id: bell-pepper
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 甜椒
 name_en: Bell Pepper
@@ -3091,6 +3187,7 @@ notes: ''
 ```yaml
 id: carrot
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 胡萝卜
 name_en: Carrot
@@ -3119,6 +3216,7 @@ notes: ''
 ```yaml
 id: daikon
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 白萝卜
 name_en: Daikon
@@ -3147,6 +3245,7 @@ notes: ''
 ```yaml
 id: chinese-yam
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 山药
 name_en: Chinese Yam
@@ -3177,6 +3276,7 @@ notes: 用户已明确降为低优先度；处理时容易刺激手部。
 ```yaml
 id: celtuce
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 莴笋
 name_en: Celtuce
@@ -3207,6 +3307,7 @@ notes: 用户已明确降为低优先度；备菜较麻烦。
 ```yaml
 id: water-chestnuts
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 马蹄
 name_en: Water Chestnuts
@@ -3235,6 +3336,7 @@ notes: ''
 ```yaml
 id: sugar-snap-peas
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 甜豆
 name_en: Sugar Snap Peas
@@ -3263,6 +3365,7 @@ notes: ''
 ```yaml
 id: frozen-shelled-edamame
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 冷冻去壳毛豆
 name_en: Frozen Shelled Edamame
@@ -3292,6 +3395,7 @@ notes: ''
 ```yaml
 id: frozen-green-peas
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 冷冻青豆
 name_en: Frozen Green Peas
@@ -3321,6 +3425,7 @@ notes: ''
 ```yaml
 id: yellow-chives
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 韭黄
 name_en: Yellow Chives
@@ -3349,6 +3454,7 @@ notes: 家庭购买通常是一包现成，备菜相对方便。
 ```yaml
 id: garlic-chives
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 韭菜
 name_en: Garlic Chives
@@ -3377,6 +3483,7 @@ notes: 可作为 Vegetable-slot 食材。
 ```yaml
 id: chinese-celery
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 香芹
 name_en: Chinese Celery
@@ -3405,6 +3512,7 @@ notes: Strong-flavor vegetable；可占 Vegetable slot。
 ```yaml
 id: celery
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 西芹
 name_en: Celery
@@ -3433,6 +3541,7 @@ notes: Strong-flavor vegetable；可占 Vegetable slot。
 ```yaml
 id: onion
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 洋葱
 name_en: Onion
@@ -3461,6 +3570,7 @@ notes: Strong-flavor vegetable；可占 Vegetable slot。
 ```yaml
 id: garlic-scapes
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 蒜苔
 name_en: Garlic Scapes
@@ -3492,6 +3602,7 @@ notes: 不算 pantry aromatic；可作为 Vegetable-slot 食材。
 ```yaml
 id: king-oyster-mushrooms
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 杏鲍菇
 name_en: King Oyster Mushrooms
@@ -3520,6 +3631,7 @@ notes: ''
 ```yaml
 id: button-cremini-mushrooms
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 口蘑 / Cremini
 name_en: Button / Cremini Mushrooms
@@ -3548,6 +3660,7 @@ notes: ''
 ```yaml
 id: fresh-shiitake
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 鲜香菇
 name_en: Fresh Shiitake
@@ -3576,6 +3689,7 @@ notes: ''
 ```yaml
 id: oyster-mushrooms
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 平菇
 name_en: Oyster Mushrooms
@@ -3604,6 +3718,7 @@ notes: ''
 ```yaml
 id: shimeji-mushrooms
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 蟹味菇（Shimeji）
 name_en: Shimeji Mushrooms
@@ -3632,6 +3747,7 @@ notes: ''
 ```yaml
 id: enoki-mushrooms
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 金针菇
 name_en: Enoki Mushrooms
@@ -3660,6 +3776,7 @@ notes: ''
 ```yaml
 id: maitake
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 舞茸
 name_en: Maitake
@@ -3690,6 +3807,7 @@ notes: 较贵，用户已明确降为低优先度。
 ```yaml
 id: fresh-wood-ear-mushrooms
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 新鲜黑木耳
 name_en: Fresh Wood Ear Mushrooms
@@ -3724,6 +3842,7 @@ notes: 固定为新鲜黑木耳；不是干木耳，不计泡发时间。
 ```yaml
 id: rice
 type: ingredient
+inventory_tracking: presence-only
 status: candidate
 name_zh: 米饭 / 大米
 name_en: Rice
@@ -3752,6 +3871,7 @@ notes: ''
 ```yaml
 id: noodles
 type: ingredient
+inventory_tracking: presence-only
 status: candidate
 name_zh: 面条
 name_en: Noodles
@@ -3780,6 +3900,7 @@ notes: ''
 ```yaml
 id: potato
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 土豆
 name_en: Potato
@@ -3808,6 +3929,7 @@ notes: 项目分类为 Staple，不按 Vegetable slot 计算。
 ```yaml
 id: sweet-potato
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 红薯
 name_en: Sweet Potato
@@ -3836,6 +3958,7 @@ notes: 项目分类为 Staple，不按 Vegetable slot 计算。
 ```yaml
 id: taro
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 芋头
 name_en: Taro
@@ -3864,6 +3987,7 @@ notes: 项目分类为 Staple，不按 Vegetable slot 计算。
 ```yaml
 id: lotus-root
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 莲藕
 name_en: Lotus Root
@@ -3892,6 +4016,7 @@ notes: 项目分类为 Staple，不按 Vegetable slot 计算。
 ```yaml
 id: kabocha-squash
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 南瓜（Kabocha）
 name_en: Kabocha Squash
@@ -3920,6 +4045,7 @@ notes: 项目分类为 Staple，不按 Vegetable slot 计算。
 ```yaml
 id: corn
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 玉米
 name_en: Corn
@@ -3948,6 +4074,7 @@ notes: 项目分类为 Staple，不按 Vegetable slot 计算。
 ```yaml
 id: bread
 type: ingredient
+inventory_tracking: presence-only
 status: candidate
 name_zh: 面包
 name_en: Bread
@@ -3976,6 +4103,7 @@ notes: ''
 ```yaml
 id: steamed-buns
 type: ingredient
+inventory_tracking: presence-only
 status: candidate
 name_zh: 馒头
 name_en: Steamed Buns
@@ -4004,6 +4132,7 @@ notes: ''
 ```yaml
 id: oats
 type: ingredient
+inventory_tracking: presence-only
 status: candidate
 name_zh: 燕麦
 name_en: Oats
@@ -4037,6 +4166,7 @@ notes: ''
 ```yaml
 id: ginger
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 姜
 name_en: Ginger
@@ -4066,6 +4196,7 @@ notes: Pantry aromatic；不占 Vegetable slot，不需要在 Starter 中勾选�
 ```yaml
 id: scallion
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 葱
 name_en: Scallion
@@ -4095,6 +4226,7 @@ notes: Pantry aromatic；不占 Vegetable slot，不需要在 Starter 中勾选�
 ```yaml
 id: garlic
 type: ingredient
+inventory_tracking: counted
 status: candidate
 name_zh: 蒜
 name_en: Garlic
@@ -17977,7 +18109,7 @@ Checked dates: Pork legacy sources were originally checked 2026-08-08; non-Pork 
 | Starter section integrity | PASS | every Ingredient resolves to one controlled section and has a unique positive order within that section |
 | Recipe-required Starter reachability | PASS | every non-pantry Ingredient required by any Recipe / `one_of` is Starter-visible |
 | All candidate | PASS | 162/162 remain `candidate`; no auto-approval |
-| v1.5 required fields | PASS | `primary_role`, `meal_contribution`, `child_coverage`, staple split, `detail_level` present on 162/162; `meal_addons` present only where supported |
+| v1.6 required fields | PASS | `primary_role`, `meal_contribution`, `child_coverage`, staple split, `detail_level` present on 162/162; `inventory_tracking` present on 132/132 Ingredients; `meal_addons` present only where supported |
 | Deprecated Recipe fields | PASS | `vegetable_count`, `staple_pairings`, `child_support_protein_needed` absent from 162/162 |
 | Ingredient availability | PASS | every non-pantry recipe ingredient is `required`; pantry seasoning is `assumed` |
 | Ingredient dependency audit | PASS | all Recipe Ingredient IDs and all `one_of` options resolve to the v1.4 Ingredient Library |
@@ -18003,6 +18135,7 @@ No required validation item remains FAIL or BLOCKED. No manual-intervention ques
 Long-term decisions added/confirmed in this formalization:
 
 - The original retained 139-item Recipe pool remains fully represented; v1.5 adds 23 Vegetable-centered structures for 162 total Recipes, with no “core subset” reduction.
+- v1.6 adds explicit `inventory_tracking` modes for all 132 Ingredients; Firebase/shared household state stores stable IDs and operating state, not Recipe or Ingredient facts.
 - All records remain `candidate`.
 - Time is a flexible workload/planning signal rather than a strict daily hard limit; precise household timings are added when actually known.
 - Manual intervention is reserved for unresolved issues that materially change safety, feasibility, Recipe identity, or household fit.
@@ -18033,6 +18166,11 @@ Long-term decisions added/confirmed in this formalization:
 - Child coverage may be `ingredient-dependent`; unknown Ingredient-level acceptance remains unknown and does not count toward hard Child completion.
 
 # 10. CHANGELOG
+
+## 2026-08-12 — v1.6
+
+- Added required `inventory_tracking` to all 132 Ingredients: counted quantities use half-unit household estimates; the approved staple/pantry set uses presence-only state.
+- Added shared household state boundaries: inventory and current-meal availability are independent snapshots; the public Firebase repository stores stable IDs and operating state only.
 
 ## 2026-08-12 — v1.5
 

@@ -1,11 +1,14 @@
 export type TimePreference = 'any' | '30' | '45' | '60';
 export type RecipeChildCoverage = boolean | 'ingredient-dependent';
 export type IngredientChildCoverage = boolean | 'unknown';
+export type InventoryTracking = 'counted' | 'presence-only';
 
 export interface MealIngredient {
   id: string;
   nameZh?: string;
+  nameEn?: string;
   tags?: string[];
+  inventoryTracking: InventoryTracking;
   childCoverage?: { vegetable: IngredientChildCoverage };
 }
 

@@ -1,0 +1,26 @@
+{
+  "rules": {
+    "households": {
+      "$householdId": {
+        "members": {
+          "$uid": {
+            ".read": "auth != null && auth.uid === $uid && data.val() === true",
+            ".write": false
+          }
+        },
+        "state": {
+          ".read": "auth != null && root.child('households').child($householdId).child('members').child(auth.uid).val() === true",
+          ".write": "auth != null && root.child('households').child($householdId).child('members').child(auth.uid).val() === true",
+          "inventory": {
+            "$ingredientId": {
+              ".validate": "(newData.isBoolean() && newData.val() == true) || (newData.isNumber() && newData.val() > 0 && newData.val() % 0.5 == 0)"
+            }
+          },
+          "currentMeal": {
+            ".validate": "newData.val() == null || (newData.hasChildren(['mealId', 'status', 'proteinTarget', 'vegetableTarget', 'stapleRequired', 'childMode', 'timePreference']) && newData.child('mealId').isString() && newData.child('mealId').val().length > 0 && newData.child('status').isString() && (newData.child('status').val() == 'selecting' || newData.child('status').val() == 'ready' || newData.child('status').val() == 'cooking') && newData.child('proteinTarget').isNumber() && newData.child('proteinTarget').val() >= 1 && newData.child('proteinTarget').val() <= 3 && newData.child('proteinTarget').val() % 0.5 == 0 && newData.child('vegetableTarget').isNumber() && newData.child('vegetableTarget').val() >= 1 && newData.child('vegetableTarget').val() <= 3 && newData.child('vegetableTarget').val() % 0.5 == 0 && newData.child('stapleRequired').isBoolean() && newData.child('childMode').isBoolean() && newData.child('timePreference').isString() && (newData.child('timePreference').val() == 'any' || newData.child('timePreference').val() == '30' || newData.child('timePreference').val() == '45' || newData.child('timePreference').val() == '60'))"
+          }
+        }
+      }
+    }
+  }
+}

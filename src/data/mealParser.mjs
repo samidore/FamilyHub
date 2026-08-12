@@ -1,6 +1,6 @@
 import { parse as parseYaml } from 'yaml';
 
-const INGREDIENT_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'starter', 'tags', 'child_coverage', 'fit', 'evidence', 'notes']);
+const INGREDIENT_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'starter', 'tags', 'child_coverage', 'inventory_tracking', 'fit', 'evidence', 'notes']);
 const RECIPE_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'tags', 'fit', 'evidence', 'notes', 'primary_role', 'main_protein_category', 'main_protein_ingredient_ids', 'supporting_protein_ingredient_ids', 'vegetable_ingredient_ids', 'meal_contribution', 'child_coverage', 'meal_addons', 'integral_staple_ingredient_ids', 'recommended_staple_ingredient_ids', 'active_minutes', 'meal_window_minutes', 'elapsed_minutes', 'advance_start_required', 'equipment', 'burner_plan', 'child_suitable', 'child_texture', 'spicy_in_base', 'deep_fried', 'salt_level', 'oil_level', 'servings', 'detail_level', 'ingredients', 'steps', 'child_serving', 'adult_finish', 'substitutions']);
 const ADDON_KEYS = new Set(['id', 'accepts_ingredient_tag', 'meal_contribution', 'child_coverage', 'notes']);
 const CONTRIBUTIONS = new Set([0, 0.5, 1, 2]);
@@ -15,6 +15,8 @@ const REQUIREMENT_KEYS = new Set(['ingredient_id', 'one_of', 'pantry_core', 'rol
 const ADDON_ID = 'finish-with-leafy-vegetable';
 const ADDON_TAG = 'finish-wilt-compatible';
 const ADDON_RECIPE_COUNT = 7;
+const INVENTORY_TRACKING = new Set(['counted', 'presence-only']);
+const PRESENCE_ONLY_INGREDIENTS = new Set(['eggs', 'rice', 'noodles', 'bread', 'steamed-buns', 'oats', 'white-oil-sausage']);
 
 const assert = (condition, message) => { if (!condition) throw new Error(`Meal KB: ${message}`); };
 const assertKeys = (record, allowed) => {
@@ -57,6 +59,8 @@ export function parseMealKb(text) {
     assert(!ingredientIds.has(record.id), `duplicate ingredient ID ${record.id}`);
     ingredientIds.add(record.id);
     assertKeys(record.starter ?? {}, STARTER_KEYS); assertKeys(record.fit ?? {}, FIT_KEYS); assertKeys(record.evidence ?? {}, EVIDENCE_KEYS); assertKeys(record.child_coverage ?? {}, INGREDIENT_CHILD_KEYS);
+    assert(INVENTORY_TRACKING.has(record.inventory_tracking), `${record.id} has invalid inventory_tracking`);
+    assert((record.inventory_tracking === 'presence-only') === PRESENCE_ONLY_INGREDIENTS.has(record.id), `${record.id} must use the approved inventory_tracking mode`);
     assert(record.starter && typeof record.starter.visible === 'boolean', `${record.id} has invalid starter visibility`);
     assert(sectionIds.has(record.starter.section), `${record.id} has unknown starter section ${record.starter.section}`);
     assert(Number.isInteger(record.starter.order) && record.starter.order > 0, `${record.id} has invalid starter order`);
@@ -66,7 +70,8 @@ export function parseMealKb(text) {
   const ingredients = ingredientRaw.map((record) => ({
     id: record.id, nameZh: String(record.name_zh), nameEn: String(record.name_en),
     visible: record.starter.visible, section: String(record.starter.section), order: Number(record.starter.order),
-    tags: stringArray(record.tags), childCoverage: record.child_coverage ? { vegetable: record.child_coverage.vegetable } : undefined,
+    tags: stringArray(record.tags), inventoryTracking: record.inventory_tracking,
+    childCoverage: record.child_coverage ? { vegetable: record.child_coverage.vegetable } : undefined,
   }));
   assert(ingredients.filter((ingredient) => ingredient.visible).length === 129, 'expected 129 visible starter ingredients');
   for (const section of starterSections) {
