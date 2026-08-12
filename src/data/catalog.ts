@@ -3,6 +3,7 @@ import rawLibraryEvents from './library-events.json';
 import rawPediatricDentists from './pediatric-dentists.json';
 import rawAdultDermatologists from './adult-dermatologists.json';
 import rawColonoscopySpecialists from './colonoscopy-specialists.json';
+import { mealRecipes } from './meal';
 import { parseAdultDermatologists, parseColonoscopySpecialists, parseDayTrips, parseLibraryEvents, parsePediatricDentists } from './schemas.mjs';
 import type { AdultDermatologist, ColonoscopySpecialist, DayTrip, LibraryEvent, PediatricDentist } from './types';
 import type { ModuleId } from '../config/modules';
@@ -19,6 +20,7 @@ export const moduleRecords: Record<ModuleId, readonly unknown[]> = {
   'pediatric-dentists': pediatricDentists,
   'adult-dermatologists': adultDermatologists,
   'colonoscopy-specialists': colonoscopySpecialists,
+  'meal-builder': mealRecipes,
 };
 
 export function latestVerifiedDate(records: readonly { verifiedDate: string }[]) {

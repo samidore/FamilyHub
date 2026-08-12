@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Family Hub is a mobile-first reference site for recurring family decisions that benefit from structured lists, search, filtering, and comparison. The first foundation release contains Day Trips, Library Activities, Pediatric Dentists, Adult Dermatologists, and Colonoscopy Specialists. Future public modules may include play ideas and recipes; private calendars, appointments, and personal notes require a separately authenticated system.
+Family Hub is a mobile-first reference site for recurring family decisions that benefit from structured lists, search, filtering, and comparison. The active public modules are Day Trips, Library Activities, Pediatric Dentists, Adult Dermatologists, Colonoscopy Specialists, and Meal Builder. Future public modules may include play ideas; private calendars, appointments, and personal notes require a separately authenticated system.
 
 This file is the current product and data authority. `HANDOFF_Family_Hub.md` and `family_outing_hub_combined_prototype.html` are historical migration references only.
 
@@ -54,7 +54,7 @@ The public site must not add analytics, third-party embeds, remote fonts, or oth
 - Mobile body text starts at 18px, controls at 17px, card titles at 28–32px, and tap targets at 48px.
 - Support keyboard navigation, visible focus, reduced motion, logical headings, live result counts, and text zoom to 200%.
 - Avoid horizontal scrolling, hover-only controls, sticky filter panels, decorative animation, and color-only meaning.
-- Server-render the complete content. JavaScript may progressively enhance filtering, sorting, URL query state, and result counts.
+- Server-render the complete content. JavaScript may progressively enhance filtering, sorting, URL query state, and result counts. Dynamic tools such as Meal Builder may require JavaScript for derived selection, ranking, and view state, provided their complete reference content remains readable without JavaScript and the page clearly explains the limitation.
 
 ## Data and source rules
 
@@ -87,12 +87,13 @@ Planned categories and modules remain absent from navigation until they have a w
 4. Run browser tests for interaction or layout changes.
 5. Publish through the GitHub Pages workflow only after all checks pass.
 
-## Release-one acceptance
+## Current acceptance
 
-- The home groups and searches the five working modules.
+- The home groups and searches the six working modules.
 - Exactly 29 trips, 18 library activities, 10 pediatric dentists, 10 adult dermatologists, and 18 colonoscopy specialists are preserved.
 - Every module works without client JavaScript and gains combined search/filter/sort behavior with it.
 - Query state is bookmarkable, empty states are recoverable, and external links are safe.
 - Layouts work without horizontal overflow at 375, 390, 430, 768, 1024, and 1440 pixels.
 - Public data passes strict schemas and contains no private-family fields.
+- Meal Builder parses its public-safe Markdown KB as the single Ingredient/Recipe source and preserves 132 Ingredients, 129 visible Starter choices, and 139 Recipes.
 - Validation, Astro checks, production build, registry audit, and browser smoke tests pass.

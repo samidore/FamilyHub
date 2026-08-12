@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { moduleRegistry } from '../src/config/modules.ts';
 import { parseAdultDermatologists, parseColonoscopySpecialists, parseDayTrips, parseLibraryEvents, parsePediatricDentists } from '../src/data/schemas.mjs';
+import { parseMealKb } from '../src/data/mealParser.mjs';
 
 const readJson = async (file) => JSON.parse(await readFile(file, 'utf8'));
 const trips = parseDayTrips(await readJson('src/data/day-trips.json'));
@@ -8,6 +9,7 @@ const events = parseLibraryEvents(await readJson('src/data/library-events.json')
 const dentists = parsePediatricDentists(await readJson('src/data/pediatric-dentists.json'));
 const dermatologists = parseAdultDermatologists(await readJson('src/data/adult-dermatologists.json'));
 const colonoscopy = parseColonoscopySpecialists(await readJson('src/data/colonoscopy-specialists.json'));
+const meals = parseMealKb(await readFile('FAMILY_MEAL_KB.md', 'utf8'));
 const home = await readFile('dist/index.html', 'utf8');
 const project = await readFile('PROJECT.md', 'utf8');
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
@@ -18,6 +20,7 @@ const records = {
   'pediatric-dentists': dentists,
   'adult-dermatologists': dermatologists,
   'colonoscopy-specialists': colonoscopy,
+  'meal-builder': meals.recipes,
 };
 const cardAttributes = {
   'day-trips': 'data-destination',
@@ -25,10 +28,11 @@ const cardAttributes = {
   'pediatric-dentists': 'data-dentist',
   'adult-dermatologists': 'data-dermatologist',
   'colonoscopy-specialists': 'data-colonoscopy',
+  'meal-builder': 'data-meal-recipe',
 };
 const cardCount = (html, attribute) => (html.match(new RegExp(`<article[^>]+${attribute}`, 'g')) ?? []).length;
 
-assert(moduleRegistry.length === 5, 'The active module registry must contain exactly five release-one modules');
+assert(moduleRegistry.length === 6, 'The active module registry must contain exactly six modules');
 assert((home.match(/<a\b[^>]+data-module/g) ?? []).length === moduleRegistry.length, 'Home module cards do not match the active registry');
 for (const module of moduleRegistry) {
   const output = await readFile(`dist${module.route}index.html`, 'utf8');
@@ -41,6 +45,7 @@ assert(events.length === 18, 'Library activity migration count is not 18');
 assert(dentists.length === 10, 'Pediatric dentist migration count is not 10');
 assert(dermatologists.length === 10, 'Adult dermatologist migration count is not 10');
 assert(colonoscopy.length === 18, 'Colonoscopy specialist migration count is not 18');
+assert(meals.ingredients.length === 132 && meals.ingredients.filter((item) => item.visible).length === 129 && meals.recipes.length === 139, 'Meal KB counts are incorrect');
 assert(events.every((item, index, all) => !index || all[index - 1].dayOrder < item.dayOrder || (all[index - 1].dayOrder === item.dayOrder && all[index - 1].timeOrder <= item.timeOrder)), 'Events are not stored in weekday/time order');
 assert(dentists.every((item) => item.healthgradesUrl.startsWith('https://www.healthgrades.com/')), 'A Healthgrades URL is missing or invalid');
 assert(dentists.every((item) => item.healthgradesRating === null || (item.healthgradesRating >= 0 && item.healthgradesRating <= 5)), 'A Healthgrades rating is invalid');
@@ -66,6 +71,7 @@ assert(!/(memberId|groupNumber|insuranceId|insuranceCard|cardImage|codex-remote-
 
 const htmlFiles = [home, ...(await Promise.all(moduleRegistry.map((module) => readFile(`dist${module.route}index.html`, 'utf8'))))];
 assert(htmlFiles.every((html) => !/(memberId|groupNumber|insuranceId|insuranceCard|cardImage|codex-remote-attachments)/i.test(html)), 'Private insurance fields or attachment paths were found in build output');
+assert(htmlFiles.every((html) => !/(2024\s*年\s*8\s*月|\bwife\b|\bhusband\b|妻子|丈夫|\buser\s+(likes?|reports?)\b)/i.test(html)), 'Private household phrasing was found in build output');
 assert(htmlFiles.every((html) => !/<iframe|google-analytics|googletagmanager|fonts\.googleapis/i.test(html)), 'A forbidden embed, analytics script, or remote font was found');
 for (const html of htmlFiles) {
   const externalLinks = [...html.matchAll(/<a\b[^>]*href="(https:[^"]+)"[^>]*>/g)];
@@ -77,4 +83,4 @@ assert(project.includes('Weather: degrees Celsius'), 'PROJECT.md is missing the 
 assert(project.includes('Recipe liquids: cups plus mL'), 'PROJECT.md is missing the liquid-unit policy');
 assert(project.includes('public-reference'), 'PROJECT.md is missing the public data classification');
 
-console.log(`Registry audit passed: ${moduleRegistry.length} modules, ${trips.length} trips, ${events.length} activities, ${dentists.length} dentists, ${dermatologists.length} dermatologists, ${colonoscopy.length} colonoscopy specialists.`);
+console.log(`Registry audit passed: ${moduleRegistry.length} modules, ${trips.length} trips, ${events.length} activities, ${dentists.length} dentists, ${dermatologists.length} dermatologists, ${colonoscopy.length} colonoscopy specialists, ${meals.recipes.length} meal recipes.`);

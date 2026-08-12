@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test('home groups and searches the active modules', async ({ page }) => {
   await page.goto('./');
-  await expect(page.locator('[data-module]')).toHaveCount(5);
+  await expect(page.locator('[data-module]')).toHaveCount(6);
   await expect(page.getByRole('heading', { name: '出行与玩乐' })).toBeVisible();
   await expect(page.getByRole('heading', { name: '健康与照护' })).toBeVisible();
   await page.getByLabel('查找一个工具').fill('牙医');
@@ -79,6 +79,8 @@ test('complete records remain available without JavaScript', async ({ browser })
   await expect(page.locator('[data-dermatologist]')).toHaveCount(10);
   await page.goto('colonoscopy-specialists/');
   await expect(page.locator('[data-colonoscopy]')).toHaveCount(18);
+  await page.goto('meal-builder/');
+  await expect(page.locator('[data-meal-recipe]')).toHaveCount(139);
   await context.close();
 });
 
@@ -96,7 +98,7 @@ test('external links are HTTPS and safely opened', async ({ page }) => {
 for (const width of [375, 390, 430, 768, 1024, 1440]) {
   test(`responsive foundation at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
-    for (const route of ['./', 'day-trips/', 'library-activities/', 'pediatric-dentists/', 'adult-dermatologists/', 'colonoscopy-specialists/']) {
+    for (const route of ['./', 'day-trips/', 'library-activities/', 'pediatric-dentists/', 'adult-dermatologists/', 'colonoscopy-specialists/', 'meal-builder/']) {
       await page.goto(route);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       expect(overflow).toBeLessThanOrEqual(1);
@@ -113,4 +115,41 @@ test('keyboard focus and 200% zoom remain usable', async ({ page }) => {
   await expect(page.locator('.skip-link')).toBeFocused();
   await page.evaluate(() => { document.documentElement.style.fontSize = '200%'; });
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+});
+
+test('meal builder filters live, completes a meal, and preserves state', async ({ page }) => {
+  await page.goto('meal-builder/');
+  await expect(page.locator('[data-meal-recipe]:visible')).toHaveCount(0);
+  for (const id of ['chicken-breast', 'broccoli', 'green-cabbage', 'onion', 'noodles']) {
+    const button = page.locator(`[data-ingredient-id="${id}"]`);
+    const section = button.locator('xpath=ancestor::details');
+    if (!(await section.evaluate((element: HTMLDetailsElement) => element.open))) await section.locator('summary').click();
+    await button.click();
+  }
+  const chicken = page.locator('[data-meal-recipe="chicken-broccoli-stir-fry"]');
+  const udon = page.locator('[data-meal-recipe="yaki-udon"]');
+  await expect(chicken).toBeVisible();
+  await chicken.getByRole('button', { name: '选择这道菜' }).click();
+  await expect(page.locator('#progress-protein')).toHaveText('1 / 1');
+  await expect(udon).toBeVisible();
+  await udon.getByRole('button', { name: '选择这道菜' }).click();
+  await expect(page.getByRole('heading', { name: '今晚的菜' })).toBeVisible();
+  await page.getByRole('button', { name: '开始做饭' }).click();
+  await expect(page.getByRole('heading', { name: '开始做饭' })).toBeVisible();
+  await expect(page.locator('[data-cook-recipe]:visible')).toHaveCount(2);
+  await page.reload();
+  await expect(page.getByRole('heading', { name: '开始做饭' })).toBeVisible();
+  await page.getByRole('button', { name: '返回菜单' }).click();
+  await page.getByRole('button', { name: '修改选菜' }).click();
+  await expect(page.locator('[data-selected-recipe]:visible')).toHaveCount(2);
+});
+
+test('meal ingredient sections keep selection while collapsed', async ({ page }) => {
+  await page.goto('meal-builder/');
+  const section = page.locator('[data-ingredient-section="pork"]');
+  await section.locator('[data-ingredient-id="whole-pork-tenderloin"]').click();
+  await section.locator('summary').click();
+  await expect(section.locator('[data-ingredient-id="whole-pork-tenderloin"]')).not.toBeVisible();
+  await section.locator('summary').click();
+  await expect(section.locator('[data-ingredient-id="whole-pork-tenderloin"]')).toHaveAttribute('aria-pressed', 'true');
 });

@@ -1,13 +1,13 @@
 export const categoryDefinitions = [
   { id: 'explore-play', title: '出行与玩乐', description: '找一个适合今天的去处、活动或轻松安排。', accent: 'evergreen', order: 1 },
   { id: 'health-care', title: '健康与照护', description: '把公开资料、家庭判断和需要确认的事项分开比较。', accent: 'ochre', order: 2 },
-  { id: 'food-home', title: '饮食与家庭', description: '为未来的食谱和家庭日常清单预留。', accent: 'berry', order: 3 },
+  { id: 'food-home', title: '饮食与家庭', description: '根据现有食材和家庭目标，减少每天组餐时的重复判断。', accent: 'berry', order: 3 },
 ] as const;
 
 export type CategoryId = (typeof categoryDefinitions)[number]['id'];
-export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists' | 'adult-dermatologists' | 'colonoscopy-specialists';
-export type ModuleAccent = 'evergreen' | 'lake' | 'ochre';
-export type ModuleIcon = 'compass' | 'calendar' | 'care';
+export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists' | 'adult-dermatologists' | 'colonoscopy-specialists' | 'meal-builder';
+export type ModuleAccent = 'evergreen' | 'lake' | 'ochre' | 'berry';
+export type ModuleIcon = 'compass' | 'calendar' | 'care' | 'meal';
 
 export interface ModuleDefinition {
   id: ModuleId;
@@ -86,6 +86,19 @@ export const moduleRegistry = [
     itemLabel: '位专家',
     accent: 'ochre',
     icon: 'care',
+    privacyClass: 'public-reference',
+    status: 'active',
+  },
+  {
+    id: 'meal-builder',
+    route: '/meal-builder/',
+    categoryId: 'food-home',
+    title: 'Meal Builder',
+    summary: '勾选这顿可用的食材，实时补齐 Protein、Vegetable、Staple 和孩子需要的菜。',
+    keywords: ['饮食', '组餐', '食材', '菜谱', '做饭', 'meal', 'recipe', 'ingredient', 'cooking'],
+    itemLabel: '道候选菜',
+    accent: 'berry',
+    icon: 'meal',
     privacyClass: 'public-reference',
     status: 'active',
   },
