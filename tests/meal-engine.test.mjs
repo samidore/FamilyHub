@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { parseMealKb } from '../src/data/mealParser.mjs';
-import { addSelectedAddon, aggregateMeal, bindRecipeIngredients, defaultMealState, isFeasible, isMealComplete, rankAddons, rankCandidates, reconcileMealState, removeSelectedAddon, resolveRecipeChildCoverage, timeFit } from '../src/lib/mealEngine.ts';
+import { addSelectedAddon, aggregateMeal, bindRecipeIngredients, defaultMealState, isFeasible, isMealComplete, rankAddons, rankCandidates, reconcileMealState, removeSelectedAddon, resolveRecipeChildCoverage, timeFit, unmetCompletionRequirements } from '../src/lib/mealEngine.ts';
 
 const recipe = (id, contribution, childCoverage = { protein: false, vegetable: false }, requirements = []) => ({ id, order: Number(id.replace(/\D/g, '')) || 0, fitScore: 4, contribution, childCoverage, requirements, mealWindowMinutes: '30–45', elapsedMinutes: '30–45', advanceStartRequired: false });
 
@@ -19,6 +19,13 @@ test('mixed contributions aggregate and complete a meal', () => {
   const totals = aggregateMeal([mixed, staple]);
   assert.deepEqual(totals, { protein: 1, vegetable: 2, staple: 1, childProtein: true, childVegetable: true });
   assert.equal(isMealComplete(state, totals), true);
+});
+
+test('completion gaps are reported in stable order', () => {
+  const state = defaultMealState();
+  assert.deepEqual(unmetCompletionRequirements(state, { protein: 0, vegetable: 2, staple: 0, childProtein: false, childVegetable: false }), ['Protein', 'Staple', '孩子蛋白', '孩子蔬菜']);
+  state.childMode = false;
+  assert.deepEqual(unmetCompletionRequirements(state, { protein: 1, vegetable: 2, staple: 1, childProtein: false, childVegetable: false }), []);
 });
 
 test('child gap ranks efficient mixed filler before half protein and full fallback', () => {

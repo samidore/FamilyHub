@@ -133,6 +133,9 @@ test('meal builder filters live, completes a meal, and preserves state', async (
   await expect(page.locator('#progress-protein')).toHaveText('1 / 1');
   await expect(udon).toBeVisible();
   await udon.getByRole('button', { name: '选择这道菜' }).click();
+  await expect(page.locator('#meal-completion-status')).toHaveText('目标已满足，可以进入下一步。');
+  await expect(page.locator('#meal-next')).toBeEnabled();
+  await page.locator('#meal-next').click();
   await expect(page.getByRole('heading', { name: '今晚的菜' })).toBeVisible();
   await page.getByRole('button', { name: '开始做饭' }).click();
   await expect(page.getByRole('heading', { name: '开始做饭' })).toBeVisible();
@@ -152,6 +155,12 @@ test('meal ingredient sections keep selection while collapsed', async ({ page })
   await expect(section.locator('[data-ingredient-id="whole-pork-tenderloin"]')).not.toBeVisible();
   await section.locator('summary').click();
   await expect(section.locator('[data-ingredient-id="whole-pork-tenderloin"]')).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('meal builder explains completion blocker and gates next step', async ({ page }) => {
+  await page.goto('meal-builder/');
+  await expect(page.locator('#meal-completion-status')).toContainText('还缺：');
+  await expect(page.locator('#meal-next')).toBeDisabled();
 });
 
 test('meal builder exposes one-of binding and explicit leafy add-on choices', async ({ page }) => {

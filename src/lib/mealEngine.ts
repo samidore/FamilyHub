@@ -209,7 +209,20 @@ export function aggregateMeal(selected: MealRecipe[], context: {
 
 export const aggregateSelection = (recipes: MealRecipe[], state: MealState, ingredients?: MealIngredient[] | Record<string, MealIngredient>) => aggregateMeal(recipes.filter((recipe) => state.selectedRecipeIds.includes(recipe.id)), { recipeIngredientBindings: state.recipeIngredientBindings, selectedAddons: state.selectedAddons, availableIngredientIds: state.availableIngredientIds, ingredients });
 
-export const isMealComplete = (state: MealState, totals: MealTotals) => totals.protein >= state.proteinTarget && totals.vegetable >= state.vegetableTarget && (!state.stapleRequired || totals.staple >= 1) && (!state.childMode || (totals.childProtein && totals.childVegetable));
+export type MealCompletionRequirement = 'Protein' | 'Vegetable' | 'Staple' | '孩子蛋白' | '孩子蔬菜';
+
+/** Return unmet targets in the same order used by the builder progress display. */
+export function unmetCompletionRequirements(state: MealState, totals: MealTotals): MealCompletionRequirement[] {
+  const unmet: MealCompletionRequirement[] = [];
+  if (totals.protein < state.proteinTarget) unmet.push('Protein');
+  if (totals.vegetable < state.vegetableTarget) unmet.push('Vegetable');
+  if (state.stapleRequired && totals.staple < 1) unmet.push('Staple');
+  if (state.childMode && !totals.childProtein) unmet.push('孩子蛋白');
+  if (state.childMode && !totals.childVegetable) unmet.push('孩子蔬菜');
+  return unmet;
+}
+
+export const isMealComplete = (state: MealState, totals: MealTotals) => unmetCompletionRequirements(state, totals).length === 0;
 
 export function timeFit(recipe: MealRecipe, preference: TimePreference) {
   if (preference === 'any') return { rank: 0, label: '' };
