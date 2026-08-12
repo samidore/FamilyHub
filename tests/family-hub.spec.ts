@@ -114,8 +114,10 @@ for (const width of [375, 390, 430, 768, 1024, 1440]) {
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       expect(overflow).toBeLessThanOrEqual(1);
       expect(await page.locator('body').evaluate((body) => parseFloat(getComputedStyle(body).fontSize))).toBeGreaterThanOrEqual(18);
-      const controls = page.locator('button:visible, input:visible, select:visible, summary:visible');
-      for (const control of await controls.all()) expect((await control.boundingBox())?.height ?? 0).toBeGreaterThanOrEqual(47);
+      const controlHeights = await page.locator('button:visible, input:visible, select:visible, summary:visible').evaluateAll((controls) =>
+        controls.map((control) => control.getBoundingClientRect().height),
+      );
+      for (const height of controlHeights) expect(height).toBeGreaterThanOrEqual(47);
     }
   });
 }
