@@ -1,5 +1,5 @@
 ---
-kb_version: 1.4
+kb_version: 1.5
 last_updated: 2026-08-12
 language: zh-CN
 status: active
@@ -18,12 +18,14 @@ status: active
 
 ## 1.2 当前阶段
 
-当前阶段：**Ingredient Library v1.4 / Starter-UI data migration**。
+当前阶段：**Vegetable Recipe Library v1.5 + finish-with-leafy-vegetable add-on formalization**。
 
-- Ingredient Library 已从 Candidate Index 迁移为 132 条正式 Candidate Ingredient records，全部保留原 stable ID。
-- 每条 Ingredient 已加入 `starter.visible`, `starter.section`, `starter.order`，用于 Family Hub 自动生成可折叠食材区与按钮顺序。
-- 129 条非-pantry Ingredient 在 Starter 中可选；`ginger`, `scallion`, `garlic` 保留为 pantry records 但不显示为 Starter 按钮。
-- 139 条 Recipe v1.3 Meal Builder 数据保持不变；所有 required / `one_of` Ingredient references 已回归验证。
+- Ingredient Library 保持 132 条 Candidate Ingredient records 与 v1.4 Starter/UI schema；stable ID 不变。
+- Recipe Library 从 139 条扩展到 **162 条**：新增 23 条去重后的 Vegetable-centered Recipe structures，全部为 `candidate`。
+- 蒜蓉/清炒等同构做法已按 cooking structure 合并；可互换食材使用机器可读 `one_of`，不做 `vegetable × seasoning` 排列组合。
+- 新增 `finish-with-leafy-vegetable` add-on：兼容主菜在铁锅/炒锅末段收汁时可顺锅焖一份兼容嫩叶菜，贡献 `vegetable: 1`，不生成 synthetic Recipe。
+- 首批仅 7 条现有主菜支持该 add-on：糖醋排骨、红烧肉、照烧鸡腿、蚝油焖鸡腿/鸡小腿、可乐鸡翅、瑞士鸡翼、红烧牛肉。`Instant Pot 酱油鸡腿` 明确不支持。
+- Child coverage schema 允许 `ingredient-dependent`；Ingredient 级 coverage 未被家庭确认时保持 `unknown`，不为 Meal Builder 虚构儿童接受度。
 - 所有 Ingredient / Recipe 仍为 `candidate`，没有自动升级 `approved`；本阶段不生成 Weekly Plan。
 
 # 2. CONSTRAINTS
@@ -94,6 +96,17 @@ Chicken 长期采购规则：只买 Whole Foods。
 - Homemade whole roast chicken 已移出 Recipe pool；烤鸡优先购买 ready-cooked supermarket roast/rotisserie chicken，不在此自动新增 Ingredient。
 - 家里有 ready-made/canned scallion oil，葱油拌面不需要从头炸葱油。
 
+## 2.7 Vegetable Recipe / finishing add-on rules
+
+- Vegetable Recipe 继续遵守“真实 cooking structure 优先”：`蒜蓉菜心`、`蒜蓉豆苗` 等若核心 workflow 与清炒叶菜相同，则合并为一个 Recipe，通过 `one_of` 覆盖兼容 Ingredient。
+- `meal_contribution.vegetable` 表示整盘菜在家庭组餐中的 Vegetable slot 贡献，不由 Vegetable Ingredient 数量机械推导；例如莴笋 + 新鲜木耳仍可整体记为 `vegetable: 1`。
+- `finish-with-leafy-vegetable` 是**主 Recipe 的选配 add-on**，不是独立 Recipe：只允许在已明确声明支持、且确有 stovetop 收汁/焖烧末段窗口的主菜上使用。
+- add-on 所接受的叶菜由 Ingredient tag `finish-wilt-compatible` 决定；不能从 `starter.section: leafy-vegetable` 自动推断。
+- 首批 `finish-wilt-compatible`：`chinese-greens`, `lettuce`, `youmai-cai`, `choy-sum`, `baby-napa-cabbage`。菠菜因家庭去草酸 workflow、芥兰/空心菜等因火候或质地差异暂不自动兼容。
+- add-on 被选中后贡献 `vegetable: 1`，并作为所选主 Recipe 的附属状态保存；不可生成诸如“糖醋排骨上海青”的新 Recipe stable ID。
+- 同一 available Ingredient 仍可用于独立 Vegetable Recipe；在两者都能补当前 Vegetable gap 时，Meal Builder 可优先 add-on，因为不另占 burner、附加 active work 更低，但独立菜仍可选。
+- `child_coverage` 可为 `ingredient-dependent`：当 Recipe / add-on 的儿童 coverage 取决于 `one_of` 中实际选中的 Ingredient 时，运行时读取该 Ingredient 的 `child_coverage`。`unknown` 不视为满足 Child hard coverage。
+
 # 3. STANDARDS
 
 ## 3.1 Status / ID / evidence / fit
@@ -113,7 +126,9 @@ Equipment: `instant-pot`, `stovetop-nonstick`, `stovetop-wok`, `oven`, `air-frye
 
 Preparation/method: `low-prep`, `medium-prep`, `high-prep`, `minimal-cutting`, `light-seasoning`, `non-spicy-base`, `pan-seared`, `stir-fried`, `steamed`, `braised`, `simmered`, `roasted`.
 
-## 3.3 Candidate Recipe record shape — v1.3
+Ingredient capability: `finish-wilt-compatible` (only for Ingredients explicitly validated for the `finish-with-leafy-vegetable` add-on).
+
+## 3.3 Candidate Recipe record shape — v1.5
 
 ```yaml
 id:
@@ -135,8 +150,13 @@ meal_contribution:
   vegetable:
   staple:
 child_coverage:
-  protein:
-  vegetable:
+  protein: true | false | ingredient-dependent
+  vegetable: true | false | ingredient-dependent
+meal_addons:
+  - id:
+    accepts_ingredient_tag:
+    meal_contribution: {protein:, vegetable:, staple:}
+    child_coverage: {protein:, vegetable:}
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids: []
 active_minutes:
@@ -173,7 +193,8 @@ substitutions:
 
 - `meal_contribution` 是家庭组餐 planning slot，不是营养学 serving 或克数。常用粒度为 `0`, `0.5`, `1`；只有明确需要时才使用更大 Vegetable contribution。
 - `primary_role` 只用于 UI 分类/排序；真正的 slot 计算只读取 `meal_contribution`。
-- `child_coverage.protein` / `.vegetable` 表示该 Recipe 按正常家庭 serving 与 child-serving 路线是否能实际承担相应儿童 coverage。已知当前接受度优先；缺少直接家庭事实时使用保守的质地 / 可分食 workflow inference，不把“理论可吃”自动写成 true。
+- `child_coverage.protein` / `.vegetable` 表示该 Recipe 按正常家庭 serving 与 child-serving 路线是否能实际承担相应儿童 coverage。值可为 `true`, `false`, `ingredient-dependent`。已知当前接受度优先；缺少直接家庭事实时使用保守的质地 / 可分食 workflow inference，不把“理论可吃”自动写成 true。`ingredient-dependent` 时运行时读取实际选中 Ingredient 的对应 coverage；Ingredient 为 `unknown` 时不计为满足 hard coverage。
+- `meal_addons` 只用于已正式定义的 Recipe add-on；v1.5 首个受控 add-on 为 `finish-with-leafy-vegetable`。Add-on contribution 与 child coverage 参与 Meal Builder 聚合，但不改变主 Recipe stable ID。
 - `child_suitable` / `child_texture` / `child_serving` 继续记录更细的儿童事实；旧 `child_support_protein_needed` 已废弃，因为 Meal Builder 可由当前 meal state + `child_coverage` 动态推出。
 - `integral_staple_ingredient_ids` 表示 Recipe 本身包含的 Staple；`recommended_staple_ingredient_ids` 只是搭配建议。旧 `staple_pairings` 已废弃。
 - `vegetable_ingredient_ids` 只列真正的 Vegetable / fungi；项目定义为 Staple 的 potato / sweet-potato / taro / lotus-root / kabocha / corn 等不再混入此字段。旧 `vegetable_count` 已废弃，Builder 只读取 `meal_contribution.vegetable`。
@@ -183,7 +204,7 @@ substitutions:
 
 **Candidate quantity rule:** 不为尚未家庭测试的 Recipe 虚构精确克数/酱汁比例。`ingredients` 负责结构与 availability；具体比例由引用来源支持并在 Cook View / 首次家庭实做时校准。这不影响 Recipe identity / fit / Meal Builder 使用。
 
-## 3.4 Candidate Ingredient record shape — v1.4
+## 3.4 Candidate Ingredient record shape — v1.5
 
 ```yaml
 id:
@@ -196,6 +217,8 @@ starter:
   section:
   order:
 tags: []
+child_coverage:  # optional; needed when Recipe coverage is ingredient-dependent
+  vegetable: true | false | unknown
 fit:
   hard_rules: pass | fail | n/a | unknown
   score: 0-5
@@ -217,6 +240,8 @@ notes:
 - Recipe availability 仍以 Recipe record 为唯一事实来源：所有 `availability: required` 条件必须被当前 available-ingredient selection 满足；`one_of` 任一选中即可；`pantry_core: assumed` 不需要 Starter 选择。
 - `starter.section` 只负责 UI 分区；Recipe 的 Protein / Vegetable / Staple contribution 仍只读取 Recipe `meal_contribution`，不能从 Ingredient section 反推。
 - `starter.order` 是稳定 UI 排序值；当前迁移沿用已确认 Ingredient brainstorm 的原有顺序，不按字母或临时 Recipe 数量动态重排。
+- Ingredient `child_coverage.vegetable` 是当前家庭 Meal Builder coverage 事实，可为 `true`, `false`, `unknown`；只在 Recipe 标记为 `ingredient-dependent` 时参与运行时解析。未确认时保持 `unknown`。
+- Ingredient capability 只能由明确 tag 声明；例如 `finish-wilt-compatible` 不能由“属于叶菜 section”自动推断。
 - 所有显示 section 均可 collapse；collapse 只改变显示，不改变已选 Ingredient。
 
 Starter section registry：
@@ -2333,7 +2358,8 @@ starter:
   visible: true
   section: leafy-vegetable
   order: 10
-tags: []
+tags:
+- finish-wilt-compatible
 fit:
   hard_rules: pass
   score: 4
@@ -2343,10 +2369,13 @@ fit:
 evidence:
   level: inferred
   checked_on: '2026-08-12'
-  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
+  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not
+    explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
   sources:
   - Family Meal Ingredient brainstorm / retained candidate decisions
 notes: ''
+child_coverage:
+  vegetable: unknown
 ```
 
 ### ingredient: napa-cabbage | 大白菜
@@ -2389,7 +2418,8 @@ starter:
   visible: true
   section: leafy-vegetable
   order: 30
-tags: []
+tags:
+- finish-wilt-compatible
 fit:
   hard_rules: pass
   score: 4
@@ -2399,10 +2429,13 @@ fit:
 evidence:
   level: inferred
   checked_on: '2026-08-12'
-  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
+  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not
+    explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
   sources:
   - Family Meal Ingredient brainstorm / retained candidate decisions
 notes: ''
+child_coverage:
+  vegetable: unknown
 ```
 
 ### ingredient: spinach | 菠菜
@@ -2445,7 +2478,8 @@ starter:
   visible: true
   section: leafy-vegetable
   order: 50
-tags: []
+tags:
+- finish-wilt-compatible
 fit:
   hard_rules: pass
   score: 4
@@ -2455,10 +2489,13 @@ fit:
 evidence:
   level: inferred
   checked_on: '2026-08-12'
-  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
+  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not
+    explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
   sources:
   - Family Meal Ingredient brainstorm / retained candidate decisions
 notes: ''
+child_coverage:
+  vegetable: unknown
 ```
 
 ### ingredient: youmai-cai | 油麦菜
@@ -2473,7 +2510,8 @@ starter:
   visible: true
   section: leafy-vegetable
   order: 60
-tags: []
+tags:
+- finish-wilt-compatible
 fit:
   hard_rules: pass
   score: 4
@@ -2483,10 +2521,13 @@ fit:
 evidence:
   level: inferred
   checked_on: '2026-08-12'
-  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
+  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not
+    explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
   sources:
   - Family Meal Ingredient brainstorm / retained candidate decisions
 notes: ''
+child_coverage:
+  vegetable: unknown
 ```
 
 ### ingredient: choy-sum | 菜心
@@ -2501,7 +2542,8 @@ starter:
   visible: true
   section: leafy-vegetable
   order: 70
-tags: []
+tags:
+- finish-wilt-compatible
 fit:
   hard_rules: pass
   score: 4
@@ -2511,10 +2553,13 @@ fit:
 evidence:
   level: inferred
   checked_on: '2026-08-12'
-  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
+  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not
+    explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
   sources:
   - Family Meal Ingredient brainstorm / retained candidate decisions
 notes: ''
+child_coverage:
+  vegetable: unknown
 ```
 
 ### ingredient: gai-lan | 芥兰
@@ -2539,10 +2584,13 @@ fit:
 evidence:
   level: inferred
   checked_on: '2026-08-12'
-  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
+  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not
+    explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
   sources:
   - Family Meal Ingredient brainstorm / retained candidate decisions
 notes: ''
+child_coverage:
+  vegetable: unknown
 ```
 
 ### ingredient: water-spinach | 空心菜
@@ -2595,10 +2643,13 @@ fit:
 evidence:
   level: inferred
   checked_on: '2026-08-12'
-  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
+  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not
+    explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
   sources:
   - Family Meal Ingredient brainstorm / retained candidate decisions
 notes: ''
+child_coverage:
+  vegetable: unknown
 ```
 
 ### ingredient: amaranth-greens | 苋菜
@@ -2623,10 +2674,13 @@ fit:
 evidence:
   level: inferred
   checked_on: '2026-08-12'
-  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
+  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not
+    explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
   sources:
   - Family Meal Ingredient brainstorm / retained candidate decisions
 notes: ''
+child_coverage:
+  vegetable: unknown
 ```
 
 ### ingredient: tong-hao | 茼蒿
@@ -2651,10 +2705,13 @@ fit:
 evidence:
   level: inferred
   checked_on: '2026-08-12'
-  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
+  scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not
+    explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
   sources:
   - Family Meal Ingredient brainstorm / retained candidate decisions
 notes: ''
+child_coverage:
+  vegetable: unknown
 ```
 
 ### ingredient: mustard-greens | 芥菜
@@ -4100,7 +4157,7 @@ evidence:
     where listed.
   sources:
   - User-confirmed household recipe/preference — non-deep-fried 糖醋里脊
-notes: Household preference favors this dish. Household route is explicitly non-deep-fried. Observed workflow is about 1 hour from starting prep to
+notes: Household preference favors this dish. Household route is explicitly non-deep-fried. Observed household workflow is about 1 hour from starting prep to
   table.
 primary_role: protein
 main_protein_category: pork
@@ -5761,9 +5818,20 @@ steps:
 - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
 - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the child portion is removed; omit if the dish does
-  not benefit from it.
+adult_finish: Optional chili/chili oil or stronger seasoning only after the child portion is removed; omit if the
+  dish does not benefit from it.
 substitutions: []
+meal_addons:
+- id: finish-with-leafy-vegetable
+  accepts_ingredient_tag: finish-wilt-compatible
+  meal_contribution:
+    protein: 0
+    vegetable: 1
+    staple: 0
+  child_coverage:
+    protein: false
+    vegetable: ingredient-dependent
+  notes: 仅在铁锅/炒锅末段已有收汁/焖烧窗口时加入兼容嫩叶菜；不另起锅。
 ```
 
 ### recipe: japanese-kakuni | 日式角煮
@@ -6126,8 +6194,8 @@ evidence:
   scope: Dish identity and core technique verified; household-light/non-spicy adaptation is documented separately.
   sources:
   - The Woks of Life — Shanghai Sweet and Sour Ribs
-notes: Household has a preferred Instant Pot-then-wok route in another chat; this library record keeps the dish identity and
-  non-fried rule.
+notes: Household has a preferred Instant Pot-then-wok route in another chat; this library record keeps the dish
+  identity and non-fried rule.
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -6173,9 +6241,20 @@ steps:
 - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
 - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the child portion is removed; omit if the dish does
-  not benefit from it.
+adult_finish: Optional chili/chili oil or stronger seasoning only after the child portion is removed; omit if the
+  dish does not benefit from it.
 substitutions: []
+meal_addons:
+- id: finish-with-leafy-vegetable
+  accepts_ingredient_tag: finish-wilt-compatible
+  meal_contribution:
+    protein: 0
+    vegetable: 1
+    staple: 0
+  child_coverage:
+    protein: false
+    vegetable: ingredient-dependent
+  notes: 仅在铁锅/炒锅末段已有收汁/焖烧窗口时加入兼容嫩叶菜；不另起锅。
 ```
 
 ### recipe: steamed-ribs-black-bean | 豉汁蒸排骨
@@ -7045,8 +7124,8 @@ evidence:
   scope: Dish identity and core technique verified; household-light/non-spicy adaptation is documented separately.
   sources:
   - Just One Cookbook — Chicken Teriyaki
-notes: Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than
-  invented.
+notes: Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather
+  than invented.
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
@@ -7070,7 +7149,8 @@ advance_start_required: false
 equipment:
 - medium burner
 - nonstick pan or iron pan as appropriate
-burner_plan: Medium burner by default; use the iron pan/high-output burner only when a hard sear is the point of the dish.
+burner_plan: Medium burner by default; use the iron pan/high-output burner only when a hard sear is the point of
+  the dish.
 child_suitable: 'yes'
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -7092,9 +7172,20 @@ steps:
 - 主料达到合适熟度后离火或转小火；需要酱汁时在最后短时间挂汁。
 - 静置或稍降温后再为孩子剪小；不要把成人后加辣味放进基础锅。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the child portion is removed; omit if the dish does
-  not benefit from it.
+adult_finish: Optional chili/chili oil or stronger seasoning only after the child portion is removed; omit if the
+  dish does not benefit from it.
 substitutions: []
+meal_addons:
+- id: finish-with-leafy-vegetable
+  accepts_ingredient_tag: finish-wilt-compatible
+  meal_contribution:
+    protein: 0
+    vegetable: 1
+    staple: 0
+  child_coverage:
+    protein: false
+    vegetable: ingredient-dependent
+  notes: 仅在铁锅/炒锅末段已有收汁/焖烧窗口时加入兼容嫩叶菜；不另起锅。
 ```
 
 ### recipe: oyakodon | 亲子丼
@@ -7878,8 +7969,8 @@ evidence:
   scope: Dish identity and core technique verified; household-light/non-spicy adaptation is documented separately.
   sources:
   - The Woks of Life — Oyster Sauce Chicken
-notes: Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than
-  invented.
+notes: Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather
+  than invented.
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
@@ -7928,9 +8019,20 @@ steps:
 - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
 - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the child portion is removed; omit if the dish does
-  not benefit from it.
+adult_finish: Optional chili/chili oil or stronger seasoning only after the child portion is removed; omit if the
+  dish does not benefit from it.
 substitutions: []
+meal_addons:
+- id: finish-with-leafy-vegetable
+  accepts_ingredient_tag: finish-wilt-compatible
+  meal_contribution:
+    protein: 0
+    vegetable: 1
+    staple: 0
+  child_coverage:
+    protein: false
+    vegetable: ingredient-dependent
+  notes: 仅在铁锅/炒锅末段已有收汁/焖烧窗口时加入兼容嫩叶菜；不另起锅。
 ```
 
 ### recipe: chicken-adobo | Chicken Adobo
@@ -8539,8 +8641,8 @@ evidence:
   scope: Dish identity and core technique verified; household-light/non-spicy adaptation is documented separately.
   sources:
   - The Woks of Life — Coca-Cola Chicken Wings
-notes: Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than
-  invented.
+notes: Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather
+  than invented.
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
@@ -8586,9 +8688,20 @@ steps:
 - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
 - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the child portion is removed; omit if the dish does
-  not benefit from it.
+adult_finish: Optional chili/chili oil or stronger seasoning only after the child portion is removed; omit if the
+  dish does not benefit from it.
 substitutions: []
+meal_addons:
+- id: finish-with-leafy-vegetable
+  accepts_ingredient_tag: finish-wilt-compatible
+  meal_contribution:
+    protein: 0
+    vegetable: 1
+    staple: 0
+  child_coverage:
+    protein: false
+    vegetable: ingredient-dependent
+  notes: 仅在铁锅/炒锅末段已有收汁/焖烧窗口时加入兼容嫩叶菜；不另起锅。
 ```
 
 ### recipe: hong-kong-swiss-chicken-wings | 瑞士鸡翼
@@ -8618,8 +8731,8 @@ evidence:
   scope: Dish identity and core technique verified; household-light/non-spicy adaptation is documented separately.
   sources:
   - Christine’s Recipes / Hong Kong home-cooking references — Swiss Chicken Wings
-notes: Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than
-  invented.
+notes: Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather
+  than invented.
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
@@ -8665,9 +8778,20 @@ steps:
 - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
 - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the child portion is removed; omit if the dish does
-  not benefit from it.
+adult_finish: Optional chili/chili oil or stronger seasoning only after the child portion is removed; omit if the
+  dish does not benefit from it.
 substitutions: []
+meal_addons:
+- id: finish-with-leafy-vegetable
+  accepts_ingredient_tag: finish-wilt-compatible
+  meal_contribution:
+    protein: 0
+    vegetable: 1
+    staple: 0
+  child_coverage:
+    protein: false
+    vegetable: ingredient-dependent
+  notes: 仅在铁锅/炒锅末段已有收汁/焖烧窗口时加入兼容嫩叶菜；不另起锅。
 ```
 
 ### recipe: white-cut-chicken | 白切鸡
@@ -10474,8 +10598,8 @@ evidence:
   scope: Dish identity and core technique verified; household-light/non-spicy adaptation is documented separately.
   sources:
   - The Woks of Life — Red Braised Beef
-notes: Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than
-  invented.
+notes: Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather
+  than invented.
 primary_role: protein
 main_protein_category: beef
 main_protein_ingredient_ids:
@@ -10521,9 +10645,20 @@ steps:
 - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
 - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the child portion is removed; omit if the dish does
-  not benefit from it.
+adult_finish: Optional chili/chili oil or stronger seasoning only after the child portion is removed; omit if the
+  dish does not benefit from it.
 substitutions: []
+meal_addons:
+- id: finish-with-leafy-vegetable
+  accepts_ingredient_tag: finish-wilt-compatible
+  meal_contribution:
+    protein: 0
+    vegetable: 1
+    staple: 0
+  child_coverage:
+    protein: false
+    vegetable: ingredient-dependent
+  notes: 仅在当天采用偏浓汁、stovetop final-reduction 路线时使用；偏汤汁版本不启用。
 ```
 
 ### recipe: red-braised-beef-noodle-soup | 红烧牛肉面
@@ -15730,6 +15865,1901 @@ adult_finish: Optional chili/chili oil or stronger seasoning only after the chil
 substitutions: []
 ```
 
+## 5.9 Vegetable-centered (23)
+
+> Vegetable-centered library uses cooking-structure dedupe. `one_of` alternatives share one Recipe when the workflow is materially the same; seasoning-only differences such as “蒜蓉” vs “清炒” do not create duplicate stable IDs.
+
+### recipe: simple-stir-fried-leafy-greens | 清炒叶菜
+
+```yaml
+id: simple-stir-fried-leafy-greens
+type: recipe
+status: candidate
+name_zh: 清炒叶菜
+name_en: Simple Stir-Fried Leafy Greens
+tags:
+- light-seasoning
+- non-spicy-base
+- stir-fried
+- stovetop-wok
+- lunch-30
+- low-prep
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V01 — Made With Lau — Choy Sum with Garlic; The Woks of Life — Bok Choy / Pea Tips stir-fry patterns
+notes: Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook
+  calibration.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- chinese-greens
+- lettuce
+- youmai-cai
+- choy-sum
+- pea-shoots
+- amaranth-greens
+- tong-hao
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: ingredient-dependent
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 10–20
+meal_window_minutes: 10–25
+elapsed_minutes: 10–30
+advance_start_required: false
+equipment:
+- high-output burner
+- wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: conditional
+child_texture: 茎叶厚度依实际 one_of Ingredient 而异；可切短、茎先下锅并煮至合适熟度。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- one_of:
+  - chinese-greens
+  - lettuce
+  - youmai-cai
+  - choy-sum
+  - pea-shoots
+  - amaranth-greens
+  - tong-hao
+  role: vegetable
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions:
+- 蒜蓉属于同一 cooking structure，不另建 Recipe。
+```
+
+### recipe: simple-stir-fried-broccoli | 清炒西兰花
+
+```yaml
+id: simple-stir-fried-broccoli
+type: recipe
+status: candidate
+name_zh: 清炒西兰花
+name_en: Simple Broccoli
+tags:
+- light-seasoning
+- non-spicy-base
+- stir-fried
+- stovetop-wok
+- lunch-30
+- soft-vegetable
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V02 — Made With Lau — Dad’s 10-Minute Weeknight Broccoli / Broccoli Stir Fry
+notes: Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook
+  calibration.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- broccoli
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 10–20
+meal_window_minutes: 10–25
+elapsed_minutes: 10–30
+advance_start_required: false
+equipment:
+- high-output burner
+- wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: 'yes'
+child_texture: 孩子份可将花梗剪小并比成人份多煮 1–2 分钟至更软；成熟来源明确给出幼儿/老人软化路线。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- ingredient_id: broccoli
+  role: vegetable
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: blanched-gai-lan-oyster-sauce | 白灼 / 蚝油芥兰
+
+```yaml
+id: blanched-gai-lan-oyster-sauce
+type: recipe
+status: candidate
+name_zh: 白灼 / 蚝油芥兰
+name_en: Blanched Gai Lan with Oyster Sauce
+tags:
+- light-seasoning
+- non-spicy-base
+- stovetop-wok
+- lunch-30
+- low-prep
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V03 — Made With Lau — Chinese Broccoli with Oyster Sauce
+notes: Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook
+  calibration.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- gai-lan
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 10–20
+meal_window_minutes: 15–25
+elapsed_minutes: 15–30
+advance_start_required: false
+equipment:
+- high-output burner
+- wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: conditional
+child_texture: 芥兰茎较粗，虽可煮软/切小，但未确认当前儿童接受度，暂不计 Child Vegetable coverage。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- ingredient_id: gai-lan
+  role: vegetable
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: fermented-bean-curd-water-spinach | 腐乳空心菜
+
+```yaml
+id: fermented-bean-curd-water-spinach
+type: recipe
+status: candidate
+name_zh: 腐乳空心菜
+name_en: Water Spinach with Fermented Bean Curd
+tags:
+- light-seasoning
+- non-spicy-base
+- stir-fried
+- stovetop-wok
+- lunch-30
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V04 — Made With Lau — Ong Choy with Fermented Bean Curd
+notes: Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook
+  calibration.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- water-spinach
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 15–25
+meal_window_minutes: 20–30
+elapsed_minutes: 20–35
+advance_start_required: false
+equipment:
+- high-output burner
+- wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: conditional
+child_texture: 空心菜茎可能较纤维，且腐乳味型较强；未确认孩子接受度，暂不计 coverage。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- ingredient_id: water-spinach
+  role: vegetable
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: sesame-spinach-gomaae | 芝麻拌菠菜
+
+```yaml
+id: sesame-spinach-gomaae
+type: recipe
+status: candidate
+name_zh: 芝麻拌菠菜
+name_en: Japanese Spinach Gomaae
+tags:
+- light-seasoning
+- non-spicy-base
+- lunch-30
+- low-prep
+- soft-vegetable
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V05 — Just One Cookbook — Japanese Spinach Salad with Sesame Dressing (Gomaae)
+notes: Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook
+  calibration.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- spinach
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 10–15
+meal_window_minutes: 15–20
+elapsed_minutes: 15–20
+advance_start_required: false
+equipment:
+- medium burner
+- pot / saucepan
+burner_plan: Medium burner for blanching; no wok required.
+child_suitable: 'yes'
+child_texture: 菠菜先焯水并挤水、切短，符合家庭去草酸 workflow；孩子份可少酱、剪短。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- ingredient_id: spinach
+  role: vegetable
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 菠菜用足量水焯至合适熟度后捞出；该路线同时满足家庭菠菜去草酸处理要求。
+- 冷却/挤去多余水分并切短。
+- 拌入轻量芝麻酱汁；家庭版控制糖盐，孩子份可更淡。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: broth-simmered-napa-cabbage | 上汤 / 汤煮娃娃菜
+
+```yaml
+id: broth-simmered-napa-cabbage
+type: recipe
+status: candidate
+name_zh: 上汤 / 汤煮娃娃菜
+name_en: Napa Cabbage in Savory Broth
+tags:
+- light-seasoning
+- non-spicy-base
+- simmered
+- stovetop-nonstick
+- lunch-30
+- soft-vegetable
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: inferred
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V06 — Chinese 上汤娃娃菜 / savory-broth baby napa cabbage household cooking references
+notes: 保留“汤煮嫩白菜”结构；不强制火腿、皮蛋等较重上汤配料，家庭版可用清汤/水 + 轻调味。
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- baby-napa-cabbage
+- napa-cabbage
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 10–15
+meal_window_minutes: 20–30
+elapsed_minutes: 20–35
+advance_start_required: false
+equipment:
+- medium burner
+- pot / deep pan
+burner_plan: Medium burner for a shallow broth simmer; high-output burner remains free.
+child_suitable: 'yes'
+child_texture: 娃娃菜/白菜汤煮后可形成软质叶菜；孩子份用清淡汤底并剪小。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- one_of:
+  - baby-napa-cabbage
+  - napa-cabbage
+  role: vegetable
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: vinegar-napa-cabbage-family | 醋溜白菜家庭版
+
+```yaml
+id: vinegar-napa-cabbage-family
+type: recipe
+status: candidate
+name_zh: 醋溜白菜家庭版
+name_en: Vinegar Napa Cabbage, Family Style
+tags:
+- light-seasoning
+- non-spicy-base
+- stir-fried
+- stovetop-wok
+- lunch-30
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V07 — The Woks of Life — Hot & Sour Napa Cabbage Stir-fry; household version omits chili
+notes: Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook
+  calibration.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- napa-cabbage
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 15–20
+meal_window_minutes: 15–25
+elapsed_minutes: 15–30
+advance_start_required: false
+equipment:
+- high-output burner
+- wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: 'yes'
+child_texture: 白菜切片后可炒至较软；孩子份保持轻醋轻盐、无辣。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- ingredient_id: napa-cabbage
+  role: vegetable
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: spinach-scrambled-eggs | 菠菜炒蛋
+
+```yaml
+id: spinach-scrambled-eggs
+type: recipe
+status: candidate
+name_zh: 菠菜炒蛋
+name_en: Spinach and Scrambled Eggs
+tags:
+- light-seasoning
+- non-spicy-base
+- stir-fried
+- stovetop-wok
+- lunch-30
+- family-shared
+- soft-protein
+- soft-vegetable
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V08 — Omnivore’s Cookbook — Spinach and Egg Stir Fry
+notes: Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook
+  calibration.
+primary_role: mixed
+main_protein_category: egg
+main_protein_ingredient_ids:
+- eggs
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- spinach
+meal_contribution:
+  protein: 0.5
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 10–15
+meal_window_minutes: 15–20
+elapsed_minutes: 15–25
+advance_start_required: false
+equipment:
+- high-output burner
+- wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: 'yes'
+child_texture: 菠菜按家庭规则先焯水；鸡蛋保持嫩，菠菜切短。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- ingredient_id: spinach
+  role: vegetable
+  availability: required
+- ingredient_id: eggs
+  role: main-protein
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: shepherds-purse-soft-tofu-soup | 荠菜豆腐羹
+
+```yaml
+id: shepherds-purse-soft-tofu-soup
+type: recipe
+status: candidate
+name_zh: 荠菜豆腐羹
+name_en: Shepherd’s Purse and Soft Tofu Soup
+tags:
+- light-seasoning
+- non-spicy-base
+- simmered
+- stovetop-nonstick
+- lunch-30
+- family-shared
+- soft-protein
+- soft-vegetable
+- low-prep
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: inferred
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V09 — Chinese 荠菜豆腐羹 household cooking pattern; soft-tofu soup structure verified elsewhere in KB
+notes: 冷冻荠菜末可按家庭已确认习惯当场使用；不要求提前解冻。
+primary_role: mixed
+main_protein_category: tofu
+main_protein_ingredient_ids:
+- soft-tofu
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- frozen-shepherds-purse
+meal_contribution:
+  protein: 0.5
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 10–15
+meal_window_minutes: 15–25
+elapsed_minutes: 15–30
+advance_start_required: false
+equipment:
+- medium burner
+- pot
+burner_plan: Medium burner for short soup simmer; high-output burner remains free.
+child_suitable: 'yes'
+child_texture: 嫩豆腐与冷冻荠菜末均可形成软质羹/汤；孩子份保持清淡。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- ingredient_id: frozen-shepherds-purse
+  role: vegetable
+  availability: required
+- ingredient_id: soft-tofu
+  role: main-protein
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: tomato-cauliflower-stir-fry | 番茄花菜
+
+```yaml
+id: tomato-cauliflower-stir-fry
+type: recipe
+status: candidate
+name_zh: 番茄花菜
+name_en: Tomato Cauliflower Stir-Fry
+tags:
+- light-seasoning
+- non-spicy-base
+- stir-fried
+- stovetop-wok
+- lunch-30
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V10 — Omnivore’s Cookbook — Stir-Fried Cauliflower with Tomato Sauce
+notes: '虽然含两种 Vegetable Ingredient，整盘仍按一个 Vegetable side 记 `vegetable: 1`。'
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- cauliflower
+- tomato
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 15–20
+meal_window_minutes: 20–30
+elapsed_minutes: 20–30
+advance_start_required: false
+equipment:
+- high-output burner
+- wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: 'yes'
+child_texture: 花菜可比成人份多焯/煮至更软，番茄形成湿润酱汁；剪成小朵。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- ingredient_id: cauliflower
+  role: vegetable
+  availability: required
+- ingredient_id: tomato
+  role: vegetable
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: simple-stir-fried-green-cabbage | 清炒卷心菜
+
+```yaml
+id: simple-stir-fried-green-cabbage
+type: recipe
+status: candidate
+name_zh: 清炒卷心菜
+name_en: Simple Stir-Fried Green Cabbage
+tags:
+- light-seasoning
+- non-spicy-base
+- stir-fried
+- stovetop-wok
+- lunch-30
+- low-prep
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V11 — The Woks of Life — cabbage stir-fry collection / everyday cabbage cooking patterns
+notes: Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook
+  calibration.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- green-cabbage
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 10–15
+meal_window_minutes: 15–20
+elapsed_minutes: 15–25
+advance_start_required: false
+equipment:
+- high-output burner
+- wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: 'yes'
+child_texture: 切细并炒至柔软；孩子份避免保留过硬菜梗。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- ingredient_id: green-cabbage
+  role: vegetable
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: braised-winter-melon | 冬瓜焖 / 烧
+
+```yaml
+id: braised-winter-melon
+type: recipe
+status: candidate
+name_zh: 冬瓜焖 / 烧
+name_en: Braised Winter Melon
+tags:
+- light-seasoning
+- non-spicy-base
+- braised
+- stovetop-wok
+- lunch-45
+- soft-vegetable
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V12 — The Woks of Life — Braised Winter Melon
+notes: Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook
+  calibration.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- winter-melon
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 15–25
+meal_window_minutes: 30–40
+elapsed_minutes: 30–45
+advance_start_required: false
+equipment:
+- high-output burner
+- wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: 'yes'
+child_texture: 冬瓜焖至半透明柔软，适合剪成小块。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- ingredient_id: winter-melon
+  role: vegetable
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: squash-scrambled-eggs | 瓜类炒蛋
+
+```yaml
+id: squash-scrambled-eggs
+type: recipe
+status: candidate
+name_zh: 瓜类炒蛋
+name_en: Squash and Scrambled Eggs
+tags:
+- light-seasoning
+- non-spicy-base
+- stir-fried
+- stovetop-wok
+- lunch-30
+- family-shared
+- soft-protein
+- soft-vegetable
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: inferred
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V13 — Chinese loofah + egg household pattern; Omnivore’s Cookbook zucchini stir-fry; common Chinese vegetable+egg
+    structure
+notes: Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook
+  calibration.
+primary_role: mixed
+main_protein_category: egg
+main_protein_ingredient_ids:
+- eggs
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- luffa
+- zucchini
+meal_contribution:
+  protein: 0.5
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 15–20
+meal_window_minutes: 15–25
+elapsed_minutes: 15–30
+advance_start_required: false
+equipment:
+- high-output burner
+- wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: 'yes'
+child_texture: 丝瓜/西葫芦都可炒至柔软；鸡蛋保持嫩。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- one_of:
+  - luffa
+  - zucchini
+  role: vegetable
+  availability: required
+- ingredient_id: eggs
+  role: main-protein
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions:
+- 丝瓜更易出水；西葫芦切片后水分管理不同，但属于同一瓜类炒蛋 structure。
+```
+
+### recipe: steamed-eggplant | 蒸茄子
+
+```yaml
+id: steamed-eggplant
+type: recipe
+status: candidate
+name_zh: 蒸茄子
+name_en: Steamed Eggplant
+tags:
+- light-seasoning
+- non-spicy-base
+- steamed
+- stovetop-nonstick
+- lunch-45
+- soft-vegetable
+- low-active-time
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V14 — Made With Lau — steamed eggplant technique within Eggplant with Garlic Sauce
+notes: 采用蒸制主体以符合家庭低油规则；不复制来源中后续辣味/重酱鱼香步骤。
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- eggplant
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 15–25
+meal_window_minutes: 25–40
+elapsed_minutes: 25–45
+advance_start_required: false
+equipment:
+- medium burner
+- steamer / pot + rack
+burner_plan: Medium burner for steaming; avoids oil-heavy wok eggplant route.
+child_suitable: 'yes'
+child_texture: 蒸至软嫩后非常容易剪小；孩子份使用清淡酱汁。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- ingredient_id: eggplant
+  role: vegetable
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: japanese-simmered-daikon | 日式煮白萝卜
+
+```yaml
+id: japanese-simmered-daikon
+type: recipe
+status: candidate
+name_zh: 日式煮白萝卜
+name_en: Japanese-Style Simmered Daikon
+tags:
+- light-seasoning
+- non-spicy-base
+- simmered
+- stovetop-nonstick
+- lunch-45
+- soft-vegetable
+- low-active-time
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: inferred
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V15 — Just One Cookbook — Japanese daikon simmering references (Buri Daikon / daikon soup patterns)
+notes: 定义为清淡日式煮萝卜 household structure，不绑定鱼类或肉类。
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- daikon
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 10–15
+meal_window_minutes: 30–50
+elapsed_minutes: 30–60
+advance_start_required: false
+equipment:
+- medium burner
+- pot
+burner_plan: Medium burner for gentle simmer; mostly unattended after prep.
+child_suitable: 'yes'
+child_texture: 白萝卜煮至可轻易穿透并切小；孩子份用淡汤汁。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- ingredient_id: daikon
+  role: vegetable
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: celtuce-fresh-wood-ear-stir-fry | 莴笋炒新鲜木耳
+
+```yaml
+id: celtuce-fresh-wood-ear-stir-fry
+type: recipe
+status: candidate
+name_zh: 莴笋炒新鲜木耳
+name_en: Celtuce with Fresh Wood Ear Mushrooms
+tags:
+- light-seasoning
+- non-spicy-base
+- stir-fried
+- stovetop-wok
+- lunch-45
+- medium-prep
+fit:
+  hard_rules: pass
+  score: 3
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V16 — The Woks of Life — Stir-Fried Celtuce with Wood Ear Mushrooms
+notes: 使用家庭固定的 fresh-wood-ear-mushrooms，不含干木耳泡发；莴笋备菜本身仍有一定工作量。
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- celtuce
+- fresh-wood-ear-mushrooms
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 20–30
+meal_window_minutes: 25–40
+elapsed_minutes: 30–45
+advance_start_required: false
+equipment:
+- high-output burner
+- wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: conditional
+child_texture: 莴笋偏脆、新鲜木耳有弹性；虽然可切小，但当前不计 Child Vegetable coverage。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- ingredient_id: celtuce
+  role: vegetable
+  availability: required
+- ingredient_id: fresh-wood-ear-mushrooms
+  role: vegetable
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: simple-stir-fried-sugar-snap-peas | 清炒甜豆
+
+```yaml
+id: simple-stir-fried-sugar-snap-peas
+type: recipe
+status: candidate
+name_zh: 清炒甜豆
+name_en: Simple Stir-Fried Sugar Snap Peas
+tags:
+- light-seasoning
+- non-spicy-base
+- stir-fried
+- stovetop-wok
+- lunch-30
+- low-prep
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V17 — Standard stir-fried sugar snap pea side-dish references
+notes: Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook
+  calibration.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- sugar-snap-peas
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 10–15
+meal_window_minutes: 10–20
+elapsed_minutes: 10–25
+advance_start_required: false
+equipment:
+- high-output burner
+- wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: conditional
+child_texture: 甜豆通常保留脆度，可能有筋；未确认儿童接受度，暂不计 coverage。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- ingredient_id: sugar-snap-peas
+  role: vegetable
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: chive-scrambled-eggs | 韭菜类炒蛋
+
+```yaml
+id: chive-scrambled-eggs
+type: recipe
+status: candidate
+name_zh: 韭菜类炒蛋
+name_en: Chives and Scrambled Eggs
+tags:
+- light-seasoning
+- non-spicy-base
+- stir-fried
+- stovetop-wok
+- lunch-30
+- family-shared
+- soft-protein
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V18 — Omnivore’s Cookbook — Chinese Chive and Egg / Yellow Chives and Eggs Stir Fry
+notes: Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook
+  calibration.
+primary_role: mixed
+main_protein_category: egg
+main_protein_ingredient_ids:
+- eggs
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- yellow-chives
+- garlic-chives
+meal_contribution:
+  protein: 0.5
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 10–15
+meal_window_minutes: 10–20
+elapsed_minutes: 10–20
+advance_start_required: false
+equipment:
+- high-output burner
+- wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: conditional
+child_texture: 鸡蛋可保持嫩；韭菜/韭黄有纤维，未确认孩子可承担完整 Vegetable coverage。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- one_of:
+  - yellow-chives
+  - garlic-chives
+  role: vegetable
+  availability: required
+- ingredient_id: eggs
+  role: main-protein
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions:
+- yellow-chives 与 garlic-chives 共用炒蛋 structure，清洗/切段细节按实际 Ingredient 调整。
+```
+
+### recipe: celery-pressed-tofu-stir-fry | 西芹香干
+
+```yaml
+id: celery-pressed-tofu-stir-fry
+type: recipe
+status: candidate
+name_zh: 西芹香干
+name_en: Celery and Pressed Tofu Stir-Fry
+tags:
+- light-seasoning
+- non-spicy-base
+- stir-fried
+- stovetop-wok
+- lunch-30
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V19 — Omnivore’s Cookbook — Dried Tofu and Celery Stir Fry; vegetarian route omits optional pork
+notes: pressed-tofu 继续保持 supporting protein，不升级为 tofu-main base；家庭版不加来源中的可选猪肉。
+primary_role: mixed
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids:
+- pressed-tofu
+vegetable_ingredient_ids:
+- celery
+meal_contribution:
+  protein: 0.5
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 15–20
+meal_window_minutes: 15–25
+elapsed_minutes: 15–30
+advance_start_required: false
+equipment:
+- high-output burner
+- wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: conditional
+child_texture: 香干与西芹都偏有嚼劲；supporting tofu 不自动视为儿童软蛋白。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- ingredient_id: celery
+  role: vegetable
+  availability: required
+- ingredient_id: pressed-tofu
+  role: supporting-protein
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: shiitake-chinese-greens-stir-fry | 香菇青菜
+
+```yaml
+id: shiitake-chinese-greens-stir-fry
+type: recipe
+status: candidate
+name_zh: 香菇青菜
+name_en: Shiitake Mushrooms with Chinese Greens
+tags:
+- light-seasoning
+- non-spicy-base
+- stir-fried
+- stovetop-wok
+- lunch-30
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V20 — The Woks of Life — Braised Chinese Mushrooms with Bok Choy / mushroom-greens pattern
+notes: '香菇 + 青菜整体仍按 `vegetable: 1`；不因两个 Vegetable Ingredient 自动变成 V2。'
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- fresh-shiitake
+- chinese-greens
+- choy-sum
+- gai-lan
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: ingredient-dependent
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 15–25
+meal_window_minutes: 20–30
+elapsed_minutes: 20–35
+advance_start_required: false
+equipment:
+- high-output burner
+- wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: conditional
+child_texture: 青菜端依实际 Ingredient；香菇可切薄，孩子可只取适合的青菜部分。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- ingredient_id: fresh-shiitake
+  role: vegetable
+  availability: required
+- one_of:
+  - chinese-greens
+  - choy-sum
+  - gai-lan
+  role: vegetable
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: pan-seared-mushrooms | 香煎菌菇
+
+```yaml
+id: pan-seared-mushrooms
+type: recipe
+status: candidate
+name_zh: 香煎菌菇
+name_en: Pan-Seared Mushrooms
+tags:
+- light-seasoning
+- non-spicy-base
+- pan-seared
+- stovetop-nonstick
+- lunch-30
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V21 — Omnivore’s Cookbook — King Oyster Mushroom / simple mushroom searing patterns
+notes: Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook
+  calibration.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- king-oyster-mushrooms
+- button-cremini-mushrooms
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 15–25
+meal_window_minutes: 15–30
+elapsed_minutes: 15–35
+advance_start_required: false
+equipment:
+- medium burner
+- nonstick skillet
+burner_plan: Medium burner with nonstick skillet; sear in a single layer when practical.
+child_suitable: conditional
+child_texture: 菌菇普遍有一定弹性/嚼劲；未确认当前儿童接受度，暂不计 coverage。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- one_of:
+  - king-oyster-mushrooms
+  - button-cremini-mushrooms
+  role: vegetable
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions:
+- 杏鲍菇切厚片/条；口蘑切片或对半。出水速度不同，但共享煎出焦香后轻调味的 structure。
+```
+
+### recipe: japanese-steamed-braised-mushrooms | 日式菌菇蒸 / 焖
+
+```yaml
+id: japanese-steamed-braised-mushrooms
+type: recipe
+status: candidate
+name_zh: 日式菌菇蒸 / 焖
+name_en: Japanese-Style Steamed Mushrooms
+tags:
+- light-seasoning
+- non-spicy-base
+- stovetop-nonstick
+- lunch-45
+- low-active-time
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V22 — Just One Cookbook — Miso Butter Mushrooms in Foil
+notes: 核心是 covered steam/braise mushroom structure；味噌黄油可作为 variation，家庭版保持轻盐。
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- fresh-shiitake
+- oyster-mushrooms
+- shimeji-mushrooms
+- enoki-mushrooms
+- maitake
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 10–15
+meal_window_minutes: 25–35
+elapsed_minutes: 25–40
+advance_start_required: false
+equipment:
+- medium burner
+- covered skillet / foil packet
+burner_plan: Medium burner; covered steam/braise route is mostly unattended after packing.
+child_suitable: conditional
+child_texture: 不同菌菇质地差异大，尤其金针菇等不自动视为儿童 Vegetable coverage。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- one_of:
+  - fresh-shiitake
+  - oyster-mushrooms
+  - shimeji-mushrooms
+  - enoki-mushrooms
+  - maitake
+  role: vegetable
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+### recipe: oyster-mushroom-scrambled-eggs | 平菇炒蛋
+
+```yaml
+id: oyster-mushroom-scrambled-eggs
+type: recipe
+status: candidate
+name_zh: 平菇炒蛋
+name_en: Oyster Mushrooms with Scrambled Eggs
+tags:
+- light-seasoning
+- non-spicy-base
+- stir-fried
+- stovetop-wok
+- lunch-30
+- family-shared
+- soft-protein
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+  - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+  - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: inferred
+  checked_on: '2026-08-12'
+  scope: Dish identity/core technique verified or conservatively inferred from cited mature household cooking patterns;
+    timing is source-derived or workflow-derived range, not household stopwatch data.
+  sources:
+  - V23 — Omnivore’s Cookbook — Easy Oyster Mushroom Stir-Fry + established Chinese vegetable-and-egg stir-fry pattern
+notes: Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook
+  calibration.
+primary_role: mixed
+main_protein_category: egg
+main_protein_ingredient_ids:
+- eggs
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+- oyster-mushrooms
+meal_contribution:
+  protein: 0.5
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+- rice
+active_minutes: 15–20
+meal_window_minutes: 15–25
+elapsed_minutes: 15–30
+advance_start_required: false
+equipment:
+- high-output burner
+- wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: conditional
+child_texture: 鸡蛋可保持嫩；平菇本身有一定嚼劲，因此儿童 Protein 可满足但 Vegetable coverage 暂不计。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+- ingredient_id: oyster-mushrooms
+  role: vegetable
+  availability: required
+- ingredient_id: eggs
+  role: main-protein
+  availability: required
+- pantry_core: light salt / neutral oil / common aromatics and sauce components appropriate to the verified structure
+  role: seasoning
+  availability: assumed
+steps:
+- 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+- 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+- 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child portion is removed; omit if unnecessary.
+substitutions: []
+```
+
+
 # 6. CANDIDATE MEAL COMBO PATTERN
 
 ## instant-pot-party-wings-rice-pot-in-pot
@@ -15761,7 +17791,7 @@ notes: Household commonly uses this lower-meat / upper-rice pattern. Exact param
 
 # 7. RESEARCH SOURCE REGISTRY
 
-Checked dates: Pork legacy sources were originally checked 2026-08-08; non-Pork formalization sources and supplemental checks were reviewed 2026-08-11. Scope is culinary identity/core technique, not retailer inventory or household preference unless explicitly stated.
+Checked dates: Pork legacy sources were originally checked 2026-08-08; non-Pork formalization sources and supplemental checks were reviewed 2026-08-11; Vegetable-centered sources V01–V23 were reviewed 2026-08-12. Scope is culinary identity/core technique, not retailer inventory or household preference unless explicitly stated.
 - **P-S1** — The Woks of Life — Moo Shu Pork: The Authentic Chinese Recipe
 - **P-S2** — Just One Cookbook — Ginger Pork (Shogayaki)
 - **P-S3** — 豆果美食 / 下厨房 — 天津锅塌里脊 / 锅塌里脊
@@ -15897,12 +17927,35 @@ Checked dates: Pork legacy sources were originally checked 2026-08-08; non-Pork 
 - **ST11** — Epicurious / Simply Recipes — savory oatmeal with egg
 - **ST12** — The Woks of Life — Mantou / steamed bun references; household uses existing ready-made `steamed-buns` ingredient
 - **ST13** — The Woks of Life — Taro Rice (芋头焖饭); household adaptation uses fresh shiitake and lower-oil stovetop route
+- **V01** — Made With Lau — Choy Sum with Garlic; The Woks of Life — Bok Choy Stir-fry / Pea Tips Stir-fry; supports one shared quick leafy-green stir-fry structure.
+- **V02** — Made With Lau — Dad’s 10-Minute Weeknight Broccoli / Broccoli Stir Fry.
+- **V03** — Made With Lau — Chinese Broccoli with Oyster Sauce.
+- **V04** — Made With Lau — Ong Choy with Fermented Bean Curd.
+- **V05** — Just One Cookbook — Japanese Spinach Salad with Sesame Dressing (Gomaae).
+- **V06** — Chinese 上汤娃娃菜 / baby napa cabbage in savory broth references; used only to verify the broth-simmered cabbage structure.
+- **V07** — The Woks of Life — Hot & Sour Napa Cabbage Stir-fry; household family version removes chili while retaining vinegar-cabbage structure.
+- **V08** — Omnivore’s Cookbook — Spinach and Egg Stir Fry.
+- **V09** — Chinese 荠菜豆腐羹 household pattern + the KB’s already-verified soft-tofu soup structure.
+- **V10** — Omnivore’s Cookbook — Stir-Fried Cauliflower with Tomato Sauce.
+- **V11** — The Woks of Life — cabbage recipes / everyday cabbage stir-fry patterns.
+- **V12** — The Woks of Life — Braised Winter Melon.
+- **V13** — Chinese loofah-and-egg household pattern + Omnivore’s Cookbook zucchini/vegetable stir-fry references; used to support a shared squash-and-egg structure.
+- **V14** — Made With Lau — steamed eggplant technique within Eggplant with Garlic Sauce; only the low-oil steaming structure is carried into the household Recipe.
+- **V15** — Just One Cookbook — Japanese daikon simmering references (including Buri Daikon / daikon soup patterns); supports the plain household simmered-daikon structure.
+- **V16** — The Woks of Life — Stir-Fried Celtuce with Wood Ear Mushrooms; household uses fresh wood ear only.
+- **V17** — Standard stir-fried sugar snap pea side-dish references; household base removes optional chili.
+- **V18** — Omnivore’s Cookbook — Chinese Chive and Egg; Chinese Yellow Chives and Eggs Stir Fry.
+- **V19** — Omnivore’s Cookbook — Dried Tofu and Celery Stir Fry; vegetarian route supports omitting optional pork.
+- **V20** — The Woks of Life — Braised Chinese Mushrooms with Bok Choy / mushroom-greens household structure.
+- **V21** — Omnivore’s Cookbook — King Oyster Mushroom Stir Fry / simple seared mushroom patterns.
+- **V22** — Just One Cookbook — Miso Butter Mushrooms in Foil; supports shared covered steam/braise structure across compatible mushrooms.
+- **V23** — Omnivore’s Cookbook — Easy Oyster Mushroom Stir-Fry plus established Chinese vegetable-and-egg stir-fry structure.
 
 # 8. VALIDATION
 
 | Check | Result | Detail |
 |---|---|---|
-| Pool coverage | PASS | 139/139 |
+| Pool coverage | PASS | 162/162 |
 | Pork | PASS | 35/35 |
 | Chicken | PASS | 23/23 |
 | Beef | PASS | 26/26 |
@@ -15911,35 +17964,40 @@ Checked dates: Pork legacy sources were originally checked 2026-08-08; non-Pork 
 | Shellfish | PASS | 9/9 |
 | Egg / Tofu | PASS | 14/14 |
 | Staple-centered | PASS | 13/13 |
-| Unique stable IDs | PASS | 139 unique; recipe headings and record IDs agree |
+| Vegetable-centered | PASS | 23/23 |
+| Unique stable IDs | PASS | 162 unique; recipe headings and record IDs agree |
 | Ingredient records | PASS | 132/132 retained Ingredient stable IDs migrated to formal Candidate records |
 | Ingredient stable IDs | PASS | 132 unique; no retained candidate ID dropped or renamed |
 | Starter visibility | PASS | 129 visible non-pantry Ingredients; 3 pantry aromatics hidden |
 | Starter section integrity | PASS | every Ingredient resolves to one controlled section and has a unique positive order within that section |
 | Recipe-required Starter reachability | PASS | every non-pantry Ingredient required by any Recipe / `one_of` is Starter-visible |
-| All candidate | PASS | 139/139 remain `candidate`; no auto-approval |
-| v1.3 required fields | PASS | `primary_role`, `meal_contribution`, `child_coverage`, staple split, `detail_level` present on 139/139 |
-| Deprecated Recipe fields | PASS | `vegetable_count`, `staple_pairings`, `child_support_protein_needed` removed from 139/139 |
+| All candidate | PASS | 162/162 remain `candidate`; no auto-approval |
+| v1.5 required fields | PASS | `primary_role`, `meal_contribution`, `child_coverage`, staple split, `detail_level` present on 162/162; `meal_addons` present only where supported |
+| Deprecated Recipe fields | PASS | `vegetable_count`, `staple_pairings`, `child_support_protein_needed` absent from 162/162 |
 | Ingredient availability | PASS | every non-pantry recipe ingredient is `required`; pantry seasoning is `assumed` |
 | Ingredient dependency audit | PASS | all Recipe Ingredient IDs and all `one_of` options resolve to the v1.4 Ingredient Library |
 | Staple classification | PASS | project Staple IDs no longer remain in `vegetable_ingredient_ids`; integral vs recommended staple separated |
 | Child coverage consistency | PASS | no child protein/vegetable coverage is true when the Recipe contributes zero of that slot |
-| Contribution / primary role consistency | PASS | `primary_role` agrees with non-zero P/V/S contributions on 139/139 |
+| Contribution / primary role consistency | PASS | `primary_role` agrees with non-zero P/V/S contributions on 162/162 |
 | Meal Builder behavior data | PASS | supports Protein target+tolerance and hard Child coverage behavior, including full-protein adult-only → half-protein child/mixed dishes ranking ahead of larger fallback proteins |
 | No spicy base | PASS | adult heat separated |
 | No deep-fry | PASS | baked/pan/steam/braise alternatives used |
 | Fresh wood ear migration | PASS | fresh-only |
 | Egg tofu child correction | PASS | child-eaten and protein coverage true |
 | Variation dedupe | PASS | steak / fish alternatives represented without duplicate Recipe records; machine-readable `one_of` used where already accepted |
-| Detail completeness | PASS | 139/139 honestly remain `discoverable`; no unverified exact Cook View quantities were invented |
+| Vegetable structure dedupe | PASS | 23 records cover merged leafy-greens, squash+egg, chives+egg and mushroom structures without seasoning-only duplicates |
+| Finish-with-leafy add-on | PASS | exactly 7 supported main Recipes; Instant Pot soy chicken thighs explicitly absent; add-on contributes V1 without synthetic Recipe IDs |
+| Finish-wilt capability | PASS | only 5 explicitly tagged Ingredients are eligible; leafy-vegetable section membership alone does not imply compatibility |
+| Ingredient-dependent child coverage | PASS | Recipe schema accepts `ingredient-dependent`; unresolved Ingredient-level coverage remains `unknown` and does not satisfy hard Child coverage |
+| Detail completeness | PASS | 162/162 honestly remain `discoverable`; no unverified exact Cook View quantities were invented |
 
-No required validation item remains FAIL or BLOCKED. No manual-intervention question was required for the Ingredient Starter/UI migration: section placement, visibility, order, labels, and conservative fit could be derived from retained Ingredient decisions and existing household rules without inventing retailer or timing facts.
+No required validation item remains FAIL or BLOCKED. No manual-intervention question was required for the Vegetable Recipe / add-on formalization: cooking-structure identity, Ingredient mapping, slot contribution, and compatibility could be supported by retained household decisions plus culinary evidence. Unconfirmed child acceptance remains `unknown` rather than being invented.
 
 # 9. DECISIONS
 
 Long-term decisions added/confirmed in this formalization:
 
-- Full retained 139-item Recipe pool is represented; no “core subset” reduction.
+- The original retained 139-item Recipe pool remains fully represented; v1.5 adds 23 Vegetable-centered structures for 162 total Recipes, with no “core subset” reduction.
 - All records remain `candidate`.
 - Time is a flexible workload/planning signal rather than a strict daily hard limit; precise household timings are added when actually known.
 - Manual intervention is reserved for unresolved issues that materially change safety, feasibility, Recipe identity, or household fit.
@@ -15959,11 +18017,26 @@ Long-term decisions added/confirmed in this formalization:
 - Recipe availability is machine-readable through required Ingredient entries, `one_of` alternatives, and assumed pantry seasoning.
 - Ingredient Starter represents **available ingredients**, not mandatory-use selections.
 - Ingredient Starter sections are data-driven by `starter.section`; all visible sections are collapsible, and collapsing never clears selection.
-- All retained non-pantry Ingredient candidates remain Starter-visible even when the current 139 Recipe pool does not yet reference them; this preserves the Ingredient Library as the input domain for future Recipe expansion rather than hiding valid retained ingredients because of temporary Recipe coverage gaps.
+- All retained non-pantry Ingredient candidates remain Starter-visible even when the current Recipe pool does not yet reference them; this preserves the Ingredient Library as the input domain for future Recipe expansion rather than hiding valid retained ingredients because of temporary Recipe coverage gaps.
 - `ginger`, `scallion`, and `garlic` remain stable Ingredient records but are `starter.visible: false` because they are assumed pantry aromatics.
 - `staple_pairings`, `vegetable_count`, and `child_support_protein_needed` are retired from Recipe v1.3 because they duplicated or conflated information now represented more precisely.
+- Vegetable-centered Recipe identity is based on cooking structure, not seasoning label; “蒜蓉” and “清炒” variants are merged when workflow is materially the same.
+- 23 Vegetable-centered Recipe structures are retained in v1.5; the library intentionally uses `one_of` to cover compatible greens, squash, chives and mushrooms without duplicate records.
+- `finish-with-leafy-vegetable` is a Recipe add-on rather than a synthetic Recipe/Meal Combo. It is restricted to explicitly compatible main Recipes with a true final stovetop reduction/braising window.
+- `Instant Pot 酱油鸡腿` does not support `finish-with-leafy-vegetable`; `照烧鸡腿` does. No separate 红烧鸡 Recipe is created because that seasoning direction does not justify a new cooking structure.
+- Ingredient `finish-wilt-compatible` is an explicit capability tag. Initial compatible Ingredients are chinese-greens, lettuce, youmai-cai, choy-sum and baby-napa-cabbage.
+- Child coverage may be `ingredient-dependent`; unknown Ingredient-level acceptance remains unknown and does not count toward hard Child completion.
 
 # 10. CHANGELOG
+
+## 2026-08-12 — v1.5
+
+- Added 23 formal Candidate Vegetable-centered Recipe structures, raising the Recipe Library from 139 to 162 records without changing existing stable IDs.
+- Merged seasoning-only duplicates into cooking structures and used `one_of` for compatible leafy greens, squash, chives and mushrooms.
+- Added the controlled `finish-with-leafy-vegetable` add-on and explicit Ingredient capability tag `finish-wilt-compatible`.
+- Enabled the add-on on exactly seven existing stovetop finishing Recipes: 红烧肉、糖醋排骨、照烧鸡腿、蚝油焖鸡腿/鸡小腿、可乐鸡翅、瑞士鸡翼、红烧牛肉；Instant Pot 酱油鸡腿 remains excluded.
+- Added `ingredient-dependent` Recipe Child coverage plus optional Ingredient-level `child_coverage.vegetable`; unconfirmed values remain `unknown`.
+- Added Vegetable research-source registry V01–V23 and completed full Recipe/Ingredient/reference/add-on regression validation with zero FAIL/BLOCKED items.
 
 ## 2026-08-12 — v1.4
 

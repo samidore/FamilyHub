@@ -6,16 +6,22 @@ import { mealData } from '../data/meal';
 const visibleIngredients = mealData.ingredients.filter((ingredient) => ingredient.visible);
 const recipes = mealData.recipes;
 type StarterSection = { id: string; labelZh: string; labelEn: string; order: number; visible: boolean };
-const clientData = JSON.stringify({ version: mealData.metadata.version, recipes: recipes.map((recipe) => ({
-  id: recipe.id, order: recipe.order, fitScore: recipe.fitScore, contribution: recipe.contribution,
-  childCoverage: recipe.childCoverage, requirements: recipe.requirements, mealWindowMinutes: recipe.mealWindowMinutes,
-  elapsedMinutes: recipe.elapsedMinutes, advanceStartRequired: recipe.advanceStartRequired,
-})) });
+const clientData = JSON.stringify({
+  version: mealData.metadata.version,
+  ingredients: mealData.ingredients.map((ingredient) => ({ id: ingredient.id, nameZh: ingredient.nameZh, tags: ingredient.tags, childCoverage: ingredient.childCoverage })),
+  recipes: recipes.map((recipe) => ({
+    id: recipe.id, order: recipe.order, fitScore: recipe.fitScore, contribution: recipe.contribution,
+    childCoverage: recipe.childCoverage, requirements: recipe.requirements, mealAddons: recipe.mealAddons,
+    ingredientChildCoverage: recipe.ingredientChildCoverage, mealWindowMinutes: recipe.mealWindowMinutes,
+    elapsedMinutes: recipe.elapsedMinutes, advanceStartRequired: recipe.advanceStartRequired,
+  })),
+});
 const contributionText = (recipe: (typeof recipes)[number]) => [
-  recipe.contribution.protein ? `Protein ${recipe.contribution.protein === .5 ? '½' : recipe.contribution.protein}` : '',
+  recipe.contribution.protein ? `Protein ${recipe.contribution.protein}` : '',
   recipe.contribution.vegetable ? `Vegetable ${recipe.contribution.vegetable}` : '',
   recipe.contribution.staple ? 'Staple ✓' : '',
 ].filter(Boolean).join(' · ');
+const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；精确用量仍需按来源或首次家庭实做校准。';
 ---
 <BaseLayout title="Meal Builder | Family Hub" description="按本顿可用食材和家庭组餐目标，实时选择合适的菜。" pageClass="module-page theme-berry meal-builder-page" themeColor="#F3E8EC">
   <SiteHeader eyebrow="饮食与家庭 · 动态组餐" title="Meal Builder" description="先勾选这顿可以使用的食材，再逐步补齐 Protein、Vegetable、Staple 和孩子需要的菜。食材可用不代表每样都必须用。" accent="berry" icon="meal">
@@ -24,8 +30,8 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
 
   <main id="main-content" class="meal-builder-app" data-enhanced="false">
     <noscript><div class="shell meal-noscript note-box"><strong>当前是阅读模式。</strong>启用 JavaScript 后可以选择食材、实时组餐和进入 Cook View；下方仍完整列出食材与菜谱。</div></noscript>
-
     <div id="meal-live" class="sr-only" aria-live="polite"></div>
+
     <section id="meal-builder-view" class="shell meal-workspace" aria-label="组餐设置与候选菜">
       <section class="meal-targets" aria-labelledby="meal-targets-heading">
         <div class="meal-section-heading"><div><p class="eyebrow">01 · 这顿需要什么</p><h2 id="meal-targets-heading">组餐目标</h2></div><button id="meal-reset" class="clear-button" type="button">重新开始</button></div>
@@ -55,21 +61,22 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
         <div class="meal-progress" aria-label="当前组餐进度">
           <div><span>Protein</span><strong id="progress-protein">0 / 1</strong></div>
           <div><span>Vegetable</span><strong id="progress-vegetable">0 / 2</strong></div>
-          <div><span>Staple</span><strong id="progress-staple">○</strong></div>
-          <div data-child-progress><span>孩子蛋白</span><strong id="progress-child-protein">○</strong></div>
-          <div data-child-progress><span>孩子蔬菜</span><strong id="progress-child-vegetable">○</strong></div>
+          <div><span>Staple</span><strong id="progress-staple">●</strong></div>
+          <div data-child-progress><span>孩子蛋白</span><strong id="progress-child-protein">●</strong></div>
+          <div data-child-progress><span>孩子蔬菜</span><strong id="progress-child-vegetable">●</strong></div>
         </div>
 
         <div id="meal-selected-panel" class="meal-selected" hidden>
           <h3>已选的菜</h3>
-          <ul>{recipes.map((recipe) => <li data-selected-recipe={recipe.id} hidden><span><strong>{recipe.nameZh}</strong><small>{contributionText(recipe)}</small></span><button type="button" data-remove-recipe={recipe.id}>移除</button></li>)}</ul>
+          <ul>{recipes.map((recipe) => <li data-selected-recipe={recipe.id} hidden><span><strong>{recipe.nameZh}</strong><small>{contributionText(recipe)}</small><small data-selected-bindings={recipe.id}></small><span class="meal-addon-list" data-selected-addons={recipe.id}></span></span><button type="button" data-remove-recipe={recipe.id}>移除</button></li>)}</ul>
         </div>
 
         <div class="meal-section-heading"><div><p class="eyebrow">03 · 逐步补齐</p><h2 id="meal-results-heading">候选菜</h2><p id="meal-guidance">先选择可用食材，候选菜会在这里出现。</p></div><span id="meal-result-count" class="meal-count" aria-live="polite">0 道可选</span></div>
         <div id="meal-recipe-grid" class="meal-recipe-grid">
           {recipes.map((recipe) => <article class="meal-recipe-card" data-meal-recipe={recipe.id}>
             <div class="meal-recipe-card__heading"><div><h3>{recipe.nameZh}</h3><p>{recipe.nameEn}</p></div><span class="meal-role">{recipe.primaryRole}</span></div>
-            <div class="badges"><span class="badge">{contributionText(recipe)}</span>{recipe.childCoverage.protein && <span class="badge">孩子蛋白 ✓</span>}{recipe.childCoverage.vegetable && <span class="badge">孩子蔬菜 ✓</span>}<span class="badge" data-time-badge hidden></span></div>
+            <div class="badges"><span class="badge">{contributionText(recipe)}</span>{recipe.childCoverage.protein === true && <span class="badge">孩子蛋白 ✓</span>}{recipe.childCoverage.vegetable === true && <span class="badge">孩子蔬菜 ✓</span>}{recipe.childCoverage.vegetable === 'ingredient-dependent' && <span class="badge" data-child-vegetable-badge>孩子蔬菜：按食材</span>}<span class="badge" data-time-badge hidden></span></div>
+            <div class="meal-recipe-bindings" data-recipe-bindings={recipe.id}></div>
             <p class="meal-timing">{recipe.mealWindowMinutes || recipe.elapsedMinutes || recipe.activeMinutes}{recipe.advanceStartRequired ? ' · 需提前开始' : ''}</p>
             <p class="meal-equipment">{recipe.equipment.join(' · ')}</p>
             <button class="button button--primary" type="button" data-select-recipe={recipe.id}>选择这道菜</button>
@@ -80,7 +87,7 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
     </section>
 
     <section id="meal-complete-view" class="shell meal-finish" hidden aria-labelledby="meal-complete-heading">
-      <p class="eyebrow">组餐完成</p><h2 id="meal-complete-heading">今晚的菜</h2><p>目标都补齐了。可以返回调整，也可以进入做饭视图。</p>
+      <p class="eyebrow">组餐完成</p><h2 id="meal-complete-heading">今晚的菜</h2><p>目标都补齐了。可以返回调整，也可以进入 Cook View。</p>
       <ul class="meal-finish-list">{recipes.map((recipe) => <li data-complete-recipe={recipe.id} hidden><span aria-hidden="true">✓</span><strong>{recipe.nameZh}</strong><small>{recipe.nameEn}</small></li>)}</ul>
       <div class="meal-finish-actions"><button id="meal-modify" class="button button--secondary" type="button">修改选菜</button><button id="meal-start-cooking" class="button button--primary" type="button">开始做饭</button></div>
     </section>
@@ -91,11 +98,12 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
         <summary><span><strong>{recipe.nameZh}</strong><small>{recipe.nameEn}</small></span><span>{recipe.mealWindowMinutes || recipe.elapsedMinutes}</span></summary>
         <div class="meal-cook-card__body">
           <div class="badges"><span class="badge">{contributionText(recipe)}</span><span class="badge">{recipe.detailLevel === 'discoverable' ? '基础做法' : '可直接照做'}</span></div>
-          {recipe.detailLevel === 'discoverable' && <p class="note-box">这道菜目前只有可靠的结构和基础步骤；精确用量仍需按来源或首次家庭实做校准。</p>}
+          {recipe.detailLevel === 'discoverable' && <p class="note-box">{discoverableNote}</p>}
           <h3>步骤</h3><ol>{recipe.steps.map((step) => <li>{step}</li>)}</ol>
           {recipe.childServing && <><h3>孩子上桌</h3><p>{recipe.childServing}</p></>}
           {recipe.adultFinish && <><h3>成人收尾</h3><p>{recipe.adultFinish}</p></>}
           {recipe.substitutions.length > 0 && <><h3>替换</h3><ul>{recipe.substitutions.map((item) => <li>{item}</li>)}</ul></>}
+          <div class="meal-cook-addons" data-cook-addons={recipe.id}></div>
         </div>
       </details>)}</div>
     </section>
@@ -109,68 +117,121 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
 
   <script id="meal-data" type="application/json" is:inline set:html={clientData}></script>
   <script>
-    import { aggregateMeal, defaultMealState, isFeasible, isMealComplete, rankCandidates, timeFit } from '../lib/mealEngine';
-    import type { MealRecipe, MealState, TimePreference } from '../lib/mealEngine';
-    type Recipe = MealRecipe;
+    import { addSelectedAddon, aggregateSelection, bindRecipeIngredients, defaultMealState, isMealComplete, rankAddons, rankCandidates, reconcileMealState, removeSelectedAddon, resolveRecipeChildCoverage, timeFit } from '../lib/mealEngine';
+    import type { MealIngredient, MealRecipe, MealState, SelectedAddon, TimePreference } from '../lib/mealEngine';
     type View = 'build' | 'complete' | 'cook';
-    const payload = JSON.parse(document.querySelector<HTMLScriptElement>('#meal-data')!.textContent!) as { version: string; recipes: Recipe[] };
+    type Payload = { version: string; ingredients: MealIngredient[]; recipes: MealRecipe[] };
+    const payload = JSON.parse(document.querySelector<HTMLScriptElement>('#meal-data')!.textContent!) as Payload;
     const recipes = payload.recipes;
+    const ingredients = payload.ingredients;
     const byId = new Map(recipes.map((recipe) => [recipe.id, recipe]));
+    const ingredientById = new Map(ingredients.map((ingredient) => [ingredient.id, ingredient]));
     const storageKey = `family-hub-meal-builder-${payload.version}`;
     let state: MealState = defaultMealState(); let view: View = 'build'; let suppressAutoComplete = false;
-    try { const saved = JSON.parse(sessionStorage.getItem(storageKey) ?? 'null'); if (saved?.state) { state = { ...defaultMealState(), ...saved.state }; view = saved.view ?? 'build'; } } catch { sessionStorage.removeItem(storageKey); }
-    state.availableIngredientIds = state.availableIngredientIds.filter((id) => document.querySelector(`[data-ingredient-id="${CSS.escape(id)}"]`));
-    const restoredAvailable = new Set(state.availableIngredientIds);
-    state.selectedRecipeIds = state.selectedRecipeIds.filter((id) => { const recipe = byId.get(id); return recipe && isFeasible(recipe, restoredAvailable); });
+    let draftBindings: Record<string, (string | null)[]> = {};
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(storageKey) ?? 'null');
+      if (saved?.state) state = reconcileMealState({ ...defaultMealState(), ...saved.state }, recipes, ingredients);
+      view = saved?.view ?? 'build';
+    } catch { sessionStorage.removeItem(storageKey); }
+    state = reconcileMealState({ ...state, availableIngredientIds: state.availableIngredientIds.filter((id) => ingredientById.has(id)) }, recipes, ingredients);
 
     const app = document.querySelector<HTMLElement>('.meal-builder-app')!; app.dataset.enhanced = 'true';
     const builder = document.querySelector<HTMLElement>('#meal-builder-view')!; const complete = document.querySelector<HTMLElement>('#meal-complete-view')!; const cook = document.querySelector<HTMLElement>('#meal-cook-view')!;
-    const live = document.querySelector<HTMLElement>('#meal-live')!; const recipeGrid = document.querySelector<HTMLElement>('#meal-recipe-grid')!;
+    const live = document.querySelector<HTMLElement>('#meal-live')!; const recipeGrid = document.querySelector<HTMLElement>('#meal-recipe-grid')!; const selectedPanel = document.querySelector<HTMLElement>('#meal-selected-panel')!;
     const protein = document.querySelector<HTMLSelectElement>('#meal-protein')!; const vegetable = document.querySelector<HTMLSelectElement>('#meal-vegetable')!; const time = document.querySelector<HTMLSelectElement>('#meal-time')!; const staple = document.querySelector<HTMLInputElement>('#meal-staple')!; const child = document.querySelector<HTMLInputElement>('#meal-child')!;
     const save = () => sessionStorage.setItem(storageKey, JSON.stringify({ state, view }));
     const announce = (message: string) => { live.textContent = ''; requestAnimationFrame(() => { live.textContent = message; }); };
-    const selectedRecipes = () => state.selectedRecipeIds.map((id) => byId.get(id)).filter((recipe): recipe is Recipe => Boolean(recipe));
+    const selectedRecipes = () => state.selectedRecipeIds.map((id) => byId.get(id)).filter((recipe): recipe is MealRecipe => Boolean(recipe));
+    const selectedAddonEntries = (recipeId: string): SelectedAddon[] => state.selectedAddons.filter((entry) => entry.mainRecipeId === recipeId);
     const setView = (next: View) => { view = next; builder.hidden = next !== 'build'; complete.hidden = next !== 'complete'; cook.hidden = next !== 'cook'; save(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+
+    function draftBindingFor(recipe: MealRecipe, available: Set<string>) {
+      const existing = draftBindings[recipe.id] ?? state.recipeIngredientBindings[recipe.id] ?? [];
+      const binding = recipe.requirements.map((requirement, index) => {
+        const options = requirement.anyOf.filter((id) => available.has(id));
+        const prior = existing[index];
+        return prior && options.includes(prior) ? prior : options[0] ?? null;
+      });
+      draftBindings[recipe.id] = binding;
+      return binding;
+    }
+
+    function renderRecipeBindings(recipe: MealRecipe, card: HTMLElement, available: Set<string>) {
+      const host = card.querySelector<HTMLElement>('[data-recipe-bindings]'); if (!host) return;
+      host.replaceChildren();
+      const binding = draftBindingFor(recipe, available);
+      recipe.requirements.forEach((requirement, index) => {
+        const options = requirement.anyOf.filter((id) => available.has(id));
+        if (options.length <= 1) return;
+        const label = document.createElement('label'); label.className = 'meal-binding-control';
+        const text = document.createElement('span'); text.textContent = `选择${requirement.role === 'vegetable' ? '蔬菜' : '食材'}`;
+        const select = document.createElement('select'); select.dataset.bindingRecipe = recipe.id; select.dataset.bindingIndex = String(index); select.setAttribute('aria-label', `${recipe.nameZh} 食材选择 ${index + 1}`);
+        options.forEach((id) => { const option = document.createElement('option'); option.value = id; option.textContent = ingredientById.get(id)?.nameZh ?? id; option.selected = binding[index] === id; select.append(option); });
+        label.append(text, select); host.append(label);
+      });
+      const childBadge = card.querySelector<HTMLElement>('[data-child-vegetable-badge]');
+      if (childBadge) childBadge.textContent = resolveRecipeChildCoverage(recipe, binding, ingredients).vegetable ? '孩子蔬菜 ✓' : '孩子蔬菜：按食材';
+    }
+
+    function renderSelectedAddons(recipe: MealRecipe) {
+      const host = document.querySelector<HTMLElement>(`[data-selected-addons="${CSS.escape(recipe.id)}"]`)!; host.replaceChildren();
+      const options = rankAddons(recipes, state, ingredients).filter((option) => option.recipeId === recipe.id);
+      for (const option of options) {
+        const selected = selectedAddonEntries(recipe.id).find((entry) => entry.addonType === option.addon.id);
+        const row = document.createElement('span'); row.className = 'meal-addon-row';
+        if (option.ingredientIds.length > 1) {
+          const label = document.createElement('label'); label.className = 'meal-addon-choice'; label.textContent = '叶菜';
+          const select = document.createElement('select'); select.dataset.addonSelect = 'true'; select.dataset.addonRecipe = recipe.id; select.dataset.addonId = option.addon.id; select.setAttribute('aria-label', `${recipe.nameZh} 叶菜附加项食材`);
+          option.ingredientIds.forEach((id) => { const item = document.createElement('option'); item.value = id; item.textContent = ingredientById.get(id)?.nameZh ?? id; item.selected = id === (selected?.ingredientId ?? option.selectedIngredientId); select.append(item); });
+          label.append(select); row.append(label);
+        }
+        const button = document.createElement('button'); button.type = 'button'; button.className = 'meal-addon-button'; button.dataset.addonRecipe = recipe.id; button.dataset.addonId = option.addon.id; button.dataset.addonIngredient = option.selectedIngredientId ?? '';
+        button.dataset.addonAction = selected ? 'remove' : 'add'; button.textContent = selected ? '移除附加项' : '+ 加入叶菜 · Vegetable 1';
+        row.append(button); host.append(row);
+      }
+    }
+
+    function renderCookAddons(recipe: MealRecipe) {
+      const host = document.querySelector<HTMLElement>(`[data-cook-addons="${CSS.escape(recipe.id)}"]`)!; host.replaceChildren();
+      for (const entry of selectedAddonEntries(recipe.id)) {
+        const addon = (recipe.mealAddons ?? []).find((candidate) => candidate.id === entry.addonType); if (!addon) continue;
+        const heading = document.createElement('h3'); heading.textContent = '收汁阶段'; host.append(heading);
+        const detail = document.createElement('p'); detail.textContent = `${ingredientById.get(entry.ingredientId)?.nameZh ?? entry.ingredientId} · Vegetable 1`; host.append(detail);
+        if (addon.notes) { const note = document.createElement('p'); note.className = 'note-box'; note.textContent = addon.notes; host.append(note); }
+      }
+    }
 
     function render(selectionChanged = false) {
       protein.value = String(state.proteinTarget); vegetable.value = String(state.vegetableTarget); time.value = state.timePreference; staple.checked = state.stapleRequired; child.checked = state.childMode;
       const available = new Set(state.availableIngredientIds);
-      document.querySelectorAll<HTMLButtonElement>('[data-ingredient-id]').forEach((button) => { const active = available.has(button.dataset.ingredientId!); button.setAttribute('aria-pressed', String(active)); });
+      document.querySelectorAll<HTMLButtonElement>('[data-ingredient-id]').forEach((button) => button.setAttribute('aria-pressed', String(available.has(button.dataset.ingredientId!))));
       document.querySelectorAll<HTMLElement>('[data-ingredient-section]').forEach((section) => { const buttons = [...section.querySelectorAll<HTMLButtonElement>('[data-ingredient-id]')]; section.querySelector<HTMLElement>('[data-section-count]')!.textContent = `${buttons.filter((button) => button.getAttribute('aria-pressed') === 'true').length} / ${buttons.length}`; });
       document.querySelector<HTMLElement>('#meal-ingredient-count')!.textContent = `已选 ${available.size}`;
-
-      const selected = selectedRecipes(); const totals = aggregateMeal(selected);
-      document.querySelector('#progress-protein')!.textContent = `${totals.protein} / ${state.proteinTarget}`;
-      document.querySelector('#progress-vegetable')!.textContent = `${totals.vegetable} / ${state.vegetableTarget}`;
-      document.querySelector('#progress-staple')!.textContent = state.stapleRequired ? (totals.staple >= 1 ? '✓' : '○') : '不需要';
-      document.querySelector('#progress-child-protein')!.textContent = totals.childProtein ? '✓' : '○'; document.querySelector('#progress-child-vegetable')!.textContent = totals.childVegetable ? '✓' : '○';
+      const selected = selectedRecipes(); const totals = aggregateSelection(recipes, state, ingredients);
+      document.querySelector('#progress-protein')!.textContent = `${totals.protein} / ${state.proteinTarget}`; document.querySelector('#progress-vegetable')!.textContent = `${totals.vegetable} / ${state.vegetableTarget}`;
+      document.querySelector('#progress-staple')!.textContent = state.stapleRequired ? (totals.staple >= 1 ? '✓' : '●') : '不需要'; document.querySelector('#progress-child-protein')!.textContent = totals.childProtein ? '✓' : '●'; document.querySelector('#progress-child-vegetable')!.textContent = totals.childVegetable ? '✓' : '●';
       document.querySelectorAll<HTMLElement>('[data-child-progress]').forEach((item) => item.hidden = !state.childMode);
-      const selectedSet = new Set(state.selectedRecipeIds); document.querySelector<HTMLElement>('#meal-selected-panel')!.hidden = selectedSet.size === 0;
+      const selectedSet = new Set(state.selectedRecipeIds); selectedPanel.hidden = selectedSet.size === 0;
       document.querySelectorAll<HTMLElement>('[data-selected-recipe]').forEach((item) => item.hidden = !selectedSet.has(item.dataset.selectedRecipe!));
-      document.querySelectorAll<HTMLElement>('[data-complete-recipe]').forEach((item) => item.hidden = !selectedSet.has(item.dataset.completeRecipe!));
-      document.querySelectorAll<HTMLElement>('[data-cook-recipe]').forEach((item) => item.hidden = !selectedSet.has(item.dataset.cookRecipe!));
-
-      const candidates = rankCandidates(recipes, state) as Recipe[]; const candidateIds = new Set(candidates.map((recipe) => recipe.id));
+      document.querySelectorAll<HTMLElement>('[data-complete-recipe]').forEach((item) => item.hidden = !selectedSet.has(item.dataset.completeRecipe!)); document.querySelectorAll<HTMLElement>('[data-cook-recipe]').forEach((item) => item.hidden = !selectedSet.has(item.dataset.cookRecipe!));
+      selected.forEach((recipe) => { renderSelectedAddons(recipe); renderCookAddons(recipe); });
+      selected.forEach((recipe) => { const host = document.querySelector<HTMLElement>(`[data-selected-bindings="${CSS.escape(recipe.id)}"]`); if (!host) return; const binding = state.recipeIngredientBindings[recipe.id] ?? bindRecipeIngredients(recipe, state.availableIngredientIds); const labels = binding.filter(Boolean).map((id) => ingredientById.get(id!)?.nameZh ?? id); host.textContent = labels.length ? `食材：${labels.join('、')}` : ''; });
+      const candidates = rankCandidates(recipes, state, ingredients, draftBindings); const candidateIds = new Set(candidates.map((recipe) => recipe.id));
       document.querySelectorAll<HTMLElement>('[data-meal-recipe]').forEach((card) => { card.hidden = !candidateIds.has(card.dataset.mealRecipe!); });
-      candidates.forEach((recipe) => { const card = document.querySelector<HTMLElement>(`[data-meal-recipe="${CSS.escape(recipe.id)}"]`)!; const badge = card.querySelector<HTMLElement>('[data-time-badge]')!; const fit = timeFit(recipe, state.timePreference); badge.hidden = !fit.label; badge.textContent = fit.label; recipeGrid.append(card); });
-      document.querySelector('#meal-result-count')!.textContent = `${candidates.length} 道可选`;
-      document.querySelector<HTMLElement>('#meal-empty')!.hidden = candidates.length > 0;
+      candidates.forEach((recipe) => { const card = document.querySelector<HTMLElement>(`[data-meal-recipe="${CSS.escape(recipe.id)}"]`)!; renderRecipeBindings(recipe, card, available); const badge = card.querySelector<HTMLElement>('[data-time-badge]')!; const fit = timeFit(recipe, state.timePreference); badge.hidden = !fit.label; badge.textContent = fit.label; recipeGrid.append(card); });
+      document.querySelector('#meal-result-count')!.textContent = `${candidates.length} 道可选`; document.querySelector<HTMLElement>('#meal-empty')!.hidden = candidates.length > 0;
       document.querySelector('#meal-guidance')!.textContent = available.size === 0 ? '先选择可用食材，候选菜会在这里出现。' : candidates.length ? '优先显示能补齐更多当前缺口、同时减少多余份数的菜。' : '增加可用食材，或调整组餐目标。';
-
-      const done = isMealComplete(state, totals);
-      if (selectionChanged && done && !suppressAutoComplete) view = 'complete';
-      if (!done && view !== 'build') view = 'build';
-      suppressAutoComplete = false; builder.hidden = view !== 'build'; complete.hidden = view !== 'complete'; cook.hidden = view !== 'cook'; save();
+      const done = isMealComplete(state, totals); if (selectionChanged && done && !suppressAutoComplete) view = 'complete'; if (!done && view !== 'build') view = 'build'; suppressAutoComplete = false; builder.hidden = view !== 'build'; complete.hidden = view !== 'complete'; cook.hidden = view !== 'cook'; save();
     }
 
-    document.querySelectorAll<HTMLButtonElement>('[data-ingredient-id]').forEach((button) => button.addEventListener('click', () => {
-      const id = button.dataset.ingredientId!; const available = new Set(state.availableIngredientIds); available.has(id) ? available.delete(id) : available.add(id); state.availableIngredientIds = [...available];
-      const feasibleSelected = selectedRecipes().filter((recipe) => isFeasible(recipe, available)); const removed = state.selectedRecipeIds.length - feasibleSelected.length; state.selectedRecipeIds = feasibleSelected.map((recipe) => recipe.id);
-      render(true); announce(removed ? `已取消食材，并移除 ${removed} 道无法制作的已选菜。` : `已${available.has(id) ? '选择' : '取消'}食材。`);
-    }));
-    document.querySelectorAll<HTMLButtonElement>('[data-select-recipe]').forEach((button) => button.addEventListener('click', () => { state.selectedRecipeIds = [...state.selectedRecipeIds, button.dataset.selectRecipe!]; render(true); announce('已加入一道菜。'); }));
-    document.querySelectorAll<HTMLButtonElement>('[data-remove-recipe]').forEach((button) => button.addEventListener('click', () => { state.selectedRecipeIds = state.selectedRecipeIds.filter((id) => id !== button.dataset.removeRecipe); render(true); announce('已移除一道菜。'); }));
-    protein.addEventListener('change', () => { state.proteinTarget = Number(protein.value); render(true); }); vegetable.addEventListener('change', () => { state.vegetableTarget = Number(vegetable.value); render(true); }); time.addEventListener('change', () => { state.timePreference = time.value as TimePreference; render(); }); staple.addEventListener('change', () => { state.stapleRequired = staple.checked; render(true); }); child.addEventListener('change', () => { state.childMode = child.checked; render(true); });
+    document.querySelectorAll<HTMLButtonElement>('[data-ingredient-id]').forEach((button) => button.addEventListener('click', () => { const id = button.dataset.ingredientId!; const available = new Set(state.availableIngredientIds); const before = state.selectedRecipeIds.length; available.has(id) ? available.delete(id) : available.add(id); state = reconcileMealState({ ...state, availableIngredientIds: [...available] }, recipes, ingredients); render(true); announce(before > state.selectedRecipeIds.length ? `已取消食材，并移除 ${before - state.selectedRecipeIds.length} 道无法制作的已选菜。` : `已${available.has(id) ? '选择' : '取消'}食材。`); }));
+    recipeGrid.addEventListener('change', (event) => { const select = (event.target as HTMLElement).closest<HTMLSelectElement>('[data-binding-recipe]'); if (!select) return; const recipe = byId.get(select.dataset.bindingRecipe!); if (!recipe) return; const binding = draftBindingFor(recipe, new Set(state.availableIngredientIds)); binding[Number(select.dataset.bindingIndex)] = select.value; draftBindings[recipe.id] = binding; render(); announce('已更新这道菜的食材选择。'); });
+    document.querySelectorAll<HTMLButtonElement>('[data-select-recipe]').forEach((button) => button.addEventListener('click', () => { const id = button.dataset.selectRecipe!; const recipe = byId.get(id)!; const binding = draftBindingFor(recipe, new Set(state.availableIngredientIds)); state = reconcileMealState({ ...state, selectedRecipeIds: [...state.selectedRecipeIds, id], recipeIngredientBindings: { ...state.recipeIngredientBindings, [id]: binding.filter((value): value is string => Boolean(value)) } }, recipes, ingredients); render(true); announce('已加入一道菜。'); }));
+    document.querySelectorAll<HTMLButtonElement>('[data-remove-recipe]').forEach((button) => button.addEventListener('click', () => { state = reconcileMealState({ ...state, selectedRecipeIds: state.selectedRecipeIds.filter((id) => id !== button.dataset.removeRecipe) }, recipes, ingredients); render(true); announce('已移除一道菜。'); }));
+    selectedPanel.addEventListener('change', (event) => { const select = (event.target as HTMLElement).closest<HTMLSelectElement>('[data-addon-select]'); if (!select) return; const recipe = byId.get(select.dataset.addonRecipe!); if (!recipe) return; state = addSelectedAddon(state, recipe, select.dataset.addonId!, select.value, ingredients); state = reconcileMealState(state, recipes, ingredients); render(true); announce('已更新叶菜附加项食材。'); });
+    selectedPanel.addEventListener('click', (event) => { const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-addon-id]'); if (!button) return; const recipe = byId.get(button.dataset.addonRecipe!); if (!recipe) return; const current = selectedAddonEntries(recipe.id).some((entry) => entry.addonType === button.dataset.addonId); const select = button.parentElement?.querySelector<HTMLSelectElement>('[data-addon-select]'); const ingredientId = select?.value ?? button.dataset.addonIngredient!; state = current || button.dataset.addonAction === 'remove' ? removeSelectedAddon(state, recipe.id, button.dataset.addonId!) : addSelectedAddon(state, recipe, button.dataset.addonId!, ingredientId, ingredients); state = reconcileMealState(state, recipes, ingredients); render(true); announce(current || button.dataset.addonAction === 'remove' ? '已移除叶菜附加项。' : '已加入叶菜附加项。'); });
+    protein.addEventListener('change', () => { state = { ...state, proteinTarget: Number(protein.value) }; render(true); }); vegetable.addEventListener('change', () => { state = { ...state, vegetableTarget: Number(vegetable.value) }; render(true); }); time.addEventListener('change', () => { state = { ...state, timePreference: time.value as TimePreference }; render(); }); staple.addEventListener('change', () => { state = { ...state, stapleRequired: staple.checked }; render(true); }); child.addEventListener('change', () => { state = { ...state, childMode: child.checked }; render(true); });
     document.querySelector('#meal-reset')!.addEventListener('click', () => { state = defaultMealState(); view = 'build'; sessionStorage.removeItem(storageKey); render(); announce('Meal Builder 已重新开始。'); });
     document.querySelector('#meal-modify')!.addEventListener('click', () => { suppressAutoComplete = true; setView('build'); render(); }); document.querySelector('#meal-start-cooking')!.addEventListener('click', () => setView('cook')); document.querySelector('#meal-back-to-menu')!.addEventListener('click', () => setView('complete'));
     render();

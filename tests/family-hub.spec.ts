@@ -80,7 +80,7 @@ test('complete records remain available without JavaScript', async ({ browser })
   await page.goto('colonoscopy-specialists/');
   await expect(page.locator('[data-colonoscopy]')).toHaveCount(18);
   await page.goto('meal-builder/');
-  await expect(page.locator('[data-meal-recipe]')).toHaveCount(139);
+  await expect(page.locator('[data-meal-recipe]')).toHaveCount(162);
   await context.close();
 });
 
@@ -152,4 +152,29 @@ test('meal ingredient sections keep selection while collapsed', async ({ page })
   await expect(section.locator('[data-ingredient-id="whole-pork-tenderloin"]')).not.toBeVisible();
   await section.locator('summary').click();
   await expect(section.locator('[data-ingredient-id="whole-pork-tenderloin"]')).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('meal builder exposes one-of binding and explicit leafy add-on choices', async ({ page }) => {
+  await page.goto('meal-builder/');
+  for (const id of ['chicken-drumsticks', 'bone-in-chicken-thighs', 'chinese-greens', 'lettuce']) {
+    const button = page.locator(`[data-ingredient-id="${id}"]`);
+    const section = button.locator('xpath=ancestor::details');
+    if (!(await section.evaluate((element: HTMLDetailsElement) => element.open))) await section.locator('summary').click();
+    await button.click();
+  }
+  const main = page.locator('[data-meal-recipe="oyster-sauce-braised-chicken"]');
+  await expect(main).toBeVisible();
+  const binding = main.locator('select[data-binding-recipe="oyster-sauce-braised-chicken"]');
+  await expect(binding).toBeVisible();
+  await binding.selectOption('bone-in-chicken-thighs');
+  await main.getByRole('button', { name: /选择这道菜/ }).click();
+  const selected = page.locator('[data-selected-recipe="oyster-sauce-braised-chicken"]');
+  await expect(selected).toBeVisible();
+  const addon = selected.locator('[data-addon-select="true"]');
+  await expect(addon).toHaveCount(1);
+  await addon.selectOption('lettuce');
+  const state = await page.evaluate(() => Object.values(sessionStorage).map((value) => { try { return JSON.parse(value); } catch { return null; } }).find((value) => value?.state)?.state);
+  expect(state.selectedRecipeIds).toContain('oyster-sauce-braised-chicken');
+  expect(state.recipeIngredientBindings['oyster-sauce-braised-chicken']).toContain('bone-in-chicken-thighs');
+  expect(state.selectedAddons).toContainEqual({ mainRecipeId: 'oyster-sauce-braised-chicken', addonType: 'finish-with-leafy-vegetable', ingredientId: 'lettuce' });
 });

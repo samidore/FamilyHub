@@ -95,5 +95,5 @@ Planned categories and modules remain absent from navigation until they have a w
 - Query state is bookmarkable, empty states are recoverable, and external links are safe.
 - Layouts work without horizontal overflow at 375, 390, 430, 768, 1024, and 1440 pixels.
 - Public data passes strict schemas and contains no private-family fields.
-- Meal Builder parses its public-safe Markdown KB as the single Ingredient/Recipe source and preserves 132 Ingredients, 129 visible Starter choices, and 139 Recipes.
+- Meal Builder parses its public-safe Markdown KB as the single Ingredient/Recipe source and preserves 132 Ingredients, 129 visible Starter choices, and 162 candidate Recipes, including 23 Vegetable-centered structures and the controlled finish-with-leafy-vegetable add-on.
 - Validation, Astro checks, production build, registry audit, and browser smoke tests pass.
