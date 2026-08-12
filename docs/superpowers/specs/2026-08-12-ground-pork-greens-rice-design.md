@@ -18,7 +18,7 @@
 
 ## 验收
 
-- Meal Builder 将该菜显示为 `Protein 1 · Vegetable 1 · Staple 1`。
+- Meal Builder 将该菜显示为 `Protein 1 · Vegetable 1 · Staple ✓`。
 - 选择该菜可独立满足一份 Protein 和一份 Staple。
 - `rice` 是菜谱必需食材，不再只是推荐搭配。
 - 数据验证、Astro 检查、生产构建和审计通过。

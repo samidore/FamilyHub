@@ -5018,15 +5018,15 @@ supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids:
 - chinese-greens
 meal_contribution:
-  protein: 0.5
+  protein: 1
   vegetable: 1
-  staple: 0
+  staple: 1
 child_coverage:
   protein: true
   vegetable: true
-integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
+integral_staple_ingredient_ids:
 - rice
+recommended_staple_ingredient_ids: []
 active_minutes: 15–25
 meal_window_minutes: 20–35
 elapsed_minutes: 20–40
@@ -5034,7 +5034,8 @@ advance_start_required: false
 equipment:
 - high-output burner
 - wok / iron pan
-burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
+- separately cooked rice
+burner_plan: High-output burner for the wok; rice is treated as an already-cooked or separately cooked staple.
 child_suitable: 'yes'
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -5050,10 +5051,14 @@ ingredients:
 - ingredient_id: chinese-greens
   role: vegetable
   availability: required
+- ingredient_id: rice
+  role: integral-staple
+  availability: required
 - pantry_core: ginger / garlic / light soy
   role: seasoning
   availability: assumed
 steps:
+- 先准备白米饭；炒菜时将米饭保温备用。
 - 按菜式需要处理 ground-pork；蔬菜为 chinese-greens。肉类需要嫩化/短腌时按引用来源执行。
 - 先把核心调味准备好：ginger / garlic / light soy；家庭版基底不放辣并降低盐油。
 - 热锅少油，先把主要蛋白炒至接近熟并视需要盛出；再处理蔬菜/香料。

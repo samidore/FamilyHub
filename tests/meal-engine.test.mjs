@@ -60,6 +60,9 @@ test('v1.5 KB keeps strict counts, Vegetable structures, and controlled add-ons'
   ]);
   assert.deepEqual(kb.ingredients.filter((item) => item.tags?.includes('finish-wilt-compatible')).map((item) => item.id).sort(), ['baby-napa-cabbage', 'chinese-greens', 'choy-sum', 'lettuce', 'youmai-cai']);
   assert.equal(kb.recipes.find((item) => item.id === 'instant-pot-soy-chicken-thighs').mealAddons.length, 0);
+  const porkGreens = kb.recipes.find((item) => item.id === 'ground-pork-chinese-greens-stir-fry');
+  assert.deepEqual(porkGreens.contribution, { protein: 1, vegetable: 1, staple: 1 });
+  assert.deepEqual(porkGreens.requirements.find((item) => item.role === 'integral-staple')?.anyOf, ['rice']);
   const everyIngredient = new Set(kb.ingredients.map((item) => item.id));
   for (const item of kb.recipes) {
     for (const [index, requirement] of item.requirements.entries()) {
