@@ -44,7 +44,17 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
     <div id="meal-live" class="sr-only" aria-live="polite"></div>
 
     <section class="shell meal-household-bar" aria-label="家庭共享状态">
-      <div><p class="eyebrow">Shared Household</p><p id="meal-connection" class="meal-connection" role="status">本地开发同步（未连接 Firebase）</p><p id="meal-uid" class="meal-uid" hidden></p></div>
+      <div>
+        <p class="eyebrow">Shared Household</p>
+        <p id="meal-connection" class="meal-connection" role="status">本地开发同步（未连接 Firebase）</p>
+        <p id="meal-account" class="meal-uid" hidden></p>
+        <p id="meal-auth-detail" class="meal-uid" hidden></p>
+        <div class="meal-auth-actions">
+          <button id="meal-google-login" class="button button--secondary" type="button" hidden>使用 Google 登录</button>
+          <button id="meal-access-refresh" class="clear-button" type="button" hidden>重新检查权限</button>
+          <button id="meal-logout" class="clear-button" type="button" hidden>退出登录</button>
+        </div>
+      </div>
       <div class="meal-shared-status"><span>本顿状态</span><strong id="meal-shared-status">未开始</strong></div>
     </section>
 
@@ -191,7 +201,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
     const builder = document.querySelector<HTMLElement>('#meal-builder-view')!; const complete = document.querySelector<HTMLElement>('#meal-complete-view')!; const cook = document.querySelector<HTMLElement>('#meal-cook-view')!;
     const live = document.querySelector<HTMLElement>('#meal-live')!; const recipeGrid = document.querySelector<HTMLElement>('#meal-recipe-grid')!; const selectedPanel = document.querySelector<HTMLElement>('#meal-selected-panel')!; const nextButton = document.querySelector<HTMLButtonElement>('#meal-next')!; const completionStatus = document.querySelector<HTMLElement>('#meal-completion-status')!;
     const protein = document.querySelector<HTMLSelectElement>('#meal-protein')!; const vegetable = document.querySelector<HTMLSelectElement>('#meal-vegetable')!; const time = document.querySelector<HTMLSelectElement>('#meal-time')!; const staple = document.querySelector<HTMLInputElement>('#meal-staple')!; const child = document.querySelector<HTMLInputElement>('#meal-child')!;
-    const connection = document.querySelector<HTMLElement>('#meal-connection')!; const uid = document.querySelector<HTMLElement>('#meal-uid')!; const sharedStatus = document.querySelector<HTMLElement>('#meal-shared-status')!; const inventoryList = document.querySelector<HTMLElement>('#meal-inventory-list')!; const inventoryCount = document.querySelector<HTMLElement>('#meal-inventory-count')!;
+    const connection = document.querySelector<HTMLElement>('#meal-connection')!; const account = document.querySelector<HTMLElement>('#meal-account')!; const authDetail = document.querySelector<HTMLElement>('#meal-auth-detail')!; const googleLogin = document.querySelector<HTMLButtonElement>('#meal-google-login')!; const accessRefresh = document.querySelector<HTMLButtonElement>('#meal-access-refresh')!; const logout = document.querySelector<HTMLButtonElement>('#meal-logout')!; const sharedStatus = document.querySelector<HTMLElement>('#meal-shared-status')!; const inventoryList = document.querySelector<HTMLElement>('#meal-inventory-list')!; const inventoryCount = document.querySelector<HTMLElement>('#meal-inventory-count')!;
     const checkout = document.querySelector<HTMLElement>('#meal-checkout')!; const checkoutList = document.querySelector<HTMLElement>('#meal-checkout-list')!; const checkoutStatus = document.querySelector<HTMLElement>('#meal-checkout-status')!; const openCheckout = document.querySelector<HTMLButtonElement>('#meal-open-checkout')!; const confirmCheckout = document.querySelector<HTMLButtonElement>('#meal-confirm-checkout')!;
     let checkoutDraft: CheckoutConsumption = {};
     const save = () => { try { sessionStorage.setItem(storageKey, JSON.stringify({ state, view })); } catch { /* sessionStorage is only a compatibility mirror */ } };
@@ -328,7 +338,16 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
     function render() {
       connection.textContent = repositoryStatus.label;
       connection.dataset.connection = repositoryStatus.connection;
-      if (repositoryStatus.uid) { uid.hidden = false; uid.textContent = repositoryStatus.connection === 'unauthorized' ? `此设备 UID：${repositoryStatus.uid}。请将此 UID 加入 household members。` : `匿名 UID：${repositoryStatus.uid}`; } else uid.hidden = true;
+      account.hidden = !repositoryStatus.email;
+      account.textContent = repositoryStatus.email ? `Google 账号：${repositoryStatus.email}` : '';
+      authDetail.hidden = !repositoryStatus.uid && !repositoryStatus.error;
+      authDetail.textContent = repositoryStatus.connection === 'pending'
+        ? `申请已提交。UID：${repositoryStatus.uid}。管理员批准后会自动连接。`
+        : repositoryStatus.error ? repositoryStatus.error : repositoryStatus.uid ? `UID：${repositoryStatus.uid}` : '';
+      googleLogin.hidden = repository.kind !== 'firebase' || (repositoryStatus.connection !== 'signed-out' && !(repositoryStatus.connection === 'error' && !repositoryStatus.email));
+      accessRefresh.hidden = repositoryStatus.connection !== 'pending' && !(repositoryStatus.connection === 'error' && Boolean(repositoryStatus.email));
+      logout.hidden = repository.kind !== 'firebase' || !repositoryStatus.email;
+      if (repositoryStatus.connection === 'connected' && repositoryStatus.enrollmentOpen) connection.textContent = '已连接 Firebase · 开放加入中';
       sharedStatus.textContent = household.currentMeal?.status ?? '未开始';
       const hasMeal = Boolean(household.currentMeal);
       const writesEnabled = canWrite();
@@ -374,6 +393,9 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       builder.hidden = !hasMeal || view !== 'build'; complete.hidden = !hasMeal || view !== 'complete'; cook.hidden = !hasMeal || view !== 'cook'; save();
     }
 
+    googleLogin.addEventListener('click', () => safeWrite(repository.signInWithGoogle()));
+    accessRefresh.addEventListener('click', () => safeWrite(repository.refreshAccess()));
+    logout.addEventListener('click', () => safeWrite(repository.signOut()));
     document.querySelectorAll<HTMLButtonElement>('[data-ingredient-id]').forEach((button) => button.addEventListener('click', () => { if (!household.currentMeal || !canWrite()) return; const id = button.dataset.ingredientId!; const available = new Set(state.availableIngredientIds); const before = state.selectedRecipeIds.length; const shouldBeOn = !available.has(id); shouldBeOn ? available.add(id) : available.delete(id); state = reconcileMealState({ ...state, availableIngredientIds: [...available] }, recipes, ingredients); void persistMeal((meal) => { const remoteAvailable = new Set(meal.availableIngredientIds); if (shouldBeOn) remoteAvailable.add(id); else remoteAvailable.delete(id); return reconcileCurrentMeal({ ...meal, availableIngredientIds: [...remoteAvailable] }, recipes, ingredients); }); render(); announce(before > state.selectedRecipeIds.length ? `已取消食材，并移除 ${before - state.selectedRecipeIds.length} 道无法制作的已选菜。` : `已${shouldBeOn ? '选择' : '取消'}食材。`); }));
     inventoryList.addEventListener('click', (event) => { const target = (event.target as HTMLElement); const toggle = target.closest<HTMLButtonElement>('[data-inventory-toggle]'); const step = target.closest<HTMLButtonElement>('[data-inventory-step]'); const ingredientId = toggle?.dataset.inventoryToggle ?? step?.dataset.inventoryIngredient; if (!ingredientId || !canWrite()) return; if (toggle) { const tracking = toggle.dataset.inventoryTracking === 'presence-only' ? 'presence-only' : 'counted'; safeWrite(repository.updateInventory((inventory) => { const current = typeof inventory[ingredientId] === 'number' ? inventory[ingredientId] as number : inventory[ingredientId] === true ? 1 : 0; const next = { ...inventory }; if (tracking === 'presence-only') { if (inventory[ingredientId] === true) delete next[ingredientId]; else next[ingredientId] = true; } else { if (current > 0) delete next[ingredientId]; else next[ingredientId] = 1; } return next; }).then((next) => { household = next; render(); })); } else if (step) { const delta = Number(step.dataset.inventoryStep); safeWrite(repository.updateInventory((inventory) => { const current = typeof inventory[ingredientId] === 'number' ? inventory[ingredientId] as number : 0; const nextValue = Math.max(0, Math.round((current + delta) * 2) / 2); const next = { ...inventory }; if (nextValue > 0) next[ingredientId] = nextValue; else delete next[ingredientId]; return next; }).then((next) => { household = next; render(); })); } });
     recipeGrid.addEventListener('change', (event) => { const select = (event.target as HTMLElement).closest<HTMLSelectElement>('[data-binding-recipe]'); if (!select || !household.currentMeal || !canWrite()) return; const recipe = byId.get(select.dataset.bindingRecipe!); if (!recipe) return; const index = Number(select.dataset.bindingIndex); const binding = draftBindingFor(recipe, new Set(state.availableIngredientIds)); binding[index] = select.value; draftBindings[recipe.id] = binding; state = reconcileMealState({ ...state, recipeIngredientBindings: { ...state.recipeIngredientBindings, [recipe.id]: binding.filter((value): value is string => Boolean(value)) } }, recipes, ingredients); void persistMeal((meal) => { const remoteBinding = [...(meal.recipeIngredientBindings[recipe.id] ?? [])]; remoteBinding[index] = select.value; return reconcileCurrentMeal({ ...meal, recipeIngredientBindings: { ...meal.recipeIngredientBindings, [recipe.id]: remoteBinding.filter((value): value is string => Boolean(value)) } }, recipes, ingredients); }); render(); announce('已更新这道菜的食材选择。'); });

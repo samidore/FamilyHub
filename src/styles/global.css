@@ -289,8 +289,11 @@ a { color: inherit; }
 .meal-household-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; border-block: 1px solid var(--line); }
 .meal-connection { margin: 3px 0 0; color: var(--muted); font-weight: 700; }
 .meal-connection[data-connection="connected"] { color: #237047; }
-.meal-connection[data-connection="error"], .meal-connection[data-connection="unauthorized"] { color: #9b3c32; }
+.meal-connection[data-connection="pending"] { color: #8a5a12; }
+.meal-connection[data-connection="error"] { color: #9b3c32; }
 .meal-uid { margin: 3px 0 0; color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
+.meal-auth-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+.meal-auth-actions .button, .meal-auth-actions .clear-button { min-height: 48px; }
 .meal-shared-status { display: grid; min-width: 100px; gap: 3px; padding: 10px 13px; border-radius: 10px; background: var(--berry-soft); color: var(--berry); text-align: center; }
 .meal-shared-status span { color: var(--muted); font-size: 13px; }
 .meal-inventory-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: end; gap: 8px; }

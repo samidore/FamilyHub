@@ -1,39 +1,57 @@
-# Shared Meal Firebase setup
+# Firebase shared meal setup
 
-The page uses the Firebase modular Web SDK (`setPersistence(auth, browserLocalPersistence)` followed by silent `signInAnonymously`) without a login form. Realtime Database state is observed with `onValue` and changed with `runTransaction`. A complete Firebase configuration never falls back to the local adapter: a connection or authorization error is shown in the page.
+The Meal Builder uses Firebase Google Authentication with `browserLocalPersistence` and Realtime Database. Recipe and Ingredient facts remain in `FAMILY_MEAL_KB.md`; Firebase stores only household membership, inventory, and the current meal. A configured Firebase error is shown and never falls back to local data.
 
-## One-time project setup
+## Firebase Console
 
-1. Create a Firebase project and a Realtime Database in the desired region.
-2. Enable **Authentication → Sign-in method → Anonymous**.
-3. Add the deployed GitHub Pages origin and local development origin under **Authentication → Settings → Authorized domains**.
-4. Deploy `database.rules.json` with the Firebase CLI (`firebase deploy --only database`). Membership is intentionally not writable by the browser.
-5. Choose one stable household ID. Both phones use the same `PUBLIC_FAMILY_HOUSEHOLD_ID`.
+1. Register a Web app in the Firebase project. Firebase Hosting is not required because GitHub Pages hosts the site.
+2. Open **Authentication → Sign-in method → Google**, enable it, choose the project support email, and save. Anonymous Authentication is no longer used.
+3. Under **Authentication → Settings → Authorized domains**, keep `samidore.github.io` (and `localhost` for local development).
+4. Create Realtime Database in locked mode.
+5. Open Realtime Database **Rules**, replace the editor with `database.rules.json`, and publish.
+6. In Realtime Database **Data**, create `households/family-household/settings/enrollmentOpen` with the Boolean value `true`.
 
-Rules tests use `firebase emulators:exec`; local runs require a Java runtime (`java -version`). GitHub-hosted Ubuntu runners provide Java for the CI rules step.
+The database rules require a verified Google token. A member record contains the token email:
 
-## GitHub Pages variables
+```text
+households/family-household/members/{uid}/email = "person@gmail.com"
+```
 
-Add these as repository **Variables** (not secrets; Firebase web API keys are public identifiers) so the build receives them:
+While `enrollmentOpen` is `true`, each Google user can create only their own member record. Once all intended members have signed in, change `enrollmentOpen` to Boolean `false`. Existing members keep access.
 
-`PUBLIC_FIREBASE_API_KEY`, `PUBLIC_FIREBASE_AUTH_DOMAIN`, `PUBLIC_FIREBASE_PROJECT_ID`, `PUBLIC_FIREBASE_DATABASE_URL`, `PUBLIC_FIREBASE_STORAGE_BUCKET`, `PUBLIC_FIREBASE_MESSAGING_SENDER_ID`, `PUBLIC_FIREBASE_APP_ID`, and `PUBLIC_FAMILY_HOUSEHOLD_ID`.
+Membership records from the earlier anonymous-auth release used the Boolean value `true`. They do not authorize Google accounts and may be removed after the new Gmail members have joined; do not replace the new `{ "email": "..." }` objects with Boolean values.
 
-The workflow passes the `PUBLIC_*` variables to the Astro build. All six required Firebase variables must be present together; any partial configuration shows a configuration error and disables shared writes. Once complete, any Firebase failure is surfaced and does not silently switch to local storage. `storageBucket` and `messagingSenderId` are optional.
+When enrollment is closed, a new signed-in user creates only:
 
-## Approving a device
+```text
+households/family-household/accessRequests/{uid}/email = "person@gmail.com"
+```
 
-On first load the anonymous UID is shown when the user is not authorized. An operator with Firebase access must manually set:
+To approve the request in Firebase Console, create `members/{uid}/email` with exactly the requested Gmail address. The open page observes its own membership and normally connects automatically. The administrator may then delete the matching access request. Do not change an existing member email; remove and recreate the record if the account must change.
 
-`households/{householdId}/members/{anonymousUid} = true`
+## GitHub repository variables
 
-Use the UID from each phone, then reload. Never commit UIDs, household data, refresh tokens, or private notes.
+Set these under **Settings → Secrets and variables → Actions → Variables**:
 
-## Final two-phone check
+| Variable | Firebase config value |
+| --- | --- |
+| `PUBLIC_FIREBASE_API_KEY` | `apiKey` |
+| `PUBLIC_FIREBASE_AUTH_DOMAIN` | `authDomain` |
+| `PUBLIC_FIREBASE_PROJECT_ID` | `projectId` |
+| `PUBLIC_FIREBASE_DATABASE_URL` | Realtime Database URL |
+| `PUBLIC_FIREBASE_APP_ID` | `appId` |
+| `PUBLIC_FAMILY_HOUSEHOLD_ID` | `family-household` |
 
-1. Open the deployed page on two phones with separate browser profiles.
-2. Copy each displayed anonymous UID into the member allowlist and reload both phones.
-3. Turn on a counted ingredient on phone A and confirm the half-step quantity appears on phone B.
-4. Start a meal, select a recipe, mark it ready and cooking, then open Checkout on both phones. Confirming on one phone must clear the shared meal; the other must report a stale/duplicate checkout rather than consuming again.
-5. Turn off a current-meal ingredient and verify inventory remains unchanged. Use Inventory Reset and confirm it requires confirmation; Recipe Reset must not.
+`PUBLIC_FIREBASE_STORAGE_BUCKET` and `PUBLIC_FIREBASE_MESSAGING_SENDER_ID` are optional. Repository variables are compiled into the production artifact. After changing them, rerun the GitHub Pages workflow.
 
-This two-phone acceptance cannot be claimed until a real Firebase project, deployed rules, approved UIDs, and the final device check exist.
+## Verification
+
+1. Leave enrollment open and sign in from each intended Gmail account once. Confirm each appears under `members` with its own UID and email.
+2. On two phones, change inventory and recipe selection and verify realtime synchronization.
+3. Set enrollment closed. Confirm both existing members still reconnect after a browser restart without another login.
+4. Sign in with a different Gmail. Confirm it shows **等待家庭管理员批准**, cannot access shared state, and creates only its own access request.
+5. Approve the request by creating its member record; confirm the page connects.
+
+Clearing browser site data, explicitly logging out, or revoking Google access requires login again. Never commit Gmail addresses, UIDs, tokens, household inventory, or meal state.
+
+Rules tests use `firebase emulators:exec`; local runs require Java. GitHub-hosted Ubuntu runners provide Java for CI.

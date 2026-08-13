@@ -211,6 +211,9 @@ test('ready meal modification is a shared selecting transition', async ({ page }
 
 test('household inventory keeps counted half-steps, presence-only values, and visible starter scope', async ({ page }) => {
   await page.goto('meal-builder/');
+  await expect(page.locator('#meal-connection')).toContainText('本地开发同步');
+  await expect(page.locator('#meal-google-login')).toBeHidden();
+  await expect(page.locator('#meal-logout')).toBeHidden();
   await expect(page.locator('[data-inventory-item]')).toHaveCount(129);
   for (const id of ['ginger', 'scallion', 'garlic']) await expect(page.locator(`[data-inventory-item="${id}"]`)).toHaveCount(0);
 

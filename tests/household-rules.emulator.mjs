@@ -3,31 +3,48 @@ import test from 'node:test';
 import { assertFails, assertSucceeds, initializeTestEnvironment } from '@firebase/rules-unit-testing';
 
 const rules = await readFile('database.rules.json', 'utf8');
-const env = await initializeTestEnvironment({
-  projectId: 'family-hub-rules',
-  database: { host: '127.0.0.1', port: 9000, rules },
-});
+const env = await initializeTestEnvironment({ projectId: 'family-hub-rules', database: { host: '127.0.0.1', port: 9000, rules } });
+const google = (uid, email) => env.authenticatedContext(uid, { email, email_verified: true, firebase: { sign_in_provider: 'google.com' } }).database();
+const password = (uid, email) => env.authenticatedContext(uid, { email, email_verified: true, firebase: { sign_in_provider: 'password' } }).database();
+const household = 'households/test-household';
+const meal = { mealId: 'meal-1', status: 'selecting', proteinTarget: 1, vegetableTarget: 2, stapleRequired: true, childMode: true, timePreference: 'any', availableIngredientIds: ['pork'], selectedRecipeIds: [], recipeIngredientBindings: {}, selectedAddons: [] };
 
 test.after(async () => env.cleanup());
 
-test('Realtime Database rules enforce member allowlist and state shape', async () => {
-  await env.withSecurityRulesDisabled(async (context) => {
-    const db = context.database();
-    await db.ref('households/test-household/members/approved-member').set(true);
-  });
+test('Google users self-enroll only while open and retain access after closure', async () => {
+  await env.withSecurityRulesDisabled(async (context) => { await context.database().ref().set(null); await context.database().ref(`${household}/settings/enrollmentOpen`).set(true); });
+  const alice = google('alice', 'alice@gmail.com');
+  await assertSucceeds(alice.ref(`${household}/members/alice`).set({ email: 'alice@gmail.com' }));
+  await assertFails(alice.ref(`${household}/members/alice`).update({ email: 'other@gmail.com' }));
+  await assertFails(alice.ref(`${household}/members/bob`).set({ email: 'alice@gmail.com' }));
+  await assertSucceeds(alice.ref(`${household}/state/inventory/pork`).set(1));
+  await env.withSecurityRulesDisabled(async (context) => context.database().ref(`${household}/settings/enrollmentOpen`).set(false));
+  await assertSucceeds(alice.ref(`${household}/state/currentMeal`).set(meal));
+});
 
-  const member = env.authenticatedContext('approved-member').database();
-  const nonMember = env.authenticatedContext('unapproved-member').database();
-  const statePath = 'households/test-household/state';
+test('closed enrollment isolates requests and denies non-members', async () => {
+  await env.withSecurityRulesDisabled(async (context) => { await context.database().ref().set(null); await context.database().ref(`${household}/settings/enrollmentOpen`).set(false); });
+  const bob = google('bob', 'bob@gmail.com');
+  const charlie = google('charlie', 'charlie@gmail.com');
+  await assertSucceeds(bob.ref(`${household}/accessRequests/bob`).set({ email: 'bob@gmail.com' }));
+  await assertFails(bob.ref(`${household}/accessRequests/charlie`).set({ email: 'bob@gmail.com' }));
+  await assertFails(bob.ref(`${household}/accessRequests/charlie`).get());
+  await assertFails(bob.ref(`${household}/members/bob`).set({ email: 'bob@gmail.com' }));
+  await assertFails(bob.ref(`${household}/state`).get());
+  await assertFails(charlie.ref(`${household}/accessRequests/charlie`).set({ email: 'bob@gmail.com' }));
+});
 
-  await assertSucceeds(member.ref(`${statePath}/inventory/pork`).set(1));
-  await assertSucceeds(member.ref(`${statePath}/currentMeal`).set({
-    mealId: 'meal-1', status: 'selecting', proteinTarget: 1, vegetableTarget: 2, stapleRequired: true, childMode: true, timePreference: 'any', availableIngredientIds: ['pork'], selectedRecipeIds: [], recipeIngredientBindings: {}, selectedAddons: [],
-  }));
-  await assertFails(nonMember.ref(statePath).get());
-  await assertFails(nonMember.ref(`${statePath}/inventory/pork`).set(1));
-  await assertFails(member.ref('households/test-household/members/unapproved-member').set(true));
-  await assertFails(member.ref(`${statePath}/inventory/pork`).set(0.25));
-  await assertFails(member.ref(`${statePath}/inventory/pork`).set(false));
-  await assertFails(member.ref(`${statePath}/currentMeal`).set({ mealId: 'meal-1', status: 'finished', proteinTarget: 1, vegetableTarget: 2, stapleRequired: true, childMode: true, timePreference: 'any' }));
+test('non-Google and mismatched token email cannot access household state', async () => {
+  await env.withSecurityRulesDisabled(async (context) => { await context.database().ref().set(null); await context.database().ref(`${household}/members/dana`).set({ email: 'dana@gmail.com' }); });
+  await assertFails(password('dana', 'dana@gmail.com').ref(`${household}/state`).get());
+  await assertFails(google('dana', 'wrong@gmail.com').ref(`${household}/state`).get());
+  await assertSucceeds(google('dana', 'dana@gmail.com').ref(`${household}/state`).get());
+});
+
+test('existing inventory and current meal validation remains enforced', async () => {
+  await env.withSecurityRulesDisabled(async (context) => { await context.database().ref().set(null); await context.database().ref(`${household}/members/alice`).set({ email: 'alice@gmail.com' }); });
+  const alice = google('alice', 'alice@gmail.com');
+  await assertFails(alice.ref(`${household}/state/inventory/pork`).set(0.25));
+  await assertFails(alice.ref(`${household}/state/inventory/pork`).set(false));
+  await assertFails(alice.ref(`${household}/state/currentMeal`).set({ ...meal, status: 'finished' }));
 });

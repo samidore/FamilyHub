@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import {
   adjustInventoryItem,
@@ -10,12 +11,27 @@ import {
   setCurrentMealStatus,
   toggleInventoryItem,
 } from '../src/lib/household.ts';
-import { LocalHouseholdRepository, createHouseholdRepository } from '../src/lib/householdRepository.ts';
+import { LocalHouseholdRepository, createHouseholdRepository, googleIdentity, shouldUseRedirectFallback } from '../src/lib/householdRepository.ts';
 
 const ingredients = [
   { id: 'pork', inventoryTracking: 'counted' },
   { id: 'eggs', inventoryTracking: 'presence-only' },
 ];
+
+test('authentication errors keep an appropriate recovery action visible', async () => {
+  const page = await readFile('src/pages/meal-builder.astro', 'utf8');
+  assert.match(page, /connection === 'error' && !repositoryStatus\.email/);
+  assert.match(page, /connection === 'error' && Boolean\(repositoryStatus\.email\)/);
+});
+
+test('Google identity requires a verified Google provider and popup fallback is narrow', () => {
+  const googleUser = { uid: 'uid-1', email: 'person@gmail.com', emailVerified: true, providerData: [{ providerId: 'google.com' }] };
+  assert.deepEqual(googleIdentity(googleUser), { uid: 'uid-1', email: 'person@gmail.com' });
+  assert.equal(googleIdentity({ ...googleUser, emailVerified: false }), null);
+  assert.equal(googleIdentity({ ...googleUser, providerData: [{ providerId: 'password' }] }), null);
+  assert.equal(shouldUseRedirectFallback({ code: 'auth/popup-blocked' }), true);
+  assert.equal(shouldUseRedirectFallback({ code: 'auth/popup-closed-by-user' }), false);
+});
 
 test('counted inventory uses half steps and turns off at zero', () => {
   let inventory = {};

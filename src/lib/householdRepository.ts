@@ -10,11 +10,23 @@ import {
 } from './household.ts';
 import type { MealIngredient, MealState } from './mealEngine.ts';
 import { getApps, initializeApp, type FirebaseApp } from 'firebase/app';
-import { browserLocalPersistence, getAuth, setPersistence, signInAnonymously, type Auth } from 'firebase/auth';
-import { get, getDatabase, onValue, ref, runTransaction, type Database, type DatabaseReference, type DataSnapshot } from 'firebase/database';
+import {
+  GoogleAuthProvider,
+  browserLocalPersistence,
+  getAuth,
+  getRedirectResult,
+  onAuthStateChanged,
+  setPersistence,
+  signInWithPopup,
+  signInWithRedirect,
+  signOut as firebaseSignOut,
+  type Auth,
+  type User,
+} from 'firebase/auth';
+import { get, getDatabase, onValue, ref, runTransaction, set, type Database, type DatabaseReference, type DataSnapshot } from 'firebase/database';
 
-export type RepositoryConnection = 'local' | 'connecting' | 'connected' | 'unauthorized' | 'error';
-export interface RepositoryStatus { connection: RepositoryConnection; label: string; uid?: string; error?: string; }
+export type RepositoryConnection = 'local' | 'signed-out' | 'connecting' | 'pending' | 'connected' | 'error';
+export interface RepositoryStatus { connection: RepositoryConnection; label: string; uid?: string; email?: string; enrollmentOpen?: boolean; error?: string; }
 export type StateListener = (state: HouseholdState, status: RepositoryStatus) => void;
 
 export interface HouseholdRepository {
@@ -33,6 +45,9 @@ export interface HouseholdRepository {
   updateCurrentMeal(mutator: (currentMeal: CurrentMeal) => CurrentMeal): Promise<HouseholdState>;
   resetInventory(): Promise<HouseholdState>;
   checkout(mealId: string, consumption: CheckoutConsumption): Promise<CheckoutResult>;
+  signInWithGoogle(): Promise<void>;
+  refreshAccess(): Promise<void>;
+  signOut(): Promise<void>;
   dispose(): void;
 }
 
@@ -103,6 +118,9 @@ export class LocalHouseholdRepository implements HouseholdRepository {
     return { ...result, state: this.getSnapshot() };
   }
 
+  async signInWithGoogle() { /* Local development needs no authentication. */ }
+  async refreshAccess() { /* Local development is always ready. */ }
+  async signOut() { /* Local development has no session. */ }
   dispose() { this.browserWindow?.removeEventListener('storage', this.handleStorage); this.channel?.close(); this.listeners.clear(); }
 
   private readonly handleStorage = (event: StorageEvent) => { if (event.key === this.key && event.newValue) this.receive(JSON.parse(event.newValue)); };
@@ -127,6 +145,14 @@ export const hasAnyFirebaseConfig = (config: Partial<FirebaseConfig> | null | un
 
 interface FirebaseRepositoryOptions { ingredients?: MealIngredient[] | Record<string, MealIngredient>; }
 
+export function googleIdentity(user: Pick<User, 'uid' | 'email' | 'emailVerified' | 'providerData'> | null) {
+  if (!user?.email || !user.emailVerified || !user.providerData.some((provider) => provider.providerId === 'google.com')) return null;
+  return { uid: user.uid, email: user.email };
+}
+
+const popupFallbackCodes = new Set(['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment', 'auth/web-storage-unsupported']);
+export const shouldUseRedirectFallback = (error: unknown) => popupFallbackCodes.has((error as { code?: string } | null)?.code ?? '');
+
 /** Firebase modular SDK adapter; configured failures never fall back to local state. */
 export class FirebaseHouseholdRepository implements HouseholdRepository {
   readonly kind = 'firebase' as const;
@@ -139,28 +165,27 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
   private readonly ingredients?: MealIngredient[] | Record<string, MealIngredient>;
   private readonly listeners = new Set<StateListener>();
   private state: HouseholdState = normalizeHouseholdState(undefined);
-  private status: RepositoryStatus = { connection: 'connecting', label: '正在连接 Firebase…' };
+  private status: RepositoryStatus = { connection: 'connecting', label: '正在恢复登录状态…' };
   private uid = '';
+  private email = '';
   private unsubscribeState?: () => void;
+  private unsubscribeMember?: () => void;
   private disposed = false;
 
   constructor(config: FirebaseConfig, options: FirebaseRepositoryOptions = {}) {
     this.householdId = config.householdId; this.ingredients = options.ingredients;
     const appName = `family-hub-${config.projectId}`;
     this.app = getApps().find((candidate) => candidate.name === appName) ?? initializeApp(config, appName);
-    this.auth = getAuth(this.app); this.database = getDatabase(this.app, config.databaseURL); this.stateRef = ref(this.database, `households/${config.householdId}/state`);
+    this.auth = getAuth(this.app); this.database = getDatabase(this.app, config.databaseURL);
+    this.stateRef = ref(this.database, `households/${config.householdId}/state`);
     this.ready = this.initialize();
   }
 
   getSnapshot() { return cloneState(this.state); }
-  getStatus() { return { ...this.status, uid: this.uid || undefined }; }
+  getStatus() { return { ...this.status, uid: this.uid || undefined, email: this.email || undefined }; }
   subscribe(listener: StateListener) { this.listeners.add(listener); listener(this.getSnapshot(), this.getStatus()); return () => this.listeners.delete(listener); }
   async update(mutator: (current: HouseholdState) => HouseholdState) { return this.transaction(mutator); }
-  async transaction(mutator: (current: HouseholdState) => HouseholdState) {
-    await this.ready; this.assertReady();
-    const next = await this.remoteTransaction(mutator);
-    this.setState(next); return this.getSnapshot();
-  }
+  async transaction(mutator: (current: HouseholdState) => HouseholdState) { await this.ready.catch(() => undefined); this.assertReady(); const next = await this.remoteTransaction(mutator); this.setState(next); return this.getSnapshot(); }
   setInventory(inventory: Inventory) { return this.update((state) => ({ ...state, inventory })); }
   updateInventory(mutator: (inventory: Inventory) => Inventory) { return this.update((state) => ({ ...state, inventory: mutator({ ...state.inventory }) })); }
   setCurrentMeal(currentMeal: CurrentMeal | null) { return this.update((state) => ({ ...state, currentMeal })); }
@@ -168,29 +193,73 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
   updateCurrentMeal(mutator: (currentMeal: CurrentMeal) => CurrentMeal) { return this.update((state) => state.currentMeal ? { ...state, currentMeal: mutator({ ...state.currentMeal }) } : state); }
   resetInventory() { return this.setInventory({}); }
   async checkout(mealId: string, consumption: CheckoutConsumption) {
-    await this.ready; this.assertReady();
-    let outcome: CheckoutResult | undefined;
+    await this.ready.catch(() => undefined); this.assertReady(); let outcome: CheckoutResult | undefined;
     await this.remoteTransaction((state) => { outcome = applyCheckout(state, mealId, consumption, this.ingredients); return outcome.state; });
     const result = outcome ?? { committed: false, reason: 'stale-meal' as const, state: this.state };
     this.setState(result.state); return { ...result, state: this.getSnapshot() };
   }
-  dispose() { this.disposed = true; this.unsubscribeState?.(); this.listeners.clear(); }
+  async signInWithGoogle() {
+    await setPersistence(this.auth, browserLocalPersistence);
+    if (this.auth.currentUser?.isAnonymous) await firebaseSignOut(this.auth);
+    this.setStatus({ connection: 'connecting', label: '正在打开 Google 登录…' });
+    const provider = new GoogleAuthProvider(); provider.setCustomParameters({ prompt: 'select_account' });
+    try { await signInWithPopup(this.auth, provider); await this.resolveCurrentUser(); }
+    catch (error) {
+      if (shouldUseRedirectFallback(error)) { await signInWithRedirect(this.auth, provider); return; }
+      this.fail('Google 登录失败', error); throw error;
+    }
+  }
+  async refreshAccess() {
+    try { await this.resolveCurrentUser(); }
+    catch (error) { this.fail('权限检查失败', error); throw error; }
+  }
+  async signOut() {
+    this.stopSubscriptions(); await firebaseSignOut(this.auth);
+    this.uid = ''; this.email = ''; this.state = normalizeHouseholdState(undefined, this.ingredients); this.showSignedOut();
+  }
+  dispose() { this.disposed = true; this.stopSubscriptions(); this.listeners.clear(); }
 
   private async initialize() {
     try {
       await setPersistence(this.auth, browserLocalPersistence);
-      const credential = await signInAnonymously(this.auth);
-      this.uid = credential.user.uid;
-      const snapshot = await get(this.stateRef); this.setStateFromSnapshot(snapshot);
-      this.status = { connection: 'connected', label: '已连接 Firebase', uid: this.uid }; this.emit();
-      this.unsubscribeState = onValue(this.stateRef, (next) => this.setStateFromSnapshot(next), (error) => {
-        if (!this.disposed) { this.status = { ...this.status, connection: 'error', label: 'Firebase 实时连接中断', error: error.message }; this.emit(); }
+      await getRedirectResult(this.auth);
+      const user = await new Promise<User | null>((resolve) => {
+        const unsubscribe = onAuthStateChanged(this.auth, (next) => { unsubscribe(); resolve(next); });
       });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      this.status = { connection: /PERMISSION_DENIED|permission-denied|401|403|unauthorized/i.test(message) ? 'unauthorized' : 'error', label: 'Firebase 连接失败', uid: this.uid || undefined, error: message }; this.emit();
-      throw error;
-    }
+      if (!user) { this.showSignedOut(); return; }
+      if (user.isAnonymous) { await firebaseSignOut(this.auth); this.showSignedOut(); return; }
+      await this.resolveAccess(user);
+    } catch (error) { this.fail('Firebase 连接失败', error); throw error; }
+  }
+  private async resolveCurrentUser() {
+    const user = this.auth.currentUser;
+    if (!user) { this.showSignedOut(); return; }
+    await this.resolveAccess(user);
+  }
+  private async resolveAccess(user: User) {
+    const identity = googleIdentity(user);
+    if (!identity) throw new Error('请使用已验证的 Google Gmail 账号登录。');
+    this.uid = identity.uid; this.email = identity.email; this.stopSubscriptions();
+    this.setStatus({ connection: 'connecting', label: '正在检查家庭权限…', uid: this.uid, email: this.email });
+    const memberRef = ref(this.database, `households/${this.householdId}/members/${this.uid}`);
+    const enrollmentRef = ref(this.database, `households/${this.householdId}/settings/enrollmentOpen`);
+    const [member, enrollment] = await Promise.all([get(memberRef), get(enrollmentRef)]);
+    const enrollmentOpen = enrollment.val() === true;
+    if (member.child('email').val() === this.email) { await this.connectState(enrollmentOpen); return; }
+    if (enrollmentOpen) { await set(memberRef, { email: this.email }); await this.connectState(true); return; }
+    await set(ref(this.database, `households/${this.householdId}/accessRequests/${this.uid}`), { email: this.email });
+    this.state = normalizeHouseholdState(undefined, this.ingredients);
+    this.setStatus({ connection: 'pending', label: '等待家庭管理员批准', uid: this.uid, email: this.email, enrollmentOpen: false });
+    this.unsubscribeMember = onValue(memberRef, (next) => {
+      if (!this.disposed && next.child('email').val() === this.email) void this.connectState(false).catch((error) => this.fail('Firebase 连接失败', error));
+    }, (error) => this.fail('成员权限检查失败', error));
+  }
+  private async connectState(enrollmentOpen: boolean) {
+    this.unsubscribeMember?.(); this.unsubscribeMember = undefined;
+    const snapshot = await get(this.stateRef); this.setStateFromSnapshot(snapshot);
+    this.setStatus({ connection: 'connected', label: '已连接 Firebase', uid: this.uid, email: this.email, enrollmentOpen });
+    this.unsubscribeState?.();
+    this.unsubscribeState = onValue(this.stateRef, (next) => this.setStateFromSnapshot(next), (error) => { if (!this.disposed) this.fail('Firebase 实时连接中断', error); });
   }
   private async remoteTransaction(mutator: (state: HouseholdState) => HouseholdState) {
     const transaction = await runTransaction(this.stateRef, (value) => normalizeHouseholdState(mutator(normalizeHouseholdState(value, this.ingredients)), this.ingredients));
@@ -199,6 +268,10 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
   private assertReady() { if (this.status.connection !== 'connected') throw new Error(this.status.error ?? 'Firebase repository is not ready'); }
   private setStateFromSnapshot(snapshot: DataSnapshot) { this.setState(normalizeHouseholdState(snapshot.val(), this.ingredients)); }
   private setState(next: HouseholdState) { this.state = normalizeHouseholdState(next, this.ingredients); this.emit(); }
+  private stopSubscriptions() { this.unsubscribeState?.(); this.unsubscribeState = undefined; this.unsubscribeMember?.(); this.unsubscribeMember = undefined; }
+  private showSignedOut() { this.state = normalizeHouseholdState(undefined, this.ingredients); this.setStatus({ connection: 'signed-out', label: '需要登录' }); }
+  private setStatus(status: RepositoryStatus) { this.status = status; this.emit(); }
+  private fail(label: string, error: unknown) { const message = error instanceof Error ? error.message : String(error); this.setStatus({ connection: 'error', label, uid: this.uid || undefined, email: this.email || undefined, error: message }); }
   private emit() { const snapshot = this.getSnapshot(); const status = this.getStatus(); for (const listener of this.listeners) listener(snapshot, status); }
 }
 
@@ -222,6 +295,9 @@ class ConfigurationErrorRepository implements HouseholdRepository {
   updateCurrentMeal(_mutator: (currentMeal: CurrentMeal) => CurrentMeal): Promise<HouseholdState> { return this.reject(); }
   resetInventory(): Promise<HouseholdState> { return this.reject(); }
   checkout(_mealId: string, _consumption: CheckoutConsumption): Promise<CheckoutResult> { return this.reject(); }
+  signInWithGoogle(): Promise<void> { return this.reject(); }
+  refreshAccess(): Promise<void> { return this.reject(); }
+  signOut(): Promise<void> { return Promise.resolve(); }
   dispose() { /* no resources */ }
 }
 
