@@ -21,6 +21,15 @@ async function startMeal(page: Page, ids: string[] = []) {
 test('home groups and searches the active modules', async ({ page }) => {
   await page.goto('./');
   await expect(page.locator('[data-module]')).toHaveCount(6);
+  const sections = page.locator('[data-category-section]');
+  await expect(sections).toHaveCount(3);
+  await expect(sections.nth(0)).toHaveAttribute('data-category-section', 'food-home');
+  await expect(sections.nth(0).locator('.category-index')).toHaveText('01');
+  await expect(sections.nth(0).locator('[data-module]').first()).toHaveAttribute('href', /\/meal-builder\/$/);
+  await expect(sections.nth(1)).toHaveAttribute('data-category-section', 'explore-play');
+  await expect(sections.nth(1).locator('.category-index')).toHaveText('02');
+  await expect(sections.nth(2)).toHaveAttribute('data-category-section', 'health-care');
+  await expect(sections.nth(2).locator('.category-index')).toHaveText('03');
   await expect(page.getByRole('heading', { name: '出行与玩乐' })).toBeVisible();
   await expect(page.getByRole('heading', { name: '健康与照护' })).toBeVisible();
   await page.getByLabel('查找一个工具').fill('牙医');

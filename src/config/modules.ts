@@ -1,7 +1,7 @@
 export const categoryDefinitions = [
-  { id: 'explore-play', title: '出行与玩乐', description: '找一个适合今天的去处、活动或轻松安排。', accent: 'evergreen', order: 1 },
-  { id: 'health-care', title: '健康与照护', description: '把公开资料、家庭判断和需要确认的事项分开比较。', accent: 'ochre', order: 2 },
-  { id: 'food-home', title: '饮食与家庭', description: '根据现有食材和家庭目标，减少每天组餐时的重复判断。', accent: 'berry', order: 3 },
+  { id: 'food-home', title: '饮食与家庭', description: '根据现有食材和家庭目标，减少每天组餐时的重复判断。', accent: 'berry', order: 1 },
+  { id: 'explore-play', title: '出行与玩乐', description: '找一个适合今天的去处、活动或轻松安排。', accent: 'evergreen', order: 2 },
+  { id: 'health-care', title: '健康与照护', description: '把公开资料、家庭判断和需要确认的事项分开比较。', accent: 'ochre', order: 3 },
 ] as const;
 
 export type CategoryId = (typeof categoryDefinitions)[number]['id'];
