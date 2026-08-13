@@ -95,6 +95,8 @@ ingredients:
   - ingredient_id: boneless-skinless-chicken-thighs
     role: main-protein
     availability: required
+    amount: 500 g # optional; required for cookable / household-tested Recipes
+    preparation: 切成适口小块 # optional
   - one_of: [chinese-greens, baby-napa-cabbage]
     role: vegetable
     availability: required
@@ -109,7 +111,7 @@ substitutions: []
 
 `meal_contribution` is the only slot-calculation source; `primary_role` is UI grouping. `integral_staple_ingredient_ids` means the recipe includes the staple; `recommended_staple_ingredient_ids` is a pairing suggestion only. `ingredients[].availability: required` must resolve to the active Ingredient library, while `one_of` means any listed option is sufficient and `pantry_core: assumed` never requires a Starter selection.
 
-`detail_level: discoverable` is enough for candidate ranking but not a claim that exact Cook View quantities have been tested. Candidate records must not invent precise grams or sauce ratios; use a supported source and household calibration before moving to `cookable` or `household-tested`.
+`ingredients[]` may add nonempty `amount` and `preparation` to an Ingredient, `one_of` group, or `pantry_core` input. Cook View renders supplied values while only required Ingredient IDs affect availability. `detail_level: discoverable` is enough for candidate ranking but not a claim that exact Cook View quantities have been tested. Candidate records must not invent precise grams or sauce ratios; use a supported source and household calibration before moving to `cookable` or `household-tested`. Those two levels require every actual input, including pantry seasoning, to have an amount, plus nonempty executable steps and equipment and at least one direct HTTPS evidence source.
 
 ## Controlled values and invariants
 

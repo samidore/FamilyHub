@@ -23,6 +23,8 @@ export interface MealAddon {
 export interface MealRequirement {
   anyOf: string[];
   role?: string;
+  amount?: string;
+  preparation?: string;
 }
 
 export interface MealRecipe {

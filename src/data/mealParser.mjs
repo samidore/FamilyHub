@@ -11,12 +11,13 @@ const EVIDENCE_KEYS = new Set(['level', 'checked_on', 'scope', 'sources']);
 const CONTRIBUTION_KEYS = new Set(['protein', 'vegetable', 'staple']);
 const RECIPE_CHILD_KEYS = new Set(['protein', 'vegetable']);
 const INGREDIENT_CHILD_KEYS = new Set(['vegetable']);
-const REQUIREMENT_KEYS = new Set(['ingredient_id', 'one_of', 'pantry_core', 'role', 'availability']);
+const REQUIREMENT_KEYS = new Set(['ingredient_id', 'one_of', 'pantry_core', 'role', 'availability', 'amount', 'preparation']);
 const ADDON_ID = 'finish-with-leafy-vegetable';
 const ADDON_TAG = 'finish-wilt-compatible';
 const INVENTORY_TRACKING = new Set(['counted', 'presence-only']);
 const ACTIVE_STATUSES = new Set(['candidate', 'approved']);
 const PRESENCE_ONLY_INGREDIENTS = new Set(['eggs', 'rice', 'noodles', 'bread', 'steamed-buns', 'oats', 'white-oil-sausage', 'potato', 'peeled-shrimp']);
+const DETAIL_LEVELS = new Set(['discoverable', 'cookable', 'household-tested']);
 
 const assert = (condition, message) => { if (!condition) throw new Error(`Meal KB: ${message}`); };
 const assertKeys = (record, allowed) => {
@@ -92,15 +93,30 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
     for (const key of ['protein', 'vegetable', 'staple']) assert(CONTRIBUTIONS.has(record.meal_contribution?.[key]), `${record.id} has invalid ${key} contribution`);
     const childCoverage = { protein: coverageValue(record.child_coverage?.protein, `${record.id}.protein`), vegetable: coverageValue(record.child_coverage?.vegetable, `${record.id}.vegetable`) };
     assert(typeof record.advance_start_required === 'boolean', `${record.id} has invalid advance-start flag`);
+    assert(DETAIL_LEVELS.has(record.detail_level), `${record.id} has an invalid detail_level`);
     const requirements = [];
+    const cookIngredients = [];
     for (const entry of record.ingredients ?? []) {
       assertKeys(entry, REQUIREMENT_KEYS);
-      if (entry.availability === 'assumed') continue;
-      assert(entry.availability === 'required', `${record.id} has unsupported ingredient availability`);
+      for (const key of ['amount', 'preparation']) assert(entry[key] === undefined || (typeof entry[key] === 'string' && entry[key].trim().length > 0), `${record.id} has an invalid ingredient ${key}`);
+      const identities = Number(Boolean(entry.ingredient_id)) + Number(Array.isArray(entry.one_of)) + Number(Boolean(entry.pantry_core));
+      assert(identities === 1, `${record.id} ingredient entry requires exactly one identity`);
       const anyOf = entry.ingredient_id ? [String(entry.ingredient_id)] : stringArray(entry.one_of);
+      cookIngredients.push({ anyOf, ...(entry.pantry_core ? { pantryCore: String(entry.pantry_core) } : {}), role: String(entry.role ?? ''), ...(entry.amount ? { amount: entry.amount } : {}), ...(entry.preparation ? { preparation: entry.preparation } : {}) });
+      if (entry.availability === 'assumed') {
+        assert(Boolean(entry.pantry_core), `${record.id} assumed input must be pantry_core`);
+        continue;
+      }
+      assert(entry.availability === 'required', `${record.id} has unsupported ingredient availability`);
       assert(anyOf.length > 0, `${record.id} has an empty required ingredient choice`);
       for (const id of anyOf) assert(ingredientIds.has(id), `${record.id} references missing ingredient ${id}`);
-      requirements.push({ anyOf, role: String(entry.role ?? '') });
+      requirements.push({ anyOf, role: String(entry.role ?? ''), ...(entry.amount ? { amount: entry.amount } : {}), ...(entry.preparation ? { preparation: entry.preparation } : {}) });
+    }
+    if (record.detail_level !== 'discoverable') {
+      assert(cookIngredients.length > 0 && cookIngredients.every((entry) => typeof entry.amount === 'string' && entry.amount.trim().length > 0), `${record.id} cookable inputs require amounts`);
+      assert(Array.isArray(record.steps) && record.steps.length > 0 && record.steps.every((step) => typeof step === 'string' && step.trim().length > 0), `${record.id} cookable record requires executable steps`);
+      assert(Array.isArray(record.equipment) && record.equipment.length > 0 && record.equipment.every((item) => typeof item === 'string' && item.trim().length > 0), `${record.id} cookable record requires equipment`);
+      assert(Array.isArray(record.evidence?.sources) && record.evidence.sources.some((source) => typeof source === 'string' && /^https:\/\/[^\s]+$/i.test(source)), `${record.id} cookable record requires a direct HTTPS evidence source`);
     }
     const mealAddons = (record.meal_addons ?? []).map((addon) => {
       assertKeys(addon, ADDON_KEYS);
@@ -123,7 +139,7 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
       id: record.id, nameZh: String(record.name_zh), nameEn: String(record.name_en), tags: stringArray(record.tags), primaryRole: String(record.primary_role),
       mainProteinCategory: String(record.main_protein_category ?? 'none'), fitScore: Number(record.fit?.score ?? 0), order,
       contribution: { protein: Number(record.meal_contribution.protein), vegetable: Number(record.meal_contribution.vegetable), staple: Number(record.meal_contribution.staple) },
-      childCoverage, requirements, mealAddons,
+      childCoverage, requirements, cookIngredients, mealAddons,
       checkoutUnits,
       ingredientChildCoverage: Object.fromEntries(requirements.flatMap((requirement) => requirement.anyOf).map((id) => [id, ingredients.find((item) => item.id === id)?.childCoverage?.vegetable ?? 'unknown'])),
       activeMinutes: String(record.active_minutes ?? ''), mealWindowMinutes: String(record.meal_window_minutes ?? ''), elapsedMinutes: String(record.elapsed_minutes ?? ''), advanceStartRequired: record.advance_start_required,

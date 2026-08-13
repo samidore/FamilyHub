@@ -1,0 +1,7 @@
+interface:
+  display_name: "Manage Meal Data"
+  short_description: "Safely research and maintain Meal Builder data."
+  default_prompt: "Use $manage-meal-data to research and plan a safe Recipe or Ingredient change."
+
+policy:
+  allow_implicit_invocation: true

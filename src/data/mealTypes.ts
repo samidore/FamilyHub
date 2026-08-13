@@ -24,6 +24,7 @@ export interface MealDataRecipe extends MealRecipe {
   activeMinutes: string;
   equipment: string[];
   detailLevel: string;
+  cookIngredients: { anyOf: string[]; pantryCore?: string; role?: string; amount?: string; preparation?: string }[];
   steps: string[];
   childServing: string;
   adultFinish: string;

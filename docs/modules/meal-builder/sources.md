@@ -34,6 +34,7 @@ The source titles retained by the migration include the specific dish/topic (for
 - `inferred` is conservative workflow/fit inference; `unverified` must remain visibly uncertain and cannot satisfy a hard rule.
 - Recipe timing is a source-derived or workflow-derived range, not household stopwatch data unless explicitly measured. Do not auto-block a Recipe because a precise household minute count is unknown.
 - Candidate recipes remain `discoverable` unless exact quantities and executable steps are supported. Never invent exact grams, sauce ratios, child acceptance, retailer packages, or safety temperatures.
+- A Recipe marked `cookable` or `household-tested` must retain a direct HTTPS source in `evidence.sources`; registry labels alone remain useful provenance but are not executable-recipe evidence.
 
 ## Decisions that sources must continue to support
 
