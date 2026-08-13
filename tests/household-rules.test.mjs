@@ -15,4 +15,7 @@ test('Realtime Database rules require Google identity, matching email, and scope
   assert.match(household.state['.write'], /google\.com/);
   assert.match(household.state.inventory.$ingredientId['.validate'], /0\.5/);
   assert.match(household.state.currentMeal['.validate'], /mealId/);
+  assert.match(household.state.currentMeal.checkoutDraft.$ingredientId['.validate'], />= 0/);
+  assert.match(household.state.currentMeal.excludedIngredientIds.$index['.validate'], /isString/);
+  assert.match(household.state.activeStep['.validate'], /checkout/);
 });

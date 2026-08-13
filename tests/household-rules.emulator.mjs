@@ -48,3 +48,14 @@ test('existing inventory and current meal validation remains enforced', async ()
   await assertFails(alice.ref(`${household}/state/inventory/pork`).set(false));
   await assertFails(alice.ref(`${household}/state/currentMeal`).set({ ...meal, status: 'finished' }));
 });
+
+test('shared step, exclusions, and checkout draft accept only supported values', async () => {
+  await env.withSecurityRulesDisabled(async (context) => { await context.database().ref().set(null); await context.database().ref(`${household}/members/alice`).set({ email: 'alice@gmail.com' }); });
+  const alice = google('alice', 'alice@gmail.com');
+  await assertSucceeds(alice.ref(`${household}/state`).set({ activeStep: 'recipes', currentMeal: meal }));
+  await assertFails(alice.ref(`${household}/state/activeStep`).set('finished'));
+  await assertSucceeds(alice.ref(`${household}/state/currentMeal/excludedIngredientIds`).set(['pork']));
+  await assertFails(alice.ref(`${household}/state/currentMeal/excludedIngredientIds`).set([42]));
+  await assertSucceeds(alice.ref(`${household}/state/currentMeal/checkoutDraft`).set({ pork: 0, eggs: false }));
+  await assertFails(alice.ref(`${household}/state/currentMeal/checkoutDraft`).set({ pork: 0.25 }));
+});

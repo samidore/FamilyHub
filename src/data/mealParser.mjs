@@ -1,7 +1,7 @@
 import { parse as parseYaml } from 'yaml';
 
 const INGREDIENT_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'starter', 'tags', 'child_coverage', 'inventory_tracking', 'fit', 'evidence', 'notes']);
-const RECIPE_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'tags', 'fit', 'evidence', 'notes', 'primary_role', 'main_protein_category', 'main_protein_ingredient_ids', 'supporting_protein_ingredient_ids', 'vegetable_ingredient_ids', 'meal_contribution', 'child_coverage', 'meal_addons', 'integral_staple_ingredient_ids', 'recommended_staple_ingredient_ids', 'active_minutes', 'meal_window_minutes', 'elapsed_minutes', 'advance_start_required', 'equipment', 'burner_plan', 'child_suitable', 'child_texture', 'spicy_in_base', 'deep_fried', 'salt_level', 'oil_level', 'servings', 'detail_level', 'ingredients', 'steps', 'child_serving', 'adult_finish', 'substitutions']);
+const RECIPE_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'tags', 'fit', 'evidence', 'notes', 'primary_role', 'main_protein_category', 'main_protein_ingredient_ids', 'supporting_protein_ingredient_ids', 'vegetable_ingredient_ids', 'meal_contribution', 'child_coverage', 'meal_addons', 'integral_staple_ingredient_ids', 'recommended_staple_ingredient_ids', 'active_minutes', 'meal_window_minutes', 'elapsed_minutes', 'advance_start_required', 'equipment', 'burner_plan', 'child_suitable', 'child_texture', 'spicy_in_base', 'deep_fried', 'salt_level', 'oil_level', 'servings', 'detail_level', 'ingredients', 'steps', 'child_serving', 'adult_finish', 'substitutions', 'checkout_units']);
 const ADDON_KEYS = new Set(['id', 'accepts_ingredient_tag', 'meal_contribution', 'child_coverage', 'notes']);
 const CONTRIBUTIONS = new Set([0, 0.5, 1, 2]);
 const STARTER_KEYS = new Set(['visible', 'section', 'order']);
@@ -109,11 +109,21 @@ export function parseMealKb(text) {
       assert(addon.child_coverage?.protein === false && addon.child_coverage?.vegetable === 'ingredient-dependent', `${record.id} has invalid add-on child coverage`);
       return { id: addon.id, acceptsIngredientTag: addon.accepts_ingredient_tag, contribution: { protein: 0, vegetable: 1, staple: 0 }, childCoverage: { protein: false, vegetable: 'ingredient-dependent' }, notes: String(addon.notes ?? '') };
     });
+    const checkoutUnits = {};
+    if (record.checkout_units !== undefined) {
+      assert(record.checkout_units && typeof record.checkout_units === 'object' && !Array.isArray(record.checkout_units), `${record.id} has invalid checkout_units`);
+      for (const [id, units] of Object.entries(record.checkout_units)) {
+        assert(ingredientIds.has(id), `${record.id} checkout_units references missing ingredient ${id}`);
+        assert(typeof units === 'number' && units > 0 && units % 0.5 === 0, `${record.id} checkout_units has invalid units`);
+        checkoutUnits[id] = units;
+      }
+    }
     return {
       id: record.id, nameZh: String(record.name_zh), nameEn: String(record.name_en), tags: stringArray(record.tags), primaryRole: String(record.primary_role),
       mainProteinCategory: String(record.main_protein_category ?? 'none'), fitScore: Number(record.fit?.score ?? 0), order,
       contribution: { protein: Number(record.meal_contribution.protein), vegetable: Number(record.meal_contribution.vegetable), staple: Number(record.meal_contribution.staple) },
       childCoverage, requirements, mealAddons,
+      checkoutUnits,
       ingredientChildCoverage: Object.fromEntries(requirements.flatMap((requirement) => requirement.anyOf).map((id) => [id, ingredients.find((item) => item.id === id)?.childCoverage?.vegetable ?? 'unknown'])),
       activeMinutes: String(record.active_minutes ?? ''), mealWindowMinutes: String(record.meal_window_minutes ?? ''), elapsedMinutes: String(record.elapsed_minutes ?? ''), advanceStartRequired: record.advance_start_required,
       equipment: stringArray(record.equipment), detailLevel: String(record.detail_level), steps: stringArray(record.steps), childServing: String(record.child_serving ?? ''), adultFinish: String(record.adult_finish ?? ''), substitutions: stringArray(record.substitutions), childTexture: String(record.child_texture ?? ''), notes: String(record.notes ?? ''), vegetableCentered: stringArray(record.evidence?.sources).some((source) => /^V\d{2}\s*[—-]/.test(source)),

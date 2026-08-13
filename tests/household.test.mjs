@@ -6,10 +6,12 @@ import {
   applyCheckout,
   createCurrentMealFromInventory,
   defaultCheckoutConsumption,
+  checkoutDraftForMeal,
   normalizeHouseholdState,
   resetRecipeSelection,
   setCurrentMealStatus,
   toggleInventoryItem,
+  updateCheckoutDraft,
 } from '../src/lib/household.ts';
 import { LocalHouseholdRepository, createHouseholdRepository, googleIdentity, shouldUseRedirectFallback } from '../src/lib/householdRepository.ts';
 
@@ -71,6 +73,27 @@ test('Realtime Database round-trip restores omitted empty collections and safe s
   assert.equal(normalized.currentMeal?.status, 'selecting');
   assert.equal(normalized.currentMeal?.proteinTarget, 1);
   assert.equal(normalized.currentMeal?.vegetableTarget, 2);
+  assert.equal(normalized.activeStep, 'inventory');
+});
+
+test('shared active step and checkout draft normalize legacy-safe values', () => {
+  const meal = createCurrentMealFromInventory({ pork: 1, eggs: true }, { mealId: 'meal-draft' }, ingredients);
+  const normalized = normalizeHouseholdState({ inventory: { pork: 1, eggs: true }, activeStep: 'checkout', currentMeal: { ...meal, excludedIngredientIds: ['pork', 'unknown'], checkoutDraft: { pork: 0, eggs: false, unknown: 1 } } }, ingredients);
+  assert.equal(normalized.activeStep, 'checkout');
+  assert.deepEqual(normalized.currentMeal?.excludedIngredientIds, ['pork']);
+  assert.deepEqual(normalized.currentMeal?.checkoutDraft, { pork: 0, eggs: false });
+  const draft = updateCheckoutDraft({ ...meal, recipeIngredientBindings: { r1: ['pork'] }, selectedRecipeIds: ['r1'], selectedAddons: [{ mainRecipeId: 'r1', addonType: 'a', ingredientId: 'eggs' }] }, { pork: 0.5, eggs: true }, { pork: 1, eggs: true }, ingredients);
+  assert.deepEqual(checkoutDraftForMeal(draft, { pork: 1, eggs: true }, ingredients), { pork: 0.5, eggs: true });
+});
+
+test('checkout defaults use declared units, fallback bindings, and cross-recipe sums', () => {
+  const meal = { ...createCurrentMealFromInventory({ pork: 4, eggs: true }, { mealId: 'units' }, ingredients), selectedRecipeIds: ['declared', 'fallback-a', 'fallback-b'], recipeIngredientBindings: { declared: ['pork', 'eggs'], 'fallback-a': ['pork', 'eggs'], 'fallback-b': ['pork'] } };
+  const recipes = [
+    { id: 'declared', checkoutUnits: { pork: 1.5, unused: 8 }, requirements: [], contribution: { protein: 0, vegetable: 0, staple: 0 }, childCoverage: { protein: false, vegetable: false } },
+    { id: 'fallback-a', requirements: [], contribution: { protein: 0, vegetable: 0, staple: 0 }, childCoverage: { protein: false, vegetable: false } },
+    { id: 'fallback-b', requirements: [], contribution: { protein: 0, vegetable: 0, staple: 0 }, childCoverage: { protein: false, vegetable: false } },
+  ];
+  assert.deepEqual(defaultCheckoutConsumption(meal, { pork: 3, eggs: true }, ingredients, recipes), { pork: 3, eggs: false });
 });
 
 test('current-meal status transitions are transaction-safe and reject stale jumps', () => {

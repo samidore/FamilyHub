@@ -33,6 +33,7 @@ export interface MealRecipe {
   childCoverage: { protein: RecipeChildCoverage; vegetable: RecipeChildCoverage };
   requirements: MealRequirement[];
   mealAddons?: MealAddon[];
+  checkoutUnits?: Record<string, number>;
   ingredientChildCoverage?: Record<string, IngredientChildCoverage>;
   mealWindowMinutes: string;
   elapsedMinutes: string;
@@ -312,4 +313,17 @@ export function addSelectedAddon(state: MealState, recipe: MealRecipe, addonId: 
 export function removeSelectedAddon(state: MealState, recipeId: string, addonId: string) {
   const selectedAddons = (state.selectedAddons ?? []).filter((entry) => !(entry.mainRecipeId === recipeId && entry.addonType === addonId));
   return { ...state, selectedAddons };
+}
+
+/** Recipe checkout units are strict when present; otherwise each bound/add-on Ingredient counts once per selected Recipe. */
+export function checkoutUnitsForSelection(recipes: MealRecipe[], state: MealState): Record<string, number> {
+  const totals: Record<string, number> = {};
+  for (const recipe of recipes.filter((item) => state.selectedRecipeIds.includes(item.id))) {
+    const usedIds = [...new Set([
+      ...(state.recipeIngredientBindings[recipe.id] ?? []),
+      ...(state.selectedAddons ?? []).filter((entry) => entry.mainRecipeId === recipe.id).map((entry) => entry.ingredientId),
+    ])];
+    for (const id of usedIds) totals[id] = (totals[id] ?? 0) + (recipe.checkoutUnits?.[id] ?? 1);
+  }
+  return totals;
 }

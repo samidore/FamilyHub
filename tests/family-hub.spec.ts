@@ -1,7 +1,14 @@
 import { expect, test, type Page } from '@playwright/test';
 
+async function inventoryItem(page: Page, id: string) {
+  const row = page.locator(`[data-inventory-item="${id}"]`);
+  const group = row.locator('xpath=ancestor::details');
+  if (await group.count() && await group.getAttribute('open') === null) await group.locator('summary').click();
+  return row;
+}
+
 async function setInventory(page: Page, ids: string[]) {
-  for (const id of ids) await page.locator(`[data-inventory-item="${id}"] [data-inventory-toggle]`).click();
+  for (const id of ids) await (await inventoryItem(page, id)).locator('[data-inventory-toggle]').click();
 }
 
 async function startMeal(page: Page, ids: string[] = []) {
@@ -145,9 +152,6 @@ test('meal builder filters live, completes a meal, and preserves state', async (
   await expect(page.locator('#meal-completion-status')).toHaveText('目标已满足，可以进入下一步。');
   await expect(page.locator('#meal-next')).toBeEnabled();
   await page.locator('#meal-next').click();
-  await expect(page.locator('#meal-shared-status')).toHaveText('ready');
-  await expect(page.getByRole('heading', { name: '今晚的菜' })).toBeVisible();
-  await page.getByRole('button', { name: '开始做饭' }).click();
   await expect(page.locator('#meal-shared-status')).toHaveText('cooking');
   await expect(page.getByRole('heading', { name: '开始做饭' })).toBeVisible();
   await expect(page.locator('[data-cook-recipe]:visible')).toHaveCount(2);
@@ -156,6 +160,7 @@ test('meal builder filters live, completes a meal, and preserves state', async (
   await page.locator('#meal-open-checkout').click();
   await expect(page.locator('#meal-checkout')).toBeVisible();
   await page.locator('#meal-confirm-checkout').click();
+  await page.locator('#meal-finalize-checkout').click();
   await expect(page.locator('#meal-start-current')).toBeEnabled();
 });
 
@@ -197,15 +202,14 @@ test('meal builder exposes one-of binding and explicit leafy add-on choices', as
   expect(state.selectedAddons).toContainEqual({ mainRecipeId: 'oyster-sauce-braised-chicken', addonType: 'finish-with-leafy-vegetable', ingredientId: 'lettuce' });
 });
 
-test('ready meal modification is a shared selecting transition', async ({ page }) => {
+test('cook back returns every device to the shared recipes step', async ({ page }) => {
   await page.goto('meal-builder/');
   await startMeal(page, ['chicken-breast', 'broccoli', 'green-cabbage', 'onion', 'noodles']);
   await page.locator('[data-meal-recipe="chicken-broccoli-stir-fry"] [data-select-recipe]').click();
   await page.locator('[data-meal-recipe="yaki-udon"] [data-select-recipe]').click();
   await page.locator('#meal-next').click();
-  await expect(page.locator('#meal-shared-status')).toHaveText('ready');
-  await page.locator('#meal-modify').click();
-  await expect(page.locator('#meal-shared-status')).toHaveText('selecting');
+  await expect(page.locator('#meal-shared-status')).toHaveText('cooking');
+  await page.locator('#meal-back-to-menu').click();
   await expect(page.locator('#meal-builder-view')).toBeVisible();
 });
 
@@ -224,7 +228,7 @@ test('household inventory keeps counted half-steps, presence-only values, and vi
   await counted.locator('[data-inventory-step="0.5"]').click();
   await expect(counted.locator('[data-inventory-value="chicken-breast"]')).toHaveText('1.5');
 
-  const presence = page.locator('[data-inventory-item="eggs"]');
+  const presence = await inventoryItem(page, 'eggs');
   await expect(presence.locator('[data-inventory-step]')).toHaveCount(0);
   await presence.locator('[data-inventory-toggle]').click();
   await expect(presence.locator('[data-inventory-value="eggs"]')).not.toHaveText('0');
@@ -240,13 +244,24 @@ test('turning a current-meal ingredient off does not change shared inventory', a
   await expect(row.locator('[data-inventory-value="whole-pork-tenderloin"]')).toHaveText('1');
 });
 
+test('returning through inventory preserves exclusions and enables newly stocked ingredients', async ({ page }) => {
+  await page.goto('meal-builder/');
+  await startMeal(page, ['whole-pork-tenderloin']);
+  await page.locator('[data-ingredient-id="whole-pork-tenderloin"]').click();
+  await page.locator('#meal-back-inventory').click();
+  await (await inventoryItem(page, 'chicken-breast')).locator('[data-inventory-toggle]').click();
+  await page.locator('#meal-start-current').click();
+  await expect(page.locator('[data-ingredient-id]:visible')).toHaveCount(2);
+  await expect(page.locator('[data-ingredient-id="whole-pork-tenderloin"]')).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('[data-ingredient-id="chicken-breast"]')).toHaveAttribute('aria-pressed', 'true');
+});
+
 test('checkout consumes counted inventory while presence-only defaults to keep', async ({ page }) => {
   await page.goto('meal-builder/');
   await startMeal(page, ['eggs', 'tomato', 'noodles']);
   await page.locator('[data-meal-recipe="tomato-egg-noodles"] [data-select-recipe]').click();
   await page.locator('[data-meal-recipe="tomato-scrambled-eggs"] [data-select-recipe]').click();
   await page.locator('#meal-next').click();
-  await page.locator('#meal-start-cooking').click();
   await page.locator('#meal-open-checkout').click();
 
   const eggsCheckout = page.locator('[data-checkout-ingredient="eggs"]');
@@ -254,6 +269,7 @@ test('checkout consumes counted inventory while presence-only defaults to keep',
   await expect(eggsCheckout.locator('[data-checkout-used-up]')).not.toBeChecked();
   await expect(page.locator('[data-checkout-value="tomato"]')).toHaveText('1 / 1');
   await page.locator('#meal-confirm-checkout').click();
+  await page.locator('#meal-finalize-checkout').click();
   await expect(page.locator('[data-inventory-value="tomato"]')).toHaveText('0');
   await expect(page.locator('[data-inventory-value="eggs"]')).toHaveText('有');
   await expect(page.locator('[data-inventory-value="noodles"]')).toHaveText('有');
@@ -267,6 +283,7 @@ test('inventory reset confirms while recipe reset is immediate and scoped to the
 
   let dialogType = '';
   page.once('dialog', async (dialog) => { dialogType = dialog.type(); await dialog.dismiss(); });
+  await page.locator('#meal-back-inventory').click();
   await page.locator('#meal-inventory-reset').click();
   expect(dialogType).toBe('confirm');
   await expect(row.locator('[data-inventory-value="chicken-breast"]')).toHaveText('1');
@@ -296,12 +313,11 @@ test('two pages in one browser context receive inventory and current-meal update
   await first.locator('[data-meal-recipe="yaki-udon"] [data-select-recipe]').click();
   await expect(second.locator('[data-selected-recipe="yaki-udon"]')).toBeVisible();
   await first.locator('#meal-next').click();
-  await expect(second.locator('#meal-shared-status')).toHaveText('ready');
-  await second.locator('#meal-start-cooking').click();
   await expect(first.locator('#meal-shared-status')).toHaveText('cooking');
   await second.locator('#meal-open-checkout').click();
   await expect(second.locator('#meal-checkout')).toBeVisible();
   await second.locator('#meal-confirm-checkout').click();
+  await second.locator('#meal-finalize-checkout').click();
   await expect.poll(async () => first.locator('[data-inventory-value="chicken-breast"]').textContent()).toBe('0');
   await expect(first.locator('#meal-start-current')).toBeEnabled();
   await context.close();
