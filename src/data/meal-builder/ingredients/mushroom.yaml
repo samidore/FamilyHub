@@ -1,0 +1,212 @@
+ingredients:
+  - id: king-oyster-mushrooms
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 杏鲍菇
+    name_en: King Oyster Mushrooms
+    starter:
+      visible: true
+      section: mushroom
+      order: 10
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: button-cremini-mushrooms
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 口蘑 / Cremini
+    name_en: Button / Cremini Mushrooms
+    starter:
+      visible: true
+      section: mushroom
+      order: 20
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: fresh-shiitake
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 鲜香菇
+    name_en: Fresh Shiitake
+    starter:
+      visible: true
+      section: mushroom
+      order: 30
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: oyster-mushrooms
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 平菇
+    name_en: Oyster Mushrooms
+    starter:
+      visible: true
+      section: mushroom
+      order: 40
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: shimeji-mushrooms
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 蟹味菇（Shimeji）
+    name_en: Shimeji Mushrooms
+    starter:
+      visible: true
+      section: mushroom
+      order: 50
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: enoki-mushrooms
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 金针菇
+    name_en: Enoki Mushrooms
+    starter:
+      visible: true
+      section: mushroom
+      order: 60
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: maitake
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 舞茸
+    name_en: Maitake
+    starter:
+      visible: true
+      section: mushroom
+      order: 70
+    tags:
+      - low-priority
+    fit:
+      hard_rules: pass
+      score: 2
+      strengths:
+        - 保留为可用候选，特定场景仍有价值。
+      tradeoffs:
+        - 用户已明确降低优先度或使用频率。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 较贵，用户已明确降为低优先度。
+  - id: fresh-wood-ear-mushrooms
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 新鲜黑木耳
+    name_en: Fresh Wood Ear Mushrooms
+    starter:
+      visible: true
+      section: mushroom
+      order: 80
+    tags:
+      - fresh-only
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 固定为新鲜黑木耳；不是干木耳，不计泡发时间。

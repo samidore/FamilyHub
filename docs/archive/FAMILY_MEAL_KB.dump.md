@@ -1,3 +1,7 @@
+# Historical GPT dump — not a maintenance source
+
+This file is retained only as the original migration record. It is not read by the build. Maintain active Meal Builder data under `src/data/meal-builder/` and follow `docs/modules/meal-builder/maintenance.md`.
+
 ---
 kb_version: 1.6
 last_updated: 2026-08-12

@@ -1,0 +1,77 @@
+id: kabocha-rice-congee
+type: recipe
+status: candidate
+name_zh: 南瓜粥
+name_en: Kabocha Rice Congee
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stovetop-nonstick
+  - child-support-protein
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+  tradeoffs:
+    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-11
+  scope: Dish identity and core technique verified; household-light/non-spicy
+    adaptation is documented separately.
+  sources:
+    - Food & Wine — Kabocha Squash Congee (congee roundup)
+notes: Candidate household route; exact seasoning quantities are intentionally
+  left for first-cook calibration rather than invented.
+primary_role: staple
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 0
+  vegetable: 0
+  staple: 1
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids:
+  - kabocha-squash
+  - rice
+recommended_staple_ingredient_ids: []
+active_minutes: 10–20
+meal_window_minutes: 10–20
+elapsed_minutes: 40–75
+advance_start_required: false
+equipment:
+  - medium burner or 9-quart Instant Pot
+  - pot
+burner_plan: Use medium burner or Instant Pot; keep seasoning/egg finishing near service.
+child_suitable: n/a
+child_texture: 本 Recipe 不承担 main protein；儿童适配主要取决于主食/蔬菜质地。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: kabocha-squash
+    role: integral-staple
+    availability: required
+  - ingredient_id: rice
+    role: integral-staple
+    availability: required
+  - pantry_core: rice + kabocha + water; very light seasoning
+    role: seasoning
+    availability: assumed
+steps:
+  - 洗米/准备燕麦与 kabocha-squash；准备 rice + kabocha + water; very light seasoning。
+  - 加水煮至粥体达到家庭喜欢的浓度；可用 Instant Pot 或普通锅，具体水比留给首次测试校准。
+  - 含鸡蛋的版本在后段加入并煮熟；南瓜等软主食在能煮软但不完全消失的时间点加入。
+  - 最后轻盐调味；成人后味另加。
+child_serving: 作为主食/配菜使用，Meal Combo 必须另配软蛋白。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

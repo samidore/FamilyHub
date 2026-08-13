@@ -1,0 +1,81 @@
+id: winter-melon-pork-meatball-soup
+type: recipe
+status: candidate
+name_zh: 冬瓜丸子汤
+name_en: Winter Melon Pork Meatball Soup
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - simmered
+  - stovetop-nonstick
+  - lunch-45
+  - family-shared
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+    - 可设计为全家共享基础口味。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-11
+  scope: Dish identity and core technique verified; household-light/non-spicy
+    adaptation is documented separately.
+  sources:
+    - The Woks of Life — Chinese Winter Melon Soup with Meatballs
+notes: Candidate household route; exact seasoning quantities are intentionally
+  left for first-cook calibration rather than invented.
+primary_role: mixed
+main_protein_category: pork
+main_protein_ingredient_ids:
+  - ground-pork
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+  - winter-melon
+meal_contribution:
+  protein: 1
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 20–35
+meal_window_minutes: 30–45
+elapsed_minutes: 35–60
+advance_start_required: false
+equipment:
+  - medium burner
+  - soup pot
+burner_plan: Medium burner for simmering; can be started earlier and leave the
+  wok burner free.
+child_suitable: yes
+child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: ground-pork
+    role: main-protein
+    availability: required
+  - ingredient_id: winter-melon
+    role: vegetable
+    availability: required
+  - pantry_core: ginger / scallion / clear light broth
+    role: seasoning
+    availability: assumed
+steps:
+  - 处理 ground-pork；蔬菜/主食配料为 winter-melon。骨肉汤按来源需要先焯洗。
+  - 加水与 ginger / scallion / clear light broth 中的基础香料，先把肉类煮/炖至接近软嫩。
+  - 按食材耐煮程度加入蔬菜或主食类块根；避免全部从一开始同煮导致过烂。
+  - 最后用轻盐调味；孩子份取软肉、软菜并去骨。
+child_serving: 取较嫩、较淡的部分，必要时剪成小块。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

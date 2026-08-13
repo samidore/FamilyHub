@@ -1,0 +1,72 @@
+id: mantou
+type: recipe
+status: candidate
+name_zh: 馒头
+name_en: Mantou / Steamed Bun Staple
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stovetop-nonstick
+  - lunch-30
+  - child-support-protein
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+  tradeoffs:
+    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-11
+  scope: Dish identity and core technique verified; household-light/non-spicy
+    adaptation is documented separately.
+  sources:
+    - The Woks of Life — Mantou / steamed bun references; household uses
+      existing ready-made `steamed-buns` ingredient
+notes: Keep simply as 馒头; do not expand into homemade dough production.
+primary_role: staple
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 0
+  vegetable: 0
+  staple: 1
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids:
+  - steamed-buns
+recommended_staple_ingredient_ids: []
+active_minutes: 8–15
+meal_window_minutes: 10–20
+elapsed_minutes: 10–25
+advance_start_required: false
+equipment:
+  - steamer or microwave
+burner_plan: Steam or microwave; no burner conflict if microwaved.
+child_suitable: n/a
+child_texture: 本 Recipe 不承担 main protein；儿童适配主要取决于主食/蔬菜质地。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: steamed-buns
+    role: integral-staple
+    availability: required
+  - pantry_core: existing ready-made steamed-buns ingredient
+    role: seasoning
+    availability: assumed
+steps:
+  - 使用现有 `steamed-buns` 成品，不在本项目重复建“从面粉发酵做馒头”的复杂路线。
+  - 按包装允许方式蒸热；赶时间时可按家庭既有规则微波加热。
+  - 作为 staple 与主菜/蔬菜组合，不单独承担 main protein。
+child_serving: 作为主食/配菜使用，Meal Combo 必须另配软蛋白。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

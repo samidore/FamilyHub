@@ -1,0 +1,326 @@
+ingredients:
+  - id: whole-pork-tenderloin
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 猪里脊
+    name_en: Whole Pork Tenderloin
+    starter:
+      visible: true
+      section: pork
+      order: 10
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 5
+      strengths:
+        - 有明确家庭高价值 / 接受度信息。
+      tradeoffs: []
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 家庭高价值食材；household-observed preference favors tenderloin dishes.
+  - id: pork-shoulder-chunks
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 梅花肉块
+    name_en: Pork Shoulder Chunks
+    starter:
+      visible: true
+      section: pork
+      order: 20
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: thin-sliced-pork-belly
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 薄切五花肉
+    name_en: Thin-Sliced Pork Belly
+    starter:
+      visible: true
+      section: pork
+      order: 30
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: extra-thin-sliced-pork-belly
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 超薄切五花肉
+    name_en: Extra-Thin-Sliced Pork Belly
+    starter:
+      visible: true
+      section: pork
+      order: 40
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: ground-pork
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 猪绞肉
+    name_en: Ground Pork
+    starter:
+      visible: true
+      section: pork
+      order: 50
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 5
+      strengths:
+        - 有明确家庭高价值 / 接受度信息。
+      tradeoffs: []
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 家庭接受度高；家庭认为味道优于牛绞肉。
+  - id: soft-pork-ribs
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 软排骨
+    name_en: Soft Pork Ribs
+    starter:
+      visible: true
+      section: pork
+      order: 60
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs:
+        - 具体 butcher cut 尚未严格核实。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 现有 stable ID 保留；具体 butcher cut 尚未严格核实，不在本次 UI migration 中虚构。
+  - id: pork-feet
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 猪脚
+    name_en: Pork Feet
+    starter:
+      visible: true
+      section: pork
+      order: 70
+    tags:
+      - child-eaten
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 孩子可以吃；总耗时通常较长。
+  - id: pork-chops
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 猪排
+    name_en: Pork Chops
+    starter:
+      visible: true
+      section: pork
+      order: 80
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: pork-liver
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 猪肝
+    name_en: Pork Liver
+    starter:
+      visible: true
+      section: pork
+      order: 90
+    tags:
+      - low-priority
+    fit:
+      hard_rules: pass
+      score: 2
+      strengths:
+        - 保留为可用候选，特定场景仍有价值。
+      tradeoffs:
+        - 用户已明确降低优先度或使用频率。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 用户已明确降为低优先度。
+  - id: white-oil-sausage
+    type: ingredient
+    inventory_tracking: presence-only
+    status: candidate
+    name_zh: 白油肠
+    name_en: White Oil Sausage
+    starter:
+      visible: true
+      section: pork
+      order: 100
+    tags:
+      - supporting-only
+      - processed
+    fit:
+      hard_rules: pass
+      score: 3
+      strengths:
+        - 作为 supporting ingredient 有明确菜单价值。
+      tradeoffs:
+        - 默认不承担 main-protein base；用途比核心主料窄。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: Processed / supporting ingredient。
+  - id: chinese-sausage
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 中式香肠
+    name_en: Chinese Sausage
+    starter:
+      visible: true
+      section: pork
+      order: 110
+    tags:
+      - supporting-only
+      - processed
+    fit:
+      hard_rules: pass
+      score: 3
+      strengths:
+        - 作为 supporting ingredient 有明确菜单价值。
+      tradeoffs:
+        - 默认不承担 main-protein base；用途比核心主料窄。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: Processed / supporting ingredient。
+  - id: pork-meatballs
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 贡丸
+    name_en: Pork Meatballs
+    starter:
+      visible: true
+      section: pork
+      order: 120
+    tags:
+      - supporting-only
+      - processed
+    fit:
+      hard_rules: pass
+      score: 3
+      strengths:
+        - 作为 supporting ingredient 有明确菜单价值。
+      tradeoffs:
+        - 默认不承担 main-protein base；用途比核心主料窄。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: Processed / supporting ingredient。

@@ -1,0 +1,42 @@
+# Meal Builder
+
+Meal Builder is a dynamic household meal-planning tool. Available ingredients plus meal targets produce live recipe candidates, selected dishes, a Cook View, and a transaction-safe inventory checkout. It is a planning aid, not a nutrition calculator.
+
+## Documentation index
+
+- [`behavior.md`](behavior.md): four-step flow, ranking, child coverage, Cook View, checkout, and household rules.
+- [`data-model.md`](data-model.md): YAML layout, stable IDs, schemas, controlled vocabularies, and invariants.
+- [`maintenance.md`](maintenance.md): add/update/delete procedure, index policy, validation, archive, and GPT-dump handling.
+- [`sources.md`](sources.md): evidence levels, source registry policy, verification dates, and retained research decisions.
+- [`firebase.md`](firebase.md): Google sign-in, Realtime Database membership, shared state, repository variables, and rules verification.
+
+Read `behavior.md` before changing UI or ranking, `data-model.md` before changing YAML/schema/loader code, and `maintenance.md` before changing any record or index.
+
+## Live data layout
+
+The build source is the indexed YAML tree under `src/data/meal-builder/`:
+
+```text
+index.yaml
+ingredients/
+  index.yaml
+  <ingredient-category>.yaml
+recipe/
+  index.yaml
+  <recipe-category>/
+    index.yaml
+    <stable-id>.yaml
+archive/
+  ingredients/
+  recipe/
+```
+
+Each recipe has one file. Category indexes and the root index are explicit; filesystem traversal never determines display or recommendation order. `docs/archive/FAMILY_MEAL_KB.dump.md` is a read-only historical GPT dump and is not loaded by the product.
+
+## Current invariants
+
+- 132 Ingredient records; 129 visible non-pantry Starter choices; 162 candidate Recipes.
+- All active records retain their stable lowercase kebab-case IDs and remain `candidate`; no automatic approval.
+- 23 vegetable-centered cooking structures are deduplicated by workflow, and seven existing stovetop Recipes support the controlled `finish-with-leafy-vegetable` add-on. `Instant Pot 酱油鸡腿` does not support that add-on; `照烧鸡腿` does.
+- Recipe availability comes from required Ingredient IDs, `one_of` alternatives, and assumed pantry seasoning. Starter selection means “available this meal,” not “must use.”
+- Public data contains recipe/ingredient facts only. Shared Firebase state contains stable IDs and household operating state, never private family profile data or a second recipe library.

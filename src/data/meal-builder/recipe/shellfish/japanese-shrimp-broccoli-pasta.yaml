@@ -1,0 +1,83 @@
+id: japanese-shrimp-broccoli-pasta
+type: recipe
+status: candidate
+name_zh: 日式虾仁西兰花意面
+name_en: Japanese-Style Shrimp Broccoli Pasta
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stovetop-nonstick
+  - lunch-45
+  - child-support-protein
+fit:
+  hard_rules: pass
+  score: 3
+  strengths: []
+  tradeoffs:
+    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-11
+  scope: Dish identity and core technique verified; household-light/non-spicy
+    adaptation is documented separately.
+  sources:
+    - Just One Cookbook — Japanese shrimp/broccolini pasta
+notes: Medium priority; pasta/noodles carried in recipe.
+primary_role: mixed
+main_protein_category: shellfish
+main_protein_ingredient_ids:
+  - peeled-shrimp
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+  - broccoli
+meal_contribution:
+  protein: 1
+  vegetable: 1
+  staple: 1
+child_coverage:
+  protein: false
+  vegetable: true
+integral_staple_ingredient_ids:
+  - noodles
+recommended_staple_ingredient_ids: []
+active_minutes: 20–35
+meal_window_minutes: 30–45
+elapsed_minutes: 35–60
+advance_start_required: false
+equipment:
+  - medium burner
+  - pot
+  - wok/nonstick pan if stir-fried
+burner_plan: Pot on medium burner; use high-output wok only if the recipe is a
+  stir-fried noodle.
+child_suitable: conditional
+child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: peeled-shrimp
+    role: main-protein
+    availability: required
+  - ingredient_id: broccoli
+    role: vegetable
+    availability: required
+  - ingredient_id: noodles
+    role: integral-staple
+    availability: required
+  - pantry_core: Japanese soy/butter or olive-oil style light sauce
+    role: seasoning
+    availability: assumed
+steps:
+  - 处理 peeled-shrimp 与 broccoli；准备 Japanese soy/butter or olive-oil style light
+    sauce。
+  - 面条按种类煮至合适熟度并沥水；汤面则保留单独汤底。
+  - 炒面在高输出灶口快速合炒；汤面则把主料/蔬菜在汤中依次煮熟。
+  - 最后合并并调整清淡盐度；成人辣味另加。
+child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

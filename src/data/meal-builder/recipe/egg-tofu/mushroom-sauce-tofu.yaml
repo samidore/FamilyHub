@@ -1,0 +1,83 @@
+id: mushroom-sauce-tofu
+type: recipe
+status: candidate
+name_zh: 蘑菇浇汁豆腐
+name_en: Tofu with Mushroom Sauce
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - pan-seared
+  - stovetop-nonstick
+  - lunch-45
+  - child-support-protein
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+    - 临近上桌流程相对集中，便于与另一灶口并行。
+  tradeoffs:
+    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-11
+  scope: Dish identity and core technique verified; household-light/non-spicy
+    adaptation is documented separately.
+  sources:
+    - Just One Cookbook — Tofu Steak with Mushroom Ankake
+notes: Candidate household route; exact seasoning quantities are intentionally
+  left for first-cook calibration rather than invented.
+primary_role: mixed
+main_protein_category: tofu
+main_protein_ingredient_ids:
+  - firm-tofu
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+  - button-cremini-mushrooms
+meal_contribution:
+  protein: 0.5
+  vegetable: 0.5
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 20–35
+meal_window_minutes: 30–45
+elapsed_minutes: 35–60
+advance_start_required: false
+equipment:
+  - medium burner
+  - nonstick pan or iron pan as appropriate
+burner_plan: Medium burner by default; use the iron pan/high-output burner only
+  when a hard sear is the point of the dish.
+child_suitable: objective-possible-currently-unlikely
+child_texture: firm tofu 可烹至较嫩，但孩子目前不吃 firm tofu。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: firm-tofu
+    role: main-protein
+    availability: required
+  - ingredient_id: button-cremini-mushrooms
+    role: vegetable
+    availability: required
+  - pantry_core: mushroom savory sauce / light soy or dashi-style ankake
+    role: seasoning
+    availability: assumed
+steps:
+  - 擦干并按菜式处理 firm-tofu；准备 mushroom savory sauce / light soy or dashi-style
+    ankake。
+  - 锅中只用薄层油，分批煎/煎封，避免锅温因一次装太满而明显下降。
+  - 主料达到合适熟度后离火或转小火；需要酱汁时在最后短时间挂汁。
+  - 静置或稍降温后再为孩子剪小；不要把成人后加辣味放进基础锅。
+child_serving: 可少量提供；Meal Combo 另配孩子已接受的嫩豆腐/鸡蛋。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

@@ -1,0 +1,81 @@
+id: mushroom-pork-slices-stir-fry
+type: recipe
+status: candidate
+name_zh: 蘑菇片炒肉片
+name_en: Mushroom and Pork Slice Stir-fry
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-45
+  - family-shared
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+    - 可设计为全家共享基础口味。
+    - 临近上桌流程相对集中，便于与另一灶口并行。
+  tradeoffs: []
+evidence:
+  level: user-confirmed
+  checked_on: 2026-08-11
+  scope: Household use/preference or retained household pattern confirmed;
+    external source may additionally support technique where listed.
+  sources:
+    - User-confirmed household pattern — mushroom pork slices stir-fry
+notes: Explicit household addition; observed household workflow is 30–45 min.
+primary_role: mixed
+main_protein_category: pork
+main_protein_ingredient_ids:
+  - whole-pork-tenderloin
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+  - button-cremini-mushrooms
+meal_contribution:
+  protein: 1
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 20–30 (workflow-derived)
+meal_window_minutes: 30–45 (user-confirmed)
+elapsed_minutes: 30–45 (user-confirmed)
+advance_start_required: false
+equipment:
+  - high-output burner
+  - wok / iron pan
+burner_plan: High-output burner for the wok; keep the medium burner free for a
+  side/soup when possible.
+child_suitable: yes
+child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: whole-pork-tenderloin
+    role: main-protein
+    availability: required
+  - ingredient_id: button-cremini-mushrooms
+    role: vegetable
+    availability: required
+  - pantry_core: light soy / ginger / optional oyster sauce
+    role: seasoning
+    availability: assumed
+steps:
+  - 按菜式需要处理 whole-pork-tenderloin；蔬菜为 button-cremini-mushrooms。肉类需要嫩化/短腌时按引用来源执行。
+  - 先把核心调味准备好：light soy / ginger / optional oyster sauce；家庭版基底不放辣并降低盐油。
+  - 热锅少油，先把主要蛋白炒至接近熟并视需要盛出；再处理蔬菜/香料。
+  - 合回主料，加入调味快速翻匀，达到合适熟度即停火，避免为追求焦色延长烹调。
+child_serving: 取较嫩、较淡的部分，必要时剪成小块。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

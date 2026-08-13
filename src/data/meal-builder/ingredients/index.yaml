@@ -1,0 +1,217 @@
+categories:
+  - id: pork
+    label_zh: 猪肉
+    label_en: Pork
+    order: 10
+    visible: true
+    file: pork.yaml
+    ingredient_ids:
+      - whole-pork-tenderloin
+      - pork-shoulder-chunks
+      - thin-sliced-pork-belly
+      - extra-thin-sliced-pork-belly
+      - ground-pork
+      - soft-pork-ribs
+      - pork-feet
+      - pork-chops
+      - pork-liver
+      - white-oil-sausage
+      - chinese-sausage
+      - pork-meatballs
+  - id: chicken
+    label_zh: 鸡肉
+    label_en: Chicken
+    order: 20
+    visible: true
+    file: chicken.yaml
+    ingredient_ids:
+      - boneless-skinless-chicken-thighs
+      - chicken-breast
+      - whole-chicken-wings
+      - party-wings
+      - chicken-drumsticks
+      - bone-in-chicken-thighs
+      - frozen-chicken-patties
+      - whole-chicken
+      - chicken-gizzards
+      - chicken-hearts
+      - chicken-liver
+  - id: beef
+    label_zh: 牛肉
+    label_en: Beef
+    order: 30
+    visible: true
+    file: beef.yaml
+    ingredient_ids:
+      - whole-beef-brisket
+      - sliced-beef-brisket
+      - hot-pot-beef-slices
+      - beef-shank
+      - chuck-roast
+      - oxtail
+      - cross-cut-beef-short-ribs
+      - ground-beef
+      - frozen-beef-patties
+      - beef-rib-fingers
+      - flat-iron-steak
+      - denver-steak
+      - boneless-beef-short-ribs
+      - beef-steak
+  - id: lamb-goat
+    label_zh: 羊 / 山羊
+    label_en: Lamb / Goat
+    order: 40
+    visible: true
+    file: lamb-goat.yaml
+    ingredient_ids:
+      - hot-pot-lamb-slices
+      - lamb-shoulder-chunks
+      - lamb-leg-chunks
+      - bone-in-lamb-chops
+      - boneless-lamb-chops
+      - lamb-shanks
+      - lamb-riblets
+      - skin-on-bone-in-goat-pieces
+      - lamb-spine-sections
+  - id: fish
+    label_zh: 鱼
+    label_en: Fish
+    order: 50
+    visible: true
+    file: fish.yaml
+    ingredient_ids:
+      - salmon
+      - chilean-sea-bass
+      - live-freshwater-bass
+      - branzino
+      - sablefish
+      - halibut
+      - black-sea-bass
+      - grouper
+  - id: shellfish
+    label_zh: 海鲜
+    label_en: Shellfish / Seafood
+    order: 60
+    visible: true
+    file: shellfish.yaml
+    ingredient_ids:
+      - peeled-shrimp
+      - shell-on-shrimp
+      - scallops
+      - squid
+      - oysters
+      - shrimp-paste
+      - fish-paste
+      - fish-balls
+      - assorted-seafood-balls
+  - id: egg-tofu
+    label_zh: 蛋 / 豆腐
+    label_en: Egg / Tofu
+    order: 70
+    visible: true
+    file: egg-tofu.yaml
+    ingredient_ids:
+      - eggs
+      - soft-tofu
+      - firm-tofu
+      - egg-tofu
+      - pressed-tofu
+      - tofu-sheets
+      - dried-yuba-sticks
+      - fried-tofu-puffs
+  - id: leafy-vegetable
+    label_zh: 叶菜
+    label_en: Leafy Vegetables
+    order: 80
+    visible: true
+    file: leafy-vegetable.yaml
+    ingredient_ids:
+      - baby-napa-cabbage
+      - napa-cabbage
+      - chinese-greens
+      - spinach
+      - lettuce
+      - youmai-cai
+      - choy-sum
+      - gai-lan
+      - water-spinach
+      - pea-shoots
+      - amaranth-greens
+      - tong-hao
+      - mustard-greens
+      - frozen-shepherds-purse
+  - id: other-vegetable
+    label_zh: 其他蔬菜
+    label_en: Other Vegetables
+    order: 90
+    visible: true
+    file: other-vegetable.yaml
+    ingredient_ids:
+      - broccoli
+      - cauliflower
+      - green-cabbage
+      - winter-melon
+      - luffa
+      - zucchini
+      - cucumber
+      - bitter-melon
+      - tomato
+      - eggplant
+      - bell-pepper
+      - carrot
+      - daikon
+      - chinese-yam
+      - celtuce
+      - water-chestnuts
+      - sugar-snap-peas
+      - frozen-shelled-edamame
+      - frozen-green-peas
+      - yellow-chives
+      - garlic-chives
+      - chinese-celery
+      - celery
+      - onion
+      - garlic-scapes
+  - id: mushroom
+    label_zh: 菌菇
+    label_en: Mushrooms
+    order: 100
+    visible: true
+    file: mushroom.yaml
+    ingredient_ids:
+      - king-oyster-mushrooms
+      - button-cremini-mushrooms
+      - fresh-shiitake
+      - oyster-mushrooms
+      - shimeji-mushrooms
+      - enoki-mushrooms
+      - maitake
+      - fresh-wood-ear-mushrooms
+  - id: staple
+    label_zh: 主食
+    label_en: Staples
+    order: 110
+    visible: true
+    file: staple.yaml
+    ingredient_ids:
+      - rice
+      - noodles
+      - potato
+      - sweet-potato
+      - taro
+      - lotus-root
+      - kabocha-squash
+      - corn
+      - bread
+      - steamed-buns
+      - oats
+  - id: pantry
+    label_zh: 常备香料
+    label_en: Pantry Aromatics
+    order: 999
+    visible: false
+    file: pantry.yaml
+    ingredient_ids:
+      - ginger
+      - scallion
+      - garlic

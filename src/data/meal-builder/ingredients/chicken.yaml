@@ -1,0 +1,295 @@
+ingredients:
+  - id: boneless-skinless-chicken-thighs
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 无骨去皮鸡腿肉
+    name_en: Boneless Skinless Chicken Thighs
+    starter:
+      visible: true
+      section: chicken
+      order: 10
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: chicken-breast
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 鸡胸
+    name_en: Chicken Breast
+    starter:
+      visible: true
+      section: chicken
+      order: 20
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: whole-chicken-wings
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 整鸡翅
+    name_en: Whole Chicken Wings
+    starter:
+      visible: true
+      section: chicken
+      order: 30
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: party-wings
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: Party Wings
+    name_en: Party Wings
+    starter:
+      visible: true
+      section: chicken
+      order: 40
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: chicken-drumsticks
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 鸡小腿
+    name_en: Chicken Drumsticks
+    starter:
+      visible: true
+      section: chicken
+      order: 50
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: bone-in-chicken-thighs
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 带骨鸡腿
+    name_en: Bone-In Chicken Thighs
+    starter:
+      visible: true
+      section: chicken
+      order: 60
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: frozen-chicken-patties
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 冷冻鸡肉饼
+    name_en: Frozen Chicken Patties
+    starter:
+      visible: true
+      section: chicken
+      order: 70
+    tags:
+      - processed
+      - frozen
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: whole-chicken
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 整鸡
+    name_en: Whole Chicken
+    starter:
+      visible: true
+      section: chicken
+      order: 80
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: chicken-gizzards
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 鸡胗
+    name_en: Chicken Gizzards
+    starter:
+      visible: true
+      section: chicken
+      order: 90
+    tags:
+      - low-priority
+    fit:
+      hard_rules: pass
+      score: 2
+      strengths:
+        - 保留为可用候选，特定场景仍有价值。
+      tradeoffs:
+        - 用户已明确降低优先度或使用频率。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 低优先度。
+  - id: chicken-hearts
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 鸡心
+    name_en: Chicken Hearts
+    starter:
+      visible: true
+      section: chicken
+      order: 100
+    tags:
+      - low-priority
+    fit:
+      hard_rules: pass
+      score: 2
+      strengths:
+        - 保留为可用候选，特定场景仍有价值。
+      tradeoffs:
+        - 用户已明确降低优先度或使用频率。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 低优先度。
+  - id: chicken-liver
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 鸡肝
+    name_en: Chicken Liver
+    starter:
+      visible: true
+      section: chicken
+      order: 110
+    tags:
+      - low-priority
+    fit:
+      hard_rules: pass
+      score: 2
+      strengths:
+        - 保留为可用候选，特定场景仍有价值。
+      tradeoffs:
+        - 用户已明确降低优先度或使用频率。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 低优先度 / 计划尝试。

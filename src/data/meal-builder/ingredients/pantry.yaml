@@ -1,0 +1,82 @@
+ingredients:
+  - id: ginger
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 姜
+    name_en: Ginger
+    starter:
+      visible: false
+      section: pantry
+      order: 10
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 家庭常备 aromatic，可由 Recipe 直接假设存在。
+      tradeoffs:
+        - 不占 Meal Builder Ingredient slot，不在 Starter 中显示。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: Pantry aromatic；不占 Vegetable slot，不需要在 Starter 中勾选。
+  - id: scallion
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 葱
+    name_en: Scallion
+    starter:
+      visible: false
+      section: pantry
+      order: 20
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 家庭常备 aromatic，可由 Recipe 直接假设存在。
+      tradeoffs:
+        - 不占 Meal Builder Ingredient slot，不在 Starter 中显示。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: Pantry aromatic；不占 Vegetable slot，不需要在 Starter 中勾选。
+  - id: garlic
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 蒜
+    name_en: Garlic
+    starter:
+      visible: false
+      section: pantry
+      order: 30
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 家庭常备 aromatic，可由 Recipe 直接假设存在。
+      tradeoffs:
+        - 不占 Meal Builder Ingredient slot，不在 Starter 中显示。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: Pantry aromatic；不占 Vegetable slot，不需要在 Starter 中勾选。

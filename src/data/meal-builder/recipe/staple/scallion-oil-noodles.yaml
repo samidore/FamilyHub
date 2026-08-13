@@ -1,0 +1,78 @@
+id: scallion-oil-noodles
+type: recipe
+status: candidate
+name_zh: 葱油拌面
+name_en: Scallion Oil Noodles
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stovetop-nonstick
+  - lunch-30
+  - child-support-protein
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+  tradeoffs:
+    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
+evidence:
+  level: user-confirmed
+  checked_on: 2026-08-11
+  scope: Household use/preference or retained household pattern confirmed;
+    external source may additionally support technique where listed.
+  sources:
+    - The Woks of Life — Shanghai Scallion Oil Noodles; household uses
+      ready-made canned scallion oil
+notes: Household has ready-made canned scallion oil; do not model frying
+  scallions from scratch.
+primary_role: staple
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 0
+  vegetable: 0
+  staple: 1
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids:
+  - noodles
+recommended_staple_ingredient_ids: []
+active_minutes: 8–15
+meal_window_minutes: 10–20
+elapsed_minutes: 10–25
+advance_start_required: false
+equipment:
+  - medium burner
+  - pot
+  - wok/nonstick pan if stir-fried
+burner_plan: Pot on medium burner; use high-output wok only if the recipe is a
+  stir-fried noodle.
+child_suitable: n/a
+child_texture: 本 Recipe 不承担 main protein；儿童适配主要取决于主食/蔬菜质地。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: noodles
+    role: integral-staple
+    availability: required
+  - pantry_core: ready-made canned scallion oil + light soy/sugar balance
+    role: seasoning
+    availability: assumed
+steps:
+  - 处理 核心主食/蛋白 与 无固定蔬菜；准备 ready-made canned scallion oil + light soy/sugar
+    balance。
+  - 面条按种类煮至合适熟度并沥水；汤面则保留单独汤底。
+  - 炒面在高输出灶口快速合炒；汤面则把主料/蔬菜在汤中依次煮熟。
+  - 最后合并并调整清淡盐度；成人辣味另加。
+child_serving: 作为主食/配菜使用，Meal Combo 必须另配软蛋白。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

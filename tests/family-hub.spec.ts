@@ -1,4 +1,9 @@
 import { expect, test, type Page } from '@playwright/test';
+import { loadMealData } from '../scripts/load-meal-data.mjs';
+
+const mealData = await loadMealData();
+const activeRecipeCount = mealData.recipes.length;
+const visibleIngredientCount = mealData.ingredients.filter((ingredient) => ingredient.visible).length;
 
 async function inventoryItem(page: Page, id: string) {
   const row = page.locator(`[data-inventory-item="${id}"]`);
@@ -107,7 +112,7 @@ test('complete records remain available without JavaScript', async ({ browser })
   await page.goto('colonoscopy-specialists/');
   await expect(page.locator('[data-colonoscopy]')).toHaveCount(18);
   await page.goto('meal-builder/');
-  await expect(page.locator('[data-meal-recipe]')).toHaveCount(162);
+  await expect(page.locator('[data-meal-recipe]')).toHaveCount(activeRecipeCount);
   await context.close();
 });
 
@@ -148,7 +153,7 @@ test('keyboard focus and 200% zoom remain usable', async ({ page }) => {
 
 test('meal builder filters live, completes a meal, and preserves state', async ({ page }) => {
   await page.goto('meal-builder/');
-  await expect(page.locator('[data-inventory-item]')).toHaveCount(129);
+  await expect(page.locator('[data-inventory-item]')).toHaveCount(visibleIngredientCount);
   await expect(page.locator('#meal-builder-view')).toBeHidden();
   await startMeal(page, ['chicken-breast', 'broccoli', 'green-cabbage', 'onion', 'noodles']);
   const chicken = page.locator('[data-meal-recipe="chicken-broccoli-stir-fry"]');
@@ -256,7 +261,7 @@ test('household inventory keeps counted half-steps, presence-only values, and vi
   await expect(page.locator('#meal-connection')).toContainText('本地开发同步');
   await expect(page.locator('#meal-google-login')).toBeHidden();
   await expect(page.locator('#meal-logout')).toBeHidden();
-  await expect(page.locator('[data-inventory-item]')).toHaveCount(129);
+  await expect(page.locator('[data-inventory-item]')).toHaveCount(visibleIngredientCount);
   await expect(page.locator('[data-inventory-section]')).toHaveCount(11);
   expect(await page.locator('[data-inventory-section]').evaluateAll((groups) => groups.every((group) => group.hasAttribute('open')))).toBe(true);
   for (const id of ['ginger', 'scallion', 'garlic']) await expect(page.locator(`[data-inventory-item="${id}"]`)).toHaveCount(0);

@@ -14,8 +14,8 @@ const INGREDIENT_CHILD_KEYS = new Set(['vegetable']);
 const REQUIREMENT_KEYS = new Set(['ingredient_id', 'one_of', 'pantry_core', 'role', 'availability']);
 const ADDON_ID = 'finish-with-leafy-vegetable';
 const ADDON_TAG = 'finish-wilt-compatible';
-const ADDON_RECIPE_COUNT = 7;
 const INVENTORY_TRACKING = new Set(['counted', 'presence-only']);
+const ACTIVE_STATUSES = new Set(['candidate', 'approved']);
 const PRESENCE_ONLY_INGREDIENTS = new Set(['eggs', 'rice', 'noodles', 'bread', 'steamed-buns', 'oats', 'white-oil-sausage', 'potato', 'peeled-shrimp']);
 
 const assert = (condition, message) => { if (!condition) throw new Error(`Meal KB: ${message}`); };
@@ -33,29 +33,30 @@ export function parseMealKb(text) {
   const frontmatter = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
   assert(frontmatter, 'frontmatter is missing');
   const metadata = parseYaml(frontmatter[1]);
-  assert(typeof metadata.kb_version === 'number', 'kb_version must be numeric');
-  assert(/^\d{4}-\d{2}-\d{2}$/.test(metadata.last_updated), 'last_updated must use YYYY-MM-DD');
-
   const blocks = [...text.matchAll(/```yaml\r?\n([\s\S]*?)```/g)].map((match) => parseYaml(match[1])).filter(Boolean);
   const sectionBlock = blocks.find((block) => Array.isArray(block.starter_sections));
   assert(sectionBlock, 'starter section registry is missing');
-  const starterSections = sectionBlock.starter_sections.map((section) => {
+  return parseMealRecords(metadata, sectionBlock.starter_sections, blocks.filter((block) => block.type === 'ingredient' && typeof block.id === 'string'), blocks.filter((block) => block.type === 'recipe' && typeof block.id === 'string'));
+}
+
+function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRecords) {
+  assert(typeof metadata.kb_version === 'number' || typeof metadata.kb_version === 'string', 'kb_version must be a number or string');
+  assert(/^\d{4}-\d{2}-\d{2}$/.test(metadata.last_updated), 'last_updated must use YYYY-MM-DD');
+  const starterSections = sectionRecords.map((section) => {
     assertKeys(section, SECTION_KEYS);
     return { id: String(section.id), labelZh: String(section.label_zh), labelEn: String(section.label_en), order: Number(section.order), visible: section.visible === true };
   });
   const sectionIds = new Set(starterSections.map((section) => section.id));
   assert(sectionIds.size === starterSections.length, 'starter section IDs must be unique');
 
-  // The shape examples in the KB have no string ID; only typed records count.
-  const ingredientRecords = blocks.filter((block) => block.type === 'ingredient' && typeof block.id === 'string');
-  const recipeRecords = blocks.filter((block) => block.type === 'recipe' && typeof block.id === 'string');
-  assert(ingredientRecords.length === 132, `expected 132 ingredients, found ${ingredientRecords.length}`);
-  assert(recipeRecords.length === 162, `expected 162 recipes, found ${recipeRecords.length}`);
+  assert(ingredientRecords.length > 0, 'no ingredient records found');
+  assert(recipeRecords.length > 0, 'no recipe records found');
 
   const ingredientIds = new Set();
   const ingredientRaw = ingredientRecords.map((record) => {
     assertKeys(record, INGREDIENT_KEYS);
     assert(/^[a-z0-9-]+$/.test(record.id), `ingredient ${record.id} has invalid ID`);
+    assert(ACTIVE_STATUSES.has(record.status) || record.status === 'archived', `${record.id} has invalid status`);
     assert(!ingredientIds.has(record.id), `duplicate ingredient ID ${record.id}`);
     ingredientIds.add(record.id);
     assertKeys(record.starter ?? {}, STARTER_KEYS); assertKeys(record.fit ?? {}, FIT_KEYS); assertKeys(record.evidence ?? {}, EVIDENCE_KEYS); assertKeys(record.child_coverage ?? {}, INGREDIENT_CHILD_KEYS);
@@ -73,18 +74,18 @@ export function parseMealKb(text) {
     tags: stringArray(record.tags), inventoryTracking: record.inventory_tracking,
     childCoverage: record.child_coverage ? { vegetable: record.child_coverage.vegetable } : undefined,
   }));
-  assert(ingredients.filter((ingredient) => ingredient.visible).length === 129, 'expected 129 visible starter ingredients');
   for (const section of starterSections) {
     const orders = ingredients.filter((ingredient) => ingredient.section === section.id).map((ingredient) => ingredient.order);
     assert(new Set(orders).size === orders.length, `${section.id} starter orders must be unique`);
   }
   const taggedIngredients = ingredients.filter((ingredient) => ingredient.tags.includes(ADDON_TAG)).map((ingredient) => ingredient.id).sort();
-  assert(taggedIngredients.length === 5, 'finish-wilt capability tag count must be five');
+  assert(taggedIngredients.length > 0, 'finish-wilt capability tag is missing');
 
   const recipeIds = new Set();
   const recipes = recipeRecords.map((record, order) => {
     assertKeys(record, RECIPE_KEYS);
     assert(/^[a-z0-9-]+$/.test(record.id), `recipe ${record.id} has invalid ID`);
+    assert(ACTIVE_STATUSES.has(record.status) || record.status === 'archived', `${record.id} has invalid status`);
     assert(!recipeIds.has(record.id), `duplicate recipe ID ${record.id}`);
     recipeIds.add(record.id);
     assertKeys(record.fit ?? {}, FIT_KEYS); assertKeys(record.evidence ?? {}, EVIDENCE_KEYS); assertKeys(record.meal_contribution ?? {}, CONTRIBUTION_KEYS); assertKeys(record.child_coverage ?? {}, RECIPE_CHILD_KEYS);
@@ -129,10 +130,7 @@ export function parseMealKb(text) {
       equipment: stringArray(record.equipment), detailLevel: String(record.detail_level), steps: stringArray(record.steps), childServing: String(record.child_serving ?? ''), adultFinish: String(record.adult_finish ?? ''), substitutions: stringArray(record.substitutions), childTexture: String(record.child_texture ?? ''), notes: String(record.notes ?? ''), vegetableCentered: stringArray(record.evidence?.sources).some((source) => /^V\d{2}\s*[—-]/.test(source)),
     };
   });
-  const addOnRecipes = recipes.filter((recipe) => recipe.mealAddons.length > 0);
-  assert(addOnRecipes.length === ADDON_RECIPE_COUNT, `expected ${ADDON_RECIPE_COUNT} add-on recipes, found ${addOnRecipes.length}`);
   assert(!recipes.find((recipe) => recipe.id === 'instant-pot-soy-chicken-thighs')?.mealAddons.length, 'Instant Pot soy chicken thighs must not support the add-on');
-  assert(recipes.filter((recipe) => recipe.vegetableCentered).length === 23, 'expected 23 Vegetable-centered recipes');
   assert(recipes.some((recipe) => recipe.id === 'simple-stir-fried-leafy-greens' && recipe.childCoverage.vegetable === 'ingredient-dependent'), 'ingredient-dependent Vegetable coverage is missing');
 
   return {
@@ -140,4 +138,98 @@ export function parseMealKb(text) {
     starterSections: starterSections.filter((section) => section.visible).sort((a, b) => a.order - b.order),
     ingredients: ingredients.sort((a, b) => a.order - b.order), recipes,
   };
+}
+
+const ROOT_KEYS = new Set(['schema_version', 'content_version', 'last_updated', 'ingredients', 'recipes']);
+const INGREDIENT_INDEX_KEYS = new Set(['categories']);
+const INGREDIENT_CATEGORY_KEYS = new Set(['id', 'label_zh', 'label_en', 'order', 'visible', 'file', 'ingredient_ids']);
+const RECIPE_INDEX_KEYS = new Set(['categories']);
+const RECIPE_CATEGORY_KEYS = new Set(['id', 'directory']);
+const RECIPE_CATEGORY_INDEX_KEYS = new Set(['recipes']);
+const yamlFile = (files, path) => {
+  const text = files[path];
+  assert(typeof text === 'string', `missing indexed file ${path}`);
+  const value = parseYaml(text);
+  assert(value && typeof value === 'object' && !Array.isArray(value), `${path} must contain a YAML object`);
+  return value;
+};
+const pathIsSafe = (value) => typeof value === 'string' && /^(?!.*(?:^|\/)\.\.(?:\/|$))[a-z0-9][a-z0-9-]*(?:\/[a-z0-9][a-z0-9-]*)*\.yaml$/.test(value);
+
+/** Parse a complete Meal Builder directory supplied as relative YAML paths to text. */
+export function parseMealFiles(files) {
+  assert(files && typeof files === 'object', 'meal files must be a path-to-text object');
+  const paths = Object.keys(files).sort();
+  assert(paths.every((path) => pathIsSafe(path)), 'meal data contains an invalid path');
+  const root = yamlFile(files, 'index.yaml');
+  assertKeys(root, ROOT_KEYS);
+  assert(root.schema_version === 1, 'unsupported schema_version');
+  assert(typeof root.content_version === 'string' && root.content_version.length > 0, 'content_version must be a string');
+  assert(/^\d{4}-\d{2}-\d{2}$/.test(root.last_updated), 'last_updated must use YYYY-MM-DD');
+  assert(root.ingredients === 'ingredients/index.yaml' && root.recipes === 'recipe/index.yaml', 'root data indexes are invalid');
+
+  const ingredientIndex = yamlFile(files, root.ingredients);
+  assertKeys(ingredientIndex, INGREDIENT_INDEX_KEYS);
+  assert(Array.isArray(ingredientIndex.categories) && ingredientIndex.categories.length > 0, 'ingredient categories are missing');
+  const activePaths = new Set(['index.yaml', root.ingredients, root.recipes]);
+  const ingredientRecords = [];
+  const ingredientIds = new Set();
+  const starterSections = [];
+  for (const category of ingredientIndex.categories) {
+    assertKeys(category, INGREDIENT_CATEGORY_KEYS);
+    assert(typeof category.id === 'string' && category.file === `${category.id}.yaml` && pathIsSafe(`ingredients/${category.file}`), 'ingredient category file is invalid');
+    starterSections.push({ id: category.id, label_zh: category.label_zh, label_en: category.label_en, order: category.order, visible: category.visible });
+    const filePath = `ingredients/${category.file}`;
+    const categoryFile = yamlFile(files, filePath);
+    assertKeys(categoryFile, new Set(['ingredients']));
+    assert(Array.isArray(categoryFile.ingredients) && Array.isArray(category.ingredient_ids), `${filePath} is missing ingredients`);
+    const ids = categoryFile.ingredients.map((record) => record?.id);
+    assert(JSON.stringify(ids) === JSON.stringify(category.ingredient_ids), `${filePath} does not match its ingredient index`);
+    for (const record of categoryFile.ingredients) {
+      assert(record?.type === 'ingredient' && record.starter?.section === category.id, `${filePath} has an invalid ingredient category`);
+      assert(ACTIVE_STATUSES.has(record.status), `${filePath} contains a non-active Ingredient`);
+      assert(!ingredientIds.has(record.id), `duplicate ingredient ID ${record.id}`); ingredientIds.add(record.id); ingredientRecords.push(record);
+    }
+    activePaths.add(filePath);
+  }
+
+  const recipeIndex = yamlFile(files, root.recipes);
+  assertKeys(recipeIndex, RECIPE_INDEX_KEYS);
+  assert(Array.isArray(recipeIndex.categories) && recipeIndex.categories.length > 0, 'recipe categories are missing');
+  const recipeRecords = [];
+  const recipeIds = new Set();
+  for (const category of recipeIndex.categories) {
+    assertKeys(category, RECIPE_CATEGORY_KEYS);
+    assert(typeof category.id === 'string' && category.directory === category.id && /^[a-z0-9-]+$/.test(category.id), 'recipe category is invalid');
+    const indexPath = `recipe/${category.directory}/index.yaml`;
+    const categoryIndex = yamlFile(files, indexPath);
+    assertKeys(categoryIndex, RECIPE_CATEGORY_INDEX_KEYS);
+    assert(Array.isArray(categoryIndex.recipes), `${indexPath} is missing recipes`);
+    activePaths.add(indexPath);
+    for (const id of categoryIndex.recipes) {
+      assert(typeof id === 'string' && /^[a-z0-9-]+$/.test(id), `${indexPath} has an invalid recipe ID`);
+      assert(!ingredientIds.has(id), `stable ID is shared by Ingredient and Recipe ${id}`);
+      const recipePath = `recipe/${category.directory}/${id}.yaml`;
+      const record = yamlFile(files, recipePath);
+      assert(record.id === id && record.type === 'recipe', `${recipePath} has an invalid recipe or filename mismatch`);
+      assert(ACTIVE_STATUSES.has(record.status), `${recipePath} must have an active status`);
+      assert(!recipeIds.has(id), `duplicate recipe ID ${id}`); recipeIds.add(id); recipeRecords.push(record); activePaths.add(recipePath);
+    }
+  }
+  for (const path of paths.filter((path) => !path.startsWith('archive/'))) assert(activePaths.has(path), `unindexed active file ${path}`);
+  const allIds = new Set([...ingredientIds, ...recipeIds]);
+  const archivedIngredients = [];
+  const archivedRecipes = [];
+  for (const path of paths.filter((path) => path.startsWith('archive/'))) {
+    const record = yamlFile(files, path);
+    assert(record.status === 'archived' && (record.type === 'ingredient' || record.type === 'recipe') && typeof record.id === 'string', `${path} is not a valid archived record`);
+    assert(path.endsWith(`/${record.id}.yaml`), `${path} does not match archived ID ${record.id}`);
+    assert(!allIds.has(record.id), `archived ID conflicts with active ID ${record.id}`); allIds.add(record.id);
+    (record.type === 'ingredient' ? archivedIngredients : archivedRecipes).push(record);
+  }
+  const metadata = { kb_version: root.content_version, last_updated: root.last_updated };
+  const activeData = parseMealRecords(metadata, starterSections, ingredientRecords, recipeRecords);
+  if (archivedIngredients.length || archivedRecipes.length) {
+    parseMealRecords(metadata, starterSections, [...ingredientRecords, ...archivedIngredients], [...recipeRecords, ...archivedRecipes]);
+  }
+  return activeData;
 }

@@ -1,0 +1,659 @@
+ingredients:
+  - id: broccoli
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 西兰花
+    name_en: Broccoli
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 10
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: cauliflower
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 花菜
+    name_en: Cauliflower
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 20
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: green-cabbage
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 卷心菜
+    name_en: Green Cabbage
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 30
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: winter-melon
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 冬瓜
+    name_en: Winter Melon
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 40
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: luffa
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 丝瓜
+    name_en: Luffa
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 50
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: zucchini
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 西葫芦
+    name_en: Zucchini
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 60
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: cucumber
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 黄瓜
+    name_en: Cucumber
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 70
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: bitter-melon
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 苦瓜
+    name_en: Bitter Melon
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 80
+    tags:
+      - low-priority
+    fit:
+      hard_rules: pass
+      score: 2
+      strengths:
+        - 保留为可用候选，特定场景仍有价值。
+      tradeoffs:
+        - 用户已明确降低优先度或使用频率。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 用户已明确降为低优先度。
+  - id: tomato
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 番茄
+    name_en: Tomato
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 90
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: eggplant
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 茄子
+    name_en: Eggplant
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 100
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: bell-pepper
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 甜椒
+    name_en: Bell Pepper
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 110
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: carrot
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 胡萝卜
+    name_en: Carrot
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 120
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: daikon
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 白萝卜
+    name_en: Daikon
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 130
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: chinese-yam
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 山药
+    name_en: Chinese Yam
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 140
+    tags:
+      - low-priority
+    fit:
+      hard_rules: pass
+      score: 2
+      strengths:
+        - 保留为可用候选，特定场景仍有价值。
+      tradeoffs:
+        - 用户已明确降低优先度或使用频率。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 用户已明确降为低优先度；处理时容易刺激手部。
+  - id: celtuce
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 莴笋
+    name_en: Celtuce
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 150
+    tags:
+      - low-priority
+    fit:
+      hard_rules: pass
+      score: 2
+      strengths:
+        - 保留为可用候选，特定场景仍有价值。
+      tradeoffs:
+        - 用户已明确降低优先度或使用频率。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 用户已明确降为低优先度；备菜较麻烦。
+  - id: water-chestnuts
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 马蹄
+    name_en: Water Chestnuts
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 160
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: sugar-snap-peas
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 甜豆
+    name_en: Sugar Snap Peas
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 170
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: frozen-shelled-edamame
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 冷冻去壳毛豆
+    name_en: Frozen Shelled Edamame
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 180
+    tags:
+      - frozen
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: frozen-green-peas
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 冷冻青豆
+    name_en: Frozen Green Peas
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 190
+    tags:
+      - frozen
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: yellow-chives
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 韭黄
+    name_en: Yellow Chives
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 200
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 家庭购买通常是一包现成，备菜相对方便。
+  - id: garlic-chives
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 韭菜
+    name_en: Garlic Chives
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 210
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 可作为 Vegetable-slot 食材。
+  - id: chinese-celery
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 香芹
+    name_en: Chinese Celery
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 220
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: Strong-flavor vegetable；可占 Vegetable slot。
+  - id: celery
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 西芹
+    name_en: Celery
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 230
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: Strong-flavor vegetable；可占 Vegetable slot。
+  - id: onion
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 洋葱
+    name_en: Onion
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 240
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: Strong-flavor vegetable；可占 Vegetable slot。
+  - id: garlic-scapes
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 蒜苔
+    name_en: Garlic Scapes
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 250
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 不算 pantry aromatic；可作为 Vegetable-slot 食材。

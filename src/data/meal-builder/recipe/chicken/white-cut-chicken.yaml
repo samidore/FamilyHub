@@ -1,0 +1,75 @@
+id: white-cut-chicken
+type: recipe
+status: candidate
+name_zh: 白切鸡
+name_en: Cantonese White Cut Chicken
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - braised
+  - stovetop-nonstick
+  - advance-start
+  - family-shared
+fit:
+  hard_rules: pass
+  score: 3
+  strengths:
+    - 可设计为全家共享基础口味。
+  tradeoffs:
+    - 需要提前启动或较长被动烹调时间。
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-11
+  scope: Dish identity and core technique verified; household-light/non-spicy
+    adaptation is documented separately.
+  sources:
+    - Made With Lau — White Cut Chicken
+notes: Whole-chicken planned/lower-frequency route; homemade roast chicken
+  remains excluded.
+primary_role: protein
+main_protein_category: chicken
+main_protein_ingredient_ids:
+  - whole-chicken
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 1
+  vegetable: 0
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 20–35
+meal_window_minutes: 20–35
+elapsed_minutes: 60–120
+advance_start_required: true
+equipment:
+  - large pot
+burner_plan: Large pot on medium/high burner during heat-up, then gentle cooking/steeping.
+child_suitable: yes
+child_texture: 成品肉可软嫩，但必须由成人去骨。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: whole-chicken
+    role: main-protein
+    availability: required
+  - pantry_core: ginger-scallion dipping sauce served separately
+    role: seasoning
+    availability: assumed
+steps:
+  - 整鸡清理后按 ginger-scallion dipping sauce served separately 的传统路线入锅；保持整鸡结构。
+  - 控制水温/火力让鸡均匀熟透；来源使用浸煮/焖浸时保留这一结构。
+  - 确认最厚部位熟透后取出并静置；需要的酱油/葱姜汁另做。
+  - 成人负责斩件、去骨；孩子份只给无骨软肉并剪小。
+child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

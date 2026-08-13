@@ -1,0 +1,79 @@
+id: pan-seared-scallops
+type: recipe
+status: candidate
+name_zh: 香煎扇贝
+name_en: Pan-Seared Scallops
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - pan-seared
+  - stovetop-nonstick
+  - lunch-30
+  - child-support-protein
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+    - 临近上桌流程相对集中，便于与另一灶口并行。
+  tradeoffs:
+    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-11
+  scope: Dish identity and core technique verified; household-light/non-spicy
+    adaptation is documented separately.
+  sources:
+    - Serious Eats — pan-seared scallop technique
+notes: Candidate household route; exact seasoning quantities are intentionally
+  left for first-cook calibration rather than invented.
+primary_role: protein
+main_protein_category: shellfish
+main_protein_ingredient_ids:
+  - scallops
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 1
+  vegetable: 0
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+  - bread
+active_minutes: 8–15
+meal_window_minutes: 10–20
+elapsed_minutes: 10–25
+advance_start_required: false
+equipment:
+  - medium burner
+  - nonstick pan or iron pan as appropriate
+burner_plan: Medium burner by default; use the iron pan/high-output burner only
+  when a hard sear is the point of the dish.
+child_suitable: conditional
+child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: scallops
+    role: main-protein
+    availability: required
+  - pantry_core: salt-light sear / optional butter-lemon adult finish
+    role: seasoning
+    availability: assumed
+steps:
+  - 擦干并按菜式处理 scallops；准备 salt-light sear / optional butter-lemon adult finish。
+  - 锅中只用薄层油，分批煎/煎封，避免锅温因一次装太满而明显下降。
+  - 主料达到合适熟度后离火或转小火；需要酱汁时在最后短时间挂汁。
+  - 静置或稍降温后再为孩子剪小；不要把成人后加辣味放进基础锅。
+child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

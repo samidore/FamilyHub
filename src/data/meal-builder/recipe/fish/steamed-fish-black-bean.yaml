@@ -1,0 +1,89 @@
+id: steamed-fish-black-bean
+type: recipe
+status: candidate
+name_zh: 豉汁蒸鱼
+name_en: Steamed Fish with Black Bean Sauce
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - steamed
+  - stovetop-nonstick
+  - lunch-45
+  - child-support-protein
+fit:
+  hard_rules: pass
+  score: 3
+  strengths: []
+  tradeoffs:
+    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-11
+  scope: Dish identity and core technique verified; household-light/non-spicy
+    adaptation is documented separately.
+  sources:
+    - The Woks of Life — Steamed Fish with Black Bean Sauce
+notes: Black-bean sauce is a meaningful dish identity, so this remains separate
+  from plain steamed fish.
+primary_role: protein
+main_protein_category: fish
+main_protein_ingredient_ids:
+  - live-freshwater-bass
+  - branzino
+  - black-sea-bass
+  - grouper
+  - halibut
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 1
+  vegetable: 0
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 20–35
+meal_window_minutes: 30–45
+elapsed_minutes: 35–60
+advance_start_required: false
+equipment:
+  - medium burner
+  - covered steamer / heatproof plate
+burner_plan: Medium burner for covered steaming; high-output burner remains available.
+child_suitable: objective-yes-current-preference-low
+child_texture: 鱼肉本身可做得柔软，但孩子目前总体不爱吃鱼。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - one_of:
+      - live-freshwater-bass
+      - branzino
+      - black-sea-bass
+      - grouper
+      - halibut
+    role: main-protein
+    availability: required
+  - pantry_core: fermented black bean / garlic / ginger / light soy
+    role: seasoning
+    availability: assumed
+steps:
+  - 处理 live-freshwater-bass；搭配 无固定蔬菜；按来源用 fermented black bean / garlic / ginger
+    / light soy 做短腌或铺料。
+  - 水开后上锅蒸；厚度/骨量变化时以实际熟度为准，不把来源分钟机械套用到不同切法。
+  - 出锅后按需要加入葱姜等清淡收尾；避免额外淋大量热油。
+  - 孩子份先去骨/剪小/确认没有硬壳或筋膜，再加成人后味。
+child_serving: 成人彻底去刺后压碎/撕小；Meal Combo 默认保留软蛋白备选。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions:
+  - branzino
+  - black-sea-bass
+  - grouper
+  - halibut

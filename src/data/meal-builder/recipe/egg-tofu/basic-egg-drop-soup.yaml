@@ -1,0 +1,78 @@
+id: basic-egg-drop-soup
+type: recipe
+status: candidate
+name_zh: 基础蛋花汤
+name_en: Basic Egg Drop Soup
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - simmered
+  - stovetop-nonstick
+  - lunch-30
+  - family-shared
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+    - 可设计为全家共享基础口味。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-11
+  scope: Dish identity and core technique verified; household-light/non-spicy
+    adaptation is documented separately.
+  sources:
+    - Made With Lau — Egg Drop Soup
+notes: Candidate household route; exact seasoning quantities are intentionally
+  left for first-cook calibration rather than invented.
+primary_role: protein
+main_protein_category: egg
+main_protein_ingredient_ids:
+  - eggs
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 0.5
+  vegetable: 0
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+  - noodles
+active_minutes: 8–15
+meal_window_minutes: 10–20
+elapsed_minutes: 10–25
+advance_start_required: false
+equipment:
+  - medium burner
+  - soup pot
+burner_plan: Medium burner for simmering; can be started earlier and leave the
+  wok burner free.
+child_suitable: yes
+child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: eggs
+    role: main-protein
+    availability: required
+  - pantry_core: light broth / egg ribbons / scallion optional
+    role: seasoning
+    availability: assumed
+steps:
+  - 处理 eggs；蔬菜/主食配料为 无固定蔬菜。骨肉汤按来源需要先焯洗。
+  - 加水与 light broth / egg ribbons / scallion optional 中的基础香料，先把肉类煮/炖至接近软嫩。
+  - 按食材耐煮程度加入蔬菜或主食类块根；避免全部从一开始同煮导致过烂。
+  - 最后用轻盐调味；孩子份取软肉、软菜并去骨。
+child_serving: 取较嫩、较淡的部分，必要时剪成小块。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

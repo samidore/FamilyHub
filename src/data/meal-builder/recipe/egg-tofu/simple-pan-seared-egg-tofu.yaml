@@ -1,0 +1,79 @@
+id: simple-pan-seared-egg-tofu
+type: recipe
+status: candidate
+name_zh: 简单煎鸡蛋豆腐
+name_en: Simple Pan-Seared Egg Tofu
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - pan-seared
+  - stovetop-nonstick
+  - lunch-30
+  - family-shared
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+    - 可设计为全家共享基础口味。
+    - 临近上桌流程相对集中，便于与另一灶口并行。
+  tradeoffs: []
+evidence:
+  level: user-confirmed
+  checked_on: 2026-08-11
+  scope: Household use/preference or retained household pattern confirmed;
+    external source may additionally support technique where listed.
+  sources:
+    - Just One Cookbook — Egg Tofu (Tamago Tofu); household uses purchased egg
+      tofu rather than making it from scratch
+    - "Household-confirmed egg-tofu use: child eats egg tofu and texture is soft"
+notes: Use gentle pan-sear so the center stays soft; child eats egg tofu.
+primary_role: protein
+main_protein_category: tofu
+main_protein_ingredient_ids:
+  - egg-tofu
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 0.5
+  vegetable: 0
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 8–15
+meal_window_minutes: 10–20
+elapsed_minutes: 10–25
+advance_start_required: false
+equipment:
+  - medium burner
+  - nonstick pan or iron pan as appropriate
+burner_plan: Medium burner by default; use the iron pan/high-output burner only
+  when a hard sear is the point of the dish.
+child_suitable: yes-user-confirmed
+child_texture: egg tofu 质地软，且孩子会吃。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: egg-tofu
+    role: main-protein
+    availability: required
+  - pantry_core: purchased egg tofu + thin oil + light soy finish
+    role: seasoning
+    availability: assumed
+steps:
+  - 擦干并按菜式处理 egg-tofu；准备 purchased egg tofu + thin oil + light soy finish。
+  - 锅中只用薄层油，分批煎/煎封，避免锅温因一次装太满而明显下降。
+  - 主料达到合适熟度后离火或转小火；需要酱汁时在最后短时间挂汁。
+  - 静置或稍降温后再为孩子剪小；不要把成人后加辣味放进基础锅。
+child_serving: 切成易入口的小块，保留清淡软嫩部分。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

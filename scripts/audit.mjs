@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { moduleRegistry } from '../src/config/modules.ts';
 import { parseAdultDermatologists, parseColonoscopySpecialists, parseDayTrips, parseLibraryEvents, parsePediatricDentists } from '../src/data/schemas.mjs';
-import { parseMealKb } from '../src/data/mealParser.mjs';
+import { loadMealData } from './load-meal-data.mjs';
 
 const readJson = async (file) => JSON.parse(await readFile(file, 'utf8'));
 const trips = parseDayTrips(await readJson('src/data/day-trips.json'));
@@ -9,9 +9,11 @@ const events = parseLibraryEvents(await readJson('src/data/library-events.json')
 const dentists = parsePediatricDentists(await readJson('src/data/pediatric-dentists.json'));
 const dermatologists = parseAdultDermatologists(await readJson('src/data/adult-dermatologists.json'));
 const colonoscopy = parseColonoscopySpecialists(await readJson('src/data/colonoscopy-specialists.json'));
-const meals = parseMealKb(await readFile('FAMILY_MEAL_KB.md', 'utf8'));
+const meals = await loadMealData();
 const home = await readFile('dist/index.html', 'utf8');
 const project = await readFile('PROJECT.md', 'utf8');
+const languageUnits = await readFile('docs/project/language-units.md', 'utf8');
+const privacyData = await readFile('docs/project/privacy-data.md', 'utf8');
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 
 const records = {
@@ -45,7 +47,7 @@ assert(events.length === 18, 'Library activity migration count is not 18');
 assert(dentists.length === 10, 'Pediatric dentist migration count is not 10');
 assert(dermatologists.length === 10, 'Adult dermatologist migration count is not 10');
 assert(colonoscopy.length === 18, 'Colonoscopy specialist migration count is not 18');
-assert(meals.ingredients.length === 132 && meals.ingredients.filter((item) => item.visible).length === 129 && meals.recipes.length === 162, 'Meal KB counts are incorrect');
+assert(meals.ingredients.length === 132 && meals.ingredients.filter((item) => item.visible).length === 129 && meals.recipes.length === 162, 'Meal Builder migration counts are incorrect');
 assert(meals.recipes.filter((item) => item.vegetableCentered).length === 23, 'Vegetable-centered Recipe count is not 23');
 assert(meals.recipes.filter((item) => item.mealAddons?.some((addon) => addon.id === 'finish-with-leafy-vegetable')).length === 7, 'Finish-with-leafy-vegetable add-on count is not seven');
 assert(!meals.recipes.find((item) => item.id === 'instant-pot-soy-chicken-thighs')?.mealAddons?.length, 'Instant Pot soy chicken thighs must not have a leafy add-on');
@@ -82,9 +84,11 @@ for (const html of htmlFiles) {
   assert(externalLinks.every((match) => /target="_blank"/.test(match[0]) && /rel="[^"]*noopener[^"]*noreferrer[^"]*"/.test(match[0])), 'An external link is missing safe new-tab attributes');
 }
 
-assert(project.includes('Road travel: minutes and miles'), 'PROJECT.md is missing the road-unit policy');
-assert(project.includes('Weather: degrees Celsius'), 'PROJECT.md is missing the weather-unit policy');
-assert(project.includes('Recipe liquids: cups plus mL'), 'PROJECT.md is missing the liquid-unit policy');
-assert(project.includes('public-reference'), 'PROJECT.md is missing the public data classification');
+assert(project.includes('docs/project/language-units.md'), 'PROJECT.md is missing the language/unit policy index');
+assert(project.includes('docs/project/privacy-data.md'), 'PROJECT.md is missing the privacy policy index');
+assert(languageUnits.includes('Road travel: minutes and miles'), 'Language/unit policy is missing the road-unit rule');
+assert(languageUnits.includes('Weather: degrees Celsius'), 'Language/unit policy is missing the weather-unit rule');
+assert(languageUnits.includes('Recipe liquids: cups plus mL'), 'Language/unit policy is missing the liquid-unit rule');
+assert(privacyData.includes('public-reference'), 'Privacy/data policy is missing the public data classification');
 
 console.log(`Registry audit passed: ${moduleRegistry.length} modules, ${trips.length} trips, ${events.length} activities, ${dentists.length} dentists, ${dermatologists.length} dermatologists, ${colonoscopy.length} colonoscopy specialists, ${meals.recipes.length} meal recipes.`);

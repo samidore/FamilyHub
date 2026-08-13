@@ -1,0 +1,78 @@
+id: steamed-egg-tofu
+type: recipe
+status: candidate
+name_zh: 清蒸鸡蛋豆腐
+name_en: Steamed Egg Tofu
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - steamed
+  - stovetop-nonstick
+  - lunch-30
+  - family-shared
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+    - 可设计为全家共享基础口味。
+  tradeoffs: []
+evidence:
+  level: user-confirmed
+  checked_on: 2026-08-11
+  scope: Household use/preference or retained household pattern confirmed;
+    external source may additionally support technique where listed.
+  sources:
+    - Just One Cookbook — Egg Tofu (Tamago Tofu); household uses purchased egg
+      tofu rather than making it from scratch
+    - "Household-confirmed egg-tofu use: child eats egg tofu and texture is soft"
+notes: Household uses purchased egg tofu; child eats it.
+primary_role: protein
+main_protein_category: tofu
+main_protein_ingredient_ids:
+  - egg-tofu
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 0.5
+  vegetable: 0
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 8–15
+meal_window_minutes: 10–20
+elapsed_minutes: 10–25
+advance_start_required: false
+equipment:
+  - medium burner
+  - covered steamer / heatproof plate
+burner_plan: Medium burner for covered steaming; high-output burner remains available.
+child_suitable: yes-user-confirmed
+child_texture: egg tofu 质地软，且孩子会吃。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: egg-tofu
+    role: main-protein
+    availability: required
+  - pantry_core: purchased egg tofu + light soy/scallion/ginger
+    role: seasoning
+    availability: assumed
+steps:
+  - 处理 egg-tofu；搭配 无固定蔬菜；按来源用 purchased egg tofu + light soy/scallion/ginger
+    做短腌或铺料。
+  - 水开后上锅蒸；厚度/骨量变化时以实际熟度为准，不把来源分钟机械套用到不同切法。
+  - 出锅后按需要加入葱姜等清淡收尾；避免额外淋大量热油。
+  - 孩子份先去骨/剪小/确认没有硬壳或筋膜，再加成人后味。
+child_serving: 切成易入口的小块，保留清淡软嫩部分。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

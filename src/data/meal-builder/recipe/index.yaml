@@ -1,0 +1,19 @@
+categories:
+  - id: pork
+    directory: pork
+  - id: chicken
+    directory: chicken
+  - id: beef
+    directory: beef
+  - id: lamb-goat
+    directory: lamb-goat
+  - id: fish
+    directory: fish
+  - id: shellfish
+    directory: shellfish
+  - id: egg-tofu
+    directory: egg-tofu
+  - id: staple
+    directory: staple
+  - id: vegetable
+    directory: vegetable

@@ -1,0 +1,82 @@
+id: tomato-fatty-beef-soup
+type: recipe
+status: candidate
+name_zh: 番茄肥牛汤
+name_en: Tomato Thin-Beef Soup
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - simmered
+  - stovetop-nonstick
+  - lunch-30
+  - child-support-protein
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+  tradeoffs:
+    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-11
+  scope: Dish identity and core technique verified; household-light/non-spicy
+    adaptation is documented separately.
+  sources:
+    - The Woks of Life — Tomato Hot Pot with Beef; used for tomato + thin-beef
+      soup structure
+notes: Candidate household route; exact seasoning quantities are intentionally
+  left for first-cook calibration rather than invented.
+primary_role: mixed
+main_protein_category: beef
+main_protein_ingredient_ids:
+  - hot-pot-beef-slices
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+  - tomato
+meal_contribution:
+  protein: 1
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 15–25
+meal_window_minutes: 20–35
+elapsed_minutes: 20–40
+advance_start_required: false
+equipment:
+  - medium burner
+  - soup pot
+burner_plan: Medium burner for simmering; can be started earlier and leave the
+  wok burner free.
+child_suitable: conditional
+child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: hot-pot-beef-slices
+    role: main-protein
+    availability: required
+  - ingredient_id: tomato
+    role: vegetable
+    availability: required
+  - pantry_core: tomato / ginger / light savory broth
+    role: seasoning
+    availability: assumed
+steps:
+  - 处理 hot-pot-beef-slices；蔬菜/主食配料为 tomato。骨肉汤按来源需要先焯洗。
+  - 加水与 tomato / ginger / light savory broth 中的基础香料，先把肉类煮/炖至接近软嫩。
+  - 按食材耐煮程度加入蔬菜或主食类块根；避免全部从一开始同煮导致过烂。
+  - 最后用轻盐调味；孩子份取软肉、软菜并去骨。
+child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

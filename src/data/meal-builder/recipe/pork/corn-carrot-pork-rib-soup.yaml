@@ -1,0 +1,86 @@
+id: corn-carrot-pork-rib-soup
+type: recipe
+status: candidate
+name_zh: 玉米胡萝卜排骨汤
+name_en: Corn-Carrot Pork Rib Soup
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - simmered
+  - stovetop-nonstick
+  - advance-start
+  - family-shared
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+    - 可设计为全家共享基础口味。
+  tradeoffs:
+    - 需要提前启动或较长被动烹调时间。
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-11
+  scope: Dish identity and core technique verified; household-light/non-spicy
+    adaptation is documented separately.
+  sources:
+    - The Woks of Life — Chinese pork-bone soup / rib-soup patterns with tomato,
+      potato and corn
+notes: Corn is a staple in this project; carrot counts as vegetable.
+primary_role: mixed
+main_protein_category: pork
+main_protein_ingredient_ids:
+  - soft-pork-ribs
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+  - carrot
+meal_contribution:
+  protein: 1
+  vegetable: 0.5
+  staple: 1
+child_coverage:
+  protein: true
+  vegetable: true
+integral_staple_ingredient_ids:
+  - corn
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 20–35
+meal_window_minutes: 20–35
+elapsed_minutes: 90–180
+advance_start_required: true
+equipment:
+  - medium burner
+  - soup pot
+burner_plan: Medium burner for simmering; can be started earlier and leave the
+  wok burner free.
+child_suitable: yes
+child_texture: 成品肉可软嫩，但必须由成人去骨。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: soft-pork-ribs
+    role: main-protein
+    availability: required
+  - ingredient_id: corn
+    role: integral-staple
+    availability: required
+  - ingredient_id: carrot
+    role: vegetable
+    availability: required
+  - pantry_core: ginger / clear broth / light salt
+    role: seasoning
+    availability: assumed
+steps:
+  - 处理 soft-pork-ribs；蔬菜/主食配料为 corn, carrot。骨肉汤按来源需要先焯洗。
+  - 加水与 ginger / clear broth / light salt 中的基础香料，先把肉类煮/炖至接近软嫩。
+  - 按食材耐煮程度加入蔬菜或主食类块根；避免全部从一开始同煮导致过烂。
+  - 最后用轻盐调味；孩子份取软肉、软菜并去骨。
+child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

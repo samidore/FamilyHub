@@ -1,0 +1,87 @@
+id: ground-pork-chinese-greens-stir-fry
+type: recipe
+status: candidate
+name_zh: 猪肉末炒青菜
+name_en: Ground Pork with Chinese Greens
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-30
+  - family-shared
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+    - 可设计为全家共享基础口味。
+    - 临近上桌流程相对集中，便于与另一灶口并行。
+  tradeoffs: []
+evidence:
+  level: user-confirmed
+  checked_on: 2026-08-11
+  scope: Household use/preference or retained household pattern confirmed;
+    external source may additionally support technique where listed.
+  sources:
+    - User-confirmed household pattern — ground pork + Chinese greens
+notes: Explicit household addition and a genuine household cooking pattern;
+  vegetable can use compatible leafy greens via substitutions.
+primary_role: mixed
+main_protein_category: pork
+main_protein_ingredient_ids:
+  - ground-pork
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+  - chinese-greens
+meal_contribution:
+  protein: 1
+  vegetable: 1
+  staple: 1
+child_coverage:
+  protein: true
+  vegetable: true
+integral_staple_ingredient_ids:
+  - rice
+recommended_staple_ingredient_ids: []
+active_minutes: 15–25
+meal_window_minutes: 20–35
+elapsed_minutes: 20–40
+advance_start_required: false
+equipment:
+  - high-output burner
+  - wok / iron pan
+  - separately cooked rice
+burner_plan: High-output burner for the wok; rice is treated as an
+  already-cooked or separately cooked staple.
+child_suitable: yes
+child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: ground-pork
+    role: main-protein
+    availability: required
+  - ingredient_id: chinese-greens
+    role: vegetable
+    availability: required
+  - ingredient_id: rice
+    role: integral-staple
+    availability: required
+  - pantry_core: ginger / garlic / light soy
+    role: seasoning
+    availability: assumed
+steps:
+  - 先准备白米饭；炒菜时将米饭保温备用。
+  - 按菜式需要处理 ground-pork；蔬菜为 chinese-greens。肉类需要嫩化/短腌时按引用来源执行。
+  - 先把核心调味准备好：ginger / garlic / light soy；家庭版基底不放辣并降低盐油。
+  - 热锅少油，先把主要蛋白炒至接近熟并视需要盛出；再处理蔬菜/香料。
+  - 合回主料，加入调味快速翻匀，达到合适熟度即停火，避免为追求焦色延长烹调。
+child_serving: 取较嫩、较淡的部分，必要时剪成小块。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

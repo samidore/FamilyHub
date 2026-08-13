@@ -1,5 +1,8 @@
-import kbText from '../../FAMILY_MEAL_KB.md?raw';
-import { parseMealKb } from './mealParser.mjs';
+import { parseMealFiles } from './mealParser.mjs';
+import type { MealData } from './mealTypes';
 
-export const mealData = parseMealKb(kbText);
+const modules = import.meta.glob('./meal-builder/**/*.yaml', { eager: true, import: 'default', query: '?raw' }) as Record<string, string>;
+const files = Object.fromEntries(Object.entries(modules).map(([file, text]) => [file.replace('./meal-builder/', ''), text]));
+
+export const mealData: MealData = parseMealFiles(files);
 export const mealRecipes = mealData.recipes;

@@ -1,0 +1,82 @@
+id: celery-pressed-tofu-stir-fry
+type: recipe
+status: candidate
+name_zh: 西芹香干
+name_en: Celery and Pressed Tofu Stir-Fry
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-30
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+    - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+    - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-12
+  scope: Dish identity/core technique verified or conservatively inferred from
+    cited mature household cooking patterns; timing is source-derived or
+    workflow-derived range, not household stopwatch data.
+  sources:
+    - V19 — Omnivore’s Cookbook — Dried Tofu and Celery Stir Fry; vegetarian
+      route omits optional pork
+notes: pressed-tofu 继续保持 supporting protein，不升级为 tofu-main base；家庭版不加来源中的可选猪肉。
+primary_role: mixed
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids:
+  - pressed-tofu
+vegetable_ingredient_ids:
+  - celery
+meal_contribution:
+  protein: 0.5
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 15–20
+meal_window_minutes: 15–25
+elapsed_minutes: 15–30
+advance_start_required: false
+equipment:
+  - high-output burner
+  - wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free
+  when possible.
+child_suitable: conditional
+child_texture: 香干与西芹都偏有嚼劲；supporting tofu 不自动视为儿童软蛋白。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: celery
+    role: vegetable
+    availability: required
+  - ingredient_id: pressed-tofu
+    role: supporting-protein
+    availability: required
+  - pantry_core: light salt / neutral oil / common aromatics and sauce components
+      appropriate to the verified structure
+    role: seasoning
+    availability: assumed
+steps:
+  - 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+  - 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+  - 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为
+  ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child
+  portion is removed; omit if unnecessary.
+substitutions: []

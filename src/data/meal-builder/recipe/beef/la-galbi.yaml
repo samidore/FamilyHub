@@ -1,0 +1,79 @@
+id: la-galbi
+type: recipe
+status: candidate
+name_zh: LA Galbi
+name_en: LA Galbi Korean Short Ribs
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - pan-seared
+  - stovetop-nonstick
+  - advance-start
+  - child-support-protein
+fit:
+  hard_rules: pass
+  score: 3
+  strengths:
+    - 临近上桌流程相对集中，便于与另一灶口并行。
+  tradeoffs:
+    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
+    - 需要提前启动或较长被动烹调时间。
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-11
+  scope: Dish identity and core technique verified; household-light/non-spicy
+    adaptation is documented separately.
+  sources:
+    - Korean Bapsang — LA Galbi
+notes: Premium/lower-frequency route; cross-cut bones require careful child
+  separation.
+primary_role: protein
+main_protein_category: beef
+main_protein_ingredient_ids:
+  - cross-cut-beef-short-ribs
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 1
+  vegetable: 0
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 15–25
+meal_window_minutes: 15–25
+elapsed_minutes: 45–75 + marination
+advance_start_required: true
+equipment:
+  - medium burner
+  - nonstick pan or iron pan as appropriate
+burner_plan: Medium burner by default; use the iron pan/high-output burner only
+  when a hard sear is the point of the dish.
+child_suitable: conditional
+child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: cross-cut-beef-short-ribs
+    role: main-protein
+    availability: required
+  - pantry_core: soy / pear-or-fruit sweetness / garlic marinade, kept light
+    role: seasoning
+    availability: assumed
+steps:
+  - 擦干并按菜式处理 cross-cut-beef-short-ribs；准备 soy / pear-or-fruit sweetness / garlic
+    marinade, kept light。
+  - 锅中只用薄层油，分批煎/煎封，避免锅温因一次装太满而明显下降。
+  - 主料达到合适熟度后离火或转小火；需要酱汁时在最后短时间挂汁。
+  - 静置或稍降温后再为孩子剪小；不要把成人后加辣味放进基础锅。
+child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

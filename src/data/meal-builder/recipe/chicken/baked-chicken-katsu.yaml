@@ -1,0 +1,77 @@
+id: baked-chicken-katsu
+type: recipe
+status: candidate
+name_zh: Baked Chicken Katsu
+name_en: Baked Chicken Katsu
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - roasted
+  - oven
+  - family-shared
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+    - 可设计为全家共享基础口味。
+    - 主烹调设备可释放灶口。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-11
+  scope: Dish identity and core technique verified; household-light/non-spicy
+    adaptation is documented separately.
+  sources:
+    - Just One Cookbook — Baked Chicken Katsu
+notes: Baked route preserves katsu identity without violating the no-deep-fry rule.
+primary_role: protein
+main_protein_category: chicken
+main_protein_ingredient_ids:
+  - chicken-breast
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 1
+  vegetable: 0
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 15–25
+meal_window_minutes: 15–25
+elapsed_minutes: 45–75
+advance_start_required: false
+equipment:
+  - gas oven
+  - sheet pan / baking dish
+burner_plan: Oven carries the main cooking load and frees both stovetop burners.
+child_suitable: yes
+child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: chicken-breast
+    role: main-protein
+    availability: required
+  - pantry_core: panko coating baked rather than deep-fried; tonkatsu sauce optional
+      at table
+    role: seasoning
+    availability: assumed
+steps:
+  - 处理 chicken-breast，准备 panko coating baked rather than deep-fried; tonkatsu
+    sauce optional at table；需要腌制的菜提前完成。
+  - 烤箱预热；食材单层放置，使用少量油或烘焙纸/烤架降低粘连。
+  - 按引用来源的厚度与熟度逻辑烤制；家庭实际切法不同则以熟度为准。
+  - 出炉后静置/拆骨/切小；成人酱汁或辣味在孩子份盛出后再加。
+child_serving: 取较嫩、较淡的部分，必要时剪成小块。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

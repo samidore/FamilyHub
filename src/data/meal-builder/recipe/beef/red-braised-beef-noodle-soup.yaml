@@ -1,0 +1,81 @@
+id: red-braised-beef-noodle-soup
+type: recipe
+status: candidate
+name_zh: 红烧牛肉面
+name_en: Red-Braised Beef Noodle Soup
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stovetop-nonstick
+  - advance-start
+  - family-shared
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+    - 可设计为全家共享基础口味。
+  tradeoffs:
+    - 需要提前启动或较长被动烹调时间。
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-11
+  scope: Dish identity and core technique verified; household-light/non-spicy
+    adaptation is documented separately.
+  sources:
+    - The Woks of Life — Braised Beef Noodle Soup
+notes: Noodles are carried in recipe.
+primary_role: mixed
+main_protein_category: beef
+main_protein_ingredient_ids:
+  - chuck-roast
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 1
+  vegetable: 0
+  staple: 1
+child_coverage:
+  protein: true
+  vegetable: false
+integral_staple_ingredient_ids:
+  - noodles
+recommended_staple_ingredient_ids: []
+active_minutes: 20–35
+meal_window_minutes: 20–35
+elapsed_minutes: 90–180
+advance_start_required: true
+equipment:
+  - medium burner
+  - pot
+  - wok/nonstick pan if stir-fried
+burner_plan: Pot on medium burner; use high-output wok only if the recipe is a
+  stir-fried noodle.
+child_suitable: yes
+child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: chuck-roast
+    role: main-protein
+    availability: required
+  - ingredient_id: noodles
+    role: integral-staple
+    availability: required
+  - pantry_core: red-braised beef broth / soy / aromatics, non-spicy household base
+    role: seasoning
+    availability: assumed
+steps:
+  - 处理 chuck-roast 与 无固定蔬菜；准备 red-braised beef broth / soy / aromatics,
+    non-spicy household base。
+  - 面条按种类煮至合适熟度并沥水；汤面则保留单独汤底。
+  - 炒面在高输出灶口快速合炒；汤面则把主料/蔬菜在汤中依次煮熟。
+  - 最后合并并调整清淡盐度；成人辣味另加。
+child_serving: 取较嫩、较淡的部分，必要时剪成小块。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

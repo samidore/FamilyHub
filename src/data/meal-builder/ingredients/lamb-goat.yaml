@@ -1,0 +1,237 @@
+ingredients:
+  - id: hot-pot-lamb-slices
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 火锅羊肉片
+    name_en: Hot-Pot Lamb Slices
+    starter:
+      visible: true
+      section: lamb-goat
+      order: 10
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: lamb-shoulder-chunks
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 羊肩肉块
+    name_en: Lamb Shoulder Chunks
+    starter:
+      visible: true
+      section: lamb-goat
+      order: 20
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: lamb-leg-chunks
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 羊腿肉块
+    name_en: Lamb Leg Chunks
+    starter:
+      visible: true
+      section: lamb-goat
+      order: 30
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: bone-in-lamb-chops
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 带骨羊排
+    name_en: Bone-In Lamb Chops
+    starter:
+      visible: true
+      section: lamb-goat
+      order: 40
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: boneless-lamb-chops
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 无骨羊排
+    name_en: Boneless Lamb Chops
+    starter:
+      visible: true
+      section: lamb-goat
+      order: 50
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: lamb-shanks
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 羊腱
+    name_en: Lamb Shanks
+    starter:
+      visible: true
+      section: lamb-goat
+      order: 60
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: lamb-riblets
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 羊肋排
+    name_en: Lamb Riblets
+    starter:
+      visible: true
+      section: lamb-goat
+      order: 70
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: skin-on-bone-in-goat-pieces
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 带皮带骨山羊肉块
+    name_en: Skin-On Bone-In Goat Pieces
+    starter:
+      visible: true
+      section: lamb-goat
+      order: 80
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: lamb-spine-sections
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 羊蝎子
+    name_en: Lamb Spine Sections
+    starter:
+      visible: true
+      section: lamb-goat
+      order: 90
+    tags:
+      - low-priority
+    fit:
+      hard_rules: pass
+      score: 2
+      strengths:
+        - 保留为可用候选，特定场景仍有价值。
+      tradeoffs:
+        - 用户已明确降低优先度或使用频率。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 低频候选。

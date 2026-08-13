@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
 import test from 'node:test';
-import { parseMealKb } from '../src/data/mealParser.mjs';
+import { loadMealData, readMealFiles } from '../scripts/load-meal-data.mjs';
+import { parseMealFiles } from '../src/data/mealParser.mjs';
 import { addSelectedAddon, aggregateMeal, bindRecipeIngredients, defaultMealState, isFeasible, isMealComplete, rankAddons, rankCandidates, recentRecipePenalty, reconcileMealState, removeSelectedAddon, resolveRecipeChildCoverage, timeFit, unmetCompletionRequirements } from '../src/lib/mealEngine.ts';
 
 const recipe = (id, contribution, childCoverage = { protein: false, vegetable: false }, requirements = []) => ({ id, order: Number(id.replace(/\D/g, '')) || 0, fitScore: 4, contribution, childCoverage, requirements, mealWindowMinutes: '30–45', elapsedMinutes: '30–45', advanceStartRequired: false });
@@ -59,8 +59,8 @@ test('recent Recipes rank after unseen choices with the newest meal last', () =>
   assert.deepEqual(rankCandidates([newest, oldest, unseen], state, [], {}, history).map((item) => item.id), ['r3', 'r2', 'r1']);
 });
 
-test('v1.6 KB keeps strict counts, Vegetable structures, and controlled add-ons', async () => {
-  const kb = parseMealKb(await readFile('FAMILY_MEAL_KB.md', 'utf8'));
+test('v1.6 structured data keeps migrated counts, Vegetable structures, and controlled add-ons', async () => {
+  const kb = await loadMealData();
   assert.equal(kb.ingredients.length, 132);
   assert.equal(kb.ingredients.filter((item) => item.visible).length, 129);
   assert.equal(kb.recipes.length, 162);
@@ -85,6 +85,13 @@ test('v1.6 KB keeps strict counts, Vegetable structures, and controlled add-ons'
       }
     }
   }
+});
+
+test('Meal Builder manifests reject unindexed files and broken references', async () => {
+  const files = await readMealFiles();
+  assert.throws(() => parseMealFiles({ ...files, 'recipe/chicken/unindexed.yaml': files['recipe/chicken/chicken-teriyaki-thighs.yaml'] }), /unindexed active file/);
+  const broken = { ...files, 'recipe/chicken/chicken-teriyaki-thighs.yaml': files['recipe/chicken/chicken-teriyaki-thighs.yaml'].replace('ingredient_id: boneless-skinless-chicken-thighs', 'ingredient_id: missing-ingredient') };
+  assert.throws(() => parseMealFiles(broken), /references missing ingredient/);
 });
 
 test('one-of bindings auto-select one available ingredient', () => {

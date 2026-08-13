@@ -1,14 +1,6 @@
 # Family Hub
 
-A mobile-first Astro reference hub for family lists that benefit from search, filtering, and comparison. The first release contains:
-
-- 29 Day Trips
-- 18 Library Activities
-- 10 Pediatric Dentists
-- 10 Adult Dermatologists
-- 18 Colonoscopy Specialists
-
-The published GitHub Pages URL is public. Read [`PROJECT.md`](PROJECT.md) before changing data, design, privacy boundaries, language, or units.
+Family Hub is a public, mobile-first Astro reference hub for family lists, comparisons, and the shared Meal Builder. Start with [`PROJECT.md`](PROJECT.md), then open the page-specific docs before changing a page or its data.
 
 ## Run locally
 
@@ -32,44 +24,38 @@ pnpm run validate
 pnpm run check
 pnpm run build
 pnpm run audit
+pnpm run test:rules
 pnpm run test:browser
 ```
 
 Install Playwright Chromium once on a new machine with `pnpm exec playwright install chromium`.
 
-## Edit content
+## Active pages and data
 
-- Day Trips: `src/data/day-trips.json`
-- Library Activities: `src/data/library-events.json`
-- Pediatric Dentists: `src/data/pediatric-dentists.json`
-- Adult Dermatologists: `src/data/adult-dermatologists.json`
-- Colonoscopy Specialists: `src/data/colonoscopy-specialists.json`
-- Active module metadata and home categories: `src/config/modules.ts`
-- Strict public-data rules: `src/data/schemas.mjs`
+- Day Trips: `src/data/day-trips.json` · [`docs/modules/day-trips/README.md`](docs/modules/day-trips/README.md)
+- Library Activities: `src/data/library-events.json` · [`docs/modules/library-activities/README.md`](docs/modules/library-activities/README.md)
+- Pediatric Dentists: `src/data/pediatric-dentists.json` · [`docs/modules/pediatric-dentists/README.md`](docs/modules/pediatric-dentists/README.md)
+- Adult Dermatologists: `src/data/adult-dermatologists.json` · [`docs/modules/adult-dermatologists/README.md`](docs/modules/adult-dermatologists/README.md)
+- Colonoscopy Specialists: `src/data/colonoscopy-specialists.json` · [`docs/modules/colonoscopy-specialists/README.md`](docs/modules/colonoscopy-specialists/README.md)
+- Meal Builder: indexed YAML under `src/data/meal-builder/` · [`docs/modules/meal-builder/README.md`](docs/modules/meal-builder/README.md)
 
-Keep U.S. proper names, addresses, programs, credentials, and official terminology in English. General guidance, family assessments, limitations, and comments use Chinese. Do not translate source material automatically.
+Active module metadata and home categories live in `src/config/modules.ts`; strict public-data rules live in `src/data/schemas.mjs`. Meal Builder data maintenance is documented in its `maintenance.md`; do not edit the historical `docs/archive/FAMILY_MEAL_KB.dump.md` as a source of truth.
 
-Only set `verifiedDate` when the underlying source was actually checked. Leave unknown values empty or `null` as allowed by the schema; never infer missing hours, prices, accessibility, parking, bathroom access, registration rules, ratings, or mileage.
+Keep U.S. proper names, addresses, programs, credentials, official terminology, and source titles in English. General guidance, family assessments, limitations, comments, and household instructions use Chinese. Do not translate source material automatically. Only set `verifiedDate` after checking the underlying source; leave unknown values empty or `null` as permitted by the schema.
 
-## Add a module
+## Add or update a page
 
-1. Add an active `ModuleDefinition` to `src/config/modules.ts`. Unfinished modules do not belong in navigation.
-2. Add a strict domain parser and TypeScript record type.
-3. Add the structured dataset and expose its parsed records through `src/data/catalog.ts`.
-4. Add a domain folder under `src/modules/` for its card/list presentation, plus an explicit Astro page and filter controller.
-5. Use the shared layout, field tab, filter shell, result count, empty state, source-link, and trust conventions.
-6. Extend the registry audit and Playwright tests before publishing.
+1. Read `PROJECT.md`, the relevant module README, and the shared design/privacy/language/acceptance docs.
+2. Edit only the appropriate structured dataset and page-owned presentation. Use the module's documented schema and stable-ID rules.
+3. Add or update schema, build-output, interaction, responsive, and privacy coverage with the behavior change.
+4. Run the full verification gate, inspect the generated output, and publish only after it passes.
 
-Do not solve private-family requirements with hidden pages, unlinked URLs, committed JSON, or local storage. Authentication and private storage require a separate architecture review.
+Do not solve private-family requirements with hidden pages, unlinked URLs, committed private JSON, or local storage. Authentication and private storage require a separate architecture review.
 
 ## Deploy
 
-1. Push the project to the repository’s `main` branch.
-2. In GitHub **Settings → Pages**, choose **GitHub Actions** as the source.
-3. The workflow installs dependencies and Chromium, validates public data, checks Astro, builds, audits the output, runs browser tests, and then publishes the static `dist` artifact.
-
-The generated site works as either a user/organization Pages site or a project Pages site because `astro.config.mjs` derives the base path in CI.
+Push the project to `main`; the GitHub Pages workflow installs dependencies and Chromium, validates data, checks Astro, builds, audits the output, runs browser tests, and publishes `dist`. In GitHub **Settings → Pages**, choose **GitHub Actions** as the source. `astro.config.mjs` derives the base path for user, organization, and project Pages sites.
 
 ## Historical references
 
-`HANDOFF_Family_Hub.md` and `family_outing_hub_combined_prototype.html` document the original migration. They are retained for provenance and data comparison, but `PROJECT.md` is the current authority.
+`HANDOFF_Family_Hub.md`, `family_outing_hub_combined_prototype.html`, and the archived Meal Builder GPT dump are retained for provenance and comparison only. Current rules and live data are indexed from `PROJECT.md`, `docs/`, and the structured datasets.

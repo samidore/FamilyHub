@@ -1,0 +1,79 @@
+id: steamed-eggplant
+type: recipe
+status: candidate
+name_zh: 蒸茄子
+name_en: Steamed Eggplant
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - steamed
+  - stovetop-nonstick
+  - lunch-45
+  - soft-vegetable
+  - low-active-time
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+    - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+    - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-12
+  scope: Dish identity/core technique verified or conservatively inferred from
+    cited mature household cooking patterns; timing is source-derived or
+    workflow-derived range, not household stopwatch data.
+  sources:
+    - V14 — Made With Lau — steamed eggplant technique within Eggplant with
+      Garlic Sauce
+notes: 采用蒸制主体以符合家庭低油规则；不复制来源中后续辣味/重酱鱼香步骤。
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+  - eggplant
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 15–25
+meal_window_minutes: 25–40
+elapsed_minutes: 25–45
+advance_start_required: false
+equipment:
+  - medium burner
+  - steamer / pot + rack
+burner_plan: Medium burner for steaming; avoids oil-heavy wok eggplant route.
+child_suitable: yes
+child_texture: 蒸至软嫩后非常容易剪小；孩子份使用清淡酱汁。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: eggplant
+    role: vegetable
+    availability: required
+  - pantry_core: light salt / neutral oil / common aromatics and sauce components
+      appropriate to the verified structure
+    role: seasoning
+    availability: assumed
+steps:
+  - 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+  - 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+  - 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为
+  ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child
+  portion is removed; omit if unnecessary.
+substitutions: []

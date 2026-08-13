@@ -1,0 +1,80 @@
+id: honey-soy-baked-wings-drumsticks
+type: recipe
+status: candidate
+name_zh: 蜂蜜酱油烤鸡翅 / 鸡小腿
+name_en: Honey-Soy Baked Wings or Drumsticks
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - roasted
+  - oven
+  - family-shared
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+    - 可设计为全家共享基础口味。
+    - 主烹调设备可释放灶口。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-11
+  scope: Dish identity and core technique verified; household-light/non-spicy
+    adaptation is documented separately.
+  sources:
+    - The Woks of Life — baked chicken wings
+notes: Candidate household route; exact seasoning quantities are intentionally
+  left for first-cook calibration rather than invented.
+primary_role: protein
+main_protein_category: chicken
+main_protein_ingredient_ids:
+  - whole-chicken-wings
+  - chicken-drumsticks
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 1
+  vegetable: 0
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 15–25
+meal_window_minutes: 15–25
+elapsed_minutes: 45–75
+advance_start_required: false
+equipment:
+  - gas oven
+  - sheet pan / baking dish
+burner_plan: Oven carries the main cooking load and frees both stovetop burners.
+child_suitable: yes
+child_texture: 成品肉可软嫩，但必须由成人去骨。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - one_of:
+      - whole-chicken-wings
+      - chicken-drumsticks
+    role: main-protein
+    availability: required
+  - pantry_core: honey / soy / garlic glaze, light household salt
+    role: seasoning
+    availability: assumed
+steps:
+  - 处理 whole-chicken-wings, chicken-drumsticks，准备 honey / soy / garlic glaze,
+    light household salt；需要腌制的菜提前完成。
+  - 烤箱预热；食材单层放置，使用少量油或烘焙纸/烤架降低粘连。
+  - 按引用来源的厚度与熟度逻辑烤制；家庭实际切法不同则以熟度为准。
+  - 出炉后静置/拆骨/切小；成人酱汁或辣味在孩子份盛出后再加。
+child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []

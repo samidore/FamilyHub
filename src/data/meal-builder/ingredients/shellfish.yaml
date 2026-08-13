@@ -1,0 +1,249 @@
+ingredients:
+  - id: peeled-shrimp
+    type: ingredient
+    inventory_tracking: presence-only
+    status: candidate
+    name_zh: 虾仁
+    name_en: Peeled Shrimp
+    starter:
+      visible: true
+      section: shellfish
+      order: 10
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: shell-on-shrimp
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 带壳虾
+    name_en: Shell-On Shrimp
+    starter:
+      visible: true
+      section: shellfish
+      order: 20
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: scallops
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 扇贝
+    name_en: Scallops
+    starter:
+      visible: true
+      section: shellfish
+      order: 30
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: squid
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 鱿鱼
+    name_en: Squid
+    starter:
+      visible: true
+      section: shellfish
+      order: 40
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
+      tradeoffs: []
+    evidence:
+      level: inferred
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: ""
+  - id: oysters
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 生蚝
+    name_en: Oysters
+    starter:
+      visible: true
+      section: shellfish
+      order: 50
+    tags:
+      - low-priority
+    fit:
+      hard_rules: pass
+      score: 2
+      strengths:
+        - 保留为可用候选，特定场景仍有价值。
+      tradeoffs:
+        - 用户已明确降低优先度或使用频率。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: 低优先度。
+  - id: shrimp-paste
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 虾滑
+    name_en: Shrimp Paste
+    starter:
+      visible: true
+      section: shellfish
+      order: 60
+    tags:
+      - supporting-only
+      - processed
+    fit:
+      hard_rules: pass
+      score: 3
+      strengths:
+        - 作为 supporting ingredient 有明确菜单价值。
+      tradeoffs:
+        - 默认不承担 main-protein base；用途比核心主料窄。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: Processed seafood；默认 supporting use。
+  - id: fish-paste
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 鱼滑
+    name_en: Fish Paste
+    starter:
+      visible: true
+      section: shellfish
+      order: 70
+    tags:
+      - supporting-only
+      - processed
+    fit:
+      hard_rules: pass
+      score: 3
+      strengths:
+        - 作为 supporting ingredient 有明确菜单价值。
+      tradeoffs:
+        - 默认不承担 main-protein base；用途比核心主料窄。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: Processed seafood；默认 supporting use。
+  - id: fish-balls
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 鱼丸
+    name_en: Fish Balls
+    starter:
+      visible: true
+      section: shellfish
+      order: 80
+    tags:
+      - supporting-only
+      - processed
+    fit:
+      hard_rules: pass
+      score: 3
+      strengths:
+        - 作为 supporting ingredient 有明确菜单价值。
+      tradeoffs:
+        - 默认不承担 main-protein base；用途比核心主料窄。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: Processed seafood；默认 supporting use。
+  - id: assorted-seafood-balls
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 综合海鲜丸
+    name_en: Assorted Seafood Balls
+    starter:
+      visible: true
+      section: shellfish
+      order: 90
+    tags:
+      - supporting-only
+      - processed
+    fit:
+      hard_rules: pass
+      score: 3
+      strengths:
+        - 作为 supporting ingredient 有明确菜单价值。
+      tradeoffs:
+        - 默认不承担 main-protein base；用途比核心主料窄。
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-12
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
+        conservative where priority was not explicit. No retailer, price,
+        package-size, prep-minute, or new child-acceptance claim.
+      sources:
+        - Family Meal Ingredient brainstorm / retained candidate decisions
+    notes: Processed seafood；默认 supporting use。

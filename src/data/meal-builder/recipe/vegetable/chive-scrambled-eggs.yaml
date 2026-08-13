@@ -1,0 +1,89 @@
+id: chive-scrambled-eggs
+type: recipe
+status: candidate
+name_zh: 韭菜类炒蛋
+name_en: Chives and Scrambled Eggs
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-30
+  - family-shared
+  - soft-protein
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+    - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+    - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-12
+  scope: Dish identity/core technique verified or conservatively inferred from
+    cited mature household cooking patterns; timing is source-derived or
+    workflow-derived range, not household stopwatch data.
+  sources:
+    - V18 — Omnivore’s Cookbook — Chinese Chive and Egg / Yellow Chives and Eggs
+      Stir Fry
+notes: Candidate Vegetable-centered route; exact household seasoning quantities
+  remain for Cook View / first-cook calibration.
+primary_role: mixed
+main_protein_category: egg
+main_protein_ingredient_ids:
+  - eggs
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+  - yellow-chives
+  - garlic-chives
+meal_contribution:
+  protein: 0.5
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 10–15
+meal_window_minutes: 10–20
+elapsed_minutes: 10–20
+advance_start_required: false
+equipment:
+  - high-output burner
+  - wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free
+  when possible.
+child_suitable: conditional
+child_texture: 鸡蛋可保持嫩；韭菜/韭黄有纤维，未确认孩子可承担完整 Vegetable coverage。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - one_of:
+      - yellow-chives
+      - garlic-chives
+    role: vegetable
+    availability: required
+  - ingredient_id: eggs
+    role: main-protein
+    availability: required
+  - pantry_core: light salt / neutral oil / common aromatics and sauce components
+      appropriate to the verified structure
+    role: seasoning
+    availability: assumed
+steps:
+  - 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
+  - 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
+  - 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为
+  ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: Adult heat or stronger seasoning may be added only after the child
+  portion is removed; omit if unnecessary.
+substitutions:
+  - yellow-chives 与 garlic-chives 共用炒蛋 structure，清洗/切段细节按实际 Ingredient 调整。

@@ -1,0 +1,75 @@
+id: japanese-simmered-kabocha
+type: recipe
+status: candidate
+name_zh: 日式煮南瓜
+name_en: Japanese Simmered Kabocha
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - braised
+  - stovetop-nonstick
+  - lunch-30
+  - child-support-protein
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+  tradeoffs:
+    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-11
+  scope: Dish identity and core technique verified; household-light/non-spicy
+    adaptation is documented separately.
+  sources:
+    - Just One Cookbook — Japanese Simmered Kabocha
+notes: Kabocha is staple in this project, not a vegetable slot.
+primary_role: staple
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 0
+  vegetable: 0
+  staple: 1
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids:
+  - kabocha-squash
+recommended_staple_ingredient_ids: []
+active_minutes: 15–25
+meal_window_minutes: 20–35
+elapsed_minutes: 20–40
+advance_start_required: false
+equipment:
+  - medium burner
+  - covered pot / braiser
+burner_plan: Medium burner for covered braise; long passive phase does not
+  occupy the high-output wok burner.
+child_suitable: n/a
+child_texture: 本 Recipe 不承担 main protein；儿童适配主要取决于主食/蔬菜质地。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: discoverable
+ingredients:
+  - ingredient_id: kabocha-squash
+    role: integral-staple
+    availability: required
+  - pantry_core: dashi / soy / small sugar
+    role: seasoning
+    availability: assumed
+steps:
+  - 处理 核心主食/蛋白；按来源决定是否需要焯水或轻煎。
+  - 加入 dashi / soy / small sugar 和足以完成焖煮的液体；家庭版轻盐、不放辣。
+  - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
+  - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
+child_serving: 作为主食/配菜使用，Meal Combo 必须另配软蛋白。
+adult_finish: Optional chili/chili oil or stronger seasoning only after the
+  child portion is removed; omit if the dish does not benefit from it.
+substitutions: []
