@@ -240,7 +240,11 @@ export function timeFit(recipe: MealRecipe, preference: TimePreference) {
   return { rank: 2, label: '可能超过时间' };
 }
 
-export function rankCandidates(recipes: MealRecipe[], state: MealState, ingredients: MealIngredient[] | Record<string, MealIngredient> = [], draftBindings: Record<string, (string | null | undefined)[]> = {}) {
+export function recentRecipePenalty(recipeId: string, recentRecipeIds: string[][] = []) {
+  return recentRecipeIds.reduce((penalty, ids, index) => ids.includes(recipeId) ? Math.max(penalty, recentRecipeIds.length - index) : penalty, 0);
+}
+
+export function rankCandidates(recipes: MealRecipe[], state: MealState, ingredients: MealIngredient[] | Record<string, MealIngredient> = [], draftBindings: Record<string, (string | null | undefined)[]> = {}, recentRecipeIds: string[][] = []) {
   const available = asSet(state.availableIngredientIds);
   const selectedIds = new Set(state.selectedRecipeIds);
   const selected = recipes.filter((recipe) => selectedIds.has(recipe.id));
@@ -265,7 +269,7 @@ export function rankCandidates(recipes: MealRecipe[], state: MealState, ingredie
     return true;
   }).sort((a, b) => {
     const x = measures(a); const y = measures(b);
-    return y.childSolved - x.childSolved || Number(y.withinProteinTolerance) - Number(x.withinProteinTolerance) || y.normalGaps - x.normalGaps || x.overage - y.overage || b.fitScore - a.fitScore || x.time.rank - y.time.rank || a.order - b.order;
+    return recentRecipePenalty(a.id, recentRecipeIds) - recentRecipePenalty(b.id, recentRecipeIds) || y.childSolved - x.childSolved || Number(y.withinProteinTolerance) - Number(x.withinProteinTolerance) || y.normalGaps - x.normalGaps || x.overage - y.overage || b.fitScore - a.fitScore || x.time.rank - y.time.rank || a.order - b.order;
   });
 }
 

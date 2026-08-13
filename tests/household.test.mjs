@@ -18,6 +18,7 @@ import { LocalHouseholdRepository, createHouseholdRepository, googleIdentity, sh
 const ingredients = [
   { id: 'pork', inventoryTracking: 'counted' },
   { id: 'eggs', inventoryTracking: 'presence-only' },
+  { id: 'potato', inventoryTracking: 'presence-only' },
 ];
 
 test('authentication errors keep an appropriate recovery action visible', async () => {
@@ -109,8 +110,14 @@ test('current-meal status transitions are transaction-safe and reject stale jump
 });
 
 test('inventory normalization keeps only known KB ingredient IDs', () => {
-  const normalized = normalizeHouseholdState({ inventory: { pork: 1, eggs: true, unknown: 2 } }, ingredients);
-  assert.deepEqual(normalized.inventory, { pork: 1, eggs: true });
+  const normalized = normalizeHouseholdState({ inventory: { pork: 1, eggs: true, potato: 1.5, unknown: 2 } }, ingredients);
+  assert.deepEqual(normalized.inventory, { pork: 1, eggs: true, potato: true });
+});
+
+test('recent meal history normalizes newest-first and keeps only four valid meals', () => {
+  const recentMeals = Array.from({ length: 6 }, (_, index) => ({ mealId: `meal-${index}`, completedAt: 100 - index, recipeIds: [`r${index}`] }));
+  const normalized = normalizeHouseholdState({ recentMeals: [...recentMeals, { mealId: '', completedAt: 0, recipeIds: [] }] }, ingredients);
+  assert.deepEqual(normalized.recentMeals, recentMeals.slice(0, 4));
 });
 
 test('partial Firebase configuration is an error and all-empty configuration stays local', async () => {
@@ -143,11 +150,16 @@ test('starting a current meal is conditional and never overwrites an existing me
 test('checkout is stale-safe and consumes counted/presence-only values once', () => {
   const meal = createCurrentMealFromInventory({ pork: 1, eggs: true }, { mealId: 'meal-1' }, ingredients);
   const cooking = { ...meal, status: 'cooking', recipeIngredientBindings: { r1: ['pork'] }, selectedRecipeIds: ['r1'], selectedAddons: [{ mainRecipeId: 'r1', addonType: 'a', ingredientId: 'eggs' }] };
-  const state = { inventory: { pork: 1, eggs: true }, currentMeal: cooking };
+  const state = { inventory: { pork: 1, eggs: true }, currentMeal: cooking, activeStep: 'checkout', recentMeals: [{ mealId: 'older', completedAt: 1, recipeIds: ['r0'] }] };
   assert.deepEqual(defaultCheckoutConsumption(cooking, state.inventory, ingredients), { eggs: false, pork: 1 });
-  const first = applyCheckout(state, 'meal-1', { eggs: true, pork: 0.5 }, ingredients);
+  const first = applyCheckout(state, 'meal-1', { eggs: true, pork: 0.5 }, ingredients, { nextMealId: 'meal-2', completedAt: 2 });
   assert.equal(first.committed, true);
-  assert.deepEqual(first.state, { inventory: { pork: 0.5 }, currentMeal: null });
+  assert.deepEqual(first.state.inventory, { pork: 0.5 });
+  assert.equal(first.state.activeStep, 'recipes');
+  assert.equal(first.state.currentMeal?.mealId, 'meal-2');
+  assert.deepEqual(first.state.currentMeal?.availableIngredientIds, ['pork']);
+  assert.deepEqual(first.state.currentMeal?.selectedRecipeIds, []);
+  assert.deepEqual(first.state.recentMeals, [{ mealId: 'meal-1', completedAt: 2, recipeIds: ['r1'] }, { mealId: 'older', completedAt: 1, recipeIds: ['r0'] }]);
   const second = applyCheckout(first.state, 'meal-1', { pork: 0.5 }, ingredients);
   assert.equal(second.committed, false);
   assert.equal(second.reason, 'stale-meal');

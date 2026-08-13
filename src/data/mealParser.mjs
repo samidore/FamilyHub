@@ -16,7 +16,7 @@ const ADDON_ID = 'finish-with-leafy-vegetable';
 const ADDON_TAG = 'finish-wilt-compatible';
 const ADDON_RECIPE_COUNT = 7;
 const INVENTORY_TRACKING = new Set(['counted', 'presence-only']);
-const PRESENCE_ONLY_INGREDIENTS = new Set(['eggs', 'rice', 'noodles', 'bread', 'steamed-buns', 'oats', 'white-oil-sausage']);
+const PRESENCE_ONLY_INGREDIENTS = new Set(['eggs', 'rice', 'noodles', 'bread', 'steamed-buns', 'oats', 'white-oil-sausage', 'potato', 'peeled-shrimp']);
 
 const assert = (condition, message) => { if (!condition) throw new Error(`Meal KB: ${message}`); };
 const assertKeys = (record, allowed) => {

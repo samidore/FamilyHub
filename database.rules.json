@@ -32,7 +32,19 @@
           ".write": "auth != null && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email",
           "inventory": {
             "$ingredientId": {
-              ".validate": "(newData.isBoolean() && newData.val() == true) || (newData.isNumber() && newData.val() > 0 && newData.val() % 0.5 == 0)"
+              ".validate": "($ingredientId == 'eggs' || $ingredientId == 'rice' || $ingredientId == 'noodles' || $ingredientId == 'bread' || $ingredientId == 'steamed-buns' || $ingredientId == 'oats' || $ingredientId == 'white-oil-sausage' || $ingredientId == 'potato' || $ingredientId == 'peeled-shrimp') ? (newData.isBoolean() && newData.val() == true) : (newData.isNumber() && newData.val() > 0 && newData.val() % 0.5 == 0)"
+            }
+          },
+          "recentMeals": {
+            ".validate": "newData.numChildren() <= 4",
+            "$index": {
+              ".validate": "($index == '0' || $index == '1' || $index == '2' || $index == '3') && newData.numChildren() == 3 && newData.hasChildren(['mealId', 'completedAt', 'recipeIds'])",
+              "mealId": { ".validate": "newData.isString() && newData.val().length > 0" },
+              "completedAt": { ".validate": "newData.isNumber() && newData.val() > 0" },
+              "recipeIds": {
+                ".validate": "newData.numChildren() > 0 && newData.numChildren() <= 162",
+                "$recipeIndex": { ".validate": "newData.isString() && newData.val().length > 0" }
+              }
             }
           },
           "currentMeal": {

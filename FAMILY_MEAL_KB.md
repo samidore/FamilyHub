@@ -1893,7 +1893,7 @@ notes: 探索性鱼类候选。
 ```yaml
 id: peeled-shrimp
 type: ingredient
-inventory_tracking: counted
+inventory_tracking: presence-only
 status: candidate
 name_zh: 虾仁
 name_en: Peeled Shrimp
@@ -3900,7 +3900,7 @@ notes: ''
 ```yaml
 id: potato
 type: ingredient
-inventory_tracking: counted
+inventory_tracking: presence-only
 status: candidate
 name_zh: 土豆
 name_en: Potato

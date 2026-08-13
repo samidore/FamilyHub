@@ -26,16 +26,24 @@ export interface CurrentMeal {
   createdAt?: number;
 }
 
+export interface CompletedMeal {
+  mealId: string;
+  completedAt: number;
+  recipeIds: string[];
+}
+
 export interface HouseholdState {
   inventory: Inventory;
   currentMeal: CurrentMeal | null;
   activeStep: MealActiveStep;
+  /** Newest first; retained only to reduce short-term Recipe repetition. */
+  recentMeals: CompletedMeal[];
 }
 
 export type CheckoutConsumption = Record<string, number | boolean>;
 
 export const PRESENCE_ONLY_INGREDIENT_IDS = new Set([
-  'eggs', 'rice', 'noodles', 'bread', 'steamed-buns', 'oats', 'white-oil-sausage',
+  'eggs', 'rice', 'noodles', 'bread', 'steamed-buns', 'oats', 'white-oil-sausage', 'potato', 'peeled-shrimp',
 ]);
 
 const isFiniteHalfStep = (value: number) => Number.isFinite(value) && value > 0 && Math.abs(value * 2 - Math.round(value * 2)) < 1e-9;
@@ -62,7 +70,7 @@ export function normalizeInventory(inventory: unknown, ingredients?: MealIngredi
     if (knownIngredientIds && !knownIngredientIds.has(id)) continue;
     const tracking = trackingForIngredient(id, ingredients);
     if (tracking === 'presence-only') {
-      if (raw === true || raw === 1) result[id] = true;
+      if (raw === true || (typeof raw === 'number' && Number.isFinite(raw) && raw > 0)) result[id] = true;
       continue;
     }
     const value = typeof raw === 'number' ? raw : Number(raw);
@@ -106,9 +114,14 @@ export function normalizeCurrentMeal(value: unknown, ingredients?: MealIngredien
 export function normalizeHouseholdState(value: unknown, ingredients?: MealIngredient[] | Record<string, MealIngredient>): HouseholdState {
   const record = isRecord(value) ? value : {};
   const currentMeal = normalizeCurrentMeal(record.currentMeal, ingredients);
+  const recentMeals = Array.isArray(record.recentMeals) ? record.recentMeals.flatMap((entry) => {
+    if (!isRecord(entry) || typeof entry.mealId !== 'string' || !entry.mealId.trim() || typeof entry.completedAt !== 'number' || !Number.isFinite(entry.completedAt)) return [];
+    const recipeIds = uniqueStrings(entry.recipeIds);
+    return recipeIds.length ? [{ mealId: entry.mealId, completedAt: entry.completedAt, recipeIds }] : [];
+  }).slice(0, 4) : [];
   const legacyStep: MealActiveStep = currentMeal?.status === 'cooking' ? 'cook' : currentMeal?.status === 'ready' ? 'recipes' : 'inventory';
   const activeStep = typeof record.activeStep === 'string' && validActiveSteps.has(record.activeStep as MealActiveStep) ? record.activeStep as MealActiveStep : legacyStep;
-  return { inventory: normalizeInventory(record.inventory, ingredients), currentMeal, activeStep: currentMeal ? activeStep : 'inventory' };
+  return { inventory: normalizeInventory(record.inventory, ingredients), currentMeal, activeStep: currentMeal ? activeStep : 'inventory', recentMeals };
 }
 
 export function normalizeCheckoutConsumption(value: unknown, ingredients?: MealIngredient[] | Record<string, MealIngredient>): CheckoutConsumption {
@@ -229,7 +242,7 @@ export function checkoutDraftForMeal(meal: CurrentMeal, inventory: Inventory, in
 export type CheckoutResult = { committed: true; state: HouseholdState } | { committed: false; reason: 'stale-meal' | 'invalid-consumption'; state: HouseholdState };
 
 /** Apply checkout atomically to the supplied current state. Call this from a repository transaction. */
-export function applyCheckout(state: HouseholdState, mealId: string, consumption: CheckoutConsumption, ingredients?: MealIngredient[] | Record<string, MealIngredient>): CheckoutResult {
+export function applyCheckout(state: HouseholdState, mealId: string, consumption: CheckoutConsumption, ingredients?: MealIngredient[] | Record<string, MealIngredient>, options: { nextMealId?: string; completedAt?: number } = {}): CheckoutResult {
   const meal = state.currentMeal;
   if (!meal || meal.mealId !== mealId || meal.status !== 'cooking' || (state.activeStep !== undefined && state.activeStep !== 'checkout')) return { committed: false, reason: 'stale-meal', state };
   const used = new Set(usedIngredientIds(meal));
@@ -248,7 +261,11 @@ export function applyCheckout(state: HouseholdState, mealId: string, consumption
     const remaining = Math.max(0, Math.round((current - requested) * 2) / 2);
     if (remaining > 0) nextInventory[id] = remaining; else delete nextInventory[id];
   }
-  return { committed: true, state: { inventory: nextInventory, currentMeal: null, ...(state.activeStep === undefined ? {} : { activeStep: 'inventory' }) } as HouseholdState };
+  const completedAt = options.completedAt ?? Date.now();
+  const completed = { mealId: meal.mealId, completedAt, recipeIds: [...new Set(meal.selectedRecipeIds)] };
+  const recentMeals = [completed, ...(state.recentMeals ?? []).filter((entry) => entry.mealId !== meal.mealId)].filter((entry) => entry.recipeIds.length).slice(0, 4);
+  const currentMeal = createCurrentMealFromInventory(nextInventory, { mealId: options.nextMealId, createdAt: completedAt }, ingredients);
+  return { committed: true, state: { inventory: nextInventory, currentMeal, activeStep: 'recipes', recentMeals } };
 }
 
 export function createMealId() {

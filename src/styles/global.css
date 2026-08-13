@@ -288,9 +288,13 @@ a { color: inherit; }
 .meal-household-bar, .meal-current-tools, .meal-inventory { margin-top: 20px; }
 .meal-step-band { margin-top: 20px; }
 .meal-step-band ol { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
-.meal-step-band li { min-width: 0; min-height: 48px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--muted); font-size: 14px; font-weight: 700; overflow-wrap: anywhere; text-align: center; }
+.meal-step-band li { min-width: 0; min-height: 48px; display: grid; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--muted); overflow: hidden; }
+.meal-step-band button { min-width: 0; min-height: 48px; padding: 8px 4px; border: 0; background: transparent; color: inherit; font: inherit; font-size: 14px; font-weight: 700; overflow-wrap: anywhere; text-align: center; cursor: pointer; }
+.meal-step-band button:disabled { cursor: not-allowed; opacity: .48; }
+.meal-step-band button:focus-visible { outline: 3px solid color-mix(in srgb, var(--berry) 70%, white); outline-offset: -3px; }
 .meal-builder-app { min-width: 0; }
 .meal-step-band li.is-active { border: 2px solid var(--berry); color: var(--berry); }
+.meal-next-actions { display: grid; gap: 10px; }
 .meal-inventory-group { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
 .meal-inventory-group summary { display: flex; min-height: 48px; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 13px; cursor: pointer; }
 .meal-inventory-group summary strong { color: var(--ink); font-size: 18px; }

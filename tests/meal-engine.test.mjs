@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { parseMealKb } from '../src/data/mealParser.mjs';
-import { addSelectedAddon, aggregateMeal, bindRecipeIngredients, defaultMealState, isFeasible, isMealComplete, rankAddons, rankCandidates, reconcileMealState, removeSelectedAddon, resolveRecipeChildCoverage, timeFit, unmetCompletionRequirements } from '../src/lib/mealEngine.ts';
+import { addSelectedAddon, aggregateMeal, bindRecipeIngredients, defaultMealState, isFeasible, isMealComplete, rankAddons, rankCandidates, recentRecipePenalty, reconcileMealState, removeSelectedAddon, resolveRecipeChildCoverage, timeFit, unmetCompletionRequirements } from '../src/lib/mealEngine.ts';
 
 const recipe = (id, contribution, childCoverage = { protein: false, vegetable: false }, requirements = []) => ({ id, order: Number(id.replace(/\D/g, '')) || 0, fitScore: 4, contribution, childCoverage, requirements, mealWindowMinutes: '30–45', elapsedMinutes: '30–45', advanceStartRequired: false });
 
@@ -46,6 +46,17 @@ test('time preference ranks without hiding and flags borderline ranges', () => {
   assert.deepEqual(timeFit(item, '30'), { rank: 1, label: '时间偏紧' });
   item.advanceStartRequired = true;
   assert.deepEqual(timeFit(item, '60'), { rank: 2, label: '需提前开始' });
+});
+
+test('recent Recipes rank after unseen choices with the newest meal last', () => {
+  const newest = recipe('r1', { protein: 1, vegetable: 0, staple: 0 });
+  const oldest = recipe('r2', { protein: 1, vegetable: 0, staple: 0 });
+  const unseen = recipe('r3', { protein: 1, vegetable: 0, staple: 0 });
+  const state = { ...defaultMealState(), availableIngredientIds: ['all'], proteinTarget: 3, stapleRequired: false, childMode: false };
+  const history = [['r1'], ['other'], ['other-2'], ['r2']];
+  assert.equal(recentRecipePenalty('r1', history), 4);
+  assert.equal(recentRecipePenalty('r2', history), 1);
+  assert.deepEqual(rankCandidates([newest, oldest, unseen], state, [], {}, history).map((item) => item.id), ['r3', 'r2', 'r1']);
 });
 
 test('v1.6 KB keeps strict counts, Vegetable structures, and controlled add-ons', async () => {

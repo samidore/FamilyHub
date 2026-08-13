@@ -46,7 +46,18 @@ test('existing inventory and current meal validation remains enforced', async ()
   const alice = google('alice', 'alice@gmail.com');
   await assertFails(alice.ref(`${household}/state/inventory/pork`).set(0.25));
   await assertFails(alice.ref(`${household}/state/inventory/pork`).set(false));
+  await assertSucceeds(alice.ref(`${household}/state/inventory/potato`).set(true));
+  await assertFails(alice.ref(`${household}/state/inventory/potato`).set(1));
   await assertFails(alice.ref(`${household}/state/currentMeal`).set({ ...meal, status: 'finished' }));
+});
+
+test('recent meal history accepts four strict entries and rejects overflow or malformed data', async () => {
+  await env.withSecurityRulesDisabled(async (context) => { await context.database().ref().set(null); await context.database().ref(`${household}/members/alice`).set({ email: 'alice@gmail.com' }); });
+  const alice = google('alice', 'alice@gmail.com');
+  const recent = Array.from({ length: 4 }, (_, index) => ({ mealId: `meal-${index}`, completedAt: index + 1, recipeIds: [`recipe-${index}`] }));
+  await assertSucceeds(alice.ref(`${household}/state/recentMeals`).set(recent));
+  await assertFails(alice.ref(`${household}/state/recentMeals`).set([...recent, { mealId: 'meal-4', completedAt: 5, recipeIds: ['recipe-4'] }]));
+  await assertFails(alice.ref(`${household}/state/recentMeals/0`).set({ mealId: 'bad', completedAt: 1, recipeIds: [], extra: true }));
 });
 
 test('shared step, exclusions, and checkout draft accept only supported values', async () => {

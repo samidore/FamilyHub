@@ -43,7 +43,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
   <main id="main-content" class="meal-builder-app" data-enhanced="false">
     <noscript><div class="shell meal-noscript note-box"><strong>当前是阅读模式。</strong>启用 JavaScript 后可以选择食材、实时组餐和进入 Cook View；下方仍完整列出食材与菜谱。</div></noscript>
     <div id="meal-live" class="sr-only" aria-live="polite"></div>
-    <nav class="shell meal-step-band" aria-label="组餐步骤"><ol><li data-step="inventory">1 库存</li><li data-step="recipes">2 选菜</li><li data-step="cook">3 做饭</li><li data-step="checkout">4 结算</li></ol></nav>
+    <nav class="shell meal-step-band" aria-label="组餐步骤"><ol><li data-step="inventory"><button type="button" data-step-target="inventory">1 库存</button></li><li data-step="recipes"><button type="button" data-step-target="recipes">2 选菜</button></li><li data-step="cook"><button type="button" data-step-target="cook">3 做饭</button></li><li data-step="checkout"><button type="button" data-step-target="checkout">4 结算</button></li></ol></nav>
 
     <section class="shell meal-household-bar" aria-label="家庭共享状态">
       <div>
@@ -106,7 +106,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
           <div data-child-progress><span>孩子蔬菜</span><strong id="progress-child-vegetable">●</strong></div>
         </div>
         <p id="meal-completion-status" class="note-box" role="status"></p>
-        <button id="meal-next" class="button button--primary" type="button" disabled>下一步：开始做饭</button>
+        <div class="meal-next-actions"><button id="meal-next" class="button button--primary" type="button" disabled>下一步：开始做饭</button><button id="meal-force-next" class="button button--secondary" type="button" disabled>就这样吧</button></div>
 
         <div id="meal-selected-panel" class="meal-selected" hidden>
           <h3>已选的菜</h3>
@@ -203,11 +203,12 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
 
     const app = document.querySelector<HTMLElement>('.meal-builder-app')!; app.dataset.enhanced = 'true';
     const builder = document.querySelector<HTMLElement>('#meal-builder-view')!; const complete = document.querySelector<HTMLElement>('#meal-complete-view')!; const cook = document.querySelector<HTMLElement>('#meal-cook-view')!;
-    const live = document.querySelector<HTMLElement>('#meal-live')!; const recipeGrid = document.querySelector<HTMLElement>('#meal-recipe-grid')!; const selectedPanel = document.querySelector<HTMLElement>('#meal-selected-panel')!; const nextButton = document.querySelector<HTMLButtonElement>('#meal-next')!; const completionStatus = document.querySelector<HTMLElement>('#meal-completion-status')!;
+    const live = document.querySelector<HTMLElement>('#meal-live')!; const recipeGrid = document.querySelector<HTMLElement>('#meal-recipe-grid')!; const selectedPanel = document.querySelector<HTMLElement>('#meal-selected-panel')!; const nextButton = document.querySelector<HTMLButtonElement>('#meal-next')!; const forceNextButton = document.querySelector<HTMLButtonElement>('#meal-force-next')!; const completionStatus = document.querySelector<HTMLElement>('#meal-completion-status')!;
     const protein = document.querySelector<HTMLSelectElement>('#meal-protein')!; const vegetable = document.querySelector<HTMLSelectElement>('#meal-vegetable')!; const time = document.querySelector<HTMLSelectElement>('#meal-time')!; const staple = document.querySelector<HTMLInputElement>('#meal-staple')!; const child = document.querySelector<HTMLInputElement>('#meal-child')!;
     const connection = document.querySelector<HTMLElement>('#meal-connection')!; const account = document.querySelector<HTMLElement>('#meal-account')!; const authDetail = document.querySelector<HTMLElement>('#meal-auth-detail')!; const googleLogin = document.querySelector<HTMLButtonElement>('#meal-google-login')!; const accessRefresh = document.querySelector<HTMLButtonElement>('#meal-access-refresh')!; const logout = document.querySelector<HTMLButtonElement>('#meal-logout')!; const sharedStatus = document.querySelector<HTMLElement>('#meal-shared-status')!; const inventoryList = document.querySelector<HTMLElement>('#meal-inventory-list')!; const inventoryCount = document.querySelector<HTMLElement>('#meal-inventory-count')!;
     const checkout = document.querySelector<HTMLElement>('#meal-checkout')!; const checkoutList = document.querySelector<HTMLElement>('#meal-checkout-list')!; const checkoutStatus = document.querySelector<HTMLElement>('#meal-checkout-status')!; const openCheckout = document.querySelector<HTMLButtonElement>('#meal-open-checkout')!; const confirmCheckout = document.querySelector<HTMLButtonElement>('#meal-confirm-checkout')!; const finalizeCheckout = document.querySelector<HTMLButtonElement>('#meal-finalize-checkout')!;
     let checkoutDraft: CheckoutConsumption = {};
+    const collapsedInventorySections = new Set<string>();
     const save = () => { try { sessionStorage.setItem(storageKey, JSON.stringify({ state, view })); } catch { /* sessionStorage is only a compatibility mirror */ } };
     const announce = (message: string) => { live.textContent = ''; requestAnimationFrame(() => { live.textContent = message; }); };
     const canWrite = () => repositoryStatus.connection === 'local' || repositoryStatus.connection === 'connected';
@@ -222,7 +223,21 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
     };
     const persistStep = async (step: 'inventory' | 'recipes' | 'cook' | 'checkout', mutator?: (meal: CurrentMeal) => CurrentMeal) => {
       try {
-        const next = await repository.transaction((current) => { if (!current.currentMeal) return current; const meal = mutator ? mutator(current.currentMeal) : current.currentMeal; if ((step === 'cook' || step === 'checkout') && meal.status !== 'cooking') return current; return { ...current, activeStep: step, currentMeal: meal }; });
+        const next = await repository.transaction((current) => {
+          if (step === 'inventory') return { ...current, activeStep: 'inventory' };
+          if (step === 'recipes') {
+            const existing = current.currentMeal ? resnapshotMeal(current.currentMeal, current.inventory) : createCurrentMealFromInventory(current.inventory, {}, ingredients);
+            const meal = mutator ? mutator(existing) : { ...existing, status: 'selecting' as const };
+            return { ...current, activeStep: 'recipes', currentMeal: meal };
+          }
+          if (!current.currentMeal || current.currentMeal.selectedRecipeIds.length === 0) return current;
+          if (step === 'cook') {
+            const meal = mutator ? mutator(current.currentMeal) : current.currentMeal.status === 'cooking' ? current.currentMeal : advanceMealToCooking({ ...current.currentMeal, status: 'selecting' });
+            return meal.status === 'cooking' ? { ...current, activeStep: 'cook', currentMeal: meal } : current;
+          }
+          if (current.activeStep !== 'cook' || current.currentMeal.status !== 'cooking') return current;
+          return { ...current, activeStep: 'checkout', currentMeal: current.currentMeal };
+        });
         household = next; return next.currentMeal;
       } catch (error) { reportWriteError(error); return null; }
     };
@@ -307,8 +322,9 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       const onCount = Object.entries(household.inventory).filter(([id, value]) => trackingForIngredient(id, ingredients) === 'presence-only' ? value === true : typeof value === 'number' && value > 0).length;
       inventoryCount.textContent = `已开启 ${onCount}`;
       inventoryList.replaceChildren();
-      payload.starterSections.forEach((section, index) => {
-        const group = document.createElement('details'); group.className = 'meal-inventory-group'; group.dataset.inventorySection = section.id; group.open = index < 2;
+      payload.starterSections.forEach((section) => {
+        const group = document.createElement('details'); group.className = 'meal-inventory-group'; group.dataset.inventorySection = section.id; group.open = !collapsedInventorySections.has(section.id);
+        group.addEventListener('toggle', () => { if (group.open) collapsedInventorySections.delete(section.id); else collapsedInventorySections.add(section.id); });
         const groupItems = ingredients.filter((candidate) => candidate.visible !== false && candidate.section === section.id);
         const stocked = groupItems.filter((item) => inventoryValue(item.id) === true || typeof inventoryValue(item.id) === 'number').length;
         const summary = document.createElement('summary');
@@ -377,7 +393,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       sharedStatus.textContent = household.currentMeal?.status ?? '未开始';
       document.querySelectorAll<HTMLElement>('[data-step]').forEach((item) => {
         const active = item.dataset.step === household.activeStep;
-        item.toggleAttribute('aria-current', active); item.classList.toggle('is-active', active);
+        item.classList.toggle('is-active', active); item.querySelector('button')?.toggleAttribute('aria-current', active);
       });
       const hasMeal = Boolean(household.currentMeal);
       document.querySelector<HTMLElement>('#meal-inventory-view')!.hidden = household.activeStep !== 'inventory';
@@ -390,7 +406,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       document.querySelectorAll<HTMLButtonElement>('[data-inventory-toggle], [data-inventory-step]').forEach((button) => { button.disabled = !writesEnabled; });
       document.querySelectorAll<HTMLButtonElement>('[data-ingredient-id], [data-select-recipe], [data-remove-recipe], [data-addon-id]').forEach((button) => { button.disabled = !writesEnabled || !hasMeal; });
       document.querySelectorAll<HTMLSelectElement>('#meal-protein, #meal-vegetable, #meal-time, #meal-staple, #meal-child, [data-binding-recipe], [data-addon-select]').forEach((control) => { control.disabled = !writesEnabled || !hasMeal; });
-      document.querySelectorAll<HTMLButtonElement>('#meal-reset, #meal-next, #meal-modify, #meal-start-cooking').forEach((button) => { button.disabled = !writesEnabled || !hasMeal; });
+      document.querySelectorAll<HTMLButtonElement>('#meal-reset, #meal-next, #meal-force-next, #meal-modify, #meal-start-cooking').forEach((button) => { button.disabled = !writesEnabled || !hasMeal; });
       document.querySelector<HTMLElement>('#meal-current-copy')!.textContent = hasMeal ? '本顿可用食材是库存快照，之后调整库存不会改写本顿。' : '请先从当前库存开始本顿；本顿开始后，两台设备会共享选菜和状态。';
       renderInventory(); renderCheckout();
       const checkoutWritable = writesEnabled && hasMeal && household.currentMeal?.status === 'cooking' && household.activeStep === 'checkout';
@@ -411,12 +427,17 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       const unmet = unmetCompletionRequirements(state, totals); const done = unmet.length === 0;
       completionStatus.textContent = done ? '目标已满足，可以进入下一步。' : `还缺：${unmet.join('、')}`;
       nextButton.disabled = !done || !writesEnabled || !hasMeal;
+      forceNextButton.disabled = state.selectedRecipeIds.length === 0 || !writesEnabled || !hasMeal;
+      document.querySelectorAll<HTMLButtonElement>('[data-step-target]').forEach((button) => {
+        const target = button.dataset.stepTarget;
+        button.disabled = !writesEnabled || (target === 'cook' && (!hasMeal || state.selectedRecipeIds.length === 0)) || (target === 'checkout' && (!hasMeal || household.activeStep !== 'cook' || household.currentMeal?.status !== 'cooking'));
+      });
       const selectedSet = new Set(state.selectedRecipeIds); selectedPanel.hidden = selectedSet.size === 0;
       document.querySelectorAll<HTMLElement>('[data-selected-recipe]').forEach((item) => item.hidden = !selectedSet.has(item.dataset.selectedRecipe!));
       document.querySelectorAll<HTMLElement>('[data-complete-recipe]').forEach((item) => item.hidden = !selectedSet.has(item.dataset.completeRecipe!)); document.querySelectorAll<HTMLElement>('[data-cook-recipe]').forEach((item) => item.hidden = !selectedSet.has(item.dataset.cookRecipe!));
       selected.forEach((recipe) => { renderSelectedAddons(recipe); renderCookAddons(recipe); });
       selected.forEach((recipe) => { const host = document.querySelector<HTMLElement>(`[data-selected-bindings="${CSS.escape(recipe.id)}"]`); if (!host) return; const binding = state.recipeIngredientBindings[recipe.id] ?? bindRecipeIngredients(recipe, state.availableIngredientIds); const labels = binding.filter(Boolean).map((id) => ingredientById.get(id!)?.nameZh ?? id); host.textContent = labels.length ? `食材：${labels.join('、')}` : ''; });
-      const candidates = rankCandidates(recipes, state, ingredients, draftBindings); const candidateIds = new Set(candidates.map((recipe) => recipe.id));
+      const candidates = rankCandidates(recipes, state, ingredients, draftBindings, household.recentMeals.map((meal) => meal.recipeIds)); const candidateIds = new Set(candidates.map((recipe) => recipe.id));
       document.querySelectorAll<HTMLElement>('[data-meal-recipe]').forEach((card) => { card.hidden = !candidateIds.has(card.dataset.mealRecipe!); });
       candidates.forEach((recipe) => { const card = document.querySelector<HTMLElement>(`[data-meal-recipe="${CSS.escape(recipe.id)}"]`)!; renderRecipeBindings(recipe, card, available); const badge = card.querySelector<HTMLElement>('[data-time-badge]')!; const fit = timeFit(recipe, state.timePreference); badge.hidden = !fit.label; badge.textContent = fit.label; recipeGrid.append(card); });
       document.querySelector('#meal-result-count')!.textContent = `${candidates.length} 道可选`; document.querySelector<HTMLElement>('#meal-empty')!.hidden = candidates.length > 0;
@@ -443,18 +464,20 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
     const resetRecipes = () => { if (!household.currentMeal || !canWrite()) return; state = { ...state, selectedRecipeIds: [], recipeIngredientBindings: {}, selectedAddons: [] }; view = 'build'; checkoutDraft = {}; void persistMeal((meal) => resetRecipeSelection(meal)); render(); announce('已重置本顿选菜；库存和本顿可用食材未改变。'); };
     document.querySelector('#meal-reset')!.addEventListener('click', resetRecipes); document.querySelector('#meal-recipe-reset')!.addEventListener('click', resetRecipes);
     document.querySelector('#meal-inventory-reset')!.addEventListener('click', () => { if (canWrite() && window.confirm('确定清空共享库存吗？')) { safeWrite(repository.resetInventory().then((next) => { household = next; render(); })); announce('已清空库存；本顿可用食材保持不变。'); } });
-    document.querySelector('#meal-start-current')!.addEventListener('click', async () => { if (!canWrite()) return; try { household = await repository.transaction((current) => { const meal = current.currentMeal ? resnapshotMeal(current.currentMeal, current.inventory) : createCurrentMealFromInventory(current.inventory, {}, ingredients); return { ...current, activeStep: 'recipes', currentMeal: meal }; }); if (household.currentMeal) { state = mealStateFromCurrentMeal(household.currentMeal); view = 'build'; checkoutDraft = household.currentMeal.checkoutDraft; render(); announce('已进入选菜步骤。'); } } catch (error) { reportWriteError(error); } });
+    document.querySelectorAll<HTMLButtonElement>('[data-step-target]').forEach((button) => button.addEventListener('click', async () => { if (button.disabled) return; const target = button.dataset.stepTarget as 'inventory' | 'recipes' | 'cook' | 'checkout'; await persistStep(target); render(); announce(`已进入第 ${target === 'inventory' ? '一' : target === 'recipes' ? '二' : target === 'cook' ? '三' : '四'} 步。`); }));
+    document.querySelector('#meal-start-current')!.addEventListener('click', async () => { if (!canWrite()) return; const meal = await persistStep('recipes'); if (meal) { state = mealStateFromCurrentMeal(meal); view = 'build'; checkoutDraft = meal.checkoutDraft; render(); announce('已进入选菜步骤。'); } });
     document.querySelector('#meal-back-inventory')!.addEventListener('click', async () => { await persistStep('inventory'); render(); });
     document.querySelector('#meal-modify')!.addEventListener('click', async () => { if (!household.currentMeal || household.currentMeal.status !== 'ready' || !canWrite()) return; const updated = await persistMeal((meal) => setCurrentMealStatus(meal, 'selecting')); if (updated?.status === 'selecting') { setView('build'); render(); } else if (updated?.status === 'cooking') { setView('cook'); render(); } });
     document.querySelector('#meal-start-cooking')!.addEventListener('click', async () => { if (!household.currentMeal || household.currentMeal.status !== 'ready' || !canWrite()) return; const updated = await persistMeal((meal) => setCurrentMealStatus(meal, 'cooking')); if (updated?.status === 'cooking') { setView('cook'); render(); } else if (updated?.status === 'selecting') { setView('build'); render(); } });
     document.querySelector('#meal-back-to-menu')!.addEventListener('click', async () => { await persistStep('recipes', (meal) => ({ ...meal, status: 'selecting' })); render(); });
     nextButton.addEventListener('click', async () => { const totals = aggregateSelection(recipes, state, ingredients); if (!isMealComplete(state, totals) || !household.currentMeal || !canWrite()) return; await persistStep('cook', advanceMealToCooking); render(); announce('已进入做饭步骤。'); });
+    forceNextButton.addEventListener('click', async () => { if (state.selectedRecipeIds.length === 0 || !household.currentMeal || !canWrite()) return; await persistStep('cook', advanceMealToCooking); render(); announce('已按当前菜单进入做饭步骤。'); });
     openCheckout.addEventListener('click', async () => { if (!household.currentMeal || household.currentMeal.status !== 'cooking' || !canWrite()) return; await persistStep('checkout'); render(); });
     document.querySelector('#meal-back-cook')!.addEventListener('click', async () => { await persistStep('cook'); render(); });
     checkoutList.addEventListener('click', (event) => { const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-checkout-step]'); if (!button) return; const id = button.dataset.checkoutIngredient!; const current = typeof checkoutDraft[id] === 'number' ? checkoutDraft[id] as number : 0; const available = typeof household.inventory[id] === 'number' ? household.inventory[id] as number : 0; checkoutDraft[id] = Math.max(0, Math.min(available, Math.round((current + Number(button.dataset.checkoutStep)) * 2) / 2)); safeWrite(persistMeal((meal) => updateCheckoutDraft(meal, checkoutDraft, household.inventory, ingredients, recipes))); renderCheckout(); });
     checkoutList.addEventListener('change', (event) => { const input = (event.target as HTMLInputElement).closest<HTMLInputElement>('[data-checkout-used-up]'); if (input) { checkoutDraft[input.dataset.checkoutUsedUp!] = input.checked; safeWrite(persistMeal((meal) => updateCheckoutDraft(meal, checkoutDraft, household.inventory, ingredients, recipes))); } });
     confirmCheckout.addEventListener('click', () => { checkoutStatus.textContent = '请再次确认后清除本顿和已用库存。'; finalizeCheckout.hidden = false; finalizeCheckout.focus(); });
-    finalizeCheckout.addEventListener('click', async () => { const meal = household.currentMeal; if (!meal || !canWrite()) return; try { const result = await repository.checkout(meal.mealId, checkoutDraft); if (result.committed) { household = result.state; state = defaultMealState(); checkoutDraft = {}; checkout.hidden = true; view = 'build'; announce('Checkout 已完成，本顿已清除。'); } else { checkoutStatus.textContent = result.reason === 'stale-meal' ? '本顿已被另一台设备修改或结算，请刷新当前状态。' : 'Checkout 数量无效，请重新检查。'; } render(); } catch (error) { reportWriteError(error); } });
+    finalizeCheckout.addEventListener('click', async () => { const meal = household.currentMeal; if (!meal || !canWrite()) return; try { const result = await repository.checkout(meal.mealId, checkoutDraft); if (result.committed) { household = result.state; state = result.state.currentMeal ? mealStateFromCurrentMeal(result.state.currentMeal) : defaultMealState(); checkoutDraft = {}; checkout.hidden = true; view = 'build'; announce('结算已完成，已按剩余库存开始新一顿选菜。'); } else { checkoutStatus.textContent = result.reason === 'stale-meal' ? '本顿已被另一台设备修改或结算，请刷新当前状态。' : 'Checkout 数量无效，请重新检查。'; } render(); } catch (error) { reportWriteError(error); } });
     repository.subscribe((next, status) => { household = next; repositoryStatus = status; if (next.currentMeal) { state = reconcileMealState(mealStateFromCurrentMeal(next.currentMeal), recipes, ingredients); view = next.activeStep === 'cook' || next.activeStep === 'checkout' ? 'cook' : 'build'; checkoutDraft = next.currentMeal.checkoutDraft; } else { state = defaultMealState(); draftBindings = {}; checkoutDraft = {}; checkout.hidden = true; view = 'build'; } render(); });
     repository.ready?.catch(() => render());
     render();

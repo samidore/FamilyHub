@@ -1,6 +1,7 @@
 import {
   applyCheckout,
   createCurrentMealFromInventory,
+  createMealId,
   normalizeHouseholdState,
   type CheckoutConsumption,
   type CheckoutResult,
@@ -113,8 +114,9 @@ export class LocalHouseholdRepository implements HouseholdRepository {
   }
   resetInventory() { return this.setInventory({}); }
   async checkout(mealId: string, consumption: CheckoutConsumption) {
+    const options = { nextMealId: createMealId(), completedAt: Date.now() };
     let result: CheckoutResult = { committed: false, reason: 'stale-meal', state: this.getSnapshot() };
-    await this.update((state) => { result = applyCheckout(state, mealId, consumption, this.ingredients); return result.state; });
+    await this.update((state) => { result = applyCheckout(state, mealId, consumption, this.ingredients, options); return result.state; });
     return { ...result, state: this.getSnapshot() };
   }
 
@@ -194,7 +196,8 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
   resetInventory() { return this.setInventory({}); }
   async checkout(mealId: string, consumption: CheckoutConsumption) {
     await this.ready.catch(() => undefined); this.assertReady(); let outcome: CheckoutResult | undefined;
-    await this.remoteTransaction((state) => { outcome = applyCheckout(state, mealId, consumption, this.ingredients); return outcome.state; });
+    const options = { nextMealId: createMealId(), completedAt: Date.now() };
+    await this.remoteTransaction((state) => { outcome = applyCheckout(state, mealId, consumption, this.ingredients, options); return outcome.state; });
     const result = outcome ?? { committed: false, reason: 'stale-meal' as const, state: this.state };
     this.setState(result.state); return { ...result, state: this.getSnapshot() };
   }
