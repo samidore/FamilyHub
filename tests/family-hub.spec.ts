@@ -77,7 +77,7 @@ test('library, dentist, dermatologist, and colonoscopy domain filters work', asy
 
   await page.goto('adult-dermatologists/');
   await page.getByText('更多筛选').click();
-  await page.getByLabel('Adult acne fit').selectOption('strong');
+  await page.locator('#dermatologist-fit').selectOption('strong');
   expect(await page.locator('[data-dermatologist]:visible').count()).toBeGreaterThan(0);
   expect(await page.locator('[data-dermatologist]:visible').count()).toBeLessThan(10);
 
@@ -86,6 +86,33 @@ test('library, dentist, dermatologist, and colonoscopy domain filters work', asy
   await page.getByLabel('复杂息肉能力').selectOption('strong');
   expect(await page.locator('[data-colonoscopy]:visible').count()).toBeGreaterThan(0);
   expect(await page.locator('[data-colonoscopy]:visible').count()).toBeLessThan(18);
+});
+
+test('dermatologist location and diagnostic-capability filters expose NYC alternatives', async ({ page }) => {
+  await page.goto('adult-dermatologists/');
+  await page.getByText('更多筛选').click();
+  await page.locator('#dermatologist-location').selectOption('nyc');
+  const nyc = page.locator('[data-dermatologist]:visible');
+  expect(await nyc.count()).toBeGreaterThanOrEqual(3);
+  expect(await nyc.count()).toBeLessThanOrEqual(5);
+  await expect(nyc.first()).toContainText('NYC 专科备选');
+  await page.locator('#dermatologist-capability').selectOption('patch-testing');
+  expect(await page.locator('[data-dermatologist]:visible').count()).toBeGreaterThan(0);
+  await expect(page).toHaveURL(/capability=patch-testing/);
+  await page.reload();
+  await expect(page.locator('#dermatologist-location')).toHaveValue('nyc');
+  await expect(page.locator('#dermatologist-capability')).toHaveValue('patch-testing');
+  await page.locator('#dermatologist-clear').click();
+  await expect(page.locator('[data-dermatologist]:visible')).toHaveCount(10);
+  await expect(page).not.toHaveURL(/location=|capability=/);
+
+  const cards = page.locator('[data-dermatologist]:visible');
+  await page.locator('#dermatologist-sort').selectOption('drive');
+  await expect(cards.first()).not.toHaveAttribute('data-drive-max', '999');
+  await expect(cards.last()).toHaveAttribute('data-drive-max', '999');
+  await page.locator('#dermatologist-sort').selectOption('rating');
+  await expect(cards.first()).not.toHaveAttribute('data-primary-rating', '-1');
+  await expect(cards.last()).toHaveAttribute('data-primary-rating', '-1');
 });
 
 test('colonoscopy network plan filter preserves candidates without private fields', async ({ page }) => {

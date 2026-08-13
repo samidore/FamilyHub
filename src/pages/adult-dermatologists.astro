@@ -7,31 +7,35 @@ import { adultDermatologists } from '../data/catalog';
 
 const concerns = [...new Set(adultDermatologists.map((item) => item.concernLevel))];
 const confidences = [...new Set(adultDermatologists.map((item) => item.reviewConfidence))];
-const reviewLabels: Record<string, string> = { moderate: 'moderate（10–24）', strong: 'strong（25–99）', 'very-strong': 'very-strong（100+）', unavailable: 'unavailable' };
+const capabilities = [...new Set(adultDermatologists.flatMap((item) => item.capabilities))];
+const reviewLabels: Record<string, string> = { 'very-limited': 'very-limited（1–4）', limited: 'limited（5–9）', moderate: 'moderate（10–24）', strong: 'strong（25–99）', 'very-strong': 'very-strong（100+）', unavailable: 'unavailable' };
+const capabilityLabels: Record<string, string> = { 'eczema-dermatitis': 'eczema / dermatitis', 'contact-dermatitis': 'contact dermatitis', 'patch-testing': 'patch testing', 'anogenital-dermatology': 'anogenital dermatology', 'infection-fungal-differential': 'infection / fungal differential', 'psoriasis-lichen-differential': 'psoriasis / lichen differential', biopsy: 'biopsy', 'multidisciplinary-referral': 'multidisciplinary referral' };
 const rankedDermatologists = [...adultDermatologists].sort((a, b) => a.rank - b.rank);
 ---
-<BaseLayout title="Adult Dermatologists | Family Hub" description="按 board certification、成人痤疮适配、患者体验和预约前确认项比较附近成人皮肤科医生。" pageClass="module-page theme-ochre" themeColor="#F4EDE0">
-  <SiteHeader eyebrow="健康与照护 · 公开资料比较" title="Adult Dermatologists" description="这是一份成人皮肤科比较清单：三条 evidence bands 等权看 clinical quality、adult acne fit 和 patient experience；Healthgrades 或可归因的 health-system provider reviews 保持分开，Google Maps/Yelp 只用于 office-level 线索。Tier 是家庭比较工具，不是医疗质量评级。" accent="ochre" icon="care">
-    <div class="summary-row"><span>10 位医生</span><span>约 5–30 分钟车程</span><span>MD/DO · provider-level reviews</span></div>
+<BaseLayout title="Adult Dermatologists · 肛周皮炎/湿疹 | Family Hub" description="按一般皮肤科基础、肛周皮炎鉴别能力、患者体验、安全资料和预约条件比较女性成人皮肤科医生。" pageClass="module-page theme-ochre" themeColor="#F4EDE0">
+  <SiteHeader eyebrow="健康与照护 · 公开资料比较" title="Adult Dermatologists · 肛周皮炎/湿疹" description="这是一份女性成人皮肤科医生比较清单。肛周皮炎可能涉及 irritant/allergic contact dermatitis、eczema、infection、psoriasis、lichen disorders 或其他原因；本页比较诊断广度和公开证据，不把“湿疹”当成已确认诊断。Healthgrades 只作 patient-experience 证据，Tier 是家庭比较工具，不是医疗质量评级。" accent="ochre" icon="care">
+    <div class="summary-row"><span>10 位女性 MD/DO</span><span>本地 + 4 位 NYC 专科备选</span><span>资格、安全与负评分开核实</span></div>
   </SiteHeader>
 
   <FilterShell accent="ochre" filterId="dermatologist-filter-panel" countId="dermatologist-count" clearId="dermatologist-clear" countText="显示 10 / 10 位医生">
     <div slot="primary" class="filter-primary__grid">
-      <label><span>搜索 provider 或证据</span><input id="dermatologist-search" type="search" placeholder="acne、board certified、Paramus…" autocomplete="off" /></label>
-      <label><span>排序</span><select id="dermatologist-sort" data-default="rank"><option value="rank">家庭比较顺序</option><option value="drive">最短车程</option><option value="rating">主要评分</option><option value="reviews">评分数量</option><option value="name">名称</option></select></label>
+      <label><span>搜索医生、地点或诊断能力</span><input id="dermatologist-search" type="search" placeholder="contact dermatitis、patch testing、Englewood…" autocomplete="off" /></label>
+      <label><span>排序</span><select id="dermatologist-sort" data-default="rank"><option value="rank">家庭综合顺序</option><option value="fit">肛周皮炎适配</option><option value="drive">最短已知车程</option><option value="rating">主要评分</option><option value="reviews">评分数量</option><option value="name">名称</option></select></label>
     </div>
     <div slot="filters" class="contents">
+      <label><span>地点</span><select id="dermatologist-location"><option value="">本地与 NYC</option><option value="local">附近医生</option><option value="nyc">NYC 专科备选</option></select></label>
       <label><span>比较 Tier</span><select id="dermatologist-tier"><option value="">全部 Tier</option><option value="1">Tier 1 · strongest choices</option><option value="2">Tier 2 · good alternatives</option><option value="3">Tier 3 · meaningful tradeoffs</option></select></label>
-      <label><span>车程</span><select id="dermatologist-drive"><option value="">不限车程</option><option value="15">15 分钟内</option><option value="20">20 分钟内</option><option value="30">30 分钟内</option></select></label>
-      <label><span>Adult acne fit</span><select id="dermatologist-acne-fit"><option value="">全部 evidence</option><option value="strong">strong</option><option value="adequate">adequate</option><option value="concern">concern</option><option value="unknown">unknown</option></select></label>
+      <label><span>车程</span><select id="dermatologist-drive"><option value="">不限已知车程</option><option value="15">15 分钟内</option><option value="20">20 分钟内</option><option value="30">30 分钟内</option></select></label>
+      <label><span>肛周皮炎适配</span><select id="dermatologist-fit"><option value="">全部 evidence</option><option value="strong">strong</option><option value="adequate">adequate</option></select></label>
+      <label><span>诊断能力</span><select id="dermatologist-capability"><option value="">全部能力</option>{capabilities.map((item) => <option value={item}>{capabilityLabels[item]}</option>)}</select></label>
       <label><span>Review confidence</span><select id="dermatologist-confidence"><option value="">全部 confidence</option>{confidences.map((item) => <option value={item}>{reviewLabels[item]}</option>)}</select></label>
-      <label><span>新患者</span><select id="dermatologist-availability"><option value="">全部状态</option><option value="verified">已核实</option><option value="conditional">需确认</option><option value="unknown">未知</option></select></label>
+      <label><span>新患者</span><select id="dermatologist-availability"><option value="">全部状态</option><option value="verified">已核实入口</option><option value="conditional">需确认</option><option value="unknown">未知</option></select></label>
       <label><span>关注程度</span><select id="dermatologist-concern"><option value="">全部程度</option>{concerns.map((item) => <option value={item}>{item}</option>)}</select></label>
     </div>
   </FilterShell>
 
   <main id="main-content" class="shell listing-main"><div id="dermatologist-list" class="record-grid">{rankedDermatologists.map((dermatologist) => <AdultDermatologistCard dermatologist={dermatologist} />)}</div><p id="dermatologist-empty" class="empty-state" hidden>没有符合这些条件的医生。清除部分筛选后再试。</p></main>
-  <footer class="module-footer"><div class="shell note-box"><strong>预约前直接确认：</strong>新患者名额、保险网络、由 MD/DO 还是团队成员负责、adult acne 是否包含 topical/oral/hormonal/isotretinoin 与疤痕/PIH 讨论、复诊与药物监测流程。若存在怀孕、备孕、哺乳、正在使用的药物或既往 acne treatment，请直接告诉 clinician；不要把本页当作诊断或处方建议。本页不保存家庭姓名、地址、保险号或医疗记录。</div></footer>
+  <footer class="module-footer"><div class="shell note-box"><strong>预约前直接确认：</strong>说明希望由女性 MD/DO 本人评估成人肛周皮疹，询问是否提供 chaperone、是否能鉴别 contact dermatitis、infection/fungal causes、psoriasis 或 lichen disorders，以及何时使用 patch testing、KOH/culture、biopsy 或转诊。若有剧烈疼痛、出血、溃疡、发热、脓液、快速扩散或免疫功能受影响，请及时寻求医疗评估。本页不是诊断或处方建议，也不保存姓名、症状照片、保险号或预约记录。</div></footer>
 
   <script>
     import { bindListState, clearListState, restoreListState } from '../lib/listState';
@@ -39,9 +43,11 @@ const rankedDermatologists = [...adultDermatologists].sort((a, b) => a.rank - b.
     const controls = {
       q: document.querySelector<HTMLInputElement>('#dermatologist-search')!,
       sort: document.querySelector<HTMLSelectElement>('#dermatologist-sort')!,
+      location: document.querySelector<HTMLSelectElement>('#dermatologist-location')!,
       tier: document.querySelector<HTMLSelectElement>('#dermatologist-tier')!,
       drive: document.querySelector<HTMLSelectElement>('#dermatologist-drive')!,
-      acneFit: document.querySelector<HTMLSelectElement>('#dermatologist-acne-fit')!,
+      fit: document.querySelector<HTMLSelectElement>('#dermatologist-fit')!,
+      capability: document.querySelector<HTMLSelectElement>('#dermatologist-capability')!,
       confidence: document.querySelector<HTMLSelectElement>('#dermatologist-confidence')!,
       availability: document.querySelector<HTMLSelectElement>('#dermatologist-availability')!,
       concern: document.querySelector<HTMLSelectElement>('#dermatologist-concern')!,
@@ -52,9 +58,10 @@ const rankedDermatologists = [...adultDermatologists].sort((a, b) => a.rank - b.
     const number = (card: HTMLElement, key: string) => Number(card.dataset[key] ?? -1);
     const render = () => {
       const query = controls.q.value.trim().toLocaleLowerCase();
-      const visible = cards.filter((card) => (!query || card.dataset.search!.includes(query)) && (!controls.tier.value || card.dataset.tier === controls.tier.value) && (!controls.drive.value || number(card, 'driveMax') <= Number(controls.drive.value)) && (!controls.acneFit.value || card.dataset.acneFit === controls.acneFit.value) && (!controls.confidence.value || card.dataset.reviewConfidence === controls.confidence.value) && (!controls.availability.value || card.dataset.availability === controls.availability.value) && (!controls.concern.value || card.dataset.concern === controls.concern.value));
+      const visible = cards.filter((card) => (!query || card.dataset.search!.includes(query)) && (!controls.location.value || card.dataset.locationScope === controls.location.value) && (!controls.tier.value || card.dataset.tier === controls.tier.value) && (!controls.drive.value || number(card, 'driveMax') <= Number(controls.drive.value)) && (!controls.fit.value || card.dataset.perianalFit === controls.fit.value) && (!controls.capability.value || card.dataset.capabilities!.split('|').includes(controls.capability.value)) && (!controls.confidence.value || card.dataset.reviewConfidence === controls.confidence.value) && (!controls.availability.value || card.dataset.availability === controls.availability.value) && (!controls.concern.value || card.dataset.concern === controls.concern.value));
       const sorters: Record<string, (a: HTMLElement, b: HTMLElement) => number> = {
         rank: (a, b) => number(a, 'rank') - number(b, 'rank'),
+        fit: (a, b) => number(a, 'fitPriority') - number(b, 'fitPriority') || number(a, 'rank') - number(b, 'rank'),
         drive: (a, b) => number(a, 'driveMax') - number(b, 'driveMax') || number(a, 'rank') - number(b, 'rank'),
         rating: (a, b) => number(b, 'primaryRating') - number(a, 'primaryRating') || number(b, 'primaryReviews') - number(a, 'primaryReviews'),
         reviews: (a, b) => number(b, 'primaryReviews') - number(a, 'primaryReviews') || number(b, 'primaryRating') - number(a, 'primaryRating'),

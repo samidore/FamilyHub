@@ -117,29 +117,33 @@ export interface DentistNegativeFinding {
 }
 
 export type DermatologyBand = 'strong' | 'adequate' | 'concern' | 'unknown';
-export type DermatologyReviewConfidence = 'moderate' | 'strong' | 'very-strong' | 'unavailable';
+export type DermatologyReviewConfidence = 'very-limited' | 'limited' | 'moderate' | 'strong' | 'very-strong' | 'unavailable';
 export type DermatologyAvailability = 'verified' | 'conditional' | 'unknown';
 export type DermatologyConcernLevel = 'none' | 'low' | 'moderate' | 'high';
+export type DermatologyCapability = 'eczema-dermatitis' | 'contact-dermatitis' | 'patch-testing' | 'anogenital-dermatology' | 'infection-fungal-differential' | 'psoriasis-lichen-differential' | 'biopsy' | 'multidisciplinary-referral';
 
 export interface AdultDermatologist {
   name: string;
   provider: string;
+  gender: 'female';
   practice: string;
   location: string;
-  driveMin: number;
-  driveMax: number;
+  locationScope: 'local' | 'nyc';
+  driveMin: number | null;
+  driveMax: number | null;
   tier: number;
   rank: number;
   eligibility: DermatologistEligibility;
   evidenceBands: DermatologistEvidenceBands;
-  adultAcneSummary: string;
-  primaryReviewSource: 'Healthgrades' | 'Health system';
-  primaryRating: number;
+  capabilities: DermatologyCapability[];
+  perianalDermatitisSummary: string;
+  primaryReviewSource: 'Healthgrades' | 'Health system' | 'Official practice' | 'Zocdoc';
+  primaryRating: number | null;
   primaryReviewCount: number;
-  primaryWrittenCount: number;
+  primaryWrittenCount: number | null;
   healthgradesRating: number | null;
   healthgradesReviewCount: number;
-  healthgradesWrittenCount: number;
+  healthgradesWrittenCount: number | null;
   reviewConfidence: DermatologyReviewConfidence;
   reviewEvidence: DermatologistReviewEvidence[];
   acceptsNewPatients: string;
@@ -147,6 +151,7 @@ export interface AdultDermatologist {
   trainingSummary: string;
   schoolContext: string;
   certificationsAwards: string;
+  safetyEvidence: DermatologistSafetyEvidence[];
   strengths: string[];
   concernLevel: DermatologyConcernLevel;
   negativeSummary: string;
@@ -167,13 +172,22 @@ export interface DermatologistEligibility {
 }
 
 export interface DermatologistEvidenceBands {
-  clinicalQuality: DermatologyBand;
-  adultAcneFit: DermatologyBand;
+  clinicalFoundation: DermatologyBand;
+  perianalDermatitisFit: DermatologyBand;
+  diagnosticBreadth: DermatologyBand;
   patientExperience: DermatologyBand;
+  practicalAccess: DermatologyBand;
+}
+
+export interface DermatologistSafetyEvidence {
+  source: 'NJ license' | 'NY license' | 'American Board of Dermatology' | 'Health system';
+  status: 'verified' | 'no-public-match' | 'requires-confirmation';
+  summary: string;
+  url: string;
 }
 
 export interface DermatologistReviewEvidence {
-  source: 'Healthgrades' | 'Health system' | 'Official practice' | 'Google Maps' | 'Yelp';
+  source: 'Healthgrades' | 'Health system' | 'Official practice' | 'Zocdoc' | 'Google Maps' | 'Yelp';
   scope: 'provider' | 'office';
   rating: number | null;
   reviewCount: number;
@@ -184,7 +198,7 @@ export interface DermatologistReviewEvidence {
 }
 
 export interface DermatologistNegativeFinding {
-  category: 'communication' | 'diagnosis-treatment' | 'medication-monitoring' | 'safety' | 'access-waiting' | 'billing-administration';
+  category: 'communication' | 'sensitive-exam-respect' | 'diagnostic-evaluation' | 'treatment' | 'safety' | 'access-waiting' | 'billing-administration';
   severity: 'none' | 'low' | 'moderate' | 'high' | 'unexplained';
   pattern: 'none' | 'isolated' | 'repeated' | 'unexplained' | 'not-available';
   scope: 'provider' | 'office' | 'unknown';

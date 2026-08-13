@@ -1,423 +1,947 @@
 [
   {
-    "name": "Rebecca Baxt, MD",
-    "provider": "Rebecca Baxt, MD",
-    "practice": "BAXT CosMedical",
-    "location": "351 Evelyn St Ste 201, Paramus, NJ 07652",
-    "driveMin": 10,
-    "driveMax": 20,
+    "name": "Alexandra Flamm, MD",
+    "provider": "Alexandra Flamm, MD",
+    "gender": "female",
+    "practice": "NYU Langone Dermatologic Associates",
+    "location": "222 East 41st Street, 16th Floor, New York, NY 10017",
+    "locationScope": "nyc",
+    "driveMin": null,
+    "driveMax": null,
+    "tier": 1,
+    "rank": 1,
+    "eligibility": {
+      "license": "screened",
+      "discipline": "screened-no-match",
+      "boardCertification": "verified",
+      "decision": "qualified"
+    },
+    "evidenceBands": {
+      "clinicalFoundation": "strong",
+      "perianalDermatitisFit": "strong",
+      "diagnosticBreadth": "strong",
+      "patientExperience": "unknown",
+      "practicalAccess": "adequate"
+    },
+    "capabilities": [
+      "eczema-dermatitis",
+      "contact-dermatitis",
+      "patch-testing",
+      "infection-fungal-differential",
+      "psoriasis-lichen-differential",
+      "biopsy",
+      "multidisciplinary-referral"
+    ],
+    "perianalDermatitisSummary": "NYU profile lists adult eczema and contact dermatitis, specialized patch testing, and dermatopathology/biopsy expertise. This supports a careful differential for a perianal rash; it does not establish eczema as the diagnosis.",
+    "primaryReviewSource": "Health system",
+    "primaryRating": null,
+    "primaryReviewCount": 0,
+    "primaryWrittenCount": null,
+    "healthgradesRating": null,
+    "healthgradesReviewCount": 0,
+    "healthgradesWrittenCount": null,
+    "reviewConfidence": "unavailable",
+    "reviewEvidence": [
+      {
+        "source": "Health system",
+        "scope": "provider",
+        "rating": null,
+        "reviewCount": 0,
+        "writtenCount": null,
+        "confidence": "unavailable",
+        "summary": "NYU offers scheduling and documents clinical scope, but the provider profile reviewed did not expose a provider-level rating count.",
+        "url": "https://nyulangone.org/doctors/1619243698/alexandra-flamm"
+      }
+    ],
+    "acceptsNewPatients": "NYU profile provides an adult appointment route; confirm the current wait, referral requirements, and whether this visit can include patch testing.",
+    "availability": "conditional",
+    "trainingSummary": "NYU dermatologist and dermatopathologist with more than a decade of patch-testing experience.",
+    "schoolContext": "Official NYU profile documents New York City medical school and dermatology residency training.",
+    "certificationsAwards": "NYU lists American Board of Dermatology certification.",
+    "safetyEvidence": [
+      {
+        "source": "NY license",
+        "status": "requires-confirmation",
+        "summary": "Use the New York official license search to confirm the named physician's current license and disciplinary status before booking.",
+        "url": "https://www.op.nysed.gov/verification-search"
+      },
+      {
+        "source": "American Board of Dermatology",
+        "status": "verified",
+        "summary": "NYU profile lists American Board of Dermatology certification.",
+        "url": "https://nyulangone.org/doctors/1619243698/alexandra-flamm"
+      }
+    ],
+    "strengths": [
+      "adult contact-dermatitis focus",
+      "patch testing",
+      "dermatopathology",
+      "biopsy capability"
+    ],
+    "concernLevel": "low",
+    "negativeSummary": "Provider-level Healthgrades rating and written-review sample were not located in this review. That absence is a data limitation, not evidence of a positive or negative safety pattern.",
+    "negativeClassification": "No provider-specific negative-review pattern was established from public sources reviewed.",
+    "negativeFindings": [],
+    "verificationQuestions": [
+      "Do you evaluate perianal dermatitis and its differential in adults?",
+      "Would patch testing be appropriate before assuming eczema?",
+      "Can the same team arrange fungal testing, biopsy, or referral if indicated?",
+      "What are the first available new-patient and patch-test dates?"
+    ],
+    "healthgradesUrl": "https://www.healthgrades.com/dermatology-directory/ny-new-york/new-york",
+    "officialUrl": "https://nyulangone.org/doctors/1619243698/alexandra-flamm",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=222%20East%2041st%20Street%20New%20York%20NY%2010017",
+    "verifiedDate": "2026-08-13"
+  },
+  {
+    "name": "Theodora K. Karagounis, MD",
+    "provider": "Theodora K. Karagounis, MD",
+    "gender": "female",
+    "practice": "NYU Langone Dermatologic Associates",
+    "location": "240 East 38th Street, 11th Floor, New York, NY 10016",
+    "locationScope": "nyc",
+    "driveMin": null,
+    "driveMax": null,
     "tier": 1,
     "rank": 2,
-    "eligibility": { "license": "verified", "discipline": "verified", "boardCertification": "verified", "decision": "qualified" },
-    "evidenceBands": { "clinicalQuality": "strong", "adultAcneFit": "strong", "patientExperience": "strong" },
-    "adultAcneSummary": "官方资料把她列为 board-certified dermatologist，覆盖 medical dermatology；acne、scarring 和 pigmentation 适合在初诊时具体确认。",
-    "primaryReviewSource": "Healthgrades",
-    "primaryRating": 4.8,
-    "primaryReviewCount": 62,
-    "primaryWrittenCount": 0,
-    "healthgradesRating": 4.8,
-    "healthgradesReviewCount": 62,
-    "healthgradesWrittenCount": 0,
-    "reviewConfidence": "strong",
+    "eligibility": {
+      "license": "screened",
+      "discipline": "screened-no-match",
+      "boardCertification": "verified",
+      "decision": "qualified"
+    },
+    "evidenceBands": {
+      "clinicalFoundation": "strong",
+      "perianalDermatitisFit": "strong",
+      "diagnosticBreadth": "strong",
+      "patientExperience": "unknown",
+      "practicalAccess": "adequate"
+    },
+    "capabilities": [
+      "eczema-dermatitis",
+      "contact-dermatitis",
+      "patch-testing",
+      "infection-fungal-differential",
+      "psoriasis-lichen-differential",
+      "biopsy",
+      "multidisciplinary-referral"
+    ],
+    "perianalDermatitisSummary": "NYU lists adult eczema, contact dermatitis, fungal infection, and patch testing. That diagnostic breadth is relevant when a sensitive-area rash could have several causes; no diagnosis is presumed.",
+    "primaryReviewSource": "Health system",
+    "primaryRating": null,
+    "primaryReviewCount": 0,
+    "primaryWrittenCount": null,
+    "healthgradesRating": null,
+    "healthgradesReviewCount": 0,
+    "healthgradesWrittenCount": null,
+    "reviewConfidence": "unavailable",
     "reviewEvidence": [
-      { "source": "Healthgrades", "scope": "provider", "rating": 4.8, "reviewCount": 62, "writtenCount": null, "confidence": "strong", "summary": "Healthgrades Paramus directory reports 4.8/5 from 62 ratings and positive trust/listening/explanation attributes; written-review count was not exposed in the directory capture.", "url": "https://www.healthgrades.com/dermatology-directory/nj-new-jersey/paramus" },
-      { "source": "Official practice", "scope": "office", "rating": null, "reviewCount": 0, "writtenCount": null, "confidence": "unavailable", "summary": "BAXT CosMedical describes board-certified medical and cosmetic dermatology and provides appointment information; office-level ratings are not blended with the provider score.", "url": "https://www.cosmedical.com/about-us/doctors/dermatologists/rebecca-baxt-md-mba-faad/" }
+      {
+        "source": "Health system",
+        "scope": "provider",
+        "rating": null,
+        "reviewCount": 0,
+        "writtenCount": null,
+        "confidence": "unavailable",
+        "summary": "NYU documents adult care and online scheduling but no provider-level review count in the profile reviewed.",
+        "url": "https://nyulangone.org/doctors/1225527682/theodora-k-karagounis"
+      }
     ],
-    "acceptsNewPatients": "官方预约入口可用于安排咨询；第三方排程资料也显示接受新患者。预约时仍需确认成人 acne visit、保险和由谁持续跟进。",
-    "availability": "verified",
-    "trainingSummary": "Board-certified dermatologist with 25+ years of medical and cosmetic dermatology experience; serves as medical director of BAXT CosMedical.",
-    "schoolContext": "公开资料列出 medical training and clinical teaching at NYU School of Medicine; school name is context, not a quality guarantee.",
-    "certificationsAwards": "American Board of Dermatology certification and FAAD status are the relevant credentials; public practice material also notes ongoing conference participation.",
-    "strengths": ["board-certified", "medical + cosmetic dermatology", "acne/scar discussion", "strong patient signal"],
+    "acceptsNewPatients": "NYU appointment scheduling is public; call to confirm clinician availability and patch-testing workflow.",
+    "availability": "conditional",
+    "trainingSummary": "NYU skin-allergy dermatologist and NIH-funded researcher in skin microbiota.",
+    "schoolContext": "Official profile lists Columbia MD and NYU dermatology residency.",
+    "certificationsAwards": "NYU lists American Board of Dermatology certification in dermatology (2022).",
+    "safetyEvidence": [
+      {
+        "source": "NY license",
+        "status": "requires-confirmation",
+        "summary": "Use the New York official license search to confirm the named physician's current license and disciplinary status before booking.",
+        "url": "https://www.op.nysed.gov/verification-search"
+      },
+      {
+        "source": "American Board of Dermatology",
+        "status": "verified",
+        "summary": "NYU lists ABD dermatology certification.",
+        "url": "https://nyulangone.org/doctors/1225527682/theodora-k-karagounis"
+      }
+    ],
+    "strengths": [
+      "adult skin-allergy dermatology",
+      "patch testing",
+      "fungal differential listed",
+      "eczema/contact dermatitis"
+    ],
     "concernLevel": "low",
-    "negativeSummary": "Healthgrades 的公开标签和可见样本没有形成诊断、安全或用药监测的材料性模式；医疗与美容服务并行，费用边界需要提前问清。",
-    "negativeClassification": "未见严重负面模式；主要是预约、费用和服务范围的常规核实项。",
-    "negativeFindings": [
-      { "category": "billing-administration", "severity": "low", "pattern": "isolated", "scope": "office", "summary": "公开资料不足以评价具体账单体验；医疗、护肤和美容服务并行，属于预约前确认项，不应推断为不当收费。" }
+    "negativeSummary": "No provider-level Healthgrades score or sufficient public written-review sample was located; this does not demonstrate absence of concerns.",
+    "negativeClassification": "No provider-specific public negative-review pattern established.",
+    "negativeFindings": [],
+    "verificationQuestions": [
+      "Do you evaluate anogenital/perianal dermatitis?",
+      "Can fungal or inflammatory mimics be tested before treatment?",
+      "How many visits does your patch-testing protocol require?",
+      "Is a female physician available for the examination?"
     ],
-    "verificationQuestions": ["成人 acne 是否由 MD 亲自评估？", "是否能讨论 topical、oral、hormonal、isotretinoin、scarring 和 PIH 的阶梯方案？", "接受哪些保险，医疗与 cosmetic 项目如何分开计费？", "复诊和药物副作用问题由谁负责？"],
-    "healthgradesUrl": "https://www.healthgrades.com/dermatology-directory/nj-new-jersey/paramus",
-    "officialUrl": "https://www.cosmedical.com/about-us/doctors/dermatologists/rebecca-baxt-md-mba-faad/",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=351%20Evelyn%20St%20Ste%20201%2C%20Paramus%2C%20NJ%2007652",
-    "verifiedDate": "2026-08-02"
+    "healthgradesUrl": "https://www.healthgrades.com/dermatology-directory/ny-new-york/new-york",
+    "officialUrl": "https://nyulangone.org/doctors/1225527682/theodora-k-karagounis",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=240%20East%2038th%20Street%20New%20York%20NY%2010016",
+    "verifiedDate": "2026-08-13"
   },
   {
-    "name": "Ahmed Hadi, MD",
-    "provider": "Ahmed Hadi, MD",
-    "practice": "Englewood Health Physician Network — Dermatology at New Milford",
-    "location": "810 River Road, New Milford, NJ 07646",
-    "driveMin": 15,
-    "driveMax": 25,
+    "name": "Emily C. Milam, MD",
+    "provider": "Emily C. Milam, MD",
+    "gender": "female",
+    "practice": "NYU Langone Dermatologic Associates",
+    "location": "240 East 38th Street, 11th Floor, New York, NY 10016",
+    "locationScope": "nyc",
+    "driveMin": null,
+    "driveMax": null,
     "tier": 1,
     "rank": 3,
-    "eligibility": { "license": "verified", "discipline": "verified", "boardCertification": "verified", "decision": "qualified" },
-    "evidenceBands": { "clinicalQuality": "strong", "adultAcneFit": "strong", "patientExperience": "strong" },
-    "adultAcneSummary": "Englewood Health 明确列出 acne、感染、毛发和 psoriasis 等 general dermatology interests；适合把成人 acne 诊断与全身情况一起讨论。",
-    "primaryReviewSource": "Healthgrades",
-    "primaryRating": 4.9,
-    "primaryReviewCount": 43,
-    "primaryWrittenCount": 0,
-    "healthgradesRating": 4.9,
-    "healthgradesReviewCount": 43,
-    "healthgradesWrittenCount": 0,
-    "reviewConfidence": "strong",
+    "eligibility": {
+      "license": "screened",
+      "discipline": "screened-no-match",
+      "boardCertification": "verified",
+      "decision": "qualified"
+    },
+    "evidenceBands": {
+      "clinicalFoundation": "strong",
+      "perianalDermatitisFit": "strong",
+      "diagnosticBreadth": "strong",
+      "patientExperience": "unknown",
+      "practicalAccess": "adequate"
+    },
+    "capabilities": [
+      "eczema-dermatitis",
+      "contact-dermatitis",
+      "patch-testing",
+      "infection-fungal-differential",
+      "psoriasis-lichen-differential",
+      "biopsy",
+      "multidisciplinary-referral"
+    ],
+    "perianalDermatitisSummary": "NYU identifies complex eczema and contact dermatitis as clinical interests and describes detailed history, examination, and patch testing. It is a specialist option for differential evaluation rather than confirmation of eczema.",
+    "primaryReviewSource": "Health system",
+    "primaryRating": null,
+    "primaryReviewCount": 0,
+    "primaryWrittenCount": null,
+    "healthgradesRating": null,
+    "healthgradesReviewCount": 0,
+    "healthgradesWrittenCount": null,
+    "reviewConfidence": "unavailable",
     "reviewEvidence": [
-      { "source": "Healthgrades", "scope": "provider", "rating": 4.9, "reviewCount": 43, "writtenCount": null, "confidence": "strong", "summary": "Healthgrades directory reports 4.9/5 from 43 ratings; the accessible directory did not expose a complete written-review count.", "url": "https://www.healthgrades.com/dermatology-directory/nj-new-jersey/new-milford" },
-      { "source": "Health system", "scope": "provider", "rating": null, "reviewCount": 0, "writtenCount": null, "confidence": "unavailable", "summary": "Englewood Health identifies him as board-certified, lists acne as a clinical interest, and provides an online booking path; its own survey score is not substituted for Healthgrades.", "url": "https://www.englewoodhealth.org/providers/ahmed-hadi" }
+      {
+        "source": "Health system",
+        "scope": "provider",
+        "rating": null,
+        "reviewCount": 0,
+        "writtenCount": null,
+        "confidence": "unavailable",
+        "summary": "NYU profile confirms adult care and scheduling, but not a provider-level patient-rating count.",
+        "url": "https://nyulangone.org/doctors/1316300296/emily-c-milam"
+      }
     ],
-    "acceptsNewPatients": "Englewood Health 页面提供 Book online，Healthline/Doctor.com 资料也显示接受新患者；保险和具体首诊时段仍需办公室确认。",
-    "availability": "verified",
-    "trainingSummary": "Board-certified dermatologist; NYU School of Medicine graduate, Mount Sinai dermatology residency and chief resident, and current clinical teaching role at Icahn School of Medicine.",
-    "schoolContext": "NYU and Mount Sinai are strong academic training signals; they complement, but do not replace, license and board verification.",
-    "certificationsAwards": "American Board of Dermatology certification and FAAD membership; Mount Sinai profile also notes acne and skin-cancer education work.",
-    "strengths": ["board-certified", "acne explicitly listed", "general medical dermatology", "online booking"],
+    "acceptsNewPatients": "NYU profile has a scheduling route; it also notes insurance details need confirmation.",
+    "availability": "conditional",
+    "trainingSummary": "NYU skin-allergy dermatologist and Associate Director of the Skin and Cancer Unit.",
+    "schoolContext": "Official profile lists NYU MD and dermatology residency.",
+    "certificationsAwards": "NYU lists American Board of Dermatology certification (2020).",
+    "safetyEvidence": [
+      {
+        "source": "NY license",
+        "status": "requires-confirmation",
+        "summary": "Use the New York official license search to confirm the named physician's current license and disciplinary status before booking.",
+        "url": "https://www.op.nysed.gov/verification-search"
+      },
+      {
+        "source": "American Board of Dermatology",
+        "status": "verified",
+        "summary": "NYU profile lists ABD certification.",
+        "url": "https://nyulangone.org/doctors/1316300296/emily-c-milam"
+      }
+    ],
+    "strengths": [
+      "complex eczema",
+      "contact dermatitis",
+      "patch testing",
+      "adult care"
+    ],
     "concernLevel": "low",
-    "negativeSummary": "可见 Healthgrades/公开患者信号以正面为主，样本没有显示安全或用药监测问题；由于可见文字样本有限，长期复诊体验仍要直接确认。",
-    "negativeClassification": "没有发现严重模式；信息量有限应标为未知，而不是把未知称为不合理患者。",
-    "negativeFindings": [
-      { "category": "access-waiting", "severity": "none", "pattern": "not-available", "scope": "unknown", "summary": "可见来源未提供足够负面文字来判断等待或沟通趋势；这不是安全结论。" }
+    "negativeSummary": "Healthgrades provider-level rating and public negative-review sample were not available in this review; no inference is made.",
+    "negativeClassification": "Insufficient provider-level review evidence for a pattern.",
+    "negativeFindings": [],
+    "verificationQuestions": [
+      "Do you see perianal dermatitis in adults?",
+      "Would patch testing be appropriate for this distribution?",
+      "Can you test for fungal/infectious mimics or arrange referral?",
+      "What is the current appointment and insurance process?"
     ],
-    "verificationQuestions": ["成人 acne 是否由 MD 亲自负责，而不是只转给其他岗位？", "是否可评估 hormonal pattern、疤痕和 PIH？", "处方药需要哪些复诊或实验室监测？", "新患者最早预约和保险网络如何确认？"],
-    "healthgradesUrl": "https://www.healthgrades.com/dermatology-directory/nj-new-jersey/new-milford",
-    "officialUrl": "https://www.englewoodhealth.org/providers/ahmed-hadi",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=810%20River%20Road%2C%20New%20Milford%2C%20NJ%2007646",
-    "verifiedDate": "2026-08-02"
+    "healthgradesUrl": "https://www.healthgrades.com/dermatology-directory/ny-new-york/new-york",
+    "officialUrl": "https://nyulangone.org/doctors/1316300296/emily-c-milam",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=240%20East%2038th%20Street%20New%20York%20NY%2010016",
+    "verifiedDate": "2026-08-13"
   },
   {
-    "name": "Hyun-Soo Lee, MD",
-    "provider": "Hyun-Soo Lee, MD",
-    "practice": "St. Joseph's Health / Englewood office",
-    "location": "500 Grand Avenue Ste 201, Englewood, NJ 07631",
+    "name": "Emma Guttman-Yassky, MD, PhD",
+    "provider": "Emma Guttman-Yassky, MD, PhD",
+    "gender": "female",
+    "practice": "Mount Sinai Dermatology",
+    "location": "5 East 98th Street, New York, NY 10029",
+    "locationScope": "nyc",
+    "driveMin": null,
+    "driveMax": null,
+    "tier": 1,
+    "rank": 4,
+    "eligibility": {
+      "license": "screened",
+      "discipline": "screened-no-match",
+      "boardCertification": "verified",
+      "decision": "qualified"
+    },
+    "evidenceBands": {
+      "clinicalFoundation": "strong",
+      "perianalDermatitisFit": "strong",
+      "diagnosticBreadth": "strong",
+      "patientExperience": "strong",
+      "practicalAccess": "adequate"
+    },
+    "capabilities": [
+      "eczema-dermatitis",
+      "contact-dermatitis",
+      "infection-fungal-differential",
+      "psoriasis-lichen-differential",
+      "biopsy",
+      "multidisciplinary-referral"
+    ],
+    "perianalDermatitisSummary": "Mount Sinai lists adult atopic dermatitis/eczema, contact dermatitis, fungal infections, psoriasis, and biopsy. This is a high-specialty inflammatory-dermatology option; the cause of a perianal rash still needs examination.",
+    "primaryReviewSource": "Health system",
+    "primaryRating": 4.9,
+    "primaryReviewCount": 106,
+    "primaryWrittenCount": 5,
+    "healthgradesRating": null,
+    "healthgradesReviewCount": 0,
+    "healthgradesWrittenCount": null,
+    "reviewConfidence": "very-strong",
+    "reviewEvidence": [
+      {
+        "source": "Health system",
+        "scope": "provider",
+        "rating": 4.9,
+        "reviewCount": 106,
+        "writtenCount": 5,
+        "confidence": "very-strong",
+        "summary": "Mount Sinai profile displayed 4.9 stars from 106 ratings and five patient comments when checked.",
+        "url": "https://profiles.mountsinai.org/emma-guttman"
+      }
+    ],
+    "acceptsNewPatients": "Mount Sinai profile states accepting new patients and video visits available; confirm clinician availability for a routine consult.",
+    "availability": "verified",
+    "trainingSummary": "Mount Sinai dermatology system chair and director of inflammatory-skin-disease programs with major focus on adult atopic dermatitis/eczema.",
+    "schoolContext": "Official profile lists Tel-Aviv University MD, Weill Cornell dermatology residency, and Rockefeller fellowship.",
+    "certificationsAwards": "Mount Sinai lists American Board of Dermatology certification and International Eczema Council leadership.",
+    "safetyEvidence": [
+      {
+        "source": "NY license",
+        "status": "requires-confirmation",
+        "summary": "Use the New York official license search to confirm the named physician's current license and disciplinary status before booking.",
+        "url": "https://www.op.nysed.gov/verification-search"
+      },
+      {
+        "source": "American Board of Dermatology",
+        "status": "verified",
+        "summary": "Mount Sinai profile lists ABD certification.",
+        "url": "https://profiles.mountsinai.org/emma-guttman"
+      }
+    ],
+    "strengths": [
+      "adult eczema expertise",
+      "broad inflammatory differential",
+      "biopsy and fungal evaluation listed",
+      "strong health-system review sample"
+    ],
+    "concernLevel": "low",
+    "negativeSummary": "The reviewed Mount Sinai rating sample was favorable; no adequate public negative-review corpus was located to establish or exclude a pattern.",
+    "negativeClassification": "No provider-specific negative-review pattern established from sources reviewed.",
+    "negativeFindings": [],
+    "verificationQuestions": [
+      "Is the clinic appropriate for a localized perianal rash rather than established atopic dermatitis?",
+      "Can the initial visit include a broad differential and infection testing?",
+      "Will the physician personally perform the sensitive-area examination?",
+      "What is the next routine new-patient appointment?"
+    ],
+    "healthgradesUrl": "https://www.healthgrades.com/dermatology-directory/ny-new-york/new-york",
+    "officialUrl": "https://profiles.mountsinai.org/emma-guttman",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=5%20East%2098th%20Street%20New%20York%20NY%2010029",
+    "verifiedDate": "2026-08-13"
+  },
+  {
+    "name": "Tamar Zapolanski, MD",
+    "provider": "Tamar Zapolanski, MD",
+    "gender": "female",
+    "practice": "Valley Medical Group Dermatology",
+    "location": "1200 East Ridgewood Avenue, Suite 302, Ridgewood, NJ 07450",
+    "locationScope": "local",
     "driveMin": 20,
     "driveMax": 30,
     "tier": 1,
-    "rank": 1,
-    "eligibility": { "license": "verified", "discipline": "verified", "boardCertification": "verified", "decision": "qualified" },
-    "evidenceBands": { "clinicalQuality": "strong", "adultAcneFit": "strong", "patientExperience": "strong" },
-    "adultAcneSummary": "Healthgrades treatment profile lists acne at a very high frequency and acne surgery; adult medical dermatology scope is explicit, while hormonal and isotretinoin pathways should be confirmed at booking.",
-    "primaryReviewSource": "Healthgrades",
-    "primaryRating": 4.6,
-    "primaryReviewCount": 152,
-    "primaryWrittenCount": 131,
-    "healthgradesRating": 4.6,
-    "healthgradesReviewCount": 152,
-    "healthgradesWrittenCount": 131,
+    "rank": 5,
+    "eligibility": {
+      "license": "screened",
+      "discipline": "screened-no-match",
+      "boardCertification": "verified",
+      "decision": "qualified"
+    },
+    "evidenceBands": {
+      "clinicalFoundation": "strong",
+      "perianalDermatitisFit": "strong",
+      "diagnosticBreadth": "strong",
+      "patientExperience": "strong",
+      "practicalAccess": "strong"
+    },
+    "capabilities": [
+      "eczema-dermatitis",
+      "contact-dermatitis",
+      "infection-fungal-differential",
+      "psoriasis-lichen-differential",
+      "biopsy",
+      "multidisciplinary-referral"
+    ],
+    "perianalDermatitisSummary": "Valley lists eczema, skin rashes, infections, and inflammatory skin conditions; her published work includes contact dermatitis. This supports broad medical-dermatology assessment, not a presumed diagnosis.",
+    "primaryReviewSource": "Health system",
+    "primaryRating": 4.9,
+    "primaryReviewCount": 493,
+    "primaryWrittenCount": 75,
+    "healthgradesRating": null,
+    "healthgradesReviewCount": 0,
+    "healthgradesWrittenCount": null,
     "reviewConfidence": "very-strong",
     "reviewEvidence": [
-      { "source": "Healthgrades", "scope": "provider", "rating": 4.6, "reviewCount": 152, "writtenCount": 131, "confidence": "very-strong", "summary": "Healthgrades reports 4.6/5 from 152 ratings and 131 written reviews; visible attributes emphasize explanations, trust and supportive acne care.", "url": "https://www.healthgrades.com/physician/dr-hyun-soo-lee-yr2sh" },
-      { "source": "Health system", "scope": "provider", "rating": null, "reviewCount": 0, "writtenCount": null, "confidence": "unavailable", "summary": "St. Joseph's provider information lists ABD dermatology certification, adult age groups, and an Englewood office accepting new patients.", "url": "https://doctors.stjosephshealth.org/provider/hyun-soo-lee/2110628" }
+      {
+        "source": "Health system",
+        "scope": "provider",
+        "rating": 4.9,
+        "reviewCount": 493,
+        "writtenCount": 75,
+        "confidence": "very-strong",
+        "summary": "Valley profile displayed 4.9 from 493 ratings and 75 reviews when checked.",
+        "url": "https://doctors.valleyhealth.com/provider/tamar-zapolanski/2528143"
+      }
     ],
-    "acceptsNewPatients": "St. Joseph's provider profile states accepting new patients; confirm that the Englewood location has an adult acne slot and that follow-ups stay with the same physician. ",
+    "acceptsNewPatients": "Valley profile states accepting new patients and lists Ridgewood scheduling.",
     "availability": "verified",
-    "trainingSummary": "Board-certified dermatologist and dermatopathology-trained physician with education at Yale and Stony Brook, internal-medicine training at Albert Einstein, and NYU fellowship training.",
-    "schoolContext": "Yale, Stony Brook and NYU are documented education/training entries; they are context rather than a stand-alone quality score.",
-    "certificationsAwards": "American Board of Dermatology certification in dermatology and dermatopathology; hospital affiliation provides an additional clinical-care context.",
-    "strengths": ["very strong review sample", "acne treatment frequency", "board-certified", "adult care"],
-    "concernLevel": "low",
-    "negativeSummary": "Healthgrades 的大样本整体正面；可见负面更多是办公室等待或后续沟通的个别意见，没有重复的安全或用药监测模式。",
-    "negativeClassification": "个别 access/continuity 摩擦，不像严重临床问题；仍需确认复诊和结果沟通流程。",
-    "negativeFindings": [
-      { "category": "access-waiting", "severity": "low", "pattern": "isolated", "scope": "office", "summary": "少量意见涉及等待或后续沟通；样本没有显示重复的诊断、安全或药物监测问题。" }
+    "trainingSummary": "Board-certified medical and surgical dermatologist treating inflammatory skin conditions, eczema, rashes, and infections.",
+    "schoolContext": "Official profile lists University of Miami MD and Weill Cornell dermatology residency/chief residency.",
+    "certificationsAwards": "Valley profile states board-certified dermatology.",
+    "safetyEvidence": [
+      {
+        "source": "NJ license",
+        "status": "requires-confirmation",
+        "summary": "Use the New Jersey official license search to confirm the named physician's current license and disciplinary status before booking.",
+        "url": "https://newjersey.mylicense.com/Verification/Search.aspx"
+      },
+      {
+        "source": "American Board of Dermatology",
+        "status": "verified",
+        "summary": "Valley profile identifies board-certified dermatology.",
+        "url": "https://doctors.valleyhealth.com/provider/tamar-zapolanski/2528143"
+      }
     ],
-    "verificationQuestions": ["acne 复诊是否由 Lee 医生持续负责？", "是否评估 acne scars、PIH 和激素相关线索？", "口服药和 isotretinoin 是否有明确监测流程？", "办公室如何处理照片、处方续药和非紧急问题？"],
-    "healthgradesUrl": "https://www.healthgrades.com/physician/dr-hyun-soo-lee-yr2sh",
-    "officialUrl": "https://doctors.stjosephshealth.org/provider/hyun-soo-lee/2110628",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=500%20Grand%20Avenue%20Ste%20201%2C%20Englewood%2C%20NJ%2007631",
-    "verifiedDate": "2026-08-02"
+    "strengths": [
+      "eczema and infections explicitly listed",
+      "contact-dermatitis publication",
+      "large health-system review sample",
+      "accepting new patients"
+    ],
+    "concernLevel": "low",
+    "negativeSummary": "A large health-system rating sample was visible; this review did not establish a sufficient public negative-review corpus or a safety pattern.",
+    "negativeClassification": "No provider-specific negative pattern established.",
+    "negativeFindings": [],
+    "verificationQuestions": [
+      "Do you see adult perianal dermatitis?",
+      "Can you evaluate infection, contact exposure, psoriasis, or lichen-type mimics?",
+      "Can the MD perform the examination with a chaperone if requested?",
+      "What is the fastest new-patient slot?"
+    ],
+    "healthgradesUrl": "https://www.healthgrades.com/dermatology-directory/nj-new-jersey/ridgewood",
+    "officialUrl": "https://doctors.valleyhealth.com/provider/tamar-zapolanski/2528143",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1200%20East%20Ridgewood%20Avenue%20Ridgewood%20NJ%2007450",
+    "verifiedDate": "2026-08-13"
   },
   {
-    "name": "Eduard Raklyar, MD",
-    "provider": "Eduard Raklyar, MD",
-    "practice": "Center for Dermatology and Skin Surgery",
-    "location": "1 W Ridgewood Avenue Ste 103, Paramus, NJ 07652",
+    "name": "Marisa K. Garshick, MD",
+    "provider": "Marisa K. Garshick, MD",
+    "gender": "female",
+    "practice": "MDCS Dermatology",
+    "location": "401A South Van Brunt Street, Suite 403, Englewood, NJ 07631",
+    "locationScope": "local",
+    "driveMin": 20,
+    "driveMax": 30,
+    "tier": 1,
+    "rank": 6,
+    "eligibility": {
+      "license": "screened",
+      "discipline": "screened-no-match",
+      "boardCertification": "verified",
+      "decision": "qualified"
+    },
+    "evidenceBands": {
+      "clinicalFoundation": "strong",
+      "perianalDermatitisFit": "adequate",
+      "diagnosticBreadth": "strong",
+      "patientExperience": "strong",
+      "practicalAccess": "strong"
+    },
+    "capabilities": [
+      "eczema-dermatitis",
+      "contact-dermatitis",
+      "infection-fungal-differential",
+      "psoriasis-lichen-differential",
+      "biopsy",
+      "multidisciplinary-referral"
+    ],
+    "perianalDermatitisSummary": "MDCS lists eczema, psoriasis, and broad adult general dermatology, and its Englewood office has a current booking route. Ask specifically whether the appointment can evaluate a perianal rash and relevant mimics.",
+    "primaryReviewSource": "Zocdoc",
+    "primaryRating": 4.93,
+    "primaryReviewCount": 1079,
+    "primaryWrittenCount": null,
+    "healthgradesRating": null,
+    "healthgradesReviewCount": 0,
+    "healthgradesWrittenCount": null,
+    "reviewConfidence": "very-strong",
+    "reviewEvidence": [
+      {
+        "source": "Zocdoc",
+        "scope": "provider",
+        "rating": 4.93,
+        "reviewCount": 1079,
+        "writtenCount": null,
+        "confidence": "very-strong",
+        "summary": "Public booking profile displayed 4.93 from 1,079 provider reviews; it is not presented as Healthgrades data.",
+        "url": "https://www.zocdoc.com/doctor/marisa-garshick-md-faad-175259"
+      }
+    ],
+    "acceptsNewPatients": "Official MDCS profile states the practice is accepting new patients; public booking shows Englewood availability.",
+    "availability": "verified",
+    "trainingSummary": "Board-certified dermatologist and Cornell assistant clinical professor providing adult medical dermatology including eczema and psoriasis.",
+    "schoolContext": "Official profile lists Tufts MD, Memorial Sloan Kettering internship, and Cornell dermatology residency/chief residency.",
+    "certificationsAwards": "Official profile lists board certification and FAAD status.",
+    "safetyEvidence": [
+      {
+        "source": "NJ license",
+        "status": "requires-confirmation",
+        "summary": "Use the New Jersey official license search to confirm the named physician's current license and disciplinary status before booking.",
+        "url": "https://newjersey.mylicense.com/Verification/Search.aspx"
+      },
+      {
+        "source": "American Board of Dermatology",
+        "status": "verified",
+        "summary": "MDCS identifies her as board-certified dermatologist and FAAD.",
+        "url": "https://www.mdcsnyc.com/provider/marisa-k-garshick-md"
+      }
+    ],
+    "strengths": [
+      "general medical dermatology",
+      "eczema and psoriasis listed",
+      "large provider review sample",
+      "Englewood booking"
+    ],
+    "concernLevel": "low",
+    "negativeSummary": "The public provider review sample is favorable, but it is not a clinical-outcome measure and this review did not establish a negative-review safety pattern.",
+    "negativeClassification": "No provider-specific negative pattern established.",
+    "negativeFindings": [],
+    "verificationQuestions": [
+      "Do you personally evaluate perianal/anogenital dermatitis?",
+      "Can the visit include fungal or contact-dermatitis differential?",
+      "Are biopsy or referral available if findings are atypical?",
+      "Will follow-up remain with the same MD?"
+    ],
+    "healthgradesUrl": "https://www.healthgrades.com/dermatology-directory/nj-new-jersey/englewood",
+    "officialUrl": "https://www.mdcsnyc.com/provider/marisa-k-garshick-md",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=401A%20South%20Van%20Brunt%20Street%20Englewood%20NJ%2007631",
+    "verifiedDate": "2026-08-13"
+  },
+  {
+    "name": "Naana A. Boakye, MD, MPH",
+    "provider": "Naana A. Boakye, MD, MPH",
+    "gender": "female",
+    "practice": "Bergen Dermatology",
+    "location": "159 Summit Avenue, Hackensack, NJ 07601",
+    "locationScope": "local",
     "driveMin": 10,
     "driveMax": 20,
     "tier": 2,
-    "rank": 6,
-    "eligibility": { "license": "verified", "discipline": "verified", "boardCertification": "verified", "decision": "qualified" },
-    "evidenceBands": { "clinicalQuality": "strong", "adultAcneFit": "adequate", "patientExperience": "strong" },
-    "adultAcneSummary": "Healthgrades lists acne and acne surgery among treated conditions; the public profile is especially rich in Mohs/scar expertise, so ask how much of the practice is ongoing adult acne management.",
+    "rank": 7,
+    "eligibility": {
+      "license": "screened",
+      "discipline": "screened-no-match",
+      "boardCertification": "verified",
+      "decision": "qualified"
+    },
+    "evidenceBands": {
+      "clinicalFoundation": "strong",
+      "perianalDermatitisFit": "adequate",
+      "diagnosticBreadth": "adequate",
+      "patientExperience": "unknown",
+      "practicalAccess": "strong"
+    },
+    "capabilities": [
+      "eczema-dermatitis",
+      "contact-dermatitis",
+      "psoriasis-lichen-differential",
+      "biopsy",
+      "multidisciplinary-referral"
+    ],
+    "perianalDermatitisSummary": "Official materials list eczema and medical dermatology, including barrier-focused care. Direct evidence for anogenital examination or patch testing was not located, so ask before booking.",
+    "primaryReviewSource": "Official practice",
+    "primaryRating": null,
+    "primaryReviewCount": 0,
+    "primaryWrittenCount": null,
+    "healthgradesRating": null,
+    "healthgradesReviewCount": 0,
+    "healthgradesWrittenCount": null,
+    "reviewConfidence": "unavailable",
+    "reviewEvidence": [
+      {
+        "source": "Official practice",
+        "scope": "provider",
+        "rating": null,
+        "reviewCount": 0,
+        "writtenCount": null,
+        "confidence": "unavailable",
+        "summary": "Official practice confirms dermatology, eczema scope, Hackensack office, and appointment link; it does not publish a provider-level review count.",
+        "url": "https://drnaanaboakye.com/"
+      }
+    ],
+    "acceptsNewPatients": "Official practice provides appointment scheduling; current new-patient availability needs confirmation.",
+    "availability": "conditional",
+    "trainingSummary": "Board-certified dermatologist and Bergen Dermatology founder with medical dermatology and eczema scope.",
+    "schoolContext": "Official profile lists Temple MD and George Washington University MPH.",
+    "certificationsAwards": "Official profile identifies board-certified dermatology and FAAD status.",
+    "safetyEvidence": [
+      {
+        "source": "NJ license",
+        "status": "requires-confirmation",
+        "summary": "Use the New Jersey official license search to confirm the named physician's current license and disciplinary status before booking.",
+        "url": "https://newjersey.mylicense.com/Verification/Search.aspx"
+      },
+      {
+        "source": "American Board of Dermatology",
+        "status": "verified",
+        "summary": "Official practice identifies board-certified dermatology.",
+        "url": "https://drnaanaboakye.com/"
+      }
+    ],
+    "strengths": [
+      "eczema listed",
+      "nearby Hackensack office",
+      "medical dermatology",
+      "barrier-care focus"
+    ],
+    "concernLevel": "low",
+    "negativeSummary": "Healthgrades/provider-level review evidence and a public negative-review sample were not located in this review. Missing data is not treated as reassurance.",
+    "negativeClassification": "Insufficient provider-level public review evidence for a pattern.",
+    "negativeFindings": [],
+    "verificationQuestions": [
+      "Do you evaluate perianal dermatitis in adults?",
+      "Can you assess contact triggers, infection, or inflammatory mimics?",
+      "Is patch testing available or is referral routine?",
+      "Does the MD perform the sensitive-area examination?"
+    ],
+    "healthgradesUrl": "https://www.healthgrades.com/dermatology-directory/nj-new-jersey/hackensack",
+    "officialUrl": "https://drnaanaboakye.com/",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=159%20Summit%20Avenue%20Hackensack%20NJ%2007601",
+    "verifiedDate": "2026-08-13"
+  },
+  {
+    "name": "Sharon Scherl, MD",
+    "provider": "Sharon Scherl, MD",
+    "gender": "female",
+    "practice": "Scherl Dermatology",
+    "location": "140 Sylvan Avenue, Suite 302, Englewood Cliffs, NJ 07632",
+    "locationScope": "local",
+    "driveMin": 15,
+    "driveMax": 25,
+    "tier": 2,
+    "rank": 8,
+    "eligibility": {
+      "license": "screened",
+      "discipline": "screened-no-match",
+      "boardCertification": "verified",
+      "decision": "qualified"
+    },
+    "evidenceBands": {
+      "clinicalFoundation": "strong",
+      "perianalDermatitisFit": "adequate",
+      "diagnosticBreadth": "adequate",
+      "patientExperience": "unknown",
+      "practicalAccess": "strong"
+    },
+    "capabilities": [
+      "eczema-dermatitis",
+      "contact-dermatitis",
+      "infection-fungal-differential",
+      "psoriasis-lichen-differential",
+      "biopsy"
+    ],
+    "perianalDermatitisSummary": "Scherl Dermatology offers comprehensive dermatology and eczema care. Direct evidence for patch testing or anogenital specialty care was not located, so fit requires a booking call.",
+    "primaryReviewSource": "Official practice",
+    "primaryRating": null,
+    "primaryReviewCount": 0,
+    "primaryWrittenCount": null,
+    "healthgradesRating": null,
+    "healthgradesReviewCount": 0,
+    "healthgradesWrittenCount": null,
+    "reviewConfidence": "unavailable",
+    "reviewEvidence": [
+      {
+        "source": "Official practice",
+        "scope": "provider",
+        "rating": null,
+        "reviewCount": 0,
+        "writtenCount": null,
+        "confidence": "unavailable",
+        "summary": "Official practice documents board-certified dermatology, eczema services, and online scheduling but no provider-level rating.",
+        "url": "https://scherlmd.com/physicians/sharon-scherl-md/"
+      }
+    ],
+    "acceptsNewPatients": "Official practice has online scheduling; confirm a new adult medical-dermatology visit.",
+    "availability": "conditional",
+    "trainingSummary": "Board-certified Bergen County dermatologist providing comprehensive medical dermatology.",
+    "schoolContext": "Englewood Health profile gives public professional context; school history was not used as a ranking factor.",
+    "certificationsAwards": "Official practice identifies board-certified dermatology and Englewood Health lists awards.",
+    "safetyEvidence": [
+      {
+        "source": "NJ license",
+        "status": "requires-confirmation",
+        "summary": "Use the New Jersey official license search to confirm the named physician's current license and disciplinary status before booking.",
+        "url": "https://newjersey.mylicense.com/Verification/Search.aspx"
+      },
+      {
+        "source": "American Board of Dermatology",
+        "status": "verified",
+        "summary": "Official practice identifies board-certified dermatology.",
+        "url": "https://scherlmd.com/physicians/sharon-scherl-md/"
+      }
+    ],
+    "strengths": [
+      "nearby comprehensive dermatology",
+      "eczema service",
+      "female physician",
+      "online scheduling"
+    ],
+    "concernLevel": "low",
+    "negativeSummary": "No provider-level Healthgrades or written-review corpus was located; missing information is not a safety conclusion.",
+    "negativeClassification": "Insufficient provider-level public review evidence for a pattern.",
+    "negativeFindings": [],
+    "verificationQuestions": [
+      "Do you evaluate adult perianal dermatitis?",
+      "Can the clinician assess infection and inflammatory mimics?",
+      "Is a chaperone available?",
+      "Is direct MD follow-up available?"
+    ],
+    "healthgradesUrl": "https://www.healthgrades.com/dermatology-directory/nj-new-jersey/englewood-cliffs",
+    "officialUrl": "https://scherlmd.com/physicians/sharon-scherl-md/",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=140%20Sylvan%20Avenue%20Englewood%20Cliffs%20NJ%2007632",
+    "verifiedDate": "2026-08-13"
+  },
+  {
+    "name": "Rebecca Baxt, MD",
+    "provider": "Rebecca Baxt, MD",
+    "gender": "female",
+    "practice": "BAXT CosMedical",
+    "location": "351 Evelyn Street, Suite 201, Paramus, NJ 07652",
+    "locationScope": "local",
+    "driveMin": 10,
+    "driveMax": 20,
+    "tier": 2,
+    "rank": 9,
+    "eligibility": {
+      "license": "screened",
+      "discipline": "verified",
+      "boardCertification": "verified",
+      "decision": "qualified"
+    },
+    "evidenceBands": {
+      "clinicalFoundation": "strong",
+      "perianalDermatitisFit": "adequate",
+      "diagnosticBreadth": "adequate",
+      "patientExperience": "strong",
+      "practicalAccess": "strong"
+    },
+    "capabilities": [
+      "eczema-dermatitis",
+      "contact-dermatitis",
+      "infection-fungal-differential",
+      "psoriasis-lichen-differential",
+      "biopsy"
+    ],
+    "perianalDermatitisSummary": "Official materials describe board-certified medical dermatology and treatment of eczema and rashes. Direct evidence for patch testing or anogenital specialization was not located, so confirm fit before booking.",
     "primaryReviewSource": "Healthgrades",
     "primaryRating": 4.8,
-    "primaryReviewCount": 13,
-    "primaryWrittenCount": 6,
+    "primaryReviewCount": 62,
+    "primaryWrittenCount": null,
     "healthgradesRating": 4.8,
-    "healthgradesReviewCount": 13,
-    "healthgradesWrittenCount": 6,
-    "reviewConfidence": "moderate",
+    "healthgradesReviewCount": 62,
+    "healthgradesWrittenCount": null,
+    "reviewConfidence": "strong",
     "reviewEvidence": [
-      { "source": "Healthgrades", "scope": "provider", "rating": 4.8, "reviewCount": 13, "writtenCount": 6, "confidence": "moderate", "summary": "Healthgrades reports 4.8/5 from 13 ratings and six written reviews; visible reviews are predominantly surgical and describe careful explanations and follow-up.", "url": "https://www.healthgrades.com/physician/dr-eduard-raklyar-29rl2" },
-      { "source": "Official practice", "scope": "office", "rating": null, "reviewCount": 0, "writtenCount": null, "confidence": "unavailable", "summary": "The practice describes adult and pediatric dermatology, medical care, Mohs and cosmetic services and provides a Paramus booking route.", "url": "https://www.centerfordermatologynj.com/physicians-providers/" }
+      {
+        "source": "Healthgrades",
+        "scope": "provider",
+        "rating": 4.8,
+        "reviewCount": 62,
+        "writtenCount": null,
+        "confidence": "strong",
+        "summary": "Healthgrades directory displayed 4.8 from 62 ratings; the accessible capture did not expose a complete written-review count.",
+        "url": "https://www.healthgrades.com/dermatology-directory/nj-new-jersey/paramus"
+      }
     ],
-    "acceptsNewPatients": "Healthgrades states accepting new patients; the practice has a Paramus booking page. Confirm adult acne availability and which physician will manage medication follow-up.",
-    "availability": "verified",
-    "trainingSummary": "Board-certified dermatologist and fellowship-trained Mohs surgeon; SUNY Downstate medical degree, Georgetown/Washington Hospital Center dermatology residency, and University of British Columbia Mohs fellowship.",
-    "schoolContext": "SUNY Downstate, Georgetown/Washington Hospital Center and University of British Columbia are documented training sites; surgical training is not the same as an acne-specific fellowship.",
-    "certificationsAwards": "American Board of Dermatology, FAAD and ACMS-related credentials; practice biography also notes Phi Beta Kappa and dermatologic-surgery memberships.",
-    "strengths": ["board-certified", "medical + surgical scope", "acne explicitly listed", "strong written signal"],
+    "acceptsNewPatients": "Official practice provides appointment scheduling; confirm a medical-dermatology visit with Dr. Baxt personally.",
+    "availability": "conditional",
+    "trainingSummary": "Board-certified dermatologist with long-standing medical and cosmetic dermatology practice.",
+    "schoolContext": "Official practice documents NYU medical training and clinical teaching; school name is context rather than a quality score.",
+    "certificationsAwards": "Official practice lists American Board of Dermatology certification and FAAD status.",
+    "safetyEvidence": [
+      {
+        "source": "NJ license",
+        "status": "requires-confirmation",
+        "summary": "Use the New Jersey official license search to confirm the named physician's current license and disciplinary status before booking.",
+        "url": "https://newjersey.mylicense.com/Verification/Search.aspx"
+      },
+      {
+        "source": "American Board of Dermatology",
+        "status": "verified",
+        "summary": "Official practice lists board certification.",
+        "url": "https://www.cosmedical.com/about-us/doctors/dermatologists/rebecca-baxt-md-mba-faad/"
+      }
+    ],
+    "strengths": [
+      "nearby Paramus office",
+      "board-certified",
+      "medical dermatology",
+      "strong Healthgrades sample"
+    ],
     "concernLevel": "moderate",
-    "negativeSummary": "可见负面文字很少且主要围绕手术/疤痕结果；没有足够证据判断长期 acne 用药或监测体验。",
-    "negativeClassification": "不是严重负面；主要是不确定性和专科重心的 tradeoff。",
+    "negativeSummary": "The accessible rating signal was favorable, but a complete provider-level written-review corpus was not available. Medical and cosmetic services share the practice, so scope and billing should be clarified.",
+    "negativeClassification": "No serious clinical or safety pattern established; office scope and billing remain booking questions.",
     "negativeFindings": [
-      { "category": "medication-monitoring", "severity": "none", "pattern": "not-available", "scope": "unknown", "summary": "可见评论集中在 Mohs/手术，无法据此推断 acne 处方监测好坏；预约时直接询问。" }
+      {
+        "category": "billing-administration",
+        "severity": "low",
+        "pattern": "not-available",
+        "scope": "office",
+        "summary": "Public sources did not provide a complete billing-review sample; confirm medical versus cosmetic billing before the visit."
+      }
     ],
-    "verificationQuestions": ["成人 acne 是否是常见的持续管理项目？", "是否能讨论 hormonal、oral antibiotic、isotretinoin 和 scar/PIH 方案？", "如果需要多次复诊，是否由同一位 MD 跟进？", "医疗与手术/美容项目的保险和费用如何区分？"],
-    "healthgradesUrl": "https://www.healthgrades.com/physician/dr-eduard-raklyar-29rl2",
-    "officialUrl": "https://www.centerfordermatologynj.com/physicians-providers/",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=1%20W%20Ridgewood%20Avenue%20Ste%20103%2C%20Paramus%2C%20NJ%2007652",
-    "verifiedDate": "2026-08-02"
+    "verificationQuestions": [
+      "Do you evaluate adult perianal dermatitis?",
+      "Can you assess infection, contact exposure, psoriasis, or lichen-type mimics?",
+      "Is a chaperone available for the examination?",
+      "How are medical and cosmetic services billed separately?"
+    ],
+    "healthgradesUrl": "https://www.healthgrades.com/dermatology-directory/nj-new-jersey/paramus",
+    "officialUrl": "https://www.cosmedical.com/about-us/doctors/dermatologists/rebecca-baxt-md-mba-faad/",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=351%20Evelyn%20Street%20Paramus%20NJ%2007652",
+    "verifiedDate": "2026-08-13"
   },
   {
     "name": "Margaret Ravits, MD",
     "provider": "Margaret Ravits, MD",
+    "gender": "female",
     "practice": "Margaret S. Ravits, M.D. & Associates Dermatology",
     "location": "299 Forest Avenue, Paramus, NJ 07652",
+    "locationScope": "local",
     "driveMin": 10,
     "driveMax": 20,
     "tier": 2,
-    "rank": 5,
-    "eligibility": { "license": "verified", "discipline": "verified", "boardCertification": "verified", "decision": "qualified" },
-    "evidenceBands": { "clinicalQuality": "strong", "adultAcneFit": "strong", "patientExperience": "adequate" },
-    "adultAcneSummary": "官方 practice 明确覆盖 acne、rosacea、eczema 和成人 general dermatology；团队模式适合问清首诊和复诊由谁负责。",
+    "rank": 10,
+    "eligibility": {
+      "license": "screened",
+      "discipline": "verified",
+      "boardCertification": "verified",
+      "decision": "qualified"
+    },
+    "evidenceBands": {
+      "clinicalFoundation": "strong",
+      "perianalDermatitisFit": "adequate",
+      "diagnosticBreadth": "adequate",
+      "patientExperience": "strong",
+      "practicalAccess": "strong"
+    },
+    "capabilities": [
+      "eczema-dermatitis",
+      "contact-dermatitis",
+      "infection-fungal-differential",
+      "psoriasis-lichen-differential",
+      "biopsy"
+    ],
+    "perianalDermatitisSummary": "The official practice lists adult medical dermatology, eczema, psoriasis, rashes, and infections. Direct patch-testing or anogenital-specialty evidence was not located; confirm that Dr. Ravits handles this visit.",
     "primaryReviewSource": "Healthgrades",
     "primaryRating": 4.3,
     "primaryReviewCount": 87,
-    "primaryWrittenCount": 0,
+    "primaryWrittenCount": null,
     "healthgradesRating": 4.3,
     "healthgradesReviewCount": 87,
-    "healthgradesWrittenCount": 0,
+    "healthgradesWrittenCount": null,
     "reviewConfidence": "strong",
     "reviewEvidence": [
-      { "source": "Healthgrades", "scope": "provider", "rating": 4.3, "reviewCount": 87, "writtenCount": null, "confidence": "strong", "summary": "Healthgrades provider/group listing reports 4.3/5 from 87 ratings; positive trust/listening attributes are visible, while written-review count is not exposed in the capture.", "url": "https://www.healthgrades.com/group-directory/nj-new-jersey/river-edge/margaret-s-ravits-md-assocs-xyygds" },
-      { "source": "Official practice", "scope": "office", "rating": null, "reviewCount": 0, "writtenCount": null, "confidence": "unavailable", "summary": "The practice treats acne and other medical dermatology conditions, accepts most insurance and advertises same-week appointments at Paramus and Hackensack.", "url": "https://www.ravitsdermatology.com/" }
+      {
+        "source": "Healthgrades",
+        "scope": "provider",
+        "rating": 4.3,
+        "reviewCount": 87,
+        "writtenCount": null,
+        "confidence": "strong",
+        "summary": "Healthgrades group/provider listing displayed 4.3 from 87 ratings; the accessible capture did not expose a complete attributable written-review count.",
+        "url": "https://www.healthgrades.com/group-directory/nj-new-jersey/river-edge/margaret-s-ravits-md-assocs-xyygds"
+      }
     ],
-    "acceptsNewPatients": "官方预约页提供 new-patient path，并写明 same-week appointments may be available；请确认由 MD 而非 PA-C 负责成人 acne 长期方案。",
-    "availability": "verified",
-    "trainingSummary": "Board-certified dermatologist with long-standing practice and senior academic/hospital roles; treats adults and children in Paramus and Hackensack.",
-    "schoolContext": "University of Miami medical training and NY-Presbyterian dermatology fellowship are listed publicly; academic/hospital roles add context but are not a guarantee.",
-    "certificationsAwards": "American Board of Dermatology certification; public biography notes clinical teaching, hospital leadership and dermatology awards.",
-    "strengths": ["acne explicitly listed", "broad medical dermatology", "same-week possibility", "board-certified"],
+    "acceptsNewPatients": "Official practice advertises appointments and accepts most insurance; confirm Dr. Ravits personally and current availability.",
+    "availability": "conditional",
+    "trainingSummary": "Board-certified dermatologist with broad adult medical dermatology practice and academic/hospital roles.",
+    "schoolContext": "Official biography documents University of Miami and NewYork-Presbyterian training; these are context, not outcome guarantees.",
+    "certificationsAwards": "Official biography lists American Board of Dermatology certification.",
+    "safetyEvidence": [
+      {
+        "source": "NJ license",
+        "status": "requires-confirmation",
+        "summary": "Use the New Jersey official license search to confirm the named physician's current license and disciplinary status before booking.",
+        "url": "https://newjersey.mylicense.com/Verification/Search.aspx"
+      },
+      {
+        "source": "American Board of Dermatology",
+        "status": "verified",
+        "summary": "Official practice identifies board-certified dermatology.",
+        "url": "https://www.ravitsdermatology.com/"
+      }
+    ],
+    "strengths": [
+      "nearby Paramus office",
+      "broad medical dermatology",
+      "eczema and infections listed",
+      "established practice"
+    ],
     "concernLevel": "moderate",
-    "negativeSummary": "Healthgrades 整体信号仍为正面，但这是一个多 provider office；可见资料没有显示安全或 medication-monitoring 重复问题，continuity 需要预约前确认。",
-    "negativeClassification": "办公室模式的连续性 tradeoff，不是严重临床负面。",
+    "negativeSummary": "The office includes multiple providers and the accessible Healthgrades material did not expose a complete attributable written-review set. Provider continuity and sensitive-exam process remain unknown.",
+    "negativeClassification": "No serious clinical or safety pattern established; continuity requires confirmation.",
     "negativeFindings": [
-      { "category": "access-waiting", "severity": "low", "pattern": "isolated", "scope": "office", "summary": "团队与多个地点可能让复诊 provider 不固定；这是流程核实项，不应把它推断为医生能力问题。" }
+      {
+        "category": "access-waiting",
+        "severity": "low",
+        "pattern": "not-available",
+        "scope": "office",
+        "summary": "Public scheduling material does not establish that the named physician will conduct both initial evaluation and follow-up."
+      }
     ],
-    "verificationQuestions": ["首诊和后续 acne 复诊是否由同一位 board-certified MD 负责？", "是否讨论 topical、oral、hormonal 和 isotretinoin 选项及监测？", "办公室如何处理妊娠计划、药物相互作用和复诊？", "Paramus 具体新患者时段和保险网络是什么？"],
+    "verificationQuestions": [
+      "Will Dr. Ravits personally evaluate the perianal rash?",
+      "Can the practice evaluate infection and inflammatory mimics?",
+      "Is a chaperone available?",
+      "Who handles biopsy, testing, and follow-up?"
+    ],
     "healthgradesUrl": "https://www.healthgrades.com/group-directory/nj-new-jersey/river-edge/margaret-s-ravits-md-assocs-xyygds",
     "officialUrl": "https://www.ravitsdermatology.com/",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=299%20Forest%20Avenue%2C%20Paramus%2C%20NJ%2007652",
-    "verifiedDate": "2026-08-02"
-  },
-  {
-    "name": "Snehal Amin, MD",
-    "provider": "Snehal Amin, MD",
-    "practice": "MDCS Dermatology",
-    "location": "401 S Van Brunt St Ste 403, Englewood, NJ 07631",
-    "driveMin": 20,
-    "driveMax": 30,
-    "tier": 2,
-    "rank": 8,
-    "eligibility": { "license": "verified", "discipline": "verified", "boardCertification": "verified", "decision": "conditional" },
-    "evidenceBands": { "clinicalQuality": "strong", "adultAcneFit": "adequate", "patientExperience": "strong" },
-    "adultAcneSummary": "MDCS 是 medical + cosmetic dermatology practice，Healthgrades 明确列出 acne directory signal；需确认 Englewood MD 预约与持续医疗 acne 管理，而不是只做 cosmetic consultation。",
-    "primaryReviewSource": "Healthgrades",
-    "primaryRating": 4.6,
-    "primaryReviewCount": 54,
-    "primaryWrittenCount": 0,
-    "healthgradesRating": 4.6,
-    "healthgradesReviewCount": 54,
-    "healthgradesWrittenCount": 0,
-    "reviewConfidence": "strong",
-    "reviewEvidence": [
-      { "source": "Healthgrades", "scope": "provider", "rating": 4.6, "reviewCount": 54, "writtenCount": null, "confidence": "strong", "summary": "Healthgrades directory reports 4.6/5 from 54 ratings and positive listening/explanation/trust attributes; written-review count was not exposed in the directory capture.", "url": "https://www.healthgrades.com/dermatology-directory/nj-new-jersey/palisades-park" },
-      { "source": "Official practice", "scope": "office", "rating": null, "reviewCount": 0, "writtenCount": null, "confidence": "unavailable", "summary": "MDCS presents medical dermatology and cosmetic surgery, with an Englewood office; office-level marketing reviews are not blended into the provider rating.", "url": "https://www.mdcsnyc.com/" }
-    ],
-    "acceptsNewPatients": "MDCS 公开资料面向新患者并提供预约入口；由于是多地点、多 provider practice，需确认 Englewood 的 MD、成人 acne 首诊和保险。",
-    "availability": "conditional",
-    "trainingSummary": "Board-certified dermatologist and dermatologic surgeon; MDCS founder with medical, surgical and cosmetic dermatology scope.",
-    "schoolContext": "Public provider/practice materials identify medical and dermatologic-surgery training; verify the current NJ license and exact location when booking.",
-    "certificationsAwards": "Board certification and dermatologic-surgery credentials are the relevant signals; cosmetic awards or practice marketing are not treated as clinical outcomes.",
-    "strengths": ["board-certified", "medical dermatology", "large review sample", "adult acne discussion"],
-    "concernLevel": "moderate",
-    "negativeSummary": "公开 Healthgrades 标签整体正面；主要不确定性来自多地点 medical/cosmetic office 的 provider continuity，而非已发现的安全或诊断模式。",
-    "negativeClassification": "预约与连续性需确认；没有证据把它归为严重临床风险。",
-    "negativeFindings": [
-      { "category": "access-waiting", "severity": "low", "pattern": "isolated", "scope": "office", "summary": "多地点团队可能造成 provider 或地点变化；可在预约时确认，不应将 office 结构误读为个人能力问题。" }
-    ],
-    "verificationQuestions": ["Englewood 首诊是否由 Snehal Amin, MD 亲自完成？", "是否提供成人 acne 的长期 medical follow-up，而非仅 cosmetic services？", "是否讨论 hormonal、oral、isotretinoin、scar 和 PIH 管理？", "保险、复诊 provider 和药物监测如何安排？"],
-    "healthgradesUrl": "https://www.healthgrades.com/dermatology-directory/nj-new-jersey/palisades-park",
-    "officialUrl": "https://www.mdcsnyc.com/",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=401%20S%20Van%20Brunt%20St%20Ste%20403%2C%20Englewood%2C%20NJ%2007631",
-    "verifiedDate": "2026-08-02"
-  },
-  {
-    "name": "Sandeep Saluja, MD",
-    "provider": "Sandeep Saluja, MD",
-    "practice": "Garden State Dermatology",
-    "location": "15-01 Broadway Ste 38, Fair Lawn, NJ 07410",
-    "driveMin": 5,
-    "driveMax": 10,
-    "tier": 2,
-    "rank": 4,
-    "eligibility": { "license": "verified", "discipline": "verified", "boardCertification": "verified", "decision": "qualified" },
-    "evidenceBands": { "clinicalQuality": "strong", "adultAcneFit": "strong", "patientExperience": "strong" },
-    "adultAcneSummary": "公开 CV/medical dermatology资料列出 acne 和 general dermatology；Fair Lawn 距离最短，适合把长期复诊便利性纳入比较。",
-    "primaryReviewSource": "Healthgrades",
-    "primaryRating": 4.6,
-    "primaryReviewCount": 29,
-    "primaryWrittenCount": 0,
-    "healthgradesRating": 4.6,
-    "healthgradesReviewCount": 29,
-    "healthgradesWrittenCount": 0,
-    "reviewConfidence": "strong",
-    "reviewEvidence": [
-      { "source": "Healthgrades", "scope": "provider", "rating": 4.6, "reviewCount": 29, "writtenCount": null, "confidence": "strong", "summary": "Healthgrades directory reports 4.6/5 from 29 ratings with positive listening, explanation and trust attributes; written-review count was not exposed in the capture.", "url": "https://www.healthgrades.com/dermatology-directory/nj-new-jersey/elmwood-park" },
-      { "source": "Official practice", "scope": "provider", "rating": null, "reviewCount": 0, "writtenCount": null, "confidence": "unavailable", "summary": "Public CV and provider material identify Garden State Dermatology in Fair Lawn, board certification and medical/cosmetic dermatology work including acne.", "url": "https://sandeepsaluja.dr-leonardo.com/" }
-    ],
-    "acceptsNewPatients": "Fair Lawn provider listing is public, but a current provider-specific new-patient slot was not exposed; call to confirm the MD, acne visit type, insurance and earliest appointment.",
-    "availability": "conditional",
-    "trainingSummary": "Board-certified dermatologist; University of Utah dermatology residency with chief-resident service and Harvard laser/cosmetic fellowship are listed in the public CV.",
-    "schoolContext": "Yale College, Albert Einstein College of Medicine and University of Utah are documented training entries; the Harvard fellowship is relevant to procedural/cosmetic work, not a substitute for acne outcomes.",
-    "certificationsAwards": "American Board of Dermatology certification is listed with an active term in the public CV; no award is used as a proxy for clinical quality.",
-    "strengths": ["short drive", "board-certified", "medical dermatology", "positive provider signal"],
-    "concernLevel": "moderate",
-    "negativeSummary": "Healthgrades 标签为正面且没有可见严重安全模式；主要 gap 是 Fair Lawn 新患者时段和 MD 连续性需要电话确认。",
-    "negativeClassification": "可操作的 access unknown，不是严重负面。",
-    "negativeFindings": [
-      { "category": "access-waiting", "severity": "none", "pattern": "not-available", "scope": "unknown", "summary": "公开来源不足以确认当前排期；不要把未公开的可用性当作已接受或已拒绝新患者。" }
-    ],
-    "verificationQuestions": ["Fair Lawn 这个地址现在是否由 Saluja 医生接收成人 acne 新患者？", "是否提供 topical、oral、hormonal、isotretinoin 和 scar/PIH 评估？", "复诊是否能保持同一位 MD？", "保险网络、实验室监测和续药沟通怎么做？"],
-    "healthgradesUrl": "https://www.healthgrades.com/dermatology-directory/nj-new-jersey/elmwood-park",
-    "officialUrl": "https://sandeepsaluja.dr-leonardo.com/",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=15-01%20Broadway%20Ste%2038%2C%20Fair%20Lawn%2C%20NJ%2007410",
-    "verifiedDate": "2026-08-02"
-  },
-  {
-    "name": "Stephen Spates, MD",
-    "provider": "Stephen Spates, MD",
-    "practice": "Schweiger Dermatology Group — Verona",
-    "location": "60 Pompton Avenue, Verona, NJ 07044",
-    "driveMin": 25,
-    "driveMax": 30,
-    "tier": 2,
-    "rank": 7,
-    "eligibility": { "license": "verified", "discipline": "verified", "boardCertification": "verified", "decision": "qualified" },
-    "evidenceBands": { "clinicalQuality": "strong", "adultAcneFit": "adequate", "patientExperience": "strong" },
-    "adultAcneSummary": "Healthgrades/Schweiger 资料确认 general dermatology；公开治疗重心更偏 skin cancer/excision，因此 acne 的 topical/systemic/hormonal 深度应在初诊确认。",
-    "primaryReviewSource": "Healthgrades",
-    "primaryRating": 4.8,
-    "primaryReviewCount": 18,
-    "primaryWrittenCount": 3,
-    "healthgradesRating": 4.8,
-    "healthgradesReviewCount": 18,
-    "healthgradesWrittenCount": 3,
-    "reviewConfidence": "moderate",
-    "reviewEvidence": [
-      { "source": "Healthgrades", "scope": "provider", "rating": 4.8, "reviewCount": 18, "writtenCount": 3, "confidence": "moderate", "summary": "Healthgrades reports 4.8/5 from 18 ratings and three written reviews; visible reviews describe listening, explanations and unrushed visits, with one lower rating.", "url": "https://www.healthgrades.com/physician/dr-stephen-spates-xnp6j" },
-      { "source": "Official practice", "scope": "office", "rating": null, "reviewCount": 0, "writtenCount": null, "confidence": "unavailable", "summary": "Schweiger lists Spates at the Verona location and provides dermatology scheduling; group marketing ratings are not blended with the provider score.", "url": "https://www.schweigerderm.com/providers/stephen-spates-m-d/" }
-    ],
-    "acceptsNewPatients": "Healthgrades states accepting new patients and the practice provides a scheduling route; confirm an adult acne appointment rather than a procedural-only slot.",
-    "availability": "verified",
-    "trainingSummary": "MD from University of Iowa Carver College of Medicine with dermatology fellowship/residency training documented by Healthgrades and practice profiles; specializes in dermatology and Mohs surgery.",
-    "schoolContext": "University of Iowa and University of Colorado/Presbyterian-St. Luke's training are public profile entries; they are context, not an acne-specific credential.",
-    "certificationsAwards": "Dermatology/Mohs scope and affiliated hospital quality signals are documented; verify current board status directly before booking.",
-    "strengths": ["4.8 rating", "positive communication tags", "board-credential signal", "accepts new patients"],
-    "concernLevel": "moderate",
-    "negativeSummary": "18 个 Healthgrades ratings里可见文字大多正面，包含一条较低评分；没有看到安全或药物监测模式，但 acne-specific 证据较窄。",
-    "negativeClassification": "孤立的体验差异，不是严重临床模式；主要是 acne fit 的证据限制。",
-    "negativeFindings": [
-      { "category": "communication", "severity": "low", "pattern": "isolated", "scope": "provider", "summary": "一条较低评分不足以说明重复沟通问题；其余可见文字对解释和耐心评价较好。" }
-    ],
-    "verificationQuestions": ["是否把成人 acne 作为持续管理，而不只是外科/皮肤癌就诊？", "是否能讨论 oral/hormonal/isotretinoin 以及疤痕和 PIH？", "复诊由 Spates 医生还是团队其他成员负责？", "新患者预约、保险和药物监测怎么安排？"],
-    "healthgradesUrl": "https://www.healthgrades.com/physician/dr-stephen-spates-xnp6j",
-    "officialUrl": "https://www.schweigerderm.com/providers/stephen-spates-m-d/",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=60%20Pompton%20Avenue%2C%20Verona%2C%20NJ%2007044",
-    "verifiedDate": "2026-08-02"
-  },
-  {
-    "name": "Michael Ehrenreich, MD",
-    "provider": "Michael Ehrenreich, MD",
-    "practice": "SOMA Skin & Laser",
-    "location": "275-277 Forest Ave Ste 120, Paramus, NJ 07652",
-    "driveMin": 10,
-    "driveMax": 20,
-    "tier": 3,
-    "rank": 9,
-    "eligibility": { "license": "verified", "discipline": "verified", "boardCertification": "verified", "decision": "qualified" },
-    "evidenceBands": { "clinicalQuality": "strong", "adultAcneFit": "strong", "patientExperience": "adequate" },
-    "adultAcneSummary": "Healthgrades lists acne at normal treatment frequency; official SOMA material describes medical dermatology and acne care, plus scar/hyperpigmentation interests. Cosmetic-office boundaries need explicit discussion.",
-    "primaryReviewSource": "Healthgrades",
-    "primaryRating": 4.3,
-    "primaryReviewCount": 104,
-    "primaryWrittenCount": 32,
-    "healthgradesRating": 4.3,
-    "healthgradesReviewCount": 104,
-    "healthgradesWrittenCount": 32,
-    "reviewConfidence": "very-strong",
-    "reviewEvidence": [
-      { "source": "Healthgrades", "scope": "provider", "rating": 4.3, "reviewCount": 104, "writtenCount": 32, "confidence": "very-strong", "summary": "Healthgrades reports 4.3/5 from 104 ratings and 32 written reviews. Positive reviews mention acne medication and thoughtful explanations; negative reviews include rushed visits, a billing complaint and perceived cosmetic upsell.", "url": "https://www.healthgrades.com/physician/dr-michael-ehrenreich-xxcyx" },
-      { "source": "Official practice", "scope": "provider", "rating": null, "reviewCount": 0, "writtenCount": null, "confidence": "unavailable", "summary": "SOMA identifies Dr. Ehrenreich as FAAD/ABD, accepting new patients, and practicing medical, surgical and cosmetic dermatology at the Paramus office.", "url": "https://somalaser.com/dr-michael-ehrenreich-md-millburn-dermatologist/" }
-    ],
-    "acceptsNewPatients": "Healthgrades and the official practice state accepting new patients; confirm that the Paramus location—not only Millburn or telehealth—can provide the desired adult acne follow-up.",
-    "availability": "verified",
-    "trainingSummary": "Rutgers New Jersey Medical School, Saint Barnabas internship and SUNY Downstate dermatology residency; FAAD and diplomate of the American Board of Dermatology, with additional Mohs certification.",
-    "schoolContext": "Rutgers and SUNY Downstate are documented academic training sites; his medical-director role adds experience context but does not erase office-level review variation.",
-    "certificationsAwards": "American Board of Dermatology and micrographic dermatologic surgery certifications; public practice biography notes NJ Family Magazine kids' doctor recognition, not an acne outcome claim.",
-    "strengths": ["very strong review sample", "acne listed", "board-certified", "new-patient status"],
-    "concernLevel": "moderate",
-    "negativeSummary": "Healthgrades 104 条评分中正面明显占多数，但存在可重复理解为 office-level communication/billing friction 的个别评论：一次 rushed visit、一次 overbilling allegation、一次 perceived upsell；没有可见重复的 medication-monitoring 或 safety pattern。",
-    "negativeClassification": "需要认真核实的办公室体验 tradeoff，但目前更像 isolated office concerns，而不是已证实的严重临床风险；未解释的单条负面不被标为不合理。",
-    "negativeFindings": [
-      { "category": "communication", "severity": "moderate", "pattern": "isolated", "scope": "office", "summary": "可见评论提到一次检查仓促和一次因香味产品导致的短复诊；更接近沟通/流程问题，不足以证明持续的诊断问题。" },
-      { "category": "billing-administration", "severity": "moderate", "pattern": "isolated", "scope": "office", "summary": "一条评论声称被收取未完成服务的费用；这是需要预先询问账单和保险的 office-level allegation，不能从单条评论推断事实成立。" }
-    ],
-    "verificationQuestions": ["成人 acne 是否由 MD 亲自评估并长期复诊？", "医疗 acne、疤痕/色沉和 cosmetic 服务如何分开说明与计费？", "口服药、激素药或 isotretinoin 的监测和副作用沟通如何做？", "Paramus 是否接受新患者及保险，复诊是否固定由同一位医生完成？"],
-    "healthgradesUrl": "https://www.healthgrades.com/physician/dr-michael-ehrenreich-xxcyx",
-    "officialUrl": "https://somalaser.com/dr-michael-ehrenreich-md-millburn-dermatologist/",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=275-277%20Forest%20Ave%20Ste%20120%2C%20Paramus%2C%20NJ%2007652",
-    "verifiedDate": "2026-08-02"
-  },
-  {
-    "name": "Allen Sapadin, MD",
-    "provider": "Allen Sapadin, MD",
-    "practice": "Allen N. Sapadin MD, PC",
-    "location": "370 Summit Avenue, Hackensack, NJ 07601",
-    "driveMin": 10,
-    "driveMax": 20,
-    "tier": 3,
-    "rank": 10,
-    "eligibility": { "license": "verified", "discipline": "verified", "boardCertification": "verified", "decision": "qualified" },
-    "evidenceBands": { "clinicalQuality": "strong", "adultAcneFit": "strong", "patientExperience": "adequate" },
-    "adultAcneSummary": "Healthgrades lists acne among treated conditions and Zocdoc lists acne visits; official practice focuses on medical dermatology, so the first call should confirm the specific acne pathway and follow-up cadence.",
-    "primaryReviewSource": "Healthgrades",
-    "primaryRating": 4.0,
-    "primaryReviewCount": 91,
-    "primaryWrittenCount": 0,
-    "healthgradesRating": 4.0,
-    "healthgradesReviewCount": 91,
-    "healthgradesWrittenCount": 0,
-    "reviewConfidence": "strong",
-    "reviewEvidence": [
-      { "source": "Healthgrades", "scope": "provider", "rating": 4.0, "reviewCount": 91, "writtenCount": null, "confidence": "strong", "summary": "Healthgrades directory reports 4.0/5 from 91 ratings; the visible provider attributes emphasize trust and explanations, while written-review count was not exposed in the directory capture.", "url": "https://www.healthgrades.com/group-directory/nj-new-jersey/hackensack/allen-sapadin-md-x3hvh3" },
-      { "source": "Official practice", "scope": "provider", "rating": null, "reviewCount": 0, "writtenCount": null, "confidence": "unavailable", "summary": "The practice describes medical dermatology, Mount Sinai training, more than 100 publications and online booking; official testimonials are not blended into the Healthgrades score.", "url": "https://www.doctorsapadin.com/about" }
-    ],
-    "acceptsNewPatients": "Hackensack Meridian's provider profile states accepting new patients and the practice offers online booking; verify the current acne appointment type and insurance before booking.",
-    "availability": "verified",
-    "trainingSummary": "Mount Sinai medical school and dermatology residency, chief-resident service, and a long-running medical/cosmetic dermatology practice in Hackensack.",
-    "schoolContext": "Mount Sinai is a documented training site and his publication record adds academic context; neither is used as a substitute for current license/board checks.",
-    "certificationsAwards": "American Board of Dermatology certification is listed by HMH; official biography notes extensive publications and teaching/lecture activity.",
-    "strengths": ["board-certified", "medical dermatology", "acne listed", "new-patient status"],
-    "concernLevel": "moderate",
-    "negativeSummary": "4.0/5 是这组里最低但仍通过门槛的 Healthgrades provider signal；可见官方 testimonials 偏正面，没有足够证据形成安全或用药监测模式。",
-    "negativeClassification": "整体评分带来的体验 tradeoff，不等于严重负面；需在首诊确认沟通和复诊习惯。",
-    "negativeFindings": [
-      { "category": "access-waiting", "severity": "low", "pattern": "isolated", "scope": "office", "summary": "公开资料不足以分离办公室与医生层面的较低评分原因；把 rating gap 当作需核实的体验差异，而不是直接归因给医生。" }
-    ],
-    "verificationQuestions": ["成人 acne 是否是医生本人持续管理的常见项目？", "是否覆盖 hormonal、oral、isotretinoin、疤痕和 PIH 方案？", "如何安排药物副作用、实验室和续药沟通？", "办公室是否能提供固定 provider 的复诊和清晰保险报价？"],
-    "healthgradesUrl": "https://www.healthgrades.com/group-directory/nj-new-jersey/hackensack/allen-sapadin-md-x3hvh3",
-    "officialUrl": "https://www.doctorsapadin.com/about",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=370%20Summit%20Avenue%2C%20Hackensack%2C%20NJ%2007601",
-    "verifiedDate": "2026-08-02"
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=299%20Forest%20Avenue%20Paramus%20NJ%2007652",
+    "verifiedDate": "2026-08-13"
   }
 ]

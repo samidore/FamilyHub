@@ -7,56 +7,77 @@ const searchable = [
   d.provider,
   d.practice,
   d.location,
-  d.adultAcneSummary,
+  d.perianalDermatitisSummary,
   d.acceptsNewPatients,
   d.trainingSummary,
   d.schoolContext,
   d.certificationsAwards,
   d.negativeSummary,
   d.negativeClassification,
+  ...d.capabilities,
   ...d.strengths,
   ...d.reviewEvidence.map((item) => `${item.source} ${item.summary}`),
+  ...d.safetyEvidence.map((item) => `${item.source} ${item.summary}`),
 ].join(' ').toLocaleLowerCase();
-const drive = `${d.driveMin}–${d.driveMax} 分钟`;
+const drive = d.driveMin === null || d.driveMax === null ? '通勤时间未核实' : `约 ${d.driveMin}–${d.driveMax} 分钟`;
 const bandLabels: Record<string, string> = { strong: 'Strong', adequate: 'Adequate', concern: 'Concern', unknown: 'Unknown' };
-const confidenceLabels: Record<string, string> = { moderate: 'moderate', strong: 'strong', 'very-strong': 'very-strong', unavailable: 'unavailable' };
-const availabilityLabels: Record<string, string> = { verified: '已核实新患者', conditional: '需电话确认', unknown: '未知' };
+const confidenceLabels: Record<string, string> = { 'very-limited': 'very-limited', limited: 'limited', moderate: 'moderate', strong: 'strong', 'very-strong': 'very-strong', unavailable: 'unavailable' };
+const availabilityLabels: Record<string, string> = { verified: '已核实新患者入口', conditional: '需电话确认', unknown: '未知' };
+const capabilityLabels: Record<string, string> = {
+  'eczema-dermatitis': 'eczema / dermatitis',
+  'contact-dermatitis': 'contact dermatitis',
+  'patch-testing': 'patch testing',
+  'anogenital-dermatology': 'anogenital dermatology',
+  'infection-fungal-differential': 'infection / fungal differential',
+  'psoriasis-lichen-differential': 'psoriasis / lichen differential',
+  biopsy: 'biopsy',
+  'multidisciplinary-referral': 'multidisciplinary referral',
+};
 const bandItems = [
-  ['Clinical quality', d.evidenceBands.clinicalQuality],
-  ['Adult acne fit', d.evidenceBands.adultAcneFit],
+  ['Clinical foundation', d.evidenceBands.clinicalFoundation],
+  ['肛周皮炎适配', d.evidenceBands.perianalDermatitisFit],
+  ['Diagnostic breadth', d.evidenceBands.diagnosticBreadth],
   ['Patient experience', d.evidenceBands.patientExperience],
+  ['Practical access', d.evidenceBands.practicalAccess],
 ] as const;
 ---
-<article class="record-card dermatologist-card" data-dermatologist data-search={searchable} data-tier={d.tier} data-drive-max={d.driveMax} data-primary-rating={d.primaryRating} data-primary-reviews={d.primaryReviewCount} data-review-confidence={d.reviewConfidence} data-acne-fit={d.evidenceBands.adultAcneFit} data-availability={d.availability} data-concern={d.concernLevel} data-rank={d.rank} data-name={d.name}>
+<article class="record-card dermatologist-card" data-dermatologist data-search={searchable} data-location-scope={d.locationScope} data-tier={d.tier} data-drive-max={d.driveMax ?? 999} data-primary-rating={d.primaryRating ?? -1} data-primary-reviews={d.primaryReviewCount} data-review-confidence={d.reviewConfidence} data-perianal-fit={d.evidenceBands.perianalDermatitisFit} data-fit-priority={d.evidenceBands.perianalDermatitisFit === 'strong' ? 0 : 1} data-capabilities={d.capabilities.join('|')} data-availability={d.availability} data-concern={d.concernLevel} data-rank={d.rank} data-name={d.name}>
   <div class="record-card__top">
-    <div class="badges"><span class="badge">比较 Tier {d.tier}</span><span class="badge badge--caution">关注：{d.concernLevel}</span><span class="badge badge--status">{availabilityLabels[d.availability]}</span></div>
+    <div class="badges">
+      <span class="badge">比较 Tier {d.tier}</span>
+      {d.locationScope === 'nyc' && <span class="badge badge--caution">NYC 专科备选</span>}
+      <span class="badge badge--caution">关注：{d.concernLevel}</span>
+      <span class="badge badge--status">{availabilityLabels[d.availability]}</span>
+    </div>
     <h2>{d.name}</h2>
     <p class="provider-line">Provider：<strong>{d.provider}</strong></p>
     <p class="provider-line">Practice：{d.practice}</p>
-    <p class="location-line">{d.location} <span aria-hidden="true">·</span> 约 {drive}</p>
+    <p class="location-line">{d.location} <span aria-hidden="true">·</span> {drive}</p>
     <dl class="metric-grid dermatologist-metrics">
-      <div><dt>{d.primaryReviewSource}</dt><dd>{d.primaryRating.toFixed(1)} / 5</dd></div>
-      <div><dt>Ratings</dt><dd>{d.primaryReviewCount.toLocaleString()}</dd></div>
+      <div><dt>{d.primaryReviewSource}</dt><dd>{d.primaryRating === null ? '未显示评分' : `${d.primaryRating.toFixed(1)} / 5`}</dd></div>
+      <div><dt>Ratings</dt><dd>{d.primaryReviewCount ? d.primaryReviewCount.toLocaleString() : '未显示数量'}</dd></div>
       <div><dt>Review confidence</dt><dd>{confidenceLabels[d.reviewConfidence]}</dd></div>
       <div><dt>Eligibility</dt><dd>{d.eligibility.decision}</dd></div>
     </dl>
   </div>
   <div class="record-card__body">
     <div class="tags" aria-label="主要优势">{d.strengths.map((strength) => <span>{strength}</span>)}</div>
-    <section class="info-block info-block--assessment"><h3>成人痤疮适配</h3><p>{d.adultAcneSummary}</p></section>
-    <section class="info-block"><h3>Evidence bands（等权）</h3><ul class="evidence-bands">{bandItems.map(([label, value]) => <li data-band={value}><span>{label}</span><strong>{bandLabels[value]}</strong></li>)}</ul></section>
-    <section class="info-block info-block--fact"><h3>Review evidence（来源分开）</h3><ul class="finding-list review-evidence-list">{d.reviewEvidence.map((evidence) => <li><strong>{evidence.source}</strong> · {evidence.scope} · {evidence.rating === null ? '未给出独立评分' : `${evidence.rating.toFixed(1)} / 5`} · {evidence.reviewCount ? `${evidence.reviewCount} reviews` : '未提供数量'}<br /><span>{evidence.summary}</span> <a href={evidence.url} target="_blank" rel="noopener noreferrer">查看来源</a></li>)}</ul></section>
+    <section class="info-block info-block--assessment"><h3>肛周皮炎 / 湿疹适配</h3><p>{d.perianalDermatitisSummary}</p></section>
+    <section class="info-block"><h3>可核实的诊断能力</h3><div class="tags" aria-label="诊断能力">{d.capabilities.map((capability) => <span>{capabilityLabels[capability]}</span>)}</div></section>
+    <section class="info-block"><h3>Evidence bands</h3><ul class="evidence-bands">{bandItems.map(([label, value]) => <li data-band={value}><span>{label}</span><strong>{bandLabels[value]}</strong></li>)}</ul></section>
+    <section class="info-block info-block--fact"><h3>Review evidence（来源分开）</h3><ul class="finding-list review-evidence-list">{d.reviewEvidence.map((evidence) => <li><strong>{evidence.source}</strong> · {evidence.scope} · {evidence.rating === null ? '未显示独立评分' : `${evidence.rating.toFixed(1)} / 5`} · {evidence.reviewCount ? `${evidence.reviewCount} ratings` : '未显示数量'}<br /><span>{evidence.summary}</span> <a href={evidence.url} target="_blank" rel="noopener noreferrer">查看来源</a></li>)}</ul></section>
     <details class="record-details">
-      <summary>查看资历、负面分析与预约问题</summary>
+      <summary>查看资格、安全、负评与预约问题</summary>
       <div class="record-details__content">
         <section class="info-block"><h3>新患者与可用性</h3><p>{d.acceptsNewPatients}</p></section>
         <section class="info-block"><h3>Eligibility gates</h3><p>License: {d.eligibility.license}; discipline: {d.eligibility.discipline}; board certification: {d.eligibility.boardCertification}; decision: {d.eligibility.decision}.</p></section>
+        <section class="info-block info-block--fact"><h3>官方安全与资格资料</h3><ul class="finding-list">{d.safetyEvidence.map((evidence) => <li><strong>{evidence.source}</strong> · {evidence.status}: {evidence.summary} <a href={evidence.url} target="_blank" rel="noopener noreferrer">查看来源</a></li>)}</ul></section>
         <section class="info-block"><h3>Training</h3><p>{d.trainingSummary}</p></section>
         <section class="info-block"><h3>学校与训练背景</h3><p>{d.schoolContext}</p></section>
         <section class="info-block"><h3>认证与相关荣誉</h3><p>{d.certificationsAwards}</p></section>
         <section class="info-block info-block--risk"><h3>负面评论如何分类</h3><p><strong>{d.negativeClassification}</strong> {d.negativeSummary}</p><ul class="finding-list">{d.negativeFindings.map((finding) => <li><strong>{finding.category}</strong> · {finding.severity} · {finding.pattern} · {finding.scope}: {finding.summary}</li>)}</ul></section>
         <section class="info-block"><h3>预约前问题</h3><ul class="question-list">{d.verificationQuestions.map((question) => <li>{question}</li>)}</ul></section>
-        <p class="verification-note">资料核实：{d.verifiedDate || '未记录'} · Review confidence 按 provider-level sample size 标记；不同平台评分不相加。</p>
+        <p class="verification-note">资料核实：{d.verifiedDate || '未记录'} · Healthgrades 只作 patient-experience 证据；缺少 provider-level 文字样本不代表安全证明。本页不记录诊断、症状照片、保险或预约资料。</p>
       </div>
     </details>
     <div class="actions actions--three"><a class="button button--primary" href={d.healthgradesUrl} target="_blank" rel="noopener noreferrer">Healthgrades</a><a class="button button--secondary" href={d.officialUrl} target="_blank" rel="noopener noreferrer">Official site</a><a class="button button--secondary" href={d.googleMapsUrl} target="_blank" rel="noopener noreferrer">Google Maps</a></div>
