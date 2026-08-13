@@ -36,15 +36,14 @@
             }
           },
           "recentMeals": {
-            ".validate": "newData.numChildren() <= 4",
             "$index": {
-              ".validate": "($index == '0' || $index == '1' || $index == '2' || $index == '3') && newData.numChildren() == 3 && newData.hasChildren(['mealId', 'completedAt', 'recipeIds'])",
+              ".validate": "($index == '0' || $index == '1' || $index == '2' || $index == '3') && newData.hasChildren(['mealId', 'completedAt', 'recipeIds'])",
               "mealId": { ".validate": "newData.isString() && newData.val().length > 0" },
               "completedAt": { ".validate": "newData.isNumber() && newData.val() > 0" },
               "recipeIds": {
-                ".validate": "newData.numChildren() > 0 && newData.numChildren() <= 162",
                 "$recipeIndex": { ".validate": "newData.isString() && newData.val().length > 0" }
-              }
+              },
+              "$other": { ".validate": false }
             }
           },
           "currentMeal": {
