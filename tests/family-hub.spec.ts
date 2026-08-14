@@ -253,7 +253,7 @@ test('top navigation allows steps one to three and gates checkout to cook', asyn
   await expect(page.locator('#meal-checkout')).toBeVisible();
 });
 
-test('meal builder exposes one-of binding and explicit leafy add-on choices', async ({ page }) => {
+test('meal builder exposes one-of binding without changing checkout-only options', async ({ page }) => {
   await page.goto('meal-builder/');
   await startMeal(page, ['chicken-drumsticks', 'bone-in-chicken-thighs', 'chinese-greens', 'lettuce']);
   const main = page.locator('[data-meal-recipe="oyster-sauce-braised-chicken"]');
@@ -262,15 +262,41 @@ test('meal builder exposes one-of binding and explicit leafy add-on choices', as
   await expect(binding).toBeVisible();
   await binding.selectOption('bone-in-chicken-thighs');
   await main.getByRole('button', { name: /选择这道菜/ }).click();
-  const selected = page.locator('[data-selected-recipe="oyster-sauce-braised-chicken"]');
-  await expect(selected).toBeVisible();
-  const addon = selected.locator('[data-addon-select="true"]');
-  await expect(addon).toHaveCount(1);
-  await addon.selectOption('lettuce');
   const state = await page.evaluate(() => Object.values(sessionStorage).map((value) => { try { return JSON.parse(value); } catch { return null; } }).find((value) => value?.state)?.state);
   expect(state.selectedRecipeIds).toContain('oyster-sauce-braised-chicken');
   expect(state.recipeIngredientBindings['oyster-sauce-braised-chicken']).toContain('bone-in-chicken-thighs');
-  expect(state.selectedAddons).toContainEqual({ mainRecipeId: 'oyster-sauce-braised-chicken', addonType: 'finish-with-leafy-vegetable', ingredientId: 'lettuce' });
+});
+
+test('iron-pan braise checkout lists optional snapshot Ingredients with a first +1 step', async ({ page }) => {
+  await page.goto('meal-builder/');
+  await setInventory(page, ['ground-pork', 'soft-tofu', 'fried-tofu-puffs']);
+  const tofuPuffsInventory = await inventoryItem(page, 'fried-tofu-puffs');
+  await tofuPuffsInventory.locator('[data-inventory-step="0.5"]').click();
+  await tofuPuffsInventory.locator('[data-inventory-step="0.5"]').click();
+  await page.locator('#meal-start-current').click();
+  await page.locator('[data-meal-recipe="minced-pork-tofu"] [data-select-recipe]').click();
+  await page.locator('#meal-force-next').click();
+  await page.locator('#meal-open-checkout').click();
+
+  await expect(page.locator('[data-checkout-optional-heading]')).toHaveText('可选顺手焖');
+  const optional = page.locator('[data-checkout-optional="true"][data-checkout-ingredient="fried-tofu-puffs"]');
+  await expect(optional.locator('[data-checkout-value="fried-tofu-puffs"]')).toHaveText('0 / 2');
+  await optional.locator('[data-checkout-step="0.5"]').click();
+  await expect(optional.locator('[data-checkout-value="fried-tofu-puffs"]')).toHaveText('1 / 2');
+  await optional.locator('[data-checkout-step="0.5"]').click();
+  await expect(optional.locator('[data-checkout-value="fried-tofu-puffs"]')).toHaveText('1.5 / 2');
+  await expect(page.locator('.meal-checkout-row[data-checkout-ingredient="soft-tofu"]')).toHaveCount(1);
+  await expect(page.locator('[data-checkout-optional="true"][data-checkout-ingredient="soft-tofu"]')).toHaveCount(0);
+});
+
+test('pure Instant Pot checkout does not expose easy-braise options', async ({ page }) => {
+  await page.goto('meal-builder/');
+  await startMeal(page, ['bone-in-chicken-thighs', 'fried-tofu-puffs']);
+  await page.locator('[data-meal-recipe="instant-pot-soy-chicken-thighs"] [data-select-recipe]').click();
+  await page.locator('#meal-force-next').click();
+  await page.locator('#meal-open-checkout').click();
+  await expect(page.locator('[data-checkout-optional-heading]')).toHaveCount(0);
+  await expect(page.locator('[data-checkout-optional="true"]')).toHaveCount(0);
 });
 
 test('cook back returns every device to the shared recipes step', async ({ page }) => {

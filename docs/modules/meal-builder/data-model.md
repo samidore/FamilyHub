@@ -45,7 +45,7 @@ notes: ''
 
 `starter.visible: false` retains a long-term ID without showing a button; the current hidden pantry aromatics are `ginger`, `scallion`, and `garlic`. Every visible non-pantry ingredient has one controlled section and a unique positive order. `inventory_tracking: counted` supports half-unit quantities; `presence-only` is used for `eggs`, `rice`, `noodles`, `bread`, `steamed-buns`, `oats`, `zongzi`, `white-oil-sausage`, `potato`, and `peeled-shrimp`.
 
-The optional Ingredient `child_coverage.vegetable` is read only when a Recipe declares ingredient-dependent coverage. `unknown` remains unknown; section membership or a leafy name cannot imply `finish-wilt-compatible`.
+The optional Ingredient `child_coverage.vegetable` is read only when a Recipe declares ingredient-dependent coverage. `unknown` remains unknown; section membership or a leafy name cannot imply `easy-braise-addon`.
 
 Starter section IDs and order are data, not UI inference:
 
@@ -112,12 +112,11 @@ substitutions: []
 ## Controlled values and invariants
 
 - Main protein categories: `pork`, `beef`, `lamb`, `chicken`, `egg`, `tofu`, `fish`, `shellfish`, `mixed`, `none`; goat maps to `lamb`.
-- Tags include timing (`lunch-30`, `lunch-45`, `make-ahead`, `advance-start`, `low-active-time`, `one-pot`, `pot-in-pot`, `leftover-friendly`, `freezer-friendly`), family (`family-shared`, `soft-protein`, `soft-vegetable`, `child-support-protein`, `adult-finish-separate`, `two-vegetable-ready`), equipment (`instant-pot`, `stovetop-nonstick`, `stovetop-wok`, `oven`, `air-fryer`), preparation (`low-prep`, `medium-prep`, `high-prep`, `minimal-cutting`, `light-seasoning`, `non-spicy-base`, `pan-seared`, `stir-fried`, `steamed`, `braised`, `simmered`, `roasted`), and the explicit `finish-wilt-compatible` Ingredient capability.
-- `meal_addons` is only for defined add-ons. The v1 add-on is `finish-with-leafy-vegetable`; it contributes a slot and child coverage but never changes the main ID.
+- Tags include timing, family, equipment, and preparation facts plus checkout-only `easy-braise-addon` Ingredients and `iron-pan-braise` Recipes. These tags are not planning contributions.
 - Deprecated fields `vegetable_count`, `staple_pairings`, and `child_support_protein_needed` must not return in active records.
 - Recipe Ingredient IDs, `one_of` options, starter sections, and active index entries must resolve. No duplicate IDs, unknown fields, invalid values, unsafe paths, filename/ID mismatch, or unindexed active file is allowed.
 - Archive records are validated for schema and privacy but never emitted as active candidates. Unknown archived IDs already present in Firebase household state are ignored by reconciliation; new IDs are never silently reused.
 
 ## Migration parity
 
-The original YAML migration preserved all 132 Ingredient IDs and 162 Recipe IDs. The active library now has 133 Ingredients, 130 visible Starter choices, and 163 Recipes while retaining the migrated records, 23 vegetable-centered structures, and seven supported add-ons.
+The original YAML migration preserved all 132 Ingredient IDs and 162 Recipe IDs. The active library now has 134 Ingredients, 131 visible Starter choices, and 163 Recipes, including 23 easy-braise Ingredients and 36 iron-pan braise Recipes.

@@ -4,6 +4,7 @@ status: candidate
 name_zh: 糖醋排骨
 name_en: Shanghai Sweet-and-Sour Ribs
 tags:
+  - iron-pan-braise
   - light-seasoning
   - non-spicy-base
   - braised
@@ -78,17 +79,6 @@ steps:
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
-meal_addons:
-  - id: finish-with-leafy-vegetable
-    accepts_ingredient_tag: finish-wilt-compatible
-    meal_contribution:
-      protein: 0
-      vegetable: 1
-      staple: 0
-    child_coverage:
-      protein: false
-      vegetable: ingredient-dependent
-    notes: 仅在铁锅/炒锅末段已有收汁/焖烧窗口时加入兼容嫩叶菜；不另起锅。
 cook_ingredients:
   - 软排骨：900 g，切段
   - 短腌：生抽 1 Tbsp；绍兴酒 1 Tbsp

@@ -87,7 +87,7 @@ ingredients:
       visible: true
       section: other-vegetable
       order: 40
-    tags: []
+    tags: [easy-braise-addon]
     fit:
       hard_rules: pass
       score: 4
@@ -297,7 +297,7 @@ ingredients:
       visible: true
       section: other-vegetable
       order: 120
-    tags: []
+    tags: [easy-braise-addon]
     fit:
       hard_rules: pass
       score: 4
@@ -323,7 +323,7 @@ ingredients:
       visible: true
       section: other-vegetable
       order: 130
-    tags: []
+    tags: [easy-braise-addon]
     fit:
       hard_rules: pass
       score: 4
@@ -615,7 +615,7 @@ ingredients:
       visible: true
       section: other-vegetable
       order: 240
-    tags: []
+    tags: [easy-braise-addon]
     fit:
       hard_rules: pass
       score: 4

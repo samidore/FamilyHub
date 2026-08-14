@@ -1,4 +1,4 @@
-import type { IngredientChildCoverage, InventoryTracking, MealAddon, MealRecipe } from '../lib/mealEngine';
+import type { IngredientChildCoverage, InventoryTracking, MealRecipe } from '../lib/mealEngine';
 
 export interface MealDataIngredient {
   id: string;
@@ -18,7 +18,6 @@ export interface MealDataRecipe extends MealRecipe {
   tags: string[];
   primaryRole: string;
   mainProteinCategory: string;
-  mealAddons: MealAddon[];
   checkoutUnits: Record<string, number>;
   ingredientChildCoverage: Record<string, IngredientChildCoverage>;
   activeMinutes: string;

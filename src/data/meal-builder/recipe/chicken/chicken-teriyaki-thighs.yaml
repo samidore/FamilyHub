@@ -4,6 +4,7 @@ status: candidate
 name_zh: 照烧鸡腿
 name_en: Chicken Teriyaki Thighs
 tags:
+  - iron-pan-braise
   - light-seasoning
   - non-spicy-base
   - pan-seared
@@ -78,17 +79,6 @@ steps:
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
-meal_addons:
-  - id: finish-with-leafy-vegetable
-    accepts_ingredient_tag: finish-wilt-compatible
-    meal_contribution:
-      protein: 0
-      vegetable: 1
-      staple: 0
-    child_coverage:
-      protein: false
-      vegetable: ingredient-dependent
-    notes: 仅在铁锅/炒锅末段已有收汁/焖烧窗口时加入兼容嫩叶菜；不另起锅。
 cook_ingredients:
   - 无骨去皮鸡腿肉：680 g，较大块可切半
   - 照烧汁 2:2:2:1：生抽 2 Tbsp；味醂 2 Tbsp；清酒 2 Tbsp；糖 1 Tbsp

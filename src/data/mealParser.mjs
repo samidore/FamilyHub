@@ -1,8 +1,7 @@
 import { parse as parseYaml } from 'yaml';
 
 const INGREDIENT_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'starter', 'tags', 'child_coverage', 'inventory_tracking', 'fit', 'evidence', 'notes']);
-const RECIPE_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'tags', 'fit', 'evidence', 'notes', 'primary_role', 'main_protein_category', 'main_protein_ingredient_ids', 'supporting_protein_ingredient_ids', 'vegetable_ingredient_ids', 'meal_contribution', 'child_coverage', 'meal_addons', 'integral_staple_ingredient_ids', 'recommended_staple_ingredient_ids', 'active_minutes', 'meal_window_minutes', 'elapsed_minutes', 'advance_start_required', 'equipment', 'burner_plan', 'child_suitable', 'child_texture', 'spicy_in_base', 'deep_fried', 'salt_level', 'oil_level', 'servings', 'detail_level', 'ingredients', 'cook_ingredients', 'steps', 'child_serving', 'adult_finish', 'substitutions', 'checkout_units']);
-const ADDON_KEYS = new Set(['id', 'accepts_ingredient_tag', 'meal_contribution', 'child_coverage', 'notes']);
+const RECIPE_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'tags', 'fit', 'evidence', 'notes', 'primary_role', 'main_protein_category', 'main_protein_ingredient_ids', 'supporting_protein_ingredient_ids', 'vegetable_ingredient_ids', 'meal_contribution', 'child_coverage', 'integral_staple_ingredient_ids', 'recommended_staple_ingredient_ids', 'active_minutes', 'meal_window_minutes', 'elapsed_minutes', 'advance_start_required', 'equipment', 'burner_plan', 'child_suitable', 'child_texture', 'spicy_in_base', 'deep_fried', 'salt_level', 'oil_level', 'servings', 'detail_level', 'ingredients', 'cook_ingredients', 'steps', 'child_serving', 'adult_finish', 'substitutions', 'checkout_units']);
 const CONTRIBUTIONS = new Set([0, 0.5, 1, 2]);
 const STARTER_KEYS = new Set(['visible', 'section', 'order']);
 const SECTION_KEYS = new Set(['id', 'label_zh', 'label_en', 'order', 'visible']);
@@ -12,8 +11,8 @@ const CONTRIBUTION_KEYS = new Set(['protein', 'vegetable', 'staple']);
 const RECIPE_CHILD_KEYS = new Set(['protein', 'vegetable']);
 const INGREDIENT_CHILD_KEYS = new Set(['vegetable']);
 const REQUIREMENT_KEYS = new Set(['ingredient_id', 'one_of', 'role']);
-const ADDON_ID = 'finish-with-leafy-vegetable';
-const ADDON_TAG = 'finish-wilt-compatible';
+const EASY_BRAISE_TAG = 'easy-braise-addon';
+const IRON_PAN_TAG = 'iron-pan-braise';
 const INVENTORY_TRACKING = new Set(['counted', 'presence-only']);
 const ACTIVE_STATUSES = new Set(['candidate', 'approved']);
 const PRESENCE_ONLY_INGREDIENTS = new Set(['eggs', 'rice', 'noodles', 'bread', 'steamed-buns', 'oats', 'zongzi', 'white-oil-sausage', 'potato', 'peeled-shrimp']);
@@ -37,10 +36,10 @@ export function parseMealKb(text) {
   const blocks = [...text.matchAll(/```yaml\r?\n([\s\S]*?)```/g)].map((match) => parseYaml(match[1])).filter(Boolean);
   const sectionBlock = blocks.find((block) => Array.isArray(block.starter_sections));
   assert(sectionBlock, 'starter section registry is missing');
-  return parseMealRecords(metadata, sectionBlock.starter_sections, blocks.filter((block) => block.type === 'ingredient' && typeof block.id === 'string'), blocks.filter((block) => block.type === 'recipe' && typeof block.id === 'string'));
+  return parseMealRecords(metadata, sectionBlock.starter_sections, blocks.filter((block) => block.type === 'ingredient' && typeof block.id === 'string'), blocks.filter((block) => block.type === 'recipe' && typeof block.id === 'string'), false);
 }
 
-function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRecords) {
+function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRecords, enforceCurrentContent = true) {
   assert(typeof metadata.kb_version === 'number' || typeof metadata.kb_version === 'string', 'kb_version must be a number or string');
   assert(/^\d{4}-\d{2}-\d{2}$/.test(metadata.last_updated), 'last_updated must use YYYY-MM-DD');
   const starterSections = sectionRecords.map((section) => {
@@ -79,8 +78,8 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
     const orders = ingredients.filter((ingredient) => ingredient.section === section.id).map((ingredient) => ingredient.order);
     assert(new Set(orders).size === orders.length, `${section.id} starter orders must be unique`);
   }
-  const taggedIngredients = ingredients.filter((ingredient) => ingredient.tags.includes(ADDON_TAG)).map((ingredient) => ingredient.id).sort();
-  assert(taggedIngredients.length > 0, 'finish-wilt capability tag is missing');
+  const taggedIngredients = ingredients.filter((ingredient) => ingredient.tags.includes(EASY_BRAISE_TAG)).map((ingredient) => ingredient.id).sort();
+  if (enforceCurrentContent) assert(taggedIngredients.length === 23, `expected 23 easy-braise Ingredients, found ${taggedIngredients.length}`);
 
   const recipeIds = new Set();
   const recipes = recipeRecords.map((record, order) => {
@@ -109,14 +108,6 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
       assert(Array.isArray(record.steps) && record.steps.length > 0 && record.steps.every((step) => typeof step === 'string' && step.trim().length > 0), `${record.id} cookable record requires executable steps`);
       assert(Array.isArray(record.equipment) && record.equipment.length > 0 && record.equipment.every((item) => typeof item === 'string' && item.trim().length > 0), `${record.id} cookable record requires equipment`);
     }
-    const mealAddons = (record.meal_addons ?? []).map((addon) => {
-      assertKeys(addon, ADDON_KEYS);
-      assert(addon.id === ADDON_ID, `${record.id} has unsupported meal add-on ${addon.id}`);
-      assert(addon.accepts_ingredient_tag === ADDON_TAG, `${record.id} has unsupported add-on capability`);
-      assert(addon.meal_contribution?.protein === 0 && addon.meal_contribution?.vegetable === 1 && addon.meal_contribution?.staple === 0, `${record.id} has invalid add-on contribution`);
-      assert(addon.child_coverage?.protein === false && addon.child_coverage?.vegetable === 'ingredient-dependent', `${record.id} has invalid add-on child coverage`);
-      return { id: addon.id, acceptsIngredientTag: addon.accepts_ingredient_tag, contribution: { protein: 0, vegetable: 1, staple: 0 }, childCoverage: { protein: false, vegetable: 'ingredient-dependent' }, notes: String(addon.notes ?? '') };
-    });
     const checkoutUnits = {};
     if (record.checkout_units !== undefined) {
       assert(record.checkout_units && typeof record.checkout_units === 'object' && !Array.isArray(record.checkout_units), `${record.id} has invalid checkout_units`);
@@ -130,15 +121,15 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
       id: record.id, nameZh: String(record.name_zh), nameEn: String(record.name_en), tags: stringArray(record.tags), primaryRole: String(record.primary_role),
       mainProteinCategory: String(record.main_protein_category ?? 'none'), fitScore: Number(record.fit?.score ?? 0), order,
       contribution: { protein: Number(record.meal_contribution.protein), vegetable: Number(record.meal_contribution.vegetable), staple: Number(record.meal_contribution.staple) },
-      childCoverage, requirements, cookIngredientLines: stringArray(record.cook_ingredients), mealAddons,
+      childCoverage, requirements, cookIngredientLines: stringArray(record.cook_ingredients),
       checkoutUnits,
       ingredientChildCoverage: Object.fromEntries(requirements.flatMap((requirement) => requirement.anyOf).map((id) => [id, ingredients.find((item) => item.id === id)?.childCoverage?.vegetable ?? 'unknown'])),
       activeMinutes: String(record.active_minutes ?? ''), mealWindowMinutes: String(record.meal_window_minutes ?? ''), elapsedMinutes: String(record.elapsed_minutes ?? ''), advanceStartRequired: record.advance_start_required,
       equipment: stringArray(record.equipment), detailLevel: String(record.detail_level), steps: stringArray(record.steps), childServing: String(record.child_serving ?? ''), adultFinish: String(record.adult_finish ?? ''), substitutions: stringArray(record.substitutions), childTexture: String(record.child_texture ?? ''), notes: String(record.notes ?? ''), vegetableCentered: stringArray(record.evidence?.sources).some((source) => /^V\d{2}\s*[—-]/.test(source)),
     };
   });
-  assert(!recipes.find((recipe) => recipe.id === 'instant-pot-soy-chicken-thighs')?.mealAddons.length, 'Instant Pot soy chicken thighs must not support the add-on');
-  assert(recipes.some((recipe) => recipe.id === 'simple-stir-fried-leafy-greens' && recipe.childCoverage.vegetable === 'ingredient-dependent'), 'ingredient-dependent Vegetable coverage is missing');
+  if (enforceCurrentContent) assert(recipes.filter((recipe) => recipe.tags.includes(IRON_PAN_TAG)).length === 36, 'expected 36 iron-pan braise Recipes');
+  if (enforceCurrentContent) assert(recipes.some((recipe) => recipe.id === 'simple-stir-fried-leafy-greens' && recipe.childCoverage.vegetable === 'ingredient-dependent'), 'ingredient-dependent Vegetable coverage is missing');
 
   return {
     metadata: { version: String(metadata.kb_version), lastUpdated: String(metadata.last_updated) },
@@ -236,7 +227,7 @@ export function parseMealFiles(files) {
   const metadata = { kb_version: root.content_version, last_updated: root.last_updated };
   const activeData = parseMealRecords(metadata, starterSections, ingredientRecords, recipeRecords);
   if (archivedIngredients.length || archivedRecipes.length) {
-    parseMealRecords(metadata, starterSections, [...ingredientRecords, ...archivedIngredients], [...recipeRecords, ...archivedRecipes]);
+    parseMealRecords(metadata, starterSections, [...ingredientRecords, ...archivedIngredients], [...recipeRecords, ...archivedRecipes], false);
   }
   return activeData;
 }

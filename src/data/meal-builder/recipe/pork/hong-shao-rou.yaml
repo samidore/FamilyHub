@@ -4,6 +4,7 @@ status: candidate
 name_zh: 红烧肉
 name_en: Red-Braised Pork
 tags:
+  - iron-pan-braise
   - light-seasoning
   - non-spicy-base
   - braised
@@ -80,17 +81,6 @@ steps:
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
-meal_addons:
-  - id: finish-with-leafy-vegetable
-    accepts_ingredient_tag: finish-wilt-compatible
-    meal_contribution:
-      protein: 0
-      vegetable: 1
-      staple: 0
-    child_coverage:
-      protein: false
-      vegetable: ingredient-dependent
-    notes: 仅在铁锅/炒锅末段已有收汁/焖烧窗口时加入兼容嫩叶菜；不另起锅。
 cook_ingredients:
   - 梅花肉块：900 g
   - 家庭红烧汁：绍兴酒 1/4 cup；生抽 3 Tbsp；老抽 1 Tbsp；冰糖或白糖 2 Tbsp；水或低盐高汤 3 cups；姜 6片；葱白 3段；八角 1个，可省；桂皮 1小段，可省

@@ -12,14 +12,6 @@ export interface MealIngredient {
   childCoverage?: { vegetable: IngredientChildCoverage };
 }
 
-export interface MealAddon {
-  id: string;
-  acceptsIngredientTag: string;
-  contribution: { protein: number; vegetable: number; staple: number };
-  childCoverage: { protein: boolean; vegetable: RecipeChildCoverage };
-  notes?: string;
-}
-
 export interface MealRequirement {
   anyOf: string[];
   role?: string;
@@ -34,22 +26,14 @@ export interface MealRecipe {
   contribution: { protein: number; vegetable: number; staple: number };
   childCoverage: { protein: RecipeChildCoverage; vegetable: RecipeChildCoverage };
   requirements: MealRequirement[];
-  mealAddons?: MealAddon[];
   checkoutUnits?: Record<string, number>;
   ingredientChildCoverage?: Record<string, IngredientChildCoverage>;
   mealWindowMinutes: string;
   elapsedMinutes: string;
   advanceStartRequired: boolean;
+  tags?: string[];
   [key: string]: unknown;
 }
-
-export interface SelectedAddon {
-  mainRecipeId: string;
-  addonType: string;
-  ingredientId: string;
-}
-
-export type SelectedAddons = SelectedAddon[];
 
 export interface MealState {
   availableIngredientIds: string[];
@@ -60,7 +44,6 @@ export interface MealState {
   timePreference: TimePreference;
   selectedRecipeIds: string[];
   recipeIngredientBindings: Record<string, string[]>;
-  selectedAddons: SelectedAddons;
 }
 
 export interface MealTotals {
@@ -73,11 +56,10 @@ export interface MealTotals {
 
 export const defaultMealState = (): MealState => ({
   availableIngredientIds: [], proteinTarget: 1, vegetableTarget: 2, stapleRequired: true, childMode: true, timePreference: 'any', selectedRecipeIds: [],
-  recipeIngredientBindings: {}, selectedAddons: [],
+  recipeIngredientBindings: {},
 });
 
 const asSet = (value: Set<string> | string[] | undefined) => value instanceof Set ? value : new Set(value ?? []);
-const recipeAddons = (recipe: MealRecipe) => Array.isArray(recipe.mealAddons) ? recipe.mealAddons : [];
 
 /** Pick a deterministic available Ingredient for every required group. */
 export function bindRecipeIngredients(recipe: MealRecipe, available: Set<string> | string[], existing: (string | null | undefined)[] = []) {
@@ -128,92 +110,33 @@ export const resolveRecipeChildCoverage = (recipe: MealRecipe, binding: (string 
   protein: resolveCoverage(recipe, 'protein', binding, ingredients), vegetable: resolveCoverage(recipe, 'vegetable', binding, ingredients),
 });
 
-export function addonIsCompatible(recipe: MealRecipe, addon: MealAddon, ingredientId: string, ingredients?: MealIngredient[] | Record<string, MealIngredient>) {
-  const item = ingredientMap(ingredients).get(ingredientId);
-  return recipeAddons(recipe).some((candidate) => candidate.id === addon.id) && Boolean(item?.tags?.includes(addon.acceptsIngredientTag));
-}
-
-export function compatibleAddonIngredients(recipe: MealRecipe, addon: MealAddon, available: Set<string> | string[], ingredients: MealIngredient[] | Record<string, MealIngredient>) {
-  const availableSet = asSet(available);
-  return [...availableSet].filter((id) => addonIsCompatible(recipe, addon, id, ingredients));
-}
-
-/** Return selected main Recipes whose declared add-on has at least one compatible Ingredient. */
-export function rankAddons(recipes: MealRecipe[], state: MealState, ingredients: MealIngredient[] | Record<string, MealIngredient>) {
-  const available = asSet(state.availableIngredientIds);
-  const selectedBindingIngredients = new Set(state.selectedRecipeIds.flatMap((id) => state.recipeIngredientBindings?.[id] ?? []));
-  const selectedAddonIngredients = new Set((state.selectedAddons ?? []).map((entry) => entry.ingredientId));
-  const selectedRecipes = recipes.filter((recipe) => state.selectedRecipeIds.includes(recipe.id));
-  const totals = aggregateMeal(selectedRecipes, {
-    recipeIngredientBindings: state.recipeIngredientBindings,
-    selectedAddons: state.selectedAddons,
-    availableIngredientIds: state.availableIngredientIds,
-    ingredients,
-  });
-  return state.selectedRecipeIds.flatMap((recipeId) => {
-    const recipe = recipes.find((item) => item.id === recipeId);
-    if (!recipe) return [];
-    const binding = bindRecipeIngredients(recipe, available, state.recipeIngredientBindings?.[recipe.id] ?? []);
-    if (!isFeasible(recipe, available, binding)) return [];
-    return recipeAddons(recipe).flatMap((addon) => {
-      const current = (state.selectedAddons ?? []).find((entry) => entry.mainRecipeId === recipe.id && entry.addonType === addon.id);
-      const ingredientIds = compatibleAddonIngredients(recipe, addon, available, ingredients).filter((id) => {
-        if (selectedBindingIngredients.has(id) && current?.ingredientId !== id) return false;
-        if (selectedAddonIngredients.has(id) && current?.ingredientId !== id) return false;
-        return true;
-      });
-      const currentIngredientValid = Boolean(current?.ingredientId && available.has(current.ingredientId) && addonIsCompatible(recipe, addon, current.ingredientId, ingredients));
-      const selectedIngredientId = currentIngredientValid ? current?.ingredientId : ingredientIds[0];
-      const needsVegetable = totals.vegetable < state.vegetableTarget;
-      const needsChildVegetable = state.childMode && !totals.childVegetable;
-      const viableIngredientIds = needsVegetable ? ingredientIds : (needsChildVegetable ? ingredientIds.filter((id) => addonCoverage(addon, id, ingredients)) : []);
-      if (!current && !viableIngredientIds.length) return [];
-      if (current && !currentIngredientValid && !viableIngredientIds.length) return [{ recipeId: recipe.id, recipe, addon, ingredientIds: current?.ingredientId ? [current.ingredientId] : [], selectedIngredientId: current?.ingredientId }];
-      if (current && currentIngredientValid && !viableIngredientIds.includes(current.ingredientId)) viableIngredientIds.unshift(current.ingredientId);
-      return [{ recipeId: recipe.id, recipe, addon, ingredientIds: viableIngredientIds, selectedIngredientId }];
-    });
-  });
-}
-
-function selectedAddonEntries(state: MealState, recipeId: string): SelectedAddon[] {
-  return (state.selectedAddons ?? []).filter((entry) => entry.mainRecipeId === recipeId);
-}
-
-function addonCoverage(addon: MealAddon, ingredientId: string | undefined, ingredients?: MealIngredient[] | Record<string, MealIngredient>) {
-  if (addon.childCoverage.vegetable !== 'ingredient-dependent') return Boolean(addon.childCoverage.vegetable);
-  if (!ingredientId) return false;
-  return ingredientMap(ingredients).get(ingredientId)?.childCoverage?.vegetable === true;
+/** Checkout-only candidates. This deliberately has no planning or Cook View effect. */
+export function easyBraiseAddonIngredientIds(recipes: MealRecipe[], state: Pick<MealState, 'selectedRecipeIds' | 'recipeIngredientBindings'>, mealSnapshotIngredientIds: string[], ingredients: MealIngredient[] | Record<string, MealIngredient>): string[] {
+  const selected = new Set(state.selectedRecipeIds);
+  if (!recipes.some((recipe) => selected.has(recipe.id) && recipe.tags?.includes('iron-pan-braise'))) return [];
+  const bound = new Set(Object.values(state.recipeIngredientBindings).flat());
+  const map = ingredientMap(ingredients);
+  return [...new Set(mealSnapshotIngredientIds)].filter((id) => !bound.has(id) && map.get(id)?.tags?.includes('easy-braise-addon'));
 }
 
 export function aggregateMeal(selected: MealRecipe[], context: {
   bindings?: Record<string, (string | null | undefined)[]>;
   recipeIngredientBindings?: Record<string, (string | null | undefined)[]>;
-  selectedAddons?: SelectedAddons;
   availableIngredientIds?: string[];
   ingredients?: MealIngredient[] | Record<string, MealIngredient>;
 } = {}): MealTotals {
   const available = asSet(context.availableIngredientIds);
   const bindings = context.bindings ?? context.recipeIngredientBindings ?? {};
-  const bindingIngredients = new Set(selected.flatMap((recipe) => bindings[recipe.id] ?? (available.size ? bindRecipeIngredients(recipe, available) : [])));
-  const usedAddonIngredients = new Set<string>();
-  const selectedAddons = context.selectedAddons ?? [];
   return selected.reduce<MealTotals>((total, recipe) => {
     const binding = bindings[recipe.id] ?? (available.size ? bindRecipeIngredients(recipe, available) : []);
     const coverage = resolveRecipeChildCoverage(recipe, binding, context.ingredients);
     total.protein += recipe.contribution.protein; total.vegetable += recipe.contribution.vegetable; total.staple += recipe.contribution.staple;
     total.childProtein ||= coverage.protein; total.childVegetable ||= coverage.vegetable;
-    for (const entry of selectedAddons.filter((candidate) => candidate.mainRecipeId === recipe.id)) {
-      const addon = recipeAddons(recipe).find((candidate) => candidate.id === entry.addonType);
-      if (!addon || !entry.ingredientId || !available.has(entry.ingredientId) || bindingIngredients.has(entry.ingredientId) || usedAddonIngredients.has(entry.ingredientId) || !addonIsCompatible(recipe, addon, entry.ingredientId, context.ingredients)) continue;
-      usedAddonIngredients.add(entry.ingredientId);
-      total.protein += addon.contribution.protein; total.vegetable += addon.contribution.vegetable; total.staple += addon.contribution.staple;
-      total.childProtein ||= addon.childCoverage.protein; total.childVegetable ||= addonCoverage(addon, entry.ingredientId, context.ingredients);
-    }
     return total;
   }, { protein: 0, vegetable: 0, staple: 0, childProtein: false, childVegetable: false });
 }
 
-export const aggregateSelection = (recipes: MealRecipe[], state: MealState, ingredients?: MealIngredient[] | Record<string, MealIngredient>) => aggregateMeal(recipes.filter((recipe) => state.selectedRecipeIds.includes(recipe.id)), { recipeIngredientBindings: state.recipeIngredientBindings, selectedAddons: state.selectedAddons, availableIngredientIds: state.availableIngredientIds, ingredients });
+export const aggregateSelection = (recipes: MealRecipe[], state: MealState, ingredients?: MealIngredient[] | Record<string, MealIngredient>) => aggregateMeal(recipes.filter((recipe) => state.selectedRecipeIds.includes(recipe.id)), { recipeIngredientBindings: state.recipeIngredientBindings, availableIngredientIds: state.availableIngredientIds, ingredients });
 
 export type MealCompletionRequirement = 'Protein' | 'Vegetable' | 'Staple' | '孩子蛋白' | '孩子蔬菜';
 
@@ -250,7 +173,7 @@ export function rankCandidates(recipes: MealRecipe[], state: MealState, ingredie
   const available = asSet(state.availableIngredientIds);
   const selectedIds = new Set(state.selectedRecipeIds);
   const selected = recipes.filter((recipe) => selectedIds.has(recipe.id));
-  const totals = aggregateMeal(selected, { recipeIngredientBindings: state.recipeIngredientBindings, selectedAddons: state.selectedAddons, availableIngredientIds: state.availableIngredientIds, ingredients });
+  const totals = aggregateMeal(selected, { recipeIngredientBindings: state.recipeIngredientBindings, availableIngredientIds: state.availableIngredientIds, ingredients });
   const proteinLimit = state.proteinTarget + 0.5;
   const measures = (recipe: MealRecipe) => {
     const binding = bindRecipeIngredients(recipe, available, draftBindings[recipe.id] ?? state.recipeIngredientBindings?.[recipe.id] ?? []);
@@ -276,8 +199,8 @@ export function rankCandidates(recipes: MealRecipe[], state: MealState, ingredie
 }
 
 /** Keep selected Recipes, bindings, and add-ons coherent after any state change. */
-export function reconcileMealState(input: Partial<MealState>, recipes: MealRecipe[], ingredients: MealIngredient[] | Record<string, MealIngredient> = []): MealState {
-  const state: MealState = { ...defaultMealState(), ...input, recipeIngredientBindings: { ...(input.recipeIngredientBindings ?? {}) }, selectedAddons: [...(input.selectedAddons ?? [])] };
+export function reconcileMealState(input: Partial<MealState>, recipes: MealRecipe[], _ingredients: MealIngredient[] | Record<string, MealIngredient> = []): MealState {
+  const state: MealState = { ...defaultMealState(), ...input, recipeIngredientBindings: { ...(input.recipeIngredientBindings ?? {}) } };
   const available = asSet(state.availableIngredientIds);
   const keptRecipes: string[] = [];
   const bindings: Record<string, string[]> = {};
@@ -288,37 +211,7 @@ export function reconcileMealState(input: Partial<MealState>, recipes: MealRecip
     if (!isFeasible(recipe, available, binding)) continue;
     keptRecipes.push(id); bindings[id] = binding.filter((value): value is string => Boolean(value));
   }
-  const selectedAddons: SelectedAddons = [];
-  const usedRecipeIngredients = new Set(Object.values(bindings).flat());
-  const usedAddonIngredients = new Set<string>();
-  for (const recipeId of keptRecipes) {
-    const recipe = recipes.find((item) => item.id === recipeId)!;
-    const entries = selectedAddonEntries(state, recipeId);
-    const kept = entries.flatMap((entry) => {
-      const addon = recipeAddons(recipe).find((candidate) => candidate.id === entry.addonType);
-      if (!addon) return [];
-      const ingredientId = entry.ingredientId;
-      if (!ingredientId || !available.has(ingredientId) || usedRecipeIngredients.has(ingredientId) || usedAddonIngredients.has(ingredientId) || !addonIsCompatible(recipe, addon, ingredientId, ingredients)) return [];
-      usedAddonIngredients.add(ingredientId);
-      return [{ mainRecipeId: recipeId, addonType: addon.id, ingredientId }];
-    });
-    selectedAddons.push(...kept);
-  }
-  return { ...state, availableIngredientIds: [...available], selectedRecipeIds: keptRecipes, recipeIngredientBindings: bindings, selectedAddons };
-}
-
-export function addSelectedAddon(state: MealState, recipe: MealRecipe, addonId: string, ingredientId: string, ingredients: MealIngredient[] | Record<string, MealIngredient>) {
-  const addon = recipeAddons(recipe).find((candidate) => candidate.id === addonId);
-  const bound = new Set(state.selectedRecipeIds.flatMap((id) => state.recipeIngredientBindings?.[id] ?? []));
-  const usedByOtherAddon = (state.selectedAddons ?? []).some((entry) => !(entry.mainRecipeId === recipe.id && entry.addonType === addonId) && entry.ingredientId === ingredientId);
-  if (!addon || !addonIsCompatible(recipe, addon, ingredientId, ingredients) || !asSet(state.availableIngredientIds).has(ingredientId) || bound.has(ingredientId) || usedByOtherAddon) return state;
-  const selectedAddons = (state.selectedAddons ?? []).filter((entry) => !(entry.mainRecipeId === recipe.id && entry.addonType === addonId));
-  return { ...state, selectedAddons: [...selectedAddons, { mainRecipeId: recipe.id, addonType: addonId, ingredientId }] };
-}
-
-export function removeSelectedAddon(state: MealState, recipeId: string, addonId: string) {
-  const selectedAddons = (state.selectedAddons ?? []).filter((entry) => !(entry.mainRecipeId === recipeId && entry.addonType === addonId));
-  return { ...state, selectedAddons };
+  return { ...state, availableIngredientIds: [...available], selectedRecipeIds: keptRecipes, recipeIngredientBindings: bindings };
 }
 
 /** Recipe checkout units are strict when present; otherwise each bound/add-on Ingredient counts once per selected Recipe. */
@@ -327,7 +220,6 @@ export function checkoutUnitsForSelection(recipes: MealRecipe[], state: MealStat
   for (const recipe of recipes.filter((item) => state.selectedRecipeIds.includes(item.id))) {
     const usedIds = [...new Set([
       ...(state.recipeIngredientBindings[recipe.id] ?? []),
-      ...(state.selectedAddons ?? []).filter((entry) => entry.mainRecipeId === recipe.id).map((entry) => entry.ingredientId),
     ])];
     for (const id of usedIds) totals[id] = (totals[id] ?? 0) + (recipe.checkoutUnits?.[id] ?? 1);
   }

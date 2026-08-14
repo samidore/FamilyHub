@@ -3,7 +3,7 @@ import test from 'node:test';
 import { parse, stringify } from 'yaml';
 import { readMealFiles } from '../scripts/load-meal-data.mjs';
 import { inspect, nextOrder, references, verifyItem } from '../.agents/skills/manage-meal-data/scripts/meal-data.mjs';
-import { parseMealFiles } from '../src/data/mealParser.mjs';
+import { parseMealFiles, parseMealKb } from '../src/data/mealParser.mjs';
 
 const recipePath = 'recipe/chicken/chicken-teriyaki-thighs.yaml';
 
@@ -45,6 +45,30 @@ test('all migrated Recipes keep Cook View text separate from operational require
     const recipe = parse(text);
     return recipe.ingredients.every((entry) => !('availability' in entry) && !('amount' in entry) && !('preparation' in entry) && !('pantry_core' in entry));
   }), true);
+});
+
+test('archived tagged records do not change active easy-braise or iron-pan counts', async () => {
+  const files = await readMealFiles();
+  const ingredient = parse(files['ingredients/chicken.yaml']).ingredients[0];
+  ingredient.id = 'archived-easy-braise'; ingredient.status = 'archived'; ingredient.starter.order = 9999; ingredient.tags = ['easy-braise-addon'];
+  const recipe = parse(files[recipePath]);
+  recipe.id = 'archived-iron-pan'; recipe.status = 'archived'; recipe.tags = ['iron-pan-braise'];
+  const data = parseMealFiles({
+    ...files,
+    'archive/ingredients/archived-easy-braise.yaml': stringify(ingredient),
+    'archive/recipe/archived-iron-pan.yaml': stringify(recipe),
+  });
+  assert.equal(data.ingredients.filter((item) => item.tags.includes('easy-braise-addon')).length, 23);
+  assert.equal(data.recipes.filter((item) => item.tags.includes('iron-pan-braise')).length, 36);
+});
+
+test('legacy KB parsing validates records without requiring current active counts', async () => {
+  const files = await readMealFiles();
+  const ingredient = parse(files['ingredients/chicken.yaml']).ingredients[0];
+  const recipe = parse(files[recipePath]);
+  recipe.ingredients = []; recipe.tags = [];
+  const text = `---\nkb_version: 1\nlast_updated: '2026-08-14'\n---\n\`\`\`yaml\nstarter_sections:\n  - id: ${ingredient.starter.section}\n    label_zh: 测试\n    label_en: Test\n    order: 1\n    visible: true\n\`\`\`\n\`\`\`yaml\n${stringify(ingredient)}\`\`\`\n\`\`\`yaml\n${stringify(recipe)}\`\`\``;
+  assert.equal(parseMealKb(text).recipes.length, 1);
 });
 
 test('read-only maintenance helper inspects names, references, ordering, and validation', async () => {

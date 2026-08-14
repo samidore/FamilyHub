@@ -26,9 +26,7 @@ Time is a workload signal, not an automatic hard filter. Account for opening, wa
 
 ## Vegetable structures and add-on
 
-Vegetable Recipes represent a real cooking structure, not every seasoning label. Compatible alternatives use `one_of` rather than duplicate stable IDs. `finish-with-leafy-vegetable` is a Recipe add-on, never a synthetic Recipe or Meal Combo: it is offered only for explicitly supported main Recipes with a final stovetop reduction/braising window and only for Ingredients tagged `finish-wilt-compatible`.
-
-The initial compatible ingredients are `chinese-greens`, `lettuce`, `youmai-cai`, `choy-sum`, and `baby-napa-cabbage`. The same ingredient may still be chosen for a standalone Vegetable Recipe. The add-on contributes `vegetable: 1` and participates in child coverage without changing the main Recipe ID. It is enabled on exactly seven existing stovetop structures; `Instant Pot 酱油鸡腿` remains excluded while `照烧鸡腿` remains supported.
+Vegetable Recipes represent a real cooking structure, not every seasoning label. Compatible alternatives use `one_of` rather than duplicate stable IDs. Easy-braise is checkout-only: an Ingredient tagged `easy-braise-addon` appears once only when this meal snapshot contains it, it is not a bound Recipe ingredient, and a selected Recipe has `iron-pan-braise`. It does not contribute planning slots or Cook View content. Checkout defaults are zero/false and the atomic transaction rechecks eligibility.
 
 ## Reset, errors, and privacy
 

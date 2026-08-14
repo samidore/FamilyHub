@@ -4,6 +4,7 @@ status: candidate
 name_zh: 红烧牛肉
 name_en: Chinese Red-Braised Beef
 tags:
+  - iron-pan-braise
   - light-seasoning
   - non-spicy-base
   - braised
@@ -33,6 +34,7 @@ notes: |-
 primary_role: protein
 main_protein_category: beef
 main_protein_ingredient_ids:
+  - whole-beef-brisket
   - chuck-roast
 supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids: []
@@ -63,10 +65,12 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - ingredient_id: chuck-roast
+  - one_of:
+      - whole-beef-brisket
+      - chuck-roast
     role: main-protein
 steps:
-  - 准备：牛肩肉大块切约4–5 cm大块；带骨件冲洗后沥干。若骨渣/血沫明显，冷水下锅煮开2–3分钟，捞出冲净。；把液体调料量好放在手边；糖单独放，避免炒糖时手忙脚乱。
+  - 准备：整块牛腩或牛肩肉切约4–5 cm大块；带骨件冲洗后沥干。若骨渣/血沫明显，冷水下锅煮开2–3分钟，捞出冲净。；把液体调料量好放在手边；糖单独放，避免炒糖时手忙脚乱。
   - 厚底锅中火加1 tsp油；肉块分批把2–3个面煎到浅褐色，避免一次堆满出水。盛出。
   - 原锅转中小火，下糖；糖刚融化成浅琥珀色时立刻加入姜葱，再把肉回锅翻匀。不要把糖烧到深褐发苦。
   - 加入绍兴酒、生抽、老抽和水/高汤；液面应接近但不必完全淹没肉。煮开后撇沫，转小火盖盖。
@@ -79,17 +83,6 @@ steps:
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
-meal_addons:
-  - id: finish-with-leafy-vegetable
-    accepts_ingredient_tag: finish-wilt-compatible
-    meal_contribution:
-      protein: 0
-      vegetable: 1
-      staple: 0
-    child_coverage:
-      protein: false
-      vegetable: ingredient-dependent
-    notes: 仅在当天采用偏浓汁、stovetop final-reduction 路线时使用；偏汤汁版本不启用。
 cook_ingredients:
-  - 牛肩肉大块：900 g
+  - 整块牛腩或牛肩肉大块：900 g
   - 家庭红烧汁：绍兴酒 1/4 cup；生抽 3 Tbsp；老抽 1 Tbsp；冰糖或白糖 2 Tbsp；水或低盐高汤 3 cups；姜 6片；葱白 3段；八角 1个，可省；桂皮 1小段，可省

@@ -12,13 +12,16 @@ import {
   setCurrentMealStatus,
   toggleInventoryItem,
   updateCheckoutDraft,
+  usedIngredientIds,
 } from '../src/lib/household.ts';
 import { LocalHouseholdRepository, createHouseholdRepository, googleIdentity, shouldUseRedirectFallback } from '../src/lib/householdRepository.ts';
 
 const ingredients = [
   { id: 'pork', inventoryTracking: 'counted' },
   { id: 'eggs', inventoryTracking: 'presence-only' },
-  { id: 'potato', inventoryTracking: 'presence-only' },
+  { id: 'potato', inventoryTracking: 'presence-only', tags: ['easy-braise-addon'] },
+  { id: 'tofu', inventoryTracking: 'counted', tags: ['easy-braise-addon'] },
+  { id: 'other', inventoryTracking: 'counted' },
 ];
 
 test('authentication errors keep an appropriate recovery action visible', async () => {
@@ -84,7 +87,7 @@ test('shared active step and checkout draft normalize legacy-safe values', () =>
   assert.deepEqual(normalized.currentMeal?.excludedIngredientIds, ['pork']);
   assert.deepEqual(normalized.currentMeal?.checkoutDraft, { pork: 0, eggs: false });
   const draft = updateCheckoutDraft({ ...meal, recipeIngredientBindings: { r1: ['pork'] }, selectedRecipeIds: ['r1'], selectedAddons: [{ mainRecipeId: 'r1', addonType: 'a', ingredientId: 'eggs' }] }, { pork: 0.5, eggs: true }, { pork: 1, eggs: true }, ingredients);
-  assert.deepEqual(checkoutDraftForMeal(draft, { pork: 1, eggs: true }, ingredients), { pork: 0.5, eggs: true });
+  assert.deepEqual(checkoutDraftForMeal(draft, { pork: 1, eggs: true }, ingredients), { pork: 0.5 });
 });
 
 test('checkout defaults use declared units, fallback bindings, and cross-recipe sums', () => {
@@ -95,6 +98,37 @@ test('checkout defaults use declared units, fallback bindings, and cross-recipe 
     { id: 'fallback-b', requirements: [], contribution: { protein: 0, vegetable: 0, staple: 0 }, childCoverage: { protein: false, vegetable: false } },
   ];
   assert.deepEqual(defaultCheckoutConsumption(meal, { pork: 3, eggs: true }, ingredients, recipes), { pork: 3, eggs: false });
+});
+
+test('checkout ignores bindings retained for unknown or archived Recipes', () => {
+  const recipes = [{ id: 'known', requirements: [], contribution: { protein: 0, vegetable: 0, staple: 0 }, childCoverage: { protein: false, vegetable: false } }];
+  const meal = {
+    ...createCurrentMealFromInventory({ pork: 2, other: 1 }, { mealId: 'reconciled-checkout' }, ingredients),
+    status: 'cooking', selectedRecipeIds: ['known', 'archived-recipe'], recipeIngredientBindings: { known: ['pork'], 'archived-recipe': ['other'] },
+  };
+  const state = { inventory: { pork: 2, other: 1 }, currentMeal: meal, activeStep: 'checkout', recentMeals: [] };
+  assert.deepEqual(usedIngredientIds(meal, recipes), ['pork']);
+  assert.deepEqual(defaultCheckoutConsumption(meal, state.inventory, ingredients, recipes), { pork: 1 });
+  assert.equal(applyCheckout(state, meal.mealId, { pork: 1 }, ingredients, { recipes, nextMealId: 'next', completedAt: 2 }).committed, true);
+  assert.equal(applyCheckout(state, meal.mealId, { other: 1 }, ingredients, { recipes }).committed, false);
+});
+
+test('easy-braise checkout defaults to zero and atomically authorizes only eligible snapshot Ingredients', () => {
+  const recipes = [{ id: 'braise', tags: ['iron-pan-braise'], requirements: [], contribution: { protein: 1, vegetable: 0, staple: 0 }, childCoverage: { protein: true, vegetable: false } }];
+  const meal = {
+    ...createCurrentMealFromInventory({ pork: 2, tofu: 2, potato: true, other: 1 }, { mealId: 'easy-braise' }, ingredients),
+    status: 'cooking', selectedRecipeIds: ['braise'], recipeIngredientBindings: { braise: ['pork'] },
+  };
+  assert.deepEqual(defaultCheckoutConsumption(meal, { pork: 2, tofu: 2, potato: true, other: 1 }, ingredients, recipes), { pork: 1, tofu: 0, potato: false });
+
+  const state = { inventory: { pork: 2, tofu: 2, potato: true, other: 1 }, currentMeal: meal, activeStep: 'checkout', recentMeals: [] };
+  const rejected = applyCheckout(state, meal.mealId, { pork: 1, other: 1 }, ingredients, { recipes });
+  assert.equal(rejected.committed, false);
+  assert.deepEqual(rejected.state.inventory, state.inventory);
+
+  const accepted = applyCheckout(state, meal.mealId, { pork: 1, tofu: 1.5, potato: true }, ingredients, { recipes, nextMealId: 'next', completedAt: 2 });
+  assert.equal(accepted.committed, true);
+  assert.deepEqual(accepted.state.inventory, { pork: 1, tofu: 0.5, other: 1 });
 });
 
 test('current-meal status transitions are transaction-safe and reject stale jumps', () => {
@@ -151,13 +185,13 @@ test('checkout is stale-safe and consumes counted/presence-only values once', ()
   const meal = createCurrentMealFromInventory({ pork: 1, eggs: true }, { mealId: 'meal-1' }, ingredients);
   const cooking = { ...meal, status: 'cooking', recipeIngredientBindings: { r1: ['pork'] }, selectedRecipeIds: ['r1'], selectedAddons: [{ mainRecipeId: 'r1', addonType: 'a', ingredientId: 'eggs' }] };
   const state = { inventory: { pork: 1, eggs: true }, currentMeal: cooking, activeStep: 'checkout', recentMeals: [{ mealId: 'older', completedAt: 1, recipeIds: ['r0'] }] };
-  assert.deepEqual(defaultCheckoutConsumption(cooking, state.inventory, ingredients), { eggs: false, pork: 1 });
-  const first = applyCheckout(state, 'meal-1', { eggs: true, pork: 0.5 }, ingredients, { nextMealId: 'meal-2', completedAt: 2 });
+  assert.deepEqual(defaultCheckoutConsumption(cooking, state.inventory, ingredients), { pork: 1 });
+  const first = applyCheckout(state, 'meal-1', { pork: 0.5 }, ingredients, { nextMealId: 'meal-2', completedAt: 2 });
   assert.equal(first.committed, true);
-  assert.deepEqual(first.state.inventory, { pork: 0.5 });
+  assert.deepEqual(first.state.inventory, { pork: 0.5, eggs: true });
   assert.equal(first.state.activeStep, 'recipes');
   assert.equal(first.state.currentMeal?.mealId, 'meal-2');
-  assert.deepEqual(first.state.currentMeal?.availableIngredientIds, ['pork']);
+  assert.deepEqual(first.state.currentMeal?.availableIngredientIds, ['eggs', 'pork']);
   assert.deepEqual(first.state.currentMeal?.selectedRecipeIds, []);
   assert.deepEqual(first.state.recentMeals, [{ mealId: 'meal-1', completedAt: 2, recipeIds: ['r1'] }, { mealId: 'older', completedAt: 1, recipeIds: ['r0'] }]);
   const second = applyCheckout(first.state, 'meal-1', { pork: 0.5 }, ingredients);

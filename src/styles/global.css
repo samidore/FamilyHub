@@ -332,6 +332,8 @@ a { color: inherit; }
 .meal-checkout-row input { width: 28px; height: 28px; }
 .meal-checkout-used-up { display: inline-flex; min-height: 48px; align-items: center; gap: 7px; color: var(--ink); font-weight: 700; white-space: nowrap; }
 .meal-checkout-row output { min-width: 72px; text-align: center; }
+.meal-checkout-optional-heading { margin: 18px 0 0; padding-top: 18px; border-top: 2px solid var(--berry); }
+.meal-checkout-optional-copy { margin: 0 0 4px; color: var(--muted); }
 .meal-workspace, .meal-finish, .meal-cook, .meal-readable-catalog { padding-block: 30px 72px; }
 .meal-inventory, .meal-workspace, .meal-cook { min-height: 100vh; }
 .meal-noscript { margin-block: 22px; }

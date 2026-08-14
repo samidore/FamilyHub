@@ -61,7 +61,7 @@ ingredients:
       visible: true
       section: staple
       order: 30
-    tags: []
+    tags: [easy-braise-addon]
     fit:
       hard_rules: pass
       score: 4
@@ -113,7 +113,7 @@ ingredients:
       visible: true
       section: staple
       order: 50
-    tags: []
+    tags: [easy-braise-addon]
     fit:
       hard_rules: pass
       score: 4
@@ -165,7 +165,7 @@ ingredients:
       visible: true
       section: staple
       order: 70
-    tags: []
+    tags: [easy-braise-addon]
     fit:
       hard_rules: pass
       score: 4

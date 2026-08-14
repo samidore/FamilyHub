@@ -10,7 +10,7 @@ ingredients:
       section: leafy-vegetable
       order: 10
     tags:
-      - finish-wilt-compatible
+      - easy-braise-addon
     fit:
       hard_rules: pass
       score: 4
@@ -38,7 +38,7 @@ ingredients:
       visible: true
       section: leafy-vegetable
       order: 20
-    tags: []
+    tags: [easy-braise-addon]
     fit:
       hard_rules: pass
       score: 4
@@ -65,7 +65,7 @@ ingredients:
       section: leafy-vegetable
       order: 30
     tags:
-      - finish-wilt-compatible
+      - easy-braise-addon
     fit:
       hard_rules: pass
       score: 4
@@ -120,7 +120,7 @@ ingredients:
       section: leafy-vegetable
       order: 50
     tags:
-      - finish-wilt-compatible
+      - easy-braise-addon
     fit:
       hard_rules: pass
       score: 4
@@ -149,7 +149,7 @@ ingredients:
       section: leafy-vegetable
       order: 60
     tags:
-      - finish-wilt-compatible
+      - easy-braise-addon
     fit:
       hard_rules: pass
       score: 4
@@ -178,7 +178,7 @@ ingredients:
       section: leafy-vegetable
       order: 70
     tags:
-      - finish-wilt-compatible
+      - easy-braise-addon
     fit:
       hard_rules: pass
       score: 4

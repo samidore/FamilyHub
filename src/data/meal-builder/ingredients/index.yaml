@@ -111,6 +111,7 @@ categories:
     visible: true
     file: egg-tofu.yaml
     ingredient_ids:
+      - tofu-skin-knots
       - eggs
       - soft-tofu
       - firm-tofu

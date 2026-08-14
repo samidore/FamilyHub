@@ -2,7 +2,14 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { loadMealData, readMealFiles } from '../scripts/load-meal-data.mjs';
 import { parseMealFiles } from '../src/data/mealParser.mjs';
-import { addSelectedAddon, aggregateMeal, bindRecipeIngredients, defaultMealState, isFeasible, isMealComplete, rankAddons, rankCandidates, recentRecipePenalty, reconcileMealState, removeSelectedAddon, resolveRecipeChildCoverage, timeFit, unmetCompletionRequirements } from '../src/lib/mealEngine.ts';
+import { aggregateMeal, bindRecipeIngredients, defaultMealState, easyBraiseAddonIngredientIds, isFeasible, isMealComplete, rankCandidates, recentRecipePenalty, resolveRecipeChildCoverage, timeFit, unmetCompletionRequirements } from '../src/lib/mealEngine.ts';
+
+const easyBraiseIngredientIds = [
+  'baby-napa-cabbage', 'carrot', 'chinese-greens', 'choy-sum', 'daikon', 'dried-yuba-sticks', 'enoki-mushrooms', 'firm-tofu', 'fresh-shiitake', 'fried-tofu-puffs', 'kabocha-squash', 'lettuce', 'maitake', 'napa-cabbage', 'onion', 'oyster-mushrooms', 'potato', 'shimeji-mushrooms', 'soft-tofu', 'taro', 'tofu-skin-knots', 'winter-melon', 'youmai-cai',
+];
+const ironPanBraiseRecipeIds = [
+  'braised-winter-melon', 'chicken-adobo', 'chicken-teriyaki-thighs', 'chinese-braised-beef-shank', 'chinese-red-braised-beef', 'coca-cola-chicken-wings', 'daikon-braised-beef', 'daikon-braised-lamb', 'filipino-pork-adobo', 'galbijjim', 'gyudon', 'homestyle-tofu-family', 'hong-kong-swiss-chicken-wings', 'hong-kong-yuba-lamb-casserole', 'hong-shao-rou', 'japanese-daikon-braised-boneless-short-ribs', 'japanese-kakuni', 'japanese-simmered-daikon', 'japanese-simmered-kabocha', 'japanese-steamed-braised-mushrooms', 'minced-pork-tofu', 'nikujaga', 'oyakodon', 'oyster-sauce-braised-chicken', 'potato-braised-beef', 'red-braised-beef-noodle-soup', 'red-braised-goat', 'red-braised-lamb', 'red-braised-pork-trotters', 'scallion-oil-taro', 'shanghai-braised-pork-chops', 'shanghai-sweet-sour-ribs', 'sukiyaki-don', 'taiwanese-braised-minced-pork-rice', 'tomato-soft-tofu', 'vietnamese-thit-kho-eggs',
+];
 
 const recipe = (id, contribution, childCoverage = { protein: false, vegetable: false }, requirements = []) => ({ id, order: Number(id.replace(/\D/g, '')) || 0, fitScore: 4, contribution, childCoverage, requirements, mealWindowMinutes: '30–45', elapsedMinutes: '30–45', advanceStartRequired: false });
 
@@ -59,23 +66,32 @@ test('recent Recipes rank after unseen choices with the newest meal last', () =>
   assert.deepEqual(rankCandidates([newest, oldest, unseen], state, [], {}, history).map((item) => item.id), ['r3', 'r2', 'r1']);
 });
 
-test('v1.9 structured data keeps active counts, Vegetable structures, and controlled add-ons', async () => {
+test('structured data keeps active counts, Ingredient coverage, and easy-braise capabilities', async () => {
   const kb = await loadMealData();
-  assert.equal(kb.ingredients.length, 133);
-  assert.equal(kb.ingredients.filter((item) => item.visible).length, 130);
+  assert.equal(kb.ingredients.length, 134);
+  assert.equal(kb.ingredients.filter((item) => item.visible).length, 131);
   assert.equal(kb.recipes.length, 163);
   assert.equal(kb.ingredients.find((item) => item.id === 'zongzi')?.inventoryTracking, 'presence-only');
   const steamedZongzi = kb.recipes.find((item) => item.id === 'steamed-zongzi');
   assert.equal(steamedZongzi?.requirements[0]?.anyOf[0], 'zongzi');
   assert.equal(steamedZongzi?.tags.includes('instant-pot'), true);
   assert.equal(steamedZongzi?.steps.some((step) => step.includes('15分钟')), true);
-  assert.equal(kb.recipes.filter((item) => item.vegetableCentered).length, 23);
-  assert.deepEqual(kb.recipes.filter((item) => item.mealAddons.length).map((item) => item.id).sort(), [
-    'chicken-teriyaki-thighs', 'chinese-red-braised-beef', 'coca-cola-chicken-wings', 'hong-kong-swiss-chicken-wings',
-    'hong-shao-rou', 'oyster-sauce-braised-chicken', 'shanghai-sweet-sour-ribs',
+  const wholeBrisketRecipeIds = kb.recipes
+    .filter((item) => item.requirements.some((requirement) => requirement.anyOf.includes('whole-beef-brisket')))
+    .map((item) => item.id);
+  assert.deepEqual(wholeBrisketRecipeIds, [
+    'daikon-braised-beef',
+    'potato-braised-beef',
+    'chinese-red-braised-beef',
+    'red-braised-beef-noodle-soup',
   ]);
-  assert.deepEqual(kb.ingredients.filter((item) => item.tags?.includes('finish-wilt-compatible')).map((item) => item.id).sort(), ['baby-napa-cabbage', 'chinese-greens', 'choy-sum', 'lettuce', 'youmai-cai']);
-  assert.equal(kb.recipes.find((item) => item.id === 'instant-pot-soy-chicken-thighs').mealAddons.length, 0);
+  assert.equal(kb.recipes.filter((item) => item.vegetableCentered).length, 23);
+  assert.deepEqual(kb.ingredients.filter((item) => item.tags?.includes('easy-braise-addon')).map((item) => item.id).sort(), easyBraiseIngredientIds);
+  assert.deepEqual(kb.recipes.filter((item) => item.tags?.includes('iron-pan-braise')).map((item) => item.id).sort(), ironPanBraiseRecipeIds);
+  assert.equal(kb.ingredients.some((item) => item.tags?.includes('finish-wilt-compatible')), false);
+  assert.equal(kb.recipes.find((item) => item.id === 'instant-pot-soy-chicken-thighs').tags.includes('iron-pan-braise'), false);
+  assert.equal(kb.recipes.find((item) => item.id === 'instant-pot-thirteen-spice-soy-party-wings').tags.includes('iron-pan-braise'), false);
+  assert.equal(kb.recipes.find((item) => item.id === 'instant-pot-oxtail-soup').tags.includes('iron-pan-braise'), false);
   const porkGreens = kb.recipes.find((item) => item.id === 'ground-pork-chinese-greens-stir-fry');
   assert.deepEqual(porkGreens.contribution, { protein: 1, vegetable: 1, staple: 1 });
   assert.deepEqual(porkGreens.requirements.find((item) => item.role === 'integral-staple')?.anyOf, ['rice']);
@@ -99,45 +115,29 @@ test('Meal Builder manifests reject unindexed files and broken references', asyn
   assert.throws(() => parseMealFiles(broken), /references missing ingredient/);
 });
 
+test('active Meal Builder source excludes retired leafy add-on fields and tags', async () => {
+  const files = await readMealFiles();
+  const active = Object.entries(files).filter(([path]) => !path.startsWith('archive/')).map(([, text]) => text).join('\n');
+  assert.equal(active.includes('finish-with-leafy-vegetable'), false);
+  assert.equal(active.includes('finish-wilt-compatible'), false);
+  assert.equal(active.includes('meal_addons:'), false);
+});
+
 test('one-of bindings auto-select one available ingredient', () => {
   const item = recipe('r1', { protein: 0, vegetable: 1, staple: 0 }, { protein: false, vegetable: 'ingredient-dependent' }, [{ anyOf: ['leaf-a', 'leaf-b'], role: 'vegetable' }]);
   assert.deepEqual(bindRecipeIngredients(item, new Set(['leaf-b'])), ['leaf-b']);
   assert.equal(isFeasible(item, new Set(['leaf-b']), ['leaf-b']), true);
 });
 
-test('add-on state is conceptual, exclusive, and removed when its ingredient disappears', () => {
-  const addon = { id: 'finish-with-leafy-vegetable', acceptsIngredientTag: 'finish-wilt-compatible', contribution: { protein: 0, vegetable: 1, staple: 0 }, childCoverage: { protein: false, vegetable: 'ingredient-dependent' } };
-  const main = { ...recipe('main', { protein: 1, vegetable: 0, staple: 0 }, { protein: true, vegetable: false }, [{ anyOf: ['pork'], role: 'main-protein' }]), mealAddons: [addon] };
-  const second = { ...recipe('second', { protein: 0, vegetable: 1, staple: 0 }, { protein: false, vegetable: true }, [{ anyOf: ['leaf-a'], role: 'vegetable' }]), mealAddons: [addon] };
-  const ingredients = [{ id: 'pork', tags: [] }, { id: 'leaf-a', tags: ['finish-wilt-compatible'], childCoverage: { vegetable: true } }, { id: 'leaf-b', tags: ['finish-wilt-compatible'], childCoverage: { vegetable: true } }];
-  let state = { ...defaultMealState(), availableIngredientIds: ['pork', 'leaf-a', 'leaf-b'], selectedRecipeIds: ['main'], recipeIngredientBindings: { main: ['pork'] } };
-  assert.equal(rankAddons([main], state, ingredients)[0].selectedIngredientId, 'leaf-a');
-  state = addSelectedAddon(state, main, addon.id, 'leaf-a', ingredients);
-  assert.deepEqual(state.selectedAddons, [{ mainRecipeId: 'main', addonType: addon.id, ingredientId: 'leaf-a' }]);
-  const blocked = addSelectedAddon({ ...state, selectedRecipeIds: ['main', 'second'], recipeIngredientBindings: { main: ['pork'], second: ['leaf-a'] } }, second, addon.id, 'leaf-a', ingredients);
-  assert.deepEqual(blocked.selectedAddons, state.selectedAddons);
-  const removed = reconcileMealState({ ...state, availableIngredientIds: ['pork', 'leaf-b'] }, [main, second], ingredients);
-  assert.deepEqual(removed.selectedAddons, []);
-  assert.deepEqual(removeSelectedAddon(state, 'main', addon.id).selectedAddons, []);
-});
-
-test('unselected add-ons surface only when they fill vegetable or child-vegetable gaps', () => {
-  const addon = { id: 'finish-with-leafy-vegetable', acceptsIngredientTag: 'finish-wilt-compatible', contribution: { protein: 0, vegetable: 1, staple: 0 }, childCoverage: { protein: false, vegetable: 'ingredient-dependent' } };
-  const main = { ...recipe('main', { protein: 1, vegetable: 0, staple: 0 }, { protein: true, vegetable: false }, [{ anyOf: ['pork'], role: 'main-protein' }]), mealAddons: [addon] };
-  const ingredients = [{ id: 'pork', tags: [] }, { id: 'leaf-a', tags: ['finish-wilt-compatible'], childCoverage: { vegetable: true } }, { id: 'leaf-b', tags: ['finish-wilt-compatible'], childCoverage: { vegetable: false } }];
-  const state = { ...defaultMealState(), availableIngredientIds: ['pork', 'leaf-a', 'leaf-b'], selectedRecipeIds: ['main'], recipeIngredientBindings: { main: ['pork'] }, vegetableTarget: 0, childMode: false };
-  assert.equal(rankAddons([main], state, ingredients).length, 0);
-  state.childMode = true;
-  assert.equal(rankAddons([main], state, ingredients).length, 1);
-  assert.deepEqual(rankAddons([main], state, ingredients)[0].ingredientIds, ['leaf-a']);
-  state.selectedAddons = [{ mainRecipeId: 'main', addonType: addon.id, ingredientId: 'leaf-a' }];
-  assert.equal(rankAddons([main], state, ingredients).length, 1);
-  const withoutAddon = aggregateMeal([main], { recipeIngredientBindings: state.recipeIngredientBindings, selectedAddons: [], availableIngredientIds: state.availableIngredientIds, ingredients });
-  const withAddon = aggregateMeal([main], { recipeIngredientBindings: state.recipeIngredientBindings, selectedAddons: state.selectedAddons, availableIngredientIds: state.availableIngredientIds, ingredients });
-  assert.equal(withAddon.vegetable - withoutAddon.vegetable, 1);
-  const removedState = removeSelectedAddon(state, 'main', addon.id);
-  const afterRemoval = aggregateMeal([main], { recipeIngredientBindings: removedState.recipeIngredientBindings, selectedAddons: removedState.selectedAddons, availableIngredientIds: removedState.availableIngredientIds, ingredients });
-  assert.equal(afterRemoval.vegetable, withoutAddon.vegetable);
+test('easy-braise checkout candidates require an iron-pan meal and exclude bound Ingredients', () => {
+  const recipes = [
+    recipe('r1', { protein: 1, vegetable: 0, staple: 0 }, undefined, [{ anyOf: ['lettuce'] }]),
+    { ...recipe('r2', { protein: 1, vegetable: 0, staple: 0 }), tags: ['iron-pan-braise'] },
+  ];
+  const ingredients = [{ id: 'lettuce', inventoryTracking: 'counted', tags: ['easy-braise-addon'] }, { id: 'onion', inventoryTracking: 'counted', tags: ['easy-braise-addon'] }];
+  const state = { ...defaultMealState(), selectedRecipeIds: ['r1', 'r2'], recipeIngredientBindings: { r1: ['lettuce'] } };
+  assert.deepEqual(easyBraiseAddonIngredientIds(recipes, state, ['lettuce', 'onion', 'onion'], ingredients), ['onion']);
+  assert.deepEqual(easyBraiseAddonIngredientIds([recipes[0]], state, ['onion'], ingredients), []);
 });
 
 test('ingredient-dependent child coverage follows the bound Ingredient and keeps unknown false', () => {

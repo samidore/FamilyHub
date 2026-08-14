@@ -1,11 +1,12 @@
-import type { InventoryTracking, MealIngredient, MealRecipe, MealState, SelectedAddon } from './mealEngine.ts';
-import { checkoutUnitsForSelection, defaultMealState, reconcileMealState } from './mealEngine.ts';
+import type { InventoryTracking, MealIngredient, MealRecipe, MealState } from './mealEngine.ts';
+import { checkoutUnitsForSelection, defaultMealState, easyBraiseAddonIngredientIds, reconcileMealState } from './mealEngine.ts';
 
 /** Values stored for an Ingredient in household state. `true` is presence-only on. */
 export type InventoryValue = true | number;
 export type Inventory = Record<string, InventoryValue>;
 export type CurrentMealStatus = 'selecting' | 'ready' | 'cooking';
 export type MealActiveStep = 'inventory' | 'recipes' | 'cook' | 'checkout';
+export interface SelectedAddon { mainRecipeId: string; addonType: string; ingredientId: string; }
 
 export interface CurrentMeal {
   mealId: string;
@@ -174,17 +175,17 @@ export function createCurrentMealFromInventory(inventory: Inventory, options: Pa
 }
 
 export function mealToEngineState(meal: CurrentMeal): MealState {
-  return { availableIngredientIds: [...meal.availableIngredientIds], proteinTarget: meal.proteinTarget, vegetableTarget: meal.vegetableTarget, stapleRequired: meal.stapleRequired, childMode: meal.childMode, timePreference: meal.timePreference, selectedRecipeIds: [...meal.selectedRecipeIds], recipeIngredientBindings: { ...meal.recipeIngredientBindings }, selectedAddons: [...meal.selectedAddons] };
+  return { availableIngredientIds: [...meal.availableIngredientIds], proteinTarget: meal.proteinTarget, vegetableTarget: meal.vegetableTarget, stapleRequired: meal.stapleRequired, childMode: meal.childMode, timePreference: meal.timePreference, selectedRecipeIds: [...meal.selectedRecipeIds], recipeIngredientBindings: { ...meal.recipeIngredientBindings } };
 }
 
 export function engineStateToMeal(meal: CurrentMeal, state: MealState): CurrentMeal {
-  return { ...meal, availableIngredientIds: [...state.availableIngredientIds], proteinTarget: state.proteinTarget, vegetableTarget: state.vegetableTarget, stapleRequired: state.stapleRequired, childMode: state.childMode, timePreference: state.timePreference, selectedRecipeIds: [...state.selectedRecipeIds], recipeIngredientBindings: { ...state.recipeIngredientBindings }, selectedAddons: [...state.selectedAddons] };
+  return { ...meal, availableIngredientIds: [...state.availableIngredientIds], proteinTarget: state.proteinTarget, vegetableTarget: state.vegetableTarget, stapleRequired: state.stapleRequired, childMode: state.childMode, timePreference: state.timePreference, selectedRecipeIds: [...state.selectedRecipeIds], recipeIngredientBindings: { ...state.recipeIngredientBindings }, selectedAddons: [] };
 }
 
 /** Reconcile only current-meal selections; household inventory is deliberately untouched. */
 export function reconcileCurrentMeal(meal: CurrentMeal, recipes: Parameters<typeof reconcileMealState>[1], ingredients: Parameters<typeof reconcileMealState>[2] = []): CurrentMeal {
   const state = reconcileMealState(mealToEngineState(meal), recipes, ingredients);
-  return engineStateToMeal(meal, state);
+  return { ...engineStateToMeal(meal, state), selectedAddons: [] };
 }
 
 export function setCurrentMealStatus(meal: CurrentMeal, status: CurrentMealStatus): CurrentMeal {
@@ -218,19 +219,23 @@ export function resetRecipeSelection(meal: CurrentMeal): CurrentMeal {
   return { ...meal, status: 'selecting', selectedRecipeIds: [], recipeIngredientBindings: {}, selectedAddons: [], checkoutDraft: {} };
 }
 
-export function usedIngredientIds(meal: CurrentMeal): string[] {
-  return [...new Set([...Object.values(meal.recipeIngredientBindings).flat(), ...meal.selectedAddons.map((entry) => entry.ingredientId)].filter(Boolean))].sort();
+export function usedIngredientIds(meal: CurrentMeal, recipes?: MealRecipe[]): string[] {
+  const known = recipes ? new Set(recipes.map((recipe) => recipe.id)) : undefined;
+  return [...new Set(meal.selectedRecipeIds.filter((id) => !known || known.has(id)).flatMap((id) => meal.recipeIngredientBindings[id] ?? []).filter(Boolean))].sort();
 }
 
 export function defaultCheckoutConsumption(meal: CurrentMeal, inventory: Inventory, ingredients?: MealIngredient[] | Record<string, MealIngredient>, recipes?: MealRecipe[]): CheckoutConsumption {
   const units = recipes ? checkoutUnitsForSelection(recipes, mealToEngineState(meal)) : {};
-  const ids = Object.keys(units).length ? Object.keys(units) : usedIngredientIds(meal);
-  return Object.fromEntries(ids.map((id) => {
+  const ids = recipes ? Object.keys(units) : usedIngredientIds(meal);
+  const optionalIds = recipes ? easyBraiseAddonIngredientIds(recipes, mealToEngineState(meal), meal.availableIngredientIds, ingredients ?? []) : [];
+  const entries: [string, number | boolean][] = ids.map((id): [string, number | boolean] => {
     const tracking = trackingForIngredient(id, ingredients);
     if (tracking === 'presence-only') return [id, false];
     const available = typeof inventory[id] === 'number' ? inventory[id] : 0;
     return [id, Math.min(units[id] ?? 1, available)];
-  }));
+  });
+  entries.push(...optionalIds.map((id): [string, number | boolean] => [id, trackingForIngredient(id, ingredients) === 'presence-only' ? false : 0]));
+  return Object.fromEntries(entries);
 }
 
 export function checkoutDraftForMeal(meal: CurrentMeal, inventory: Inventory, ingredients?: MealIngredient[] | Record<string, MealIngredient>, recipes?: MealRecipe[]) {
@@ -242,13 +247,15 @@ export function checkoutDraftForMeal(meal: CurrentMeal, inventory: Inventory, in
 export type CheckoutResult = { committed: true; state: HouseholdState } | { committed: false; reason: 'stale-meal' | 'invalid-consumption'; state: HouseholdState };
 
 /** Apply checkout atomically to the supplied current state. Call this from a repository transaction. */
-export function applyCheckout(state: HouseholdState, mealId: string, consumption: CheckoutConsumption, ingredients?: MealIngredient[] | Record<string, MealIngredient>, options: { nextMealId?: string; completedAt?: number } = {}): CheckoutResult {
+export function applyCheckout(state: HouseholdState, mealId: string, consumption: CheckoutConsumption, ingredients?: MealIngredient[] | Record<string, MealIngredient>, options: { nextMealId?: string; completedAt?: number; recipes?: MealRecipe[] } = {}): CheckoutResult {
   const meal = state.currentMeal;
   if (!meal || meal.mealId !== mealId || meal.status !== 'cooking' || (state.activeStep !== undefined && state.activeStep !== 'checkout')) return { committed: false, reason: 'stale-meal', state };
-  const used = new Set(usedIngredientIds(meal));
+  const normal = new Set(options.recipes ? Object.keys(checkoutUnitsForSelection(options.recipes, mealToEngineState(meal))) : usedIngredientIds(meal));
+  const optional = new Set(options.recipes ? easyBraiseAddonIngredientIds(options.recipes, mealToEngineState(meal), meal.availableIngredientIds, ingredients ?? []) : []);
+  const used = new Set([...normal, ...optional]);
   const nextInventory = { ...state.inventory };
   for (const [id, requested] of Object.entries(consumption)) {
-    if (!used.has(id)) continue;
+    if (!used.has(id)) return { committed: false, reason: 'invalid-consumption', state };
     const tracking = trackingForIngredient(id, ingredients);
     if (tracking === 'presence-only') {
       if (requested !== true && requested !== false) return { committed: false, reason: 'invalid-consumption', state };

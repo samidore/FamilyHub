@@ -9,7 +9,7 @@ import {
   type HouseholdState,
   type Inventory,
 } from './household.ts';
-import type { MealIngredient, MealState } from './mealEngine.ts';
+import type { MealIngredient, MealRecipe, MealState } from './mealEngine.ts';
 import { getApps, initializeApp, type FirebaseApp } from 'firebase/app';
 import {
   GoogleAuthProvider,
@@ -53,7 +53,7 @@ export interface HouseholdRepository {
 }
 
 interface StorageLike { getItem(key: string): string | null; setItem(key: string, value: string): void; removeItem(key: string): void; }
-interface LocalRepositoryOptions { storage?: StorageLike; window?: Window; broadcast?: boolean; ingredients?: MealIngredient[] | Record<string, MealIngredient>; }
+interface LocalRepositoryOptions { storage?: StorageLike; window?: Window; broadcast?: boolean; ingredients?: MealIngredient[] | Record<string, MealIngredient>; recipes?: MealRecipe[]; }
 
 const fallbackStores = new Map<string, string>();
 const memoryStorage: StorageLike = { getItem: (key) => fallbackStores.get(key) ?? null, setItem: (key, value) => void fallbackStores.set(key, value), removeItem: (key) => void fallbackStores.delete(key) };
@@ -75,6 +75,7 @@ export class LocalHouseholdRepository implements HouseholdRepository {
   private readonly browserWindow?: Window;
   private readonly listeners = new Set<StateListener>();
   private readonly ingredients?: MealIngredient[] | Record<string, MealIngredient>;
+  private readonly recipes?: MealRecipe[];
   private readonly channel?: BroadcastChannel;
   private state: HouseholdState;
   private status: RepositoryStatus = { ...LOCAL_STATUS };
@@ -84,7 +85,7 @@ export class LocalHouseholdRepository implements HouseholdRepository {
     this.key = `family-hub-household-${householdId}`;
     this.storage = options.storage ?? browserStorage();
     this.browserWindow = options.window ?? (typeof window === 'undefined' ? undefined : window);
-    this.ingredients = options.ingredients;
+    this.ingredients = options.ingredients; this.recipes = options.recipes;
     try { this.state = normalizeHouseholdState(JSON.parse(this.storage.getItem(this.key) ?? 'null'), this.ingredients); } catch { this.state = normalizeHouseholdState(undefined, this.ingredients); }
     if (options.broadcast !== false && this.browserWindow && typeof BroadcastChannel !== 'undefined') {
       this.channel = new BroadcastChannel(this.key);
@@ -114,7 +115,7 @@ export class LocalHouseholdRepository implements HouseholdRepository {
   }
   resetInventory() { return this.setInventory({}); }
   async checkout(mealId: string, consumption: CheckoutConsumption) {
-    const options = { nextMealId: createMealId(), completedAt: Date.now() };
+    const options = { nextMealId: createMealId(), completedAt: Date.now(), recipes: this.recipes };
     let result: CheckoutResult = { committed: false, reason: 'stale-meal', state: this.getSnapshot() };
     await this.update((state) => { result = applyCheckout(state, mealId, consumption, this.ingredients, options); return result.state; });
     return { ...result, state: this.getSnapshot() };
@@ -145,7 +146,7 @@ const firebaseOptionalConfigKeys: (keyof FirebaseConfig)[] = ['storageBucket', '
 export const hasCompleteFirebaseConfig = (config: Partial<FirebaseConfig> | null | undefined): config is FirebaseConfig => Boolean(config && firebaseConfigKeys.every((key) => typeof config[key] === 'string' && config[key]!.trim()));
 export const hasAnyFirebaseConfig = (config: Partial<FirebaseConfig> | null | undefined) => Boolean(config && [...firebaseConfigKeys, ...firebaseOptionalConfigKeys].some((key) => typeof config[key] === 'string' && config[key]!.trim()));
 
-interface FirebaseRepositoryOptions { ingredients?: MealIngredient[] | Record<string, MealIngredient>; }
+interface FirebaseRepositoryOptions { ingredients?: MealIngredient[] | Record<string, MealIngredient>; recipes?: MealRecipe[]; }
 
 export function googleIdentity(user: Pick<User, 'uid' | 'email' | 'emailVerified' | 'providerData'> | null) {
   if (!user?.email || !user.emailVerified || !user.providerData.some((provider) => provider.providerId === 'google.com')) return null;
@@ -165,6 +166,7 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
   private readonly database: Database;
   private readonly stateRef: DatabaseReference;
   private readonly ingredients?: MealIngredient[] | Record<string, MealIngredient>;
+  private readonly recipes?: MealRecipe[];
   private readonly listeners = new Set<StateListener>();
   private state: HouseholdState = normalizeHouseholdState(undefined);
   private status: RepositoryStatus = { connection: 'connecting', label: '正在恢复登录状态…' };
@@ -175,7 +177,7 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
   private disposed = false;
 
   constructor(config: FirebaseConfig, options: FirebaseRepositoryOptions = {}) {
-    this.householdId = config.householdId; this.ingredients = options.ingredients;
+    this.householdId = config.householdId; this.ingredients = options.ingredients; this.recipes = options.recipes;
     const appName = `family-hub-${config.projectId}`;
     this.app = getApps().find((candidate) => candidate.name === appName) ?? initializeApp(config, appName);
     this.auth = getAuth(this.app); this.database = getDatabase(this.app, config.databaseURL);
@@ -196,7 +198,7 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
   resetInventory() { return this.setInventory({}); }
   async checkout(mealId: string, consumption: CheckoutConsumption) {
     await this.ready.catch(() => undefined); this.assertReady(); let outcome: CheckoutResult | undefined;
-    const options = { nextMealId: createMealId(), completedAt: Date.now() };
+    const options = { nextMealId: createMealId(), completedAt: Date.now(), recipes: this.recipes };
     await this.remoteTransaction((state) => { outcome = applyCheckout(state, mealId, consumption, this.ingredients, options); return outcome.state; });
     const result = outcome ?? { committed: false, reason: 'stale-meal' as const, state: this.state };
     this.setState(result.state); return { ...result, state: this.getSnapshot() };

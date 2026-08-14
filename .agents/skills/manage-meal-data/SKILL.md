@@ -39,7 +39,7 @@ Judge semantic duplicates yourself from identity, core technique, equipment, tag
 ## Add or update an Ingredient
 
 1. Classify it into an existing category and as `counted` or `presence-only`. Hidden pantry aromatics/seasonings need no Recipe coverage.
-2. For other Ingredients, inspect Recipe coverage. If the user names a Recipe, complete it directly; otherwise use the brainstorming Skill when available, propose at least one researched cookable Recipe, and wait for confirmation before adding both.
+2. For other Ingredients, inspect Recipe coverage. An Ingredient explicitly designated `easy-braise-addon` may be added without Recipe coverage; otherwise, if the user names a Recipe, complete it directly; otherwise use the brainstorming Skill when available, propose at least one researched cookable Recipe, and wait for confirmation before adding both.
 3. Add the record and ID once. Use the next multiple-of-ten order reported by `next-order`.
 
 ## Delete
