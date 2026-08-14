@@ -64,7 +64,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: daikon
     role: vegetable
-    availability: required
 steps:
   - 准备：白萝卜去皮；厚块边缘可略修圆，表面浅划十字帮助入味。
   - 白萝卜先放清水中小火煮10分钟，倒掉预煮水；这一步减轻生萝卜辛味。

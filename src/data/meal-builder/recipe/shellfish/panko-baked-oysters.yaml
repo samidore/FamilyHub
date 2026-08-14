@@ -64,7 +64,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: oysters
     role: main-protein
-    availability: required
 steps:
   - 准备：烤箱预热450°F/230°C；生蚝检查碎壳并吸去表面多余水。；Panko topping混匀。
   - 生蚝排在铺盐/铝箔固定的烤盘上，每只薄铺一层Panko，不压厚。

@@ -22,7 +22,7 @@ For a Recipe:
 2. Use a real cooking structure, not a protein × vegetable × seasoning product. Reference existing required Ingredient IDs or `one_of` alternatives; keep pantry details in `cook_ingredients` and add no synthetic leafy add-on Recipe.
 3. Add the ID exactly once to the category index and update root content metadata. Keep status `candidate` until a separate approval decision.
 
-Before adding a record or changing an existing one, use [`.agents/skills/manage-meal-data/SKILL.md`](../../../.agents/skills/manage-meal-data/SKILL.md). It requires Plan-mode research, an explicit approval before writes, semantic duplicate review, and its read-only inspection commands.
+Before adding a record or changing an existing one, use [`.agents/skills/manage-meal-data/SKILL.md`](../../../.agents/skills/manage-meal-data/SKILL.md). It requires semantic duplicate review, its read-only inspection commands, and research only for requested, missing, or doubtful facts.
 
 For either record, run the migration-equivalent parity/privacy/schema checks plus the full validation, type check, build, audit, rules, and browser checks. Do not expose a new active record until its index and references validate.
 
@@ -33,14 +33,13 @@ For either record, run the migration-equivalent parity/privacy/schema checks plu
 - Update `evidence.checked_on`/`verifiedDate` only after checking the underlying source on that date. File movement, a parser migration, or a new GPT dump is not evidence.
 - Preserve `candidate` status, source scope, family constraints, child-coverage uncertainty, and conservative timing/detail level unless the change explicitly resolves them.
 - If a Recipe changes required Ingredients, `one_of`, contributions, child coverage, or add-ons, inspect affected ranking, Starter reachability, selected-meal reconciliation, Cook View, and checkout tests.
-- A `cookable` or `household-tested` Recipe needs nonempty display-only `cook_ingredients`, executable steps/equipment, and source-label evidence. Operational Ingredients remain availability-only; pantry items are not tracked there.
+- A `cookable` or `household-tested` Recipe needs nonempty display-only `cook_ingredients` and executable steps/equipment. Operational Ingredients contain only required identities and roles; pantry items are not tracked there. Evidence is preserved when present but does not determine cookability.
 
-## Delete and archive
+## Delete
 
-1. First move the record to `src/data/meal-builder/archive/` (preserving its stable ID and a clear category path) and remove it from the active index.
-2. Remove active references from Recipes, indexes, fixtures, and documentation. Active data must not reference an archived record.
-3. Run the repository-wide stable-ID/privacy/reference audit. Archived IDs remain globally reserved and may not be reused. Existing Firebase household state may contain an archived ID; runtime reconciliation ignores it safely.
-4. Keep the archived record through at least one successful deployed version. Physical deletion is a later, separate change only after that deployment and another full reference check.
+1. Inspect active and archived references once.
+2. An explicit delete permanently removes the record, its index entry, and all active references. Do not archive it or require a later deployment or second request.
+3. Run the repository-wide stable-ID/privacy/reference audit and never reuse the deleted ID. Existing Firebase household state may still contain it; runtime reconciliation ignores unknown IDs safely.
 
 Do not “delete” a record by hiding it with a UI flag while leaving it active, and do not silently replace it with a differently named record.
 

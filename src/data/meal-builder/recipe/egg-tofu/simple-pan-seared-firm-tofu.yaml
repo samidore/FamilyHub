@@ -64,7 +64,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: firm-tofu
     role: main-protein
-    availability: required
 steps:
   - 准备：豆腐沥去包装水；嫩豆腐切2.5–3 cm块并尽量少搬动，硬豆腐可切1.5 cm厚片。；把豆腐汁搅匀；姜切丝5 g、葱切段备用。
   - 不粘锅中火预热，加2 tsp油；硬豆腐/蛋豆腐擦干后单层排入。

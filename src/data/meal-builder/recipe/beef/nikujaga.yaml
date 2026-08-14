@@ -67,16 +67,12 @@ detail_level: cookable
 ingredients:
   - ingredient_id: hot-pot-beef-slices
     role: main-protein
-    availability: required
   - ingredient_id: potato
     role: integral-staple
-    availability: required
   - ingredient_id: onion
     role: vegetable
-    availability: required
   - ingredient_id: carrot
     role: vegetable
-    availability: required
 steps:
   - 准备：土豆切4–5 cm块后用清水冲掉表面淀粉；胡萝卜与洋葱切块。；牛肉片解开成片。
   - 厚锅中火加1 Tbsp油，下洋葱炒到边缘透明；加入牛肉快速炒到大部分变色。

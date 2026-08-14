@@ -65,7 +65,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: eggs
     role: main-protein
-    availability: required
 steps:
   - 准备：鸡蛋打匀但不必打入大量空气。；薄芡提前搅匀；不喜欢勾芡可完全省略。
   - 加入汤底煮开，转中小火；若使用薄芡，边搅边倒入，煮到汤只略有稠度。

@@ -64,7 +64,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: soft-pork-ribs
     role: main-protein
-    availability: required
 steps:
   - 准备：排骨冲净骨渣并彻底沥干；与全部腌料抓匀，冷藏腌30分钟。；浅盘单层铺开，较厚段放盘外圈而不是堆中央。
   - 蒸锅水先烧到持续沸腾，再放入排骨盘。

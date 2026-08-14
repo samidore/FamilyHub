@@ -66,7 +66,6 @@ ingredients:
       - chicken-drumsticks
       - bone-in-chicken-thighs
     role: main-protein
-    availability: required
 steps:
   - 准备：鸡肉擦干；若皮很多可剪去明显多余脂肪。；焖汁混匀。
   - 宽锅中火，鸡皮面朝下煎约3分钟到浅金黄；翻面再煎1–2分钟。

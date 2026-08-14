@@ -67,13 +67,10 @@ detail_level: cookable
 ingredients:
   - ingredient_id: whole-pork-tenderloin
     role: main-protein
-    availability: required
   - ingredient_id: pressed-tofu
     role: supporting-protein
-    availability: required
   - ingredient_id: yellow-chives
     role: vegetable
-    availability: required
 steps:
   - 准备：猪里脊逆纹切约3 mm薄片或细丝；若是整条里脊，先冷冻15–20分钟至略硬更容易切匀。；把腌料加入猪肉，抓到水分基本被吸收，再静置10–15分钟。；所有蔬菜/香干先切到能在2–4分钟内熟的大小；炒汁下锅前再次搅匀，避免淀粉沉底。
   - 铁锅/炒锅大火预热至滴水快速滚动蒸发，转中大火，加1 Tbsp中性油。

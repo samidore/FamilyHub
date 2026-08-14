@@ -63,10 +63,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: celery
     role: vegetable
-    availability: required
   - ingredient_id: pressed-tofu
     role: supporting-protein
-    availability: required
 steps:
   - 准备：蔬菜洗净后彻底沥干；叶菜把较粗的梗和叶分开，硬菜切成约一口大小。；蒜2瓣切末；把蔬菜汁混匀。
   - 炒锅大火预热到明显热但不冒浓烟，加2 tsp中性油；下蒜末炒10秒。

@@ -62,7 +62,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: kabocha-squash
     role: integral-staple
-    availability: required
 steps:
   - 准备：南瓜保留皮帮助定型；去籽后切大小尽量一致，尖角可略修圆减少煮碎。；煮汁混匀。
   - 南瓜皮朝下单层排入较小锅中，倒入煮汁；液体不需要完全淹没。

@@ -64,7 +64,6 @@ ingredients:
       - king-oyster-mushrooms
       - button-cremini-mushrooms
     role: vegetable
-    availability: required
 steps:
   - 准备：菌菇表面清理干净并擦干；杏鲍菇切1 cm厚片，口蘑切半/厚片。；不要把湿菌菇堆进锅里。
   - 大平底锅中大火预热，加2 tsp油；菌菇单层铺开。

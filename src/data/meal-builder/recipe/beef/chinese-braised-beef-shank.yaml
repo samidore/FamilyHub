@@ -65,7 +65,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: beef-shank
     role: main-protein
-    availability: required
 steps:
   - 准备：牛腱保持整块或切成2大段；冷水焯3–5分钟，冲净浮沫。；把液体调料量好放在手边；糖单独放，避免炒糖时手忙脚乱。
   - 厚底锅中火加1 tsp油；肉块分批把2–3个面煎到浅褐色，避免一次堆满出水。盛出。

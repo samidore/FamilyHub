@@ -65,7 +65,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: party-wings
     role: main-protein
-    availability: required
 steps:
   - 准备：检查内胆底部无残渣；主料擦干/冲净并按上述预处理处理Party Wings。；所有压力段液体一次加入；不要用浓稠含淀粉酱汁直接压力烹调。
   - 主料与压力锅底/酱汁加入9-qt Instant Pot；确认至少有足够可产生蒸汽的稀液体，刮净锅底。

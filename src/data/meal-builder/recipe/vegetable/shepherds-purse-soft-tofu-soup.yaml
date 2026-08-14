@@ -67,10 +67,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: frozen-shepherds-purse
     role: vegetable
-    availability: required
   - ingredient_id: soft-tofu
     role: main-protein
-    availability: required
 steps:
   - 准备：豆腐切2.5 cm块；尽量少搬动。；冷冻荠菜可直接下锅掰散；若用青菜切短。
   - 汤锅把清汤煮开；若用冷冻荠菜，先下锅煮到完全散开并重新沸腾。

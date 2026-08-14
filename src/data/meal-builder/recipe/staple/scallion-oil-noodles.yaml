@@ -62,7 +62,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: noodles
     role: integral-staple
-    availability: required
 steps:
   - 准备：葱油汁在大碗底完全混匀；家庭已有现成罐装葱油，不从头炸葱。；烧足量面水。
   - 面条下滚水后立刻拨散；按包装煮到刚熟、仍有咬劲。

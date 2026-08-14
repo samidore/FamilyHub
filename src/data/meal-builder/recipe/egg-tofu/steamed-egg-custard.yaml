@@ -64,7 +64,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: eggs
     role: main-protein
-    availability: required
 steps:
   - 准备：鸡蛋充分打匀；加入温水和盐搅匀。；过筛入浅碗，撇掉表面大泡；盖耐热盘或保鲜膜留小缝防冷凝水滴入。
   - 蒸锅水先烧开后转小火，让水保持轻微沸腾而不是猛烈翻滚。

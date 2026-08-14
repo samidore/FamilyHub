@@ -63,7 +63,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: chicken-breast
     role: main-protein
-    availability: required
 steps:
   - 准备：鸡胸横片成约1.5 cm厚；轻拍到厚度一致。；烤箱预热425°F/220°C；Panko与1 Tbsp油拌匀，先在干锅中火炒到浅金黄可提高烤后颜色。
   - 鸡排撒盐胡椒；依次薄蘸面粉、蛋液、Panko，按压让面包糠黏牢。

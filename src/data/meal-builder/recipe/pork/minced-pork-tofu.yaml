@@ -66,10 +66,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
-    availability: required
   - ingredient_id: soft-tofu
     role: supporting-protein
-    availability: required
 steps:
   - 准备：豆腐切块后尽量少搬动；姜5 g、蒜1瓣切末。；酱汁混匀；本菜不是麻婆豆腐，基础锅不放豆瓣酱/辣椒。
   - 深不粘锅中火加2 tsp油，下姜蒜10秒；加入猪绞肉压散。

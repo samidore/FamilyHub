@@ -65,13 +65,10 @@ detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
-    availability: required
   - ingredient_id: fresh-shiitake
     role: vegetable
-    availability: required
   - ingredient_id: rice
     role: integral-staple
-    availability: required
 steps:
   - 准备：鲜香菇切小丁；本家庭不用干香菇，因此不保留泡发步骤。；姜末1 Tbsp、葱/红葱头碎约1 cup；卤汁量好。
   - 小锅中火加1 Tbsp油，下葱/红葱头炒到软、边缘开始金黄。

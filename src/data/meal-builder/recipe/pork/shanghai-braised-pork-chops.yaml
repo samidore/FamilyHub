@@ -63,7 +63,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: pork-chops
     role: main-protein
-    availability: required
 steps:
   - 准备：猪排较厚时轻拍到约1–1.5 cm；加短腌15分钟。；蛋打散；猪排先蘸蛋再薄拍淀粉，抖掉厚粉。
   - 不粘锅中大火加1 Tbsp油，猪排分批煎到两面蛋衣浅金黄；不需要像来源传统路线那样大量浅炸。

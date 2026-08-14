@@ -65,13 +65,10 @@ detail_level: cookable
 ingredients:
   - ingredient_id: eggs
     role: main-protein
-    availability: required
   - ingredient_id: tomato
     role: vegetable
-    availability: required
   - ingredient_id: noodles
     role: integral-staple
-    availability: required
 steps:
   - 准备：鸡蛋打匀；番茄切块。；另锅烧面水。
   - 炒锅中大火加2 tsp油，蛋炒到七成熟盛出。

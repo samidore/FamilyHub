@@ -65,10 +65,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: soft-pork-ribs
     role: main-protein
-    availability: required
   - ingredient_id: lotus-root
     role: integral-staple
-    availability: required
 steps:
   - 准备：带骨肉/大块肉冷水下锅，加足量清水煮开2–4分钟；捞出后用温水冲去浮沫和碎骨。；莲藕切成适合汤煮的一口大小；容易煮烂的材料单独放，后下。
   - 焯洗后的肉放入汤锅，加2.0 L水、姜和葱，大火煮开后再次撇净浮沫。

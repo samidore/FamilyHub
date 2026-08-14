@@ -62,7 +62,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: napa-cabbage
     role: vegetable
-    availability: required
 steps:
   - 准备：白菜梗斜切薄片，叶切大块；完全沥干。；醋溜汁搅匀；基础锅不放辣椒。
   - 炒锅大火加2 tsp油，下蒜2瓣10秒。

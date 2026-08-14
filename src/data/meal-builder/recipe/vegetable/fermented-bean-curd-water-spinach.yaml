@@ -62,7 +62,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: water-spinach
     role: vegetable
-    availability: required
 steps:
   - 准备：空心菜洗净，粗梗切5 cm段并和叶分开。；腐乳用水压散，再与糖、绍兴酒、白胡椒混匀。
   - 炒锅大火烧热，加2 tsp油；下蒜2瓣炒10秒。

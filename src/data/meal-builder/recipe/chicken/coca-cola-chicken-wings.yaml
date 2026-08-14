@@ -62,7 +62,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: whole-chicken-wings
     role: main-protein
-    availability: required
 steps:
   - 准备：鸡翅擦干；关节处可不切。；酱汁量好。
   - 宽锅中大火加1 tsp油，鸡翅单层分批煎到两面浅金黄。

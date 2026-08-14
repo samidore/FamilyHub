@@ -59,7 +59,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: steamed-buns
     role: integral-staple
-    availability: required
 steps:
   - 准备：若冷冻馒头无需完全解冻；准备蒸锅和蒸布/烘焙纸。
   - 蒸锅加足水烧开；馒头之间留至少2 cm空隙放在蒸屉。

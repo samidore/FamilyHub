@@ -66,7 +66,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: pork-shoulder-chunks
     role: main-protein
-    availability: required
 steps:
   - 准备：猪肉切成约5–7 cm厚的长条；腌汁混匀。；在腌汁接触生肉前先舀出约1 Tbsp + 1 tsp作为后段刷汁；其余腌汁与猪肉拌匀，冷藏至少8小时，最好隔夜。
   - 烤箱上层架预热475°F/246°C；烤盘铺铝箔并架金属烤架，盘底加入约1 cup水防滴汁焦糊。

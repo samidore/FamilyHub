@@ -65,7 +65,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: soft-pork-ribs
     role: main-protein
-    availability: required
 steps:
   - 准备：排骨用短腌抓匀15分钟；表面擦去明显多余水分。；糖、醋、酱油和水量好。
   - 厚锅中大火加1 Tbsp油，排骨分批煎到多面浅褐，盛出。

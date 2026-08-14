@@ -63,7 +63,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: whole-chicken
     role: main-protein
-    availability: required
 steps:
   - 准备：鸡内外清理并擦干；准备能基本浸没鸡的深锅。；葱末、姜末和油先量好，蘸汁在鸡静置时再混合。
   - 深锅加足水、2根葱和5片姜煮开；把鸡缓慢浸入，让鸡腔也灌入热水。

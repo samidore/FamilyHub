@@ -63,7 +63,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: whole-chicken-wings
     role: main-protein
-    availability: required
 steps:
   - 准备：鸡翅检查骨屑并擦干；瑞士汁材料全部量好。
   - 锅中放入瑞士汁全部材料，中火煮开并搅到冰糖溶解。

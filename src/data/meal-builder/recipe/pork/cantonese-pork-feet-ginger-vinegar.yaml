@@ -64,10 +64,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: pork-feet
     role: main-protein
-    availability: required
   - ingredient_id: eggs
     role: supporting-protein
-    availability: required
 steps:
   - 准备：猪脚冷水下锅煮开3–5分钟，捞出冲净；尽量去除骨渣。；姜拍裂后干锅或极少油炒到表面略干；鸡蛋煮熟剥壳。
   - 厚锅加入姜、甜醋和黑醋，煮开后转小火10分钟，让姜味进入醋汁。

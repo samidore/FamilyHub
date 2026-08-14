@@ -62,7 +62,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: boneless-skinless-chicken-thighs
     role: main-protein
-    availability: required
 steps:
   - 准备：鸡腿擦干并与调味拌匀；空气炸锅预热400°F/205°C。
   - 鸡肉单层放篮中，不重叠。

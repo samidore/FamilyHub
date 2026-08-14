@@ -65,10 +65,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
-    availability: required
   - ingredient_id: winter-melon
     role: vegetable
-    availability: required
 steps:
   - 准备：肉馅与全部丸子调味同一方向搅8–10分钟至明显发黏；冷藏10–15分钟更好成形。；冬瓜切均匀块。
   - 汤锅加入高汤和水煮开，转中小火保持轻沸。

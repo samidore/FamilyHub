@@ -66,10 +66,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: whole-pork-tenderloin
     role: main-protein
-    availability: required
   - ingredient_id: pressed-tofu
     role: supporting-protein
-    availability: required
 steps:
   - 准备：肉丝与全部腌料抓匀，静置15分钟；香干切与肉丝近似粗细。；姜5 g、蒜2瓣切末；收尾调味预先混匀。
   - 炒锅大火加1 Tbsp油；肉丝炒到完全变色、约八成熟，立即盛出。

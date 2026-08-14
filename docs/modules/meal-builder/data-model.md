@@ -94,10 +94,8 @@ detail_level: discoverable # discoverable | cookable | household-tested
 ingredients:
   - ingredient_id: boneless-skinless-chicken-thighs
     role: main-protein
-    availability: required
   - one_of: [chinese-greens, baby-napa-cabbage]
     role: vegetable
-    availability: required
 cook_ingredients:
   - 去骨去皮鸡腿肉：500 g，切成适口小块
   - 照烧汁：生抽 2 Tbsp；味醂 2 Tbsp；清酒 2 Tbsp；糖 1 tsp
@@ -107,9 +105,9 @@ adult_finish: ''
 substitutions: []
 ```
 
-`meal_contribution` is the only slot-calculation source; `primary_role` is UI grouping. `integral_staple_ingredient_ids` means the recipe includes the staple; `recommended_staple_ingredient_ids` is a pairing suggestion only. `ingredients[]` contains only required `ingredient_id` or `one_of` availability inputs and must resolve to the active Ingredient library.
+`meal_contribution` is the only slot-calculation source; `primary_role` is UI grouping. `integral_staple_ingredient_ids` means the recipe includes the staple; `recommended_staple_ingredient_ids` is a pairing suggestion only. Each `ingredients[]` entry contains one required `ingredient_id` or `one_of` identity plus its role and must resolve to the active Ingredient library.
 
-`cook_ingredients` is a separate display-only list of complete text lines, including pantry ingredients and quantities. It never affects availability or inventory. `cookable` and `household-tested` records require nonempty Cook View lines, executable steps, equipment, and source-label evidence; source URLs are optional.
+`cook_ingredients` is a separate display-only list of complete text lines, including pantry ingredients and quantities. It never affects availability or inventory. `cookable` and `household-tested` records require nonempty Cook View lines, executable steps, and equipment. Evidence labels and URLs are optional for cookability.
 
 ## Controlled values and invariants
 

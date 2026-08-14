@@ -71,7 +71,6 @@ ingredients:
       - enoki-mushrooms
       - maitake
     role: vegetable
-    availability: required
 steps:
   - 准备：菌菇去硬根，大朵撕/切成一口大小；混合菌菇尽量尺寸相近。；味噌、清酒、味醂和水调匀，黄油切小块。
   - 菌菇放深盘/带盖小锅，淋味噌汁，黄油点在表面。

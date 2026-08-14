@@ -67,13 +67,10 @@ detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
-    availability: required
   - ingredient_id: water-chestnuts
     role: vegetable
-    availability: required
   - ingredient_id: chinese-greens
     role: vegetable
-    availability: required
 steps:
   - 准备：猪肉与除马蹄外的肉馅调料同一方向搅8–10分钟至明显发黏；加入马蹄再搅1–2分钟。；湿手分成4个大丸子；青菜洗净。
   - 宽锅加入清炖汤底煮到接近沸腾后转小火，液面只保持轻微小泡。

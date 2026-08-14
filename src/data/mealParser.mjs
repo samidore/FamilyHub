@@ -11,7 +11,7 @@ const EVIDENCE_KEYS = new Set(['level', 'checked_on', 'scope', 'sources']);
 const CONTRIBUTION_KEYS = new Set(['protein', 'vegetable', 'staple']);
 const RECIPE_CHILD_KEYS = new Set(['protein', 'vegetable']);
 const INGREDIENT_CHILD_KEYS = new Set(['vegetable']);
-const REQUIREMENT_KEYS = new Set(['ingredient_id', 'one_of', 'role', 'availability']);
+const REQUIREMENT_KEYS = new Set(['ingredient_id', 'one_of', 'role']);
 const ADDON_ID = 'finish-with-leafy-vegetable';
 const ADDON_TAG = 'finish-wilt-compatible';
 const INVENTORY_TRACKING = new Set(['counted', 'presence-only']);
@@ -100,7 +100,6 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
       const identities = Number(Boolean(entry.ingredient_id)) + Number(Array.isArray(entry.one_of));
       assert(identities === 1, `${record.id} ingredient entry requires exactly one identity`);
       const anyOf = entry.ingredient_id ? [String(entry.ingredient_id)] : stringArray(entry.one_of);
-      assert(entry.availability === 'required', `${record.id} has unsupported ingredient availability`);
       assert(anyOf.length > 0, `${record.id} has an empty required ingredient choice`);
       for (const id of anyOf) assert(ingredientIds.has(id), `${record.id} references missing ingredient ${id}`);
       requirements.push({ anyOf, role: String(entry.role ?? '') });
@@ -109,7 +108,6 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
       assert(Array.isArray(record.cook_ingredients) && record.cook_ingredients.length > 0 && record.cook_ingredients.every((entry) => typeof entry === 'string' && entry.trim().length > 0), `${record.id} cookable record requires cook_ingredients`);
       assert(Array.isArray(record.steps) && record.steps.length > 0 && record.steps.every((step) => typeof step === 'string' && step.trim().length > 0), `${record.id} cookable record requires executable steps`);
       assert(Array.isArray(record.equipment) && record.equipment.length > 0 && record.equipment.every((item) => typeof item === 'string' && item.trim().length > 0), `${record.id} cookable record requires equipment`);
-      assert(Array.isArray(record.evidence?.sources) && record.evidence.sources.some((source) => typeof source === 'string' && source.trim().length > 0), `${record.id} cookable record requires source evidence`);
     }
     const mealAddons = (record.meal_addons ?? []).map((addon) => {
       assertKeys(addon, ADDON_KEYS);

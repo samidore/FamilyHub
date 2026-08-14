@@ -61,7 +61,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: taro
     role: integral-staple
-    availability: required
 steps:
   - 准备：芋头去皮后切均匀块，处理时避免皮肤刺激；冲洗表面黏液并沥干。；葱油最后加入，不需要另炸葱。
   - 锅中加入芋头、水、盐和蚝油，煮开后转中小火盖盖。

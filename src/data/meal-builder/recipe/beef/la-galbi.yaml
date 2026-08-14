@@ -64,7 +64,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: cross-cut-beef-short-ribs
     role: main-protein
-    availability: required
 steps:
   - 准备：牛小排用冷水快速冲去骨屑，彻底擦干。；腌汁混匀；冷藏腌4–12小时，中途翻一次。
   - 煎前把肉取出，抖掉厚腌汁，避免糖在锅里先烧焦。

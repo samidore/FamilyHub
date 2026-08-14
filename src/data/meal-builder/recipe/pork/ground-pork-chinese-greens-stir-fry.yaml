@@ -67,13 +67,10 @@ detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
-    availability: required
   - ingredient_id: chinese-greens
     role: vegetable
-    availability: required
   - ingredient_id: rice
     role: integral-staple
-    availability: required
 steps:
   - 准备：肉末提前从冰箱取出，只需解开大块，不需要腌；青菜切细/切小。；把炒汁全部混匀；若使用冷冻荠菜末，可直接从冷冻状态下锅，但先掰散。
   - 炒锅中大火预热，加2 tsp中性油；下姜末5 g炒10秒。

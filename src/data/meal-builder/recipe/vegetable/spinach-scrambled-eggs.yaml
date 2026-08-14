@@ -67,10 +67,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: spinach
     role: vegetable
-    availability: required
   - ingredient_id: eggs
     role: main-protein
-    availability: required
 steps:
   - 准备：菠菜洗净；准备沸水和冷水。鸡蛋打散加盐水。
   - 菠菜入大量沸水焯30–45秒，立即捞出过冷水；挤干并切4–5 cm段，焯水弃掉。

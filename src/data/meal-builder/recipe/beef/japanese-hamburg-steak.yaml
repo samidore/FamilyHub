@@ -66,10 +66,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: ground-beef
     role: main-protein
-    availability: required
   - ingredient_id: onion
     role: vegetable
-    availability: required
 steps:
   - 准备：洋葱用1 tsp油中火炒软后放凉。Panko与牛奶/水混合5分钟。；牛肉、洋葱、Panko、鸡蛋和调味拌到刚有黏性，分3个肉饼，中间压浅凹。
   - 不粘锅中火加1 tsp油，肉饼下锅后第一面煎3–4分钟至褐色。

@@ -65,7 +65,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: pork-shoulder-chunks
     role: main-protein
-    availability: required
 steps:
   - 准备：猪肩切4–5 cm块并彻底擦干；所有卤汁量好。
   - 厚底锅大火加油，猪肉分批煎，每面约1–2分钟形成浅褐色外壳；不要把锅挤满。

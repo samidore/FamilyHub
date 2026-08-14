@@ -65,7 +65,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: whole-pork-tenderloin
     role: main-protein
-    availability: required
 steps:
   - 准备：猪肉加1 Tbsp清酒抓匀，静置5分钟后擦去表面多余水分；薄薄拍面粉。；姜烧汁全部混匀。
   - 不粘锅中大火加2 tsp油；猪肉分批单层煎，第一面变白并有浅焦边后翻面。

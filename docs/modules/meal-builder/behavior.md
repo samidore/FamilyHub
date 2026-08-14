@@ -21,7 +21,7 @@ Time is a workload signal, not an automatic hard filter. Account for opening, wa
 - Protein uses an internal `+0.5` tolerance. Once the target is met, candidates that exceed remaining tolerance without filling another unmet slot or child coverage disappear. A half-protein dish that also fills Vegetable ranks above a pure half-protein fallback when Child Protein is still missing; a larger child-suitable protein may remain as a hard-coverage fallback.
 - Child mode defaults **on**. With it enabled, both child protein and child vegetable coverage are hard meal-completion requirements. This is dynamic state aggregation, not a simple recipe-category filter.
 - `child_coverage` may be `true`, `false`, or `ingredient-dependent`. An ingredient-dependent recipe reads the selected ingredient's `child_coverage`; `unknown` never satisfies a hard child requirement. General `child_suitable`, `child_texture`, and `child_serving` notes remain separate facts.
-- Recipe availability is evaluated from `ingredients[].availability: required` and any matching `one_of` option. Pantry items are display-only Cook View text and never participate in availability or inventory. A Starter ingredient is available for this meal; it is not mandatory to consume.
+- Recipe availability is evaluated from each `ingredients[]` identity and any matching `one_of` option. Pantry items are display-only Cook View text and never participate in availability or inventory. A Starter ingredient is available for this meal; it is not mandatory to consume.
 - The UI sections are data-driven by `starter.section`; every visible section can collapse, and collapsing never clears selections. `starter.order` is stable and not alphabetic.
 
 ## Vegetable structures and add-on

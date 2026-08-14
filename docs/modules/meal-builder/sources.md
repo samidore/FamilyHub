@@ -2,7 +2,7 @@
 
 ## Registry rule
 
-Every Ingredient and Recipe keeps an `evidence` object with `level`, `checked_on`, `scope`, and `sources`. The source ID in that field is the maintained registry key; source evidence is part of the record, not a comment hidden in an import dump. Scope is normally culinary identity and core technique, not retailer inventory, price, package size, household preference, or child acceptance unless the record says so.
+Every Ingredient and Recipe keeps an `evidence` object with `level`, `checked_on`, `scope`, and `sources`. Existing evidence remains part of the record, but `sources` may be empty and does not determine whether a Recipe is cookable. Scope is normally culinary identity and core technique, not retailer inventory, price, package size, household preference, or child acceptance unless the record says so.
 
 Current registry review dates are: legacy Pork sources originally checked 2026-08-08; non-Pork formalization and supplemental checks reviewed 2026-08-11; Vegetable-centered sources V01–V23 reviewed 2026-08-12. A `checked_on` date must be changed only after the underlying source is checked again.
 
@@ -34,7 +34,7 @@ The source titles retained by the migration include the specific dish/topic (for
 - `inferred` is conservative workflow/fit inference; `unverified` must remain visibly uncertain and cannot satisfy a hard rule.
 - Recipe timing is a source-derived or workflow-derived range, not household stopwatch data unless explicitly measured. Do not auto-block a Recipe because a precise household minute count is unknown.
 - Candidate recipes remain `discoverable` unless exact quantities and executable steps are supported. Never invent exact grams, sauce ratios, child acceptance, retailer packages, or safety temperatures.
-- A Recipe marked `cookable` or `household-tested` retains source-label provenance in `evidence.sources`; URLs are optional.
+- Evidence labels and URLs are optional for `cookable` and `household-tested` Recipes. Preserve existing provenance, and research only requested, missing, or doubtful facts.
 
 ## Decisions that sources must continue to support
 

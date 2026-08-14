@@ -66,16 +66,12 @@ detail_level: cookable
 ingredients:
   - ingredient_id: boneless-skinless-chicken-thighs
     role: main-protein
-    availability: required
   - ingredient_id: eggs
     role: supporting-protein
-    availability: required
   - ingredient_id: onion
     role: vegetable
-    availability: required
   - ingredient_id: rice
     role: integral-staple
-    availability: required
 steps:
   - 准备：鸡腿切均匀块；洋葱切薄片。；鸡蛋只轻轻划散，保留少量蛋白蛋黄纹理。
   - 宽锅放丼汁和洋葱，中火煮开后转中小火，煮到洋葱软而仍有形。

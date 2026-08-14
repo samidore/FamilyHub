@@ -67,10 +67,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: chicken-breast
     role: main-protein
-    availability: required
   - ingredient_id: garlic-chives
     role: vegetable
-    availability: required
 steps:
   - 准备：鸡肉逆纹切约5 mm薄片；先加水抓到基本吸收，再加淀粉、油、盐抓匀，静置15–20分钟。；蔬菜切成快炒大小；西兰花如茎粗，先焯30–60秒并彻底沥干。；炒汁与薄芡分别混匀；薄芡下锅前再次搅匀。
   - 炒锅大火预热，加1 Tbsp油；下鸡片摊开，快速翻炒到表面全部发白、中心仍略欠熟，约六七成熟时盛出。

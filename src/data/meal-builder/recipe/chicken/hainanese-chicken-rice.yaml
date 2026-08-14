@@ -64,13 +64,10 @@ detail_level: cookable
 ingredients:
   - ingredient_id: whole-chicken
     role: main-protein
-    availability: required
   - ingredient_id: rice
     role: integral-staple
-    availability: required
   - ingredient_id: cucumber
     role: vegetable
-    availability: required
 steps:
   - 准备：鸡擦干并用1 Tbsp盐轻擦鸡皮；保留腹腔取下的鸡油。；Jasmine rice淘洗沥干；姜蒜汁和甜老抽汁材料分别量好。
   - 深锅把12–14 cups水、姜和葱煮开；鸡胸朝上缓慢放入。水再次将沸时提起鸡，倒出腔内较冷的水，再放回。

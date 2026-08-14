@@ -64,7 +64,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: hot-pot-lamb-slices
     role: main-protein
-    availability: required
 steps:
   - 准备：羊肉薄片与短腌抓匀10–15分钟。；葱切5 cm段，葱白和葱绿分开；轻汁混匀。
   - 炒锅大火烧热，加1 Tbsp油；羊肉分批单层下锅，快速翻炒到边缘变色、约八成熟时盛出。

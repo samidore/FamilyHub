@@ -65,10 +65,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
-    availability: required
   - ingredient_id: eggs
     role: supporting-protein
-    availability: required
 steps:
   - 准备：肉末与腌料拌匀；铺在浅盘底部。；鸡蛋打匀，与1.5 cups温水先混匀；追求更嫩可增加到2 cups。过筛一次可减少气泡。
   - 蒸锅水先烧开；肉末盘上锅大火蒸3–5分钟，直到肉末约八成熟。

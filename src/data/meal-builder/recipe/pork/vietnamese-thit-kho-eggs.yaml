@@ -65,10 +65,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: pork-shoulder-chunks
     role: main-protein
-    availability: required
   - ingredient_id: eggs
     role: supporting-protein
-    availability: required
 steps:
   - 准备：鸡蛋煮熟剥壳；猪肉擦干。；鱼露、椰子水和水分别量好；糖焦化时不要离锅。
   - 厚锅中小火把1 Tbsp糖与1 Tbsp水煮到浅琥珀色；立即加入猪肉翻匀上色。

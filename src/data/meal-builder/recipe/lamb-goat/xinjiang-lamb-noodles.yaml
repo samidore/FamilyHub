@@ -67,16 +67,12 @@ detail_level: cookable
 ingredients:
   - ingredient_id: lamb-leg-chunks
     role: main-protein
-    availability: required
   - ingredient_id: onion
     role: vegetable
-    availability: required
   - ingredient_id: bell-pepper
     role: vegetable
-    availability: required
   - ingredient_id: noodles
     role: integral-staple
-    availability: required
 steps:
   - 准备：羊肉薄片与短腌抓匀10–15分钟。；葱切5 cm段，葱白和葱绿分开；轻汁混匀。
   - 羊腿肉切薄片/小条，与羊肉短腌拌10–15分钟；洋葱、甜椒切条。

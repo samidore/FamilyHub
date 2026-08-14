@@ -65,10 +65,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: lamb-shoulder-chunks
     role: main-protein
-    availability: required
   - ingredient_id: dried-yuba-sticks
     role: supporting-protein
-    availability: required
 steps:
   - 准备：腐竹提前泡到完全柔软，无硬芯后沥干。；羊肉冷水焯3–5分钟并冲净。
   - 厚锅中火加1 Tbsp油，下姜葱炒香；加入羊肉翻到表面略干。

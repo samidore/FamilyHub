@@ -70,16 +70,12 @@ detail_level: cookable
 ingredients:
   - ingredient_id: whole-pork-tenderloin
     role: main-protein
-    availability: required
   - ingredient_id: eggs
     role: supporting-protein
-    availability: required
   - ingredient_id: cucumber
     role: vegetable
-    availability: required
   - ingredient_id: fresh-wood-ear-mushrooms
     role: vegetable
-    availability: required
 steps:
   - 准备：肉丝腌15–20分钟；鸡蛋打散加蛋液调味。；黄瓜切薄片；新鲜黑木耳不泡发，直接洗净切小。
   - 炒锅中大火加2 tsp油，鸡蛋炒到七成熟、仍湿润时盛出。

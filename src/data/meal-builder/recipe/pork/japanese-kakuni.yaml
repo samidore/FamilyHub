@@ -66,7 +66,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: pork-shoulder-chunks
     role: main-protein
-    availability: required
 steps:
   - 准备：肉块擦干；来源允许以 pork shoulder 替代五花肉，项目使用梅花肉。；调味液全部量好。
   - 厚锅中火加1 tsp油，把肉块各面煎2–3分钟至浅金黄。

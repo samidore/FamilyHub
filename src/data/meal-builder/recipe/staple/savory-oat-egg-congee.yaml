@@ -63,10 +63,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: eggs
     role: main-protein
-    availability: required
   - ingredient_id: oats
     role: integral-staple
-    availability: required
 steps:
   - 准备：鸡蛋打散；燕麦按原味rolled oats设计，若是quick/steel-cut需按包装时间调整而不是套用同一分钟。
   - 锅中加入3 cups水/高汤煮开，加入1 cup燕麦，转中小火。

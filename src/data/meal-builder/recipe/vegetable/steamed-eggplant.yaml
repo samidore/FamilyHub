@@ -64,7 +64,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: eggplant
     role: vegetable
-    availability: required
 steps:
   - 准备：茄子切约1.5 cm粗长条，切后立即上锅避免久放褐变。；酱汁混匀。
   - 蒸锅水先烧开；茄子单层/疏松铺盘上锅。

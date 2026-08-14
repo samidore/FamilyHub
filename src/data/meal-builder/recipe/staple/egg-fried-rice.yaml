@@ -65,10 +65,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: eggs
     role: main-protein
-    availability: required
   - ingredient_id: rice
     role: integral-staple
-    availability: required
 steps:
   - 准备：冷饭用手/饭勺打散大块；鸡蛋打匀。；所有材料放在灶边，炒饭全程快速。
   - 炒锅大火烧热，加2 tsp油；倒蛋液快速推到约七成熟。

@@ -66,10 +66,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: chuck-roast
     role: main-protein
-    availability: required
   - ingredient_id: potato
     role: integral-staple
-    availability: required
 steps:
   - 准备：牛肩肉大块切约4–5 cm大块；带骨件冲洗后沥干。若骨渣/血沫明显，冷水下锅煮开2–3分钟，捞出冲净。；把液体调料量好放在手边；糖单独放，避免炒糖时手忙脚乱。
   - 厚底锅中火加1 tsp油；肉块分批把2–3个面煎到浅褐色，避免一次堆满出水。盛出。

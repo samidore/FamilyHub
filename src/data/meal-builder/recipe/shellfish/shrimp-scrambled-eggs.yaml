@@ -66,10 +66,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: peeled-shrimp
     role: main-protein
-    availability: required
   - ingredient_id: eggs
     role: supporting-protein
-    availability: required
 steps:
   - 准备：虾擦干后拌虾仁调味；鸡蛋打散后加入蛋液调味。；葱花1–2 Tbsp可选。
   - 不粘锅中大火加2 tsp油，虾仁单层煎/炒到刚变粉红、不透明约七成熟，立即盛出。

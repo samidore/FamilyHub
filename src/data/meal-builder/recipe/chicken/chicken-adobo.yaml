@@ -65,7 +65,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: bone-in-chicken-thighs
     role: main-protein
-    availability: required
 steps:
   - 准备：鸡肉擦干；卤汁全部量好。
   - 厚锅中火把鸡皮面向下干煎或加1 tsp油煎至浅褐，再翻面1–2分钟。

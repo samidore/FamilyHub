@@ -66,7 +66,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: hot-pot-lamb-slices
     role: main-protein
-    availability: required
 steps:
   - 准备：羊肉与腌料拌匀30分钟。；孜然籽干锅小火炒到明显香、不要焦黑；辣椒/花椒不进基础锅。
   - 炒锅烧到很热，加1 Tbsp油；羊肉分两批平铺，大火快速煎炒。

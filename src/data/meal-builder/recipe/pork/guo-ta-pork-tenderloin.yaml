@@ -66,10 +66,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: whole-pork-tenderloin
     role: main-protein
-    availability: required
   - ingredient_id: eggs
     role: supporting-protein
-    availability: required
 steps:
   - 准备：肉片与短腌料抓匀15分钟；蛋衣搅匀。；塌汁预先混匀。
   - 肉片逐片薄裹蛋衣；不粘锅中火加1 Tbsp油，单层排入。

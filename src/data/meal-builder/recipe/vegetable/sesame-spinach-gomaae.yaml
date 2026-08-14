@@ -62,7 +62,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: spinach
     role: vegetable
-    availability: required
 steps:
   - 准备：菠菜切去老根，彻底洗净；准备一大盆冷水。；芝麻磨碎后与生抽、糖、水混匀。
   - 大锅水充分沸腾；先抓住叶片把茎部入水约20秒，再整把放入。

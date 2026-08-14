@@ -60,10 +60,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: kabocha-squash
     role: integral-staple
-    availability: required
   - ingredient_id: rice
     role: integral-staple
-    availability: required
 steps:
   - 准备：米淘洗沥干；南瓜切均匀小块。；使用厚底锅，避免粥底长时间直接受强火。
   - 米和5 cups水大火煮开，立刻转最小火，盖盖留缝。

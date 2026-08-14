@@ -64,7 +64,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: whole-chicken
     role: main-protein
-    availability: required
 steps:
   - 准备：鸡提前约1小时从冰箱取出；去内脏并清理鸡皮。；使用能刚好容纳整鸡的高而窄的锅；锅过大会需要按比例增加master sauce。
   - 中小火锅中加油和姜，约30秒后加葱再炒30秒；加八角、玫瑰露和绍兴酒，煮到重新轻沸。

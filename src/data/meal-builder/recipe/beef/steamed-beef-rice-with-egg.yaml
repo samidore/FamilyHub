@@ -65,13 +65,10 @@ detail_level: cookable
 ingredients:
   - ingredient_id: ground-beef
     role: main-protein
-    availability: required
   - ingredient_id: eggs
     role: supporting-protein
-    availability: required
   - ingredient_id: rice
     role: integral-staple
-    availability: required
 steps:
   - 准备：米按家庭正常米水比入锅开始煮；牛肉与腌料抓匀15分钟。；鸡蛋备用。
   - 米饭煮到表面水基本被吸收、米粒已膨胀但尚未完全熟时打开盖。

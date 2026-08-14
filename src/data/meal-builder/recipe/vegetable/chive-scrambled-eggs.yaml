@@ -69,10 +69,8 @@ ingredients:
       - yellow-chives
       - garlic-chives
     role: vegetable
-    availability: required
   - ingredient_id: eggs
     role: main-protein
-    availability: required
 steps:
   - 准备：鸡蛋打散到蛋白蛋黄完全融合，加入盐和1 Tbsp水。；韭黄 / 韭菜洗净/处理后切成一口大小；含水多的瓜类或菌菇需要先单独炒到水汽明显减少。
   - 炒锅中大火预热，加2 tsp油；倒蛋液后用锅铲从外向内推，约七成熟、仍有湿润光泽时立即盛出。

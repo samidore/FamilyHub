@@ -64,7 +64,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: sweet-potato
     role: integral-staple
-    availability: required
 steps:
   - 准备：红薯刷洗干净并彻底擦干；不削皮、不包紧铝箔。；烤箱预热325°F/165°C，烤架中层。
   - 红薯直接放烤架或铺纸烤盘，彼此留空。

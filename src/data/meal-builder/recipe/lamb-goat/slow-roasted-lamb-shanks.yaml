@@ -65,7 +65,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: lamb-shanks
     role: main-protein
-    availability: required
 steps:
   - 准备：烤箱预热到325°F / 165°C，中层放烤架；羊腱擦干并单层放入烤盘。；把基础调味均匀涂在表面；需要腌制的菜按专用 recipe override，不使用此通用步骤。
   - 烤盘铺烘焙纸或薄薄抹油；主料之间留空隙，避免蒸汽把表面焖湿。

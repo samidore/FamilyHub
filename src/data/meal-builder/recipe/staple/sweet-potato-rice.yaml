@@ -62,10 +62,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: sweet-potato
     role: integral-staple
-    availability: required
   - ingredient_id: rice
     role: integral-staple
-    availability: required
 steps:
   - 准备：米淘洗沥干；红薯刷净，可留皮，切块后快速冲洗表面淀粉。；按家庭米种计量正常煮饭水量。
   - 米、正常水量、味醂和盐入锅轻拌。

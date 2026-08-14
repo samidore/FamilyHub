@@ -62,7 +62,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: gai-lan
     role: vegetable
-    availability: required
 steps:
   - 准备：粗芥兰梗纵切一刀，叶和粗梗分开；酱汁混匀。；准备大锅沸水。
   - 沸水中加1 tsp油（可省）和一小撮盐；先下粗梗30秒。

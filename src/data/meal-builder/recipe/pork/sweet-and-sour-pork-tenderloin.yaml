@@ -66,7 +66,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: whole-pork-tenderloin
     role: main-protein
-    availability: required
 steps:
   - 准备：里脊切成大小一致的条；加入绍兴酒、盐、水抓到吸收，再加淀粉和1 tsp油抓匀，静置15分钟。；糖醋汁全部搅匀；下锅前再搅一次，防止淀粉沉底。
   - 不粘锅中大火预热，加1 Tbsp中性油；猪肉分两批摊成单层，避免挤在一起出水。

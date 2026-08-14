@@ -64,10 +64,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: soft-tofu
     role: main-protein
-    availability: required
   - ingredient_id: tomato
     role: vegetable
-    availability: required
 steps:
   - 准备：豆腐切块尽量少搬动；番茄去硬蒂切2–3 cm块。；番茄豆腐汁搅匀。
   - 深不粘锅中火加1 tsp油，下番茄炒2–3分钟到边缘软并明显出汁。

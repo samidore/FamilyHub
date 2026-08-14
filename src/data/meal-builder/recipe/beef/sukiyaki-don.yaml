@@ -65,13 +65,10 @@ detail_level: cookable
 ingredients:
   - ingredient_id: hot-pot-beef-slices
     role: main-protein
-    availability: required
   - ingredient_id: onion
     role: vegetable
-    availability: required
   - ingredient_id: rice
     role: integral-staple
-    availability: required
 steps:
   - 准备：牛肉片解开；洋葱薄切；寿喜烧汁混匀。
   - 宽锅放寿喜烧汁和洋葱，中火煮开后转中小火2–3分钟，让洋葱开始变软。

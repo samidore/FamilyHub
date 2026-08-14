@@ -63,7 +63,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: winter-melon
     role: vegetable
-    availability: required
 steps:
   - 准备：冬瓜切均匀大块；姜5 g切片。；焖汁混匀。
   - 宽锅中火加2 tsp油，下姜炒20秒；加入冬瓜翻1分钟。

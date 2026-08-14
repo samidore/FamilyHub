@@ -67,10 +67,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
-    availability: required
   - ingredient_id: pressed-tofu
     role: supporting-protein
-    availability: required
 steps:
   - 准备：香干切成与肉末颗粒接近的小丁；姜5 g切末。；酱丁汁全部混匀；基础锅不加辣。
   - 炒锅中大火加2 tsp油，下姜末10秒。

@@ -65,13 +65,10 @@ detail_level: cookable
 ingredients:
   - ingredient_id: hot-pot-beef-slices
     role: main-protein
-    availability: required
   - ingredient_id: onion
     role: vegetable
-    availability: required
   - ingredient_id: rice
     role: integral-staple
-    availability: required
 steps:
   - 准备：牛肉片若很长切成8–10 cm；洋葱顺纹薄切。；牛丼汁全部放宽锅中。
   - 冷锅加入牛丼汁和洋葱，中火煮开后转中小火，煮到洋葱开始透明。

@@ -63,7 +63,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: bone-in-chicken-thighs
     role: main-protein
-    availability: required
 steps:
   - 准备：鸡腿擦干；酱汁混匀。；如做 pot-in-pot 米饭，确保上层容器不接触鸡肉且不超过锅内安全装载线；米水比仍按家里实际米种。
   - 鸡腿放下层内胆，倒入酱汁并刮净锅底；架好上层饭盆（如使用）。

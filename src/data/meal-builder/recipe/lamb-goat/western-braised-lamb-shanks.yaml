@@ -69,13 +69,10 @@ detail_level: cookable
 ingredients:
   - ingredient_id: lamb-shanks
     role: main-protein
-    availability: required
   - ingredient_id: carrot
     role: vegetable
-    availability: required
   - ingredient_id: onion
     role: vegetable
-    availability: required
 steps:
   - 准备：烤箱预热350°F/180°C；羊腱擦干，用盐和黑胡椒均匀调味。；洋葱、胡萝卜和西芹切细丁，保证能在前段炒甜。
   - 厚底可进烤箱锅大火加约1 Tbsp油，羊腱尽量各面煎褐，约5分钟；盛出，倒掉明显过多脂肪。

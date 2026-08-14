@@ -65,10 +65,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
-    availability: required
   - ingredient_id: water-chestnuts
     role: vegetable
-    availability: required
 steps:
   - 准备：猪肉加全部调味同一方向搅2–3分钟至略发黏，再拌入马蹄。；铺入20–23 cm浅盘，压成约1.5–2 cm均匀厚度；中心不要堆高。
   - 蒸锅水先大开；肉饼上锅后立即盖盖，保持中大火稳定蒸汽。

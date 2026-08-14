@@ -63,13 +63,10 @@ detail_level: cookable
 ingredients:
   - ingredient_id: peeled-shrimp
     role: main-protein
-    availability: required
   - ingredient_id: broccoli
     role: vegetable
-    availability: required
   - ingredient_id: noodles
     role: integral-staple
-    availability: required
 steps:
   - 准备：虾擦干；西兰花切小朵。；面水烧开并加适量盐；酱油和清酒量好，黄油单独放。
   - 面条按包装煮；最后2分钟把西兰花加入同锅，捞前保留1/3 cup面水。

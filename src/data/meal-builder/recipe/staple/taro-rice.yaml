@@ -67,19 +67,14 @@ detail_level: cookable
 ingredients:
   - ingredient_id: chinese-sausage
     role: supporting-protein
-    availability: required
   - ingredient_id: taro
     role: integral-staple
-    availability: required
   - ingredient_id: fresh-shiitake
     role: vegetable
-    availability: required
   - ingredient_id: carrot
     role: vegetable
-    availability: required
   - ingredient_id: rice
     role: integral-staple
-    availability: required
 steps:
   - 准备：米淘洗沥干；芋头、胡萝卜切小丁；香肠薄切。；按家庭米种准备正常米水量，配菜出水不多时无需大幅扣水。
   - 宽锅中火加1 tsp油，香肠先炒30秒出香；加香菇、胡萝卜和芋头再炒2分钟。

@@ -73,7 +73,6 @@ ingredients:
       - grouper
       - halibut
     role: main-protein
-    availability: required
 steps:
   - 准备：鱼擦干；整鱼两面各划2–3刀但不要切到骨断。；耐热盘下垫少量姜葱；蒸锅水必须先完全烧开。
   - 水大开后把鱼盘上锅，立刻盖严，保持中大火稳定蒸汽。

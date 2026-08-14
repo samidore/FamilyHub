@@ -66,10 +66,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
-    availability: required
   - ingredient_id: eggplant
     role: vegetable
-    availability: required
 steps:
   - 准备：茄子切条后立即烹调；不预油炸。；轻蒜香汁完全混匀。
   - 不粘锅中大火加2 tsp油，下茄子单层/分批煎1–2分钟，让切面出现浅色焦点。

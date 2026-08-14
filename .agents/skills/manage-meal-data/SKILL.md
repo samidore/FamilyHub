@@ -23,15 +23,15 @@ Judge semantic duplicates yourself from identity, core technique, equipment, tag
 
 ## Research
 
-- Use the `agent-reach` Skill when available, then its routed Internet tools. Prefer a reputable recipe author for identity, quantities, and technique.
-- Store nonempty source-label evidence in every new or updated `cookable` record. Check food-safety claims against an official government, manufacturer, or similarly authoritative source when retaining those claims.
-- Record only supported claims and the actual check date. Mark adaptations. Preserve complete user-supplied content and research only missing or doubtful fields.
+- Use complete user-supplied Recipe content directly. Research only when the user requests it or a required fact is missing or doubtful.
+- When research is needed, use the `agent-reach` Skill when available and prefer a reputable recipe author for identity, quantities, and technique. Check retained food-safety claims against an authoritative source.
+- Evidence labels and URLs are optional for cookability. Preserve existing evidence, record only supported claims and actual check dates, and mark adaptations.
 
 ## Add or update a Recipe
 
 1. Accept a dish name as sufficient input. Inspect exact ID/name, Chinese-English aliases, archived IDs, and semantic duplicates.
 2. Convert an exact or structurally equivalent Add into Update. Create a new stable kebab-case ID only for a distinct identity or core technique.
-3. Produce a `cookable` Recipe with display-only Cook View input lines, executable steps, equipment, timing, servings, and source-label evidence; keep operational requirements availability-only and do not track pantry items there.
+3. Produce a `cookable` Recipe with display-only Cook View input lines, executable steps, equipment, timing, and servings; keep operational requirements to required Ingredient identities and roles, and do not track pantry items there.
 4. Preserve `status: candidate`; never auto-approve. Keep unsupported household facts unknown or ask.
 5. Create missing required non-pantry Ingredients in the same planned transaction. On Update, retain the stable ID/filename and re-check the complete record.
 6. Put a new Recipe in `recipe/<category>/<id>.yaml` and append it to the category index unless the user requests a position.
@@ -45,8 +45,8 @@ Judge semantic duplicates yourself from identity, core technique, equipment, tag
 ## Delete
 
 1. Inspect active and archived references.
-2. First move the record under `archive/`, set `status: archived`, remove active indexes, and remove or migrate active references.
-3. Reserve the ID forever. Physically delete only after one successful deployed version and a second explicit request plus another reference check.
+2. An explicit delete permanently removes the record, its index entry, and all active references after that single reference check. Do not archive it or require another request or deployment wait.
+3. Never reuse the deleted stable ID.
 
 ## Complete the transaction
 

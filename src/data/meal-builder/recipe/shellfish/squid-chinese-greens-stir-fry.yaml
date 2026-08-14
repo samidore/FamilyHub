@@ -65,10 +65,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: squid
     role: main-protein
-    availability: required
   - ingredient_id: chinese-greens
     role: vegetable
-    availability: required
 steps:
   - 准备：海鲜彻底擦干；虾去肠线，鱿鱼切成大小一致的片/圈，扇贝去侧筋。；配菜提前切好并彻底沥干；海鲜快炒时间很短，所有调味必须先准备好。
   - 锅大火预热后加油；海鲜单层下锅，不要堆叠。

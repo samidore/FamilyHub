@@ -66,16 +66,12 @@ detail_level: cookable
 ingredients:
   - ingredient_id: lamb-shoulder-chunks
     role: main-protein
-    availability: required
   - ingredient_id: carrot
     role: vegetable
-    availability: required
   - ingredient_id: onion
     role: vegetable
-    availability: required
   - ingredient_id: rice
     role: integral-staple
-    availability: required
 steps:
   - 准备：米洗净沥干；羊肉切块；胡萝卜洋葱切好。；水量按来源半份起始值，若家庭米种吸水不同以后再校准。
   - 厚锅中大火加油，羊肉分批煎到多面褐色。

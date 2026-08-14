@@ -66,10 +66,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: eggs
     role: main-protein
-    availability: required
   - ingredient_id: tomato
     role: vegetable
-    availability: required
 steps:
   - 准备：鸡蛋加盐和水打匀；番茄去硬蒂切2–3 cm块。；葱花1根可选。
   - 炒锅中大火加2 tsp油，倒蛋液；推成大块，约七成熟仍湿润时盛出。

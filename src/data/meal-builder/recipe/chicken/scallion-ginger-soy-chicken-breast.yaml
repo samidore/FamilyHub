@@ -65,7 +65,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: chicken-breast
     role: main-protein
-    availability: required
 steps:
   - 准备：鸡胸横片到约1.5 cm厚，擦干；可轻撒1/4 tsp盐。；酱汁混匀。
   - 不粘锅中火加2 tsp油，鸡胸单层放入；第一面煎3分钟左右至有浅金色。

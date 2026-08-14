@@ -65,7 +65,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: oxtail
     role: main-protein
-    availability: required
 steps:
   - 准备：牛尾检查骨屑；家庭若偏好清汤，可先沸水焯3–5分钟并冲净。；牛尾单层或尽量平铺放入内锅，加入低盐牛汤/水、姜和洋葱。
   - 锁盖，High Pressure 45分钟。

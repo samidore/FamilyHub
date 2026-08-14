@@ -64,13 +64,10 @@ detail_level: cookable
 ingredients:
   - ingredient_id: chicken-breast
     role: main-protein
-    availability: required
   - ingredient_id: fresh-shiitake
     role: vegetable
-    availability: required
   - ingredient_id: noodles
     role: integral-staple
-    availability: required
 steps:
   - 准备：鸡片加短腌抓匀10分钟；香菇切片。；乌冬按包装焯散，沥干分3碗。
   - 汤锅把清汤乌冬底煮开，加入鲜香菇，中火煮3分钟到香菇软。

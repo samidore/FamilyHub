@@ -65,7 +65,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: whole-pork-tenderloin
     role: main-protein
-    availability: required
 steps:
   - 准备：猪里脊逆纹切细丝，加入全部腌料抓匀，静置15分钟。；京酱汁搅匀；葱白丝铺在盘底或另放，孩子若不吃生葱可不配。
   - 炒锅大火预热，加2 tsp油；肉丝迅速摊开并翻炒，颜色由粉转白、约八成熟时盛出。

@@ -66,10 +66,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: boneless-beef-short-ribs
     role: main-protein
-    availability: required
   - ingredient_id: daikon
     role: vegetable
-    availability: required
 steps:
   - 准备：主料切成大小一致、适合炖煮的块；块根切约2.5–3 cm。；日式煮汁混匀。
   - 厚锅中火加1 tsp油；肉类有明显表面时先煎到浅褐，薄片类只需快速变色。

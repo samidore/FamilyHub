@@ -65,10 +65,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: frozen-beef-patties
     role: main-protein
-    availability: required
   - ingredient_id: bread
     role: integral-staple
-    availability: required
 steps:
   - 准备：保持冷冻或按包装说明解冻；若包装已调味，不额外加盐。
   - 不粘锅中火预热，冷冻饼按包装是否需要油；一般只薄抹1 tsp油。

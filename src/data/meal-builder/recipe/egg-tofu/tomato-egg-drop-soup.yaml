@@ -66,10 +66,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: eggs
     role: main-protein
-    availability: required
   - ingredient_id: tomato
     role: vegetable
-    availability: required
 steps:
   - 准备：鸡蛋打匀但不必打入大量空气。；番茄切块。；薄芡提前搅匀；不喜欢勾芡可完全省略。
   - 汤锅中火加1 tsp油，下番茄炒约5分钟，直到明显出汁、边缘软。

@@ -67,7 +67,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: sliced-beef-brisket
     role: main-protein
-    availability: required
 steps:
   - 准备：牛肉逆纹切2–3 mm薄片；加入腌料抓匀，静置10–15分钟。；蔬菜切到快炒大小；西兰花/芥兰粗梗若较硬，可先沸水焯30–60秒后彻底沥干。；把炒汁搅到没有淀粉结块；下锅前再次搅匀。
   - 炒锅大火预热，加1 Tbsp中性油；牛肉摊成单层，30秒内不要频繁翻动。

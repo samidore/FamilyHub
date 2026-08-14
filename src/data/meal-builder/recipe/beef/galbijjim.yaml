@@ -66,13 +66,10 @@ detail_level: cookable
 ingredients:
   - ingredient_id: cross-cut-beef-short-ribs
     role: main-protein
-    availability: required
   - ingredient_id: carrot
     role: vegetable
-    availability: required
   - ingredient_id: daikon
     role: vegetable
-    availability: required
 steps:
   - 准备：牛小排冷水浸20–30分钟换水一次以去血水，冲净骨屑。；萝卜胡萝卜切大块，边角略削圆可减少久炖碎裂。
   - 牛小排冷水下锅煮开3分钟，捞出冲净；换干净锅。

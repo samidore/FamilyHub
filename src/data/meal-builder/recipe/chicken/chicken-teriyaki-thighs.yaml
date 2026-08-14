@@ -65,7 +65,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: boneless-skinless-chicken-thighs
     role: main-protein
-    availability: required
 steps:
   - 准备：鸡腿擦干；厚处轻划一刀或拍平，使厚度接近。；照烧汁完全混匀。
   - 不粘锅中火加2 tsp油，鸡腿较平的一面朝下单层放入；煎到能轻松翻面且呈金黄。

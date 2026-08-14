@@ -66,7 +66,6 @@ ingredients:
       - whole-chicken-wings
       - chicken-drumsticks
     role: main-protein
-    availability: required
 steps:
   - 准备：烤箱预热425°F/220°C；鸡翅/鸡小腿擦干。；刷汁搅匀，分成‘生肉刷汁’和‘最后干净刷汁’两份，避免交叉污染。
   - 鸡肉单层放铺纸烤盘，先不刷厚糖汁，烤15分钟。

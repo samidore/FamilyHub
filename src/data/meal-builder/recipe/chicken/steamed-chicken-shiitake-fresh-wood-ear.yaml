@@ -67,13 +67,10 @@ detail_level: cookable
 ingredients:
   - ingredient_id: boneless-skinless-chicken-thighs
     role: main-protein
-    availability: required
   - ingredient_id: fresh-shiitake
     role: vegetable
-    availability: required
   - ingredient_id: fresh-wood-ear-mushrooms
     role: vegetable
-    availability: required
 steps:
   - 准备：主料切成厚度尽量一致的片/小块；加入全部腌料抓匀，静置15–20分钟。；配菜切薄；把肉在浅盘中摊成尽量单层，较厚块不要堆在盘中心。；蒸锅加足水并先烧到持续沸腾，再把盘子上锅。
   - 水已大开后上锅，立刻盖严；保持中大火让蒸汽持续稳定。

@@ -63,7 +63,6 @@ detail_level: cookable
 ingredients:
   - ingredient_id: shell-on-shrimp
     role: main-protein
-    availability: required
 steps:
   - 准备：虾冲净并去肠线；带壳保留。；蘸汁另碗混匀。
   - 白灼水大火煮到充分沸腾。

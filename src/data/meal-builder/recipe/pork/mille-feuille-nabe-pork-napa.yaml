@@ -66,10 +66,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: thin-sliced-pork-belly
     role: main-protein
-    availability: required
   - ingredient_id: napa-cabbage
     role: vegetable
-    availability: required
 steps:
   - 准备：白菜叶与猪肉片交替叠成4–5层；切成约5 cm段。；把叠好的段切面朝上紧密排入锅中；中间到外圈都尽量塞紧。
   - 从锅边倒入日式清汤，不要直接冲散层次；盖盖中大火煮到明显沸腾。

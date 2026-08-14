@@ -67,13 +67,10 @@ detail_level: cookable
 ingredients:
   - ingredient_id: green-cabbage
     role: vegetable
-    availability: required
   - ingredient_id: onion
     role: vegetable
-    availability: required
   - ingredient_id: noodles
     role: integral-staple
-    availability: required
 steps:
   - 准备：冷冻乌冬按包装解冻/焯散，彻底沥水。；卷心菜、洋葱切好；炒汁混匀。
   - 炒锅中大火加2 tsp油，下洋葱炒1分钟到边缘透明。
