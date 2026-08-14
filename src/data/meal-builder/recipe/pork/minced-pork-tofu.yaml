@@ -20,15 +20,16 @@ fit:
     - 家庭版包含明确的受控改编，需首次实做后再校准。
 evidence:
   level: inferred
-  checked_on: 2026-08-11
-  scope: Dish family/technique verified; this exact household adaptation is
-    inferred and remains candidate until tested.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 本菜为家庭清淡肉末豆腐；旧 KB 的麻婆豆腐来源仅证明结构，不作为调味来源。Cook View 使用项目中式家庭轻盐标准汁。
   sources:
-    - Made With Lau — Mapo Tofu with Pork; used only to verify ground-pork +
-      soft-tofu structure, with chili/bean-sauce identity not carried into
-      household 肉末豆腐
-notes: Main category remains pork; soft tofu is supporting protein. This is a
-  mild household adaptation, not Mapo Tofu.
+    - Made With Lau — Mapo Tofu with Pork; used only to verify ground-pork + soft-tofu structure, with chili/bean-sauce identity not carried into household 肉末豆腐
+    - Made With Lau / The Woks of Life / Just One Cookbook — tofu recipes listed in the source KB
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Main category remains pork; soft tofu is supporting protein. This is a mild household adaptation, not Mapo Tofu.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -53,8 +54,7 @@ advance_start_required: false
 equipment:
   - medium burner
   - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not
-  occupy the high-output wok burner.
+burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -62,7 +62,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
@@ -70,17 +70,19 @@ ingredients:
   - ingredient_id: soft-tofu
     role: supporting-protein
     availability: required
-  - pantry_core: light soy / oyster-sauce-style savory sauce; no chili/bean-chili
-      paste in base
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 ground-pork；按来源决定是否需要焯水或轻煎。
-  - 加入 light soy / oyster-sauce-style savory sauce; no chili/bean-chili paste in
-    base 和足以完成焖煮的液体；家庭版轻盐、不放辣。
-  - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
-  - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
+  - 准备：豆腐切块后尽量少搬动；姜5 g、蒜1瓣切末。；酱汁混匀；本菜不是麻婆豆腐，基础锅不放豆瓣酱/辣椒。
+  - 深不粘锅中火加2 tsp油，下姜蒜10秒；加入猪绞肉压散。
+  - 炒到肉末全部变色并出现少量褐色点。
+  - 倒入酱汁并煮开，再轻轻滑入豆腐；用晃锅代替频繁翻动。
+  - 中小火煮3–5分钟，让豆腐中心热透；如果汁太稀，再中火煮30–60秒。
+  - 汁薄薄挂勺、肉末完全熟、豆腐仍成块时关火。
+  - 完成提示：豆腐完整、中心热透；肉末完全熟；汁薄挂勺，不成厚芡。
+  - 安全提示：绞肉或含绞肉馅中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 猪绞肉：300 g
+  - 嫩豆腐：1盒，约400–450 g，切2.5 cm块
+  - 轻口肉末豆腐汁：水或低盐高汤 1/2 cup；生抽 1 Tbsp；蚝油 2 tsp；糖 1/2 tsp；玉米淀粉 1.5 tsp

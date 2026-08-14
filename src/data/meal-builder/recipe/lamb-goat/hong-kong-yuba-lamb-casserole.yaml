@@ -20,14 +20,15 @@ fit:
     - 已在 brainstorm 中标为第二优先度。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 配比按 The Woks of Life Hong Kong Style Lamb Casserole；来源允许 lamb shoulder，家庭基础锅不辣。
   sources:
-    - The Woks of Life — Hong Kong Style Lamb Casserole; source explicitly
-      accepts lamb shoulder and goat substitutions
-notes: Second priority; dried yuba requires advance soaking. Source supports
-  lamb shoulder as a substitute for lamb breast.
+    - The Woks of Life — Hong Kong Style Lamb Casserole; source explicitly accepts lamb shoulder and goat substitutions
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Second priority; dried yuba requires advance soaking. Source supports lamb shoulder as a substitute for lamb breast.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: lamb
 main_protein_ingredient_ids:
@@ -52,8 +53,7 @@ advance_start_required: true
 equipment:
   - medium burner
   - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not
-  occupy the high-output wok burner.
+burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: conditional
 child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
 spicy_in_base: false
@@ -61,7 +61,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: lamb-shoulder-chunks
     role: main-protein
@@ -69,16 +69,20 @@ ingredients:
   - ingredient_id: dried-yuba-sticks
     role: supporting-protein
     availability: required
-  - pantry_core: fermented-bean-curd / ginger / aromatic casserole profile, kept mild
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 lamb-shoulder-chunks；按来源决定是否需要焯水或轻煎。
-  - 加入 fermented-bean-curd / ginger / aromatic casserole profile, kept mild
-    和足以完成焖煮的液体；家庭版轻盐、不放辣。
-  - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
-  - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
+  - 准备：腐竹提前泡到完全柔软，无硬芯后沥干。；羊肉冷水焯3–5分钟并冲净。
+  - 厚锅中火加1 Tbsp油，下姜葱炒香；加入羊肉翻到表面略干。
+  - 加入腐乳、柱候酱翻1分钟，再加绍兴酒、生抽老抽和冰糖。
+  - 加热水至接近没过肉，煮开后转小火盖盖炖60分钟。
+  - 羊肉开始软后加入泡软腐竹，再炖20–30分钟。
+  - 肉筷子能轻松插入、腐竹吸汁软而不烂时开盖略收。
+  - 汁能薄挂勺、锅底仍有可舀汁时关火。
+  - 完成提示：羊肉软嫩、腐竹吸汁；煲汁浓香但仍可流动。
+  - 安全提示：整块羊/山羊肉可测处达到145°F/63°C并静置3分钟；炖菜以更高温度达到软烂质地。
 child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 羊肩肉块：1100 g
+  - 腐竹：100 g干重，提前泡软切段
+  - 枝竹羊腩煲汁：南乳/红腐乳 3块，压泥；柱候酱 1/4 cup；绍兴酒 3 Tbsp；老抽 1 tsp；生抽 2 Tbsp；冰糖 10 g；姜 15片；葱 6根；八角 1个，可省

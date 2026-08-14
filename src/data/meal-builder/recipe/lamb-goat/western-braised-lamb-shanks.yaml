@@ -21,12 +21,16 @@ fit:
     - 已在 brainstorm 中标为第二优先度。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 采用 RecipeTin Eats Slow Cooked Lamb Shanks in Red Wine Sauce 的4只羊腱配方做1/2算术缩放，保留350°F/180°C 2小时盖盖 + 30分钟开盖的流程。
   sources:
     - Western braised lamb-shank references
-notes: Second priority.
+    - RecipeTin Eats — Slow Cooked Lamb Shanks in Red Wine Sauce — exact ingredient card and oven method
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Second priority.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: lamb
 main_protein_ingredient_ids:
@@ -53,8 +57,7 @@ advance_start_required: true
 equipment:
   - medium burner
   - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not
-  occupy the high-output wok burner.
+burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: yes
 child_texture: 成品肉可软嫩，但必须由成人去骨。
 spicy_in_base: false
@@ -62,7 +65,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: lamb-shanks
     role: main-protein
@@ -73,15 +76,22 @@ ingredients:
   - ingredient_id: onion
     role: vegetable
     availability: required
-  - pantry_core: stock / tomato optional / herbs / onion-carrot
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 lamb-shanks；按来源决定是否需要焯水或轻煎。
-  - 加入 stock / tomato optional / herbs / onion-carrot 和足以完成焖煮的液体；家庭版轻盐、不放辣。
-  - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
-  - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
+  - 准备：烤箱预热350°F/180°C；羊腱擦干，用盐和黑胡椒均匀调味。；洋葱、胡萝卜和西芹切细丁，保证能在前段炒甜。
+  - 厚底可进烤箱锅大火加约1 Tbsp油，羊腱尽量各面煎褐，约5分钟；盛出，倒掉明显过多脂肪。
+  - 转中小火，必要时补余下油；洋葱和蒜炒2分钟，再加胡萝卜、西芹炒5分钟到洋葱透明发甜。
+  - 加入红酒、鸡汤、碎番茄、番茄膏、百里香和月桂叶，搅匀并煮到轻沸。
+  - 羊腱放回，肉厚端尽量浸在液体里；盖盖入350°F/180°C烤2小时。
+  - 开盖再烤30分钟；用叉子测试，应极软但肉仍刚好挂在骨上；不够软就重新盖盖继续烤。
+  - 羊腱盛出保温，去掉月桂叶/百里香；酱汁若太稀，中火单独浓缩到有光泽、能挂勺，再淋回。
+  - 完成提示：羊腱肉极软、叉子一拨即可分开但仍挂骨；红酒番茄汁有光泽、浓而可流动。
+  - 安全提示：整块羊/山羊肉可测处达到145°F/63°C并静置3分钟；炖菜以更高温度达到软烂质地。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 羊腱：2只，每只约350–400 g
+  - 洋葱：1/2个，细丁
+  - 胡萝卜：1/2 cup，细丁
+  - 西芹：1/2 cup，细丁
+  - 红酒炖汁（RecipeTin Eats 原方半量）：盐 1/2 tsp；黑胡椒 1/2 tsp；橄榄油 1–1 1/2 Tbsp；蒜末 1–2瓣；干红酒 1 1/4 cups；罐装碎番茄 400 g；番茄膏 1 Tbsp；低盐鸡汤 1 cup；百里香 2–3枝鲜或1 tsp干；月桂叶 1片

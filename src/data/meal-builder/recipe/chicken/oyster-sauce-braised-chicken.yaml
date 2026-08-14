@@ -19,13 +19,15 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 配比与分阶段焖法来自已核实 oyster-sauce braised chicken 来源。
   sources:
     - The Woks of Life — Oyster Sauce Chicken
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
@@ -50,8 +52,7 @@ advance_start_required: false
 equipment:
   - medium burner
   - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not
-  occupy the high-output wok burner.
+burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: yes
 child_texture: 成品肉可软嫩，但必须由成人去骨。
 spicy_in_base: false
@@ -59,25 +60,25 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - one_of:
       - chicken-drumsticks
       - bone-in-chicken-thighs
     role: main-protein
     availability: required
-  - pantry_core: oyster sauce / soy / ginger-scallion, diluted for light salt
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 chicken-drumsticks, bone-in-chicken-thighs；按来源决定是否需要焯水或轻煎。
-  - 加入 oyster sauce / soy / ginger-scallion, diluted for light salt
-    和足以完成焖煮的液体；家庭版轻盐、不放辣。
-  - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
-  - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
+  - 准备：鸡肉擦干；若皮很多可剪去明显多余脂肪。；焖汁混匀。
+  - 宽锅中火，鸡皮面朝下煎约3分钟到浅金黄；翻面再煎1–2分钟。
+  - 加入姜蒜和焖汁，煮开后转小火盖盖15分钟。
+  - 翻面，再盖盖15分钟；最厚处测到165°F/74°C。
+  - 开盖转中火，把汁减少；每2–3分钟给鸡肉淋汁。
+  - 汁从水状变成刚能薄挂勺时关火，不收到浓咸膏状。
+  - 孩子份去骨、去软骨并剪小。
+  - 完成提示：鸡肉熟透软嫩；汁能薄挂勺、锅底仍有可舀汁。
+  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 meal_addons:
   - id: finish-with-leafy-vegetable
@@ -90,3 +91,6 @@ meal_addons:
       protein: false
       vegetable: ingredient-dependent
     notes: 仅在铁锅/炒锅末段已有收汁/焖烧窗口时加入兼容嫩叶菜；不另起锅。
+cook_ingredients:
+  - 带骨鸡腿/鸡小腿：4个 leg quarters 或约900–1100 g
+  - 蚝油焖汁：低盐鸡汤 2 cups；生抽 2 Tbsp；蚝油 3 Tbsp；姜 5片；蒜 3瓣

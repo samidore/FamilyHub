@@ -19,13 +19,16 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. Made With Lau 蒸蛋水蛋比例：4蛋配约1.5–2 cups水；家庭做全熟。
   sources:
     - Made With Lau — Chinese Steamed Eggs
-notes: 鸡蛋豆腐蒸蛋 stays a variation/substitution unless later testing shows a
-  distinct workflow.
+    - Made With Lau / The Woks of Life — Chinese steamed eggs / tomato eggs / egg drop soup
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  鸡蛋豆腐蒸蛋 stays a variation/substitution unless later testing shows a distinct workflow.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: egg
 main_protein_ingredient_ids:
@@ -57,20 +60,25 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: eggs
     role: main-protein
     availability: required
-  - pantry_core: egg + warm water/stock + light soy at finish
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 eggs；搭配 无固定蔬菜；按来源用 egg + warm water/stock + light soy at finish 做短腌或铺料。
-  - 水开后上锅蒸；厚度/骨量变化时以实际熟度为准，不把来源分钟机械套用到不同切法。
-  - 出锅后按需要加入葱姜等清淡收尾；避免额外淋大量热油。
-  - 孩子份先去骨/剪小/确认没有硬壳或筋膜，再加成人后味。
+  - 准备：鸡蛋充分打匀；加入温水和盐搅匀。；过筛入浅碗，撇掉表面大泡；盖耐热盘或保鲜膜留小缝防冷凝水滴入。
+  - 蒸锅水先烧开后转小火，让水保持轻微沸腾而不是猛烈翻滚。
+  - 放入蛋碗，盖锅；小火蒸8分钟后开始检查。
+  - 轻晃碗：中心整体像果冻一样轻颤但没有水状液体时关火；若中心仍像水，每次继续1–2分钟。
+  - 离火后盖着静置2分钟，让余温完成凝固。
+  - 孩子份不必加酱油；成人份可滴1 tsp生抽和少量芝麻油。
+  - 完成提示：表面平滑，中心凝固、整体轻颤；切开没有水状生蛋液。
+  - 安全提示：含蛋菜按家庭安全底线做到蛋液完全凝固；蛋类菜中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 鸡蛋：4个
+  - 温水：1.5–2 cups
+  - 蛋液：盐 1/2 tsp；温水 1.5 cups偏紧实；2 cups更嫩
+  - 出锅调味：生抽 1 tsp，可选；芝麻油 几滴，可选

@@ -19,13 +19,15 @@ fit:
     - 需要提前启动或较长被动烹调时间。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 比例依据已核实的 Cantonese Pork Knuckles with Ginger and Vinegar 配方；家庭不另加辣。
   sources:
     - The Woks of Life — Cantonese Pork Knuckles with Ginger and Vinegar
-notes: Strong sweet-vinegar/ginger identity makes this lower-frequency for the
-  household.
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Strong sweet-vinegar/ginger identity makes this lower-frequency for the household.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -50,8 +52,7 @@ advance_start_required: true
 equipment:
   - medium burner
   - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not
-  occupy the high-output wok burner.
+burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: conditional
 child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
 spicy_in_base: false
@@ -59,7 +60,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: pork-feet
     role: main-protein
@@ -67,15 +68,21 @@ ingredients:
   - ingredient_id: eggs
     role: supporting-protein
     availability: required
-  - pantry_core: ginger / sweet black vinegar / egg braise
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 pork-feet；按来源决定是否需要焯水或轻煎。
-  - 加入 ginger / sweet black vinegar / egg braise 和足以完成焖煮的液体；家庭版轻盐、不放辣。
-  - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
-  - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
+  - 准备：猪脚冷水下锅煮开3–5分钟，捞出冲净；尽量去除骨渣。；姜拍裂后干锅或极少油炒到表面略干；鸡蛋煮熟剥壳。
+  - 厚锅加入姜、甜醋和黑醋，煮开后转小火10分钟，让姜味进入醋汁。
+  - 加入焯洗猪脚和绍兴酒；液体应基本覆盖，必要时换更小的锅而不是大量加水。
+  - 小火盖盖炖到猪脚皮和筋开始变软；中途每20–30分钟翻动一次。
+  - 加入熟鸡蛋继续小火煮，让鸡蛋上色；猪脚最终应筷子能轻易穿透皮肉连接处。
+  - 尝汁后再决定是否需要盐；本菜以酸甜姜醋汁为主，不额外收成浓稠糖浆。
+  - 孩子若食用，只取去骨软肉；姜醋浓汁少量。
+  - 完成提示：猪脚皮筋软糯、肉易脱骨；姜醋汁仍为可舀液体、酸甜明显但不焦糖化。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
 child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 猪脚：约1 kg，斩块
+  - 鸡蛋：6个，煮熟剥壳
+  - 姜：450 g，去皮拍裂
+  - 姜醋汁：甜醋 1200 mL；黑醋 120 mL；绍兴酒 2 Tbsp；盐 少量，最后再判断

@@ -19,12 +19,15 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 日式 chicken katsu 的粉—蛋—Panko结构改为烤箱路线，不油炸。
   sources:
     - Just One Cookbook — Baked Chicken Katsu
-notes: Baked route preserves katsu identity without violating the no-deep-fry rule.
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Baked route preserves katsu identity without violating the no-deep-fry rule.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
@@ -56,22 +59,24 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: chicken-breast
     role: main-protein
     availability: required
-  - pantry_core: panko coating baked rather than deep-fried; tonkatsu sauce optional
-      at table
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 chicken-breast，准备 panko coating baked rather than deep-fried; tonkatsu
-    sauce optional at table；需要腌制的菜提前完成。
-  - 烤箱预热；食材单层放置，使用少量油或烘焙纸/烤架降低粘连。
-  - 按引用来源的厚度与熟度逻辑烤制；家庭实际切法不同则以熟度为准。
-  - 出炉后静置/拆骨/切小；成人酱汁或辣味在孩子份盛出后再加。
+  - 准备：鸡胸横片成约1.5 cm厚；轻拍到厚度一致。；烤箱预热425°F/220°C；Panko与1 Tbsp油拌匀，先在干锅中火炒到浅金黄可提高烤后颜色。
+  - 鸡排撒盐胡椒；依次薄蘸面粉、蛋液、Panko，按压让面包糠黏牢。
+  - 放在烤架/铺纸烤盘上，彼此留空。
+  - 烤10分钟后翻面；继续烤5–8分钟。
+  - 最厚处达到165°F/74°C立即出炉；不要为了更深颜色继续烤干。
+  - 静置2分钟切条；孩子份不淋浓酱，成人猪排酱另蘸。
+  - 完成提示：外层干爽酥脆、金黄；鸡胸中心熟透仍多汁。
+  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 鸡胸：450–550 g，切成3片薄鸡排
+  - 基础调味：盐 1/2 tsp；黑胡椒 1/4 tsp
+  - 裹层：面粉 1/3 cup；鸡蛋 1个，打散；Panko面包糠 1.5 cups；中性油 1 Tbsp，与Panko拌匀

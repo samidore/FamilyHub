@@ -59,7 +59,7 @@ test('recent Recipes rank after unseen choices with the newest meal last', () =>
   assert.deepEqual(rankCandidates([newest, oldest, unseen], state, [], {}, history).map((item) => item.id), ['r3', 'r2', 'r1']);
 });
 
-test('v1.6 structured data keeps migrated counts, Vegetable structures, and controlled add-ons', async () => {
+test('v1.7 structured data keeps migrated counts, Vegetable structures, and controlled add-ons', async () => {
   const kb = await loadMealData();
   assert.equal(kb.ingredients.length, 132);
   assert.equal(kb.ingredients.filter((item) => item.visible).length, 129);

@@ -20,13 +20,16 @@ fit:
     - 需要提前启动或较长被动烹调时间。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 采用 Serious Eats Pork Adobo 的完整结构与比例，按约900 g猪肩做2/3算术缩放；保留其椰奶版本，不额外加糖。
   sources:
     - Filipino Pork Adobo references — vinegar/soy/garlic braise
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - Serious Eats — Pork Adobo Recipe — exact ingredients and directions
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -50,8 +53,7 @@ advance_start_required: true
 equipment:
   - medium burner
   - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not
-  occupy the high-output wok burner.
+burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -59,20 +61,24 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: pork-shoulder-chunks
     role: main-protein
     availability: required
-  - pantry_core: vinegar / soy / garlic / bay leaf
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 pork-shoulder-chunks；按来源决定是否需要焯水或轻煎。
-  - 加入 vinegar / soy / garlic / bay leaf 和足以完成焖煮的液体；家庭版轻盐、不放辣。
-  - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
-  - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
+  - 准备：猪肩切4–5 cm块并彻底擦干；所有卤汁量好。
+  - 厚底锅大火加油，猪肉分批煎，每面约1–2分钟形成浅褐色外壳；不要把锅挤满。
+  - 全部猪肉回锅，加入生抽、米醋、椰奶、月桂叶和蒜；煮开后立即转到极小火。
+  - 盖盖保持bare simmer，炖约2–2.5小时；每30分钟检查一次液体和软嫩度。
+  - 猪肉很软但仍能保持块状时盛出；酱汁撇去明显浮油。
+  - 酱汁中火浓缩到约2/3 cup、能薄挂勺；加入预留2 tsp米醋，尝味后再决定是否需要更多，避免再加盐。
+  - 猪肉回锅裹汁1–2分钟即关火；孩子份少带浓汁。
+  - 完成提示：猪肩叉子可轻松插入但仍保持块状；酱汁浓缩后薄挂勺，醋味明显但不生冲。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 梅花肉/猪肩：900 g，切4–5 cm块
+  - Adobo 卤汁（Serious Eats 原方约2/3量）：中性油 2 tsp；生抽 1/3 cup；米醋 1/3 cup，另备2 tsp最后校酸；椰奶 2/3 cup；月桂叶 3片；蒜 5–6瓣，拍裂

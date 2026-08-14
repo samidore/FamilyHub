@@ -19,13 +19,16 @@ fit:
     - 需要提前启动或较长被动烹调时间。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 采用 The Woks of Life Cantonese Poached Chicken 的3–4 lb整鸡、葱姜和3:2:3姜葱油比例；安全终点统一用165°F/74°C。
   sources:
     - Made With Lau — White Cut Chicken
-notes: Whole-chicken planned/lower-frequency route; homemade roast chicken
-  remains excluded.
+    - The Woks of Life — Cantonese Poached Chicken (Bai Qie Ji) — exact chicken/aromatics and ginger-scallion sauce
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Whole-chicken planned/lower-frequency route; homemade roast chicken remains excluded.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
@@ -56,20 +59,26 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: whole-chicken
     role: main-protein
     availability: required
-  - pantry_core: ginger-scallion dipping sauce served separately
-    role: seasoning
-    availability: assumed
 steps:
-  - 整鸡清理后按 ginger-scallion dipping sauce served separately 的传统路线入锅；保持整鸡结构。
-  - 控制水温/火力让鸡均匀熟透；来源使用浸煮/焖浸时保留这一结构。
-  - 确认最厚部位熟透后取出并静置；需要的酱油/葱姜汁另做。
-  - 成人负责斩件、去骨；孩子份只给无骨软肉并剪小。
+  - 准备：鸡内外清理并擦干；准备能基本浸没鸡的深锅。；葱末、姜末和油先量好，蘸汁在鸡静置时再混合。
+  - 深锅加足水、2根葱和5片姜煮开；把鸡缓慢浸入，让鸡腔也灌入热水。
+  - 水恢复接近沸腾后转最小火，保持水面只有轻微移动；按鸡大小约30分钟起检查。
+  - 大腿最厚处避骨达到165°F/74°C后立即捞出；不要用“汁水清澈”替代温度计。
+  - 鸡静置10–15分钟再斩件。
+  - 蘸汁把3 Tbsp葱末、2 Tbsp姜末、3 Tbsp油和少量盐拌匀；生抽只放成人蘸碟，不直接淋整鸡。
+  - 孩子份彻底去骨、检查碎骨和硬软骨后剪小。
+  - 完成提示：鸡刚熟、多汁，皮完整；蘸汁姜葱清香，不把整鸡浸成高盐。
+  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 整鸡：1只，约1.4–1.8 kg（3–4 lb）
+  - 葱：2根，煮鸡用
+  - 姜：5片，煮鸡用
+  - 姜葱蘸汁（The Woks of Life）：葱末 3 Tbsp；姜末 2 Tbsp；中性油 3 Tbsp；盐 按蘸汁少量调味；先从1/4 tsp开始；生抽 成人蘸碟可选，另加

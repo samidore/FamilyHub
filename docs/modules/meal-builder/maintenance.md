@@ -19,7 +19,7 @@ For an Ingredient:
 For a Recipe:
 
 1. Create `recipe/<category>/<stable-id>.yaml`; the filename must equal `id`.
-2. Use a real cooking structure, not a protein × vegetable × seasoning product. Reference existing Ingredient IDs, `one_of` alternatives, or assumed pantry seasoning; add no synthetic leafy add-on Recipe.
+2. Use a real cooking structure, not a protein × vegetable × seasoning product. Reference existing required Ingredient IDs or `one_of` alternatives; keep pantry details in `cook_ingredients` and add no synthetic leafy add-on Recipe.
 3. Add the ID exactly once to the category index and update root content metadata. Keep status `candidate` until a separate approval decision.
 
 Before adding a record or changing an existing one, use [`.agents/skills/manage-meal-data/SKILL.md`](../../../.agents/skills/manage-meal-data/SKILL.md). It requires Plan-mode research, an explicit approval before writes, semantic duplicate review, and its read-only inspection commands.
@@ -33,7 +33,7 @@ For either record, run the migration-equivalent parity/privacy/schema checks plu
 - Update `evidence.checked_on`/`verifiedDate` only after checking the underlying source on that date. File movement, a parser migration, or a new GPT dump is not evidence.
 - Preserve `candidate` status, source scope, family constraints, child-coverage uncertainty, and conservative timing/detail level unless the change explicitly resolves them.
 - If a Recipe changes required Ingredients, `one_of`, contributions, child coverage, or add-ons, inspect affected ranking, Starter reachability, selected-meal reconciliation, Cook View, and checkout tests.
-- A `cookable` or `household-tested` Recipe needs an amount for every actual input, including pantry seasoning, executable nonempty steps/equipment, and a direct HTTPS evidence source. Do not turn a discoverable record into one of those levels merely to fill fields.
+- A `cookable` or `household-tested` Recipe needs nonempty display-only `cook_ingredients`, executable steps/equipment, and source-label evidence. Operational Ingredients remain availability-only; pantry items are not tracked there.
 
 ## Delete and archive
 

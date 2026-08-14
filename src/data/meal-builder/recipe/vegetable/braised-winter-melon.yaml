@@ -19,14 +19,15 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-12
-  scope: Dish identity/core technique verified or conservatively inferred from
-    cited mature household cooking patterns; timing is source-derived or
-    workflow-derived range, not household stopwatch data.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. The Woks of Life Braised Winter Melon 10–12分钟焖制结构家庭轻盐化。
   sources:
     - V12 — The Woks of Life — Braised Winter Melon
-notes: Candidate Vegetable-centered route; exact household seasoning quantities
-  remain for Cook View / first-cook calibration.
+    - Made With Lau — vegetable stir-fry / broccoli / choy sum recipes; The Woks of Life vegetable stir-fry patterns
+notes: |-
+  Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook calibration.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
@@ -50,8 +51,7 @@ advance_start_required: false
 equipment:
   - high-output burner
   - wok / iron pan
-burner_plan: High-output burner with wok / iron pan; keep the medium burner free
-  when possible.
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
 child_suitable: yes
 child_texture: 冬瓜焖至半透明柔软，适合剪成小块。
 spicy_in_base: false
@@ -59,21 +59,23 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: winter-melon
     role: vegetable
     availability: required
-  - pantry_core: light salt / neutral oil / common aromatics and sauce components
-      appropriate to the verified structure
-    role: seasoning
-    availability: assumed
 steps:
-  - 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
-  - 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
-  - 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
-child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为
-  ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
-adult_finish: Adult heat or stronger seasoning may be added only after the child
-  portion is removed; omit if unnecessary.
+  - 准备：冬瓜切均匀大块；姜5 g切片。；焖汁混匀。
+  - 宽锅中火加2 tsp油，下姜炒20秒；加入冬瓜翻1分钟。
+  - 倒入焖汁，煮开后转中小火盖盖10分钟。
+  - 开盖用筷子检查；冬瓜应开始半透明、能穿透但不散。
+  - 若仍硬继续盖2–3分钟；熟后开盖转中火。
+  - 汁减少到约锅底2–3 Tbsp并能薄挂冬瓜时关火；不要把冬瓜炒碎。
+  - 完成提示：冬瓜半透明软嫩、块形完整；汁薄挂而非汤水或厚酱。
+  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 冬瓜：700 g，去皮去瓤切3 cm块
+  - 焖汁：水或低盐高汤 1 cup；蚝油 1 Tbsp；老抽 1/2 tsp；糖 1/4 tsp；白胡椒 1小撮

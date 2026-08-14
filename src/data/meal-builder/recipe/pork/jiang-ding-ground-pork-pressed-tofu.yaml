@@ -20,12 +20,16 @@ fit:
   tradeoffs: []
 evidence:
   level: user-confirmed
-  checked_on: 2026-08-11
-  scope: Household use/preference or retained household pattern confirmed;
-    external source may additionally support technique where listed.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 用户确认的家庭酱丁结构；调味按甜面酱/酱香肉末家庭标准化，不冒充外部传统原方。
   sources:
     - User-confirmed household pattern — 酱丁 (ground pork + pressed tofu)
-notes: Explicit household addition. Pressed tofu remains supporting protein.
+    - The Woks of Life — shredded-pork / pork-tofu stir-fry technique; normalized family-light sauce
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Explicit household addition. Pressed tofu remains supporting protein.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -51,8 +55,7 @@ advance_start_required: false
 equipment:
   - high-output burner
   - wok / iron pan
-burner_plan: High-output burner for the wok; keep the medium burner free for a
-  side/soup when possible.
+burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -60,7 +63,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
@@ -68,16 +71,20 @@ ingredients:
   - ingredient_id: pressed-tofu
     role: supporting-protein
     availability: required
-  - pantry_core: savory bean/soy-style sauce, kept non-spicy and light
-    role: seasoning
-    availability: assumed
 steps:
-  - 按菜式需要处理 ground-pork；蔬菜为 无固定蔬菜。肉类需要嫩化/短腌时按引用来源执行。
-  - 先把核心调味准备好：savory bean/soy-style sauce, kept non-spicy and
-    light；家庭版基底不放辣并降低盐油。
-  - 热锅少油，先把主要蛋白炒至接近熟并视需要盛出；再处理蔬菜/香料。
-  - 合回主料，加入调味快速翻匀，达到合适熟度即停火，避免为追求焦色延长烹调。
+  - 准备：香干切成与肉末颗粒接近的小丁；姜5 g切末。；酱丁汁全部混匀；基础锅不加辣。
+  - 炒锅中大火加2 tsp油，下姜末10秒。
+  - 加入猪绞肉，用锅铲压散，炒到完全变色并出现少量褐色焦点。
+  - 加入香干丁，大火翻炒1–2分钟，让香干表面热透略干。
+  - 倒入酱丁汁，保持中大火持续翻炒1–2分钟。
+  - 汁从水状变成薄亮层、肉末和香干丁都均匀着色且锅底基本干爽时关火。
+  - 孩子份可少带浓酱；成人可用作拌饭/拌面浇头。
+  - 完成提示：肉末松散熟透、香干丁有嚼感但不干硬；酱汁薄裹、不积水。
+  - 安全提示：绞肉或含绞肉馅中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 猪绞肉：300 g
+  - 香干：200 g，切约7–8 mm丁
+  - 酱丁汁：甜面酱 1.5 Tbsp；生抽 1 Tbsp；绍兴酒 1 Tbsp；糖 1/2 tsp；水 3 Tbsp

@@ -18,13 +18,15 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-12
-  scope: Dish identity/core technique verified or conservatively inferred from
-    cited mature household cooking patterns; timing is source-derived or
-    workflow-derived range, not household stopwatch data.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. Just One Cookbook Miso Butter Mushrooms in Foil 的味噌黄油蒸焖结构家庭化。
   sources:
     - V22 — Just One Cookbook — Miso Butter Mushrooms in Foil
-notes: 核心是 covered steam/braise mushroom structure；味噌黄油可作为 variation，家庭版保持轻盐。
+    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
+notes: |-
+  核心是 covered steam/braise mushroom structure；味噌黄油可作为 variation，家庭版保持轻盐。
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
@@ -60,7 +62,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - one_of:
       - fresh-shiitake
@@ -70,16 +72,18 @@ ingredients:
       - maitake
     role: vegetable
     availability: required
-  - pantry_core: light salt / neutral oil / common aromatics and sauce components
-      appropriate to the verified structure
-    role: seasoning
-    availability: assumed
 steps:
-  - 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
-  - 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
-  - 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
-child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为
-  ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
-adult_finish: Adult heat or stronger seasoning may be added only after the child
-  portion is removed; omit if unnecessary.
+  - 准备：菌菇去硬根，大朵撕/切成一口大小；混合菌菇尽量尺寸相近。；味噌、清酒、味醂和水调匀，黄油切小块。
+  - 菌菇放深盘/带盖小锅，淋味噌汁，黄油点在表面。
+  - 盖严，中小火焖/蒸5分钟。
+  - 开盖翻匀，再盖2–4分钟，直到菌菇明显缩水、完全热透并释放汁。
+  - 开盖中火30秒让汁略集中；不要收干，菌菇应仍湿润。
+  - 关火拌匀；孩子份按原 child coverage 记录，不自动推断。
+  - 完成提示：菌菇完全软熟、释放鲜汁；酱汁乳化湿润而不是油水分离。
+  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 鲜香菇 / 平菇 / 蟹味菇（Shimeji） / 金针菇 / 舞茸：300–450 g；任选一种；实际选中项使用同一批量
+  - 味噌黄油汁：味噌 1 Tbsp；清酒 1 Tbsp；味醂 1 Tbsp；无盐黄油 1 Tbsp；水 1 Tbsp

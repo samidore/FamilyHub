@@ -20,13 +20,15 @@ fit:
     - 需要提前启动或较长被动烹调时间。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 采用韩式 galbi 梨/苹果+酱油腌制结构并按家庭轻盐标准化。
   sources:
     - Korean Bapsang — LA Galbi
-notes: Premium/lower-frequency route; cross-cut bones require careful child
-  separation.
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Premium/lower-frequency route; cross-cut bones require careful child separation.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: beef
 main_protein_ingredient_ids:
@@ -50,8 +52,7 @@ advance_start_required: true
 equipment:
   - medium burner
   - nonstick pan or iron pan as appropriate
-burner_plan: Medium burner by default; use the iron pan/high-output burner only
-  when a hard sear is the point of the dish.
+burner_plan: Medium burner by default; use the iron pan/high-output burner only when a hard sear is the point of the dish.
 child_suitable: conditional
 child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
 spicy_in_base: false
@@ -59,21 +60,24 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: cross-cut-beef-short-ribs
     role: main-protein
     availability: required
-  - pantry_core: soy / pear-or-fruit sweetness / garlic marinade, kept light
-    role: seasoning
-    availability: assumed
 steps:
-  - 擦干并按菜式处理 cross-cut-beef-short-ribs；准备 soy / pear-or-fruit sweetness / garlic
-    marinade, kept light。
-  - 锅中只用薄层油，分批煎/煎封，避免锅温因一次装太满而明显下降。
-  - 主料达到合适熟度后离火或转小火；需要酱汁时在最后短时间挂汁。
-  - 静置或稍降温后再为孩子剪小；不要把成人后加辣味放进基础锅。
+  - 准备：牛小排用冷水快速冲去骨屑，彻底擦干。；腌汁混匀；冷藏腌4–12小时，中途翻一次。
+  - 煎前把肉取出，抖掉厚腌汁，避免糖在锅里先烧焦。
+  - 铁锅/不粘锅中大火预热，薄薄抹油；牛小排单层放入。
+  - 第一面出现焦色后翻面，第二面也煎上色；过早变黑时立刻降火。
+  - 最厚肉处达到项目整块牛肉安全底线后离火，静置3分钟。
+  - 锅中焦黑糖渣不要继续用于下一批，必要时擦锅再煎。
+  - 孩子份剔除横切骨及骨边硬筋，只给无骨肉。
+  - 完成提示：两面焦香但糖不焦黑；肉熟度达到安全底线；骨边肉仍有汁。
+  - 安全提示：整块牛肉可测处达到145°F/63°C并静置3分钟；薄片炒菜实际炒至无冷生中心。
 child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 横切牛小排：900 g
+  - LA Galbi 腌汁：生抽 1/2 cup；水 1/2 cup；糖 3 Tbsp；梨或苹果泥 1/2 cup；蒜末 1 Tbsp；姜末 1 tsp；芝麻油 1 Tbsp；葱末 2 Tbsp

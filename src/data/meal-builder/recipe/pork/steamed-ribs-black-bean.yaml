@@ -19,13 +19,16 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 按现有可靠豉汁蒸排骨来源标准化为家庭轻盐版本。
   sources:
     - The Woks of Life — Dim Sum Steamed Spare Ribs with Black Beans
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - Made With Lau / The Woks of Life — Chinese steaming recipes
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -57,21 +60,23 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: soft-pork-ribs
     role: main-protein
     availability: required
-  - pantry_core: fermented black bean / garlic / light soy
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 soft-pork-ribs；搭配 无固定蔬菜；按来源用 fermented black bean / garlic / light soy
-    做短腌或铺料。
-  - 水开后上锅蒸；厚度/骨量变化时以实际熟度为准，不把来源分钟机械套用到不同切法。
-  - 出锅后按需要加入葱姜等清淡收尾；避免额外淋大量热油。
-  - 孩子份先去骨/剪小/确认没有硬壳或筋膜，再加成人后味。
+  - 准备：排骨冲净骨渣并彻底沥干；与全部腌料抓匀，冷藏腌30分钟。；浅盘单层铺开，较厚段放盘外圈而不是堆中央。
+  - 蒸锅水先烧到持续沸腾，再放入排骨盘。
+  - 保持中大火蒸15分钟后，从最厚肉段测中心温度并用筷子测试软度。
+  - 若未熟透或仍明显韧，每次继续蒸3–5分钟；不要只按固定分钟停。
+  - 熟后关火等30秒开盖；把盘底豉汁与排骨轻轻拌匀。
+  - 孩子份先剔骨并避开发酵黑豆颗粒过集中的部分。
+  - 完成提示：排骨中心熟透、肉汁清；表面有薄薄豉汁，盘底有少量汁但不水汪汪。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 软排骨：600 g，切2.5–4 cm小段
+  - 豉汁腌料：发酵黑豆 1 Tbsp，冲洗后粗切；蒜 2瓣，切末；生抽 1 Tbsp；绍兴酒 1 Tbsp；糖 1/2 tsp；玉米淀粉 1 Tbsp；水 2 Tbsp；中性油 1 tsp

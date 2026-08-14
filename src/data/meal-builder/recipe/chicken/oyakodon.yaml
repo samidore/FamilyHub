@@ -18,12 +18,16 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. Just One Cookbook Oyakodon 2人配方按1.5倍算术缩放到约3人份；家庭蛋液做全熟。
   sources:
     - Just One Cookbook — Oyakodon (Chicken and Egg Bowl)
-notes: Rice is carried in the recipe; onion counts as vegetable.
+    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Rice is carried in the recipe; onion counts as vegetable.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: chicken
 main_protein_ingredient_ids:
@@ -50,8 +54,7 @@ equipment:
   - medium burner
   - nonstick pan
   - separately cooked rice
-burner_plan: Medium burner for topping; rice is treated as an already-cooked or
-  separately cooked staple.
+burner_plan: Medium burner for topping; rice is treated as an already-cooked or separately cooked staple.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -59,7 +62,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: boneless-skinless-chicken-thighs
     role: main-protein
@@ -73,15 +76,22 @@ ingredients:
   - ingredient_id: rice
     role: integral-staple
     availability: required
-  - pantry_core: dashi / soy / mirin / lightly sweet sauce
-    role: seasoning
-    availability: assumed
 steps:
-  - 先准备米饭；处理 boneless-skinless-chicken-thighs 与 onion。
-  - 用小锅/不粘锅按 dashi / soy / mirin / lightly sweet sauce 做成浇头，保持清淡并控制汁量。
-  - 把浇头连同适量汁放在米饭上；含蛋的版本保持适合家庭的熟度。
-  - 孩子份优先选择软嫩主料并剪小，成人后味分开。
+  - 准备：鸡腿切均匀块；洋葱切薄片。；鸡蛋只轻轻划散，保留少量蛋白蛋黄纹理。
+  - 宽锅放丼汁和洋葱，中火煮开后转中小火，煮到洋葱软而仍有形。
+  - 加入鸡肉单层铺开，盖盖中小火煮到鸡肉接近熟透；中途翻一次。
+  - 确认鸡肉最厚处达到165°F/74°C；先把约2/3蛋液绕圈倒入，盖20–30秒。
+  - 倒入剩余蛋液，关到小火再盖20–40秒，直到蛋液完全凝固但仍柔软。
+  - 连汁一起分到3碗热饭上；汁应湿润米饭但不是汤泡饭。
+  - 孩子份先确认鸡肉块大小并剪小。
+  - 完成提示：鸡肉熟透、洋葱软甜；蛋完全凝固但仍嫩；锅内留足够丼汁湿润米饭。
+  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 无骨去皮鸡腿肉：340 g，切2.5 cm块
+  - 鸡蛋：4个，轻轻打散
+  - 洋葱：1个，约200 g，薄切
+  - 米饭：3碗熟饭
+  - 亲子丼汁：日式高汤 3/4 cup；生抽 3 Tbsp；味醂 3 Tbsp；糖 1 Tbsp

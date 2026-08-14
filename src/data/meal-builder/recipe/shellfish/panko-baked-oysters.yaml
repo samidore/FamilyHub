@@ -19,12 +19,15 @@ fit:
     - 已在 brainstorm 中标为低优先度/低频。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 烤Panko生蚝成熟结构，明确为烤制而非油炸。
   sources:
     - Taste of Home / Mediterranean Dish — oven-baked breadcrumb oysters
-notes: Low priority.
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Low priority.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: shellfish
 main_protein_ingredient_ids:
@@ -57,21 +60,23 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: oysters
     role: main-protein
     availability: required
-  - pantry_core: panko / garlic / herb or lemon finish; baked, not fried
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 oysters，准备 panko / garlic / herb or lemon finish; baked, not
-    fried；需要腌制的菜提前完成。
-  - 烤箱预热；食材单层放置，使用少量油或烘焙纸/烤架降低粘连。
-  - 按引用来源的厚度与熟度逻辑烤制；家庭实际切法不同则以熟度为准。
-  - 出炉后静置/拆骨/切小；成人酱汁或辣味在孩子份盛出后再加。
+  - 准备：烤箱预热450°F/230°C；生蚝检查碎壳并吸去表面多余水。；Panko topping混匀。
+  - 生蚝排在铺盐/铝箔固定的烤盘上，每只薄铺一层Panko，不压厚。
+  - 送入烤箱上层烤5–8分钟。
+  - 当面包糠金黄、蚝边缘卷起、内部热透时取出；若Panko上色慢可最后上火1分钟并全程看守。
+  - 不要继续烤到蚝明显缩小干硬。
+  - 稍降温后上桌；孩子是否食用按原 child coverage 记录，不自动改变。
+  - 完成提示：Panko金黄酥脆；蚝边缘卷起、内部充分热透但未干缩。
+  - 安全提示：虾/扇贝/鱿鱼煮至肉体不透明、质地刚变紧实；避免继续久煮变老。生蚝烤至边缘卷起且内部充分加热。
 child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 生蚝：12只，开壳留半壳或约450 g蚝肉
+  - Panko topping：Panko 1/2 cup；橄榄油/融化黄油 1 Tbsp；蒜末 1 tsp；柠檬皮屑 1/2 tsp，可省；盐 1小撮

@@ -38,5 +38,5 @@ Each recipe has one file. Category indexes and the root index are explicit; file
 - 132 Ingredient records; 129 visible non-pantry Starter choices; 162 candidate Recipes.
 - All active records retain their stable lowercase kebab-case IDs and remain `candidate`; no automatic approval.
 - 23 vegetable-centered cooking structures are deduplicated by workflow, and seven existing stovetop Recipes support the controlled `finish-with-leafy-vegetable` add-on. `Instant Pot 酱油鸡腿` does not support that add-on; `照烧鸡腿` does.
-- Recipe availability comes from required Ingredient IDs, `one_of` alternatives, and assumed pantry seasoning. Starter selection means “available this meal,” not “must use.”
+- Recipe availability comes only from required Ingredient IDs and `one_of` alternatives. Pantry items appear only as Cook View text and are not tracked. Starter selection means “available this meal,” not “must use.”
 - Public data contains recipe/ingredient facts only. Shared Firebase state contains stable IDs and household operating state, never private family profile data or a second recipe library.

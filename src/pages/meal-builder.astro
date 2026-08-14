@@ -34,8 +34,6 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
   recipe.contribution.staple ? 'Staple ✓' : '',
 ].filter(Boolean).join(' · ');
 const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；精确用量仍需按来源或首次家庭实做校准。';
-const ingredientNames = new Map(mealData.ingredients.map((ingredient) => [ingredient.id, ingredient.nameZh]));
-const requirementLabel = (requirement: (typeof recipes)[number]['cookIngredients'][number]) => requirement.pantryCore ?? requirement.anyOf.map((id) => ingredientNames.get(id) ?? id).join(' / ');
 ---
 <BaseLayout title="Meal Builder | Family Hub" description="按本顿可用食材和家庭组餐目标，实时选择合适的菜。" pageClass="module-page theme-berry meal-builder-page" themeColor="#F3E8EC">
   <SiteHeader eyebrow="饮食与家庭 · 动态组餐" title="Meal Builder" description="先勾选这顿可以使用的食材，再逐步补齐 Protein、Vegetable、Staple 和孩子需要的菜。食材可用不代表每样都必须用。" accent="berry" icon="meal">
@@ -143,7 +141,7 @@ const requirementLabel = (requirement: (typeof recipes)[number]['cookIngredients
         <div class="meal-cook-card__body">
           <div class="badges"><span class="badge">{contributionText(recipe)}</span><span class="badge">{recipe.detailLevel === 'discoverable' ? '基础做法' : '可直接照做'}</span></div>
           {recipe.detailLevel === 'discoverable' && <p class="note-box">{discoverableNote}</p>}
-          {recipe.cookIngredients.some((requirement) => requirement.amount || requirement.preparation) && <><h3>食材</h3><ul>{recipe.cookIngredients.map((requirement) => <li><strong>{requirementLabel(requirement)}</strong>{requirement.amount ? `：${requirement.amount}` : ''}{requirement.preparation ? `，${requirement.preparation}` : ''}</li>)}</ul></>}
+          {recipe.cookIngredientLines.length > 0 && <><h3>食材</h3><ul>{recipe.cookIngredientLines.map((line) => <li>{line}</li>)}</ul></>}
           <h3>步骤</h3><ol>{recipe.steps.map((step) => <li>{step}</li>)}</ol>
           {recipe.childServing && <><h3>孩子上桌</h3><p>{recipe.childServing}</p></>}
           {recipe.adultFinish && <><h3>成人收尾</h3><p>{recipe.adultFinish}</p></>}

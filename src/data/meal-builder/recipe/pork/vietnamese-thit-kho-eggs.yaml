@@ -19,14 +19,16 @@ fit:
     - 需要提前启动或较长被动烹调时间。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 以 Wok & Kin 的1 kg猪肉、6 Tbsp鱼露、5 tsp糖、4 cups椰子水、3/4 cup水为明确基准；家庭版本把鱼露降至5 Tbsp并省略2 Tbsp鸡粉，以符合已确认的轻盐偏好。这个差异是有意 household adaptation，不冒充来源原方。
   sources:
-    - Vietnamese Thịt Kho references — pork + eggs + coconut-water/fish-sauce
-      caramel braise
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - Vietnamese Thịt Kho references — pork + eggs + coconut-water/fish-sauce caramel braise
+    - Wok & Kin — Thit Kho (Vietnamese Braised Pork Belly and Eggs in Coconut Water) — 1 kg formula
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -51,8 +53,7 @@ advance_start_required: true
 equipment:
   - medium burner
   - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not
-  occupy the high-output wok burner.
+burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -60,7 +61,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: pork-shoulder-chunks
     role: main-protein
@@ -68,16 +69,21 @@ ingredients:
   - ingredient_id: eggs
     role: supporting-protein
     availability: required
-  - pantry_core: coconut-water / fish-sauce / caramelized-sugar braise, salt kept light
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 pork-shoulder-chunks；按来源决定是否需要焯水或轻煎。
-  - 加入 coconut-water / fish-sauce / caramelized-sugar braise, salt kept light
-    和足以完成焖煮的液体；家庭版轻盐、不放辣。
-  - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
-  - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
+  - 准备：鸡蛋煮熟剥壳；猪肉擦干。；鱼露、椰子水和水分别量好；糖焦化时不要离锅。
+  - 厚锅中小火把1 Tbsp糖与1 Tbsp水煮到浅琥珀色；立即加入猪肉翻匀上色。
+  - 加入鱼露和其余糖翻1分钟，再加入椰子水与水；煮开撇沫。
+  - 转小火盖盖炖约20分钟后加入鸡蛋；继续小火炖到猪肉软嫩。
+  - 若汁过多，最后开盖中火减少；每几分钟轻翻鸡蛋使上色均匀。
+  - 汁仍能流动、猪肉软嫩且鸡蛋表面上色时关火；不要把鱼露汁收到咸稠。
+  - 孩子份优先猪肉瘦嫩部分和蛋黄/蛋白，少带浓汁。
+  - 完成提示：猪肉筷子可轻松插入；鸡蛋均匀着色；汤汁浓香但仍是可舀的卤汁。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 梅花肉块：900–1000 g，切4–5 cm块
+  - 鸡蛋：6个，煮熟剥壳
+  - Thịt Kho 卤汁：鱼露 5 Tbsp；糖 4 tsp；椰子水 4 cups；水 3/4 cup
+  - 焦糖：糖 1 Tbsp；水 1 Tbsp

@@ -21,13 +21,16 @@ fit:
     - 家庭版包含明确的受控改编，需首次实做后再校准。
 evidence:
   level: inferred
-  checked_on: 2026-08-11
-  scope: Dish family/technique verified; this exact household adaptation is
-    inferred and remains candidate until tested.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. Made With Lau / The Woks of Life 鸡片嫩化法按家庭轻盐标准化，省略鸡粉。
   sources:
     - Made With Lau — Chicken & Broccoli Stir-fry
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - Made With Lau — Chicken & Broccoli; The Woks of Life — Moo Goo Gai Pan
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: chicken
 main_protein_ingredient_ids:
@@ -52,8 +55,7 @@ advance_start_required: false
 equipment:
   - high-output burner
   - wok / iron pan
-burner_plan: High-output burner for the wok; keep the medium burner free for a
-  side/soup when possible.
+burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -61,7 +63,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: chicken-breast
     role: main-protein
@@ -69,15 +71,22 @@ ingredients:
   - ingredient_id: garlic-chives
     role: vegetable
     availability: required
-  - pantry_core: ginger / light soy / small amount sesame oil
-    role: seasoning
-    availability: assumed
 steps:
-  - 按菜式需要处理 chicken-breast；蔬菜为 garlic-chives。肉类需要嫩化/短腌时按引用来源执行。
-  - 先把核心调味准备好：ginger / light soy / small amount sesame oil；家庭版基底不放辣并降低盐油。
-  - 热锅少油，先把主要蛋白炒至接近熟并视需要盛出；再处理蔬菜/香料。
-  - 合回主料，加入调味快速翻匀，达到合适熟度即停火，避免为追求焦色延长烹调。
+  - 准备：鸡肉逆纹切约5 mm薄片；先加水抓到基本吸收，再加淀粉、油、盐抓匀，静置15–20分钟。；蔬菜切成快炒大小；西兰花如茎粗，先焯30–60秒并彻底沥干。；炒汁与薄芡分别混匀；薄芡下锅前再次搅匀。
+  - 炒锅大火预热，加1 Tbsp油；下鸡片摊开，快速翻炒到表面全部发白、中心仍略欠熟，约六七成熟时盛出。
+  - 原锅下姜5 g、蒜2瓣炒10–15秒；加入韭菜，大火炒至颜色变亮、刚断生。
+  - 鸡片回锅，倒入炒汁，翻炒至锅中重新沸腾。
+  - 把薄芡分2次加入，每次都充分翻匀；看到汁刚能薄薄挂住鸡片和菜就停止加芡。
+  - 继续翻炒到最厚鸡片完全熟，立即离火；不要为了更深焦色继续炒。
+  - 孩子份先盛出、剪小；成人后味另加。
+  - 完成提示：鸡片嫩、内部完全不透明；蔬菜刚熟；汁薄亮挂料、没有白浆感或锅底积汁。
+  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 鸡胸：340 g
+  - 韭菜：300–450 g
+  - 鸡片腌料：水 3 Tbsp；玉米淀粉 2 tsp；中性油 1 tsp；盐 1/4 tsp
+  - 家庭轻盐鸡片炒汁：水或低盐高汤 3 Tbsp；蚝油 2 tsp；生抽 1 tsp；糖 1/2 tsp
+  - 薄芡：玉米淀粉 1.5 tsp；水 1 Tbsp

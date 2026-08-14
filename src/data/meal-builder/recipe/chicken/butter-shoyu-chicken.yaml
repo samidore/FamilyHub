@@ -20,13 +20,16 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 按 Just One Cookbook Butter Shoyu Chicken 的酱油/清酒/味醂/糖结构标准化。
   sources:
     - Just One Cookbook — Butter Shoyu Chicken
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
@@ -50,8 +53,7 @@ advance_start_required: false
 equipment:
   - medium burner
   - nonstick pan or iron pan as appropriate
-burner_plan: Medium burner by default; use the iron pan/high-output burner only
-  when a hard sear is the point of the dish.
+burner_plan: Medium burner by default; use the iron pan/high-output burner only when a hard sear is the point of the dish.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -59,21 +61,24 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: boneless-skinless-chicken-thighs
     role: main-protein
     availability: required
-  - pantry_core: butter + soy sauce; household uses modest butter/soy
-    role: seasoning
-    availability: assumed
 steps:
-  - 擦干并按菜式处理 boneless-skinless-chicken-thighs；准备 butter + soy sauce; household
-    uses modest butter/soy。
-  - 锅中只用薄层油，分批煎/煎封，避免锅温因一次装太满而明显下降。
-  - 主料达到合适熟度后离火或转小火；需要酱汁时在最后短时间挂汁。
-  - 静置或稍降温后再为孩子剪小；不要把成人后加辣味放进基础锅。
+  - 准备：鸡肉擦干，加盐胡椒。；液体调味混匀；黄油单独留到最后。
+  - 不粘锅中火加1 tsp油，鸡肉单层煎到第一面金黄，再翻面。
+  - 转中小火盖2–3分钟，直到鸡肉接近熟透。
+  - 开盖倒入液体调味，转中大火翻匀。
+  - 最厚处达到165°F/74°C后加入黄油，持续晃锅让黄油乳化进汁。
+  - 汁变光亮、能薄挂鸡肉时立即关火；不要继续收到油水分离。
+  - 完成提示：鸡肉熟透；汁乳化发亮、薄挂表面，没有明显油水分层。
+  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 无骨去皮鸡腿肉：450 g，切大块
+  - 黄油酱油汁：生抽 2.5 Tbsp；清酒 2 Tbsp；味醂 1 Tbsp；糖 1 Tbsp；无盐黄油 1 Tbsp
+  - 鸡肉基础调味：盐 1/4 tsp；黑胡椒 1/8 tsp

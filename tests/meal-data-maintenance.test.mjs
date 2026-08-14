@@ -11,33 +11,36 @@ async function withCookableRecipe(change = () => {}) {
   const files = await readMealFiles();
   const record = parse(files[recipePath]);
   record.detail_level = 'cookable';
-  record.ingredients.find((entry) => entry.availability === 'required').amount = '500 g';
-  record.ingredients.find((entry) => entry.availability === 'required').preparation = 'cut into bite-size pieces';
-  record.ingredients.find((entry) => entry.availability === 'assumed').amount = '60 mL';
-  record.evidence.sources.push('https://www.justonecookbook.com/chicken-teriyaki/');
+  record.cook_ingredients = ['鸡腿肉：500 g', '照烧汁：60 mL'];
   change(record);
   return { ...files, [recipePath]: stringify(record) };
 }
 
-test('cookable Recipe preserves amount and preparation at runtime', async () => {
+test('cookable Recipe preserves display-only Cook View lines at runtime', async () => {
   const data = parseMealFiles(await withCookableRecipe());
-  const requirement = data.recipes.find((recipe) => recipe.id === 'chicken-teriyaki-thighs').requirements[0];
-  assert.equal(requirement.amount, '500 g');
-  assert.equal(requirement.preparation, 'cut into bite-size pieces');
-  assert.equal(data.recipes.find((recipe) => recipe.id === 'chicken-teriyaki-thighs').cookIngredients[1].amount, '60 mL');
+  assert.deepEqual(data.recipes.find((recipe) => recipe.id === 'chicken-teriyaki-thighs').cookIngredientLines, ['鸡腿肉：500 g', '照烧汁：60 mL']);
 });
 
-test('cookable Recipe rejects missing amount, steps, equipment, or direct source', async () => {
-  await assert.rejects(async () => parseMealFiles(await withCookableRecipe((record) => { delete record.ingredients[0].amount; })), /require amounts/);
+test('cookable Recipe rejects missing Cook View lines, steps, equipment, or evidence', async () => {
+  await assert.rejects(async () => parseMealFiles(await withCookableRecipe((record) => { record.cook_ingredients = []; })), /cook_ingredients/);
   await assert.rejects(async () => parseMealFiles(await withCookableRecipe((record) => { record.steps = []; })), /requires executable steps/);
   await assert.rejects(async () => parseMealFiles(await withCookableRecipe((record) => { record.equipment = []; })), /requires equipment/);
-  await assert.rejects(async () => parseMealFiles(await withCookableRecipe((record) => { record.evidence.sources = ['Source title']; })), /direct HTTPS/);
+  await assert.rejects(async () => parseMealFiles(await withCookableRecipe((record) => { record.evidence.sources = []; })), /source evidence/);
+  await assert.doesNotReject(async () => parseMealFiles(await withCookableRecipe((record) => { record.evidence.sources = ['Source title']; })));
 });
 
-test('discoverable Recipes remain compatible without amounts or URL sources', async () => {
-  const data = parseMealFiles(await readMealFiles());
+test('all migrated Recipes keep Cook View text separate from operational requirements', async () => {
+  const files = await readMealFiles();
+  const data = parseMealFiles(files);
   assert.equal(data.recipes.length, 162);
-  assert.equal(data.recipes.every((recipe) => recipe.detailLevel === 'discoverable'), true);
+  assert.equal(data.recipes.every((recipe) => recipe.detailLevel === 'cookable'), true);
+  assert.equal(data.recipes.every((recipe) => recipe.cookIngredientLines.length > 0), true);
+  assert.equal(data.recipes.find((recipe) => recipe.id === 'hainanese-chicken-rice').cookIngredientLines.includes('整鸡：1只，约1.5 kg（3–3.5 lb）'), true);
+  assert.equal(Object.entries(files).filter(([file]) => file.startsWith('recipe/') && !file.endsWith('index.yaml')).every(([, text]) => {
+    const recipe = parse(text);
+    return recipe.evidence.sources.every((source) => !source.startsWith('https://'))
+      && recipe.ingredients.every((entry) => entry.availability === 'required' && !('amount' in entry) && !('preparation' in entry) && !('pantry_core' in entry));
+  }), true);
 });
 
 test('read-only maintenance helper inspects names, references, ordering, and validation', async () => {

@@ -18,13 +18,16 @@ fit:
     - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. Just One Cookbook Gyudon 2人配方按1.5倍算术缩放为约3人份。
   sources:
     - Just One Cookbook — Gyudon
-notes: Rice is carried in the recipe; thin beef is tenderer but child support
-  remains prudent unless household experience says otherwise.
+    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Rice is carried in the recipe; thin beef is tenderer but child support remains prudent unless household experience says otherwise.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: beef
 main_protein_ingredient_ids:
@@ -50,8 +53,7 @@ equipment:
   - medium burner
   - nonstick pan
   - separately cooked rice
-burner_plan: Medium burner for topping; rice is treated as an already-cooked or
-  separately cooked staple.
+burner_plan: Medium burner for topping; rice is treated as an already-cooked or separately cooked staple.
 child_suitable: conditional
 child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
 spicy_in_base: false
@@ -59,7 +61,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: hot-pot-beef-slices
     role: main-protein
@@ -70,15 +72,21 @@ ingredients:
   - ingredient_id: rice
     role: integral-staple
     availability: required
-  - pantry_core: dashi / soy / mirin / mild sweetness
-    role: seasoning
-    availability: assumed
 steps:
-  - 先准备米饭；处理 hot-pot-beef-slices 与 onion。
-  - 用小锅/不粘锅按 dashi / soy / mirin / mild sweetness 做成浇头，保持清淡并控制汁量。
-  - 把浇头连同适量汁放在米饭上；含蛋的版本保持适合家庭的熟度。
-  - 孩子份优先选择软嫩主料并剪小，成人后味分开。
+  - 准备：牛肉片若很长切成8–10 cm；洋葱顺纹薄切。；牛丼汁全部放宽锅中。
+  - 冷锅加入牛丼汁和洋葱，中火煮开后转中小火，煮到洋葱开始透明。
+  - 把牛肉片逐片拨散加入，避免成团；轻轻翻动让肉全部接触汤汁。
+  - 盖盖中小火3–4分钟；撇掉明显浮沫。
+  - 打开检查牛肉无冷生中心，再煮约1分钟让汁味均匀。
+  - 锅中应保留相当一部分可流动汁；直接分到3碗饭上，不收成浓酱。
+  - 孩子份把牛肉片剪短。
+  - 完成提示：洋葱软甜、牛肉熟而仍嫩；锅内保留足够丼汁湿润米饭。
+  - 安全提示：整块牛肉可测处达到145°F/63°C并静置3分钟；薄片炒菜实际炒至无冷生中心。
 child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 火锅牛肉片/牛腩片：340 g
+  - 洋葱：约170 g，薄切
+  - 米饭：3碗熟饭
+  - 牛丼汁：日式高汤 3/4 cup；清酒 3 Tbsp；味醂 3 Tbsp；生抽 4.5 Tbsp；糖 1.5 Tbsp

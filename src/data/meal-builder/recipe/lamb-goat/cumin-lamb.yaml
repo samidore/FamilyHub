@@ -22,13 +22,15 @@ fit:
     - 家庭版包含明确的受控改编，需首次实做后再校准。
 evidence:
   level: inferred
-  checked_on: 2026-08-11
-  scope: Dish family/technique verified; this exact household adaptation is
-    inferred and remains candidate until tested.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 配比按 The Woks of Life / Omnivore’s Cookbook cumin lamb；家庭基础锅去掉辣椒和花椒。
   sources:
-    - Omnivore’s Cookbook / The Woks of Life — Xinjiang Cumin Lamb; household
-      adaptation omits chili from base
-notes: Cumin remains defining; chili moves to adult finish.
+    - Omnivore’s Cookbook / The Woks of Life — Xinjiang Cumin Lamb; household adaptation omits chili from base
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Cumin remains defining; chili moves to adult finish.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: lamb
 main_protein_ingredient_ids:
@@ -52,8 +54,7 @@ advance_start_required: false
 equipment:
   - high-output burner
   - wok / iron pan
-burner_plan: High-output burner for the wok; keep the medium burner free for a
-  side/soup when possible.
+burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: conditional
 child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
 spicy_in_base: false
@@ -61,21 +62,24 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: hot-pot-lamb-slices
     role: main-protein
     availability: required
-  - pantry_core: cumin / garlic / optional cilantro; chili omitted from base
-    role: seasoning
-    availability: assumed
 steps:
-  - 按菜式需要处理 hot-pot-lamb-slices；蔬菜为 无固定蔬菜。肉类需要嫩化/短腌时按引用来源执行。
-  - 先把核心调味准备好：cumin / garlic / optional cilantro; chili omitted from
-    base；家庭版基底不放辣并降低盐油。
-  - 热锅少油，先把主要蛋白炒至接近熟并视需要盛出；再处理蔬菜/香料。
-  - 合回主料，加入调味快速翻匀，达到合适熟度即停火，避免为追求焦色延长烹调。
+  - 准备：羊肉与腌料拌匀30分钟。；孜然籽干锅小火炒到明显香、不要焦黑；辣椒/花椒不进基础锅。
+  - 炒锅烧到很热，加1 Tbsp油；羊肉分两批平铺，大火快速煎炒。
+  - 每批炒到边缘焦香、基本熟透即盛出，不让薄片长时间出水。
+  - 原锅下葱段和炒香孜然籽10–15秒。
+  - 羊肉全部回锅，加糖快速翻20–30秒。
+  - 肉片无生中心且孜然均匀附着时立即关火；成人辣椒面在孩子份盛出后撒。
+  - 完成提示：羊肉边缘有焦香、片仍嫩；孜然香明显且锅底干爽。
+  - 安全提示：整块羊/山羊肉可测处达到145°F/63°C并静置3分钟；炖菜以更高温度达到软烂质地。
 child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 火锅羊肉片：450 g
+  - 羊肉腌料：孜然粉 1 Tbsp；玉米淀粉 1.5 tsp；中性油 1 Tbsp，可减半；生抽 1 Tbsp；绍兴酒 1 Tbsp
+  - 出锅香料：孜然籽 2 Tbsp；糖 1/4 tsp；葱段 3根；香菜 1把，可选

@@ -19,14 +19,16 @@ fit:
     - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 清汤结构按来源标准化；盐最后加入，避免长炖后过咸。
   sources:
-    - The Woks of Life — Tomato Hot Pot with Beef; used for tomato + thin-beef
-      soup structure
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - The Woks of Life — Tomato Hot Pot with Beef; used for tomato + thin-beef soup structure
+    - The Woks of Life — Chinese winter melon / rib / clear soup recipes
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: beef
 main_protein_ingredient_ids:
@@ -51,8 +53,7 @@ advance_start_required: false
 equipment:
   - medium burner
   - soup pot
-burner_plan: Medium burner for simmering; can be started earlier and leave the
-  wok burner free.
+burner_plan: Medium burner for simmering; can be started earlier and leave the wok burner free.
 child_suitable: conditional
 child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
 spicy_in_base: false
@@ -60,7 +61,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: hot-pot-beef-slices
     role: main-protein
@@ -68,15 +69,19 @@ ingredients:
   - ingredient_id: tomato
     role: vegetable
     availability: required
-  - pantry_core: tomato / ginger / light savory broth
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 hot-pot-beef-slices；蔬菜/主食配料为 tomato。骨肉汤按来源需要先焯洗。
-  - 加水与 tomato / ginger / light savory broth 中的基础香料，先把肉类煮/炖至接近软嫩。
-  - 按食材耐煮程度加入蔬菜或主食类块根；避免全部从一开始同煮导致过烂。
-  - 最后用轻盐调味；孩子份取软肉、软菜并去骨。
+  - 准备：带骨肉/大块肉冷水下锅，加足量清水煮开2–4分钟；捞出后用温水冲去浮沫和碎骨。；番茄切成适合汤煮的一口大小；容易煮烂的材料单独放，后下。
+  - 番茄切块；汤锅中火加1 tsp油把番茄炒3–5分钟到明显出汁。
+  - 加入2.0 L清汤底中的水/低盐高汤和姜，煮开后转中火5分钟。
+  - 把火锅牛肉片逐片拨散加入，保持小沸，只煮到肉片全部变色且无冷生中心。
+  - 牛肉熟后立即关到小火；最后分次加盐和白胡椒，不让薄牛肉在汤里久滚。
+  - 孩子份牛肉剪短，番茄压小。
+  - 完成提示：番茄汤味融合但仍清爽；牛肉片刚熟嫩、不因久滚卷紧发柴。
+  - 安全提示：整块牛肉可测处达到145°F/63°C并静置3分钟；薄片炒菜实际炒至无冷生中心。
 child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 火锅牛肉片：340 g
+  - 番茄：300–450 g
+  - 清汤底：水 2.0 L；姜 5片；葱白 2段；盐 1–1.5 tsp，最后分次加；白胡椒 1小撮，可省

@@ -22,12 +22,14 @@ fit:
     - 需要提前启动或较长被动烹调时间。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 按 Just One Cookbook Yaki Imo 低温慢烤思路；时间按红薯大小用质地判断。
   sources:
     - Just One Cookbook — Baked Japanese Sweet Potatoes (Yaki Imo)
-notes: Low-active-time staple; baking elapsed time is long but scheduling-flexible.
+notes: |-
+  Low-active-time staple; baking elapsed time is long but scheduling-flexible.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: staple
 main_protein_category: none
 main_protein_ingredient_ids: []
@@ -58,20 +60,22 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: sweet-potato
     role: integral-staple
     availability: required
-  - pantry_core: whole sweet potato; no added seasoning required
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 核心主食/蛋白，准备 whole sweet potato; no added seasoning required；需要腌制的菜提前完成。
-  - 烤箱预热；食材单层放置，使用少量油或烘焙纸/烤架降低粘连。
-  - 按引用来源的厚度与熟度逻辑烤制；家庭实际切法不同则以熟度为准。
-  - 出炉后静置/拆骨/切小；成人酱汁或辣味在孩子份盛出后再加。
+  - 准备：红薯刷洗干净并彻底擦干；不削皮、不包紧铝箔。；烤箱预热325°F/165°C，烤架中层。
+  - 红薯直接放烤架或铺纸烤盘，彼此留空。
+  - 低温慢烤；45分钟后开始按大小检查，粗大的需要更久。
+  - 用竹签/细刀从最厚处插入：几乎无阻力、外皮略皱并有少量糖汁渗出即熟。
+  - 若中心仍硬，每次继续烤10–15分钟再检查。
+  - 出炉静置5–10分钟再剥皮；孩子份取内部软肉并确认不过烫。
+  - 完成提示：最厚处完全软、插签几乎无阻力；内部湿润甜软，无硬芯。
+  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
 child_serving: 作为主食/配菜使用，Meal Combo 必须另配软蛋白。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 红薯：3个中等，共约600–750 g

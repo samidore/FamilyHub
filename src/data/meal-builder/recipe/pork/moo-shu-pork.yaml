@@ -21,12 +21,17 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 按 The Woks of Life Moo Shu Pork 的分次炒制结构；使用项目固定的新鲜黑木耳。
   sources:
     - "The Woks of Life — Moo Shu Pork: The Authentic Chinese Recipe"
-notes: Uses fresh wood ear; no soaking time.
+    - The Woks of Life — shredded-pork / pork-tofu stir-fry technique; normalized family-light sauce
+    - Made With Lau / The Woks of Life — Chinese steamed eggs / tomato eggs / egg drop soup
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Uses fresh wood ear; no soaking time.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -53,8 +58,7 @@ advance_start_required: false
 equipment:
   - high-output burner
   - wok / iron pan
-burner_plan: High-output burner for the wok; keep the medium burner free for a
-  side/soup when possible.
+burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -62,7 +66,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: whole-pork-tenderloin
     role: main-protein
@@ -76,16 +80,23 @@ ingredients:
   - ingredient_id: fresh-wood-ear-mushrooms
     role: vegetable
     availability: required
-  - pantry_core: light soy / Shaoxing / sesame-oil-style finish
-    role: seasoning
-    availability: assumed
 steps:
-  - 按菜式需要处理 whole-pork-tenderloin；蔬菜为 cucumber,
-    fresh-wood-ear-mushrooms。肉类需要嫩化/短腌时按引用来源执行。
-  - 先把核心调味准备好：light soy / Shaoxing / sesame-oil-style finish；家庭版基底不放辣并降低盐油。
-  - 热锅少油，先把主要蛋白炒至接近熟并视需要盛出；再处理蔬菜/香料。
-  - 合回主料，加入调味快速翻匀，达到合适熟度即停火，避免为追求焦色延长烹调。
+  - 准备：肉丝腌15–20分钟；鸡蛋打散加蛋液调味。；黄瓜切薄片；新鲜黑木耳不泡发，直接洗净切小。
+  - 炒锅中大火加2 tsp油，鸡蛋炒到七成熟、仍湿润时盛出。
+  - 锅重新烧热加2 tsp油，下肉丝大火炒到表面变色、约八成熟，盛出。
+  - 原锅下黄瓜和新鲜木耳，大火翻炒60–90秒，让木耳彻底热透、黄瓜刚失去生味。
+  - 肉丝回锅，倒入木须汁，翻炒30秒。
+  - 鸡蛋最后回锅，用锅铲轻折10–20秒；汁刚被食材吸附、锅底不积水时关火。
+  - 完成提示：鸡蛋软、肉丝嫩；木耳热透、黄瓜仍有形；锅底无明显汁水。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 猪里脊：225 g，切细丝
+  - 鸡蛋：3个
+  - 黄瓜：1根，约200 g，切片/条
+  - 新鲜黑木耳：150 g，洗净切小片
+  - 肉丝腌料：生抽 2 tsp；绍兴酒 1 tsp；玉米淀粉 2 tsp；芝麻油 1/2 tsp；姜末 1 tsp
+  - 木须汁：绍兴酒 1 Tbsp；生抽 1 Tbsp；蚝油 1 tsp；水 2 Tbsp；糖 1/4 tsp
+  - 蛋液：盐 1/4 tsp；绍兴酒 1 tsp

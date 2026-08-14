@@ -18,12 +18,16 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 粤式蒸牛肉饭/煲仔饭类成熟结构家庭化；鸡蛋做全熟。
   sources:
     - Made With Lau — Minced Beef with Rice / 窝蛋免治牛肉飯
-notes: Main category remains beef; rice carried in recipe.
+    - The Woks of Life — Beef & Broccoli / Beef with Mushrooms
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Main category remains beef; rice carried in recipe.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: beef
 main_protein_ingredient_ids:
@@ -49,8 +53,7 @@ equipment:
   - medium burner
   - nonstick pan
   - separately cooked rice
-burner_plan: Medium burner for topping; rice is treated as an already-cooked or
-  separately cooked staple.
+burner_plan: Medium burner for topping; rice is treated as an already-cooked or separately cooked staple.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -58,7 +61,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: ground-beef
     role: main-protein
@@ -69,16 +72,20 @@ ingredients:
   - ingredient_id: rice
     role: integral-staple
     availability: required
-  - pantry_core: light soy / oyster-sauce style minced-beef seasoning + egg
-    role: seasoning
-    availability: assumed
 steps:
-  - 先准备米饭；处理 ground-beef 与 无固定蔬菜。
-  - 用小锅/不粘锅按 light soy / oyster-sauce style minced-beef seasoning + egg
-    做成浇头，保持清淡并控制汁量。
-  - 把浇头连同适量汁放在米饭上；含蛋的版本保持适合家庭的熟度。
-  - 孩子份优先选择软嫩主料并剪小，成人后味分开。
+  - 准备：米按家庭正常米水比入锅开始煮；牛肉与腌料抓匀15分钟。；鸡蛋备用。
+  - 米饭煮到表面水基本被吸收、米粒已膨胀但尚未完全熟时打开盖。
+  - 把牛肉薄薄铺在米饭表面，不堆厚；立即盖回，中小火/正常煮饭程序继续。
+  - 约5分钟后打开，在两侧打入鸡蛋；立即盖回继续蒸。
+  - 牛肉无冷生中心、鸡蛋完全凝固且米饭熟透后关火。
+  - 焖5分钟，再从底部轻翻；孩子份牛肉剪短。
+  - 完成提示：米饭熟透无硬芯；牛肉熟而不柴；鸡蛋完全凝固。
+  - 安全提示：含蛋菜按家庭安全底线做到蛋液完全凝固；蛋类菜中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 牛肉片：300 g，切薄片
+  - 米：1.5 cups
+  - 鸡蛋：2个
+  - 牛肉腌料：生抽 1 Tbsp；蚝油 1 tsp；绍兴酒 1 Tbsp；玉米淀粉 1 tsp；水 1 Tbsp

@@ -18,15 +18,14 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-12
-  scope: Dish identity/core technique verified or conservatively inferred from
-    cited mature household cooking patterns; timing is source-derived or
-    workflow-derived range, not household stopwatch data.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 简单 mushroom searing 成熟结构，家庭轻油。
   sources:
-    - V21 — Omnivore’s Cookbook — King Oyster Mushroom / simple mushroom searing
-      patterns
-notes: Candidate Vegetable-centered route; exact household seasoning quantities
-  remain for Cook View / first-cook calibration.
+    - V21 — Omnivore’s Cookbook — King Oyster Mushroom / simple mushroom searing patterns
+notes: |-
+  Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook calibration.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
@@ -59,24 +58,26 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - one_of:
       - king-oyster-mushrooms
       - button-cremini-mushrooms
     role: vegetable
     availability: required
-  - pantry_core: light salt / neutral oil / common aromatics and sauce components
-      appropriate to the verified structure
-    role: seasoning
-    availability: assumed
 steps:
-  - 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
-  - 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
-  - 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
-child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为
-  ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
-adult_finish: Adult heat or stronger seasoning may be added only after the child
-  portion is removed; omit if unnecessary.
+  - 准备：菌菇表面清理干净并擦干；杏鲍菇切1 cm厚片，口蘑切半/厚片。；不要把湿菌菇堆进锅里。
+  - 大平底锅中大火预热，加2 tsp油；菌菇单层铺开。
+  - 先不动1–2分钟，让第一面真正上色；翻面继续煎。
+  - 菌菇开始缩小并释放少量水后，保持中大火把水汽蒸掉。
+  - 加盐和可选生抽，快速翻20秒。
+  - 表面金黄、中心熟透且锅底重新干爽时关火。
+  - 完成提示：菌菇表面金黄、内部多汁熟透；锅底无水，不是焖煮口感。
+  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions:
   - 杏鲍菇切厚片/条；口蘑切片或对半。出水速度不同，但共享煎出焦香后轻调味的 structure。
+cook_ingredients:
+  - 杏鲍菇 / 口蘑 / Cremini：300–450 g；任选一种；实际选中项使用同一批量
+  - 基础调味：中性油 2 tsp；盐 1/2 tsp；生抽 1 tsp，可选

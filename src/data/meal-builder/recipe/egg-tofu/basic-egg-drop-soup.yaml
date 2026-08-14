@@ -19,13 +19,16 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 按 The Woks of Life / Made With Lau 蛋花汤结构家庭轻盐化。
   sources:
     - Made With Lau — Egg Drop Soup
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - Made With Lau / The Woks of Life — Chinese steamed eggs / tomato eggs / egg drop soup
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: egg
 main_protein_ingredient_ids:
@@ -50,8 +53,7 @@ advance_start_required: false
 equipment:
   - medium burner
   - soup pot
-burner_plan: Medium burner for simmering; can be started earlier and leave the
-  wok burner free.
+burner_plan: Medium burner for simmering; can be started earlier and leave the wok burner free.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -59,20 +61,24 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: eggs
     role: main-protein
     availability: required
-  - pantry_core: light broth / egg ribbons / scallion optional
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 eggs；蔬菜/主食配料为 无固定蔬菜。骨肉汤按来源需要先焯洗。
-  - 加水与 light broth / egg ribbons / scallion optional 中的基础香料，先把肉类煮/炖至接近软嫩。
-  - 按食材耐煮程度加入蔬菜或主食类块根；避免全部从一开始同煮导致过烂。
-  - 最后用轻盐调味；孩子份取软肉、软菜并去骨。
+  - 准备：鸡蛋打匀但不必打入大量空气。；薄芡提前搅匀；不喜欢勾芡可完全省略。
+  - 加入汤底煮开，转中小火；若使用薄芡，边搅边倒入，煮到汤只略有稠度。
+  - 把火调到只保持小泡，用筷子沿同一方向缓慢搅汤形成旋涡。
+  - 蛋液细线状缓慢倒入；倒完后停止搅动10–15秒，让蛋花定型。
+  - 轻轻推散大块蛋花，再煮到蛋完全凝固；不要持续猛搅成碎屑。
+  - 最后尝味，孩子份先盛出降温；成人可加白胡椒。
+  - 完成提示：蛋花成柔软丝带、完全凝固；汤只微稠或清汤状，不是厚羹。
+  - 安全提示：含蛋菜按家庭安全底线做到蛋液完全凝固；蛋类菜中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 鸡蛋：3个
+  - 汤底：低盐鸡汤 4 cups；生抽 1 tsp；芝麻油 1/2 tsp；白胡椒 1小撮
+  - 可选薄芡：玉米淀粉 1 Tbsp；水 2 Tbsp

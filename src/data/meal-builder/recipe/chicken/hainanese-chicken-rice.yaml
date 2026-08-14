@@ -19,13 +19,16 @@ fit:
     - 需要提前启动或较长被动烹调时间。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 采用 The Woks of Life Hainan Chicken Rice 的1.5 kg整鸡原流程；米饭和两种不辣蘸汁按原方做1/2算术缩放。辣椒汁不进入家庭基础版本。
   sources:
     - The Woks of Life — Hainan Chicken and Rice
-notes: Rice is carried in the recipe; lower-frequency because whole-chicken
-  workflow is larger.
+    - The Woks of Life — Hainan Chicken Rice — exact chicken, rice and sauce ingredient cards/method
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Rice is carried in the recipe; lower-frequency because whole-chicken workflow is larger.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: chicken
 main_protein_ingredient_ids:
@@ -57,7 +60,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: whole-chicken
     role: main-protein
@@ -68,17 +71,24 @@ ingredients:
   - ingredient_id: cucumber
     role: vegetable
     availability: required
-  - pantry_core: poached chicken + ginger-scallion sauces + chicken-flavored rice
-    role: seasoning
-    availability: assumed
 steps:
-  - 整鸡清理后按 poached chicken + ginger-scallion sauces + chicken-flavored rice
-    的传统路线入锅；保持整鸡结构。
-  - 控制水温/火力让鸡均匀熟透；来源使用浸煮/焖浸时保留这一结构。
-  - 确认最厚部位熟透后取出并静置；需要的酱油/葱姜汁另做。
-  - 用鸡汤/鸡油风味液按引用来源另煮米饭；具体米水比按家庭常用米和锅具校准，不在未测试时写死。
-  - 成人负责斩件、去骨；孩子份只给无骨软肉并剪小。
+  - 准备：鸡擦干并用1 Tbsp盐轻擦鸡皮；保留腹腔取下的鸡油。；Jasmine rice淘洗沥干；姜蒜汁和甜老抽汁材料分别量好。
+  - 深锅把12–14 cups水、姜和葱煮开；鸡胸朝上缓慢放入。水再次将沸时提起鸡，倒出腔内较冷的水，再放回。
+  - 水刚重新开始沸腾时立即转最小火，盖盖保持barely simmer；1.5 kg鸡约30–35分钟起检查，大腿最厚处避骨达到165°F/74°C即取出。
+  - 把鸡放入冰水15分钟以停止余热，再彻底沥干；孩子份上桌前仍按卫生要求处理并彻底去骨。
+  - 做饭：中火把鸡油和1/2 tsp油炼出约1/2 Tbsp脂肪，加入蒜末短炒；加入1.5 cups生米连续翻约2分钟。
+  - 炉灶锅版本加入2 cups鸡汤和1 tsp盐，浸20分钟后盖盖煮开，立刻转最小火约15分钟至液体吸收，再关火焖10分钟；rice cooker版本用鸡汤加到对应米量刻度。
+  - 姜蒜汁：姜蒜打碎后用1.5 Tbsp油小火炒到刚失去生辣味，加一小撮盐。甜老抽汁：水和糖煮到糖溶、略成糖浆，再拌入老抽。
+  - 鸡斩件，与鸡饭、两种不辣蘸汁分开上桌；辣椒汁只给成人另做，不进入家庭基础锅。
+  - 完成提示：鸡刚熟多汁；米饭吸尽鸡汤、颗粒熟透不湿烂；两种蘸汁独立控制盐甜度。
+  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 整鸡：1只，约1.5 kg（3–3.5 lb）
+  - Jasmine rice：1.5 US cups，淘洗沥干
+  - 煮鸡：盐 1 Tbsp，用于轻擦鸡皮；水 12–14 cups，或足量使鸡胸仅略露出；姜 4–5片；葱 2根
+  - 鸡饭（原方半量）：鸡油 约1 oz/28 g，可减少但不另补大量油；中性油 1/2 tsp；蒜末 2瓣；煮鸡汤 2 cups（炉灶锅做1.5 cups米时按原方半量）；用rice cooker则按1.5 cups米对应刻度；盐 1 tsp
+  - 姜蒜汁（原方约半量）：姜 约2-inch piece；蒜 1瓣；中性油 1 1/2 Tbsp；盐 1小撮
+  - 甜老抽汁（原方半量）：水 2 Tbsp；糖 1 Tbsp + 3/4 tsp；老抽 2 Tbsp

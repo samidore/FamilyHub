@@ -21,14 +21,15 @@ fit:
     - 家庭版包含明确的受控改编，需首次实做后再校准。
 evidence:
   level: inferred
-  checked_on: 2026-08-11
-  scope: Dish family/technique verified; this exact household adaptation is
-    inferred and remains candidate until tested.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 家庭轻盐豆腐标准汁；不把它冒充原来源的辣味或重油版本。
   sources:
-    - The Woks of Life — Home Style Tofu; household family version removes
-      chili-heavy base and lowers oil
-notes: Family adaptation preserves home-style tofu stir-fry structure but not a
-  chili-heavy or deep-fried route.
+    - The Woks of Life — Home Style Tofu; household family version removes chili-heavy base and lowers oil
+    - Made With Lau / The Woks of Life / Just One Cookbook — tofu recipes listed in the source KB
+notes: |-
+  Family adaptation preserves home-style tofu stir-fry structure but not a chili-heavy or deep-fried route.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: tofu
 main_protein_ingredient_ids:
@@ -53,8 +54,7 @@ advance_start_required: false
 equipment:
   - high-output burner
   - wok / iron pan
-burner_plan: High-output burner for the wok; keep the medium burner free for a
-  side/soup when possible.
+burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: objective-possible-currently-unlikely
 child_texture: firm tofu 可烹至较嫩，但孩子目前不吃 firm tofu。
 spicy_in_base: false
@@ -62,7 +62,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: firm-tofu
     role: main-protein
@@ -70,16 +70,19 @@ ingredients:
   - ingredient_id: bell-pepper
     role: vegetable
     availability: required
-  - pantry_core: soy / garlic / mild savory sauce; chili removed from base and oil reduced
-    role: seasoning
-    availability: assumed
 steps:
-  - 按菜式需要处理 firm-tofu；蔬菜为 bell-pepper。肉类需要嫩化/短腌时按引用来源执行。
-  - 先把核心调味准备好：soy / garlic / mild savory sauce; chili removed from base and oil
-    reduced；家庭版基底不放辣并降低盐油。
-  - 热锅少油，先把主要蛋白炒至接近熟并视需要盛出；再处理蔬菜/香料。
-  - 合回主料，加入调味快速翻匀，达到合适熟度即停火，避免为追求焦色延长烹调。
+  - 准备：豆腐沥去包装水；嫩豆腐切2.5–3 cm块并尽量少搬动，硬豆腐可切1.5 cm厚片。；把豆腐汁搅匀；姜切丝5 g、葱切段备用。 甜椒切成一口大小。
+  - 锅中火加1 tsp油，下姜丝炒10秒；加入甜椒先炒到接近熟。
+  - 轻轻滑入豆腐，沿锅边倒入家庭轻盐豆腐汁；用晃锅和锅铲背面轻推，少翻。
+  - 煮开后转中小火2–4分钟，让豆腐中心热透；有配菜时同时煮到完全熟。
+  - 若汁仍像水，用中火再煮30–60秒；不要猛烈翻炒把嫩豆腐搅碎。
+  - 汁变成薄薄挂勺且豆腐仍完整时关火。
+  - 完成提示：豆腐中心热透、块形完整；酱汁薄挂勺，不是厚芡。
+  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
 child_serving: 可少量提供；Meal Combo 另配孩子已接受的嫩豆腐/鸡蛋。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 老豆腐 / 硬豆腐：1盒，约400–450 g
+  - 甜椒：300–450 g
+  - 家庭轻盐豆腐汁：水或低盐高汤 1/3 cup；生抽 2 tsp；蚝油 1 tsp；糖 1/4 tsp；玉米淀粉 1 tsp

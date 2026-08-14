@@ -17,13 +17,14 @@ fit:
     - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 南瓜粥按家庭3人份标准化；水量明确为5 cups，并以最终稠度允许热水微调。
   sources:
     - Food & Wine — Kabocha Squash Congee (congee roundup)
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: staple
 main_protein_category: none
 main_protein_ingredient_ids: []
@@ -55,7 +56,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: kabocha-squash
     role: integral-staple
@@ -63,15 +64,19 @@ ingredients:
   - ingredient_id: rice
     role: integral-staple
     availability: required
-  - pantry_core: rice + kabocha + water; very light seasoning
-    role: seasoning
-    availability: assumed
 steps:
-  - 洗米/准备燕麦与 kabocha-squash；准备 rice + kabocha + water; very light seasoning。
-  - 加水煮至粥体达到家庭喜欢的浓度；可用 Instant Pot 或普通锅，具体水比留给首次测试校准。
-  - 含鸡蛋的版本在后段加入并煮熟；南瓜等软主食在能煮软但不完全消失的时间点加入。
-  - 最后轻盐调味；成人后味另加。
+  - 准备：米淘洗沥干；南瓜切均匀小块。；使用厚底锅，避免粥底长时间直接受强火。
+  - 米和5 cups水大火煮开，立刻转最小火，盖盖留缝。
+  - 保持轻微冒泡20分钟，每5–10分钟从锅底搅一次防粘。
+  - 加入南瓜块，继续小火15–25分钟；南瓜变软后可用勺背压碎约1/3，让粥自然变稠。
+  - 米粒完全开花、南瓜无硬芯后关火；若太稠只补热水，不补冷水。
+  - 静置5分钟后判断最终稠度；孩子份可再压细并降温。
+  - 完成提示：米粒完全开花、南瓜软烂无硬芯；粥能缓慢流动而非成干饭。
+  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
 child_serving: 作为主食/配菜使用，Meal Combo 必须另配软蛋白。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 米：1/2 cup 生米
+  - 南瓜（Kabocha）：450 g，去籽去硬皮后切2 cm块
+  - 粥底：水 5 cups；盐 0–1/4 tsp，最后可不加

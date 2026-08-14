@@ -20,13 +20,16 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. Made With Lau / The Woks of Life 番茄炒蛋结构按家庭轻盐标准化。
   sources:
     - Made With Lau / The Woks of Life — Tomato and Eggs
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - Made With Lau / The Woks of Life — Chinese steamed eggs / tomato eggs / egg drop soup
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: egg
 main_protein_ingredient_ids:
@@ -51,8 +54,7 @@ advance_start_required: false
 equipment:
   - high-output burner
   - wok / iron pan
-burner_plan: High-output burner for the wok; keep the medium burner free for a
-  side/soup when possible.
+burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -60,7 +62,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: eggs
     role: main-protein
@@ -68,15 +70,20 @@ ingredients:
   - ingredient_id: tomato
     role: vegetable
     availability: required
-  - pantry_core: tomato / egg / light salt / small sugar optional
-    role: seasoning
-    availability: assumed
 steps:
-  - 按菜式需要处理 eggs；蔬菜为 tomato。肉类需要嫩化/短腌时按引用来源执行。
-  - 先把核心调味准备好：tomato / egg / light salt / small sugar optional；家庭版基底不放辣并降低盐油。
-  - 热锅少油，先把主要蛋白炒至接近熟并视需要盛出；再处理蔬菜/香料。
-  - 合回主料，加入调味快速翻匀，达到合适熟度即停火，避免为追求焦色延长烹调。
+  - 准备：鸡蛋加盐和水打匀；番茄去硬蒂切2–3 cm块。；葱花1根可选。
+  - 炒锅中大火加2 tsp油，倒蛋液；推成大块，约七成熟仍湿润时盛出。
+  - 原锅加1 tsp油，下番茄和1/4 tsp盐，中大火炒2–3分钟。
+  - 番茄边缘软、锅底出现自然汁水时加糖；若番茄很干才加2 Tbsp水。
+  - 鸡蛋回锅，轻轻翻折，让番茄汁裹住蛋块。
+  - 蛋液最后完全凝固、番茄仍有部分块形时关火；不要煮成番茄汤。
+  - 完成提示：鸡蛋软嫩、完全凝固；番茄出汁但仍有块形；锅底是少量自然番茄汁。
+  - 安全提示：含蛋菜按家庭安全底线做到蛋液完全凝固；蛋类菜中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 鸡蛋：4个
+  - 番茄：450 g，约3个中等，切块
+  - 蛋液：盐 1/4 tsp；水 1 Tbsp
+  - 番茄调味：盐 1/4 tsp；糖 1 tsp；水 2 Tbsp，仅番茄偏干时

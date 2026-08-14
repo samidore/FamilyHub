@@ -18,13 +18,14 @@ fit:
     - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 本项目 `steamed-buns` 为现成馒头；Cook View 只写复热，不写从面粉制作。
   sources:
-    - The Woks of Life — Mantou / steamed bun references; household uses
-      existing ready-made `steamed-buns` ingredient
-notes: Keep simply as 馒头; do not expand into homemade dough production.
+    - The Woks of Life — Mantou / steamed bun references; household uses existing ready-made `steamed-buns` ingredient
+notes: |-
+  Keep simply as 馒头; do not expand into homemade dough production.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: staple
 main_protein_category: none
 main_protein_ingredient_ids: []
@@ -54,19 +55,22 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: steamed-buns
     role: integral-staple
     availability: required
-  - pantry_core: existing ready-made steamed-buns ingredient
-    role: seasoning
-    availability: assumed
 steps:
-  - 使用现有 `steamed-buns` 成品，不在本项目重复建“从面粉发酵做馒头”的复杂路线。
-  - 按包装允许方式蒸热；赶时间时可按家庭既有规则微波加热。
-  - 作为 staple 与主菜/蔬菜组合，不单独承担 main protein。
+  - 准备：若冷冻馒头无需完全解冻；准备蒸锅和蒸布/烘焙纸。
+  - 蒸锅加足水烧开；馒头之间留至少2 cm空隙放在蒸屉。
+  - 冷藏馒头上锅后中火蒸约6–8分钟；冷冻馒头约10–12分钟起检查。
+  - 掰开一个确认中心完全热透、没有冷硬芯；不足再蒸2分钟。
+  - 关火后等1分钟再开盖，减少骤冷导致表皮回缩。
+  - 孩子份撕成小块并降温后上桌。
+  - 完成提示：中心完全热透、组织柔软有弹性，无冷硬芯或湿黏表面。
+  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
 child_serving: 作为主食/配菜使用，Meal Combo 必须另配软蛋白。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 现成馒头：3–6个

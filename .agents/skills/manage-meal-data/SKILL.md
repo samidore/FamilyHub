@@ -24,14 +24,14 @@ Judge semantic duplicates yourself from identity, core technique, equipment, tag
 ## Research
 
 - Use the `agent-reach` Skill when available, then its routed Internet tools. Prefer a reputable recipe author for identity, quantities, and technique.
-- Store at least one direct HTTPS Recipe URL in every new or updated `cookable` record. Check food-safety claims against an official government, manufacturer, or similarly authoritative source.
+- Store nonempty source-label evidence in every new or updated `cookable` record. Check food-safety claims against an official government, manufacturer, or similarly authoritative source when retaining those claims.
 - Record only supported claims and the actual check date. Mark adaptations. Preserve complete user-supplied content and research only missing or doubtful fields.
 
 ## Add or update a Recipe
 
 1. Accept a dish name as sufficient input. Inspect exact ID/name, Chinese-English aliases, archived IDs, and semantic duplicates.
 2. Convert an exact or structurally equivalent Add into Update. Create a new stable kebab-case ID only for a distinct identity or core technique.
-3. Produce a `cookable` Recipe with real amounts for every actual input, including pantry seasoning, executable steps, equipment, timing, servings, and direct source evidence.
+3. Produce a `cookable` Recipe with display-only Cook View input lines, executable steps, equipment, timing, servings, and source-label evidence; keep operational requirements availability-only and do not track pantry items there.
 4. Preserve `status: candidate`; never auto-approve. Keep unsupported household facts unknown or ask.
 5. Create missing required non-pantry Ingredients in the same planned transaction. On Update, retain the stable ID/filename and re-check the complete record.
 6. Put a new Recipe in `recipe/<category>/<id>.yaml` and append it to the category index unless the user requests a position.

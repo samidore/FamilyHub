@@ -18,12 +18,16 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. savory oatmeal + egg 结构家庭轻盐化；以 rolled oats 为明确基线。
   sources:
     - Epicurious / Simply Recipes — savory oatmeal with egg
-notes: Oats carried as staple; egg is main protein per finalized rule.
+    - Made With Lau / The Woks of Life — Chinese steamed eggs / tomato eggs / egg drop soup
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Oats carried as staple; egg is main protein per finalized rule.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: egg
 main_protein_ingredient_ids:
@@ -55,7 +59,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: eggs
     role: main-protein
@@ -63,15 +67,19 @@ ingredients:
   - ingredient_id: oats
     role: integral-staple
     availability: required
-  - pantry_core: oats + egg + water/stock + light salt/scallion
-    role: seasoning
-    availability: assumed
 steps:
-  - 洗米/准备燕麦与 无固定蔬菜；准备 oats + egg + water/stock + light salt/scallion。
-  - 加水煮至粥体达到家庭喜欢的浓度；可用 Instant Pot 或普通锅，具体水比留给首次测试校准。
-  - 含鸡蛋的版本在后段加入并煮熟；南瓜等软主食在能煮软但不完全消失的时间点加入。
-  - 最后轻盐调味；成人后味另加。
+  - 准备：鸡蛋打散；燕麦按原味rolled oats设计，若是quick/steel-cut需按包装时间调整而不是套用同一分钟。
+  - 锅中加入3 cups水/高汤煮开，加入1 cup燕麦，转中小火。
+  - rolled oats小火煮5–8分钟并持续搅底，直到燕麦完全吸水变软。
+  - 火调到小沸，蛋液细线状倒入；停10秒后轻轻搅开。
+  - 继续煮到蛋完全凝固，加入1/4 tsp盐。
+  - 关火静置2分钟；太稠可补热水1–2 Tbsp，孩子份降温后上桌。
+  - 完成提示：燕麦软熟无硬芯、蛋完全凝固；粥稠但能舀流。
+  - 安全提示：含蛋菜按家庭安全底线做到蛋液完全凝固；蛋类菜中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 燕麦：1 cup
+  - 鸡蛋：2个
+  - 咸燕麦粥底：水或低盐高汤 3 cups；盐 1/4 tsp；葱花 1 Tbsp，可选

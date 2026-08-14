@@ -21,12 +21,15 @@ fit:
     - 家庭版包含明确的受控改编，需首次实做后再校准。
 evidence:
   level: inferred
-  checked_on: 2026-08-11
-  scope: Dish family/technique verified; this exact household adaptation is
-    inferred and remains candidate until tested.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 少油路线明确用少量煎+加水焖软代替油炸；调味按家庭轻盐标准化。
   sources:
     - 下厨房 — 少油版肉末茄子
-notes: Household route deliberately avoids deep-frying and heavy oil.
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Household route deliberately avoids deep-frying and heavy oil.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -51,8 +54,7 @@ advance_start_required: false
 equipment:
   - high-output burner
   - wok / iron pan
-burner_plan: High-output burner for the wok; keep the medium burner free for a
-  side/soup when possible.
+burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -60,7 +62,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
@@ -68,16 +70,20 @@ ingredients:
   - ingredient_id: eggplant
     role: vegetable
     availability: required
-  - pantry_core: garlic / light soy / small amount savory sauce, no chili
-    role: seasoning
-    availability: assumed
 steps:
-  - 按菜式需要处理 ground-pork；蔬菜为 eggplant。肉类需要嫩化/短腌时按引用来源执行。
-  - 先把核心调味准备好：garlic / light soy / small amount savory sauce, no
-    chili；家庭版基底不放辣并降低盐油。
-  - 热锅少油，先把主要蛋白炒至接近熟并视需要盛出；再处理蔬菜/香料。
-  - 合回主料，加入调味快速翻匀，达到合适熟度即停火，避免为追求焦色延长烹调。
+  - 准备：茄子切条后立即烹调；不预油炸。；轻蒜香汁完全混匀。
+  - 不粘锅中大火加2 tsp油，下茄子单层/分批煎1–2分钟，让切面出现浅色焦点。
+  - 全部茄子回锅，加3 Tbsp水，立即盖盖转中火焖3–5分钟；开盖时茄子应明显变软。
+  - 把茄子推到一侧或暂盛出；空处加1 tsp油，下猪绞肉压散炒到完全变色。
+  - 肉和茄子合锅，倒入轻蒜香汁；中大火轻翻1–2分钟。
+  - 茄子软到筷子可轻松穿透、汁薄挂表面且锅底不积水时关火。
+  - 孩子份取最软茄子和完全熟肉末。
+  - 完成提示：茄子软润无硬芯但未吸满油；肉末熟透；蒜香汁薄挂。
+  - 安全提示：绞肉或含绞肉馅中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 猪绞肉：300 g
+  - 茄子：450 g，切约1.5×5 cm条
+  - 轻蒜香汁：生抽 1 Tbsp；蚝油 1 tsp；糖 1/2 tsp；水 1/3 cup；玉米淀粉 1 tsp；蒜末 2瓣

@@ -21,15 +21,16 @@ fit:
   tradeoffs: []
 evidence:
   level: inferred
-  checked_on: 2026-08-12
-  scope: Dish identity/core technique verified or conservatively inferred from
-    cited mature household cooking patterns; timing is source-derived or
-    workflow-derived range, not household stopwatch data.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 来源验证的中式炒蛋结构，按家庭轻油轻盐标准化。
   sources:
-    - V13 — Chinese loofah + egg household pattern; Omnivore’s Cookbook zucchini
-      stir-fry; common Chinese vegetable+egg structure
-notes: Candidate Vegetable-centered route; exact household seasoning quantities
-  remain for Cook View / first-cook calibration.
+    - V13 — Chinese loofah + egg household pattern; Omnivore’s Cookbook zucchini stir-fry; common Chinese vegetable+egg structure
+    - Made With Lau / The Woks of Life — Chinese steamed eggs / tomato eggs / egg drop soup
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook calibration.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: egg
 main_protein_ingredient_ids:
@@ -55,8 +56,7 @@ advance_start_required: false
 equipment:
   - high-output burner
   - wok / iron pan
-burner_plan: High-output burner with wok / iron pan; keep the medium burner free
-  when possible.
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
 child_suitable: yes
 child_texture: 丝瓜/西葫芦都可炒至柔软；鸡蛋保持嫩。
 spicy_in_base: false
@@ -64,7 +64,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - one_of:
       - luffa
@@ -74,17 +74,20 @@ ingredients:
   - ingredient_id: eggs
     role: main-protein
     availability: required
-  - pantry_core: light salt / neutral oil / common aromatics and sauce components
-      appropriate to the verified structure
-    role: seasoning
-    availability: assumed
 steps:
-  - 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
-  - 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
-  - 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
-child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为
-  ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
-adult_finish: Adult heat or stronger seasoning may be added only after the child
-  portion is removed; omit if unnecessary.
+  - 准备：鸡蛋打散到蛋白蛋黄完全融合，加入盐和1 Tbsp水。；丝瓜 / 西葫芦洗净/处理后切成一口大小；含水多的瓜类或菌菇需要先单独炒到水汽明显减少。
+  - 炒锅中大火预热，加2 tsp油；倒蛋液后用锅铲从外向内推，约七成熟、仍有湿润光泽时立即盛出。
+  - 原锅补1 tsp油，加入丝瓜 / 西葫芦；中大火炒到刚熟并把多余水汽蒸掉。
+  - 鸡蛋回锅，快速翻折而不是长时间铲碎。
+  - 看到最后一层湿蛋液刚刚凝固即关火；余温会继续把蛋做熟。
+  - 孩子份先盛出；成人需要胡椒/辣味再另加。
+  - 完成提示：蛋块柔软、刚完全凝固；配菜熟而不水汪汪，锅底无大量游离汁。
+  - 安全提示：含蛋菜按家庭安全底线做到蛋液完全凝固；蛋类菜中心达到160°F/71°C。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions:
   - 丝瓜更易出水；西葫芦切片后水分管理不同，但属于同一瓜类炒蛋 structure。
+cook_ingredients:
+  - 丝瓜 / 西葫芦：300–450 g；任选一种；实际选中项使用同一批量
+  - 鸡蛋：4个
+  - 蛋液：盐 1/4 tsp；水 1 Tbsp；中性油 1 tsp，拌入蛋液可省

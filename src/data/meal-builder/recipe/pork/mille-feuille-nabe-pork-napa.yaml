@@ -19,13 +19,16 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 配比按 Just One Cookbook Mille-Feuille Nabe；家庭轻盐。
   sources:
     - Just One Cookbook — Mille-Feuille Nabe
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -51,8 +54,7 @@ advance_start_required: false
 equipment:
   - medium burner
   - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not
-  occupy the high-output wok burner.
+burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -60,7 +62,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: thin-sliced-pork-belly
     role: main-protein
@@ -68,15 +70,19 @@ ingredients:
   - ingredient_id: napa-cabbage
     role: vegetable
     availability: required
-  - pantry_core: dashi / light soy / ginger or ponzu-at-table
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 thin-sliced-pork-belly；按来源决定是否需要焯水或轻煎。
-  - 加入 dashi / light soy / ginger or ponzu-at-table 和足以完成焖煮的液体；家庭版轻盐、不放辣。
-  - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
-  - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
+  - 准备：白菜叶与猪肉片交替叠成4–5层；切成约5 cm段。；把叠好的段切面朝上紧密排入锅中；中间到外圈都尽量塞紧。
+  - 从锅边倒入日式清汤，不要直接冲散层次；盖盖中大火煮到明显沸腾。
+  - 转中小火保持稳定小沸约15分钟；白菜会明显塌下并释放水分。
+  - 从中心夹开一组检查，猪肉应全部变色且达到安全温度，白菜梗能轻松咬断。
+  - 若锅内汤太多不需要收干；本菜以清汤锅状态上桌。
+  - 孩子份先取完全熟的猪肉与软白菜，剪小；成人蘸汁另配。
+  - 完成提示：白菜软甜、层次仍可夹起；猪肉完全熟；锅内保留清汤，不收汁。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 薄切五花肉：680 g
+  - 大白菜：1颗，约1.8 kg
+  - 日式清汤：日式高汤 5 cups；清酒 2 Tbsp；生抽 1 Tbsp；盐 1/2 tsp；姜 3片

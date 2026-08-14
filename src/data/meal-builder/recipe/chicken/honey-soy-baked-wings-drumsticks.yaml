@@ -19,13 +19,15 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 家庭烤制蜂蜜酱油标准化；用分装刷汁避免生熟交叉污染。
   sources:
     - The Woks of Life — baked chicken wings
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
@@ -58,23 +60,25 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - one_of:
       - whole-chicken-wings
       - chicken-drumsticks
     role: main-protein
     availability: required
-  - pantry_core: honey / soy / garlic glaze, light household salt
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 whole-chicken-wings, chicken-drumsticks，准备 honey / soy / garlic glaze,
-    light household salt；需要腌制的菜提前完成。
-  - 烤箱预热；食材单层放置，使用少量油或烘焙纸/烤架降低粘连。
-  - 按引用来源的厚度与熟度逻辑烤制；家庭实际切法不同则以熟度为准。
-  - 出炉后静置/拆骨/切小；成人酱汁或辣味在孩子份盛出后再加。
+  - 准备：烤箱预热425°F/220°C；鸡翅/鸡小腿擦干。；刷汁搅匀，分成‘生肉刷汁’和‘最后干净刷汁’两份，避免交叉污染。
+  - 鸡肉单层放铺纸烤盘，先不刷厚糖汁，烤15分钟。
+  - 翻面，薄刷第一份蜂蜜酱油汁，再烤10分钟。
+  - 最厚处接近165°F/74°C时用干净刷子刷第二份汁。
+  - 再烤3–5分钟到表面发亮、边缘轻焦；糖变深太快就降温或提前出炉。
+  - 确认165°F/74°C后出炉；孩子份去骨/软骨。
+  - 完成提示：鸡肉熟透；表面亮、有轻焦边但蜂蜜不烧黑。
+  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 整鸡翅 / 鸡小腿：900 g；任选一种；实际选中项使用同一批量
+  - 蜂蜜酱油刷汁：蜂蜜 2 Tbsp；生抽 2 Tbsp；水 1 Tbsp；蒜末 1 tsp；姜末 1 tsp

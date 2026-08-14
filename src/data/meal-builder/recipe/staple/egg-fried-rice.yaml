@@ -20,13 +20,16 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. Made With Lau Egg Fried Rice 结构家庭轻油轻盐化。
   sources:
     - Made With Lau — Egg Fried Rice
-notes: Rice carried in recipe; fresh or leftover rice may be used according to
-  source route.
+    - Made With Lau / The Woks of Life — Chinese steamed eggs / tomato eggs / egg drop soup
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Rice carried in recipe; fresh or leftover rice may be used according to source route.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: egg
 main_protein_ingredient_ids:
@@ -50,8 +53,7 @@ advance_start_required: false
 equipment:
   - high-output burner
   - wok / iron pan
-burner_plan: High-output burner for the wok; keep the medium burner free for a
-  side/soup when possible.
+burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -59,7 +61,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: eggs
     role: main-protein
@@ -67,15 +69,20 @@ ingredients:
   - ingredient_id: rice
     role: integral-staple
     availability: required
-  - pantry_core: egg / rice / scallion / light soy optional
-    role: seasoning
-    availability: assumed
 steps:
-  - 按菜式需要处理 eggs；蔬菜为 无固定蔬菜。肉类需要嫩化/短腌时按引用来源执行。
-  - 先把核心调味准备好：egg / rice / scallion / light soy optional；家庭版基底不放辣并降低盐油。
-  - 热锅少油，先把主要蛋白炒至接近熟并视需要盛出；再处理蔬菜/香料。
-  - 合回主料，加入调味快速翻匀，达到合适熟度即停火，避免为追求焦色延长烹调。
+  - 准备：冷饭用手/饭勺打散大块；鸡蛋打匀。；所有材料放在灶边，炒饭全程快速。
+  - 炒锅大火烧热，加2 tsp油；倒蛋液快速推到约七成熟。
+  - 立刻加入米饭，用锅铲压散并翻炒，让湿蛋包住米粒。
+  - 保持大火炒2–3分钟，直到米饭完全热透、米粒开始松散跳动。
+  - 加盐、生抽和葱花，再翻30秒；生抽沿锅边少量加入，不把饭泡湿。
+  - 蛋完全凝固、米饭热透且锅底干爽时关火。
+  - 完成提示：米粒松散热透、不湿黏；蛋完全凝固且均匀分布。
+  - 安全提示：含蛋菜按家庭安全底线做到蛋液完全凝固；蛋类菜中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 熟米饭：约600 g，最好冷饭/充分放凉
+  - 鸡蛋：4个
+  - 葱：2根，切花
+  - 调味：盐 1/2 tsp；生抽 1 tsp，可选；白胡椒 1小撮，可省

@@ -19,13 +19,15 @@ fit:
     - 需要提前启动或较长被动烹调时间。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 调味比例按 The Woks of Life Taiwanese Braised Minced Pork；家庭将干香菇改为已确认的新鲜香菇。
   sources:
     - The Woks of Life — Taiwanese Braised Minced Pork (肉燥饭)
-notes: Rice is carried by the recipe. Use fresh shiitake or a no-dried-mushroom
-  version; do not add dried shiitake soaking burden.
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Rice is carried by the recipe. Use fresh shiitake or a no-dried-mushroom version; do not add dried shiitake soaking burden.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -51,8 +53,7 @@ equipment:
   - medium burner
   - nonstick pan
   - separately cooked rice
-burner_plan: Medium burner for topping; rice is treated as an already-cooked or
-  separately cooked staple.
+burner_plan: Medium burner for topping; rice is treated as an already-cooked or separately cooked staple.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -60,7 +61,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
@@ -71,17 +72,21 @@ ingredients:
   - ingredient_id: rice
     role: integral-staple
     availability: required
-  - pantry_core: soy / shallot-or-scallion / five-spice style braising profile,
-      light household salt
-    role: seasoning
-    availability: assumed
 steps:
-  - 先准备米饭；处理 ground-pork 与 fresh-shiitake。
-  - 用小锅/不粘锅按 soy / shallot-or-scallion / five-spice style braising profile,
-    light household salt 做成浇头，保持清淡并控制汁量。
-  - 把浇头连同适量汁放在米饭上；含蛋的版本保持适合家庭的熟度。
-  - 孩子份优先选择软嫩主料并剪小，成人后味分开。
+  - 准备：鲜香菇切小丁；本家庭不用干香菇，因此不保留泡发步骤。；姜末1 Tbsp、葱/红葱头碎约1 cup；卤汁量好。
+  - 小锅中火加1 Tbsp油，下葱/红葱头炒到软、边缘开始金黄。
+  - 加入猪绞肉，压散炒到完全变色并有少量褐色点；加入鲜香菇再炒2分钟。
+  - 加入全部卤汁，煮开后转小火，盖盖留缝炖30–45分钟。
+  - 开盖转中火，让水分缓慢减少；每几分钟搅一次防粘底。
+  - 当肉燥汁由稀汤变成能舀起、仍有流动性但不水汪汪时关火；不要收到油肉分离且过咸。
+  - 每碗饭只浇足够湿润米饭的肉燥和汁；孩子份先剪碎香菇块。
+  - 完成提示：肉末柔软、香菇熟透；卤汁浓而仍可流动，能渗入米饭而不是胶状。
+  - 安全提示：绞肉或含绞肉馅中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 猪绞肉：450 g
+  - 鲜香菇：150 g，切小丁
+  - 米饭：3碗熟饭
+  - 肉燥卤汁：绍兴酒 3 Tbsp；糖 1 Tbsp；生抽 2 Tbsp；老抽 1 Tbsp；蚝油 1 Tbsp；白胡椒 1/2 tsp；五香粉 1/4 tsp；水 2 cups

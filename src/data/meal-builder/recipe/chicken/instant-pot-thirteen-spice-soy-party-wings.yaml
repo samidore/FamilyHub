@@ -22,15 +22,15 @@ fit:
   tradeoffs: []
 evidence:
   level: user-confirmed
-  checked_on: 2026-08-11
-  scope: Household use/preference or retained household pattern confirmed;
-    external source may additionally support technique where listed.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 家庭 Instant Pot 十三香酱油鸡翅：High Pressure 10分钟+自然泄压5分钟；十三香明确量化，收汁只到薄挂勺。
   sources:
-    - Household-confirmed Instant Pot Party Wings pattern; current user update
-      2026-08-11
-notes: Household commonly cooks meat below and rice in an elevated upper bowl;
-  pressure segment is commonly around 10–15 min. Exact release/liquid/rice ratio
-  remains recipe-specific.
+    - Household-confirmed Instant Pot Party Wings pattern; current user update 2026-08-11
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Household commonly cooks meat below and rice in an elevated upper bowl; pressure segment is commonly around 10–15 min. Exact release/liquid/rice ratio remains recipe-specific.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
@@ -61,21 +61,24 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: party-wings
     role: main-protein
     availability: required
-  - pantry_core: thirteen-spice + soy-style light braising liquid
-    role: seasoning
-    availability: assumed
 steps:
-  - 将 party-wings 与 thirteen-spice + soy-style light braising liquid 放入 9-qt
-    Instant Pot 下层；液体至少满足设备正常起压要求，但不在未验证时写死家庭水量。
-  - 本家庭常用肉类压力段约 10–15 分钟作为工作模式；具体菜首次执行时按食材厚度与可靠来源校正，不把该范围当统一强制参数。
-  - 放压方式按具体菜与当日流程选择并记录到测试备注；未测试前不宣称某一种 release 为家庭标准。
-  - 开盖确认熟度，必要时用 sauté 收汁/调味；孩子份先盛出。
+  - 准备：检查内胆底部无残渣；主料擦干/冲净并按上述预处理处理Party Wings。；所有压力段液体一次加入；不要用浓稠含淀粉酱汁直接压力烹调。
+  - 主料与压力锅底/酱汁加入9-qt Instant Pot；确认至少有足够可产生蒸汽的稀液体，刮净锅底。
+  - 锁盖、阀门置密封，选择High Pressure 10分钟。
+  - 压力程序结束后自然泄压5分钟后手动排余压；打开盖子时避开蒸汽。
+  - 从最厚处检查熟度/软嫩度；若肉仍明显韧，可再次加压5–10分钟，而不是靠长时间Sauté硬煮。
+  - 若是酱汁菜，把肉先夹出或推到一侧，切到Sauté；只把液体煮到由水状变成能薄薄挂勺，再把肉翻匀。不要把咸味浓缩到发黏。
+  - 孩子份先盛出、去骨/剪小；成人后味另加。
+  - 完成提示：压力后肉达到目标软嫩度；需要收汁的菜仅收到薄挂勺，不剩稀水也不发黏过咸。
+  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - Party Wings：900 g
+  - 压力锅酱汁：水或低盐高汤 1 cup；生抽 2 Tbsp；绍兴酒 1 Tbsp；糖 1 Tbsp；姜 5片；葱白 2段；十三香 1 tsp

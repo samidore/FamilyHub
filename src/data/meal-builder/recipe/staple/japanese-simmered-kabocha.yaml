@@ -19,12 +19,15 @@ fit:
     - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 按 Just One Cookbook Japanese Simmered Kabocha 结构家庭轻盐化。
   sources:
     - Just One Cookbook — Japanese Simmered Kabocha
-notes: Kabocha is staple in this project, not a vegetable slot.
+    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
+notes: |-
+  Kabocha is staple in this project, not a vegetable slot.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: staple
 main_protein_category: none
 main_protein_ingredient_ids: []
@@ -47,8 +50,7 @@ advance_start_required: false
 equipment:
   - medium burner
   - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not
-  occupy the high-output wok burner.
+burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: n/a
 child_texture: 本 Recipe 不承担 main protein；儿童适配主要取决于主食/蔬菜质地。
 spicy_in_base: false
@@ -56,20 +58,23 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: kabocha-squash
     role: integral-staple
     availability: required
-  - pantry_core: dashi / soy / small sugar
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 核心主食/蛋白；按来源决定是否需要焯水或轻煎。
-  - 加入 dashi / soy / small sugar 和足以完成焖煮的液体；家庭版轻盐、不放辣。
-  - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
-  - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
+  - 准备：南瓜保留皮帮助定型；去籽后切大小尽量一致，尖角可略修圆减少煮碎。；煮汁混匀。
+  - 南瓜皮朝下单层排入较小锅中，倒入煮汁；液体不需要完全淹没。
+  - 盖落盖/锅盖留缝，中火煮开后转小火。
+  - 保持轻微咕嘟10分钟后开始用竹签从肉侧检查；能轻松插入即熟。
+  - 关火让南瓜在煮汁中静置10分钟吸味；不要继续大火收干。
+  - 盛出时从底部托起，避免把熟南瓜夹碎。
+  - 完成提示：南瓜肉软、竹签易穿透，块形仍完整；锅底保留少量清亮煮汁。
+  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
 child_serving: 作为主食/配菜使用，Meal Combo 必须另配软蛋白。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 南瓜（Kabocha）：600 g去籽后，切4–5 cm块
+  - 日式南瓜煮汁：日式高汤或水 1 cup；糖 1 Tbsp；味醂 1 Tbsp；生抽 1 Tbsp

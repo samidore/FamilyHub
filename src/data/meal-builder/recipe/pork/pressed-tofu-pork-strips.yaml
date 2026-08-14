@@ -20,14 +20,16 @@ fit:
   tradeoffs: []
 evidence:
   level: user-confirmed
-  checked_on: 2026-08-11
-  scope: Household use/preference or retained household pattern confirmed;
-    external source may additionally support technique where listed.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 配比依据 The Woks of Life Five Spice Tofu with Shredded Pork；家庭版不额外加入辣味。
   sources:
-    - The Woks of Life — Five Spice Tofu with Shredded Pork; plus user-confirmed
-      household preference
-notes: Household preference favors this dish. Pressed tofu is supporting
-  protein, not the main category.
+    - The Woks of Life — Five Spice Tofu with Shredded Pork; plus user-confirmed household preference
+    - The Woks of Life — shredded-pork / pork-tofu stir-fry technique; normalized family-light sauce
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Household preference favors this dish. Pressed tofu is supporting protein, not the main category.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -52,8 +54,7 @@ advance_start_required: false
 equipment:
   - high-output burner
   - wok / iron pan
-burner_plan: High-output burner for the wok; keep the medium burner free for a
-  side/soup when possible.
+burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -61,7 +62,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: whole-pork-tenderloin
     role: main-protein
@@ -69,16 +70,20 @@ ingredients:
   - ingredient_id: pressed-tofu
     role: supporting-protein
     availability: required
-  - pantry_core: light soy / Shaoxing / ginger-garlic style stir-fry sauce
-    role: seasoning
-    availability: assumed
 steps:
-  - 按菜式需要处理 whole-pork-tenderloin；蔬菜为 无固定蔬菜。肉类需要嫩化/短腌时按引用来源执行。
-  - 先把核心调味准备好：light soy / Shaoxing / ginger-garlic style stir-fry
-    sauce；家庭版基底不放辣并降低盐油。
-  - 热锅少油，先把主要蛋白炒至接近熟并视需要盛出；再处理蔬菜/香料。
-  - 合回主料，加入调味快速翻匀，达到合适熟度即停火，避免为追求焦色延长烹调。
+  - 准备：肉丝与全部腌料抓匀，静置15分钟；香干切与肉丝近似粗细。；姜5 g、蒜2瓣切末；收尾调味预先混匀。
+  - 炒锅大火加1 Tbsp油；肉丝炒到完全变色、约八成熟，立即盛出。
+  - 原锅下姜蒜15秒；加入香干，大火翻炒1–2分钟让表面热透。
+  - 肉丝回锅，倒入收尾调味。
+  - 快速翻炒30–60秒，直到香干和肉丝都均匀着色、锅底没有多余水。
+  - 关火后再淋芝麻油（若已混入调味可省此步）；孩子份剪短肉丝。
+  - 完成提示：香干热透但不干硬；肉丝嫩；锅底基本干爽、表面只有薄薄调味。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 猪里脊：225 g，切细丝
+  - 香干：225 g，切细丝
+  - 肉丝腌料：玉米淀粉 1.5 tsp；水 3 Tbsp；糖 1/8 tsp；绍兴酒 2 tsp；生抽 1 Tbsp
+  - 收尾调味：老抽 1/2 tsp；糖 1/4 tsp；芝麻油 1 tsp；水 1 Tbsp

@@ -196,6 +196,7 @@ test('meal builder filters live, completes a meal, and preserves state', async (
   await expect(page.locator('#meal-shared-status')).toHaveText('cooking');
   await expect(page.getByRole('heading', { name: '开始做饭' })).toBeVisible();
   await expect(page.locator('[data-cook-recipe]:visible')).toHaveCount(2);
+  await expect(page.locator('[data-cook-recipe="chicken-broccoli-stir-fry"]')).toContainText('鸡胸：340 g');
   await page.reload();
   await expect(page.locator('#meal-cook-view')).toBeVisible();
   await page.locator('#meal-open-checkout').click();

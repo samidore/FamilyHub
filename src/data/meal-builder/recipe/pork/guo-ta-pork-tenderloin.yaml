@@ -19,12 +19,17 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 依据现有锅塌里脊来源的蛋衣+少量汤汁‘塌’制结构，家庭版少油平煎。
   sources:
     - 豆果美食 / 下厨房 — 天津锅塌里脊 / 锅塌里脊
-notes: Household has not made this yet; timing remains source/workflow-derived.
+    - The Woks of Life — shredded-pork / pork-tofu stir-fry technique; normalized family-light sauce
+    - Made With Lau / The Woks of Life — Chinese steamed eggs / tomato eggs / egg drop soup
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Household has not made this yet; timing remains source/workflow-derived.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -49,8 +54,7 @@ advance_start_required: false
 equipment:
   - medium burner
   - nonstick pan or iron pan as appropriate
-burner_plan: Medium burner by default; use the iron pan/high-output burner only
-  when a hard sear is the point of the dish.
+burner_plan: Medium burner by default; use the iron pan/high-output burner only when a hard sear is the point of the dish.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -58,7 +62,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: whole-pork-tenderloin
     role: main-protein
@@ -66,16 +70,21 @@ ingredients:
   - ingredient_id: eggs
     role: supporting-protein
     availability: required
-  - pantry_core: egg coating + light savory finishing liquid
-    role: seasoning
-    availability: assumed
 steps:
-  - 擦干并按菜式处理 whole-pork-tenderloin；准备 egg coating + light savory finishing
-    liquid。
-  - 锅中只用薄层油，分批煎/煎封，避免锅温因一次装太满而明显下降。
-  - 主料达到合适熟度后离火或转小火；需要酱汁时在最后短时间挂汁。
-  - 静置或稍降温后再为孩子剪小；不要把成人后加辣味放进基础锅。
+  - 准备：肉片与短腌料抓匀15分钟；蛋衣搅匀。；塌汁预先混匀。
+  - 肉片逐片薄裹蛋衣；不粘锅中火加1 Tbsp油，单层排入。
+  - 第一面蛋衣凝固并浅金黄后翻面；第二面也定型，分批完成。
+  - 把全部肉片平铺回锅，沿锅边倒入塌汁，转中小火。
+  - 盖盖焖2–3分钟，让肉片熟透并吸汁；开盖轻晃锅。
+  - 汁量剩薄薄一层、蛋衣软嫩而不泡烂时关火，静置3分钟。
+  - 完成提示：蛋衣完整软嫩；肉片熟透；锅底只留薄薄鲜汁，不是汤。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 猪里脊：340 g，切约5 mm片
+  - 鸡蛋：2个
+  - 肉片短腌：生抽 2 tsp；绍兴酒 1 tsp；盐 1/4 tsp；玉米淀粉 1 Tbsp
+  - 蛋衣：鸡蛋 2个；玉米淀粉 1 Tbsp
+  - 塌汁：水或低盐高汤 1/3 cup；生抽 1 Tbsp；绍兴酒 1 Tbsp；糖 1/2 tsp；芝麻油 1/2 tsp

@@ -21,14 +21,15 @@ fit:
     - 家庭版包含明确的受控改编，需首次实做后再校准。
 evidence:
   level: inferred
-  checked_on: 2026-08-11
-  scope: Dish family/technique verified; this exact household adaptation is
-    inferred and remains candidate until tested.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 依据现有 seafood quick-cook 来源与家庭轻盐标准汁整合；不把标准汁冒充特定传统原方。
   sources:
-    - Epicurious — Squid and Bell Pepper Stir-Fry; onion is a
-      household-compatible aromatic/vegetable addition
-notes: Direct bell-pepper squid stir-fry is source-backed; onion is a compatible
-  household addition.
+    - Epicurious — Squid and Bell Pepper Stir-Fry; onion is a household-compatible aromatic/vegetable addition
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Direct bell-pepper squid stir-fry is source-backed; onion is a compatible household addition.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: shellfish
 main_protein_ingredient_ids:
@@ -54,8 +55,7 @@ advance_start_required: false
 equipment:
   - high-output burner
   - wok / iron pan
-burner_plan: High-output burner for the wok; keep the medium burner free for a
-  side/soup when possible.
+burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: conditional
 child_texture: 鱿鱼天然较有嚼劲，不适合作为稳定的孩子软蛋白来源。
 spicy_in_base: false
@@ -63,7 +63,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: squid
     role: main-protein
@@ -74,15 +74,21 @@ ingredients:
   - ingredient_id: onion
     role: vegetable
     availability: required
-  - pantry_core: ginger / garlic / light soy-oyster style sauce
-    role: seasoning
-    availability: assumed
 steps:
-  - 按菜式需要处理 squid；蔬菜为 bell-pepper, onion。肉类需要嫩化/短腌时按引用来源执行。
-  - 先把核心调味准备好：ginger / garlic / light soy-oyster style sauce；家庭版基底不放辣并降低盐油。
-  - 热锅少油，先把主要蛋白炒至接近熟并视需要盛出；再处理蔬菜/香料。
-  - 合回主料，加入调味快速翻匀，达到合适熟度即停火，避免为追求焦色延长烹调。
+  - 准备：海鲜彻底擦干；虾去肠线，鱿鱼切成大小一致的片/圈，扇贝去侧筋。；配菜提前切好并彻底沥干；海鲜快炒时间很短，所有调味必须先准备好。
+  - 锅大火预热后加油；海鲜单层下锅，不要堆叠。
+  - 虾/鱿鱼/扇贝一面刚变不透明或形成焦色时立即翻动；第一轮只做到约七八成熟并盛出。
+  - 若有蔬菜，原锅先把蔬菜炒到刚断生；硬菜可预先焯30–60秒。
+  - 海鲜回锅，加入对应轻盐汁，快速翻10–30秒。
+  - 海鲜刚全部不透明、质地变紧实但仍有弹性时立即关火；不要继续为了收汁久煮。
+  - 孩子份虾去尾壳，鱿鱼剪小；扇贝按大小切。
+  - 完成提示：海鲜刚熟、仍有弹性；酱汁薄薄附着，不靠长时间收浓。
+  - 安全提示：虾/扇贝/鱿鱼煮至肉体不透明、质地刚变紧实；避免继续久煮变老。生蚝烤至边缘卷起且内部充分加热。
 child_serving: 如给孩子仅取非常小、嫩的部分；另配软蛋白。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 鱿鱼：450 g
+  - 甜椒：300–450 g
+  - 洋葱：300–450 g
+  - 轻盐鱿鱼汁：水 2 Tbsp；生抽 2 tsp；蚝油 1 tsp；绍兴酒 1 Tbsp；糖 1/4 tsp

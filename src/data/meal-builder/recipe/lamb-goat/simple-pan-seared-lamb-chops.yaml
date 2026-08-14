@@ -19,13 +19,15 @@ fit:
     - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 基础煎制流程按安全温度与家庭轻油原则标准化；特定酱汁菜另有专用 override。
   sources:
     - RecipeTin Eats / RecipeTin Japan — pan-seared lamb-chop techniques
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: lamb
 main_protein_ingredient_ids:
@@ -50,8 +52,7 @@ advance_start_required: false
 equipment:
   - medium burner
   - nonstick pan or iron pan as appropriate
-burner_plan: Medium burner by default; use the iron pan/high-output burner only
-  when a hard sear is the point of the dish.
+burner_plan: Medium burner by default; use the iron pan/high-output burner only when a hard sear is the point of the dish.
 child_suitable: conditional
 child_texture: 整块煎牛排/羊排即使可切小，也不是稳定的软质主蛋白。
 spicy_in_base: false
@@ -59,20 +60,23 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: bone-in-lamb-chops
     role: main-protein
     availability: required
-  - pantry_core: salt-light / garlic-herb optional finish
-    role: seasoning
-    availability: assumed
 steps:
-  - 擦干并按菜式处理 bone-in-lamb-chops；准备 salt-light / garlic-herb optional finish。
-  - 锅中只用薄层油，分批煎/煎封，避免锅温因一次装太满而明显下降。
-  - 主料达到合适熟度后离火或转小火；需要酱汁时在最后短时间挂汁。
-  - 静置或稍降温后再为孩子剪小；不要把成人后加辣味放进基础锅。
+  - 准备：带骨羊排用厨房纸彻底擦干；厚薄不一致时尽量整理成接近一致厚度。；下锅前均匀撒基础盐胡椒；不要提前长时间盐腌薄片海鲜。
+  - 厚底不粘锅或铁锅中大火预热；加油并转动锅面，油流动变快时放入带骨羊排。
+  - 带骨羊排放下后先不要移动，让接触面形成完整焦色；锅温过高冒浓烟则立即降一档。
+  - 翻面后转中火；厚件可加盖短暂焖熟，但不要加大量水把煎变成煮。
+  - 从羊排最厚处避骨测中心温度；达到145°F/63°C立即离火。
+  - 静置至少3分钟再切/上桌。
+  - 完成提示：两面有均匀焦色；内部达到安全温度且没有因继续煎而明显出水变柴。
+  - 安全提示：整块羊/山羊肉可测处达到145°F/63°C并静置3分钟；炖菜以更高温度达到软烂质地。
 child_serving: 若提供则逆纹切很小；Meal Combo 另配软蛋白。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 带骨羊排：4块，共约600–800 g
+  - 基础调味：盐 3/4 tsp；黑胡椒 1/2 tsp；中性油 2 tsp；蒜 2瓣，拍裂

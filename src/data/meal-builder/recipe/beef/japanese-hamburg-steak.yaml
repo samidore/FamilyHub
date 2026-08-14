@@ -20,13 +20,15 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. Just One Cookbook Hambagu 结构；现有 Recipe 只要求 ground beef，故做全牛肉家庭版本。
   sources:
     - Just One Cookbook — Hambagu / Wafu Hambagu
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: beef
 main_protein_ingredient_ids:
@@ -52,8 +54,7 @@ advance_start_required: false
 equipment:
   - medium burner
   - nonstick pan or iron pan as appropriate
-burner_plan: Medium burner by default; use the iron pan/high-output burner only
-  when a hard sear is the point of the dish.
+burner_plan: Medium burner by default; use the iron pan/high-output burner only when a hard sear is the point of the dish.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -61,7 +62,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: ground-beef
     role: main-protein
@@ -69,16 +70,23 @@ ingredients:
   - ingredient_id: onion
     role: vegetable
     availability: required
-  - pantry_core: onion + mild savory sauce; choose lighter wafu finish when useful
-    role: seasoning
-    availability: assumed
 steps:
-  - 擦干并按菜式处理 ground-beef；准备 onion + mild savory sauce; choose lighter wafu
-    finish when useful。
-  - 锅中只用薄层油，分批煎/煎封，避免锅温因一次装太满而明显下降。
-  - 主料达到合适熟度后离火或转小火；需要酱汁时在最后短时间挂汁。
-  - 静置或稍降温后再为孩子剪小；不要把成人后加辣味放进基础锅。
+  - 准备：洋葱用1 tsp油中火炒软后放凉。Panko与牛奶/水混合5分钟。；牛肉、洋葱、Panko、鸡蛋和调味拌到刚有黏性，分3个肉饼，中间压浅凹。
+  - 不粘锅中火加1 tsp油，肉饼下锅后第一面煎3–4分钟至褐色。
+  - 翻面，加2 Tbsp水，盖盖中小火4–6分钟。
+  - 最大肉饼中心达到160°F/71°C后先盛出。
+  - 原锅倒入轻汁，刮起锅底焦香，煮30–60秒到薄挂勺。
+  - 汁淋肉饼；孩子份切小并确认中心无生肉。
+  - 完成提示：肉饼中心160°F/71°C、仍有肉汁；酱汁薄挂而不厚甜。
+  - 安全提示：绞肉或含绞肉馅中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 牛绞肉：450 g
+  - 洋葱：150 g，切细丁
+  - 鸡蛋：1个
+  - Panko：1/3 cup
+  - 牛奶或水：3 Tbsp
+  - 肉饼调味：盐 3/4 tsp；黑胡椒 1/4 tsp；肉豆蔻 1/4 tsp，可省
+  - 轻汁：番茄酱 2 Tbsp；伍斯特酱 1 Tbsp；水 3 Tbsp；糖 1/2 tsp

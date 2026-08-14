@@ -19,12 +19,16 @@ fit:
     - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. The Woks of Life Cantonese steamed fish / black-bean fish 结构；家庭减少热油。
   sources:
     - The Woks of Life — Cantonese Steamed Fish
-notes: Compatible sea-bass-like fish remain substitutions, not separate recipes.
+    - Made With Lau / The Woks of Life — Chinese steaming recipes
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Compatible sea-bass-like fish remain substitutions, not separate recipes.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: fish
 main_protein_ingredient_ids:
@@ -60,7 +64,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - one_of:
       - live-freshwater-bass
@@ -70,21 +74,24 @@ ingredients:
       - halibut
     role: main-protein
     availability: required
-  - pantry_core: ginger / scallion / light soy; minimal oil finish
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 live-freshwater-bass；搭配 无固定蔬菜；按来源用 ginger / scallion / light soy; minimal
-    oil finish 做短腌或铺料。
-  - 水开后上锅蒸；厚度/骨量变化时以实际熟度为准，不把来源分钟机械套用到不同切法。
-  - 出锅后按需要加入葱姜等清淡收尾；避免额外淋大量热油。
-  - 孩子份先去骨/剪小/确认没有硬壳或筋膜，再加成人后味。
+  - 准备：鱼擦干；整鱼两面各划2–3刀但不要切到骨断。；耐热盘下垫少量姜葱；蒸锅水必须先完全烧开。
+  - 水大开后把鱼盘上锅，立刻盖严，保持中大火稳定蒸汽。
+  - 约7分钟起根据鱼厚度检查；最厚处中心达到145°F/63°C，且鱼肉能轻易分片即可。
+  - 立即出锅，倒掉盘中大部分腥水，不让鱼继续泡在蒸水里。
+  - 铺上新鲜姜葱丝，淋清蒸豉油汁；把1 Tbsp油加热至流动变快后仅淋在姜葱上。
+  - 孩子份从鱼背厚肉处取肉，逐指检查细刺后剪小。
+  - 完成提示：鱼肉刚从半透明转不透明、能沿肌理分片；盘底只有少量清亮调味汁。
+  - 安全提示：鱼中心达到145°F/63°C，或肉完全不透明并能轻易分片；给孩子份再次检查鱼刺。
 child_serving: 成人彻底去刺后压碎/撕小；Meal Combo 默认保留软蛋白备选。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions:
   - branzino
   - black-sea-bass
   - grouper
   - halibut
   - whole-fish or compatible fillet path
+cook_ingredients:
+  - 活淡水鲈鱼 / Branzino（欧洲海鲈） / 黑海鲈 / 石斑鱼 / 大比目鱼：1条，约650–800 g，去鳞去内脏；任选一种；实际选中项使用同一批量
+  - 清蒸豉油汁：生抽 1.5 Tbsp；热水 2 Tbsp；糖 1/8 tsp；盐 1/8 tsp
+  - 香料：姜 15 g，细丝；葱 2根，细丝；中性油 1 Tbsp，家庭减油版

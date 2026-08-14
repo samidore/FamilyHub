@@ -19,13 +19,16 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 配比按 The Woks of Life Chinese Winter Melon Soup with Meatballs，家庭保持清淡。
   sources:
     - The Woks of Life — Chinese Winter Melon Soup with Meatballs
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - The Woks of Life — Chinese winter melon / rib / clear soup recipes
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -50,8 +53,7 @@ advance_start_required: false
 equipment:
   - medium burner
   - soup pot
-burner_plan: Medium burner for simmering; can be started earlier and leave the
-  wok burner free.
+burner_plan: Medium burner for simmering; can be started earlier and leave the wok burner free.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -59,7 +61,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
@@ -67,15 +69,21 @@ ingredients:
   - ingredient_id: winter-melon
     role: vegetable
     availability: required
-  - pantry_core: ginger / scallion / clear light broth
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 ground-pork；蔬菜/主食配料为 winter-melon。骨肉汤按来源需要先焯洗。
-  - 加水与 ginger / scallion / clear light broth 中的基础香料，先把肉类煮/炖至接近软嫩。
-  - 按食材耐煮程度加入蔬菜或主食类块根；避免全部从一开始同煮导致过烂。
-  - 最后用轻盐调味；孩子份取软肉、软菜并去骨。
+  - 准备：肉馅与全部丸子调味同一方向搅8–10分钟至明显发黏；冷藏10–15分钟更好成形。；冬瓜切均匀块。
+  - 汤锅加入高汤和水煮开，转中小火保持轻沸。
+  - 湿手或用勺挤出直径约3 cm丸子，逐个下锅；下完后不要立刻大力搅动。
+  - 丸子浮起后再煮3–4分钟；从最大的一个中心确认160°F/71°C。
+  - 加入冬瓜，中火煮到冬瓜从白色变半透明、筷子能穿透，约8–12分钟。
+  - 尝汤后再决定是否补盐；撇去明显浮油，孩子份先取丸子和软冬瓜。
+  - 完成提示：丸子熟透仍多汁；冬瓜半透明软嫩但不碎；汤清爽不过咸。
+  - 安全提示：绞肉或含绞肉馅中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 猪绞肉：450 g
+  - 冬瓜：450 g，去皮切2.5 cm块
+  - 低盐高汤：4 cups
+  - 水：2 cups
+  - 丸子调味：水 2 Tbsp；生抽 2.5 Tbsp；绍兴酒 2 Tbsp；芝麻油 1 tsp；白胡椒 1/2 tsp；糖 1/2 tsp；蛋白 1个；姜末 1 Tbsp；葱末 1根；盐 1/4 tsp

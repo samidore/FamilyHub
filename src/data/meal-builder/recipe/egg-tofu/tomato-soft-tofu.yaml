@@ -19,13 +19,15 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 依据现有 tomato-tofu 来源；家庭版不用重蚝油，以番茄+少量生抽为主。
   sources:
     - The Woks of Life / Made With Lau — tomato tofu recipes
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - Made With Lau / The Woks of Life / Just One Cookbook — tofu recipes listed in the source KB
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: tofu
 main_protein_ingredient_ids:
@@ -50,8 +52,7 @@ advance_start_required: false
 equipment:
   - medium burner
   - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not
-  occupy the high-output wok burner.
+burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -59,7 +60,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: soft-tofu
     role: main-protein
@@ -67,15 +68,19 @@ ingredients:
   - ingredient_id: tomato
     role: vegetable
     availability: required
-  - pantry_core: tomato / light soy or broth / scallion
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 soft-tofu；按来源决定是否需要焯水或轻煎。
-  - 加入 tomato / light soy or broth / scallion 和足以完成焖煮的液体；家庭版轻盐、不放辣。
-  - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
-  - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
+  - 准备：豆腐切块尽量少搬动；番茄去硬蒂切2–3 cm块。；番茄豆腐汁搅匀。
+  - 深不粘锅中火加1 tsp油，下番茄炒2–3分钟到边缘软并明显出汁。
+  - 倒入番茄豆腐汁煮开，轻轻滑入豆腐。
+  - 转中小火煮3–5分钟，用晃锅代替频繁翻动。
+  - 豆腐中心热透后转中火30–60秒，让汁从水状变成薄挂勺。
+  - 豆腐仍完整、番茄软但有块形时关火；孩子份可少带汁。
+  - 完成提示：番茄自然出汁、豆腐完整热透；汁薄挂勺，不成厚芡。
+  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 嫩豆腐：1盒，约400–450 g，切2.5 cm块
+  - 番茄：450 g，切块
+  - 番茄豆腐汁：水或低盐高汤 1/2 cup；生抽 2 tsp；糖 1/2 tsp；玉米淀粉 1 tsp

@@ -18,13 +18,15 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-12
-  scope: Dish identity/core technique verified or conservatively inferred from
-    cited mature household cooking patterns; timing is source-derived or
-    workflow-derived range, not household stopwatch data.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 来源验证的中式蔬菜快炒结构，按家庭轻盐标准化；不把同一标准汁冒充为地方菜传统原方。
   sources:
     - V10 — Omnivore’s Cookbook — Stir-Fried Cauliflower with Tomato Sauce
-notes: "虽然含两种 Vegetable Ingredient，整盘仍按一个 Vegetable side 记 `vegetable: 1`。"
+    - Made With Lau — vegetable stir-fry / broccoli / choy sum recipes; The Woks of Life vegetable stir-fry patterns
+notes: |-
+  虽然含两种 Vegetable Ingredient，整盘仍按一个 Vegetable side 记 `vegetable: 1`。
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
@@ -49,8 +51,7 @@ advance_start_required: false
 equipment:
   - high-output burner
   - wok / iron pan
-burner_plan: High-output burner with wok / iron pan; keep the medium burner free
-  when possible.
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
 child_suitable: yes
 child_texture: 花菜可比成人份多焯/煮至更软，番茄形成湿润酱汁；剪成小朵。
 spicy_in_base: false
@@ -58,7 +59,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: cauliflower
     role: vegetable
@@ -66,16 +67,19 @@ ingredients:
   - ingredient_id: tomato
     role: vegetable
     availability: required
-  - pantry_core: light salt / neutral oil / common aromatics and sauce components
-      appropriate to the verified structure
-    role: seasoning
-    availability: assumed
 steps:
-  - 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
-  - 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
-  - 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
-child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为
-  ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
-adult_finish: Adult heat or stronger seasoning may be added only after the child
-  portion is removed; omit if unnecessary.
+  - 准备：蔬菜洗净后彻底沥干；叶菜把较粗的梗和叶分开，硬菜切成约一口大小。；蒜2瓣切末；把蔬菜汁混匀。
+  - 炒锅大火预热到明显热但不冒浓烟，加2 tsp中性油；下蒜末炒10秒。
+  - 先下较硬的梗/厚片，大火翻炒30–60秒；再下叶片或易熟部分。
+  - 沿锅边加1 tsp绍兴酒（可省略），立刻翻炒；若锅太干，只沿锅边补1 Tbsp水，不要把菜煮在水里。
+  - 蔬菜接近断生时倒入家庭轻盐蔬菜汁，快速翻匀20–30秒。
+  - 看到菜颜色鲜亮、体积刚缩、梗部能咬断但仍有轻微脆感时立即关火。
+  - 完成提示：叶片刚塌、梗能咬断但不软烂；锅底没有一滩水，菜表面只薄薄有味汁。
+  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 花菜：300–450 g
+  - 番茄：300–450 g
+  - 家庭轻盐蔬菜汁：水 1 Tbsp；生抽 2 tsp；蚝油 1 tsp；糖 1/4 tsp

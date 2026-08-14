@@ -20,14 +20,15 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 压力段采用家庭常用10–15分钟范围中的10分钟，并与官方 Instant Pot 鸡腿类似程序核对；不附 leafy finish add-on。
   sources:
-    - Instant Pot official chicken-thigh pressure-cooking recipes; household soy
-      route adaptation
-notes: Exact household pressure/release/liquid parameters remain recipe-test
-  data, not a reason to block the record.
+    - Instant Pot official chicken-thigh pressure-cooking recipes; household soy route adaptation
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Exact household pressure/release/liquid parameters remain recipe-test data, not a reason to block the record.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
@@ -58,21 +59,24 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: bone-in-chicken-thighs
     role: main-protein
     availability: required
-  - pantry_core: soy / ginger / scallion mild braising liquid
-    role: seasoning
-    availability: assumed
 steps:
-  - 将 bone-in-chicken-thighs 与 soy / ginger / scallion mild braising liquid 放入
-    9-qt Instant Pot 下层；液体至少满足设备正常起压要求，但不在未验证时写死家庭水量。
-  - 本家庭常用肉类压力段约 10–15 分钟作为工作模式；具体菜首次执行时按食材厚度与可靠来源校正，不把该范围当统一强制参数。
-  - 放压方式按具体菜与当日流程选择并记录到测试备注；未测试前不宣称某一种 release 为家庭标准。
-  - 开盖确认熟度，必要时用 sauté 收汁/调味；孩子份先盛出。
+  - 准备：鸡腿擦干；酱汁混匀。；如做 pot-in-pot 米饭，确保上层容器不接触鸡肉且不超过锅内安全装载线；米水比仍按家里实际米种。
+  - 鸡腿放下层内胆，倒入酱汁并刮净锅底；架好上层饭盆（如使用）。
+  - 锁盖，High Pressure 10分钟；结束后自然泄压5分钟，再手动排余压。
+  - 开盖后测最厚鸡肉达到165°F/74°C；不足则Sauté轻煮或再加压短时间。
+  - 把鸡腿夹出；若汁太稀，Sauté中火煮到从水状变成薄挂勺。
+  - 鸡腿回锅翻匀即可；此 Instant Pot 路线不附加 `finish-with-leafy-vegetable`。
+  - 孩子份去骨、去明显软骨后剪小。
+  - 完成提示：鸡腿完全熟且嫩；酱汁只是薄挂勺，不浓缩成重咸糖浆。
+  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 带骨鸡腿：900 g
+  - 酱油压力汁：水 1 cup；生抽 2 Tbsp；绍兴酒 1 Tbsp；糖 1 Tbsp；姜 5片；葱白 2段

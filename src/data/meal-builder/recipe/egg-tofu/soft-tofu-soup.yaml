@@ -19,13 +19,15 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 家庭嫩豆腐清汤/荠菜豆腐羹标准化。
   sources:
     - Made With Lau — tofu soup patterns; household soft-tofu soup simplified
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - Made With Lau / The Woks of Life / Just One Cookbook — tofu recipes listed in the source KB
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: tofu
 main_protein_ingredient_ids:
@@ -50,8 +52,7 @@ advance_start_required: false
 equipment:
   - medium burner
   - soup pot
-burner_plan: Medium burner for simmering; can be started earlier and leave the
-  wok burner free.
+burner_plan: Medium burner for simmering; can be started earlier and leave the wok burner free.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -59,7 +60,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: soft-tofu
     role: main-protein
@@ -67,15 +68,20 @@ ingredients:
   - ingredient_id: chinese-greens
     role: vegetable
     availability: required
-  - pantry_core: clear light broth / soft tofu / leafy green optional
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 soft-tofu；蔬菜/主食配料为 chinese-greens。骨肉汤按来源需要先焯洗。
-  - 加水与 clear light broth / soft tofu / leafy green optional 中的基础香料，先把肉类煮/炖至接近软嫩。
-  - 按食材耐煮程度加入蔬菜或主食类块根；避免全部从一开始同煮导致过烂。
-  - 最后用轻盐调味；孩子份取软肉、软菜并去骨。
+  - 准备：豆腐切2.5 cm块；尽量少搬动。；冷冻荠菜可直接下锅掰散；若用青菜切短。
+  - 汤锅把清汤煮开；若用冷冻荠菜，先下锅煮到完全散开并重新沸腾。
+  - 轻轻滑入豆腐，转中小火煮3–4分钟让中心热透。
+  - 若用其他青菜，最后2–3分钟加入。
+  - 想做‘羹’才把薄芡搅匀后细线倒入，边轻推边煮到汤略稠；普通嫩豆腐汤可完全不勾芡。
+  - 最后分次加盐，避免沸腾太猛把豆腐冲碎。
+  - 完成提示：豆腐完整且中心热透；菜软；汤清或仅轻微挂勺，不厚糊。
+  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 嫩豆腐：1盒，约400–450 g，切块
+  - 青菜：250–300 g
+  - 清汤：低盐高汤或水 4 cups；生抽 1 tsp；盐 1/2 tsp起；白胡椒 1小撮，可省
+  - 可选薄羹：玉米淀粉 1 Tbsp；水 2 Tbsp

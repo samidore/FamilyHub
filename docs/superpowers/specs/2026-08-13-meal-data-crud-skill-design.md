@@ -10,7 +10,7 @@ The Skill separates planning from mutation, checks exact and semantic duplicates
 
 The Skill contains concise workflow instructions, implicit invocation metadata, and a deterministic read-only helper for inspection, references, ordering, and item validation. Normal edits continue to use repository editing tools rather than a write-capable CRUD program.
 
-Recipe inputs accept optional `amount` and `preparation`. Existing `discoverable` records remain compatible. A `cookable` or `household-tested` Recipe requires amounts for every actual input, including pantry seasoning, executable steps, equipment, and a direct HTTPS source. Cook View renders supplied amounts and preparation without treating pantry inputs as inventory requirements.
+Operational Recipe inputs contain only required Ingredient IDs or `one_of` alternatives. A `cookable` or `household-tested` Recipe uses separate display-only `cook_ingredients` text plus executable steps and equipment. Pantry inputs are not operational requirements, and source URLs are optional.
 
 ## Acceptance
 

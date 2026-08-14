@@ -20,12 +20,16 @@ fit:
     - 家庭版包含明确的受控改编，需首次实做后再校准。
 evidence:
   level: inferred
-  checked_on: 2026-08-11
-  scope: Dish family/technique verified; this exact household adaptation is
-    inferred and remains candidate until tested.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. Just One Cookbook 日式煮物比例结构按家庭轻盐标准化；具体菜名的传统配料由原 recipe required ingredients 保留。
   sources:
     - Japanese soy/miso daikon + boneless short-rib braise references
-notes: Premium/lower-frequency route.
+    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Premium/lower-frequency route.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: beef
 main_protein_ingredient_ids:
@@ -50,8 +54,7 @@ advance_start_required: true
 equipment:
   - medium burner
   - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not
-  occupy the high-output wok burner.
+burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -59,7 +62,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: boneless-beef-short-ribs
     role: main-protein
@@ -67,15 +70,20 @@ ingredients:
   - ingredient_id: daikon
     role: vegetable
     availability: required
-  - pantry_core: soy / dashi or miso-light braise / ginger
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 boneless-beef-short-ribs；按来源决定是否需要焯水或轻煎。
-  - 加入 soy / dashi or miso-light braise / ginger 和足以完成焖煮的液体；家庭版轻盐、不放辣。
-  - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
-  - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
+  - 准备：主料切成大小一致、适合炖煮的块；块根切约2.5–3 cm。；日式煮汁混匀。
+  - 厚锅中火加1 tsp油；肉类有明显表面时先煎到浅褐，薄片类只需快速变色。
+  - 加入较硬的洋葱/块根翻1分钟，再倒入日式煮汁。
+  - 煮开后撇去浮沫，转小火盖盖留缝；保持轻微咕嘟。
+  - 先炖肉到开始变软，再确保块根煮到筷子可穿透；若液体过少补热水，不补浓酱油。
+  - 最后开盖中火减少到汁量约剩一半、仍能舀起；不是所有日式煮物都需要收干。
+  - 关火静置5分钟让味道回吸。
+  - 完成提示：肉软嫩、块根熟而不碎；锅内保留少量清亮甜咸煮汁。
+  - 安全提示：整块牛肉可测处达到145°F/63°C并静置3分钟；薄片炒菜实际炒至无冷生中心。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 无骨牛小排：900 g
+  - 白萝卜：300–450 g
+  - 日式煮汁：日式高汤或水 2 cups；生抽 3 Tbsp；味醂 3 Tbsp；清酒 2 Tbsp；糖 1 Tbsp

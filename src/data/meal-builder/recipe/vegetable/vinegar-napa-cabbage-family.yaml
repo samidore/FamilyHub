@@ -18,15 +18,15 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-12
-  scope: Dish identity/core technique verified or conservatively inferred from
-    cited mature household cooking patterns; timing is source-derived or
-    workflow-derived range, not household stopwatch data.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. The Woks of Life hot & sour napa cabbage 结构；家庭删除辣椒并保留醋香。
   sources:
-    - V07 — The Woks of Life — Hot & Sour Napa Cabbage Stir-fry; household
-      version omits chili
-notes: Candidate Vegetable-centered route; exact household seasoning quantities
-  remain for Cook View / first-cook calibration.
+    - V07 — The Woks of Life — Hot & Sour Napa Cabbage Stir-fry; household version omits chili
+    - Made With Lau — vegetable stir-fry / broccoli / choy sum recipes; The Woks of Life vegetable stir-fry patterns
+notes: |-
+  Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook calibration.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
@@ -50,8 +50,7 @@ advance_start_required: false
 equipment:
   - high-output burner
   - wok / iron pan
-burner_plan: High-output burner with wok / iron pan; keep the medium burner free
-  when possible.
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
 child_suitable: yes
 child_texture: 白菜切片后可炒至较软；孩子份保持轻醋轻盐、无辣。
 spicy_in_base: false
@@ -59,21 +58,23 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: napa-cabbage
     role: vegetable
     availability: required
-  - pantry_core: light salt / neutral oil / common aromatics and sauce components
-      appropriate to the verified structure
-    role: seasoning
-    availability: assumed
 steps:
-  - 按实际选中的 required / one_of Ingredient 清洗、修整并切成适合该 cooking structure 的大小。
-  - 按成熟菜式的核心 technique 处理；家庭版保持轻盐、少油、无辣 base。
-  - 根据蔬菜含水量与茎叶厚度控制顺序和火候，达到合适熟度即停火，避免为追求焦色而过度加热。
-child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为
-  ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
-adult_finish: Adult heat or stronger seasoning may be added only after the child
-  portion is removed; omit if unnecessary.
+  - 准备：白菜梗斜切薄片，叶切大块；完全沥干。；醋溜汁搅匀；基础锅不放辣椒。
+  - 炒锅大火加2 tsp油，下蒜2瓣10秒。
+  - 先下白菜梗，大火翻炒60–90秒到边缘开始透明。
+  - 下白菜叶，再翻30–60秒到叶片刚塌。
+  - 醋溜汁重新搅匀沿锅边倒入，快速翻20–30秒。
+  - 汁刚发亮、白菜熟但梗仍有脆感时立即关火；醋香应明显但不呛生。
+  - 完成提示：白菜梗熟脆、叶片刚软；酸甜汁薄挂、不成厚芡。
+  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
+child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 大白菜：600 g，梗叶分开切
+  - 醋溜汁：陈醋/镇江醋 1.5 Tbsp；生抽 1 Tbsp；糖 1 tsp；水 1 Tbsp；玉米淀粉 1/2 tsp

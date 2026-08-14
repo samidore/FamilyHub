@@ -20,12 +20,15 @@ fit:
     - 需要提前启动或较长被动烹调时间。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. The Woks of Life Xinjiang Lamb Rice 6人配方约半量标准化为家庭份。
   sources:
     - The Woks of Life — Xinjiang Lamb Rice
-notes: Rice carried in recipe.
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Rice carried in recipe.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: lamb
 main_protein_ingredient_ids:
@@ -59,7 +62,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: lamb-shoulder-chunks
     role: main-protein
@@ -73,16 +76,22 @@ ingredients:
   - ingredient_id: rice
     role: integral-staple
     availability: required
-  - pantry_core: cumin / onion / carrot / lamb-fat-aroma profile with restrained added oil
-    role: seasoning
-    availability: assumed
 steps:
-  - 洗米并处理 carrot, onion 及配料；准备 cumin / onion / carrot / lamb-fat-aroma profile
-    with restrained added oil。
-  - 需要先煸香/轻煎的配料用少量油处理，然后与米同锅。
-  - 按引用来源的锅具路线把米饭焖熟；家庭版若改变米量/锅具，不写死未经测试的水比。
-  - 关火后按需要焖放，再轻轻拌匀上桌。
+  - 准备：米洗净沥干；羊肉切块；胡萝卜洋葱切好。；水量按来源半份起始值，若家庭米种吸水不同以后再校准。
+  - 厚锅中大火加油，羊肉分批煎到多面褐色。
+  - 加入洋葱炒软，再加胡萝卜炒2分钟；加入盐、生抽、孜然。
+  - 倒入水/高汤煮开，转小火先煮羊肉15–20分钟。
+  - 把米均匀撒在表面，不搅到底；液体应略高于米面。
+  - 盖盖最小火煮到米熟且水被吸收；关火焖10分钟。
+  - 开盖从底部翻松，确认羊肉软熟、米无硬芯。
+  - 完成提示：米饭熟而松、无游离水；羊肉软熟；胡萝卜软甜。
+  - 安全提示：整块羊/山羊肉可测处达到145°F/63°C并静置3分钟；炖菜以更高温度达到软烂质地。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 米：1 cup
+  - 羊肩肉块：450 g，切2.5 cm块
+  - 胡萝卜：225 g，粗丝/条
+  - 洋葱：1/2个，约100 g，切丝
+  - 抓饭调味：水或低盐高汤 2 cups；盐 1 tsp；生抽 1 tsp；孜然粉 1/2 tsp；中性油 1.5 Tbsp

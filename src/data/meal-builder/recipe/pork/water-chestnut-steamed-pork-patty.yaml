@@ -19,13 +19,16 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 蒸肉饼结构按现有可靠来源标准化；家庭加入马蹄并控制盐油。
   sources:
     - Bon Appétit — Chinese Steamed Pork Patty
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - Made With Lau / The Woks of Life — Chinese steaming recipes
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -58,7 +61,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
@@ -66,16 +69,19 @@ ingredients:
   - ingredient_id: water-chestnuts
     role: vegetable
     availability: required
-  - pantry_core: light soy / ginger / sesame-oil-style seasoning
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 ground-pork；搭配 water-chestnuts；按来源用 light soy / ginger / sesame-oil-style
-    seasoning 做短腌或铺料。
-  - 水开后上锅蒸；厚度/骨量变化时以实际熟度为准，不把来源分钟机械套用到不同切法。
-  - 出锅后按需要加入葱姜等清淡收尾；避免额外淋大量热油。
-  - 孩子份先去骨/剪小/确认没有硬壳或筋膜，再加成人后味。
+  - 准备：猪肉加全部调味同一方向搅2–3分钟至略发黏，再拌入马蹄。；铺入20–23 cm浅盘，压成约1.5–2 cm均匀厚度；中心不要堆高。
+  - 蒸锅水先大开；肉饼上锅后立即盖盖，保持中大火稳定蒸汽。
+  - 蒸10分钟后从中心测温；若未达到160°F/71°C，继续每2分钟检查一次。
+  - 达到安全温度后关火，等30秒再开盖。
+  - 盘中肉汁可保留；如果表面浮油较多，用勺撇去明显油层。
+  - 孩子份切成小块，确认马蹄丁大小适合咀嚼。
+  - 完成提示：肉饼中心完全熟、按压有弹性但不干硬；盘汁清亮。
+  - 安全提示：绞肉或含绞肉馅中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 猪绞肉：450 g
+  - 马蹄：100 g，切细丁
+  - 肉饼调味：生抽 1 Tbsp；绍兴酒 1 Tbsp；蚝油 2 tsp；玉米淀粉 2 tsp；水 3 Tbsp；芝麻油 1 tsp；白胡椒 1小撮

@@ -20,12 +20,16 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 配比按 Just One Cookbook Nikujaga；省略不在现有 Recipe availability 中的魔芋丝。
   sources:
     - Just One Cookbook — Nikujaga
-notes: Potato is the staple carried in the recipe; onion/carrot count as vegetables.
+    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Potato is the staple carried in the recipe; onion/carrot count as vegetables.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: beef
 main_protein_ingredient_ids:
@@ -51,8 +55,7 @@ advance_start_required: false
 equipment:
   - medium burner
   - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not
-  occupy the high-output wok burner.
+burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -60,7 +63,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: hot-pot-beef-slices
     role: main-protein
@@ -74,15 +77,22 @@ ingredients:
   - ingredient_id: carrot
     role: vegetable
     availability: required
-  - pantry_core: dashi / soy / mirin / sugar
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 hot-pot-beef-slices；按来源决定是否需要焯水或轻煎。
-  - 加入 dashi / soy / mirin / sugar 和足以完成焖煮的液体；家庭版轻盐、不放辣。
-  - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
-  - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
+  - 准备：土豆切4–5 cm块后用清水冲掉表面淀粉；胡萝卜与洋葱切块。；牛肉片解开成片。
+  - 厚锅中火加1 Tbsp油，下洋葱炒到边缘透明；加入牛肉快速炒到大部分变色。
+  - 加入土豆和胡萝卜翻1分钟，倒入全部煮汁。
+  - 煮开撇沫，落盖/盖盖留缝，中小火煮15分钟。
+  - 检查土豆：筷子能穿透但块形完整时即可；若仍硬再煮3–5分钟。
+  - 开盖只把汁减少到能舀起、约剩锅底1–2 cm，不收干。
+  - 关火静置10分钟后再上桌，味道会继续回吸。
+  - 完成提示：土豆软而不碎、胡萝卜熟、牛肉不柴；保留甜咸煮汁。
+  - 安全提示：整块牛肉可测处达到145°F/63°C并静置3分钟；薄片炒菜实际炒至无冷生中心。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 火锅牛肉片：225 g
+  - 土豆：550 g，切大块
+  - 胡萝卜：125 g，滚刀块
+  - 洋葱：250 g，粗切
+  - 肉じゃが煮汁：日式高汤 2 cups；味醂 4 Tbsp；生抽 4 Tbsp；清酒 2 Tbsp；糖 1 Tbsp

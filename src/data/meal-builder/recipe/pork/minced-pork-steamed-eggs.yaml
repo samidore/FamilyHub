@@ -19,12 +19,16 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 水蛋比例和分阶段蒸法来自 Made With Lau 蒸蛋/肉末蒸蛋资料；按家庭轻盐处理。
   sources:
     - PBS Food / Made With Lau — Chinese Steamed Eggs with Minced Pork
-notes: Main category is pork per finalized classification rule.
+    - Made With Lau / The Woks of Life — Chinese steamed eggs / tomato eggs / egg drop soup
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Main category is pork per finalized classification rule.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -57,7 +61,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
@@ -65,15 +69,21 @@ ingredients:
   - ingredient_id: eggs
     role: supporting-protein
     availability: required
-  - pantry_core: light soy / scallion optional
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 ground-pork；搭配 无固定蔬菜；按来源用 light soy / scallion optional 做短腌或铺料。
-  - 水开后上锅蒸；厚度/骨量变化时以实际熟度为准，不把来源分钟机械套用到不同切法。
-  - 出锅后按需要加入葱姜等清淡收尾；避免额外淋大量热油。
-  - 孩子份先去骨/剪小/确认没有硬壳或筋膜，再加成人后味。
+  - 准备：肉末与腌料拌匀；铺在浅盘底部。；鸡蛋打匀，与1.5 cups温水先混匀；追求更嫩可增加到2 cups。过筛一次可减少气泡。
+  - 蒸锅水先烧开；肉末盘上锅大火蒸3–5分钟，直到肉末约八成熟。
+  - 转小火，让锅内只保持稳定蒸汽；把蛋液轻轻倒在肉末上。
+  - 盖盘/留小缝防滴水，低火蒸8–10分钟；中心仍像水一样晃动则继续1–2分钟。
+  - 从肉末最厚处确认达到160°F/71°C；蛋羹中心应凝固但仍轻微颤动。
+  - 离火静置2分钟；孩子份直接取软蛋羹与肉末，成人可滴少量生抽。
+  - 完成提示：蛋羹表面平、中心凝固但轻颤；肉末完全熟，没有水状生蛋液。
+  - 安全提示：绞肉或含绞肉馅中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 猪绞肉：140 g
+  - 鸡蛋：4个
+  - 温水：1.5–2 cups，根据想要的嫩度
+  - 肉末腌料：玉米淀粉 1 Tbsp；蚝油 1 Tbsp；盐 1/4 tsp；白胡椒 1小撮；水 2 Tbsp；中性油 1 tsp
+  - 蛋液调味：盐 1/2 tsp；生抽 1 tsp，出锅后可选

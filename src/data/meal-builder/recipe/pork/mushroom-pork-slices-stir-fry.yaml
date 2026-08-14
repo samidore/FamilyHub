@@ -20,12 +20,16 @@ fit:
   tradeoffs: []
 evidence:
   level: user-confirmed
-  checked_on: 2026-08-11
-  scope: Household use/preference or retained household pattern confirmed;
-    external source may additionally support technique where listed.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 使用来源验证的中式肉片炒法，统一成家庭轻盐标准汁；若旧记录有特定传统酱汁，则由专用 recipe override 替代。
   sources:
     - User-confirmed household pattern — mushroom pork slices stir-fry
-notes: Explicit household addition; observed household workflow is 30–45 min.
+    - The Woks of Life — shredded-pork / pork-tofu stir-fry technique; normalized family-light sauce
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Explicit household addition; observed household workflow is 30–45 min.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -50,8 +54,7 @@ advance_start_required: false
 equipment:
   - high-output burner
   - wok / iron pan
-burner_plan: High-output burner for the wok; keep the medium burner free for a
-  side/soup when possible.
+burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -59,7 +62,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: whole-pork-tenderloin
     role: main-protein
@@ -67,15 +70,21 @@ ingredients:
   - ingredient_id: button-cremini-mushrooms
     role: vegetable
     availability: required
-  - pantry_core: light soy / ginger / optional oyster sauce
-    role: seasoning
-    availability: assumed
 steps:
-  - 按菜式需要处理 whole-pork-tenderloin；蔬菜为 button-cremini-mushrooms。肉类需要嫩化/短腌时按引用来源执行。
-  - 先把核心调味准备好：light soy / ginger / optional oyster sauce；家庭版基底不放辣并降低盐油。
-  - 热锅少油，先把主要蛋白炒至接近熟并视需要盛出；再处理蔬菜/香料。
-  - 合回主料，加入调味快速翻匀，达到合适熟度即停火，避免为追求焦色延长烹调。
+  - 准备：猪里脊逆纹切约3 mm薄片或细丝；若是整条里脊，先冷冻15–20分钟至略硬更容易切匀。；把腌料加入猪肉，抓到水分基本被吸收，再静置10–15分钟。；所有蔬菜/香干先切到能在2–4分钟内熟的大小；炒汁下锅前再次搅匀，避免淀粉沉底。
+  - 铁锅/炒锅大火预热至滴水快速滚动蒸发，转中大火，加1 Tbsp中性油。
+  - 猪肉摊成单层，先不要频繁翻动；约30–45秒底面变白后快速翻炒，炒到约七八成熟、中心刚失去大部分粉红色，立即盛出。
+  - 原锅补1 tsp油（若锅仍有油可不补），下姜末5 g和蒜末2瓣炒约15秒；加入口蘑 / Cremini，按硬度先后炒到刚断生。
+  - 猪肉回锅；把炒汁重新搅匀后沿锅边倒入，持续翻炒30–60秒。
+  - 当汁从水状变成薄薄发亮、能均匀挂在肉和菜上且锅底不积一滩水时立刻关火；不要继续把汁收成咸稠浆。
+  - 离火静置约3分钟再盛孩子份；孩子份剪短肉丝/肉片，成人辣味另加。
+  - 完成提示：肉片嫩、无生中心；蔬菜刚熟仍有形；锅底只剩薄薄亮汁，不积水。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 猪里脊：340 g
+  - 口蘑 / Cremini：300–450 g
+  - 肉片腌料（先混匀）：水 2 Tbsp；生抽 2 tsp；绍兴酒 2 tsp；玉米淀粉 2 tsp；中性油 1 tsp
+  - 家庭轻盐炒汁（下锅前搅匀）：水或低盐高汤 3 Tbsp；生抽 2 tsp；蚝油 2 tsp；糖 1/2 tsp；玉米淀粉 1 tsp

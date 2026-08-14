@@ -20,13 +20,16 @@ fit:
     - 需要提前启动或较长被动烹调时间。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 比例与流程按 The Woks of Life Shanghai Sweet and Sour Ribs；家庭保持轻油。
   sources:
     - The Woks of Life — Shanghai Sweet and Sour Ribs
-notes: Household has a preferred Instant Pot-then-wok route in another chat;
-  this library record keeps the dish identity and non-fried rule.
+    - The Woks of Life — Hong Shao Rou / Red Braised Beef and related Chinese red-braise recipes
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Household has a preferred Instant Pot-then-wok route in another chat; this library record keeps the dish identity and non-fried rule.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -50,8 +53,7 @@ advance_start_required: true
 equipment:
   - medium burner
   - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not
-  occupy the high-output wok burner.
+burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: yes
 child_texture: 成品肉可软嫩，但必须由成人去骨。
 spicy_in_base: false
@@ -59,23 +61,23 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: soft-pork-ribs
     role: main-protein
     availability: required
-  - pantry_core: vinegar / sugar / soy sweet-sour braise; no deep-frying
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 soft-pork-ribs；按来源决定是否需要焯水或轻煎。
-  - 加入 vinegar / sugar / soy sweet-sour braise; no deep-frying
-    和足以完成焖煮的液体；家庭版轻盐、不放辣。
-  - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
-  - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
+  - 准备：排骨用短腌抓匀15分钟；表面擦去明显多余水分。；糖、醋、酱油和水量好。
+  - 厚锅中大火加1 Tbsp油，排骨分批煎到多面浅褐，盛出。
+  - 转中火，下姜葱炒香；加入糖，看到糖开始融化后立刻把排骨回锅翻匀。
+  - 加入其余焖汁，煮开后转小火盖盖约30分钟；中途翻一次。
+  - 排骨已软嫩后开盖转中大火，持续翻动让水分蒸发。
+  - 当汁量剩很少、气泡变大、汁能形成薄亮层紧贴排骨，但锅底仍有少量可流动汁时加入黑醋最后翻匀。
+  - 立即关火；孩子份剔骨后剪小。
+  - 完成提示：排骨肉能较容易从骨上咬下；糖醋汁薄亮包裹、不成硬糖壳。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 meal_addons:
   - id: finish-with-leafy-vegetable
@@ -88,3 +90,7 @@ meal_addons:
       protein: false
       vegetable: ingredient-dependent
     notes: 仅在铁锅/炒锅末段已有收汁/焖烧窗口时加入兼容嫩叶菜；不另起锅。
+cook_ingredients:
+  - 软排骨：900 g，切段
+  - 短腌：生抽 1 Tbsp；绍兴酒 1 Tbsp
+  - 糖醋焖汁：绍兴酒 1 Tbsp；糖 2 Tbsp；老抽 2 tsp；黑醋 1 Tbsp；水 2 cups；姜 8片；葱白 4段

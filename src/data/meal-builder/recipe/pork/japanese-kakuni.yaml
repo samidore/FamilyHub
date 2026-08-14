@@ -19,12 +19,16 @@ fit:
     - 需要提前启动或较长被动烹调时间。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 配比按 Just One Cookbook Kakuni；使用来源明确允许的 pork shoulder 替代。
   sources:
     - Just One Cookbook — Kakuni (Braised Pork Belly)
-notes: Long cook; cut adaptation documented.
+    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Long cook; cut adaptation documented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -50,8 +54,7 @@ advance_start_required: true
 equipment:
   - medium burner
   - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not
-  occupy the high-output wok burner.
+burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -59,20 +62,24 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: pork-shoulder-chunks
     role: main-protein
     availability: required
-  - pantry_core: soy / sake / mirin / ginger braise
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 pork-shoulder-chunks；按来源决定是否需要焯水或轻煎。
-  - 加入 soy / sake / mirin / ginger braise 和足以完成焖煮的液体；家庭版轻盐、不放辣。
-  - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
-  - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
+  - 准备：肉块擦干；来源允许以 pork shoulder 替代五花肉，项目使用梅花肉。；调味液全部量好。
+  - 厚锅中火加1 tsp油，把肉块各面煎2–3分钟至浅金黄。
+  - 加入足量清水和姜，煮开后转小火，先慢炖到肉明显变软；中途撇油。
+  - 把肉转入较干净的锅，加入角煮汁；液面接近肉高度，煮开后转小火。
+  - 落盖/盖盖留缝，小火继续煮到筷子能轻松插入、肉块仍保持形状。
+  - 最后开盖中火，让汁减少到约一半并能薄薄挂肉；不要收到糖浆状。
+  - 静置后盛出；孩子份选瘦嫩部分剪小。
+  - 完成提示：肉块非常软嫩但不散；汁有光泽、能挂肉且仍可流动。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 梅花肉块：790–900 g，切4–5 cm块
+  - 角煮汁：日式高汤 2.5 cups；清酒 1/4 cup；味醂 1/4 cup；糖 1/4 cup；生抽 1/4 cup；姜 6片

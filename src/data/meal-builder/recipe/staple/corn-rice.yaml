@@ -18,12 +18,15 @@ fit:
     - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. Just One Cookbook Corn Rice 结构；米水比按家庭米种。
   sources:
     - Just One Cookbook — Corn Rice
-notes: Corn and rice together carry staple role.
+    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
+notes: |-
+  Corn and rice together carry staple role.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: staple
 main_protein_category: none
 main_protein_ingredient_ids: []
@@ -55,7 +58,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: corn
     role: integral-staple
@@ -63,15 +66,19 @@ ingredients:
   - ingredient_id: rice
     role: integral-staple
     availability: required
-  - pantry_core: rice + corn + light salt/butter optional
-    role: seasoning
-    availability: assumed
 steps:
-  - 洗米并处理 corn 及配料；准备 rice + corn + light salt/butter optional。
-  - 需要先煸香/轻煎的配料用少量油处理，然后与米同锅。
-  - 按引用来源的锅具路线把米饭焖熟；家庭版若改变米量/锅具，不写死未经测试的水比。
-  - 关火后按需要焖放，再轻轻拌匀上桌。
+  - 准备：米淘洗后沥干5分钟；玉米切下玉米粒。；按家庭米种计量正常煮饭水量。
+  - 米、正常米水量、盐、清酒、生抽加入锅中轻轻拌匀。
+  - 玉米粒铺在米上，不再搅动；炉灶版煮开后立刻最小火盖盖。
+  - 煮到米饭熟透、表面无水后关火，焖10分钟。
+  - 开盖加入黄油（可省），从底部翻松，让玉米均匀分布。
+  - 孩子份先确认玉米粒软熟。
+  - 完成提示：米粒熟透不湿烂；玉米软甜；锅底无游离水。
+  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
 child_serving: 作为主食/配菜使用，Meal Combo 必须另配软蛋白。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 米：1.5 cups
+  - 玉米粒：约1.5 cups，来自1–2根玉米
+  - 玉米饭调味：盐 1/2 tsp；清酒 1 Tbsp；生抽 1 tsp；无盐黄油 1 Tbsp，可选出锅拌

@@ -20,12 +20,16 @@ fit:
     - 需要提前启动或较长被动烹调时间。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 肉馅比例源自 The Woks of Life Lion’s Head；家庭 route 明确不油炸，改为清汤轻煨，因此不声称是来源原法。
   sources:
     - The Woks of Life — Lion’s Head Meatballs; 下厨房 — 清炖狮子头
-notes: Clear-braised route avoids deep-frying; Chinese greens optional but compatible.
+    - The Woks of Life — Chinese winter melon / rib / clear soup recipes
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Clear-braised route avoids deep-frying; Chinese greens optional but compatible.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -51,8 +55,7 @@ advance_start_required: true
 equipment:
   - medium burner
   - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not
-  occupy the high-output wok burner.
+burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -60,7 +63,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
@@ -71,15 +74,21 @@ ingredients:
   - ingredient_id: chinese-greens
     role: vegetable
     availability: required
-  - pantry_core: ginger / scallion / light soy or clear broth
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 ground-pork；按来源决定是否需要焯水或轻煎。
-  - 加入 ginger / scallion / light soy or clear broth 和足以完成焖煮的液体；家庭版轻盐、不放辣。
-  - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
-  - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
+  - 准备：猪肉与除马蹄外的肉馅调料同一方向搅8–10分钟至明显发黏；加入马蹄再搅1–2分钟。；湿手分成4个大丸子；青菜洗净。
+  - 宽锅加入清炖汤底煮到接近沸腾后转小火，液面只保持轻微小泡。
+  - 逐个放入丸子；不要让汤猛烈翻滚，否则丸子容易散。盖盖小火炖25–35分钟。
+  - 丸子明显变紧实并浮起后，从最大丸子中心测温；达到160°F/71°C再继续下一步。
+  - 加入青菜，按叶菜厚度再煮2–5分钟至软而仍有形。
+  - 最后尝汤，只补必要的盐；孩子份把丸子切成小块并配软菜。
+  - 完成提示：丸子定型、中心熟透且仍多汁；汤保持清爽；青菜软而不黄烂。
+  - 安全提示：绞肉或含绞肉馅中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 猪绞肉：450 g
+  - 马蹄：100 g，切细丁
+  - 青菜：300 g，可用当前 recipe 对应叶菜
+  - 狮子头肉馅：鸡蛋 1个；面包糠 25 g；绍兴酒 1 Tbsp；生抽 1 Tbsp；蚝油 1 Tbsp；白胡椒 1/2 tsp；玉米淀粉 1.5 tsp；水 1/4 cup
+  - 清炖汤底：水或低盐高汤 4 cups；姜 4片；葱 2段；盐 1/2 tsp，最后调整

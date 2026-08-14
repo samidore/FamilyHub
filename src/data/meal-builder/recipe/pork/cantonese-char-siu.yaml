@@ -20,12 +20,16 @@ fit:
     - 需要提前启动或较长被动烹调时间。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 采用 The Woks of Life Char Siu 的实际配方与烤制流程，按约900 g猪肩做2/3算术缩放；省略可选红色食用色素。尚未家庭实做校准。
   sources:
     - The Woks of Life — Char Siu (Chinese BBQ Pork)
-notes: Shoulder can be cut into long pieces; advance marination lowers spontaneity.
+    - The Woks of Life — Char Siu (Chinese BBQ Pork), Restaurant-Style — exact ingredient card and oven method
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Shoulder can be cut into long pieces; advance marination lowers spontaneity.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -58,22 +62,25 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: pork-shoulder-chunks
     role: main-protein
     availability: required
-  - pantry_core: char-siu sweet-savory glaze; household version lighter and not
-      aggressively salty
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 pork-shoulder-chunks，准备 char-siu sweet-savory glaze; household version
-    lighter and not aggressively salty；需要腌制的菜提前完成。
-  - 烤箱预热；食材单层放置，使用少量油或烘焙纸/烤架降低粘连。
-  - 按引用来源的厚度与熟度逻辑烤制；家庭实际切法不同则以熟度为准。
-  - 出炉后静置/拆骨/切小；成人酱汁或辣味在孩子份盛出后再加。
+  - 准备：猪肉切成约5–7 cm厚的长条；腌汁混匀。；在腌汁接触生肉前先舀出约1 Tbsp + 1 tsp作为后段刷汁；其余腌汁与猪肉拌匀，冷藏至少8小时，最好隔夜。
+  - 烤箱上层架预热475°F/246°C；烤盘铺铝箔并架金属烤架，盘底加入约1 cup水防滴汁焦糊。
+  - 猪肉沥去多余腌汁后单层放烤架；475°F烤10分钟，然后把烤箱降到375°F/190°C，继续烤15分钟。
+  - 总计烤25分钟时翻面；若盘底已干，再补约2/3 cup水，并把烤盘前后转180°；375°F再烤15分钟。
+  - 把预留的干净腌汁与麦芽糖/蜂蜜、热水混匀。总计40分钟时两面都刷汁，翻面后再烤10分钟；每10分钟观察一次，糖分过快变黑就降温。
+  - 中心达到145°F/63°C后取出；若表面颜色不足，可最后短时间broil，但必须全程看守。
+  - 出炉后可再薄刷一次剩余干净刷汁，静置至少10分钟再切片；孩子份选瘦嫩、不过焦部分。
+  - 完成提示：表面深红褐发亮、有焦糖化边缘但不焦黑；内部仍多汁。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
 child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 梅花肉/猪肩：900 g，切成长条，厚约5–7 cm
+  - 叉烧腌汁（The Woks of Life 原方约2/3量）：白糖 2 Tbsp + 2 tsp；盐 1 1/3 tsp；五香粉 1/3 tsp；白胡椒 1/8 tsp + 1小撮；芝麻油 1/3 tsp；绍兴酒 2 tsp；生抽 2 tsp；海鲜酱 2 tsp；糖蜜 molasses 1 1/3 tsp；蒜末 2瓣
+  - 后段刷汁：从腌汁中预先留出的干净腌汁 约1 Tbsp + 1 tsp（必须在接触生肉前留出）；麦芽糖或蜂蜜 1 Tbsp + 1 tsp；热水 2 tsp

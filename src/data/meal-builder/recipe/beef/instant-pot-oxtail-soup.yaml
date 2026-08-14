@@ -21,13 +21,16 @@ fit:
     - 需要提前启动或较长被动烹调时间。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 压力段采用 Omnivore’s Cookbook Instant Pot Oxtail Soup 的 High Pressure 45分钟 + 10分钟自然泄压；家庭版本去掉番茄/土豆/卷心菜等配料，保留清汤路线，因此这些删减不改变已核实的牛尾压力时间。
   sources:
     - Instant Pot official oxtail soup pressure-cooking references
-notes: Pressure-cooking route is supported; exact household pressure/release
-  remains test data.
+    - Omnivore’s Cookbook — Pressure Cooker Oxtail Soup (An Instant Pot Recipe) — High Pressure 45 min + 10 min natural release
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Pressure-cooking route is supported; exact household pressure/release remains test data.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: beef
 main_protein_ingredient_ids:
@@ -58,21 +61,27 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: oxtail
     role: main-protein
     availability: required
-  - pantry_core: ginger / clear broth / light salt
-    role: seasoning
-    availability: assumed
 steps:
-  - 将 oxtail 与 ginger / clear broth / light salt 放入 9-qt Instant Pot
-    下层；液体至少满足设备正常起压要求，但不在未验证时写死家庭水量。
-  - 本家庭常用肉类压力段约 10–15 分钟作为工作模式；具体菜首次执行时按食材厚度与可靠来源校正，不把该范围当统一强制参数。
-  - 放压方式按具体菜与当日流程选择并记录到测试备注；未测试前不宣称某一种 release 为家庭标准。
-  - 开盖确认熟度，必要时用 sauté 收汁/调味；孩子份先盛出。
+  - 准备：牛尾检查骨屑；家庭若偏好清汤，可先沸水焯3–5分钟并冲净。；牛尾单层或尽量平铺放入内锅，加入低盐牛汤/水、姜和洋葱。
+  - 锁盖，High Pressure 45分钟。
+  - 程序结束后自然泄压10分钟，再按机器说明安全快速释放剩余压力。
+  - 开盖后用叉子测试关节周围肉：应很软、接近能从骨上拉下；若仍明显紧韧，再High Pressure 5–10分钟。
+  - 撇去表面明显浮油；若需要更清爽，可先把牛尾取出再撇油。
+  - 切Sauté把汤重新煮开2–3分钟，最后从1 tsp盐开始分次调味；不在压力前重盐。
+  - 孩子份把肉从骨上完全拆下，检查碎骨和硬筋后剪小。
+  - 完成提示：牛尾肉非常软、接近脱骨；汤体清爽，油脂已撇去大部分。
+  - 安全提示：整块牛肉可测处达到145°F/63°C并静置3分钟；薄片炒菜实际炒至无冷生中心。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 牛尾：900 g
+  - 低盐牛汤/水：约3 cups，且不得超过9-qt Instant Pot max fill线
+  - 姜：4片
+  - 洋葱：1/3个，粗切，可省
+  - 最后调味：盐 1 tsp起，压力后分次加；白胡椒 1小撮，可省

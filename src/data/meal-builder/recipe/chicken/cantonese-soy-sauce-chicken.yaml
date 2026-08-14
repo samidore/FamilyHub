@@ -19,13 +19,16 @@ fit:
     - 需要提前启动或较长被动烹调时间。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 采用 The Woks of Life Soy Sauce Chicken 的4 lb整鸡与完整master sauce原方；家庭轻盐通过“成品少带卤汁/孩子份不淋浓汁”实现，而不擅自重写master sauce比例。
   sources:
     - Made With Lau — Soy Sauce Chicken
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - "The Woks of Life — Soy Sauce Chicken: A Chinatown Classic — exact ingredient card and master-sauce method"
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
@@ -49,8 +52,7 @@ advance_start_required: true
 equipment:
   - medium burner
   - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not
-  occupy the high-output wok burner.
+burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: yes
 child_texture: 成品肉可软嫩，但必须由成人去骨。
 spicy_in_base: false
@@ -58,22 +60,24 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: whole-chicken
     role: main-protein
     availability: required
-  - pantry_core: soy / ginger / scallion aromatic braising liquid, diluted for
-      household salt
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 whole-chicken；按来源决定是否需要焯水或轻煎。
-  - 加入 soy / ginger / scallion aromatic braising liquid, diluted for household
-    salt 和足以完成焖煮的液体；家庭版轻盐、不放辣。
-  - 盖锅低火焖至主料达到该菜式要求的软嫩程度；大块肉以质地而不是死守分钟数判断。
-  - 临近上桌再调整浓度与盐度；需要收汁时只收至能挂住食材，不做过咸浓缩。
+  - 准备：鸡提前约1小时从冰箱取出；去内脏并清理鸡皮。；使用能刚好容纳整鸡的高而窄的锅；锅过大会需要按比例增加master sauce。
+  - 中小火锅中加油和姜，约30秒后加葱再炒30秒；加八角、玫瑰露和绍兴酒，煮到重新轻沸。
+  - 加入生抽、老抽、糖、盐和水；重新煮到轻沸后转小火煮20分钟，让master sauce融合。
+  - 调到slow boil，把鸡胸朝上缓慢浸入并确保鸡腔充满热卤汁；中高火约5分钟后提起鸡倒出腔内较冷液体，再放回。
+  - 卤汁恢复lazy simmer后盖盖，约210°F/99°C附近轻煨25分钟；若没有完全淹没，中途浇汁或在约13分钟时翻面。
+  - 关火仍盖盖，让鸡在卤汁中浸15–25分钟；大腿最厚处避骨测到165°F/74°C。
+  - 取出静置10–15分钟再斩件；master sauce只少量淋盘，孩子份去骨去软骨、少带皮和浓汁。
+  - 完成提示：鸡皮均匀酱色、肉多汁；master sauce保持液体状态，不需要再浓缩。
+  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 整鸡：1只，约1.8 kg（4 lb）
+  - 豉油鸡 master sauce（The Woks of Life 原方）：盐 1/4 cup（主要用于清洁鸡皮并进入master sauce；成品只少量带汁）；中性油 2 tsp；姜 7片；葱 2根，切约8 cm段并拍扁；八角 3个；玫瑰露酒 3/4 cup；绍兴酒 3/4 cup；生抽 2 cups；老抽 1/2 cup；糖 1 3/4 cups；水 12 cups

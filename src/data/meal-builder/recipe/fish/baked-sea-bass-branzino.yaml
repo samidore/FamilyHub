@@ -19,13 +19,15 @@ fit:
     - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-11
-  scope: Dish identity and core technique verified; household-light/non-spicy
-    adaptation is documented separately.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 按 RecipeTin Eats whole baked fish / sea-bass-branzino 烤制结构家庭轻盐化。
   sources:
     - RecipeTin Eats — Whole Baked Fish; supports sea-bass/branzino oven route
-notes: Candidate household route; exact seasoning quantities are intentionally
-  left for first-cook calibration rather than invented.
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: fish
 main_protein_ingredient_ids:
@@ -60,7 +62,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - one_of:
       - branzino
@@ -68,20 +70,22 @@ ingredients:
       - live-freshwater-bass
     role: main-protein
     availability: required
-  - pantry_core: lemon-herb OR soy-citrus finish; finishes are variations
-    role: seasoning
-    availability: assumed
 steps:
-  - 处理 branzino，准备 lemon-herb OR soy-citrus finish; finishes are
-    variations；需要腌制的菜提前完成。
-  - 烤箱预热；食材单层放置，使用少量油或烘焙纸/烤架降低粘连。
-  - 按引用来源的厚度与熟度逻辑烤制；家庭实际切法不同则以熟度为准。
-  - 出炉后静置/拆骨/切小；成人酱汁或辣味在孩子份盛出后再加。
+  - 准备：整鱼擦干，两面各划2–3刀；烤箱预热425°F/220°C。；烤盘铺纸，鱼腹可放姜片/柠檬片，不塞得过满。
+  - 鱼表面薄抹1 Tbsp油和盐，放烤盘中层。
+  - 烤约12分钟起按鱼大小检查；整鱼眼白/鳍不是安全判断，仍以最厚肉中心温度为准。
+  - 达到145°F/63°C、鱼肉能沿骨轻松分离时立即出炉。
+  - 静置2分钟；孩子份从背部厚肉处取肉并逐指检查鱼刺。
+  - 成人可另淋柠檬或酱油，不把酸咸汁全部加到孩子份。
+  - 完成提示：鱼皮干爽略上色，最厚处熟透且鱼肉仍湿润、易分片。
+  - 安全提示：鱼中心达到145°F/63°C，或肉完全不透明并能轻易分片；给孩子份再次检查鱼刺。
 child_serving: 成人彻底去刺后压碎/撕小；Meal Combo 默认保留软蛋白备选。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions:
   - black-sea-bass
   - live-freshwater-bass when suitable for baking
   - lemon-herb finish
   - soy-citrus finish
+cook_ingredients:
+  - Branzino（欧洲海鲈） / 黑海鲈 / 活淡水鲈鱼：1条，约650–800 g，去鳞去内脏；任选一种；实际选中项使用同一批量
+  - 烤鱼基础调味：中性油/橄榄油 1 Tbsp；盐 1/2 tsp；柠檬片 4片，可选

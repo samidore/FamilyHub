@@ -20,13 +20,16 @@ fit:
   tradeoffs: []
 evidence:
   level: user-confirmed
-  checked_on: 2026-08-11
-  scope: Household use/preference or retained household pattern confirmed;
-    external source may additionally support technique where listed.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 家庭肉末快炒标准化来源配方；具体蔬菜按原 recipe identity 保留。
   sources:
     - User-confirmed household pattern — ground pork + Chinese greens
-notes: Explicit household addition and a genuine household cooking pattern;
-  vegetable can use compatible leafy greens via substitutions.
+    - The Woks of Life — shredded-pork / pork-tofu stir-fry technique; normalized family-light sauce
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Explicit household addition and a genuine household cooking pattern; vegetable can use compatible leafy greens via substitutions.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: mixed
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -52,8 +55,7 @@ equipment:
   - high-output burner
   - wok / iron pan
   - separately cooked rice
-burner_plan: High-output burner for the wok; rice is treated as an
-  already-cooked or separately cooked staple.
+burner_plan: High-output burner for the wok; rice is treated as an already-cooked or separately cooked staple.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -61,7 +63,7 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
@@ -72,16 +74,19 @@ ingredients:
   - ingredient_id: rice
     role: integral-staple
     availability: required
-  - pantry_core: ginger / garlic / light soy
-    role: seasoning
-    availability: assumed
 steps:
-  - 先准备白米饭；炒菜时将米饭保温备用。
-  - 按菜式需要处理 ground-pork；蔬菜为 chinese-greens。肉类需要嫩化/短腌时按引用来源执行。
-  - 先把核心调味准备好：ginger / garlic / light soy；家庭版基底不放辣并降低盐油。
-  - 热锅少油，先把主要蛋白炒至接近熟并视需要盛出；再处理蔬菜/香料。
-  - 合回主料，加入调味快速翻匀，达到合适熟度即停火，避免为追求焦色延长烹调。
+  - 准备：肉末提前从冰箱取出，只需解开大块，不需要腌；青菜切细/切小。；把炒汁全部混匀；若使用冷冻荠菜末，可直接从冷冻状态下锅，但先掰散。
+  - 炒锅中大火预热，加2 tsp中性油；下姜末5 g炒10秒。
+  - 下肉末，用锅铲压散成小粒，保持中大火炒到整体变色并开始出现少量褐色焦点。
+  - 加入青菜；含水多的叶菜/冷冻荠菜先让水汽蒸出，炒到菜明显塌软但不发黄。
+  - 沿锅边倒入炒汁，翻炒1–2分钟，让肉末和菜均匀吸味；若锅底水多，保持中大火让多余水汽蒸掉。
+  - 锅底只留薄薄湿润汁、肉末松散不泡在水里时关火。
+  - 完成提示：肉末完全变色并有少量焦香；蔬菜软而不烂；锅底无明显游离汤水。
+  - 安全提示：绞肉或含绞肉馅中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 猪绞肉：300 g
+  - 青菜：300–450 g
+  - 家庭轻盐肉末炒汁：生抽 1 Tbsp；绍兴酒 1 Tbsp；蚝油 1 tsp；糖 1/2 tsp；水 2 Tbsp

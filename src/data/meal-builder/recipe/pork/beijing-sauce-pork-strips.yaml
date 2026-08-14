@@ -20,13 +20,15 @@ fit:
   tradeoffs: []
 evidence:
   level: user-confirmed
-  checked_on: 2026-08-11
-  scope: Household use/preference or retained household pattern confirmed;
-    external source may additionally support technique where listed.
+  checked_on: 2026-08-13
+  scope: Culinary identity and executable technique; adapted household-light route. 配比按 The Woks of Life Shredded Pork Stir-Fry with Sweet Bean Sauce；家庭保持不辣。
   sources:
-    - The Woks of Life — Shredded Pork Stir-Fry with Sweet Bean Sauce; plus
-      user-confirmed household preference
-notes: Household preference favors this dish; recipe need not contain a vegetable.
+    - The Woks of Life — Shredded Pork Stir-Fry with Sweet Bean Sauce; plus user-confirmed household preference
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+notes: |-
+  Household preference favors this dish; recipe need not contain a vegetable.
+
+  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids:
@@ -51,8 +53,7 @@ advance_start_required: false
 equipment:
   - high-output burner
   - wok / iron pan
-burner_plan: High-output burner for the wok; keep the medium burner free for a
-  side/soup when possible.
+burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -60,20 +61,25 @@ deep_fried: false
 salt_level: light
 oil_level: light
 servings: 3
-detail_level: discoverable
+detail_level: cookable
 ingredients:
   - ingredient_id: whole-pork-tenderloin
     role: main-protein
     availability: required
-  - pantry_core: sweet bean sauce / light soy / sugar, used lightly
-    role: seasoning
-    availability: assumed
 steps:
-  - 按菜式需要处理 whole-pork-tenderloin；蔬菜为 无固定蔬菜。肉类需要嫩化/短腌时按引用来源执行。
-  - 先把核心调味准备好：sweet bean sauce / light soy / sugar, used lightly；家庭版基底不放辣并降低盐油。
-  - 热锅少油，先把主要蛋白炒至接近熟并视需要盛出；再处理蔬菜/香料。
-  - 合回主料，加入调味快速翻匀，达到合适熟度即停火，避免为追求焦色延长烹调。
+  - 准备：猪里脊逆纹切细丝，加入全部腌料抓匀，静置15分钟。；京酱汁搅匀；葱白丝铺在盘底或另放，孩子若不吃生葱可不配。
+  - 炒锅大火预热，加2 tsp油；肉丝迅速摊开并翻炒，颜色由粉转白、约八成熟时盛出。
+  - 原锅保持中大火，倒入京酱汁；不断搅拌至开始连续冒泡。
+  - 肉丝回锅，快速翻炒30–60秒，让汁均匀包裹。
+  - 当酱汁从流动液体变成薄亮层、锅底没有一滩汁时立即关火；不要继续收浓。
+  - 盛在葱丝上；孩子份先取肉丝并剪短，成人可再配更多葱丝。
+  - 完成提示：肉丝根根分明、嫩而不柴；甜面酱汁均匀挂肉且不成厚浆。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: Optional chili/chili oil or stronger seasoning only after the
-  child portion is removed; omit if the dish does not benefit from it.
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
+cook_ingredients:
+  - 猪里脊：225 g，切细丝
+  - 葱白：3–4根，切5 cm细丝，用于垫底/同食
+  - 肉丝腌料：盐 1/4 tsp；绍兴酒 1 tsp；白胡椒 1小撮；玉米淀粉 2 tsp；中性油 1 tsp
+  - 京酱汁：水 1/4 cup；甜面酱 / sweet bean sauce 2.5 Tbsp；老抽 1/2 tsp；黑醋 1/4 tsp；糖 1 tsp；生抽 1 Tbsp
