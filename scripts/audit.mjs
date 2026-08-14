@@ -47,7 +47,7 @@ assert(events.length === 18, 'Library activity migration count is not 18');
 assert(dentists.length === 10, 'Pediatric dentist migration count is not 10');
 assert(dermatologists.length === 10, 'Adult dermatologist migration count is not 10');
 assert(colonoscopy.length === 18, 'Colonoscopy specialist migration count is not 18');
-assert(meals.ingredients.length === 132 && meals.ingredients.filter((item) => item.visible).length === 129 && meals.recipes.length === 162, 'Meal Builder migration counts are incorrect');
+assert(meals.ingredients.length === 133 && meals.ingredients.filter((item) => item.visible).length === 130 && meals.recipes.length === 163, 'Meal Builder active counts are incorrect');
 assert(meals.recipes.filter((item) => item.vegetableCentered).length === 23, 'Vegetable-centered Recipe count is not 23');
 assert(meals.recipes.filter((item) => item.mealAddons?.some((addon) => addon.id === 'finish-with-leafy-vegetable')).length === 7, 'Finish-with-leafy-vegetable add-on count is not seven');
 assert(!meals.recipes.find((item) => item.id === 'instant-pot-soy-chicken-thighs')?.mealAddons?.length, 'Instant Pot soy chicken thighs must not have a leafy add-on');

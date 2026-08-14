@@ -35,7 +35,7 @@ Each recipe has one file. Category indexes and the root index are explicit; file
 
 ## Current invariants
 
-- 132 Ingredient records; 129 visible non-pantry Starter choices; 162 candidate Recipes.
+- 133 Ingredient records; 130 visible non-pantry Starter choices; 163 candidate Recipes.
 - All active records retain their stable lowercase kebab-case IDs and remain `candidate`; no automatic approval.
 - 23 vegetable-centered cooking structures are deduplicated by workflow, and seven existing stovetop Recipes support the controlled `finish-with-leafy-vegetable` add-on. `Instant Pot 酱油鸡腿` does not support that add-on; `照烧鸡腿` does.
 - Recipe availability comes only from Ingredient IDs and `one_of` alternatives in `ingredients[]`. Pantry items appear only as Cook View text and are not tracked. Starter selection means “available this meal,” not “must use.”

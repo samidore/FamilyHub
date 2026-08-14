@@ -37,7 +37,7 @@ test('operational Recipe requirements reject obsolete tracking fields', async ()
 test('all migrated Recipes keep Cook View text separate from operational requirements', async () => {
   const files = await readMealFiles();
   const data = parseMealFiles(files);
-  assert.equal(data.recipes.length, 162);
+  assert.equal(data.recipes.length, 163);
   assert.equal(data.recipes.every((recipe) => recipe.detailLevel === 'cookable'), true);
   assert.equal(data.recipes.every((recipe) => recipe.cookIngredientLines.length > 0), true);
   assert.equal(data.recipes.find((recipe) => recipe.id === 'hainanese-chicken-rice').cookIngredientLines.includes('整鸡：1只，约1.5 kg（3–3.5 lb）'), true);

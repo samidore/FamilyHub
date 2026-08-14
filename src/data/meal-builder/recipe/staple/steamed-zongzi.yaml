@@ -1,0 +1,74 @@
+id: steamed-zongzi
+type: recipe
+status: candidate
+name_zh: 蒸粽子
+name_en: Steamed Zongzi
+tags:
+  - instant-pot
+  - steamed
+  - lunch-30
+  - low-active-time
+  - minimal-cutting
+fit:
+  hard_rules: pass
+  score: 5
+  strengths:
+    - 做法简单，蒸制时可释放灶口。
+    - 用户确认可使用 Instant Pot。
+  tradeoffs:
+    - 馅料、盐油和儿童接受度取决于实际粽子，当前未指定。
+evidence:
+  level: user-confirmed
+  checked_on: 2026-08-13
+  scope: 用户确认核心做法为蒸15分钟，并可使用 Instant Pot；未补写压力、泄压、水量、馅料或份量参数。
+  sources:
+    - User-confirmed household steaming workflow
+notes: |-
+  使用现成粽子；不推断具体馅料或产品。
+
+  Cook basis: user-confirmed. 蒸制时间为用户确认的15分钟；尚未标记为 household-tested。
+primary_role: staple
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 0
+  vegetable: 0
+  staple: 1
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids:
+  - zongzi
+recommended_staple_ingredient_ids: []
+active_minutes: 未记录
+meal_window_minutes: 15
+elapsed_minutes: 15
+advance_start_required: false
+equipment:
+  - 9-quart Instant Pot or steamer
+burner_plan: 使用 Instant Pot 时释放两处灶口；也可使用普通蒸锅。
+child_suitable: unknown
+child_texture: 馅料和糯米质地未确认，不推断儿童适合度。
+spicy_in_base: false
+deep_fried: false
+salt_level: unknown
+oil_level: unknown
+servings: 未指定
+detail_level: cookable
+ingredients:
+  - ingredient_id: zongzi
+    role: integral-staple
+steps:
+  - 蒸制设备加水并放好蒸架；把本餐需要的粽子放在蒸架上。
+  - 使用 Instant Pot 时按家中惯用蒸法操作；未确认的压力和泄压参数不在此处补写。
+  - 开始出蒸汽后计时15分钟。
+  - 结束后取出一个，确认中心热透；若中心仍冷，继续蒸至热透。
+  - 拆线和粽叶后再上桌，避免误食包材。
+  - 完成提示：粽子中心热透，没有冷芯。
+child_serving: 当前未确认儿童接受度；如提供，先拆净线和粽叶，并按实际馅料与质地处理。
+adult_finish: 无需额外调味；按实际粽子食用。
+substitutions: []
+cook_ingredients:
+  - 粽子：本餐所需数量

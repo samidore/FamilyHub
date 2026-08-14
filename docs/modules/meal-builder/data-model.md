@@ -43,7 +43,7 @@ evidence:
 notes: ''
 ```
 
-`starter.visible: false` retains a long-term ID without showing a button; the current hidden pantry aromatics are `ginger`, `scallion`, and `garlic`. Every visible non-pantry ingredient has one controlled section and a unique positive order. `inventory_tracking: counted` supports half-unit quantities; `presence-only` is used for `eggs`, `rice`, `noodles`, `bread`, `steamed-buns`, `oats`, `white-oil-sausage`, `potato`, and `peeled-shrimp`.
+`starter.visible: false` retains a long-term ID without showing a button; the current hidden pantry aromatics are `ginger`, `scallion`, and `garlic`. Every visible non-pantry ingredient has one controlled section and a unique positive order. `inventory_tracking: counted` supports half-unit quantities; `presence-only` is used for `eggs`, `rice`, `noodles`, `bread`, `steamed-buns`, `oats`, `zongzi`, `white-oil-sausage`, `potato`, and `peeled-shrimp`.
 
 The optional Ingredient `child_coverage.vegetable` is read only when a Recipe declares ingredient-dependent coverage. `unknown` remains unknown; section membership or a leafy name cannot imply `finish-wilt-compatible`.
 
@@ -120,4 +120,4 @@ substitutions: []
 
 ## Migration parity
 
-The YAML migration must preserve all 132 Ingredient IDs, all 162 Recipe IDs, active ordering, fields, statuses, source evidence, Starter visibility/order, 23 vegetable-centered structures, seven supported add-ons, and the 129 visible Starter count. Compare old parsed records with new loaded records record-by-record before treating the historical dump as archive-only.
+The original YAML migration preserved all 132 Ingredient IDs and 162 Recipe IDs. The active library now has 133 Ingredients, 130 visible Starter choices, and 163 Recipes while retaining the migrated records, 23 vegetable-centered structures, and seven supported add-ons.

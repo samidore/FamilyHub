@@ -59,11 +59,16 @@ test('recent Recipes rank after unseen choices with the newest meal last', () =>
   assert.deepEqual(rankCandidates([newest, oldest, unseen], state, [], {}, history).map((item) => item.id), ['r3', 'r2', 'r1']);
 });
 
-test('v1.8 structured data keeps migrated counts, Vegetable structures, and controlled add-ons', async () => {
+test('v1.9 structured data keeps active counts, Vegetable structures, and controlled add-ons', async () => {
   const kb = await loadMealData();
-  assert.equal(kb.ingredients.length, 132);
-  assert.equal(kb.ingredients.filter((item) => item.visible).length, 129);
-  assert.equal(kb.recipes.length, 162);
+  assert.equal(kb.ingredients.length, 133);
+  assert.equal(kb.ingredients.filter((item) => item.visible).length, 130);
+  assert.equal(kb.recipes.length, 163);
+  assert.equal(kb.ingredients.find((item) => item.id === 'zongzi')?.inventoryTracking, 'presence-only');
+  const steamedZongzi = kb.recipes.find((item) => item.id === 'steamed-zongzi');
+  assert.equal(steamedZongzi?.requirements[0]?.anyOf[0], 'zongzi');
+  assert.equal(steamedZongzi?.tags.includes('instant-pot'), true);
+  assert.equal(steamedZongzi?.steps.some((step) => step.includes('15分钟')), true);
   assert.equal(kb.recipes.filter((item) => item.vegetableCentered).length, 23);
   assert.deepEqual(kb.recipes.filter((item) => item.mealAddons.length).map((item) => item.id).sort(), [
     'chicken-teriyaki-thighs', 'chinese-red-braised-beef', 'coca-cola-chicken-wings', 'hong-kong-swiss-chicken-wings',
