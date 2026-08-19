@@ -1,0 +1,125 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import FilterShell from '../components/FilterShell.astro';
+import ObGynCard from '../modules/ob-gyn/ObGynCard.astro';
+import { obGynProviders } from '../data/catalog';
+import type { ObGynSection } from '../data/obGynTypes';
+
+const sections: { id: ObGynSection; title: string; short: string; description: string }[] = [
+  { id: 'valley-ob', title: 'V · The Valley Hospital', short: 'Valley OB', description: '10 位 OB 候选。医院关系可为 likely delivery；未在线确认的接生关系保留并标明电话确认。' },
+  { id: 'hackensack-ob', title: 'H · Hackensack University Medical Center', short: 'Hackensack OB', description: '10 位 OB 候选。Academic Practice、laborist 和 affiliation-only 分开显示，不把 affiliation 自动当作本人接生。' },
+  { id: 'englewood-ob', title: 'E · Englewood Hospital', short: 'Englewood OB', description: '10 位 OB 候选。已明确“deliver babies”的 group 与仅有 network / affiliation 证据的医生分开标记。' },
+  { id: 'gyn', title: 'G · General Gynecology', short: 'GYN', description: '10 位普通 GYN 候选合并比较；同时做 OB 的医生保留 OB + GYN 标记。' },
+];
+
+const placements = obGynProviders.flatMap((provider) => provider.placements.map((placement) => ({ provider, placement })));
+const recordsFor = (section: ObGynSection) => placements.filter((item) => item.placement.section === section).sort((a, b) => a.placement.rank - b.placement.rank);
+---
+<BaseLayout title="OB / GYN · Valley / Hackensack / Englewood | Family Hub" description="按医院接生关系、公开资格与训练、患者体验、实际可用性和证据缺口比较附近 OB 与普通 GYN。" pageClass="module-page theme-ochre" themeColor="#F4EDE0">
+  <SiteHeader eyebrow="健康与照护 · 公开资料比较" title="OB / GYN · V / H / E" description="OB 按 Valley、Hackensack、Englewood 各保留 10 位；普通 GYN 合并 10 位。医院 affiliation 可以进入候选，查不到当前接生关系不淘汰，只标为需要电话确认。家庭筛选分与 Tier 只是比较顺序，不是医疗质量评级。" accent="ochre" icon="care">
+    <div class="summary-row"><span>35 位去重医生</span><span>40 个比较席位</span><span>4 个可折叠区块</span><span>Premera / NJ safety 未猜测</span></div>
+  </SiteHeader>
+
+  <FilterShell accent="ochre" filterId="obgyn-filter-panel" countId="obgyn-count" clearId="obgyn-clear" countText="显示 40 / 40 个比较席位">
+    <div slot="primary" class="filter-primary__grid">
+      <label><span>搜索医生、practice、地点或证据</span><input id="obgyn-search" type="search" placeholder="Fair Lawn、high-risk、menopause…" autocomplete="off" /></label>
+    </div>
+    <div slot="filters" class="contents">
+      <label><span>区块</span><select id="obgyn-section"><option value="">全部</option>{sections.map((section) => <option value={section.id}>{section.short}</option>)}</select></label>
+      <label><span>家庭比较 Tier</span><select id="obgyn-tier"><option value="">全部 Tier</option><option value="1">Tier 1</option><option value="2">Tier 2</option><option value="3">Tier 3</option></select></label>
+    </div>
+  </FilterShell>
+
+  <main id="main-content" class="shell listing-main obgyn-main">
+    <div class="trust-note">
+      <strong>这版还没把两项当成“已通过”：</strong> NJ physician primary-source license / discipline 逐人核验，以及 Premera 的具体 member/network in-network 状态。两项都不作为本轮淘汰条件；最终由保险公司、practice 和 delivery facility 分别确认。
+    </div>
+
+    <div id="obgyn-sections" class="provider-sections">
+      {sections.map((section) => (
+        <details class="provider-section" data-provider-section data-section={section.id}>
+          <summary>
+            <span><strong>{section.title}</strong><small>{section.description}</small></span>
+            <span class="section-count" data-section-count>10</span>
+          </summary>
+          <div class="section-grid">
+            {recordsFor(section.id).map(({ provider, placement }) => <ObGynCard provider={provider} placement={placement} />)}
+          </div>
+        </details>
+      ))}
+    </div>
+    <p id="obgyn-empty" class="empty-state" hidden>没有符合当前条件的医生。清除筛选后再试。</p>
+  </main>
+
+  <footer class="module-footer">
+    <div class="shell note-box">
+      <strong>OB 电话确认建议：</strong>
+      <ol>
+        <li>Dr. X 现在是否仍在目标医院接生？</li>
+        <li>临产时由本人、practice group call，还是 hospital laborist 接生？</li>
+        <li>大致有多少机会由自己的 OB 实际接生？</li>
+        <li>现在是否接收 new OB patients？</li>
+        <li>prenatal appointment 通常在哪个 office？</li>
+        <li>Premera 具体 plan 的 physician professional fee 与 hospital / facility 是否分别 in-network？</li>
+      </ol>
+      <p>患者评论只作 patient-experience 证据；单条临床指控不作为已证实事实。资料缺失保持 unknown，不把“没搜到”写成 clean safety record。</p>
+    </div>
+  </footer>
+
+  <script>
+    import { bindListState, clearListState, restoreListState } from '../lib/listState';
+    const cards = [...document.querySelectorAll<HTMLElement>('[data-ob-gyn]')];
+    const sectionEls = [...document.querySelectorAll<HTMLDetailsElement>('[data-provider-section]')];
+    const controls = {
+      q: document.querySelector<HTMLInputElement>('#obgyn-search')!,
+      section: document.querySelector<HTMLSelectElement>('#obgyn-section')!,
+      tier: document.querySelector<HTMLSelectElement>('#obgyn-tier')!,
+    };
+    const count = document.querySelector<HTMLElement>('#obgyn-count')!;
+    const empty = document.querySelector<HTMLElement>('#obgyn-empty')!;
+
+    const render = () => {
+      const query = controls.q.value.trim().toLocaleLowerCase();
+      const activeFilter = Boolean(query || controls.section.value || controls.tier.value);
+      let visibleTotal = 0;
+      cards.forEach((card) => {
+        const visible = (!query || card.dataset.search!.includes(query)) && (!controls.section.value || card.dataset.section === controls.section.value) && (!controls.tier.value || card.dataset.tier === controls.tier.value);
+        card.hidden = !visible;
+        if (visible) visibleTotal += 1;
+      });
+      sectionEls.forEach((section) => {
+        const visible = [...section.querySelectorAll<HTMLElement>('[data-ob-gyn]')].filter((card) => !card.hidden);
+        section.hidden = visible.length === 0;
+        section.querySelector<HTMLElement>('[data-section-count]')!.textContent = String(visible.length);
+        if (activeFilter && visible.length) section.open = true;
+      });
+      count.textContent = `显示 ${visibleTotal} / ${cards.length} 个比较席位`;
+      empty.hidden = visibleTotal > 0;
+    };
+
+    restoreListState(controls);
+    if (controls.section.value || controls.tier.value) document.querySelector<HTMLDetailsElement>('.filter-disclosure')!.open = true;
+    bindListState(controls, render);
+    document.querySelector('#obgyn-clear')!.addEventListener('click', () => clearListState(controls, render));
+    render();
+  </script>
+
+  <style>
+    .obgyn-main { display: grid; gap: 1.25rem; }
+    .trust-note { padding: 1rem 1.1rem; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface); line-height: 1.55; }
+    .provider-sections { display: grid; gap: 1rem; }
+    .provider-section { border: 1px solid var(--border); border-radius: 1.1rem; background: var(--surface); overflow: clip; }
+    .provider-section > summary { min-height: 64px; cursor: pointer; padding: 1rem 1.1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; }
+    .provider-section > summary strong { display: block; font-size: 1.15rem; }
+    .provider-section > summary small { display: block; margin-top: .3rem; color: var(--muted); line-height: 1.4; font-size: .9rem; font-weight: 400; }
+    .section-count { flex: 0 0 auto; min-width: 2.5rem; min-height: 2.5rem; display: grid; place-items: center; border-radius: 999px; background: var(--accent-soft); font-weight: 700; }
+    .section-grid { display: grid; gap: 1rem; padding: 0 1rem 1rem; }
+    .obgyn-card h3 { margin: .5rem 0; font-size: clamp(1.65rem, 5vw, 2rem); }
+    .note-box ol { margin: .75rem 0 1rem; padding-left: 1.4rem; }
+    .note-box li + li { margin-top: .35rem; }
+    @media (min-width: 900px) {
+      .section-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</BaseLayout>
