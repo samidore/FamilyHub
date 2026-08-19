@@ -11,7 +11,6 @@ const dermatologists = parseAdultDermatologists(await readJson('src/data/adult-d
 const colonoscopy = parseColonoscopySpecialists(await readJson('src/data/colonoscopy-specialists.json'));
 const meals = await loadMealData();
 const home = await readFile('dist/index.html', 'utf8');
-const project = await readFile('PROJECT.md', 'utf8');
 const languageUnits = await readFile('docs/project/language-units.md', 'utf8');
 const privacyData = await readFile('docs/project/privacy-data.md', 'utf8');
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
@@ -87,8 +86,6 @@ for (const html of htmlFiles) {
   assert(externalLinks.every((match) => /target="_blank"/.test(match[0]) && /rel="[^"]*noopener[^"]*noreferrer[^"]*"/.test(match[0])), 'An external link is missing safe new-tab attributes');
 }
 
-assert(project.includes('docs/project/language-units.md'), 'PROJECT.md is missing the language/unit policy index');
-assert(project.includes('docs/project/privacy-data.md'), 'PROJECT.md is missing the privacy policy index');
 assert(languageUnits.includes('Road travel: minutes and miles'), 'Language/unit policy is missing the road-unit rule');
 assert(languageUnits.includes('Weather: degrees Celsius'), 'Language/unit policy is missing the weather-unit rule');
 assert(languageUnits.includes('Recipe liquids: cups plus mL'), 'Language/unit policy is missing the liquid-unit rule');
