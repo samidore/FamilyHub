@@ -26,7 +26,7 @@ async function startMeal(page: Page, ids: string[] = []) {
 
 test('home groups and searches the active modules', async ({ page }) => {
   await page.goto('./');
-  await expect(page.locator('[data-module]')).toHaveCount(6);
+  await expect(page.locator('[data-module]')).toHaveCount(7);
   const sections = page.locator('[data-category-section]');
   await expect(sections).toHaveCount(3);
   await expect(sections.nth(0)).toHaveAttribute('data-category-section', 'food-home');
@@ -63,7 +63,7 @@ test('day-trip filters combine, persist in the URL, and clear', async ({ page })
   await expect(page).not.toHaveURL(/drive=/);
 });
 
-test('library, dentist, dermatologist, and colonoscopy domain filters work', async ({ page }) => {
+test('library, dentist, dermatologist, colonoscopy, and OB GYN domain filters work', async ({ page }) => {
   await page.goto('library-activities/');
   await page.getByText('更多筛选').click();
   await page.getByLabel('活动类型').selectOption('story');
@@ -87,6 +87,30 @@ test('library, dentist, dermatologist, and colonoscopy domain filters work', asy
   await page.getByLabel('复杂息肉能力').selectOption('strong');
   expect(await page.locator('[data-colonoscopy]:visible').count()).toBeGreaterThan(0);
   expect(await page.locator('[data-colonoscopy]:visible').count()).toBeLessThan(18);
+
+  await page.goto('ob-gyn/');
+  await page.getByText('更多筛选').click();
+  await page.getByLabel('区块').selectOption('hackensack-ob');
+  await expect(page.locator('[data-ob-gyn]:visible')).toHaveCount(10);
+  await expect(page).toHaveURL(/section=hackensack-ob/);
+});
+
+test('OB GYN groups are collapsible and keep ten ranked placements each', async ({ page }) => {
+  await page.goto('ob-gyn/');
+  const sections = page.locator('[data-provider-section]');
+  await expect(sections).toHaveCount(4);
+  for (const section of await sections.all()) await expect(section.locator('[data-ob-gyn]')).toHaveCount(10);
+
+  const valley = page.locator('[data-provider-section][data-section="valley-ob"]');
+  await expect(valley).not.toHaveAttribute('open', '');
+  await valley.locator(':scope > summary').click();
+  await expect(valley).toHaveAttribute('open', '');
+  await valley.locator(':scope > summary').click();
+  await expect(valley).not.toHaveAttribute('open', '');
+
+  await page.getByLabel('搜索医生、practice、地点或证据').fill('Gerardis');
+  await expect(page.locator('[data-ob-gyn]:visible')).toHaveCount(1);
+  await expect(page.locator('[data-provider-section][data-section="hackensack-ob"]')).toHaveAttribute('open', '');
 });
 
 test('dermatologist location and diagnostic-capability filters expose NYC alternatives', async ({ page }) => {
@@ -139,6 +163,8 @@ test('complete records remain available without JavaScript', async ({ browser })
   await expect(page.locator('[data-dermatologist]')).toHaveCount(10);
   await page.goto('colonoscopy-specialists/');
   await expect(page.locator('[data-colonoscopy]')).toHaveCount(18);
+  await page.goto('ob-gyn/');
+  await expect(page.locator('[data-ob-gyn]')).toHaveCount(40);
   await page.goto('meal-builder/');
   await expect(page.locator('[data-meal-recipe]')).toHaveCount(activeRecipeCount);
   await context.close();
@@ -158,7 +184,7 @@ test('external links are HTTPS and safely opened', async ({ page }) => {
 for (const width of [375, 390, 430, 768, 1024, 1440]) {
   test(`responsive foundation at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
-    for (const route of ['./', 'day-trips/', 'library-activities/', 'pediatric-dentists/', 'adult-dermatologists/', 'colonoscopy-specialists/', 'meal-builder/']) {
+    for (const route of ['./', 'day-trips/', 'library-activities/', 'pediatric-dentists/', 'adult-dermatologists/', 'colonoscopy-specialists/', 'ob-gyn/', 'meal-builder/']) {
       await page.goto(route);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       expect(overflow).toBeLessThanOrEqual(1);
