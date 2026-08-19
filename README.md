@@ -39,7 +39,7 @@ Install Playwright Chromium once on a new machine with `pnpm exec playwright ins
 - Colonoscopy Specialists: `src/data/colonoscopy-specialists.json` · [`docs/modules/colonoscopy-specialists/README.md`](docs/modules/colonoscopy-specialists/README.md)
 - Meal Builder: indexed YAML under `src/data/meal-builder/` · [`docs/modules/meal-builder/README.md`](docs/modules/meal-builder/README.md)
 
-Active module metadata and home categories live in `src/config/modules.ts`; strict public-data rules live in `src/data/schemas.mjs`. Meal Builder data maintenance is documented in its `maintenance.md`; do not edit the historical `docs/archive/FAMILY_MEAL_KB.dump.md` as a source of truth.
+Active module metadata and home categories live in `src/config/modules.ts`; strict public-data rules live in `src/data/schemas.mjs`. Meal Builder data maintenance is documented in its `maintenance.md`; archived migration material under `docs/archive/` is not a build source.
 
 Keep U.S. proper names, addresses, programs, credentials, official terminology, and source titles in English. General guidance, family assessments, limitations, comments, and household instructions use Chinese. Do not translate source material automatically. Only set `verifiedDate` after checking the underlying source; leave unknown values empty or `null` as permitted by the schema.
 
@@ -58,4 +58,4 @@ Push the project to `main`; the GitHub Pages workflow installs dependencies and 
 
 ## Historical references
 
-`HANDOFF_Family_Hub.md`, `family_outing_hub_combined_prototype.html`, and the archived Meal Builder GPT dump are retained for provenance and comparison only. Current rules and live data are indexed from `PROJECT.md`, `docs/`, and the structured datasets.
+Historical migration and provenance material lives under `docs/archive/`. It is not a current source of project behavior or data.

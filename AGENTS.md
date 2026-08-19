@@ -1,11 +1,10 @@
 # AGENTS.md
 
-Before making a change:
+Read `PROJECT.md` before changing the repository, then follow the documentation owned by the area being changed.
 
-1. Read [`PROJECT.md`](PROJECT.md) as the concise project index and mandatory-policy summary.
-2. Read [`gpt.md`](gpt.md) for coding behavior rules.
-3. Read the relevant page README under [`docs/modules/`](docs/modules/) and the linked shared rules under [`docs/project/`](docs/project/).
-4. For Meal Builder changes, read its `README.md`, `behavior.md`, `data-model.md`, `maintenance.md`, and the relevant `sources.md` or `firebase.md` before editing data, UI, or shared state. For Recipe or Ingredient CRUD, also read and use [`.agents/skills/manage-meal-data/SKILL.md`](.agents/skills/manage-meal-data/SKILL.md).
-5. Consult `HANDOFF_Family_Hub.md`, `family_outing_hub_combined_prototype.html`, and `docs/archive/FAMILY_MEAL_KB.dump.md` only as historical migration references. They are historical input, not current sources.
-6. Preserve existing research and uncommitted user work unless the user explicitly asks to replace it. If current user instructions conflict with the project docs, report the conflict before implementing.
-7. Run the relevant checks, then the complete verification gate in [`docs/project/acceptance-release.md`](docs/project/acceptance-release.md). After requested implementation work passes, commit and push task-related changes unless the user explicitly says not to. Never include unrelated user work in that commit or push.
+- Make the smallest change that fully satisfies the request.
+- Do not refactor, clean up, or redesign unrelated code. Preserve unrelated user work.
+- Resolve minor ambiguity from existing code, behavior, tests, and project conventions. Ask only when the choice would materially change behavior, data meaning, architecture, privacy/security, or cause a destructive change.
+- A clear implementation request does not require separate plan approval.
+- Use focused checks while working and the project verification gate before completing applicable implementation work. Fix task-caused failures rather than stopping at the first failure; report exact environmental blockers when verification cannot run.
+- Keep commits task-scoped. Do not create backup branches, safety copies, or extra scaffolding without a concrete need or explicit request.
