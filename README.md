@@ -17,17 +17,6 @@ Run the complete local acceptance suite with:
 pnpm run verify
 ```
 
-The individual checks are:
-
-```bash
-pnpm run validate
-pnpm run check
-pnpm run build
-pnpm run audit
-pnpm run test:rules
-pnpm run test:browser
-```
-
 Install Playwright Chromium once on a new machine with `pnpm exec playwright install chromium`.
 
 ## Active pages and data
@@ -54,7 +43,7 @@ Do not solve private-family requirements with hidden pages, unlinked URLs, commi
 
 ## Deploy
 
-Push the project to `main`; the GitHub Pages workflow installs dependencies and Chromium, validates data, checks Astro, builds, audits the output, runs browser tests, and publishes `dist`. In GitHub **Settings → Pages**, choose **GitHub Actions** as the source. `astro.config.mjs` derives the base path for user, organization, and project Pages sites.
+Push the project to `main`; the GitHub Pages workflow installs dependencies and Chromium, runs the repository verification gate, builds the Firebase-configured production artifact, and publishes `dist`. In GitHub **Settings → Pages**, choose **GitHub Actions** as the source. `astro.config.mjs` derives the base path for user, organization, and project Pages sites.
 
 ## Historical references
 

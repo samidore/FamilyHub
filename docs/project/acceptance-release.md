@@ -1,32 +1,38 @@
 # Acceptance and release
 
-## Module contract
+## Verification
 
-Each active page has a typed registry entry, a strict domain parser/schema, structured data, a domain presentation, and acceptance coverage. A new page must add registry metadata and keywords, define its schema and build-time parser, add its page/card/filter presentation, use the shared layout and trust conventions, and add schema, build-output, interaction, responsive, and privacy checks before it is added to navigation.
+Use the checks available and relevant to the change while developing.
 
-## Verification gate
+The complete repository verification gate is:
 
-Run the smallest relevant checks while editing, then the full gate before publishing:
-
-```text
-pnpm run validate
-pnpm run check
-pnpm run build
-pnpm run audit
-pnpm run test:rules
-pnpm run test:browser
+```bash
+pnpm run verify
 ```
 
-The rules tests use `firebase emulators:exec` and require Java locally; GitHub-hosted Ubuntu runners provide Java. Install Playwright Chromium once on a new machine with `pnpm exec playwright install chromium`.
+`package.json` defines what this gate includes.
 
-## Required acceptance
+A change may be implementation-complete even when the current environment cannot run the full gate. In that case, verify everything available in the current environment and report the unrun checks explicitly.
 
-- Home exposes exactly the six active registry modules and each route produces a page with a `main-content` target.
-- Baseline public counts remain 29 Day Trips, 18 Library Activities, 10 Pediatric Dentists, 10 Adult Dermatologists, and 18 Colonoscopy Specialists. Tests should compare rendered counts with validated data rather than duplicating numbers in browser logic.
-- Every page server-renders its reference content, supports combined search/filter/sort behavior with JavaScript, preserves bookmarkable query state, recovers from empty results, and avoids horizontal overflow at 375, 390, 430, 768, 1024, and 1440px.
-- Public schemas reject unknown/private fields, unsafe URLs, invalid ranges, unsupported values, duplicate stable IDs, and broken references. Generated HTML passes the privacy scan.
-- Meal Builder validates manifest completeness, stable ordering, globally unique IDs, archive isolation, ingredient references, and active counts of 135 Ingredients, 132 visible Starter choices, and 164 Recipes. Checkout atomically validates its checkout-only easy-braise eligibility.
+Firebase rules tests require Java. Playwright Chromium must be installed on a new local environment.
 
-## Release discipline
+Before release, the full verification gate must pass.
 
-Record `verifiedDate` only after checking the underlying source, using `YYYY-MM-DD`. Time-sensitive content tells readers to check the current official page; it is not automatically expired. Publish through the GitHub Pages workflow only after the full gate passes. Commit only task-related changes and preserve unrelated user work.
+## Acceptance
+
+A change is implementation-complete when:
+
+- the requested change is implemented;
+- affected references, schemas, and static invariants that can be checked in the current environment are valid;
+- relevant module-specific requirements are satisfied;
+- any verification that could not be run is identified explicitly.
+
+A release is complete only after `pnpm run verify` passes.
+
+New modules must have registry metadata, validated structured data, a working route/presentation, and appropriate acceptance coverage before entering navigation.
+
+## Release
+
+Deploy only after the full verification gate passes.
+
+Set source verification dates only when the underlying source was actually checked; a file or content update is not source verification.

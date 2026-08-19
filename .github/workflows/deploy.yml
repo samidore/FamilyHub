@@ -29,13 +29,7 @@ jobs:
           package-manager-cache: false
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm run validate
-      - run: pnpm run check
-      - name: Build local test artifact
-        run: pnpm run build
-      - run: pnpm run audit
-      - run: pnpm run test:rules
-      - run: pnpm run test:browser
+      - run: pnpm run verify
       - name: Build Firebase production artifact
         run: pnpm run build
         env:
