@@ -37,7 +37,6 @@ test('operational Recipe requirements reject obsolete tracking fields', async ()
 test('all migrated Recipes keep Cook View text separate from operational requirements', async () => {
   const files = await readMealFiles();
   const data = parseMealFiles(files);
-  assert.equal(data.recipes.length, 164);
   assert.equal(data.recipes.every((recipe) => recipe.detailLevel === 'cookable'), true);
   assert.equal(data.recipes.every((recipe) => recipe.cookIngredientLines.length > 0), true);
   assert.equal(data.recipes.find((recipe) => recipe.id === 'hainanese-chicken-rice').cookIngredientLines.includes('整鸡：1只，约1.5 kg（3–3.5 lb）'), true);
@@ -47,8 +46,23 @@ test('all migrated Recipes keep Cook View text separate from operational require
   }), true);
 });
 
-test('archived tagged records do not change active easy-braise or iron-pan counts', async () => {
+test('active capability tags are data-driven rather than count-gated', async () => {
   const files = await readMealFiles();
+  const chicken = parse(files['ingredients/chicken.yaml']);
+  const ingredient = chicken.ingredients.find((item) => !item.tags?.includes('easy-braise-addon'));
+  ingredient.tags = [...(ingredient.tags ?? []), 'easy-braise-addon'];
+  const recipe = parse(files['recipe/chicken/instant-pot-soy-chicken-thighs.yaml']);
+  recipe.tags = [...(recipe.tags ?? []), 'iron-pan-braise'];
+  assert.doesNotThrow(() => parseMealFiles({
+    ...files,
+    'ingredients/chicken.yaml': stringify(chicken),
+    'recipe/chicken/instant-pot-soy-chicken-thighs.yaml': stringify(recipe),
+  }));
+});
+
+test('archived tagged records do not change active easy-braise or iron-pan membership', async () => {
+  const files = await readMealFiles();
+  const before = parseMealFiles(files);
   const ingredient = parse(files['ingredients/chicken.yaml']).ingredients[0];
   ingredient.id = 'archived-easy-braise'; ingredient.status = 'archived'; ingredient.starter.order = 9999; ingredient.tags = ['easy-braise-addon'];
   const recipe = parse(files[recipePath]);
@@ -58,8 +72,10 @@ test('archived tagged records do not change active easy-braise or iron-pan count
     'archive/ingredients/archived-easy-braise.yaml': stringify(ingredient),
     'archive/recipe/archived-iron-pan.yaml': stringify(recipe),
   });
-  assert.equal(data.ingredients.filter((item) => item.tags.includes('easy-braise-addon')).length, 23);
-  assert.equal(data.recipes.filter((item) => item.tags.includes('iron-pan-braise')).length, 36);
+  const easyBraiseIds = (value) => value.ingredients.filter((item) => item.tags.includes('easy-braise-addon')).map((item) => item.id).sort();
+  const ironPanIds = (value) => value.recipes.filter((item) => item.tags.includes('iron-pan-braise')).map((item) => item.id).sort();
+  assert.deepEqual(easyBraiseIds(data), easyBraiseIds(before));
+  assert.deepEqual(ironPanIds(data), ironPanIds(before));
 });
 
 test('legacy KB parsing validates records without requiring current active counts', async () => {

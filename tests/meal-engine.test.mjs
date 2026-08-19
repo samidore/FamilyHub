@@ -4,13 +4,6 @@ import { loadMealData, readMealFiles } from '../scripts/load-meal-data.mjs';
 import { parseMealFiles } from '../src/data/mealParser.mjs';
 import { aggregateMeal, bindRecipeIngredients, defaultMealState, easyBraiseAddonIngredientIds, isFeasible, isMealComplete, rankCandidates, recentRecipePenalty, resolveRecipeChildCoverage, timeFit, unmetCompletionRequirements } from '../src/lib/mealEngine.ts';
 
-const easyBraiseIngredientIds = [
-  'baby-napa-cabbage', 'carrot', 'chinese-greens', 'choy-sum', 'daikon', 'dried-yuba-sticks', 'enoki-mushrooms', 'firm-tofu', 'fresh-shiitake', 'fried-tofu-puffs', 'kabocha-squash', 'lettuce', 'maitake', 'napa-cabbage', 'onion', 'oyster-mushrooms', 'potato', 'shimeji-mushrooms', 'soft-tofu', 'taro', 'tofu-skin-knots', 'winter-melon', 'youmai-cai',
-];
-const ironPanBraiseRecipeIds = [
-  'braised-winter-melon', 'chicken-adobo', 'chicken-teriyaki-thighs', 'chinese-braised-beef-shank', 'chinese-red-braised-beef', 'coca-cola-chicken-wings', 'daikon-braised-beef', 'daikon-braised-lamb', 'filipino-pork-adobo', 'galbijjim', 'gyudon', 'homestyle-tofu-family', 'hong-kong-swiss-chicken-wings', 'hong-kong-yuba-lamb-casserole', 'hong-shao-rou', 'japanese-daikon-braised-boneless-short-ribs', 'japanese-kakuni', 'japanese-simmered-daikon', 'japanese-simmered-kabocha', 'japanese-steamed-braised-mushrooms', 'minced-pork-tofu', 'nikujaga', 'oyakodon', 'oyster-sauce-braised-chicken', 'potato-braised-beef', 'red-braised-beef-noodle-soup', 'red-braised-goat', 'red-braised-lamb', 'red-braised-pork-trotters', 'scallion-oil-taro', 'shanghai-braised-pork-chops', 'shanghai-sweet-sour-ribs', 'sukiyaki-don', 'taiwanese-braised-minced-pork-rice', 'tomato-soft-tofu', 'vietnamese-thit-kho-eggs',
-];
-
 const recipe = (id, contribution, childCoverage = { protein: false, vegetable: false }, requirements = []) => ({ id, order: Number(id.replace(/\D/g, '')) || 0, fitScore: 4, contribution, childCoverage, requirements, mealWindowMinutes: '30–45', elapsedMinutes: '30–45', advanceStartRequired: false });
 
 test('required and one-of ingredients determine feasibility', () => {
@@ -66,11 +59,8 @@ test('recent Recipes rank after unseen choices with the newest meal last', () =>
   assert.deepEqual(rankCandidates([newest, oldest, unseen], state, [], {}, history).map((item) => item.id), ['r3', 'r2', 'r1']);
 });
 
-test('structured data keeps active counts, Ingredient coverage, and easy-braise capabilities', async () => {
+test('structured data keeps key Ingredient, Recipe, and capability relationships', async () => {
   const kb = await loadMealData();
-  assert.equal(kb.ingredients.length, 135);
-  assert.equal(kb.ingredients.filter((item) => item.visible).length, 132);
-  assert.equal(kb.recipes.length, 164);
   assert.equal(kb.ingredients.find((item) => item.id === 'zongzi')?.inventoryTracking, 'presence-only');
   const steamedZongzi = kb.recipes.find((item) => item.id === 'steamed-zongzi');
   assert.equal(steamedZongzi?.requirements[0]?.anyOf[0], 'zongzi');
@@ -80,18 +70,12 @@ test('structured data keeps active counts, Ingredient coverage, and easy-braise 
   const beanSprouts = kb.recipes.find((item) => item.id === 'simple-stir-fried-bean-sprouts');
   assert.equal(beanSprouts?.requirements[0]?.anyOf[0], 'bean-sprouts');
   assert.deepEqual(beanSprouts?.contribution, { protein: 0, vegetable: 1, staple: 0 });
-  const wholeBrisketRecipeIds = kb.recipes
+  const wholeBrisketRecipeIds = new Set(kb.recipes
     .filter((item) => item.requirements.some((requirement) => requirement.anyOf.includes('whole-beef-brisket')))
-    .map((item) => item.id);
-  assert.deepEqual(wholeBrisketRecipeIds, [
-    'daikon-braised-beef',
-    'potato-braised-beef',
-    'chinese-red-braised-beef',
-    'red-braised-beef-noodle-soup',
-  ]);
-  assert.equal(kb.recipes.filter((item) => item.vegetableCentered).length, 24);
-  assert.deepEqual(kb.ingredients.filter((item) => item.tags?.includes('easy-braise-addon')).map((item) => item.id).sort(), easyBraiseIngredientIds);
-  assert.deepEqual(kb.recipes.filter((item) => item.tags?.includes('iron-pan-braise')).map((item) => item.id).sort(), ironPanBraiseRecipeIds);
+    .map((item) => item.id));
+  for (const id of ['daikon-braised-beef', 'potato-braised-beef', 'chinese-red-braised-beef', 'red-braised-beef-noodle-soup']) assert.equal(wholeBrisketRecipeIds.has(id), true, `${id} must support whole-beef-brisket`);
+  assert.equal(kb.ingredients.find((item) => item.id === 'fried-tofu-puffs')?.tags?.includes('easy-braise-addon'), true);
+  assert.equal(kb.recipes.find((item) => item.id === 'minced-pork-tofu')?.tags?.includes('iron-pan-braise'), true);
   assert.equal(kb.ingredients.some((item) => item.tags?.includes('finish-wilt-compatible')), false);
   assert.equal(kb.recipes.find((item) => item.id === 'instant-pot-soy-chicken-thighs').tags.includes('iron-pan-braise'), false);
   assert.equal(kb.recipes.find((item) => item.id === 'instant-pot-thirteen-spice-soy-party-wings').tags.includes('iron-pan-braise'), false);

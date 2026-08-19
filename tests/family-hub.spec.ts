@@ -4,6 +4,7 @@ import { loadMealData } from '../scripts/load-meal-data.mjs';
 const mealData = await loadMealData();
 const activeRecipeCount = mealData.recipes.length;
 const visibleIngredientCount = mealData.ingredients.filter((ingredient) => ingredient.visible).length;
+const visibleSectionCount = mealData.starterSections.length;
 
 async function inventoryItem(page: Page, id: string) {
   const row = page.locator(`[data-inventory-item="${id}"]`);
@@ -322,7 +323,7 @@ test('household inventory keeps counted half-steps, presence-only values, and vi
   await expect(page.locator('#meal-google-login')).toBeHidden();
   await expect(page.locator('#meal-logout')).toBeHidden();
   await expect(page.locator('[data-inventory-item]')).toHaveCount(visibleIngredientCount);
-  await expect(page.locator('[data-inventory-section]')).toHaveCount(11);
+  await expect(page.locator('[data-inventory-section]')).toHaveCount(visibleSectionCount);
   expect(await page.locator('[data-inventory-section]').evaluateAll((groups) => groups.every((group) => group.hasAttribute('open')))).toBe(true);
   for (const id of ['ginger', 'scallion', 'garlic']) await expect(page.locator(`[data-inventory-item="${id}"]`)).toHaveCount(0);
 

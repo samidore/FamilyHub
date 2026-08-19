@@ -11,8 +11,6 @@ const CONTRIBUTION_KEYS = new Set(['protein', 'vegetable', 'staple']);
 const RECIPE_CHILD_KEYS = new Set(['protein', 'vegetable']);
 const INGREDIENT_CHILD_KEYS = new Set(['vegetable']);
 const REQUIREMENT_KEYS = new Set(['ingredient_id', 'one_of', 'role']);
-const EASY_BRAISE_TAG = 'easy-braise-addon';
-const IRON_PAN_TAG = 'iron-pan-braise';
 const INVENTORY_TRACKING = new Set(['counted', 'presence-only']);
 const ACTIVE_STATUSES = new Set(['candidate', 'approved']);
 const PRESENCE_ONLY_INGREDIENTS = new Set(['eggs', 'rice', 'noodles', 'bread', 'steamed-buns', 'oats', 'zongzi', 'white-oil-sausage', 'potato', 'peeled-shrimp']);
@@ -78,8 +76,6 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
     const orders = ingredients.filter((ingredient) => ingredient.section === section.id).map((ingredient) => ingredient.order);
     assert(new Set(orders).size === orders.length, `${section.id} starter orders must be unique`);
   }
-  const taggedIngredients = ingredients.filter((ingredient) => ingredient.tags.includes(EASY_BRAISE_TAG)).map((ingredient) => ingredient.id).sort();
-  if (enforceCurrentContent) assert(taggedIngredients.length === 23, `expected 23 easy-braise Ingredients, found ${taggedIngredients.length}`);
 
   const recipeIds = new Set();
   const recipes = recipeRecords.map((record, order) => {
@@ -128,7 +124,6 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
       equipment: stringArray(record.equipment), detailLevel: String(record.detail_level), steps: stringArray(record.steps), childServing: String(record.child_serving ?? ''), adultFinish: String(record.adult_finish ?? ''), substitutions: stringArray(record.substitutions), childTexture: String(record.child_texture ?? ''), notes: String(record.notes ?? ''), vegetableCentered: stringArray(record.evidence?.sources).some((source) => /^V\d{2}\s*[—-]/.test(source)),
     };
   });
-  if (enforceCurrentContent) assert(recipes.filter((recipe) => recipe.tags.includes(IRON_PAN_TAG)).length === 36, 'expected 36 iron-pan braise Recipes');
   if (enforceCurrentContent) assert(recipes.some((recipe) => recipe.id === 'simple-stir-fried-leafy-greens' && recipe.childCoverage.vegetable === 'ingredient-dependent'), 'ingredient-dependent Vegetable coverage is missing');
 
   return {
@@ -214,6 +209,7 @@ export function parseMealFiles(files) {
     }
   }
   for (const path of paths.filter((path) => !path.startsWith('archive/'))) assert(activePaths.has(path), `unindexed active file ${path}`);
+
   const allIds = new Set([...ingredientIds, ...recipeIds]);
   const archivedIngredients = [];
   const archivedRecipes = [];
