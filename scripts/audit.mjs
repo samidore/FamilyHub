@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { moduleRegistry } from '../src/config/modules.ts';
 import { parseAdultDermatologists, parseColonoscopySpecialists, parseDayTrips, parseLibraryEvents, parsePediatricDentists } from '../src/data/schemas.mjs';
+import { parseObGynProviders } from '../src/data/obGynSchema.mjs';
 import { loadMealData } from './load-meal-data.mjs';
 
 const readJson = async (file) => JSON.parse(await readFile(file, 'utf8'));
@@ -9,6 +10,8 @@ const events = parseLibraryEvents(await readJson('src/data/library-events.json')
 const dentists = parsePediatricDentists(await readJson('src/data/pediatric-dentists.json'));
 const dermatologists = parseAdultDermatologists(await readJson('src/data/adult-dermatologists.json'));
 const colonoscopy = parseColonoscopySpecialists(await readJson('src/data/colonoscopy-specialists.json'));
+const obGyn = parseObGynProviders(await readJson('src/data/ob-gyn.json'));
+const obGynPlacements = obGyn.flatMap((provider) => provider.placements);
 const meals = await loadMealData();
 const home = await readFile('dist/index.html', 'utf8');
 const languageUnits = await readFile('docs/project/language-units.md', 'utf8');
@@ -21,6 +24,7 @@ const records = {
   'pediatric-dentists': dentists,
   'adult-dermatologists': dermatologists,
   'colonoscopy-specialists': colonoscopy,
+  'ob-gyn': obGynPlacements,
   'meal-builder': meals.recipes,
 };
 const cardAttributes = {
@@ -29,11 +33,12 @@ const cardAttributes = {
   'pediatric-dentists': 'data-dentist',
   'adult-dermatologists': 'data-dermatologist',
   'colonoscopy-specialists': 'data-colonoscopy',
+  'ob-gyn': 'data-ob-gyn',
   'meal-builder': 'data-meal-recipe',
 };
 const cardCount = (html, attribute) => (html.match(new RegExp(`<article[^>]+${attribute}`, 'g')) ?? []).length;
 
-assert(moduleRegistry.length === 6, 'The active module registry must contain exactly six modules');
+assert(moduleRegistry.length === 7, 'The active module registry must contain exactly seven modules');
 assert((home.match(/<a\b[^>]+data-module/g) ?? []).length === moduleRegistry.length, 'Home module cards do not match the active registry');
 for (const module of moduleRegistry) {
   const output = await readFile(`dist${module.route}index.html`, 'utf8');
@@ -46,6 +51,13 @@ assert(events.length === 18, 'Library activity migration count is not 18');
 assert(dentists.length === 10, 'Pediatric dentist migration count is not 10');
 assert(dermatologists.length === 10, 'Adult dermatologist migration count is not 10');
 assert(colonoscopy.length === 18, 'Colonoscopy specialist migration count is not 18');
+assert(obGyn.length === 35, 'OB/GYN unique provider count is not 35');
+assert(obGynPlacements.length === 40, 'OB/GYN placement count is not 40');
+for (const section of ['valley-ob', 'hackensack-ob', 'englewood-ob', 'gyn']) {
+  const sectionPlacements = obGynPlacements.filter((placement) => placement.section === section).sort((a, b) => a.rank - b.rank);
+  assert(sectionPlacements.length === 10, `${section} must contain 10 placements`);
+  assert(sectionPlacements.every((placement, index) => placement.rank === index + 1), `${section} ranks are not a complete deterministic order`);
+}
 assert(!meals.recipes.find((item) => item.id === 'instant-pot-soy-chicken-thighs')?.tags?.includes('iron-pan-braise'), 'Instant Pot soy chicken thighs must not be iron-pan-braise');
 assert(events.every((item, index, all) => !index || all[index - 1].dayOrder < item.dayOrder || (all[index - 1].dayOrder === item.dayOrder && all[index - 1].timeOrder <= item.timeOrder)), 'Events are not stored in weekday/time order');
 assert(dentists.every((item) => item.healthgradesUrl.startsWith('https://www.healthgrades.com/')), 'A Healthgrades URL is missing or invalid');
@@ -72,6 +84,7 @@ assert(colonoscopy.every((item) => item.networkVerification.planLabel === 'BlueC
 assert(colonoscopy.every((item) => item.networkVerification.professionalStatus === 'requires-confirmation'), 'A colonoscopy professional network status must remain conditional');
 assert(colonoscopy.every((item) => item.networkVerification.sourceUrls.every((url) => url.startsWith('https://'))), 'A colonoscopy network source is missing or insecure');
 assert(!/(memberId|groupNumber|insuranceId|insuranceCard|cardImage|codex-remote-attachments)/i.test(JSON.stringify(colonoscopy)), 'Private insurance fields or attachment paths were found in colonoscopy data');
+assert(!/(memberId|groupNumber|insuranceId|insuranceCard|cardImage|codex-remote-attachments)/i.test(JSON.stringify(obGyn)), 'Private insurance fields or attachment paths were found in OB/GYN data');
 
 const htmlFiles = [home, ...(await Promise.all(moduleRegistry.map((module) => readFile(`dist${module.route}index.html`, 'utf8'))))];
 assert(htmlFiles.every((html) => !/(memberId|groupNumber|insuranceId|insuranceCard|cardImage|codex-remote-attachments)/i.test(html)), 'Private insurance fields or attachment paths were found in build output');
@@ -87,4 +100,4 @@ assert(languageUnits.includes('Weather: degrees Celsius'), 'Language/unit policy
 assert(languageUnits.includes('Recipe liquids: cups plus mL'), 'Language/unit policy is missing the liquid-unit rule');
 assert(privacyData.includes('public-reference'), 'Privacy/data policy is missing the public data classification');
 
-console.log(`Registry audit passed: ${moduleRegistry.length} modules, ${trips.length} trips, ${events.length} activities, ${dentists.length} dentists, ${dermatologists.length} dermatologists, ${colonoscopy.length} colonoscopy specialists, ${meals.recipes.length} meal recipes.`);
+console.log(`Registry audit passed: ${moduleRegistry.length} modules, ${trips.length} trips, ${events.length} activities, ${dentists.length} dentists, ${dermatologists.length} dermatologists, ${colonoscopy.length} colonoscopy specialists, ${obGyn.length} OB/GYN providers / ${obGynPlacements.length} placements, ${meals.recipes.length} meal recipes.`);
