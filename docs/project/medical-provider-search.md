@@ -38,7 +38,52 @@
 - 每位医生附官方网页、Healthgrades、Google Maps、州执照/纪律记录及其他使用过的来源。
 - 标明资料核验日期。保险只按公开信息辅助排序，最终必须向保险公司、医生和 Facility 分别确认。
 
-## 4. 可复制提示词
+## 4. OB/GYN 搜索补充规则
+
+### OB 名单
+
+- 按目标分娩医院分别保留候选；同一医生可以出现在多家医院名单。
+- 医院关系分为：`Confirmed delivery`、`Likely delivery`、`Affiliation only`、`Unclear — call to confirm`。
+- 不因为当前分娩关系无法在线确认而淘汰医生；保留候选并明确电话确认项。
+- 同时提供普通妇科的医生标记为 `OB + GYN`。
+- 尽量核实接生覆盖模式：本人接自己的病人、小型 group rotation、大型 group call、hospitalist/laborist involvement 或 unknown；另标本人接生概率高/中/低/未知。查不到不猜。
+- 医生个人评分与医院能力分开。医生比较不因为所属医院更强而自动加分；需要综合选择时可另做 `医生 70% + 医院 30%` 的家庭决策分，同时保留两个原始评价。
+- 不使用未经可靠风险校正的医生个人 C-section rate 排名。
+
+### GYN 名单
+
+- 普通 GYN 候选合并比较，不按分娩医院拆分。
+- 优先 general gynecology 的连续照护、常见妇科问题覆盖、必要的微创手术能力和转诊网络。
+- 只做 gyn oncology、urogynecology、reproductive endocrinology 等亚专科且不再提供 general GYN 的医生，不进入普通 GYN 主名单。
+- 同时做 OB 的医生保留 `OB + GYN` 标记及其医院关系。
+
+### 医生评分
+
+在通过基础资格与严重安全问题筛查后，医生个人比较使用以下结构：
+
+- 专业资格与安全记录：30
+- 临床能力与用途匹配：25
+- 医患沟通与患者体验：20
+- OB 接生模式 / GYN continuity：10
+- 实际便利性：10
+- 证据完整度：5
+
+缺失资料降低证据完整度，但不自动等同于负面事实。
+
+### 患者体验
+
+- Healthgrades、Google Maps、Yelp 及医院/医疗集团自己的患者调查必须分别记录评分和样本量，不混合计算。
+- 医院或 practice 的评分不能冒充某位医生的评分。
+- 负评除通用四类外，OB 额外关注 birth plan、induction、C-section pressure、labor management 和 consent；只有多个独立来源反复出现同类描述时才视为较强信号。
+- 单条患者评论中的临床或安全指控只能作为进一步核查线索，不能当作已证实事实。
+
+### 保险与可用性
+
+- 保险信息记录但不作为初筛淘汰条件；按 `insurer confirmed`、`other public source`、`possible`、`unknown`、`conflicting` 等状态表达证据强度。
+- 具体 plan 的网络状态以保险公司、医生 practice 和实际 Facility 的最终确认为准。
+- 接收新病人和预约等待时间同样记录但不作为初筛硬门槛；允许 `Unknown / Call to confirm`。
+
+## 5. 可复制提示词
 
 ```text
 帮我找 [医生类型]，主要用途是 [用途]。患者是 [年龄/成人或儿童]，偏好 [性别/语言/无]。范围是 [地点或最长车程]。保险 plan 是 [只写通用 plan 名，不写任何个人编号]。最低要求是 [评分]、[评论数]，并且 [需要/不要求] 接收新病人。
