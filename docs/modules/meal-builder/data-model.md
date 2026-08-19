@@ -54,17 +54,11 @@ evidence:
 notes: ''
 ```
 
-`starter.visible: false` retains a long-term ID without showing a button; the current hidden pantry aromatics are `ginger`, `scallion`, and `garlic`. Every visible non-pantry ingredient has one controlled section and a unique positive order. `inventory_tracking: counted` supports half-unit quantities; `presence-only` is used for `eggs`, `rice`, `noodles`, `bread`, `steamed-buns`, `oats`, `zongzi`, `white-oil-sausage`, `potato`, and `peeled-shrimp`.
+`starter.visible: false` retains a long-term ID without showing a button; the current hidden pantry aromatics are `ginger`, `scallion`, and `garlic`. Every visible non-pantry ingredient has one controlled section and a unique positive order. `inventory_tracking` is the source of truth for inventory mode: `counted` uses half-unit quantities and `presence-only` stores boolean presence. Runtime code must not infer tracking mode from Ingredient IDs; Firebase validates the allowed storage shapes while application interpretation comes from Ingredient data.
 
 The optional Ingredient `child_coverage.vegetable` is read only when a Recipe declares ingredient-dependent coverage. `unknown` remains unknown; section membership or a leafy name cannot imply `easy-braise-addon`.
 
-Starter section IDs and order are data, not UI inference:
-
-```text
-pork 10 · chicken 20 · beef 30 · lamb-goat 40 · fish 50 · shellfish 60
-egg-tofu 70 · leafy-vegetable 80 · other-vegetable 90 · mushroom 100
-staple 110 · pantry 999 (hidden)
-```
+Starter section IDs and order come from the Ingredient index. UI and documentation must not maintain a parallel section-order list.
 
 ## Recipe record
 

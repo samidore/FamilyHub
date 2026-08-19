@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import {
+  COUNTED_INVENTORY_STEP,
+  RECENT_MEAL_LIMIT,
   adjustInventoryItem,
   applyCheckout,
   createCurrentMealFromInventory,
@@ -11,6 +13,7 @@ import {
   resetRecipeSelection,
   setCurrentMealStatus,
   toggleInventoryItem,
+  trackingForIngredient,
   updateCheckoutDraft,
   usedIngredientIds,
 } from '../src/lib/household.ts';
@@ -39,21 +42,36 @@ test('Google identity requires a verified Google provider and popup fallback is 
   assert.equal(shouldUseRedirectFallback({ code: 'auth/popup-closed-by-user' }), false);
 });
 
-test('counted inventory uses half steps and turns off at zero', () => {
+test('household numeric policy keeps half-unit inventory and four recent meals', () => {
+  assert.equal(COUNTED_INVENTORY_STEP, 0.5);
+  assert.equal(RECENT_MEAL_LIMIT, 4);
+});
+
+test('counted inventory uses configured steps and turns off at zero', () => {
   let inventory = {};
   inventory = toggleInventoryItem(inventory, 'pork', 'counted');
   assert.deepEqual(inventory, { pork: 1 });
-  inventory = adjustInventoryItem(inventory, 'pork', 0.5, 'counted');
-  assert.equal(inventory.pork, 1.5);
-  inventory = adjustInventoryItem(inventory, 'pork', -1.5, 'counted');
+  inventory = adjustInventoryItem(inventory, 'pork', COUNTED_INVENTORY_STEP, 'counted');
+  assert.equal(inventory.pork, 1 + COUNTED_INVENTORY_STEP);
+  inventory = adjustInventoryItem(inventory, 'pork', -(1 + COUNTED_INVENTORY_STEP), 'counted');
   assert.deepEqual(inventory, {});
 });
 
 test('presence-only inventory stores only true', () => {
   let inventory = toggleInventoryItem({}, 'eggs', 'presence-only');
   assert.deepEqual(inventory, { eggs: true });
-  inventory = adjustInventoryItem(inventory, 'eggs', -0.5, 'presence-only');
+  inventory = adjustInventoryItem(inventory, 'eggs', -COUNTED_INVENTORY_STEP, 'presence-only');
   assert.deepEqual(inventory, {});
+});
+
+test('inventory tracking comes from Ingredient records rather than ID whitelists', () => {
+  const custom = [
+    { id: 'eggs', inventoryTracking: 'counted' },
+    { id: 'custom-presence', inventoryTracking: 'presence-only' },
+  ];
+  assert.equal(trackingForIngredient('eggs', custom), 'counted');
+  assert.equal(trackingForIngredient('custom-presence', custom), 'presence-only');
+  assert.deepEqual(normalizeHouseholdState({ inventory: { eggs: true, 'custom-presence': 1 } }, custom).inventory, { 'custom-presence': true });
 });
 
 test('current meal copies inventory once and recipe reset keeps availability', () => {
@@ -68,7 +86,7 @@ test('current meal copies inventory once and recipe reset keeps availability', (
 test('Realtime Database round-trip restores omitted empty collections and safe scalar defaults', () => {
   const normalized = normalizeHouseholdState({
     inventory: { pork: 1 },
-    currentMeal: { mealId: 'meal-1', status: 'bad-status', proteinTarget: 99, vegetableTarget: 0, selectedRecipeIds: undefined },
+    currentMeal: { mealId: 'meal-1', status: 'bad-status', proteinTarget: 1.5, vegetableTarget: 2.5, selectedRecipeIds: undefined },
   }, ingredients);
   assert.deepEqual(normalized.currentMeal?.availableIngredientIds, []);
   assert.deepEqual(normalized.currentMeal?.selectedRecipeIds, []);
@@ -86,8 +104,8 @@ test('shared active step and checkout draft normalize legacy-safe values', () =>
   assert.equal(normalized.activeStep, 'checkout');
   assert.deepEqual(normalized.currentMeal?.excludedIngredientIds, ['pork']);
   assert.deepEqual(normalized.currentMeal?.checkoutDraft, { pork: 0, eggs: false });
-  const draft = updateCheckoutDraft({ ...meal, recipeIngredientBindings: { r1: ['pork'] }, selectedRecipeIds: ['r1'], selectedAddons: [{ mainRecipeId: 'r1', addonType: 'a', ingredientId: 'eggs' }] }, { pork: 0.5, eggs: true }, { pork: 1, eggs: true }, ingredients);
-  assert.deepEqual(checkoutDraftForMeal(draft, { pork: 1, eggs: true }, ingredients), { pork: 0.5 });
+  const draft = updateCheckoutDraft({ ...meal, recipeIngredientBindings: { r1: ['pork'] }, selectedRecipeIds: ['r1'], selectedAddons: [{ mainRecipeId: 'r1', addonType: 'a', ingredientId: 'eggs' }] }, { pork: COUNTED_INVENTORY_STEP, eggs: true }, { pork: 1, eggs: true }, ingredients);
+  assert.deepEqual(checkoutDraftForMeal(draft, { pork: 1, eggs: true }, ingredients), { pork: COUNTED_INVENTORY_STEP });
 });
 
 test('checkout defaults use declared units, fallback bindings, and cross-recipe sums', () => {
@@ -148,10 +166,10 @@ test('inventory normalization keeps only known KB ingredient IDs', () => {
   assert.deepEqual(normalized.inventory, { pork: 1, eggs: true, potato: true });
 });
 
-test('recent meal history normalizes newest-first and keeps only four valid meals', () => {
-  const recentMeals = Array.from({ length: 6 }, (_, index) => ({ mealId: `meal-${index}`, completedAt: 100 - index, recipeIds: [`r${index}`] }));
+test('recent meal history normalizes newest-first and keeps only the configured limit', () => {
+  const recentMeals = Array.from({ length: RECENT_MEAL_LIMIT + 2 }, (_, index) => ({ mealId: `meal-${index}`, completedAt: 100 - index, recipeIds: [`r${index}`] }));
   const normalized = normalizeHouseholdState({ recentMeals: [...recentMeals, { mealId: '', completedAt: 0, recipeIds: [] }] }, ingredients);
-  assert.deepEqual(normalized.recentMeals, recentMeals.slice(0, 4));
+  assert.deepEqual(normalized.recentMeals, recentMeals.slice(0, RECENT_MEAL_LIMIT));
 });
 
 test('partial Firebase configuration is an error and all-empty configuration stays local', async () => {
@@ -186,15 +204,15 @@ test('checkout is stale-safe and consumes counted/presence-only values once', ()
   const cooking = { ...meal, status: 'cooking', recipeIngredientBindings: { r1: ['pork'] }, selectedRecipeIds: ['r1'], selectedAddons: [{ mainRecipeId: 'r1', addonType: 'a', ingredientId: 'eggs' }] };
   const state = { inventory: { pork: 1, eggs: true }, currentMeal: cooking, activeStep: 'checkout', recentMeals: [{ mealId: 'older', completedAt: 1, recipeIds: ['r0'] }] };
   assert.deepEqual(defaultCheckoutConsumption(cooking, state.inventory, ingredients), { pork: 1 });
-  const first = applyCheckout(state, 'meal-1', { pork: 0.5 }, ingredients, { nextMealId: 'meal-2', completedAt: 2 });
+  const first = applyCheckout(state, 'meal-1', { pork: COUNTED_INVENTORY_STEP }, ingredients, { nextMealId: 'meal-2', completedAt: 2 });
   assert.equal(first.committed, true);
-  assert.deepEqual(first.state.inventory, { pork: 0.5, eggs: true });
+  assert.deepEqual(first.state.inventory, { pork: COUNTED_INVENTORY_STEP, eggs: true });
   assert.equal(first.state.activeStep, 'recipes');
   assert.equal(first.state.currentMeal?.mealId, 'meal-2');
   assert.deepEqual(first.state.currentMeal?.availableIngredientIds, ['eggs', 'pork']);
   assert.deepEqual(first.state.currentMeal?.selectedRecipeIds, []);
   assert.deepEqual(first.state.recentMeals, [{ mealId: 'meal-1', completedAt: 2, recipeIds: ['r1'] }, { mealId: 'older', completedAt: 1, recipeIds: ['r0'] }]);
-  const second = applyCheckout(first.state, 'meal-1', { pork: 0.5 }, ingredients);
+  const second = applyCheckout(first.state, 'meal-1', { pork: COUNTED_INVENTORY_STEP }, ingredients);
   assert.equal(second.committed, false);
   assert.equal(second.reason, 'stale-meal');
 });

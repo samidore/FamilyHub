@@ -34,6 +34,15 @@ test('operational Recipe requirements reject obsolete tracking fields', async ()
   }
 });
 
+test('Ingredient inventory tracking is data-driven rather than ID-whitelisted', async () => {
+  const files = await readMealFiles();
+  const chicken = parse(files['ingredients/chicken.yaml']);
+  const ingredient = chicken.ingredients.find((item) => item.inventory_tracking === 'counted');
+  ingredient.inventory_tracking = 'presence-only';
+  const data = parseMealFiles({ ...files, 'ingredients/chicken.yaml': stringify(chicken) });
+  assert.equal(data.ingredients.find((item) => item.id === ingredient.id)?.inventoryTracking, 'presence-only');
+});
+
 test('all migrated Recipes keep Cook View text separate from operational requirements', async () => {
   const files = await readMealFiles();
   const data = parseMealFiles(files);

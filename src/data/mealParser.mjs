@@ -13,7 +13,6 @@ const INGREDIENT_CHILD_KEYS = new Set(['vegetable']);
 const REQUIREMENT_KEYS = new Set(['ingredient_id', 'one_of', 'role']);
 const INVENTORY_TRACKING = new Set(['counted', 'presence-only']);
 const ACTIVE_STATUSES = new Set(['candidate', 'approved']);
-const PRESENCE_ONLY_INGREDIENTS = new Set(['eggs', 'rice', 'noodles', 'bread', 'steamed-buns', 'oats', 'zongzi', 'white-oil-sausage', 'potato', 'peeled-shrimp']);
 const DETAIL_LEVELS = new Set(['discoverable', 'cookable', 'household-tested']);
 
 const assert = (condition, message) => { if (!condition) throw new Error(`Meal KB: ${message}`); };
@@ -59,7 +58,6 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
     ingredientIds.add(record.id);
     assertKeys(record.starter ?? {}, STARTER_KEYS); assertKeys(record.fit ?? {}, FIT_KEYS); assertKeys(record.evidence ?? {}, EVIDENCE_KEYS); assertKeys(record.child_coverage ?? {}, INGREDIENT_CHILD_KEYS);
     assert(INVENTORY_TRACKING.has(record.inventory_tracking), `${record.id} has invalid inventory_tracking`);
-    assert((record.inventory_tracking === 'presence-only') === PRESENCE_ONLY_INGREDIENTS.has(record.id), `${record.id} must use the approved inventory_tracking mode`);
     assert(record.starter && typeof record.starter.visible === 'boolean', `${record.id} has invalid starter visibility`);
     assert(sectionIds.has(record.starter.section), `${record.id} has unknown starter section ${record.starter.section}`);
     assert(Number.isInteger(record.starter.order) && record.starter.order > 0, `${record.id} has invalid starter order`);

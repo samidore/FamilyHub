@@ -41,13 +41,21 @@ test('non-Google and mismatched token email cannot access household state', asyn
   await assertSucceeds(google('dana', 'dana@gmail.com').ref(`${household}/state`).get());
 });
 
-test('existing inventory and current meal validation remains enforced', async () => {
+test('inventory rules validate storage shape while Ingredient data owns tracking mode', async () => {
   await env.withSecurityRulesDisabled(async (context) => { await context.database().ref().set(null); await context.database().ref(`${household}/members/alice`).set({ email: 'alice@gmail.com' }); });
   const alice = google('alice', 'alice@gmail.com');
+  await assertSucceeds(alice.ref(`${household}/state/inventory/pork`).set(1.5));
+  await assertSucceeds(alice.ref(`${household}/state/inventory/zongzi`).set(true));
   await assertFails(alice.ref(`${household}/state/inventory/pork`).set(0.25));
   await assertFails(alice.ref(`${household}/state/inventory/pork`).set(false));
-  await assertSucceeds(alice.ref(`${household}/state/inventory/potato`).set(true));
-  await assertFails(alice.ref(`${household}/state/inventory/potato`).set(1));
+});
+
+test('current meal accepts only integer planning targets', async () => {
+  await env.withSecurityRulesDisabled(async (context) => { await context.database().ref().set(null); await context.database().ref(`${household}/members/alice`).set({ email: 'alice@gmail.com' }); });
+  const alice = google('alice', 'alice@gmail.com');
+  for (const target of [1, 2, 3]) await assertSucceeds(alice.ref(`${household}/state/currentMeal`).set({ ...meal, proteinTarget: target, vegetableTarget: target }));
+  await assertFails(alice.ref(`${household}/state/currentMeal`).set({ ...meal, proteinTarget: 1.5 }));
+  await assertFails(alice.ref(`${household}/state/currentMeal`).set({ ...meal, vegetableTarget: 2.5 }));
   await assertFails(alice.ref(`${household}/state/currentMeal`).set({ ...meal, status: 'finished' }));
 });
 

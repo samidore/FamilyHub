@@ -1,4 +1,8 @@
-export type TimePreference = 'any' | '30' | '45' | '60';
+export const MEAL_TARGET_OPTIONS = [1, 2, 3] as const;
+export const TIME_PREFERENCES = ['any', '30', '45', '60'] as const;
+export const PROTEIN_TARGET_TOLERANCE = 0.5;
+
+export type TimePreference = (typeof TIME_PREFERENCES)[number];
 export type RecipeChildCoverage = boolean | 'ingredient-dependent';
 export type IngredientChildCoverage = boolean | 'unknown';
 export type InventoryTracking = 'counted' | 'presence-only';
@@ -174,7 +178,7 @@ export function rankCandidates(recipes: MealRecipe[], state: MealState, ingredie
   const selectedIds = new Set(state.selectedRecipeIds);
   const selected = recipes.filter((recipe) => selectedIds.has(recipe.id));
   const totals = aggregateMeal(selected, { recipeIngredientBindings: state.recipeIngredientBindings, availableIngredientIds: state.availableIngredientIds, ingredients });
-  const proteinLimit = state.proteinTarget + 0.5;
+  const proteinLimit = state.proteinTarget + PROTEIN_TARGET_TOLERANCE;
   const measures = (recipe: MealRecipe) => {
     const binding = bindRecipeIngredients(recipe, available, draftBindings[recipe.id] ?? state.recipeIngredientBindings?.[recipe.id] ?? []);
     const coverage = resolveRecipeChildCoverage(recipe, binding, ingredients);
