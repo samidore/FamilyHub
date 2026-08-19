@@ -4,7 +4,7 @@
 
 Every Ingredient and Recipe keeps an `evidence` object with `level`, `checked_on`, `scope`, and `sources`. Existing evidence remains part of the record, but `sources` may be empty and does not determine whether a Recipe is cookable. Scope is normally culinary identity and core technique, not retailer inventory, price, package size, household preference, or child acceptance unless the record says so.
 
-Current registry review dates are: legacy Pork sources originally checked 2026-08-08; non-Pork formalization and supplemental checks reviewed 2026-08-11; Vegetable-centered sources V01–V23 reviewed 2026-08-12. A `checked_on` date must be changed only after the underlying source is checked again.
+Current registry review dates are: legacy Pork sources originally checked 2026-08-08; non-Pork formalization and supplemental checks reviewed 2026-08-11; Vegetable-centered sources V01–V23 reviewed 2026-08-12; V24 reviewed 2026-08-19. A `checked_on` date must be changed only after the underlying source is checked again.
 
 ## Retained source families
 
@@ -22,9 +22,9 @@ The migrated YAML preserves the complete legacy registry IDs and titles in `evid
 | SH01–SH09 | Shellfish/seafood structures: Made With Lau, The Woks of Life, Serious Eats, Omnivore’s Cookbook, Just One Cookbook, Epicurious, Taste of Home, and Mediterranean Dish. |
 | E01–E14 | Egg/tofu structures: Made With Lau, The Woks of Life, Just One Cookbook, household soft-tofu and egg-tofu patterns, and child-texture confirmation. |
 | ST01–ST13 | Staple structures: Made With Lau, Just One Cookbook, The Woks of Life, Food & Wine, Epicurious, Simply Recipes, and ready-made staple decisions. |
-| V01–V23 | Vegetable-centered structures: Made With Lau, The Woks of Life, Just One Cookbook, Omnivore’s Cookbook, Chinese household patterns, and standard low-oil vegetable techniques. |
+| V01–V24 | Vegetable-centered structures: Made With Lau, The Woks of Life, Just One Cookbook, Omnivore’s Cookbook, Chinese household patterns, and standard low-oil vegetable techniques. |
 
-The source titles retained by the migration include the specific dish/topic (for example, Chicken Teriyaki, Oyakodon, Moo Shu Pork, Chinese Steamed Fish, Egg Fried Rice, Choy Sum with Garlic, Spinach and Egg Stir Fry, and Braised Chinese Mushrooms with Bok Choy). Do not replace a record's specific source ID with a generic “internet” citation.
+The source titles retained by the migration include the specific dish/topic (for example, Chicken Teriyaki, Oyakodon, Moo Shu Pork, Chinese Steamed Fish, Egg Fried Rice, Choy Sum with Garlic, Spinach and Egg Stir Fry, Braised Chinese Mushrooms with Bok Choy, and Bean Sprout Stir Fry). Do not replace a record's specific source ID with a generic “internet” citation.
 
 ## Evidence and household decisions
 

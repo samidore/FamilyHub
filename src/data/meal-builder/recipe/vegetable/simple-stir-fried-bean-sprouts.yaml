@@ -19,16 +19,16 @@ fit:
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-18
-  scope: Culinary identity, high-heat bean-sprout technique, and under-5 sprout safety; household-light seasoning/oil adaptation. Child acceptance remains unverified.
+  checked_on: 2026-08-19
+  scope: Culinary identity, high-heat bean-sprout technique, under-5 sprout safety, and user-confirmed child acceptance; household-light seasoning/oil adaptation.
   sources:
-    - Omnivore's Cookbook — Bean Sprout Stir Fry
+    - V24 — Omnivore's Cookbook — Bean Sprout Stir Fry
     - The Woks of Life — Chicken and Bean Sprouts Stir Fry
     - CDC — Safer Food Choices for Children Under 5 Years Old
 notes: |-
   Candidate Vegetable-centered route. Display ingredient remains generic 豆芽 rather than forcing mung-bean versus soybean-sprout inventory splits.
 
-  Cook basis: source-derived-household-adaptation. Omnivore's Cookbook supports a roughly 454 g bean-sprout batch and a short high-heat stir-fry; The Woks of Life supports thorough draining, high heat, and short cooking with bean sprouts. CDC guidance for children under 5 requires sprouts to be cooked until steaming hot. Oil and seasoning are reduced for the household-light base; not household-tested.
+  Cook basis: source-derived-household-adaptation. Omnivore's Cookbook supports a roughly 454 g bean-sprout batch and a short high-heat stir-fry; The Woks of Life supports thorough draining, high heat, and short cooking with bean sprouts. CDC guidance for children under 5 requires sprouts to be cooked until steaming hot. Oil and seasoning are reduced for the household-light base; not household-tested. Child acceptance is user-confirmed on 2026-08-19.
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
@@ -41,7 +41,7 @@ meal_contribution:
   staple: 0
 child_coverage:
   protein: false
-  vegetable: false
+  vegetable: true
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice
@@ -53,8 +53,8 @@ equipment:
   - high-output burner
   - wok / iron pan
 burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
-child_suitable: conditional
-child_texture: 豆芽熟透后仍有一定脆感和纤维感；未确认儿童接受度，暂不计 Child Vegetable coverage。
+child_suitable: yes
+child_texture: 家庭已确认孩子可以吃豆芽；仍需完全加热，熟透后保留轻微脆感和纤维感。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -71,7 +71,7 @@ steps:
   - 沿锅边淋入预混调味，继续大火翻炒2–3分钟。目标不是生脆：整锅应持续明显冒蒸汽，豆芽杆略变半透明、已完全热透，但仍保留弹性。若豆粒明显较大且仍偏硬，再炒约1分钟，以完全热透为准。
   - 锅底若析出少量水分，继续大火翻炒到只剩薄薄汁光、没有一滩水；淋入1/2 tsp香油，翻10秒立刻关火装盘。
   - 完成提示：豆芽全部滚热、杆部略透明，咬断时没有生硬感；锅底无明显积水。给5岁以下孩子的部分不要保留生或半生豆芽。
-child_serving: 给孩子吃的部分必须炒到整盘持续冒蒸汽、完全热透；盛出后可剪短，再放凉到适口温度。儿童实际接受度未确认，因此本菜暂不计 Child Vegetable coverage。
+child_serving: 家庭已确认孩子可以吃；孩子份必须炒到整盘持续冒蒸汽、完全热透，盛出后可剪短，再放凉到适口温度。本菜计入 Child Vegetable coverage。
 adult_finish: 孩子份盛出后，成人可另加辣椒油、辣椒脆或少量香醋；不需要则省略。
 substitutions: []
 cook_ingredients:
