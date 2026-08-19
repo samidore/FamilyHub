@@ -5,7 +5,7 @@ export const categoryDefinitions = [
 ] as const;
 
 export type CategoryId = (typeof categoryDefinitions)[number]['id'];
-export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists' | 'adult-dermatologists' | 'colonoscopy-specialists' | 'meal-builder';
+export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists' | 'adult-dermatologists' | 'colonoscopy-specialists' | 'ob-gyn' | 'meal-builder';
 export type ModuleAccent = 'evergreen' | 'lake' | 'ochre' | 'berry';
 export type ModuleIcon = 'compass' | 'calendar' | 'care' | 'meal';
 
@@ -84,6 +84,19 @@ export const moduleRegistry = [
     summary: '按复杂息肉切除能力、医院级 Facility、Healthgrades 负面证据和 NY 正式安全记录比较 NYC 肠镜专家。',
     keywords: ['健康', '照护', '肠镜', '息肉', 'colonoscopy', 'polyp', 'EMR', 'ESD', 'advanced endoscopy', 'Healthgrades'],
     itemLabel: '位专家',
+    accent: 'ochre',
+    icon: 'care',
+    privacyClass: 'public-reference',
+    status: 'active',
+  },
+  {
+    id: 'ob-gyn',
+    route: '/ob-gyn/',
+    categoryId: 'health-care',
+    title: 'OB / GYN',
+    summary: '按 Valley、Hackensack、Englewood 的接生关系、公开训练与患者体验比较 OB，并保留一份合并 GYN shortlist。',
+    keywords: ['健康', '照护', '产科', '妇科', 'OB', 'GYN', 'OBGYN', 'pregnancy', 'delivery', 'Valley', 'Hackensack', 'Englewood', 'Premera'],
+    itemLabel: '位去重医生',
     accent: 'ochre',
     icon: 'care',
     privacyClass: 'public-reference',
