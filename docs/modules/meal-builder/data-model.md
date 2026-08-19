@@ -14,6 +14,17 @@ Root and category indexes are the only ordering authority. An index entry includ
 - `fit.score` is an integer 0–5 and cannot override a hard-rule failure. `fit.hard_rules` is `pass`, `fail`, `n/a`, or `unknown`.
 - Evidence levels are `official-current`, `retailer-current`, `reputable-general`, `user-confirmed`, `inferred`, and `unverified`. `evidence.checked_on` is a real source-check date, not a file timestamp.
 
+## Data changes
+
+Treat each Recipe or Ingredient change as one transaction:
+
+- Add the record and its required index/reference changes together.
+- If an Add is the same identity as an existing record, update the existing stable ID instead of creating a duplicate.
+- A new Recipe may reference only active Ingredients; add any genuinely new required non-pantry Ingredient in the same transaction.
+- Delete the record, its index entry, and active references together.
+- Update root content metadata for active data changes using the existing repository format.
+- Validate the complete transaction before considering the change finished.
+
 ## Ingredient record
 
 ```yaml
@@ -116,7 +127,3 @@ substitutions: []
 - Deprecated fields `vegetable_count`, `staple_pairings`, and `child_support_protein_needed` must not return in active records.
 - Recipe Ingredient IDs, `one_of` options, starter sections, and active index entries must resolve. No duplicate IDs, unknown fields, invalid values, unsafe paths, filename/ID mismatch, or unindexed active file is allowed.
 - Archive records are validated for schema and privacy but never emitted as active candidates. Unknown archived IDs already present in Firebase household state are ignored by reconciliation; new IDs are never silently reused.
-
-## Migration parity
-
-The original YAML migration preserved all 132 Ingredient IDs and 162 Recipe IDs. The active library now has 135 Ingredients, 132 visible Starter choices, and 164 Recipes, including 23 easy-braise Ingredients and 36 iron-pan braise Recipes.

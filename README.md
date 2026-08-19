@@ -39,7 +39,7 @@ Install Playwright Chromium once on a new machine with `pnpm exec playwright ins
 - Colonoscopy Specialists: `src/data/colonoscopy-specialists.json` · [`docs/modules/colonoscopy-specialists/README.md`](docs/modules/colonoscopy-specialists/README.md)
 - Meal Builder: indexed YAML under `src/data/meal-builder/` · [`docs/modules/meal-builder/README.md`](docs/modules/meal-builder/README.md)
 
-Active module metadata and home categories live in `src/config/modules.ts`; strict public-data rules live in `src/data/schemas.mjs`. Meal Builder data maintenance is documented in its `maintenance.md`; archived migration material under `docs/archive/` is not a build source.
+Active module metadata and home categories live in `src/config/modules.ts`; strict public-data rules live in `src/data/schemas.mjs`. Meal Builder data rules start from its module README and data model; archived migration material under `docs/archive/` is not a build source.
 
 Keep U.S. proper names, addresses, programs, credentials, official terminology, and source titles in English. General guidance, family assessments, limitations, comments, and household instructions use Chinese. Do not translate source material automatically. Only set `verifiedDate` after checking the underlying source; leave unknown values empty or `null` as permitted by the schema.
 
