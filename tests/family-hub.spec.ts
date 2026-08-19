@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { loadMealData } from '../scripts/load-meal-data.mjs';
+import { moduleRegistry } from '../src/config/modules';
 
 const mealData = await loadMealData();
 const activeRecipeCount = mealData.recipes.length;
@@ -26,7 +27,7 @@ async function startMeal(page: Page, ids: string[] = []) {
 
 test('home groups and searches the active modules', async ({ page }) => {
   await page.goto('./');
-  await expect(page.locator('[data-module]')).toHaveCount(7);
+  await expect(page.locator('[data-module]')).toHaveCount(moduleRegistry.length);
   const sections = page.locator('[data-category-section]');
   await expect(sections).toHaveCount(3);
   await expect(sections.nth(0)).toHaveAttribute('data-category-section', 'food-home');
