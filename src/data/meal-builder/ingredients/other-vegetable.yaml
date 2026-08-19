@@ -657,3 +657,27 @@ ingredients:
       sources:
         - Family Meal Ingredient brainstorm / retained candidate decisions
     notes: 不算 pantry aromatic；可作为 Vegetable-slot 食材。
+  - id: bean-sprouts
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 豆芽
+    name_en: Bean Sprouts
+    starter:
+      visible: true
+      section: other-vegetable
+      order: 260
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 用户明确要求加入，适合作为快速蔬菜候选。
+      tradeoffs: []
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-18
+      scope: User-requested generic bean-sprout Ingredient identity; no retailer, price, package-size, tested timing, or child-acceptance claim.
+      sources:
+        - User request — add generic 豆芽 Ingredient
+    notes: 显示概念保持通用“豆芽”，不强制拆分绿豆芽/黄豆芽。

@@ -173,6 +173,7 @@ categories:
       - celery
       - onion
       - garlic-scapes
+      - bean-sprouts
   - id: mushroom
     label_zh: 菌菇
     label_en: Mushrooms

@@ -1,0 +1,82 @@
+id: simple-stir-fried-bean-sprouts
+type: recipe
+status: candidate
+name_zh: 清炒豆芽
+name_en: Simple Stir-Fried Bean Sprouts
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-30
+  - low-prep
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+    - 用户明确要求加入清炒豆芽，补充 Vegetable-centered coverage。
+    - 与家庭现有轻盐、少油、无辣 base 和现有炒锅路线兼容。
+  tradeoffs: []
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-18
+  scope: Culinary identity, high-heat bean-sprout technique, and under-5 sprout safety; household-light seasoning/oil adaptation. Child acceptance remains unverified.
+  sources:
+    - Omnivore's Cookbook — Bean Sprout Stir Fry
+    - The Woks of Life — Chicken and Bean Sprouts Stir Fry
+    - CDC — Safer Food Choices for Children Under 5 Years Old
+notes: |-
+  Candidate Vegetable-centered route. Display ingredient remains generic 豆芽 rather than forcing mung-bean versus soybean-sprout inventory splits.
+
+  Cook basis: source-derived-household-adaptation. Omnivore's Cookbook supports a roughly 454 g bean-sprout batch and a short high-heat stir-fry; The Woks of Life supports thorough draining, high heat, and short cooking with bean sprouts. CDC guidance for children under 5 requires sprouts to be cooked until steaming hot. Oil and seasoning are reduced for the household-light base; not household-tested.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+  - bean-sprouts
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 10–15
+meal_window_minutes: 10–20
+elapsed_minutes: 10–20
+advance_start_required: false
+equipment:
+  - high-output burner
+  - wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: conditional
+child_texture: 豆芽熟透后仍有一定脆感和纤维感；未确认儿童接受度，暂不计 Child Vegetable coverage。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: bean-sprouts
+    role: vegetable
+steps:
+  - 准备：豆芽450 g用流动冷水冲洗，挑掉明显坏芽和松散豆壳；放漏篮充分沥干，表面很湿时用厨房纸轻压吸水。蒜2瓣切末。把生抽1 tsp、盐1/4 tsp、糖1/2 tsp和白胡椒1/8 tsp预先混匀；香油1/2 tsp单独放好。
+  - 炒锅大火预热到锅面明显热、刚有轻烟，加2 tsp中性油；下蒜末快速翻10秒，不要把蒜炒焦。
+  - 一次下入全部豆芽，保持大火，快速翻炒约1分钟，让豆芽均匀接触热锅；不要加水，也不要盖盖。
+  - 沿锅边淋入预混调味，继续大火翻炒2–3分钟。目标不是生脆：整锅应持续明显冒蒸汽，豆芽杆略变半透明、已完全热透，但仍保留弹性。若豆粒明显较大且仍偏硬，再炒约1分钟，以完全热透为准。
+  - 锅底若析出少量水分，继续大火翻炒到只剩薄薄汁光、没有一滩水；淋入1/2 tsp香油，翻10秒立刻关火装盘。
+  - 完成提示：豆芽全部滚热、杆部略透明，咬断时没有生硬感；锅底无明显积水。给5岁以下孩子的部分不要保留生或半生豆芽。
+child_serving: 给孩子吃的部分必须炒到整盘持续冒蒸汽、完全热透；盛出后可剪短，再放凉到适口温度。儿童实际接受度未确认，因此本菜暂不计 Child Vegetable coverage。
+adult_finish: 孩子份盛出后，成人可另加辣椒油、辣椒脆或少量香醋；不需要则省略。
+substitutions: []
+cook_ingredients:
+  - 豆芽：450 g
+  - 蒜：2瓣，切末
+  - 中性油：2 tsp
+  - 调味：生抽 1 tsp；盐 1/4 tsp；糖 1/2 tsp；白胡椒 1/8 tsp
+  - 香油：1/2 tsp，出锅前加入

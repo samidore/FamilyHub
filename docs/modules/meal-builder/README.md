@@ -35,8 +35,9 @@ Each recipe has one file. Category indexes and the root index are explicit; file
 
 ## Current invariants
 
-- 134 Ingredient records; 131 visible non-pantry Starter choices; 163 candidate Recipes.
+- 135 Ingredient records; 132 visible non-pantry Starter choices; 164 candidate Recipes.
 - All active records retain their stable lowercase kebab-case IDs and remain `candidate`; no automatic approval.
 - 23 Ingredients carry the checkout-only `easy-braise-addon` capability and 36 Recipes carry `iron-pan-braise`. This pairing does not affect planning or Cook View; pure Instant Pot/Sauté-only routes are excluded.
 - Recipe availability comes only from Ingredient IDs and `one_of` alternatives in `ingredients[]`. Pantry items appear only as Cook View text and are not tracked. Starter selection means “available this meal,” not “must use.”
+- 24 Recipes are vegetable-centered structures.
 - Public data contains recipe/ingredient facts only. Shared Firebase state contains stable IDs and household operating state, never private family profile data or a second recipe library.

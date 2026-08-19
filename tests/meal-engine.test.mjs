@@ -68,14 +68,18 @@ test('recent Recipes rank after unseen choices with the newest meal last', () =>
 
 test('structured data keeps active counts, Ingredient coverage, and easy-braise capabilities', async () => {
   const kb = await loadMealData();
-  assert.equal(kb.ingredients.length, 134);
-  assert.equal(kb.ingredients.filter((item) => item.visible).length, 131);
-  assert.equal(kb.recipes.length, 163);
+  assert.equal(kb.ingredients.length, 135);
+  assert.equal(kb.ingredients.filter((item) => item.visible).length, 132);
+  assert.equal(kb.recipes.length, 164);
   assert.equal(kb.ingredients.find((item) => item.id === 'zongzi')?.inventoryTracking, 'presence-only');
   const steamedZongzi = kb.recipes.find((item) => item.id === 'steamed-zongzi');
   assert.equal(steamedZongzi?.requirements[0]?.anyOf[0], 'zongzi');
   assert.equal(steamedZongzi?.tags.includes('instant-pot'), true);
   assert.equal(steamedZongzi?.steps.some((step) => step.includes('15分钟')), true);
+  assert.equal(kb.ingredients.find((item) => item.id === 'bean-sprouts')?.visible, true);
+  const beanSprouts = kb.recipes.find((item) => item.id === 'simple-stir-fried-bean-sprouts');
+  assert.equal(beanSprouts?.requirements[0]?.anyOf[0], 'bean-sprouts');
+  assert.deepEqual(beanSprouts?.contribution, { protein: 0, vegetable: 1, staple: 0 });
   const wholeBrisketRecipeIds = kb.recipes
     .filter((item) => item.requirements.some((requirement) => requirement.anyOf.includes('whole-beef-brisket')))
     .map((item) => item.id);
@@ -85,7 +89,7 @@ test('structured data keeps active counts, Ingredient coverage, and easy-braise 
     'chinese-red-braised-beef',
     'red-braised-beef-noodle-soup',
   ]);
-  assert.equal(kb.recipes.filter((item) => item.vegetableCentered).length, 23);
+  assert.equal(kb.recipes.filter((item) => item.vegetableCentered).length, 24);
   assert.deepEqual(kb.ingredients.filter((item) => item.tags?.includes('easy-braise-addon')).map((item) => item.id).sort(), easyBraiseIngredientIds);
   assert.deepEqual(kb.recipes.filter((item) => item.tags?.includes('iron-pan-braise')).map((item) => item.id).sort(), ironPanBraiseRecipeIds);
   assert.equal(kb.ingredients.some((item) => item.tags?.includes('finish-wilt-compatible')), false);

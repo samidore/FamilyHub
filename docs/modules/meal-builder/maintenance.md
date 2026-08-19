@@ -64,4 +64,4 @@ pnpm run test:rules
 pnpm run test:browser
 ```
 
-Also inspect the generated Meal Builder output, privacy scan, active/archive boundaries, known stable IDs, 133/130/163 counts, 23 vegetable structures, seven add-on supports, and Firebase unknown-ID reconciliation when applicable.
+Also inspect the generated Meal Builder output, privacy scan, active/archive boundaries, known stable IDs, 135/132/164 counts, 24 vegetable structures, 23 easy-braise Ingredients, 36 iron-pan braise Recipes, and Firebase unknown-ID reconciliation when applicable.

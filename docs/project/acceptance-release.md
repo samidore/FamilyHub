@@ -25,7 +25,7 @@ The rules tests use `firebase emulators:exec` and require Java locally; GitHub-h
 - Baseline public counts remain 29 Day Trips, 18 Library Activities, 10 Pediatric Dentists, 10 Adult Dermatologists, and 18 Colonoscopy Specialists. Tests should compare rendered counts with validated data rather than duplicating numbers in browser logic.
 - Every page server-renders its reference content, supports combined search/filter/sort behavior with JavaScript, preserves bookmarkable query state, recovers from empty results, and avoids horizontal overflow at 375, 390, 430, 768, 1024, and 1440px.
 - Public schemas reject unknown/private fields, unsafe URLs, invalid ranges, unsupported values, duplicate stable IDs, and broken references. Generated HTML passes the privacy scan.
-- Meal Builder validates manifest completeness, stable ordering, globally unique IDs, archive isolation, ingredient references, and active counts of 134 Ingredients, 131 visible Starter choices, and 163 Recipes. Checkout atomically validates its checkout-only easy-braise eligibility.
+- Meal Builder validates manifest completeness, stable ordering, globally unique IDs, archive isolation, ingredient references, and active counts of 135 Ingredients, 132 visible Starter choices, and 164 Recipes. Checkout atomically validates its checkout-only easy-braise eligibility.
 
 ## Release discipline
 

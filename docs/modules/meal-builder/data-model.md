@@ -119,4 +119,4 @@ substitutions: []
 
 ## Migration parity
 
-The original YAML migration preserved all 132 Ingredient IDs and 162 Recipe IDs. The active library now has 134 Ingredients, 131 visible Starter choices, and 163 Recipes, including 23 easy-braise Ingredients and 36 iron-pan braise Recipes.
+The original YAML migration preserved all 132 Ingredient IDs and 162 Recipe IDs. The active library now has 135 Ingredients, 132 visible Starter choices, and 164 Recipes, including 23 easy-braise Ingredients and 36 iron-pan braise Recipes.
