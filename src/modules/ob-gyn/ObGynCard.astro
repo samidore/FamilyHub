@@ -1,0 +1,53 @@
+---
+import type { ObGynPlacement, ObGynProvider } from '../../data/obGynTypes';
+
+const { provider: p, placement } = Astro.props as { provider: ObGynProvider; placement: ObGynPlacement };
+const relationLabels: Record<string, string> = {
+  'confirmed-delivery': 'Confirmed delivery',
+  'likely-delivery': 'Likely delivery',
+  'affiliation-only': 'Affiliation only',
+  unclear: 'Unclear',
+};
+const scopeLabel = p.scopes.includes('ob') && p.scopes.includes('gyn') ? 'OB + GYN' : p.scopes.includes('ob') ? 'OB' : 'GYN';
+const searchable = [p.name, p.practice, p.location, p.evidence, p.reviews, p.availability, ...p.strengths, ...p.checks].join(' ').toLocaleLowerCase();
+---
+<article class="record-card obgyn-card" data-ob-gyn data-search={searchable} data-section={placement.section} data-tier={placement.tier} data-rank={placement.rank} data-name={p.name}>
+  <div class="record-card__top">
+    <div class="badges">
+      <span class="badge">#{placement.rank}</span>
+      <span class="badge">Tier {placement.tier}</span>
+      <span class="badge badge--status">{scopeLabel}</span>
+      {placement.hospitalRelation && <span class="badge badge--caution">{relationLabels[placement.hospitalRelation]}</span>}
+    </div>
+    <h3>{p.name}</h3>
+    <p class="provider-line"><strong>{p.practice}</strong></p>
+    <p class="location-line">{p.location}</p>
+    <dl class="metric-grid">
+      <div><dt>家庭顺序</dt><dd>#{placement.rank}</dd></div>
+      <div><dt>家庭筛选分</dt><dd>{placement.familyScore} / 100</dd></div>
+      <div><dt>范围</dt><dd>{scopeLabel}</dd></div>
+      <div><dt>资料核验</dt><dd>{p.verifiedDate}</dd></div>
+    </dl>
+  </div>
+
+  <div class="record-card__body">
+    <div class="tags" aria-label="主要优势">{p.strengths.map((strength) => <span>{strength}</span>)}</div>
+    <section class="info-block info-block--assessment"><h4>为什么进入名单</h4><p>{p.evidence}</p></section>
+    <section class="info-block info-block--fact"><h4>患者体验证据</h4><p>{p.reviews}</p></section>
+    {placement.deliveryModel && <section class="info-block"><h4>接生模式</h4><p>{placement.deliveryModel}</p></section>}
+
+    <details class="record-details">
+      <summary>查看可用性、证据缺口与电话确认项</summary>
+      <div class="record-details__content">
+        <section class="info-block"><h4>新患者 / 可用性</h4><p>{p.availability}</p></section>
+        <section class="info-block info-block--risk"><h4>仍需核实</h4><ul class="question-list">{p.checks.map((check) => <li>{check}</li>)}</ul></section>
+        <p class="verification-note">本页尚未把 NJ primary-source license / discipline 查询或 Premera 的具体 member network 状态标成“已通过”。缺失资料保持 unknown，不等于负面事实。</p>
+      </div>
+    </details>
+
+    <div class:list={['actions', p.healthgradesUrl ? 'actions--three' : '']}>
+      <a class="button button--primary" href={p.officialUrl} target="_blank" rel="noopener noreferrer">Official source</a>
+      {p.healthgradesUrl && <a class="button button--secondary" href={p.healthgradesUrl} target="_blank" rel="noopener noreferrer">Healthgrades</a>}
+    </div>
+  </div>
+</article>
