@@ -40,8 +40,10 @@ const recordsFor = (section: ObGynSection) => placements.filter((item) => item.p
       {sections.map((section) => (
         <details class="provider-section" data-provider-section data-section={section.id}>
           <summary>
-            <span class="section-summary-copy"><h2>{section.title}</h2><small>{section.description}</small></span>
-            <span class="section-count" data-section-count>10</span>
+            <h2>
+              <span class="section-summary-copy"><span class="section-title">{section.title}</span><small>{section.description}</small></span>
+              <span class="section-count" data-section-count>10</span>
+            </h2>
           </summary>
           <div class="section-grid">
             {recordsFor(section.id).map(({ provider, placement }) => <ObGynCard provider={provider} placement={placement} />)}
@@ -110,11 +112,12 @@ const recordsFor = (section: ObGynSection) => placements.filter((item) => item.p
     .trust-note { padding: 1rem 1.1rem; border: 1px solid var(--line); border-radius: 1rem; background: var(--surface); line-height: 1.55; }
     .provider-sections { display: grid; gap: 1rem; }
     .provider-section { border: 1px solid var(--line); border-radius: 1.1rem; background: var(--surface); overflow: clip; }
-    .provider-section > summary { min-height: 64px; cursor: pointer; padding: 1rem 1.1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; }
+    .provider-section > summary { min-height: 64px; cursor: pointer; padding: 1rem 1.1rem; }
+    .provider-section > summary h2 { margin: 0; display: flex; gap: 1rem; align-items: center; justify-content: space-between; font-size: inherit; }
     .section-summary-copy { min-width: 0; }
-    .provider-section > summary h2 { margin: 0; font-size: 1.15rem; line-height: 1.25; }
+    .section-title { display: block; font-size: 1.15rem; line-height: 1.25; font-weight: 700; }
     .provider-section > summary small { display: block; margin-top: .3rem; color: var(--muted); line-height: 1.4; font-size: .9rem; font-weight: 400; }
-    .section-count { flex: 0 0 auto; min-width: 2.5rem; min-height: 2.5rem; display: grid; place-items: center; border-radius: 999px; background: var(--accent-soft); font-weight: 700; }
+    .section-count { flex: 0 0 auto; min-width: 2.5rem; min-height: 2.5rem; display: grid; place-items: center; border-radius: 999px; background: var(--accent-soft); font-size: 1rem; font-weight: 700; }
     .section-grid { display: grid; gap: 1rem; padding: 0 1rem 1rem; }
     .note-box ol { margin: .75rem 0 1rem; padding-left: 1.4rem; }
     .note-box li + li { margin-top: .35rem; }
