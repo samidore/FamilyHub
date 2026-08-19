@@ -40,7 +40,7 @@ const recordsFor = (section: ObGynSection) => placements.filter((item) => item.p
       {sections.map((section) => (
         <details class="provider-section" data-provider-section data-section={section.id}>
           <summary>
-            <span><strong>{section.title}</strong><small>{section.description}</small></span>
+            <span class="section-summary-copy"><h2>{section.title}</h2><small>{section.description}</small></span>
             <span class="section-count" data-section-count>10</span>
           </summary>
           <div class="section-grid">
@@ -111,12 +111,11 @@ const recordsFor = (section: ObGynSection) => placements.filter((item) => item.p
     .provider-sections { display: grid; gap: 1rem; }
     .provider-section { border: 1px solid var(--line); border-radius: 1.1rem; background: var(--surface); overflow: clip; }
     .provider-section > summary { min-height: 64px; cursor: pointer; padding: 1rem 1.1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; }
-    .provider-section > summary strong { display: block; font-size: 1.15rem; }
+    .section-summary-copy { min-width: 0; }
+    .provider-section > summary h2 { margin: 0; font-size: 1.15rem; line-height: 1.25; }
     .provider-section > summary small { display: block; margin-top: .3rem; color: var(--muted); line-height: 1.4; font-size: .9rem; font-weight: 400; }
     .section-count { flex: 0 0 auto; min-width: 2.5rem; min-height: 2.5rem; display: grid; place-items: center; border-radius: 999px; background: var(--accent-soft); font-weight: 700; }
     .section-grid { display: grid; gap: 1rem; padding: 0 1rem 1rem; }
-    .obgyn-card h3 { margin: .5rem 0; font-size: clamp(1.65rem, 5vw, 2rem); }
-    .obgyn-card .info-block h4 { margin: 0 0 4px; font-size: 16px; line-height: 1.35; }
     .note-box ol { margin: .75rem 0 1rem; padding-left: 1.4rem; }
     .note-box li + li { margin-top: .35rem; }
     @media (min-width: 900px) {
