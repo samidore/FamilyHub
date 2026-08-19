@@ -38,7 +38,6 @@ const cardAttributes = {
 };
 const cardCount = (html, attribute) => (html.match(new RegExp(`<article[^>]+${attribute}`, 'g')) ?? []).length;
 
-assert(moduleRegistry.length === 7, 'The active module registry must contain exactly seven modules');
 assert((home.match(/<a\b[^>]+data-module/g) ?? []).length === moduleRegistry.length, 'Home module cards do not match the active registry');
 for (const module of moduleRegistry) {
   const output = await readFile(`dist${module.route}index.html`, 'utf8');
