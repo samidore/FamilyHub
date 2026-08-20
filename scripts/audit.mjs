@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { moduleRegistry } from '../src/config/modules.ts';
 import { parseAdultDermatologists, parseColonoscopySpecialists, parseDayTrips, parseLibraryEvents, parsePediatricDentists } from '../src/data/schemas.mjs';
 import { parseObGynProviders } from '../src/data/obGynSchema.mjs';
+import { obGynExternalProfiles } from '../src/data/obGynExternalProfiles.ts';
 import { loadMealData } from './load-meal-data.mjs';
 
 const readJson = async (file) => JSON.parse(await readFile(file, 'utf8'));
@@ -57,6 +58,14 @@ for (const section of ['valley-ob', 'hackensack-ob', 'englewood-ob', 'gyn']) {
   assert(sectionPlacements.length === 10, `${section} must contain 10 placements`);
   assert(sectionPlacements.every((placement, index) => placement.rank === index + 1), `${section} ranks are not a complete deterministic order`);
 }
+const obGynIds = obGyn.map((provider) => provider.id).sort();
+const obGynExternalIds = Object.keys(obGynExternalProfiles).sort();
+assert(obGynExternalIds.length === obGyn.length, 'OB/GYN external review-link directory must contain exactly one entry per unique provider');
+assert(JSON.stringify(obGynExternalIds) === JSON.stringify(obGynIds), 'OB/GYN external review-link directory provider IDs do not match the provider dataset');
+assert(Object.values(obGynExternalProfiles).every((entry) => entry.healthgradesUrl.startsWith('https://www.healthgrades.com/')), 'Every OB/GYN provider must have a Healthgrades link');
+assert(Object.values(obGynExternalProfiles).every((entry) => ['profile', 'group', 'directory'].includes(entry.healthgradesLinkKind)), 'An OB/GYN Healthgrades link is missing its scope label');
+assert(Object.values(obGynExternalProfiles).every((entry) => !entry.webmdUrl || entry.webmdUrl.startsWith('https://doctor.webmd.com/')), 'An OB/GYN WebMD link is invalid');
+assert(Object.values(obGynExternalProfiles).every((entry) => !entry.zocdocUrl || entry.zocdocUrl.startsWith('https://www.zocdoc.com/')), 'An OB/GYN Zocdoc link is invalid');
 assert(!meals.recipes.find((item) => item.id === 'instant-pot-soy-chicken-thighs')?.tags?.includes('iron-pan-braise'), 'Instant Pot soy chicken thighs must not be iron-pan-braise');
 assert(events.every((item, index, all) => !index || all[index - 1].dayOrder < item.dayOrder || (all[index - 1].dayOrder === item.dayOrder && all[index - 1].timeOrder <= item.timeOrder)), 'Events are not stored in weekday/time order');
 assert(dentists.every((item) => item.healthgradesUrl.startsWith('https://www.healthgrades.com/')), 'A Healthgrades URL is missing or invalid');
