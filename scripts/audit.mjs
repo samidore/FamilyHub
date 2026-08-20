@@ -47,12 +47,18 @@ for (const module of moduleRegistry) {
 }
 
 assert(trips.length === 29, 'Trip migration count is not 29');
-assert(events.length === 18, 'Library activity migration count is not 18');
 assert(dentists.length === 10, 'Pediatric dentist migration count is not 10');
 assert(dermatologists.length === 10, 'Adult dermatologist migration count is not 10');
 assert(colonoscopy.length === 18, 'Colonoscopy specialist migration count is not 18');
 assert(obGyn.length === 35, 'OB/GYN unique provider count is not 35');
 assert(obGynPlacements.length === 40, 'OB/GYN placement count is not 40');
+const eventRangePattern = /^\d{4}-\d{2}-\d{2}(?: – \d{4}-\d{2}-\d{2})?$/;
+assert(events.every((item) => item.library === 'Maurice M. Pine Library' && item.location.includes('Fair Lawn')), 'Library activities must be limited to Fair Lawn / Maurice M. Pine Library');
+assert(events.every((item) => item.verifiedDate && eventRangePattern.test(item.dateRange)), 'Every library activity must have a verified source date and a bounded ISO date range');
+assert(events.every((item) => {
+  const dates = item.dateRange.match(/\d{4}-\d{2}-\d{2}/g) ?? [];
+  return dates.length > 0 && dates.at(-1) >= dates[0];
+}), 'A library activity end date precedes its start date');
 for (const section of ['valley-ob', 'hackensack-ob', 'englewood-ob', 'gyn']) {
   const sectionPlacements = obGynPlacements.filter((placement) => placement.section === section).sort((a, b) => a.rank - b.rank);
   assert(sectionPlacements.length === 10, `${section} must contain 10 placements`);
