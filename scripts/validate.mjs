@@ -12,8 +12,17 @@ const colonoscopy = parseColonoscopySpecialists(await readJson('src/data/colonos
 const obGyn = parseObGynProviders(await readJson('src/data/ob-gyn.json'));
 const meals = await loadMealData();
 
-if (trips.length !== 29 || events.length !== 18 || dentists.length !== 10 || dermatologists.length !== 10 || colonoscopy.length !== 18 || obGyn.length !== 35) {
+if (trips.length !== 29 || dentists.length !== 10 || dermatologists.length !== 10 || colonoscopy.length !== 18 || obGyn.length !== 35) {
   throw new Error(`Migration count mismatch: ${trips.length} trips, ${events.length} events, ${dentists.length} dentists, ${dermatologists.length} dermatologists, ${colonoscopy.length} colonoscopy specialists, ${obGyn.length} OB/GYN providers`);
+}
+
+const eventRangePattern = /^\d{4}-\d{2}-\d{2}(?: – \d{4}-\d{2}-\d{2})?$/;
+for (const [index, event] of events.entries()) {
+  if (event.library !== 'Maurice M. Pine Library' || !event.location.includes('Fair Lawn')) throw new Error(`library-events[${index}]: only Fair Lawn / Maurice M. Pine Library events are allowed`);
+  if (!event.verifiedDate) throw new Error(`library-events[${index}].verifiedDate: source verification date is required`);
+  if (!eventRangePattern.test(event.dateRange)) throw new Error(`library-events[${index}].dateRange: expected YYYY-MM-DD or YYYY-MM-DD – YYYY-MM-DD`);
+  const dates = event.dateRange.match(/\d{4}-\d{2}-\d{2}/g) ?? [];
+  if (dates.at(-1) < dates[0]) throw new Error(`library-events[${index}].dateRange: end date must not precede start date`);
 }
 
 console.log(`Validated strict public schemas: ${trips.length} trips, ${events.length} events, ${dentists.length} dentists, ${dermatologists.length} dermatologists, ${colonoscopy.length} colonoscopy specialists, ${obGyn.length} OB/GYN providers.`);
