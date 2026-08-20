@@ -1,0 +1,126 @@
+---
+const hospitals = [
+  {
+    code: 'H',
+    name: 'Hackensack University Medical Center',
+    take: '最高救援冗余 / 高危优先',
+    bestFor: '如果 pregnancy 明显高危、担心极早产/复杂胎盘问题，或单纯希望把成人 ICU、儿科、NICU、MFM、手术与创伤救援都放在同一大型 academic campus，HUMC 最强。',
+    capability: 'Donna A. Sanzari Women’s Hospital 是 Regional Perinatal Referral Center；HMH 当前资料列 Level IIIC NICU，另有 Joseph M. Sanzari Children’s Hospital。HUMC 本身是 Level I Adult Trauma + Level II Pediatric Trauma，整体急救与专科冗余三院里最深。',
+    maternity: 'Leapfrog 2026 submission：低风险初产单胎足月头位（NTSV）C-section 22.1%，very-low-birth-weight deliveries 74，达到 VLBW 标准；9.60 nursing hours / patient day，Magnet。HMH 教学资料称每年约 6,000+ deliveries。',
+    comfort: '有独立 Women’s Hospital、L&D、NICU 与 postpartum，但公开资料对“酒店式”房间细节没有 Valley 那么透明。选择 HUMC 的核心理由应是高危与救援能力，而不是房间更新程度。',
+    tradeoff: '规模大、academic/group/laborist 模式更多，选到某位 OB 不代表生产时一定由本人接。对正常低风险 pregnancy，医院硬件优势不应压倒医生/practice 本身的明显差异。',
+    sources: [
+      ['HUMC hospital', 'https://www.hackensackmeridianhealth.org/en/locations/hackensack-university-medical-center'],
+      ['HUMC NICU', 'https://www.hackensackmeridianhealth.org/en/services/childrens-health/specialties-and-services/neonatal-intensive-care'],
+      ['Leapfrog 2026', 'https://ratings.leapfroggroup.org/facility/details/31-0001/hackensack-meridian-hackensack-university-medical-center-hackensack-nj'],
+    ],
+  },
+  {
+    code: 'V',
+    name: 'The Valley Hospital',
+    take: '现代产房 / 舒适度优先',
+    bestFor: '低风险或常规 pregnancy，如果很看重现代 maternity 环境、私密性、support-person 空间和 hydrotherapy，同时仍希望有完整 MFM + Level III NICU，Valley 很有吸引力。',
+    capability: 'Valley 有完整 Maternal-Fetal Medicine 团队；15-bed NICU 为 NJ Level III nursery，neonatologists 24/7。它不是 HUMC 那种大型 regional academic rescue hub，但高危 pregnancy 和 neonatal intensive care 并不弱。',
+    maternity: '当前可直接检索的 Leapfrog 页面仍显示 2025-09-04 submission：NTSV C-section 29.9%，VLBW outcomes “As Expected”，Magnet；页面另列 474 NICU admissions。由于 submission 日期早于 HUMC 2026 数据，不做伪精确横比。',
+    comfort: 'Paramus 新院 Family Care Pavilion：14 间 L&D，2 间有 jetted hydrotherapy tubs；42-bed postpartum。NICU 以 private single-patient rooms 为主，multiples 有 semiprivate rooms，父母可 overnight stay。三院里当前公开的现代 maternity 设施信息最完整。',
+    tradeoff: '当前公开 Leapfrog maternity submission 比 HUMC 旧，而且该版本的 NTSV C-section 高于 Leapfrog 23.6% 标准。若重视低干预生产，应进一步问具体 OB/practice 的 induction、call coverage 与医院最新 maternity 数据。',
+    sources: [
+      ['Family Care Pavilion', 'https://www.valleyhealth.com/trending/family-care-services-valley-hospital-paramus'],
+      ['Level III NICU', 'https://www.valleyhealth.com/services/critical-care/neonatal-intensive-care-unit'],
+      ['Leapfrog', 'https://ratings.leapfroggroup.org/facility/details/31-0012/the-valley-hospital-paramus-nj'],
+    ],
+  },
+  {
+    code: 'E',
+    name: 'Englewood Hospital',
+    take: '常规产科指标 + 舒适度平衡',
+    bestFor: '低风险/常规 pregnancy，如果希望 maternity unit 不太大、设施舒适，同时公开低风险 C-section / episiotomy 数据表现不错，Englewood 是很均衡的选择。',
+    capability: '有 onsite Maternal-Fetal Medicine、neonatologists 与 NICU；MFM 每年约做 10,000 次 ultrasound。医院公开资料将其 maternity service 描述为 tertiary-level，但极低出生体重儿量明显小于 HUMC。',
+    maternity: '当前可直接检索的 Leapfrog maternity page 显示 2025-06-19 submission：NTSV C-section 20.5%，episiotomy 3.5%，2,881 live births，VLBW deliveries 12；提供 VBAC、允许自带 doula。Spring 2026 hospital-wide Leapfrog Safety Grade 为 A。',
+    comfort: '8 间 L&D 都有 private bathroom，另有 2 间 planned/emergency C-section OR；提供 hydrotherapy tubs。Postpartum 为 21 间 private + 3 间 semiprivate，private room 视 availability，support person 有 sleeper sofa。',
+    tradeoff: '整体规模和高危 newborn volume 小于 HUMC；如果明确存在复杂 maternal/fetal risk，我会更偏 HUMC。另一个实际点是 postpartum private room 不能保证。',
+    sources: [
+      ['Maternity', 'https://www.englewoodhealth.org/service/maternity-care'],
+      ['Room details', 'https://www.englewoodhealth.org/service/maternity-care/during-your-maternity-unit-stay'],
+      ['Leapfrog', 'https://ratings.leapfroggroup.org/facility/details/31-0045/englewood-hospital-and-medical-center-englewood-nj'],
+    ],
+  },
+];
+---
+<details class="hospital-comparison" data-hospital-comparison>
+  <summary>
+    <span>
+      <span class="hospital-comparison__title">先选医院 · Valley / Hackensack / Englewood</span>
+      <small>救援能力、产科/NICU、当前公开指标、房间与实际 trade-off 分开看。</small>
+    </span>
+    <span class="hospital-comparison__tag">3 院</span>
+  </summary>
+
+  <div class="hospital-comparison__body">
+    <div class="decision-strip" aria-label="三院一句话结论">
+      <div><strong>最高救援冗余</strong><span>HUMC</span></div>
+      <div><strong>现代 maternity 舒适度</strong><span>Valley</span></div>
+      <div><strong>常规产科平衡</strong><span>Englewood</span></div>
+    </div>
+
+    <p class="comparison-note"><strong>指标日期不完全一致：</strong> HUMC 的 Leapfrog maternity submission 已是 2026；Valley 和 Englewood 当前可直接检索页仍显示 2025 submission。页面保留原日期，不把不同 reporting window 当成严格同期排名。</p>
+
+    <div class="hospital-grid">
+      {hospitals.map((hospital) => (
+        <article class="hospital-card">
+          <header>
+            <span class="hospital-code">{hospital.code}</span>
+            <div><h3>{hospital.name}</h3><p>{hospital.take}</p></div>
+          </header>
+          <section><h4>最适合</h4><p>{hospital.bestFor}</p></section>
+          <section><h4>高危 / 救援能力</h4><p>{hospital.capability}</p></section>
+          <section><h4>当前公开 maternity 数据</h4><p>{hospital.maternity}</p></section>
+          <section><h4>产房与舒适度</h4><p>{hospital.comfort}</p></section>
+          <section class="tradeoff"><h4>主要 trade-off</h4><p>{hospital.tradeoff}</p></section>
+          <div class="hospital-sources" aria-label={`${hospital.name} sources`}>
+            {hospital.sources.map(([label, url]) => <a href={url} target="_blank" rel="noopener noreferrer">{label}</a>)}
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="bottom-line">
+      <strong>家庭决策底线：</strong>
+      <span>明显高危或希望最大 rescue depth → HUMC；正常低风险且最看重环境 → Valley；正常低风险且看重公开产科指标与舒适度平衡 → Englewood。低风险情况下，一个明显更合适的医生/practice 完全可以胜过“医院更强但医生一般”的组合。</span>
+    </div>
+  </div>
+</details>
+
+<style>
+  .hospital-comparison { border: 1px solid var(--line); border-radius: 1.1rem; background: var(--surface); overflow: clip; }
+  .hospital-comparison > summary { min-height: 70px; padding: 1rem 1.1rem; display: flex; gap: 1rem; align-items: center; justify-content: space-between; cursor: pointer; }
+  .hospital-comparison__title { display: block; font-size: 1.2rem; line-height: 1.25; font-weight: 700; }
+  .hospital-comparison > summary small { display: block; margin-top: .3rem; color: var(--muted); line-height: 1.4; font-size: .9rem; font-weight: 400; }
+  .hospital-comparison__tag { flex: 0 0 auto; min-width: 3rem; min-height: 2.5rem; display: grid; place-items: center; padding-inline: .65rem; border-radius: 999px; background: var(--accent-soft); font-size: .9rem; font-weight: 700; }
+  .hospital-comparison__body { display: grid; gap: 1rem; padding: 0 1rem 1rem; }
+  .decision-strip { display: grid; gap: .55rem; }
+  .decision-strip > div { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .7rem .8rem; border: 1px solid var(--line); border-radius: .75rem; background: #fafbf9; }
+  .decision-strip strong { font-size: .9rem; }
+  .decision-strip span { color: var(--accent); font-weight: 700; }
+  .comparison-note { margin: 0; padding: .85rem 1rem; border-left: 4px solid var(--ochre); background: #f8f3e9; color: #4c4336; font-size: .92rem; }
+  .hospital-grid { display: grid; gap: 1rem; }
+  .hospital-card { min-width: 0; padding: 1rem; border: 1px solid var(--line); border-radius: 1rem; background: #fff; }
+  .hospital-card header { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); gap: .8rem; align-items: start; padding-bottom: .85rem; border-bottom: 1px solid var(--line); }
+  .hospital-code { display: grid; width: 2.6rem; height: 2.6rem; place-items: center; border-radius: .7rem; background: var(--accent); color: #fff; font-weight: 700; }
+  .hospital-card h3 { margin: 0; font-size: 1.18rem; line-height: 1.25; }
+  .hospital-card header p { margin: .2rem 0 0; color: var(--accent); font-size: .9rem; font-weight: 700; }
+  .hospital-card section { margin-top: .9rem; }
+  .hospital-card h4 { margin: 0 0 .2rem; font-size: .9rem; }
+  .hospital-card section p { margin: 0; color: #35433a; font-size: .94rem; line-height: 1.55; }
+  .hospital-card .tradeoff { padding: .75rem; border-radius: .75rem; background: #f8f3e9; }
+  .hospital-sources { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
+  .hospital-sources a { padding: .45rem .65rem; border: 1px solid var(--line); border-radius: .6rem; color: var(--accent); font-size: .82rem; font-weight: 700; text-decoration: none; }
+  .bottom-line { display: grid; gap: .25rem; padding: .9rem 1rem; border-radius: .8rem; background: var(--accent-soft); font-size: .94rem; line-height: 1.55; }
+  @media (min-width: 720px) {
+    .decision-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .decision-strip > div { display: grid; gap: .15rem; }
+  }
+  @media (min-width: 1000px) {
+    .hospital-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+</style>
