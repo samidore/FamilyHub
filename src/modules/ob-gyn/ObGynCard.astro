@@ -1,14 +1,23 @@
 ---
 import type { ObGynPlacement, ObGynProvider } from '../../data/obGynTypes';
+import { obGynExternalProfiles } from '../../data/obGynExternalProfiles';
 
 const { provider: p, placement } = Astro.props as { provider: ObGynProvider; placement: ObGynPlacement };
+const external = obGynExternalProfiles[p.id];
+if (!external) throw new Error(`Missing external profile links for OB/GYN provider: ${p.id}`);
 const relationLabels: Record<string, string> = {
   'confirmed-delivery': 'Confirmed delivery',
   'likely-delivery': 'Likely delivery',
   'affiliation-only': 'Affiliation only',
   unclear: 'Unclear',
 };
+const healthgradesKindLabels = {
+  profile: 'direct doctor profile',
+  group: 'practice / group page listing this doctor',
+  directory: 'specialty directory fallback; direct profile not reliably verified',
+} as const;
 const scopeLabel = p.scopes.includes('ob') && p.scopes.includes('gyn') ? 'OB + GYN' : p.scopes.includes('ob') ? 'OB' : 'GYN';
+const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${p.name} ${p.practice} ${p.location}`)}`;
 const searchable = [p.name, p.practice, p.location, p.evidence, p.reviews, p.availability, ...p.strengths, ...p.checks].join(' ').toLocaleLowerCase();
 ---
 <article class="record-card obgyn-card" data-ob-gyn data-search={searchable} data-section={placement.section} data-tier={placement.tier} data-rank={placement.rank} data-name={p.name}>
@@ -40,14 +49,18 @@ const searchable = [p.name, p.practice, p.location, p.evidence, p.reviews, p.ava
       <summary>查看可用性、证据缺口与电话确认项</summary>
       <div class="record-details__content">
         <section class="info-block"><h4>新患者 / 可用性</h4><p>{p.availability}</p></section>
+        <section class="info-block"><h4>Review links</h4><p>Healthgrades：{healthgradesKindLabels[external.healthgradesLinkKind]}。Google Maps 用于查看 practice / office 层面的公开体验，不等同于医生个人评分。各平台评分不合并平均。</p></section>
         <section class="info-block info-block--risk"><h4>仍需核实</h4><ul class="question-list">{p.checks.map((check) => <li>{check}</li>)}</ul></section>
         <p class="verification-note">本页尚未把 NJ primary-source license / discipline 查询或 Premera 的具体 member network 状态标成“已通过”。缺失资料保持 unknown，不等于负面事实。</p>
       </div>
     </details>
 
-    <div class:list={['actions', p.healthgradesUrl ? 'actions--three' : '']}>
-      <a class="button button--primary" href={p.officialUrl} target="_blank" rel="noopener noreferrer">Official source</a>
-      {p.healthgradesUrl && <a class="button button--secondary" href={p.healthgradesUrl} target="_blank" rel="noopener noreferrer">Healthgrades</a>}
+    <div class="actions review-actions">
+      <a class="button button--primary" href={p.officialUrl} target="_blank" rel="noopener noreferrer">Official</a>
+      <a class="button button--secondary" data-review-source="healthgrades" href={external.healthgradesUrl} target="_blank" rel="noopener noreferrer">Healthgrades</a>
+      <a class="button button--secondary" data-review-source="google" href={googleMapsUrl} target="_blank" rel="noopener noreferrer">Google · office</a>
+      {external.zocdocUrl && <a class="button button--secondary" data-review-source="zocdoc" href={external.zocdocUrl} target="_blank" rel="noopener noreferrer">Zocdoc</a>}
+      {external.webmdUrl && <a class="button button--secondary" data-review-source="webmd" href={external.webmdUrl} target="_blank" rel="noopener noreferrer">WebMD</a>}
     </div>
   </div>
 </article>
@@ -65,4 +78,6 @@ const searchable = [p.name, p.practice, p.location, p.evidence, p.reviews, p.ava
     font-size: 16px;
     line-height: 1.35;
   }
+  .review-actions { flex-wrap: wrap; }
+  .review-actions .button { flex: 1 1 9rem; }
 </style>
