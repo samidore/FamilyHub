@@ -1,0 +1,50 @@
+id: simple-stir-fried-celery
+type: recipe
+status: candidate
+name_zh: 清炒香芹 / 西芹
+name_en: Simple Stir-Fried Chinese or Western Celery
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30]
+fit: { hard_rules: pass, score: 4, strengths: [香芹和西芹都可单独清炒。], tradeoffs: [两种芹菜都保留纤维和脆度，不计孩子软蔬菜。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Chinese/western celery as stir-fry vegetables is documented by The Woks of Life; household light sauce reuses the canonical everyday vegetable structure.
+  sources: [The Woks of Life — Chinese Vegetables & Fungi; The Woks of Life — Everyday Vegetable Stir-Fry]
+notes: One shared Recipe for chinese-celery and celery; Chinese celery is cut shorter because it is more fibrous.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: [chinese-celery, celery]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 10–15
+meal_window_minutes: 15–20
+elapsed_minutes: 15–20
+advance_start_required: false
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High-output burner.
+child_suitable: no
+child_texture: 芹菜保留明显纤维与脆度，不计 Child Vegetable。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - one_of: [chinese-celery, celery]
+    role: vegetable
+steps:
+  - 芹菜300–400 g去老筋和硬根；香芹切2–3 cm段，西芹斜切约5 mm薄片。
+  - 炒锅大火加2 tsp油，下蒜末10秒；加入芹菜翻约1分钟。
+  - 沿锅边加1 Tbsp水，翻到颜色鲜亮、能咬断但仍脆。
+  - 加生抽2 tsp、蚝油1 tsp、糖1/4 tsp，翻20–30秒到汁薄挂表面关火。
+child_serving: 本 Recipe 不计 Child Vegetable。
+adult_finish: 成人可另加辣椒、黑胡椒或花椒油。
+substitutions: []
+cook_ingredients:
+  - 香芹或西芹：300–400 g；任选一种
+  - 蒜2瓣；中性油2 tsp；水1 Tbsp；生抽2 tsp；蚝油1 tsp；糖1/4 tsp

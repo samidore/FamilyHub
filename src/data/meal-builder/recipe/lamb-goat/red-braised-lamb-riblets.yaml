@@ -1,0 +1,55 @@
+id: red-braised-lamb-riblets
+type: recipe
+status: candidate
+name_zh: 红烧羊肋排
+name_en: Red-Braised Lamb Riblets
+tags: [iron-pan-braise, light-seasoning, non-spicy-base, braised, stovetop-nonstick, advance-start, family-shared, child-support-protein]
+fit: { hard_rules: pass, score: 4, strengths: [羊肋排适合长炖红烧，能单独成菜。], tradeoffs: [孩子份必须由成人彻底拆骨。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Omnivore’s Cookbook Red Braised Lamb explicitly supports lamb ribs; exact household braising-liquid quantities reuse the already source-backed canonical red-braised-lamb record for the same 900 g batch. Chili remains outside the family base.
+  sources:
+    - Omnivore’s Cookbook — Red Braised Lamb
+    - src/data/meal-builder/recipe/lamb-goat/red-braised-lamb.yaml
+notes: Standalone fallback; only lamb-riblets is required. The seasoning formula is deliberately reused rather than invented.
+primary_role: protein
+main_protein_category: lamb
+main_protein_ingredient_ids: [lamb-riblets]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 20–35
+meal_window_minutes: 20–35
+elapsed_minutes: 90–180
+advance_start_required: true
+equipment: [medium burner, covered pot / braiser]
+burner_plan: Medium burner; long braise is passive.
+child_suitable: yes
+child_texture: 长炖到肉容易脱骨；孩子份只提供成人拆出的软肉并逐块检查碎骨。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: lamb-riblets
+    role: main-protein
+steps:
+  - 羊肋排900 g切成适合锅大小的段；若骨渣/血沫明显，冷水下锅煮开2–3分钟，捞出冲净并沥干。
+  - 厚底锅中火加1 tsp油；羊肋排分批把2–3个面煎到浅褐色，盛出。
+  - 原锅转中小火，下2 Tbsp糖；糖刚融化成浅琥珀色时加入姜葱，再把羊肋排回锅翻匀。
+  - 加绍兴酒1/4 cup、生抽3 Tbsp、老抽1 Tbsp、水或低盐高汤3 cups；煮开撇沫，转小火盖盖。
+  - 保持轻微咕嘟，90分钟开始检查；继续炖到肉能很容易从骨上分离，液体不足时只补热水。
+  - 肉已软烂后开盖转中火，收至汁量约剩最初1/4、能薄挂肉且锅底仍有少量流动汁。
+  - 孩子份在成人调重口前取出；成人完整拆骨并逐块检查碎骨和硬软骨后剪小。
+child_serving: 只提供彻底拆骨、逐块检查后的软肉；本 Recipe 计入 Child Protein。
+adult_finish: 成人可另加孜然、辣椒或黑胡椒。
+substitutions: []
+cook_ingredients:
+  - 羊肋排：900 g
+  - 家庭红烧汁：绍兴酒 1/4 cup；生抽 3 Tbsp；老抽 1 Tbsp；冰糖或白糖 2 Tbsp；水或低盐高汤 3 cups；姜 6片；葱白 3段；八角 1个可省；桂皮 1小段可省

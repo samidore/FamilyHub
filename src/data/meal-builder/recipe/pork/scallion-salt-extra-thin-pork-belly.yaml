@@ -1,0 +1,50 @@
+id: scallion-salt-extra-thin-pork-belly
+type: recipe
+status: candidate
+name_zh: 葱盐煎超薄五花肉
+name_en: Scallion-Salt Extra-Thin Pork Belly
+tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-wok, lunch-30]
+fit: { hard_rules: pass, score: 3, strengths: [超薄五花肉可单独快速煎香。], tradeoffs: [快煎口感不作为孩子软蛋白。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: High-heat thin-slice searing follows standard pork-belly yakiniku / stir-fry technique; seasoning is intentionally minimal and endpoint-driven rather than timing-dependent.
+  sources: [Just One Cookbook — Japanese BBQ / thin-sliced pork cooking patterns]
+notes: Standalone fallback; only extra-thin-sliced-pork-belly is required.
+primary_role: protein
+main_protein_category: pork
+main_protein_ingredient_ids: [extra-thin-sliced-pork-belly]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 10–15
+meal_window_minutes: 10–20
+elapsed_minutes: 10–20
+advance_start_required: false
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High-output burner; cook in batches so the slices sear rather than steam.
+child_suitable: no
+child_texture: 快煎五花仍有脂肪层和嚼劲，不计 Child Protein。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: medium
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: extra-thin-sliced-pork-belly
+    role: main-protein
+steps:
+  - 五花肉分开摊平并擦去表面水；葱切末。
+  - 干锅中大火预热，五花肉单层下锅；肉一侧出现褐色焦点、脂肪转透明后翻面。
+  - 第二面也上色且肉完全不再呈生粉红后立即盛出；量大时分批，不把锅塞满。
+  - 倒掉明显多余油，全部肉回锅，加入葱末、1/2 tsp盐和少量白胡椒快速翻匀即关火。
+child_serving: 本 Recipe 不计 Child Protein。
+adult_finish: 可另加柠檬、七味粉或辣椒。
+substitutions: []
+cook_ingredients:
+  - 超薄切五花肉：400–450 g
+  - 葱：2根；盐 1/2 tsp；白胡椒少量

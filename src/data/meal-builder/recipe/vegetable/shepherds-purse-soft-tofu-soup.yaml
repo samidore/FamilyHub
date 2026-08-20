@@ -1,63 +1,39 @@
 id: shepherds-purse-soft-tofu-soup
 type: recipe
 status: candidate
-name_zh: 荠菜豆腐羹
-name_en: Shepherd’s Purse and Soft Tofu Soup
-tags:
-  - light-seasoning
-  - non-spicy-base
-  - simmered
-  - stovetop-nonstick
-  - lunch-30
-  - family-shared
-  - soft-protein
-  - soft-vegetable
-  - low-prep
+name_zh: 荠菜羹 / 荠菜豆腐羹
+name_en: Shepherd’s Purse Soup, with Optional Soft Tofu
+tags: [light-seasoning, non-spicy-base, simmered, stovetop-nonstick, lunch-30, family-shared, soft-vegetable, low-prep]
 fit:
   hard_rules: pass
   score: 5
   strengths:
-    - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
-    - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+    - 冷冻荠菜末本身即可做羹；有嫩豆腐时可加入做完整荠菜豆腐羹。
   tradeoffs: []
 evidence:
   level: inferred
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 家庭嫩豆腐清汤/荠菜豆腐羹标准化。
+  checked_on: 2026-08-19
+  scope: Existing V09 shepherd's-purse soup structure retained. Soft tofu is moved to optional Cook View text because the soup remains a valid dish without it.
   sources:
     - V09 — Chinese 荠菜豆腐羹 household cooking pattern; soft-tofu soup structure verified elsewhere in KB
-    - Made With Lau / The Woks of Life / Just One Cookbook — tofu recipes listed in the source KB
-notes: |-
-  冷冻荠菜末可按家庭已确认习惯当场使用；不要求提前解冻。
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
-primary_role: mixed
-main_protein_category: tofu
-main_protein_ingredient_ids:
-  - soft-tofu
+notes: 冷冻荠菜末可直接下锅；嫩豆腐是推荐加料，不阻挡 availability。
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
 supporting_protein_ingredient_ids: []
-vegetable_ingredient_ids:
-  - frozen-shepherds-purse
-meal_contribution:
-  protein: 0.5
-  vegetable: 1
-  staple: 0
-child_coverage:
-  protein: true
-  vegetable: true
+vegetable_ingredient_ids: [frozen-shepherds-purse]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: true }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
+recommended_staple_ingredient_ids: [rice]
 active_minutes: 10–15
 meal_window_minutes: 15–25
 elapsed_minutes: 15–30
 advance_start_required: false
-equipment:
-  - medium burner
-  - pot
-burner_plan: Medium burner for short soup simmer; high-output burner remains free.
+equipment: [medium burner, pot]
+burner_plan: Medium burner.
 child_suitable: yes
-child_texture: 嫩豆腐与冷冻荠菜末均可形成软质羹/汤；孩子份保持清淡。
+child_texture: 荠菜末煮散后质地细软；有嫩豆腐时同样柔软。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -67,22 +43,16 @@ detail_level: cookable
 ingredients:
   - ingredient_id: frozen-shepherds-purse
     role: vegetable
-  - ingredient_id: soft-tofu
-    role: main-protein
 steps:
-  - 准备：豆腐切2.5 cm块；尽量少搬动。；冷冻荠菜可直接下锅掰散；若用青菜切短。
-  - 汤锅把清汤煮开；若用冷冻荠菜，先下锅煮到完全散开并重新沸腾。
-  - 轻轻滑入豆腐，转中小火煮3–4分钟让中心热透。
-  - 若用其他青菜，最后2–3分钟加入。
-  - 想做‘羹’才把薄芡搅匀后细线倒入，边轻推边煮到汤略稠；普通嫩豆腐汤可完全不勾芡。
-  - 最后分次加盐，避免沸腾太猛把豆腐冲碎。
-  - 完成提示：豆腐完整且中心热透；菜软；汤清或仅轻微挂勺，不厚糊。
-  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
-child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+  - 汤锅加4 cups低盐高汤或水煮开；冷冻荠菜末200–250 g可直接下锅掰散。
+  - 煮到荠菜完全散开并重新沸腾；有嫩豆腐时把1盒豆腐切块轻轻滑入，再中小火3–4分钟。
+  - 想做羹时，把1 Tbsp玉米淀粉与2 Tbsp水调匀，细线倒入并轻推到汤略挂勺；普通汤可不勾芡。
+  - 最后分次加盐；孩子份保持清淡并确认没有成团的长纤维。
+child_serving: 荠菜末煮散、保持清淡；本 Recipe 计入 Child Vegetable。
+adult_finish: 成人可另加白胡椒、香油或辣椒油。
 substitutions: []
 cook_ingredients:
-  - 嫩豆腐：1盒，约400–450 g，切块
   - 冷冻荠菜末：200–250 g
-  - 清汤：低盐高汤或水 4 cups；生抽 1 tsp；盐 1/2 tsp起；白胡椒 1小撮，可省
+  - 清汤：低盐高汤或水 4 cups；生抽 1 tsp；盐 1/2 tsp起；白胡椒可省
+  - 嫩豆腐：1盒约400–450 g，可选；有货时加入
   - 可选薄羹：玉米淀粉 1 Tbsp；水 2 Tbsp

@@ -1,0 +1,51 @@
+id: simple-stir-fried-celtuce
+type: recipe
+status: candidate
+name_zh: 清炒莴笋
+name_en: Simple Stir-Fried Celtuce
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30]
+fit: { hard_rules: pass, score: 2, strengths: [莴笋无需木耳等其他库存也能单独成菜。], tradeoffs: [家庭低优先度；本菜目标保留轻脆口感。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Peel, 1/8-inch slicing and clear-sauce stir-fry structure follow The Woks of Life celtuce stir-fry; wood ear and pepper are omitted rather than required.
+  sources: [The Woks of Life — Stir-fried Celtuce with Wood Ear Mushrooms]
+notes: Standalone fallback; only celtuce is required.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: [celtuce]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 10–15
+meal_window_minutes: 15–25
+elapsed_minutes: 15–25
+advance_start_required: false
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High-output burner.
+child_suitable: no
+child_texture: 莴笋这道菜保留轻脆口感，不计 Child Vegetable。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: celtuce
+    role: vegetable
+steps:
+  - 莴笋1大根削去全部硬外皮，露出嫩绿色内芯；斜切约3 mm薄片。
+  - 把1/3 cup水或低盐高汤、1/4 tsp盐、1/4 tsp糖、1 Tbsp绍兴酒混匀；另调1 tsp玉米淀粉加1 Tbsp水。
+  - 炒锅大火烧热，加2 tsp油和姜片15秒；加蒜片，再下莴笋大火翻1分钟。
+  - 倒入预混汤汁翻匀；莴笋刚熟仍轻脆时细线加入淀粉水，翻约30秒到薄汁挂片，立即关火。
+child_serving: 本 Recipe 不计 Child Vegetable。
+adult_finish: 可另加辣椒或花椒油。
+substitutions: []
+cook_ingredients:
+  - 莴笋：1大根，削皮后约300–400 g
+  - 水或低盐高汤 1/3 cup；盐 1/4 tsp；糖 1/4 tsp；绍兴酒 1 Tbsp
+  - 姜2片；蒜2瓣；中性油2 tsp；玉米淀粉1 tsp+水1 Tbsp

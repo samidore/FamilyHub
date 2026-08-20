@@ -1,0 +1,53 @@
+id: butter-shoyu-onion
+type: recipe
+status: candidate
+name_zh: 黄油酱油洋葱
+name_en: Butter-Soy Onion
+tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, lunch-30, soft-vegetable]
+fit: { hard_rules: pass, score: 4, strengths: [洋葱单独即可做成柔软的黄油酱油小菜。], tradeoffs: [] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Onion slicing, softening endpoint, butter and soy proportions are a 1.5x arithmetic scale of Kurashiru's 200 g onion / 20 g butter / 2 tsp soy onion component. Enoki is intentionally omitted because it is not required for the standalone onion dish.
+  sources:
+    - Kurashiru — あと一品に えのきと玉ねぎのバター醤油炒め
+notes: Standalone fallback; only onion is required. Child coverage depends on continuing the same pan-softening step until the onion is genuinely soft.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: [onion]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: true }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 10–15
+meal_window_minutes: 15–25
+elapsed_minutes: 15–25
+advance_start_required: false
+equipment: [medium burner, nonstick pan]
+burner_plan: Medium burner.
+child_suitable: yes
+child_texture: 洋葱顺纹切5 mm后炒到完全软；孩子份继续低火到叉子轻压即断并切短。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: medium
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: onion
+    role: vegetable
+steps:
+  - 洋葱300 g去皮，纵向切半后逆纤维切约5 mm条。
+  - 不粘锅中火融化15 g黄油，下洋葱持续翻炒到明显塌软、半透明。
+  - 加生抽3 tsp和剩余15 g黄油，转中小火翻匀。
+  - 孩子份继续低火软化，只以叉子轻压即断为终点；若锅太干可加少量水防焦，不写死额外时间。
+  - 孩子份先盛出切短；成人份再按需加黑胡椒。
+child_serving: 炒到完全软、叉子轻压即断并切短；本 Recipe 计入 Child Vegetable。
+adult_finish: 成人可另加黑胡椒或七味粉。
+substitutions: []
+cook_ingredients:
+  - 洋葱：300 g
+  - 有盐或无盐黄油：30 g，分两次用
+  - 生抽：3 tsp

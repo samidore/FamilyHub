@@ -1,0 +1,52 @@
+id: cumin-chicken-hearts
+type: recipe
+status: candidate
+name_zh: 孜然鸡心
+name_en: Cumin Chicken Hearts
+tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-wok, lunch-30]
+fit: { hard_rules: pass, score: 3, strengths: [鸡心有独立孜然成菜路线。], tradeoffs: [鸡心肌肉有弹性，不计孩子软蛋白。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Butterfly cut, marinade and cumin proportions follow Jason Wang's Xi'an Famous Foods chicken-heart recipe; skillet route replaces charcoal grilling while keeping the same fully-cooked endpoint. Chili is adult finish only.
+  sources: [Epicurious / Xi'an Famous Foods — Spicy Cumin Chicken Heart Skewers; USDA FSIS — Safe Minimum Internal Temperature Chart]
+notes: Standalone fallback; only chicken-hearts is required.
+primary_role: protein
+main_protein_category: chicken
+main_protein_ingredient_ids: [chicken-hearts]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 15–20
+meal_window_minutes: 20–30
+elapsed_minutes: 75–90
+advance_start_required: true
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High-output burner; sear in one layer.
+child_suitable: no
+child_texture: 鸡心有弹性和嚼劲，不计 Child Protein。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: chicken-hearts
+    role: main-protein
+steps:
+  - 鸡心修去多余脂肪和血管，纵向深切但不完全切断，蝴蝶展开；冲掉残血后沥干。
+  - 按来源把455 g鸡心与葱2根、姜约4 cm、花椒2 tsp、五香粉1/2 tsp、绍兴酒1 Tbsp、盐1 tsp和水1 cup冷藏腌1小时。
+  - 捞出彻底沥干；炒锅/铁锅大火预热，加1 Tbsp油，鸡心展开面朝下单层煎。
+  - 两面都煎到明显收紧并完全熟透；用温度计确认最厚处达到165°F/74°C。
+  - 离火撒粗孜然约1/2 Tbsp；辣椒粉只加成人份。
+child_serving: 本 Recipe 不计 Child Protein。
+adult_finish: 成人可按来源加辣椒粉和芝麻。
+substitutions: []
+cook_ingredients:
+  - 鸡心：455 g，蝴蝶切
+  - 腌料：葱2根；姜约4 cm；花椒2 tsp；五香粉1/2 tsp；绍兴酒1 Tbsp；盐1 tsp；水1 cup
+  - 煎制：中性油1 Tbsp；粗孜然1/2 Tbsp；辣椒粉成人可选

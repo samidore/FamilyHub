@@ -1,0 +1,50 @@
+id: blanched-wood-ear-salad
+type: recipe
+status: candidate
+name_zh: 焯拌黑木耳
+name_en: Blanched Wood Ear Mushroom Salad
+tags: [light-seasoning, non-spicy-base, blanched, cold-dish, lunch-30, child-support-vegetable]
+fit: { hard_rules: pass, score: 4, strengths: [新鲜黑木耳可单独焯熟凉拌；孩子份延长煮并切小。], tradeoffs: [] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Dressing and required cooking step follow The Woks of Life Wood Ear Mushroom Salad. Source uses dried/reconstituted wood ears; fresh wood ears skip rehydration but are still fully cooked before serving.
+  sources: [The Woks of Life — Wood Ear Mushroom Salad 凉拌木耳]
+notes: User explicitly confirmed wood ear can count for the child when cooked and cut appropriately.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: [fresh-wood-ear-mushrooms]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: true }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 10–15
+meal_window_minutes: 20–40
+elapsed_minutes: 20–40
+advance_start_required: false
+equipment: [medium burner, saucepan, mixing bowl]
+burner_plan: Medium burner.
+child_suitable: yes
+child_texture: 新鲜黑木耳必须煮熟；孩子份延长煮到更软，去硬根并切成小片。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: fresh-wood-ear-mushrooms
+    role: vegetable
+steps:
+  - 新鲜黑木耳300–400 g彻底洗净，切掉硬根和厚硬连接处，大朵撕小。
+  - 锅中水大开，下黑木耳煮3–4分钟；孩子份继续煮到更软，再捞出沥干并切成小片。
+  - 黑醋1.5 Tbsp、生抽1 Tbsp、糖1 tsp、芝麻油1 tsp和蒜末拌到糖溶解；成人份拌汁静置约30分钟更入味。
+  - 孩子份少带汁，确认没有大韧片或硬根。
+child_serving: 完全煮熟、去硬根、延长煮软并切小；本 Recipe 计入 Child Vegetable。
+adult_finish: 成人可另加辣椒、香菜或花椒油。
+substitutions: []
+cook_ingredients:
+  - 新鲜黑木耳：300–400 g
+  - 黑醋1.5 Tbsp；生抽1 Tbsp；糖1 tsp；芝麻油1 tsp；蒜2–3瓣

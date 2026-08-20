@@ -1,0 +1,51 @@
+id: soy-braised-chicken-liver
+type: recipe
+status: candidate
+name_zh: 酱油焖鸡肝
+name_en: Soy-Braised Chicken Liver
+tags: [light-seasoning, non-spicy-base, braised, stovetop-nonstick, lunch-30, child-support-protein]
+fit: { hard_rules: pass, score: 3, strengths: [鸡肝可在卤汁中短焖至熟并保持柔软。], tradeoffs: [] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Epicurious giblet guidance supports adding liver only for the final ~15 minutes of a red braise because it cooks faster; USDA poultry endpoint controls doneness.
+  sources: [Epicurious — Heart, Liver, Neck, and Gizzards: How to Cook Every Part of the Chicken; USDA FSIS — Safe Minimum Internal Temperature Chart]
+notes: Standalone fallback; only chicken-liver is required.
+primary_role: protein
+main_protein_category: chicken
+main_protein_ingredient_ids: [chicken-liver]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 10–15
+meal_window_minutes: 20–25
+elapsed_minutes: 20–25
+advance_start_required: false
+equipment: [medium burner, covered skillet]
+burner_plan: Medium burner.
+child_suitable: yes
+child_texture: 短焖完全熟后仍可保持柔软；孩子份压碎或切小。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: chicken-liver
+    role: main-protein
+steps:
+  - 鸡肝去筋膜并分成大小接近的块，快速冲洗后彻底沥干。
+  - 小锅加入水1 cup、生抽1 Tbsp、绍兴酒1 Tbsp、姜4片和葱2段，煮开后转小火。
+  - 加入鸡肝，保持轻微小滚并加盖；按来源“最后约15分钟加入肝”的窗口烹调。
+  - 约10分钟起测最厚处；达到165°F/74°C立即离火，避免继续久煮变粉硬。
+  - 孩子份取柔软部分压碎/切小，少带汁。
+child_serving: 只提供完全熟且柔软的部分；本 Recipe 计 Child Protein。
+adult_finish: 成人可另加白胡椒或辣椒。
+substitutions: []
+cook_ingredients:
+  - 鸡肝：400 g
+  - 卤汁：水1 cup；生抽1 Tbsp；绍兴酒1 Tbsp；姜4片；葱2段

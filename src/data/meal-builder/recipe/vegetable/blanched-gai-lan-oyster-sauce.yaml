@@ -3,56 +3,31 @@ type: recipe
 status: candidate
 name_zh: 白灼 / 蚝油芥兰
 name_en: Blanched Gai Lan with Oyster Sauce
-tags:
-  - light-seasoning
-  - non-spicy-base
-  - stovetop-wok
-  - lunch-30
-  - low-prep
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
-    - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
-  tradeoffs: []
+tags: [light-seasoning, non-spicy-base, stovetop-wok, lunch-30, low-prep, soft-vegetable]
+fit: { hard_rules: pass, score: 4, strengths: [芥兰可通过孩子份延长焯煮做到软。], tradeoffs: [] }
 evidence:
   level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. Made With Lau Chinese Broccoli with Oyster Sauce 结构家庭轻盐化。
-  sources:
-    - V03 — Made With Lau — Chinese Broccoli with Oyster Sauce
-    - Made With Lau — vegetable stir-fry / broccoli / choy sum recipes; The Woks of Life vegetable stir-fry patterns
-notes: |-
-  Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook calibration.
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
+  checked_on: 2026-08-19
+  scope: V03 source structure retained; child coverage changed because a normal longer blanch/longitudinal stem cut can make the same dish soft enough without changing its identity.
+  sources: [V03 — Made With Lau — Chinese Broccoli with Oyster Sauce]
+notes: Current preference is not a hard Child coverage condition.
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
 supporting_protein_ingredient_ids: []
-vegetable_ingredient_ids:
-  - gai-lan
-meal_contribution:
-  protein: 0
-  vegetable: 1
-  staple: 0
-child_coverage:
-  protein: false
-  vegetable: false
+vegetable_ingredient_ids: [gai-lan]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: true }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
+recommended_staple_ingredient_ids: [rice]
 active_minutes: 10–20
 meal_window_minutes: 15–25
 elapsed_minutes: 15–30
 advance_start_required: false
-equipment:
-  - high-output burner
-  - wok / iron pan
-burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
-child_suitable: conditional
-child_texture: 芥兰茎较粗，虽可煮软/切小，但未确认当前儿童接受度，暂不计 Child Vegetable coverage。
+equipment: [medium burner, pot / wok]
+burner_plan: Medium burner for blanching.
+child_suitable: yes
+child_texture: 粗梗纵切；孩子份继续焯到叉子能较容易穿透，再剪短。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -63,16 +38,13 @@ ingredients:
   - ingredient_id: gai-lan
     role: vegetable
 steps:
-  - 准备：粗芥兰梗纵切一刀，叶和粗梗分开；酱汁混匀。；准备大锅沸水。
-  - 沸水中加1 tsp油（可省）和一小撮盐；先下粗梗30秒。
-  - 加入叶片再焯45–90秒；粗梗能咬断、叶片刚软时立即捞出彻底沥水。
-  - 酱汁小锅/原锅煮到刚冒泡，搅匀。
-  - 芥兰装盘，酱汁均匀淋在表面而不是倒到盘底泡菜。
-  - 孩子份选较嫩梗尖和叶，必要时剪短。
-  - 完成提示：芥兰鲜绿、梗熟而仍有轻脆感；盘底不积大量水。
-  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
-child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+  - 芥兰450 g洗净；粗梗纵切一刀，叶与粗梗分开；蚝油汁混匀。
+  - 大锅水充分沸腾，先下粗梗30秒，再下叶片45–90秒。
+  - 成人份达到梗熟而仍有轻脆感时先捞出；孩子份继续煮到粗梗能被叉子较容易穿透。
+  - 孩子份剪成短段；成人份淋蚝油汁，孩子份只少量淋汁。
+  - 完成提示：孩子份没有硬粗梗，能正常咬断。
+child_serving: 粗梗纵切并延长焯煮至软，剪短；本 Recipe 计入 Child Vegetable。
+adult_finish: 成人可另加更多蚝油汁或辣椒。
 substitutions: []
 cook_ingredients:
   - 芥兰：450 g

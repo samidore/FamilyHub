@@ -1,0 +1,59 @@
+id: pan-seared-frozen-beef-patty
+type: recipe
+status: candidate
+name_zh: 香煎冷冻牛肉饼
+name_en: Pan-Seared Frozen Beef Patty
+tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, lunch-30, child-support-protein]
+fit:
+  hard_rules: pass
+  score: 3
+  strengths:
+    - 不需要面包即可把冷冻牛肉饼单独做成主蛋白。
+  tradeoffs:
+    - 具体商品厚度和包装说明不同，时间不能写死。
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Ground-beef safety endpoint is USDA-derived; product-specific thawing/cooking directions remain package-controlled.
+  sources:
+    - USDA FSIS Safe Minimum Internal Temperature Chart
+    - product package cooking directions
+notes: Burger recipe仍保留；本记录专门解决无面包时的 standalone fallback。
+primary_role: protein
+main_protein_category: beef
+main_protein_ingredient_ids: [frozen-beef-patties]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice, bread]
+active_minutes: 10–20
+meal_window_minutes: 15–30
+elapsed_minutes: 15–30
+advance_start_required: false
+equipment: [medium burner, nonstick pan, instant-read thermometer]
+burner_plan: Medium burner.
+child_suitable: yes
+child_texture: 不把肉饼煎干；孩子份取中心湿润柔软部分切小。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: frozen-beef-patties
+    role: main-protein
+steps:
+  - 先读包装，确认是否要求解冻以及推荐加热方式；包装步骤优先。
+  - 若允许平底锅路线，不粘锅中火预热并薄刷油，肉饼单层放入；按包装提示翻面。
+  - 表面已经上色而中心温度仍低时，转中小火并加盖，避免继续硬煎外层。
+  - 从最厚中心测温达到160°F/71°C；不要靠颜色判断绞牛肉熟度。
+  - 离火静置2分钟；孩子份切小，选仍湿润柔软的中心。
+child_serving: 取完全熟且仍湿润柔软的中心切小；本 Recipe 计入 Child Protein。
+adult_finish: 可另加黑胡椒、番茄酱或芥末。
+substitutions: []
+cook_ingredients:
+  - 冷冻牛肉饼：3块；具体重量、是否解冻和时间以包装为准
+  - 中性油：1 tsp，仅在包装允许平底锅路线时使用

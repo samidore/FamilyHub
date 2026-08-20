@@ -1,0 +1,49 @@
+id: steamed-corn
+type: recipe
+status: candidate
+name_zh: 蒸玉米
+name_en: Steamed Corn
+tags: [light-seasoning, non-spicy-base, steamed, low-prep, family-shared]
+fit: { hard_rules: pass, score: 4, strengths: [玉米无需其他库存即可直接做主食。], tradeoffs: [] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Covered steaming route follows standard steamed-vegetable guidance; exact time varies with ear size and is checked by kernel tenderness.
+  sources: [Just One Cookbook — Steamed Vegetables]
+notes: Corn is treated as Staple by household Meal Builder classification.
+primary_role: staple
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 0, vegetable: 0, staple: 1 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: [corn]
+recommended_staple_ingredient_ids: []
+active_minutes: 5–10
+meal_window_minutes: 15–25
+elapsed_minutes: 15–25
+advance_start_required: false
+equipment: [medium burner, covered steamer]
+burner_plan: Medium burner.
+child_suitable: conditional
+child_texture: 玉米熟后仍是圆粒；孩子份是否提供按家庭实际处理，不影响 Staple completion。
+spicy_in_base: false
+deep_fried: false
+salt_level: none
+oil_level: none
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: corn
+    role: integral-staple
+steps:
+  - 玉米剥去外层叶和玉米须，必要时切成能平放进蒸锅的段。
+  - 蒸锅水先烧开，把玉米放入蒸层并盖严。
+  - 蒸约8分钟开始检查；较粗玉米继续到籽粒中心热透、用指甲/叉子能轻松压出汁。
+  - 关火取出，静置2分钟后再切段上桌。
+child_serving: 不以整根让孩子自行啃咬作为本 Recipe 的默认 child route；按家庭实际切取并看护。
+adult_finish: 可另抹黄油、盐或辣椒粉。
+substitutions: []
+cook_ingredients:
+  - 玉米：3根

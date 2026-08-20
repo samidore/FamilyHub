@@ -1,0 +1,50 @@
+id: smashed-cucumber
+type: recipe
+status: candidate
+name_zh: 拍黄瓜
+name_en: Smashed Cucumber Salad
+tags: [light-seasoning, non-spicy-base, cold-dish, lunch-30, low-prep]
+fit: { hard_rules: pass, score: 4, strengths: [黄瓜无需其他库存即可做经典凉菜。], tradeoffs: [成品保持脆口，不计孩子软蔬菜。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Salt-drain and vinegar/soy/sesame dressing structure follows The Woks of Life smashed Asian cucumber salad; chili omitted from the family base.
+  sources: [The Woks of Life — Smashed Asian Cucumber Salad]
+notes: Standalone fallback; only cucumber is required.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: [cucumber]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 10–15
+meal_window_minutes: 30–45
+elapsed_minutes: 30–45
+advance_start_required: false
+equipment: [cutting board, chef knife]
+burner_plan: No burner required.
+child_suitable: no
+child_texture: 拍黄瓜目标是脆口，不计 Child Vegetable。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: cucumber
+    role: vegetable
+steps:
+  - 黄瓜约600 g洗净，纵向拍裂后切一口块；拌1 tsp盐静置20分钟。
+  - 倒掉析出的水并轻轻沥干，不用挤碎黄瓜。
+  - 加黑醋1.5 Tbsp、生抽1 Tbsp、糖1 tsp、芝麻油1 tsp和蒜末2瓣拌匀。
+  - 静置10分钟后再拌一次；孩子若尝只少量提供，但本 Recipe 不承担 Child Vegetable。
+child_serving: 本 Recipe 不计 Child Vegetable。
+adult_finish: 成人可另加辣椒油或花椒油。
+substitutions: []
+cook_ingredients:
+  - 黄瓜：约600 g
+  - 盐 1 tsp；黑醋 1.5 Tbsp；生抽 1 Tbsp；糖 1 tsp；芝麻油 1 tsp；蒜 2瓣

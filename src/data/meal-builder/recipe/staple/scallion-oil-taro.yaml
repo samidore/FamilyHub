@@ -1,58 +1,40 @@
 id: scallion-oil-taro
 type: recipe
 status: candidate
-name_zh: 葱油芋头
-name_en: Scallion Oil Taro
-tags:
-  - iron-pan-braise
-  - light-seasoning
-  - non-spicy-base
-  - braised
-  - stovetop-nonstick
-  - lunch-30
-  - child-support-protein
+name_zh: 葱油芋头 / 土豆
+name_en: Scallion Oil Taro or Potato
+tags: [iron-pan-braise, light-seasoning, non-spicy-base, braised, stovetop-nonstick, lunch-30]
 fit:
   hard_rules: pass
   score: 4
   strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
+    - 芋头和土豆都可用加水焖熟、最后拌现成葱油的结构独立成主食。
+  tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. The Woks of Life scallion-oil taro 结构；按家庭现有罐装葱油简化。
+  checked_on: 2026-08-19
+  scope: Existing The Woks of Life scallion-oil taro structure retained; potato is added using standard boiled/braised potato doneness and the household's already-stocked scallion oil. This is not mashed potato.
   sources:
     - The Woks of Life — Scallion Oil Taro
-notes: |-
-  Taro is the staple carried in recipe.
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
+    - The Woks of Life — Sichuan Stir-Fried Potatoes, for potato prep/doneness context
+notes: Potato route intentionally satisfies the approved 葱油土豆 standalone fallback; mashed potatoes remain excluded.
 primary_role: staple
 main_protein_category: none
 main_protein_ingredient_ids: []
 supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids: []
-meal_contribution:
-  protein: 0
-  vegetable: 0
-  staple: 1
-child_coverage:
-  protein: false
-  vegetable: false
-integral_staple_ingredient_ids:
-  - taro
+meal_contribution: { protein: 0, vegetable: 0, staple: 1 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: [taro, potato]
 recommended_staple_ingredient_ids: []
 active_minutes: 15–25
 meal_window_minutes: 20–35
 elapsed_minutes: 20–40
 advance_start_required: false
-equipment:
-  - medium burner
-  - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
+equipment: [medium burner, covered pot / braiser]
+burner_plan: Medium burner.
 child_suitable: n/a
-child_texture: 本 Recipe 不承担 main protein；儿童适配主要取决于主食/蔬菜质地。
+child_texture: 芋头或土豆都必须煮到无硬芯；孩子份可压小。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -60,20 +42,18 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - ingredient_id: taro
+  - one_of: [taro, potato]
     role: integral-staple
 steps:
-  - 准备：芋头去皮后切均匀块，处理时避免皮肤刺激；冲洗表面黏液并沥干。；葱油最后加入，不需要另炸葱。
-  - 锅中加入芋头、水、盐和蚝油，煮开后转中小火盖盖。
-  - 煮10分钟后开始检查；芋头中心仍硬则每3分钟继续检查。
+  - 芋头或土豆500 g去皮，切约2.5 cm均匀块；芋头处理时避免皮肤刺激，土豆切后用清水冲掉表面多余淀粉。
+  - 锅中加入主料、水1 cup、盐1/2 tsp和蚝油1 Tbsp，煮开后转中小火盖盖。
+  - 10分钟开始检查；中心仍硬则每3分钟继续检查并防止水烧干。
   - 筷子能轻松穿透但块仍完整时开盖，中火让水分减少。
-  - 锅底只剩2–3 Tbsp薄汁时关火，拌入1 Tbsp现成葱油和白胡椒。
-  - 孩子份确认芋头完全软、无硬芯并降温。
-  - 完成提示：芋头粉糯无硬芯、块形基本完整；葱油只薄薄附着，不油腻。
-  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
-child_serving: 作为主食/配菜使用，Meal Combo 必须另配软蛋白。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+  - 锅底只剩2–3 Tbsp薄汁时关火，拌入现成葱油1 Tbsp和少量白胡椒。
+  - 完成提示：无硬芯、块形基本完整；葱油只薄薄附着。
+child_serving: 作为主食使用；确认无硬芯并按需要压小。
+adult_finish: 可另加白胡椒、辣椒油或更多葱油。
 substitutions: []
 cook_ingredients:
-  - 芋头：500 g，切2.5 cm块
-  - 葱油芋头汁：水 1 cup；盐 1/2 tsp；蚝油 1 Tbsp；白胡椒 1小撮；现成葱油 1 Tbsp
+  - 芋头或土豆：500 g；任选一种
+  - 水 1 cup；盐 1/2 tsp；蚝油 1 Tbsp；白胡椒少量；现成葱油 1 Tbsp

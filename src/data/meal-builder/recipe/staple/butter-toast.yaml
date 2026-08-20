@@ -1,0 +1,50 @@
+id: butter-toast
+type: recipe
+status: candidate
+name_zh: 黄油烤吐司
+name_en: Butter Toast
+tags: [light-seasoning, non-spicy-base, pan-seared, low-prep]
+fit: { hard_rules: pass, score: 4, strengths: [面包有不依赖其他库存的快速主食 fallback。], tradeoffs: [] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Buttered bread toasted on a skillet until golden is a standard documented technique; exact time is endpoint-driven because bread thickness varies.
+  sources: [Serious Eats — butter-and-toast skillet technique]
+notes: Standalone staple fallback; only bread is required.
+primary_role: staple
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 0, vegetable: 0, staple: 1 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: [bread]
+recommended_staple_ingredient_ids: []
+active_minutes: 5–10
+meal_window_minutes: 5–10
+elapsed_minutes: 5–10
+advance_start_required: false
+equipment: [medium burner, nonstick skillet or toaster]
+burner_plan: Medium burner if pan-toasting; toaster uses no burner.
+child_suitable: yes
+child_texture: 孩子份不要烤到硬脆，保留内部柔软并切条/小块。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: bread
+    role: integral-staple
+steps:
+  - 面包6片两面薄薄抹软化黄油，共约1.5 Tbsp。
+  - 平底锅中火预热，面包单层放入；一面出现浅金色后翻面。
+  - 第二面也浅金色、中心仍柔软时立即取出；孩子份可更早取出，不追求干脆边缘。
+  - 稍凉后孩子份切成长条或小块。
+child_serving: 保留内部柔软，不烤硬，按需要切条/小块。
+adult_finish: 可另加果酱、蜂蜜或蒜香黄油；不进入基础版。
+substitutions: []
+cook_ingredients:
+  - 面包：6片
+  - 黄油：约1.5 Tbsp

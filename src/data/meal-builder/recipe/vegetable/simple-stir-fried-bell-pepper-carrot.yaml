@@ -1,0 +1,52 @@
+id: simple-stir-fried-bell-pepper-carrot
+type: recipe
+status: candidate
+name_zh: 清炒甜椒 / 胡萝卜
+name_en: Simple Stir-Fried Bell Pepper or Carrot
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, soft-vegetable]
+fit: { hard_rules: pass, score: 4, strengths: [甜椒和胡萝卜都能用同一轻汁炒法，并为孩子单独加水焖软。], tradeoffs: [] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Vegetable choice and stir-fry structure are supported by The Woks of Life Everyday Vegetable Stir-Fry; household light sauce reuses the canonical Meal Builder vegetable sauce.
+  sources: [The Woks of Life — Everyday Vegetable Stir-Fry; src/data/meal-builder/recipe/vegetable/simple-stir-fried-broccoli.yaml]
+notes: Shared Recipe only for two vegetables that tolerate the same slice-and-soften path.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: [bell-pepper, carrot]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: true }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 10–15
+meal_window_minutes: 15–25
+elapsed_minutes: 15–25
+advance_start_required: false
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High-output burner.
+child_suitable: yes
+child_texture: 切薄；孩子份加水盖焖到叉子容易穿透，甜椒皮仍难咬时切更小。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - one_of: [bell-pepper, carrot]
+    role: vegetable
+steps:
+  - 甜椒去籽切约1 cm条，或胡萝卜去皮切约3 mm薄片；总量300–450 g。
+  - 炒锅大火加2 tsp油，下蒜末10秒；加入蔬菜翻1分钟。
+  - 沿锅边加2–3 Tbsp水，盖盖1–2分钟；胡萝卜通常需要更久，按叉子穿透程度判断。
+  - 孩子份继续补1 Tbsp水、盖焖到明显柔软，先盛出。
+  - 成人份倒入轻盐蔬菜汁，快速翻20–30秒到汁薄挂表面关火。
+child_serving: 额外盖焖至叉子容易穿透并切小；本 Recipe 计入 Child Vegetable。
+adult_finish: 成人可另加辣椒油或黑胡椒。
+substitutions: []
+cook_ingredients:
+  - 甜椒或胡萝卜：300–450 g；任选一种
+  - 家庭轻盐蔬菜汁：水 1 Tbsp；生抽 2 tsp；蚝油 1 tsp；糖 1/4 tsp
+  - 蒜 2瓣；中性油 2 tsp

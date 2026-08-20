@@ -1,0 +1,50 @@
+id: soy-braised-chicken-gizzards
+type: recipe
+status: candidate
+name_zh: 卤鸡胗
+name_en: Soy-Braised Chicken Gizzards
+tags: [light-seasoning, non-spicy-base, braised, stovetop-nonstick, advance-start]
+fit: { hard_rules: pass, score: 3, strengths: [鸡胗可单独卤制。], tradeoffs: [即使长炖仍有嚼劲，不计孩子软蛋白。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Cleaning, soy/Shaoxing braise and 90–120 minute simmer are arithmetic-scaled from Gradual Gastronomy Soy Braised Chicken Gizzards; chili omitted from the family base.
+  sources: [Gradual Gastronomy — Soy Braised Chicken Gizzards]
+notes: Standalone fallback; only chicken-gizzards is required.
+primary_role: protein
+main_protein_category: chicken
+main_protein_ingredient_ids: [chicken-gizzards]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 15–20
+meal_window_minutes: 20–30
+elapsed_minutes: 100–140
+advance_start_required: true
+equipment: [medium burner, covered saucepan]
+burner_plan: Medium burner; long simmer is passive.
+child_suitable: no
+child_texture: 鸡胗本身有弹性和嚼劲，不计 Child Protein。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: chicken-gizzards
+    role: main-protein
+steps:
+  - 鸡胗剪去明显筋膜、脂肪和硬黄皮残留，冲洗后沥干。
+  - 约500 g鸡胗加生抽1.5 Tbsp、老抽1.5 Tbsp、绍兴酒1.5 Tbsp、十三香约1 tsp、水3/4 cup、姜和葱煮开。
+  - 转小火盖盖，保持轻微沸腾90分钟后开始检查；来源允许煮到约2小时，最终以自己能接受的韧度为准。
+  - 达到目标韧度后开盖略收汁；放凉5分钟，逆明显纤维切片。
+child_serving: 本 Recipe 不计 Child Protein。
+adult_finish: 可另加辣椒、花椒或更多香料。
+substitutions: []
+cook_ingredients:
+  - 鸡胗：500 g
+  - 卤汁：生抽 1.5 Tbsp；老抽 1.5 Tbsp；绍兴酒 1.5 Tbsp；十三香约1 tsp；水 3/4 cup；姜 4片；葱 2段
