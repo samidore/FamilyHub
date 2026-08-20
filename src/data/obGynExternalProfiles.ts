@@ -1,4 +1,4 @@
-export type ObGynHealthgradesLinkKind = 'profile' | 'group' | 'directory';
+export type ObGynHealthgradesLinkKind = 'profile' | 'directory';
 
 export interface ObGynExternalProfileLinks {
   healthgradesUrl: string;
@@ -7,18 +7,13 @@ export interface ObGynExternalProfileLinks {
   zocdocUrl?: string;
 }
 
-const healthgradesHackensackDirectory = 'https://www.healthgrades.com/obstetrics-gynecology-directory/nj-new-jersey/hackensack';
-const healthgradesValleyParamus = 'https://www.healthgrades.com/group-directory/nj-new-jersey/paramus/valley-medical-group-ob-gyn-paramus-u3lyngv';
-const healthgradesValleyRamsey = 'https://www.healthgrades.com/group-directory/nj-new-jersey/ramsey/valley-medical-group-ob-gyn-ramsey-u3l2kcv';
-const healthgradesValleyFairLawn = 'https://www.healthgrades.com/group-directory/nj-new-jersey/fair-lawn/valley-medical-group-ob-gyn-fair-lawn-u3lymj7';
-const healthgradesValleyMontvale = 'https://www.healthgrades.com/group-directory/nj-new-jersey/montvale/valley-medical-group-center-for-womens-health-u3l23d5';
-const healthgradesValleyRidgewood = 'https://www.healthgrades.com/group-directory/nj-new-jersey/ridgewood/valley-medical-group-gynecology-ridgewood-u3l2hxj';
-const healthgradesKirilMarkGroup = 'https://www.healthgrades.com/group-directory/nj-new-jersey/hackensack/arthur-okeefe-xsw7tf';
-const healthgradesEnglewoodFour = 'https://www.healthgrades.com/group-directory/nj-new-jersey/englewood/englewood-health-physician-network-englert-tovmasian-desoyza-shoshilos-ob-gyn-at-englewood-u3l25vk';
-const healthgradesEnglewoodComplete = 'https://www.healthgrades.com/group-directory/nj-new-jersey/englewood/englewood-health-physician-network-complete-womens-healthcare-at-englewood-u3ljcwc';
-const healthgradesEnglewoodBrescia = 'https://www.healthgrades.com/group-directory/nj-new-jersey/englewood/englewood-health-physician-network-brescia-and-migliaccio-womens-health-at-englewood-u3lyflr';
-const healthgradesEnglewoodRivera = 'https://www.healthgrades.com/group-directory/nj-new-jersey/englewood/englewood-health-physician-network-brescia-and-migliaccio-womens-health-at-englewood-u3cl5hj';
-const healthgradesSandraGironGroup = 'https://www.healthgrades.com/group-directory/nj-new-jersey/cliffside-park/englewood-health-physician-network-bariatric-and-general-surgery-at-cliffside-park-u3l2xq3';
+const healthgradesFairLawn = 'https://www.healthgrades.com/obstetrics-gynecology-directory/nj-new-jersey/fair-lawn';
+const healthgradesParamus = 'https://www.healthgrades.com/obstetrics-gynecology-directory/nj-new-jersey/paramus';
+const healthgradesRamsey = 'https://www.healthgrades.com/obstetrics-gynecology-directory/nj-new-jersey/ramsey';
+const healthgradesMontvale = 'https://www.healthgrades.com/obstetrics-gynecology-directory/nj-new-jersey/montvale';
+const healthgradesRidgewood = 'https://www.healthgrades.com/obstetrics-gynecology-directory/nj-new-jersey/ridgewood';
+const healthgradesHackensack = 'https://www.healthgrades.com/obstetrics-gynecology-directory/nj-new-jersey/hackensack';
+const healthgradesEnglewood = 'https://www.healthgrades.com/obstetrics-gynecology-directory/nj-new-jersey/englewood';
 
 export const obGynExternalProfiles: Record<string, ObGynExternalProfileLinks> = {
   'david-garfinkel': {
@@ -30,8 +25,8 @@ export const obGynExternalProfiles: Record<string, ObGynExternalProfileLinks> = 
     healthgradesLinkKind: 'profile',
   },
   'eugenia-kuo': {
-    healthgradesUrl: healthgradesValleyParamus,
-    healthgradesLinkKind: 'group',
+    healthgradesUrl: healthgradesParamus,
+    healthgradesLinkKind: 'directory',
     webmdUrl: 'https://doctor.webmd.com/doctor/eugenia-kuo-d90703bf-04c9-4028-8fac-51b380055ac9-overview',
   },
   'amna-iftikhar': {
@@ -39,13 +34,13 @@ export const obGynExternalProfiles: Record<string, ObGynExternalProfileLinks> = 
     healthgradesLinkKind: 'profile',
   },
   'oscarina-contin-mendoza': {
-    healthgradesUrl: healthgradesValleyParamus,
-    healthgradesLinkKind: 'group',
+    healthgradesUrl: healthgradesParamus,
+    healthgradesLinkKind: 'directory',
     webmdUrl: 'https://doctor.webmd.com/doctor/oscarina-contin-28cf091b-72c4-4df6-9593-7dd3cdfeda05-overview',
   },
   'richa-pursnani': {
-    healthgradesUrl: healthgradesValleyParamus,
-    healthgradesLinkKind: 'group',
+    healthgradesUrl: healthgradesParamus,
+    healthgradesLinkKind: 'directory',
   },
   'sami-ahmad': {
     healthgradesUrl: 'https://www.healthgrades.com/physician/dr-sami-ahmad-gctf2',
@@ -60,17 +55,17 @@ export const obGynExternalProfiles: Record<string, ObGynExternalProfileLinks> = 
     healthgradesLinkKind: 'profile',
   },
   'hayley-norian': {
-    healthgradesUrl: healthgradesValleyMontvale,
-    healthgradesLinkKind: 'group',
+    healthgradesUrl: healthgradesMontvale,
+    healthgradesLinkKind: 'directory',
   },
 
   'judi-gerardis': {
-    healthgradesUrl: healthgradesHackensackDirectory,
+    healthgradesUrl: healthgradesHackensack,
     healthgradesLinkKind: 'directory',
     webmdUrl: 'https://doctor.webmd.com/doctor/judi-gerardis-fa830121-4480-4237-8c29-28ded0f94503-overview',
   },
   'lizabeth-kopp': {
-    healthgradesUrl: healthgradesHackensackDirectory,
+    healthgradesUrl: healthgradesHackensack,
     healthgradesLinkKind: 'directory',
   },
   'melanie-kaufer': {
@@ -86,7 +81,7 @@ export const obGynExternalProfiles: Record<string, ObGynExternalProfileLinks> = 
     healthgradesLinkKind: 'profile',
   },
   'emily-howell': {
-    healthgradesUrl: healthgradesHackensackDirectory,
+    healthgradesUrl: healthgradesHackensack,
     healthgradesLinkKind: 'directory',
   },
   'maryann-khoudary': {
@@ -94,12 +89,12 @@ export const obGynExternalProfiles: Record<string, ObGynExternalProfileLinks> = 
     healthgradesLinkKind: 'profile',
   },
   'david-lee': {
-    healthgradesUrl: healthgradesHackensackDirectory,
+    healthgradesUrl: healthgradesHackensack,
     healthgradesLinkKind: 'directory',
   },
   'kiril-mark': {
-    healthgradesUrl: healthgradesKirilMarkGroup,
-    healthgradesLinkKind: 'group',
+    healthgradesUrl: healthgradesHackensack,
+    healthgradesLinkKind: 'directory',
   },
   'kanchi-chadha': {
     healthgradesUrl: 'https://www.healthgrades.com/physician/dr-kanchi-chadha-y9w7tdz',
@@ -111,20 +106,20 @@ export const obGynExternalProfiles: Record<string, ObGynExternalProfileLinks> = 
     healthgradesLinkKind: 'profile',
   },
   'neelangani-desoyza': {
-    healthgradesUrl: healthgradesEnglewoodFour,
-    healthgradesLinkKind: 'group',
+    healthgradesUrl: healthgradesEnglewood,
+    healthgradesLinkKind: 'directory',
   },
   'anna-shoshilos': {
-    healthgradesUrl: healthgradesEnglewoodFour,
-    healthgradesLinkKind: 'group',
+    healthgradesUrl: healthgradesEnglewood,
+    healthgradesLinkKind: 'directory',
   },
   'lucy-tovmasian': {
-    healthgradesUrl: healthgradesEnglewoodFour,
-    healthgradesLinkKind: 'group',
+    healthgradesUrl: healthgradesEnglewood,
+    healthgradesLinkKind: 'directory',
   },
   'marina-jacobson': {
-    healthgradesUrl: healthgradesEnglewoodComplete,
-    healthgradesLinkKind: 'group',
+    healthgradesUrl: healthgradesEnglewood,
+    healthgradesLinkKind: 'directory',
   },
   'ronny-meier': {
     healthgradesUrl: 'https://www.healthgrades.com/physician/dr-ronny-meier-xgscx',
@@ -135,12 +130,12 @@ export const obGynExternalProfiles: Record<string, ObGynExternalProfileLinks> = 
     healthgradesLinkKind: 'profile',
   },
   'stephanie-rivera-segarra': {
-    healthgradesUrl: healthgradesEnglewoodRivera,
-    healthgradesLinkKind: 'group',
+    healthgradesUrl: healthgradesEnglewood,
+    healthgradesLinkKind: 'directory',
   },
   'sara-brescia': {
-    healthgradesUrl: healthgradesEnglewoodBrescia,
-    healthgradesLinkKind: 'group',
+    healthgradesUrl: healthgradesEnglewood,
+    healthgradesLinkKind: 'directory',
   },
   'sara-slatky': {
     healthgradesUrl: 'https://www.healthgrades.com/physician/dr-sara-slatky-xylk9dn',
@@ -148,23 +143,23 @@ export const obGynExternalProfiles: Record<string, ObGynExternalProfileLinks> = 
   },
 
   'michael-faust': {
-    healthgradesUrl: healthgradesValleyRamsey,
-    healthgradesLinkKind: 'group',
+    healthgradesUrl: healthgradesRamsey,
+    healthgradesLinkKind: 'directory',
   },
   'linda-silva-karcz': {
-    healthgradesUrl: 'https://www.healthgrades.com/physician/dr-linda-silva-karcz-3xjgq',
-    healthgradesLinkKind: 'profile',
+    healthgradesUrl: healthgradesRidgewood,
+    healthgradesLinkKind: 'directory',
   },
   'sandra-giron': {
-    healthgradesUrl: healthgradesSandraGironGroup,
-    healthgradesLinkKind: 'group',
+    healthgradesUrl: healthgradesEnglewood,
+    healthgradesLinkKind: 'directory',
   },
   'jeffrey-reinkraut': {
-    healthgradesUrl: healthgradesValleyFairLawn,
-    healthgradesLinkKind: 'group',
+    healthgradesUrl: healthgradesFairLawn,
+    healthgradesLinkKind: 'directory',
   },
   'michelle-beloff': {
-    healthgradesUrl: healthgradesValleyRidgewood,
-    healthgradesLinkKind: 'group',
+    healthgradesUrl: healthgradesRidgewood,
+    healthgradesLinkKind: 'directory',
   },
 };
