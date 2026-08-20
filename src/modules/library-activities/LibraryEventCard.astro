@@ -1,19 +1,23 @@
 ---
 import type { LibraryEvent } from '../../data/types';
 const { event } = Astro.props as { event: LibraryEvent };
-const searchable = [event.name, event.library, event.location, event.age, event.ageGroup, event.description, event.registration, ...event.badges].join(' ').toLocaleLowerCase();
+const searchable = [event.name, event.library, event.location, event.age, event.ageGroup, event.description, event.registration, event.dateRange, ...event.badges].join(' ').toLocaleLowerCase();
 const driveMin = Number(event.drive.match(/\d+/)?.[0] ?? 999);
 const typeText = `${event.name} ${event.description}`.toLocaleLowerCase();
 const activityType = /story|goose|librarian/.test(typeText) ? 'story' : /craft|artist/.test(typeText) ? 'craft' : /music|move|jamboree|shake|groove/.test(typeText) ? 'movement' : /play/.test(typeText) ? 'play' : 'other';
 const registrationType = /无需|drop-in|先到先得|前\d+名/i.test(`${event.registration} ${event.badges.join(' ')}`) ? 'drop-in' : 'registration';
 const drive = `${event.drive}${event.distanceMiles != null ? ` · ${event.distanceMiles} miles` : ''}`;
+const scheduleDates = event.dateRange.match(/\d{4}-\d{2}-\d{2}/g) ?? [];
+const startDate = scheduleDates[0] ?? '';
+const endDate = scheduleDates.at(-1) ?? '';
 ---
-<article class="record-card event-card" data-event data-search={searchable} data-day={event.day} data-day-order={event.dayOrder} data-time-order={event.timeOrder} data-library={event.library} data-age={event.ageGroup} data-drive={driveMin} data-type={activityType} data-registration={registrationType}>
+<article class="record-card event-card" data-event data-search={searchable} data-day={event.day} data-day-order={event.dayOrder} data-time-order={event.timeOrder} data-start-date={startDate} data-end-date={endDate} data-age={event.ageGroup} data-drive={driveMin} data-type={activityType} data-registration={registrationType}>
   <div class="event-time"><span>{event.day}</span><strong>{event.time}</strong></div>
   <div class="record-card__body event-body">
     <h2>{event.name}</h2>
     <p class="event-library">{event.library}</p>
     <dl class="event-details">
+      {event.dateRange && <div><dt>日期</dt><dd>{event.dateRange}</dd></div>}
       <div><dt>地点与车程</dt><dd>{event.location} <span aria-hidden="true">·</span> {drive}</dd></div>
       <div><dt>年龄</dt><dd>{event.age}</dd></div>
       <div><dt>报名</dt><dd>{event.registration}</dd></div>
