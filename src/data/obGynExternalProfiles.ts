@@ -13,7 +13,6 @@ const healthgradesValleyRamsey = 'https://www.healthgrades.com/group-directory/n
 const healthgradesValleyFairLawn = 'https://www.healthgrades.com/group-directory/nj-new-jersey/fair-lawn/valley-medical-group-ob-gyn-fair-lawn-u3lymj7';
 const healthgradesValleyMontvale = 'https://www.healthgrades.com/group-directory/nj-new-jersey/montvale/valley-medical-group-center-for-womens-health-u3l23d5';
 const healthgradesValleyRidgewood = 'https://www.healthgrades.com/group-directory/nj-new-jersey/ridgewood/valley-medical-group-gynecology-ridgewood-u3l2hxj';
-const healthgradesHumcAcademic = 'https://www.healthgrades.com/group-directory/nj-new-jersey/hackensack/hackensack-meridian-medical-group-ob-gyn-xtwls2';
 const healthgradesKirilMarkGroup = 'https://www.healthgrades.com/group-directory/nj-new-jersey/hackensack/arthur-okeefe-xsw7tf';
 const healthgradesEnglewoodFour = 'https://www.healthgrades.com/group-directory/nj-new-jersey/englewood/englewood-health-physician-network-englert-tovmasian-desoyza-shoshilos-ob-gyn-at-englewood-u3l25vk';
 const healthgradesEnglewoodComplete = 'https://www.healthgrades.com/group-directory/nj-new-jersey/englewood/englewood-health-physician-network-complete-womens-healthcare-at-englewood-u3ljcwc';
@@ -83,8 +82,8 @@ export const obGynExternalProfiles: Record<string, ObGynExternalProfileLinks> = 
     healthgradesLinkKind: 'profile',
   },
   'stavros-lazarou': {
-    healthgradesUrl: healthgradesHackensackDirectory,
-    healthgradesLinkKind: 'directory',
+    healthgradesUrl: 'https://www.healthgrades.com/physician/dr-stavros-lazarou-3fbc8',
+    healthgradesLinkKind: 'profile',
   },
   'emily-howell': {
     healthgradesUrl: healthgradesHackensackDirectory,
