@@ -20,7 +20,7 @@
 2. **用途匹配**：是否经常处理目标年龄和问题；复杂病例是否有相应技术与转诊能力。
 3. **医院与 Facility**：医院质量、设备、麻醉、病理、急救或手术支持是否符合需求。
 4. **安全记录**：州执照、纪律处分、公开 malpractice 或事故资料。患者评论不能代替正式记录。
-5. **患者体验**：Healthgrades 优先；再查看 Google Maps、Yelp 等平台，评分和评论数分平台记录，不混合计算。
+5. **患者体验**：Healthgrades 为固定医生级入口；再按证据情况查看医院/医疗集团 patient survey、Google Maps、Zocdoc、WebMD、Yelp 等。各来源评分和评论数分开记录，不混合计算。
 6. **负评分类**：
    - 等待、前台或预约不便；
    - 沟通、态度或解释不足；
@@ -36,6 +36,10 @@
 - Tier 3：备选；距离、证据、评论或用途匹配较弱。
 - 保留完整候选名单；写明排序理由、优势、风险、证据缺口和预约前问题。
 - 每位医生附官方网页、Healthgrades、Google Maps、州执照/纪律记录及其他使用过的来源。
+- Healthgrades 优先使用 direct doctor profile；找不到可可靠确认的 direct profile 时，可使用明确列出该医生的 Healthgrades group page；只有前两者均无法可靠确认时才使用 specialty-directory fallback，并明确链接 scope。
+- Google Maps 默认作为 office/practice 层面的体验证据；除非评论对象明确是该医生本人，不把 location rating 当医生个人评分。
+- 医院或医疗集团 patient survey 独立展示，不因样本更大就与 Healthgrades 合并或覆盖。
+- Zocdoc、WebMD 有可靠 direct provider profile 时可加入；Vitals、RateMDs 等作为补充研究来源，不要求固定占用页面 UI。
 - 标明资料核验日期。保险只按公开信息辅助排序，最终必须向保险公司、医生和 Facility 分别确认。
 
 ## 4. OB/GYN 搜索补充规则
@@ -72,8 +76,10 @@
 
 ### 患者体验
 
-- Healthgrades、Google Maps、Yelp 及医院/医疗集团自己的患者调查必须分别记录评分和样本量，不混合计算。
+- Healthgrades、Google Maps、Yelp、Zocdoc、WebMD 及医院/医疗集团自己的患者调查必须分别记录评分和样本量，不混合计算。
 - 医院或 practice 的评分不能冒充某位医生的评分。
+- Healthgrades 每名候选都保留可用入口，并区分 direct profile、明确列出医生的 group page、以及最后才使用的 directory fallback。
+- Zocdoc 若使用，优先保留其 verified-patient review 证据；WebMD 作为补充医生级 review source。没有可靠 direct profile 时不猜链接。
 - 负评除通用四类外，OB 额外关注 birth plan、induction、C-section pressure、labor management 和 consent；只有多个独立来源反复出现同类描述时才视为较强信号。
 - 单条患者评论中的临床或安全指控只能作为进一步核查线索，不能当作已证实事实。
 
@@ -88,7 +94,7 @@
 ```text
 帮我找 [医生类型]，主要用途是 [用途]。患者是 [年龄/成人或儿童]，偏好 [性别/语言/无]。范围是 [地点或最长车程]。保险 plan 是 [只写通用 plan 名，不写任何个人编号]。最低要求是 [评分]、[评论数]，并且 [需要/不要求] 接收新病人。
 
-请优先核查执照、专科训练、Board Certification、用途匹配、医院或 Facility、州纪律处分和公开医疗事故资料。患者体验以 Healthgrades 为主要来源，再看 Google Maps 和 Yelp；各平台评分分开记录。阅读负评并分类为等待/前台、沟通、收费保险、或疑似严重临床与安全问题，不要因为单条情绪化评论直接下结论。
+请优先核查执照、专科训练、Board Certification、用途匹配、医院或 Facility、州纪律处分和公开医疗事故资料。患者体验以 Healthgrades 为固定医生级入口，并把医院 patient survey、Google Maps、Zocdoc、WebMD、Yelp 等来源分开记录。阅读负评并分类为等待/前台、沟通、收费保险、或疑似严重临床与安全问题，不要因为单条情绪化评论直接下结论。
 
 保留完整合格名单，按 Tier 排序。每位医生写清排序理由、优势、风险、证据缺口、预约前需要确认的问题，并附官方网页、Healthgrades、Google Maps、州执照/纪律记录和资料核验日期。Tier 只是家庭比较，不是医疗质量评级。不要在网站或仓库中保存患者资料、病历、诊断、预约信息、保险 ID、Group Number 或保险卡。
 ```
