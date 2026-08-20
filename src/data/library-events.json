@@ -1,1 +1,71 @@
-[]
+[
+  {
+    "day": "周四",
+    "dayOrder": 4,
+    "time": "时间见报名页",
+    "timeOrder": 9999,
+    "name": "Kurt Gallagher",
+    "library": "Maurice M. Pine Library",
+    "location": "Fair Lawn, NJ（具体地点见报名页）",
+    "drive": "Fair Lawn 内；具体地点见报名页",
+    "age": "官网儿童主页未标明本场最低年龄；参加前在报名页确认",
+    "ageGroup": "年龄待确认",
+    "description": "官网当前列出的 August Special Summer Program。儿童主页确认活动日期为 8/20；年龄、时间和具体地点需以官方报名页为准。",
+    "registration": "需报名；官网说明 August special programs 提前 1 周开放",
+    "badges": [
+      "年龄待确认",
+      "时间待确认",
+      "仅 Fair Lawn 居民"
+    ],
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Fair+Lawn+NJ",
+    "officialUrl": "https://bccls.libcal.com/event/16906740",
+    "verifiedDate": "2026-08-20",
+    "dateRange": "2026-08-20"
+  },
+  {
+    "day": "周一",
+    "dayOrder": 1,
+    "time": "时间见报名页",
+    "timeOrder": 9999,
+    "name": "Battle The Second",
+    "library": "Maurice M. Pine Library",
+    "location": "Fair Lawn, NJ（具体地点见报名页）",
+    "drive": "Fair Lawn 内；具体地点见报名页",
+    "age": "官网儿童主页未标明本场最低年龄；参加前在报名页确认",
+    "ageGroup": "年龄待确认",
+    "description": "官网当前列出的 August Special Summer Program。儿童主页确认活动日期为 8/24；年龄、时间和具体地点需以官方报名页为准。",
+    "registration": "需报名；官网说明 August special programs 提前 1 周开放",
+    "badges": [
+      "年龄待确认",
+      "时间待确认",
+      "仅 Fair Lawn 居民"
+    ],
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Fair+Lawn+NJ",
+    "officialUrl": "https://bccls.libcal.com/event/16886249",
+    "verifiedDate": "2026-08-20",
+    "dateRange": "2026-08-24"
+  },
+  {
+    "day": "周四",
+    "dayOrder": 4,
+    "time": "时间见报名页",
+    "timeOrder": 9999,
+    "name": "Bracelets for Warriors",
+    "library": "Maurice M. Pine Library",
+    "location": "Fair Lawn, NJ（具体地点见报名页）",
+    "drive": "Fair Lawn 内；具体地点见报名页",
+    "age": "官网儿童主页未标明本场最低年龄；参加前在报名页确认",
+    "ageGroup": "年龄待确认",
+    "description": "官网当前列出的 August Special Summer Program。儿童主页确认活动日期为 8/27；年龄、时间和具体地点需以官方报名页为准。",
+    "registration": "需报名；官网说明 August special programs 提前 1 周开放",
+    "badges": [
+      "年龄待确认",
+      "时间待确认",
+      "仅 Fair Lawn 居民"
+    ],
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Fair+Lawn+NJ",
+    "officialUrl": "https://bccls.libcal.com/event/17271409",
+    "verifiedDate": "2026-08-20",
+    "dateRange": "2026-08-27"
+  }
+]
