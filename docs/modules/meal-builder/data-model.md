@@ -58,6 +58,8 @@ notes: ''
 
 The optional Ingredient `child_coverage.vegetable` is read only when a Recipe declares ingredient-dependent coverage. `unknown` remains unknown; section membership or a leafy name cannot imply `easy-braise-addon`.
 
+A visible Ingredient normally requires a true standalone Recipe fallback: with every other inventory Ingredient unavailable, at least one Recipe must remain feasible. `addon-only` is the explicit exception for an Ingredient intentionally used only as a controlled add-on/supporting item; do not add that tag merely to silence missing coverage.
+
 Starter section IDs and order come from the Ingredient index. UI and documentation must not maintain a parallel section-order list.
 
 ## Recipe record
@@ -112,12 +114,15 @@ substitutions: []
 
 `meal_contribution` is the only slot-calculation source; `primary_role` is UI grouping. `integral_staple_ingredient_ids` means the recipe includes the staple; `recommended_staple_ingredient_ids` is a pairing suggestion only. Each `ingredients[]` entry contains one required `ingredient_id` or `one_of` identity plus its role and must resolve to the active Ingredient library.
 
+`ingredients[]` is the hard availability contract, not a transcription of the full recipe. Put an inventory Ingredient there only when the dish stops being that dish without it. Recommended but omittable inventory items, pantry aromatics, and the complete good version of the recipe stay in `cook_ingredients`/steps instead. `meal_contribution` must count only slots guaranteed by those hard requirements.
+
 `cook_ingredients` is a separate display-only list of complete text lines, including pantry ingredients and quantities. It never affects availability or inventory. `cookable` and `household-tested` records require nonempty Cook View lines, executable steps, and equipment. Evidence labels and URLs are optional for cookability.
 
 ## Controlled values and invariants
 
 - Main protein categories: `pork`, `beef`, `lamb`, `chicken`, `egg`, `tofu`, `fish`, `shellfish`, `mixed`, `none`; goat maps to `lamb`.
-- Tags include timing, family, equipment, and preparation facts plus checkout-only `easy-braise-addon` Ingredients and `iron-pan-braise` Recipes. These tags are not planning contributions.
+- Tags include timing, family, equipment, and preparation facts plus checkout-only `easy-braise-addon` Ingredients, standalone-exemption `addon-only` Ingredients, and `iron-pan-braise` Recipes. These tags are not planning contributions.
+- Every visible Ingredient without `addon-only` must have at least one active Recipe with a single required identity group containing that Ingredient; this is the machine-checked standalone fallback invariant.
 - Deprecated fields `vegetable_count`, `staple_pairings`, and `child_support_protein_needed` must not return in active records.
 - Recipe Ingredient IDs, `one_of` options, starter sections, and active index entries must resolve. No duplicate IDs, unknown fields, invalid values, unsafe paths, filename/ID mismatch, or unindexed active file is allowed.
 - Archive records are validated for schema and privacy but never emitted as active candidates. Unknown archived IDs already present in Firebase household state are ignored by reconciliation; new IDs are never silently reused.

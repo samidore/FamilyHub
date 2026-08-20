@@ -122,7 +122,16 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
       equipment: stringArray(record.equipment), detailLevel: String(record.detail_level), steps: stringArray(record.steps), childServing: String(record.child_serving ?? ''), adultFinish: String(record.adult_finish ?? ''), substitutions: stringArray(record.substitutions), childTexture: String(record.child_texture ?? ''), notes: String(record.notes ?? ''), vegetableCentered: stringArray(record.evidence?.sources).some((source) => /^V\d{2}\s*[—-]/.test(source)),
     };
   });
-  if (enforceCurrentContent) assert(recipes.some((recipe) => recipe.id === 'simple-stir-fried-leafy-greens' && recipe.childCoverage.vegetable === 'ingredient-dependent'), 'ingredient-dependent Vegetable coverage is missing');
+  if (enforceCurrentContent) {
+    const standaloneRequired = ingredients.filter((ingredient) => ingredient.visible && !ingredient.tags.includes('addon-only'));
+    for (const ingredient of standaloneRequired) {
+      assert(
+        recipes.some((recipe) => recipe.requirements.length === 1 && recipe.requirements[0].anyOf.includes(ingredient.id)),
+        `${ingredient.id} is missing a standalone Recipe; tag it addon-only only when that is the intentional product behavior`,
+      );
+    }
+    assert(recipes.some((recipe) => recipe.id === 'simple-stir-fried-leafy-greens' && recipe.childCoverage.vegetable === true), 'softened leafy-greens Child Vegetable coverage is missing');
+  }
 
   return {
     metadata: { version: String(metadata.kb_version), lastUpdated: String(metadata.last_updated) },

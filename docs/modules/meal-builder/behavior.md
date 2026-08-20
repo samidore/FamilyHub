@@ -20,6 +20,7 @@ Time is a workload signal, not an automatic hard filter. Account for opening, wa
 - Protein, Vegetable, and Staple are family planning slots, not nutrition servings or grams. A recipe may contribute multiple slots; for example, a meat-and-vegetable dish may contribute `protein: 0.5` and `vegetable: 1`.
 - Protein uses an internal `+0.5` tolerance. Once the target is met, candidates that exceed remaining tolerance without filling another unmet slot or child coverage disappear. A half-protein dish that also fills Vegetable ranks above a pure half-protein fallback when Child Protein is still missing; a larger child-suitable protein may remain as a hard-coverage fallback.
 - Child mode defaults **on**. With it enabled, both child protein and child vegetable coverage are hard meal-completion requirements. This is dynamic state aggregation, not a simple recipe-category filter.
+- `child_coverage` answers whether the same Recipe can provide a realistically chewable child portion through normal serving adjustments such as cutting shorter/smaller, a brief extra softening step, or adult deboning/checking. Current preference or willingness to eat is not a hard coverage condition. A quick stir-fry whose defining result remains chewy does not count merely because it can be cut smaller; meat braised/stewed genuinely soft can count, including ribs only after adult deboning and bone-fragment checks.
 - `child_coverage` may be `true`, `false`, or `ingredient-dependent`. An ingredient-dependent recipe reads the selected ingredient's `child_coverage`; `unknown` never satisfies a hard child requirement. General `child_suitable`, `child_texture`, and `child_serving` notes remain separate facts.
 - Recipe availability is evaluated from each `ingredients[]` identity and any matching `one_of` option. Pantry items are display-only Cook View text and never participate in availability or inventory. A Starter ingredient is available for this meal; it is not mandatory to consume.
 - The UI sections are data-driven by `starter.section`; every visible section can collapse, and collapsing never clears selections. `starter.order` is stable and not alphabetic.
@@ -27,6 +28,8 @@ Time is a workload signal, not an automatic hard filter. Account for opening, wa
 ## Vegetable structures and add-on
 
 Vegetable Recipes represent a real cooking structure, not every seasoning label. Compatible alternatives use `one_of` rather than duplicate stable IDs. Easy-braise is checkout-only: an Ingredient tagged `easy-braise-addon` appears once only when this meal snapshot contains it, it is not a bound Recipe ingredient, and a selected Recipe has `iron-pan-braise`. It does not contribute planning slots or Cook View content. Checkout defaults are zero/false and the atomic transaction rechecks eligibility.
+
+`addon-only` is a data-quality exemption from standalone Recipe coverage for an Ingredient intentionally used only as a controlled add-on/supporting item. It does not itself make an Ingredient eligible for Easy-braise or any other add-on UI; the corresponding add-on mechanism/tag still controls actual behavior.
 
 ## Reset, errors, and privacy
 
