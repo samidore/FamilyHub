@@ -5,49 +5,68 @@ import FilterShell from '../components/FilterShell.astro';
 import LibraryEventCard from '../modules/library-activities/LibraryEventCard.astro';
 import { libraryEvents } from '../data/catalog';
 const days = [...new Set(libraryEvents.map((event) => event.day))];
-const libraries = [...new Set(libraryEvents.map((event) => event.library))].sort();
 const ages = [...new Set(libraryEvents.map((event) => event.ageGroup))];
+const eventCount = libraryEvents.length;
 ---
-<BaseLayout title="Library Activities | Family Hub" description="按星期、library、年龄和活动类型浏览附近儿童活动。" pageClass="module-page theme-lake" themeColor="#E7F0F3">
-  <SiteHeader eyebrow="出行与玩乐 · 每周活动" title="Library Activities" description="按星期、时间和年龄，查看附近 library 的 storytime、音乐、手工和自由玩耍活动。" accent="lake" icon="calendar">
-    <div class="summary-row"><span>18 个活动</span><span>5 个附近 library systems</span><span>时间与资格需复核</span></div>
+<BaseLayout title="Library Activities | Family Hub" description="查看 Fair Lawn 已核实、适合 2 岁儿童的当前 library 活动。" pageClass="module-page theme-lake" themeColor="#E7F0F3">
+  <SiteHeader eyebrow="出行与玩乐 · Fair Lawn" title="Library Activities" description="只看 Maurice M. Pine Library 当前或即将举行、且官方年龄要求明确包含 2 岁的儿童活动。" accent="lake" icon="calendar">
+    <div class="summary-row"><span id="event-total">{eventCount} 个已核实活动</span><span>Fair Lawn only</span><span>2 岁适龄</span></div>
   </SiteHeader>
 
-  <FilterShell accent="lake" filterId="event-filter-panel" countId="event-count" clearId="event-clear" countText="显示 18 / 18 个活动">
+  <FilterShell accent="lake" filterId="event-filter-panel" countId="event-count" clearId="event-clear" countText={`显示 ${eventCount} / ${eventCount} 个活动`}>
     <div slot="primary" class="filter-primary__grid">
       <label><span>搜索活动</span><input id="event-search" type="search" placeholder="storytime、音乐、手工…" autocomplete="off" /></label>
-      <label><span>排序</span><select id="event-sort" data-default="schedule"><option value="schedule">星期与时间</option><option value="drive">最短车程</option><option value="library">Library 名称</option></select></label>
+      <label><span>排序</span><select id="event-sort" data-default="schedule"><option value="schedule">日期与时间</option><option value="drive">最短车程</option></select></label>
     </div>
     <div slot="filters" class="contents">
       <label><span>星期</span><select id="event-day"><option value="">全部日期</option>{days.map((item) => <option value={item}>{item}</option>)}</select></label>
-      <label><span>Library</span><select id="event-library"><option value="">全部 libraries</option>{libraries.map((item) => <option value={item}>{item}</option>)}</select></label>
       <label><span>年龄状态</span><select id="event-age"><option value="">全部年龄</option>{ages.map((item) => <option value={item}>{item}</option>)}</select></label>
       <label><span>活动类型</span><select id="event-type"><option value="">全部类型</option><option value="story">Storytime</option><option value="movement">音乐与运动</option><option value="craft">手工</option><option value="play">自由玩耍</option><option value="other">其他</option></select></label>
       <label><span>报名方式</span><select id="event-registration"><option value="">全部方式</option><option value="drop-in">无需预先报名 / 先到先得</option><option value="registration">需要报名或确认</option></select></label>
     </div>
   </FilterShell>
 
-  <main id="main-content" class="shell listing-main"><div id="event-list" class="event-list">{libraryEvents.map((event) => <LibraryEventCard event={event} />)}</div><p id="event-empty" class="empty-state" hidden>没有符合这些条件的活动。清除部分筛选后再试。</p></main>
-  <footer class="module-footer"><div class="shell note-box"><strong>参加前复核。</strong> Registration、居民资格、年龄限制、季节日期和取消安排会变化。请使用活动或 library 官方页面。</div></footer>
+  <main id="main-content" class="shell listing-main">
+    <div id="event-list" class="event-list">{libraryEvents.map((event) => <LibraryEventCard event={event} />)}</div>
+    <div id="event-empty" class="empty-state" hidden={eventCount > 0}>
+      <p>这里暂时没有已核实、适合 2 岁且尚未过期的 Fair Lawn 活动。</p>
+      <p><a class="button button--secondary" href="https://www.fairlawnlibrary.org/children" target="_blank" rel="noopener noreferrer">查看官方儿童活动页</a></p>
+    </div>
+  </main>
+  <footer class="module-footer"><div class="shell note-box"><strong>只收录已确认年龄的项目。</strong> Registration、居民资格、年龄限制、季节日期和取消安排会变化；年龄未在官方来源中确认的活动不会先行加入。</div></footer>
 
   <script>
     import { bindListState, clearListState, restoreListState } from '../lib/listState';
     const cards = [...document.querySelectorAll<HTMLElement>('[data-event]')];
     const controls = {
-      q: document.querySelector<HTMLInputElement>('#event-search')!, sort: document.querySelector<HTMLSelectElement>('#event-sort')!, day: document.querySelector<HTMLSelectElement>('#event-day')!, library: document.querySelector<HTMLSelectElement>('#event-library')!, age: document.querySelector<HTMLSelectElement>('#event-age')!, type: document.querySelector<HTMLSelectElement>('#event-type')!, registration: document.querySelector<HTMLSelectElement>('#event-registration')!,
+      q: document.querySelector<HTMLInputElement>('#event-search')!,
+      sort: document.querySelector<HTMLSelectElement>('#event-sort')!,
+      day: document.querySelector<HTMLSelectElement>('#event-day')!,
+      age: document.querySelector<HTMLSelectElement>('#event-age')!,
+      type: document.querySelector<HTMLSelectElement>('#event-type')!,
+      registration: document.querySelector<HTMLSelectElement>('#event-registration')!,
     };
     const list = document.querySelector<HTMLElement>('#event-list')!;
     const count = document.querySelector<HTMLElement>('#event-count')!;
+    const total = document.querySelector<HTMLElement>('#event-total')!;
     const empty = document.querySelector<HTMLElement>('#event-empty')!;
     const number = (card: HTMLElement, key: string) => Number(card.dataset[key]);
-    const schedule = (a: HTMLElement, b: HTMLElement) => number(a, 'dayOrder') - number(b, 'dayOrder') || number(a, 'timeOrder') - number(b, 'timeOrder');
+    const fairLawnDate = () => {
+      const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
+      const value = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value ?? '';
+      return `${value('year')}-${value('month')}-${value('day')}`;
+    };
+    const schedule = (a: HTMLElement, b: HTMLElement) => (a.dataset.startDate || '9999-12-31').localeCompare(b.dataset.startDate || '9999-12-31') || number(a, 'timeOrder') - number(b, 'timeOrder') || number(a, 'dayOrder') - number(b, 'dayOrder');
     const render = () => {
       const query = controls.q.value.trim().toLocaleLowerCase();
-      const visible = cards.filter((card) => (!query || card.dataset.search!.includes(query)) && (!controls.day.value || card.dataset.day === controls.day.value) && (!controls.library.value || card.dataset.library === controls.library.value) && (!controls.age.value || card.dataset.age === controls.age.value) && (!controls.type.value || card.dataset.type === controls.type.value) && (!controls.registration.value || card.dataset.registration === controls.registration.value));
-      const sorters: Record<string, (a: HTMLElement, b: HTMLElement) => number> = { schedule, drive: (a, b) => number(a, 'drive') - number(b, 'drive') || schedule(a, b), library: (a, b) => a.dataset.library!.localeCompare(b.dataset.library!) || schedule(a, b) };
+      const today = fairLawnDate();
+      const active = cards.filter((card) => !card.dataset.endDate || card.dataset.endDate >= today);
+      const visible = active.filter((card) => (!query || card.dataset.search!.includes(query)) && (!controls.day.value || card.dataset.day === controls.day.value) && (!controls.age.value || card.dataset.age === controls.age.value) && (!controls.type.value || card.dataset.type === controls.type.value) && (!controls.registration.value || card.dataset.registration === controls.registration.value));
+      const sorters: Record<string, (a: HTMLElement, b: HTMLElement) => number> = { schedule, drive: (a, b) => number(a, 'drive') - number(b, 'drive') || schedule(a, b) };
       cards.forEach((card) => card.hidden = !visible.includes(card));
       visible.sort(sorters[controls.sort.value]).forEach((card) => list.append(card));
-      count.textContent = `显示 ${visible.length} / ${cards.length} 个活动`;
+      count.textContent = `显示 ${visible.length} / ${active.length} 个活动`;
+      total.textContent = `${active.length} 个已核实活动`;
       empty.hidden = visible.length > 0;
     };
     restoreListState(controls);
