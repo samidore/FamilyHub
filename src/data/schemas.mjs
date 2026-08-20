@@ -4,7 +4,7 @@ const privateFieldNames = new Set([
   'familyphoto', 'personalnote', 'privatenote', 'token', 'secret', 'password',
 ]);
 
-const dayTripKeys = ['name', 'shortName', 'location', 'category', 'driveMin', 'driveMax', 'status', 'ratings', 'tags', 'conditions', 'verifiedFacts', 'familyFit', 'risks', 'beforeYouGo', 'googleMapsUrl', 'officialUrl', 'verifiedDate', 'recommendationScore'];
+const dayTripKeys = ['name', 'shortName', 'location', 'category', 'driveMinutes', 'status', 'ratings', 'tags', 'conditions', 'verifiedFacts', 'familyFit', 'risks', 'beforeYouGo', 'googleMapsUrl', 'officialUrl', 'verifiedDate', 'recommendationScore'];
 const eventKeys = ['day', 'dayOrder', 'time', 'timeOrder', 'name', 'library', 'location', 'drive', 'age', 'ageGroup', 'description', 'registration', 'badges', 'googleMapsUrl', 'officialUrl', 'verifiedDate', 'dateRange'];
 const dentistKeys = ['name', 'provider', 'eligibility', 'evidenceBands', 'tier', 'rank', 'location', 'driveMin', 'driveMax', 'rating', 'reviewCount', 'healthgradesRating', 'healthgradesReviewCount', 'healthgradesWrittenCount', 'reviewConfidence', 'healthgradesEvidence', 'healthgradesTags', 'healthgradesNegativeSummary', 'negativeClassification', 'acceptsNewPatients', 'trainingSummary', 'schoolContext', 'certificationsAwards', 'longTermFit', 'strengths', 'concernLevel', 'secondaryReviewSummary', 'negativeFindings', 'verificationQuestions', 'reviewSources', 'healthgradesUrl', 'officialUrl', 'googleMapsUrl', 'verifiedDate'];
 const adultDermatologistKeys = ['name', 'provider', 'gender', 'practice', 'location', 'locationScope', 'driveMin', 'driveMax', 'tier', 'rank', 'eligibility', 'evidenceBands', 'capabilities', 'perianalDermatitisSummary', 'primaryReviewSource', 'primaryRating', 'primaryReviewCount', 'primaryWrittenCount', 'healthgradesRating', 'healthgradesReviewCount', 'healthgradesWrittenCount', 'reviewConfidence', 'reviewEvidence', 'acceptsNewPatients', 'availability', 'trainingSummary', 'schoolContext', 'certificationsAwards', 'safetyEvidence', 'strengths', 'concernLevel', 'negativeSummary', 'negativeClassification', 'negativeFindings', 'verificationQuestions', 'healthgradesUrl', 'officialUrl', 'googleMapsUrl', 'verifiedDate'];
@@ -84,7 +84,7 @@ export function parseDayTrips(value) {
   return parseList(value, 'day-trips', (record, path) => {
     exactObject(record, dayTripKeys, ['distanceMiles'], path);
     ['name', 'shortName', 'location', 'category', 'status', 'verifiedFacts', 'familyFit', 'risks', 'beforeYouGo'].forEach((key) => text(record[key], `${path}.${key}`));
-    number(record.driveMin, `${path}.driveMin`, 0, 300); number(record.driveMax, `${path}.driveMax`, record.driveMin, 300); distance(record.distanceMiles, `${path}.distanceMiles`);
+    number(record.driveMinutes, `${path}.driveMinutes`, 0, 300); distance(record.distanceMiles, `${path}.distanceMiles`);
     exactObject(record.ratings, ratingKeys, [], `${path}.ratings`);
     ratingKeys.forEach((key) => nullableNumber(record.ratings[key], `${path}.ratings.${key}`, 0, 5));
     strings(record.tags, `${path}.tags`); strings(record.conditions, `${path}.conditions`);

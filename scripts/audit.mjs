@@ -46,7 +46,6 @@ for (const module of moduleRegistry) {
   assert(output.includes('id="main-content"'), `${module.id} is missing the main-content target`);
 }
 
-assert(trips.length === 29, 'Trip migration count is not 29');
 assert(dentists.length === 10, 'Pediatric dentist migration count is not 10');
 assert(dermatologists.length === 10, 'Adult dermatologist migration count is not 10');
 assert(colonoscopy.length === 18, 'Colonoscopy specialist migration count is not 18');

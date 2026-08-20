@@ -7,6 +7,12 @@ const mealData = await loadMealData();
 const activeRecipeCount = mealData.recipes.length;
 const visibleIngredientCount = mealData.ingredients.filter((ingredient) => ingredient.visible).length;
 const visibleSectionCount = mealData.starterSections.length;
+const dayTripData = JSON.parse(await readFile(new URL('../src/data/day-trips.json', import.meta.url), 'utf8')) as Array<{ name: string; location: string; driveMinutes: number; distanceMiles?: number | null }>;
+const dayTripCount = dayTripData.length;
+const within20DayTripCount = dayTripData.filter((trip) => trip.driveMinutes <= 20).length;
+const mcfaulData = dayTripData.find((trip) => trip.name === 'J.A. McFaul Environmental Center');
+if (!mcfaulData) throw new Error('J.A. McFaul Environmental Center is missing from Day Trips data');
+const mcfaulDriveText = `${mcfaulData.location} · ${mcfaulData.driveMinutes} 分钟${mcfaulData.distanceMiles != null ? ` · ${mcfaulData.distanceMiles} miles` : ''}`;
 const libraryEventCount = JSON.parse(await readFile(new URL('../src/data/library-events.json', import.meta.url), 'utf8')).length;
 
 async function inventoryItem(page: Page, id: string) {
@@ -50,19 +56,20 @@ test('home groups and searches the active modules', async ({ page }) => {
 
 test('day-trip filters combine, persist in the URL, and clear', async ({ page }) => {
   await page.goto('day-trips/');
-  await expect(page.locator('[data-destination]')).toHaveCount(29);
-  const mcfaul = page.locator('[data-destination]').filter({ hasText: 'J.A. McFaul Environmental Center' });
-  await expect(mcfaul.locator('.location-line')).toHaveText('Wyckoff, NJ · 15 分钟');
+  await expect(page.locator('[data-destination]')).toHaveCount(dayTripCount);
+  const mcfaul = page.locator('[data-destination]').filter({ hasText: mcfaulData.name });
+  await expect(mcfaul.locator('.location-line')).toHaveText(mcfaulDriveText);
   await page.getByText('更多筛选').click();
   await page.locator('#trip-drive').selectOption('20');
   const filtered = page.locator('[data-destination]:visible');
-  await expect(filtered).toHaveCount(14);
+  await expect(filtered).toHaveCount(within20DayTripCount);
+  for (const card of await filtered.all()) expect(Number(await card.getAttribute('data-drive'))).toBeLessThanOrEqual(20);
   await expect(mcfaul).toBeVisible();
   await expect(page).toHaveURL(/drive=20/);
   await page.reload();
   await expect(page.locator('#trip-drive')).toHaveValue('20');
   await page.getByRole('button', { name: '清除筛选' }).click();
-  await expect(page.locator('[data-destination]:visible')).toHaveCount(29);
+  await expect(page.locator('[data-destination]:visible')).toHaveCount(dayTripCount);
   await expect(page).not.toHaveURL(/drive=/);
 });
 
@@ -161,7 +168,7 @@ test('complete records remain available without JavaScript', async ({ browser })
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto('day-trips/');
-  await expect(page.locator('[data-destination]')).toHaveCount(29);
+  await expect(page.locator('[data-destination]')).toHaveCount(dayTripCount);
   await page.goto('library-activities/');
   await expect(page.locator('[data-event]')).toHaveCount(libraryEventCount);
   await page.goto('pediatric-dentists/');

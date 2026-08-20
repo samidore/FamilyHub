@@ -12,8 +12,7 @@ export interface DayTrip {
   shortName: string;
   location: string;
   category: string;
-  driveMin: number;
-  driveMax: number;
+  driveMinutes: number;
   distanceMiles?: number | null;
   status: string;
   ratings: RatingSet;

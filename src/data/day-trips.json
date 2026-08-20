@@ -4,8 +4,7 @@
     "shortName": "J.A. McFaul",
     "location": "Wyckoff, NJ",
     "category": "室内外结合",
-    "driveMin": 15,
-    "driveMax": 25,
+    "driveMinutes": 15,
     "status": "已验证基准",
     "ratings": {
       "indoor": 3,
@@ -39,8 +38,7 @@
     "shortName": "Trailside",
     "location": "Mountainside, NJ",
     "category": "室内外结合",
-    "driveMin": 35,
-    "driveMax": 50,
+    "driveMinutes": 35,
     "status": "去过并喜欢",
     "ratings": {
       "indoor": 4.5,
@@ -75,8 +73,7 @@
     "shortName": "Flat Rock Brook",
     "location": "Englewood, NJ",
     "category": "室内外结合",
-    "driveMin": 20,
-    "driveMax": 35,
+    "driveMinutes": 20,
     "status": "优先新地点",
     "ratings": {
       "indoor": 3,
@@ -111,8 +108,7 @@
     "shortName": "Essex Environmental Center",
     "location": "Roseland, NJ",
     "category": "室内外结合",
-    "driveMin": 30,
-    "driveMax": 45,
+    "driveMinutes": 30,
     "status": "同类候选",
     "ratings": {
       "indoor": 3,
@@ -145,8 +141,7 @@
     "shortName": "Greenburgh Nature Center",
     "location": "Scarsdale, NY",
     "category": "室内外结合",
-    "driveMin": 35,
-    "driveMax": 50,
+    "driveMinutes": 35,
     "status": "活体动物候选",
     "ratings": {
       "indoor": 3,
@@ -180,8 +175,7 @@
     "shortName": "Teatown",
     "location": "Ossining, NY",
     "category": "室内外结合",
-    "driveMin": 45,
-    "driveMax": 65,
+    "driveMinutes": 45,
     "status": "施工期降级",
     "ratings": {
       "indoor": 0,
@@ -215,8 +209,7 @@
     "shortName": "Dunkerhook / Saddle River",
     "location": "Fair Lawn–Paramus, NJ",
     "category": "纯户外自然",
-    "driveMin": 5,
-    "driveMax": 15,
+    "driveMinutes": 5,
     "status": "常去",
     "ratings": {
       "indoor": 0,
@@ -250,8 +243,7 @@
     "shortName": "Glen Rock Duck Pond",
     "location": "Glen Rock, NJ",
     "category": "纯户外自然",
-    "driveMin": 5,
-    "driveMax": 15,
+    "driveMinutes": 5,
     "status": "常去",
     "ratings": {
       "indoor": 0,
@@ -285,8 +277,7 @@
     "shortName": "Bergen County Zoo",
     "location": "Paramus, NJ",
     "category": "动物与农场",
-    "driveMin": 10,
-    "driveMax": 20,
+    "driveMinutes": 10,
     "status": "常去",
     "ratings": {
       "indoor": 0,
@@ -320,8 +311,7 @@
     "shortName": "Thielke Arboretum",
     "location": "Glen Rock, NJ",
     "category": "纯户外自然",
-    "driveMin": 5,
-    "driveMax": 15,
+    "driveMinutes": 5,
     "status": "本地候选",
     "ratings": {
       "indoor": 2,
@@ -355,8 +345,7 @@
     "shortName": "NJ Botanical Garden",
     "location": "Ringwood, NJ",
     "category": "花园与植物园",
-    "driveMin": 30,
-    "driveMax": 45,
+    "driveMinutes": 30,
     "status": "高匹配",
     "ratings": {
       "indoor": 2,
@@ -390,8 +379,7 @@
     "shortName": "Frelinghuysen Arboretum",
     "location": "Morristown, NJ",
     "category": "花园与植物园",
-    "driveMin": 40,
-    "driveMax": 55,
+    "driveMinutes": 40,
     "status": "高匹配",
     "ratings": {
       "indoor": 2,
@@ -426,8 +414,7 @@
     "shortName": "Rockefeller Preserve",
     "location": "Pleasantville, NY",
     "category": "纯户外自然",
-    "driveMin": 45,
-    "driveMax": 65,
+    "driveMinutes": 45,
     "status": "长散步首选",
     "ratings": {
       "indoor": 2,
@@ -462,8 +449,7 @@
     "shortName": "Bear Mountain / Hessian Lake",
     "location": "Bear Mountain, NY",
     "category": "纯户外自然",
-    "driveMin": 50,
-    "driveMax": 70,
+    "driveMinutes": 50,
     "status": "去过并喜欢",
     "ratings": {
       "indoor": 2,
@@ -498,8 +484,7 @@
     "shortName": "Duke Farms",
     "location": "Hillsborough, NJ",
     "category": "纯户外自然",
-    "driveMin": 55,
-    "driveMax": 75,
+    "driveMinutes": 55,
     "status": "完整 day trip",
     "ratings": {
       "indoor": 2,
@@ -534,8 +519,7 @@
     "shortName": "Liberty Science Center",
     "location": "Jersey City, NJ",
     "category": "纯室内科学",
-    "driveMin": 35,
-    "driveMax": 55,
+    "driveMinutes": 35,
     "status": "两岁强推荐",
     "ratings": {
       "indoor": 5,
@@ -570,8 +554,7 @@
     "shortName": "NY Hall of Science",
     "location": "Queens, NY",
     "category": "纯室内科学",
-    "driveMin": 40,
-    "driveMax": 65,
+    "driveMinutes": 40,
     "status": "互动科学强",
     "ratings": {
       "indoor": 5,
@@ -606,8 +589,7 @@
     "shortName": "Morris Museum",
     "location": "Morristown, NJ",
     "category": "纯室内科学",
-    "driveMin": 40,
-    "driveMax": 55,
+    "driveMinutes": 40,
     "status": "半日型",
     "ratings": {
       "indoor": 4.5,
@@ -642,8 +624,7 @@
     "shortName": "AMNH",
     "location": "New York, NY",
     "category": "纯室内科学",
-    "driveMin": 35,
-    "driveMax": 65,
+    "driveMinutes": 35,
     "status": "视觉冲击强",
     "ratings": {
       "indoor": 5,
@@ -678,8 +659,7 @@
     "shortName": "Intrepid Museum",
     "location": "New York, NY",
     "category": "纯室内科学",
-    "driveMin": 35,
-    "driveMax": 65,
+    "driveMinutes": 35,
     "status": "实物型科学",
     "ratings": {
       "indoor": 4,
@@ -713,8 +693,7 @@
     "shortName": "NJ State Museum",
     "location": "Trenton, NJ",
     "category": "纯室内科学",
-    "driveMin": 60,
-    "driveMax": 85,
+    "driveMinutes": 60,
     "status": "远端候选",
     "ratings": {
       "indoor": 4.5,
@@ -750,8 +729,7 @@
     "shortName": "Memorial Park",
     "location": "Fair Lawn, NJ",
     "category": "优秀 Playground",
-    "driveMin": 5,
-    "driveMax": 10,
+    "driveMinutes": 5,
     "status": "本地常备",
     "ratings": {
       "indoor": 0,
@@ -785,8 +763,7 @@
     "shortName": "Berdan Grove",
     "location": "Fair Lawn, NJ",
     "category": "优秀 Playground",
-    "driveMin": 5,
-    "driveMax": 10,
+    "driveMinutes": 5,
     "status": "本地优先",
     "ratings": {
       "indoor": 0,
@@ -820,8 +797,7 @@
     "shortName": "Gregory Park",
     "location": "Fair Lawn, NJ",
     "category": "Local Park",
-    "driveMin": 5,
-    "driveMax": 10,
+    "driveMinutes": 5,
     "status": "本地补充",
     "ratings": {
       "indoor": 0,
@@ -855,8 +831,7 @@
     "shortName": "Cresthill Park",
     "location": "Fair Lawn, NJ",
     "category": "Local Park",
-    "driveMin": 5,
-    "driveMax": 12,
+    "driveMinutes": 5,
     "status": "本地补充",
     "ratings": {
       "indoor": 0,
@@ -890,8 +865,7 @@
     "shortName": "Van Saun Playground",
     "location": "Paramus, NJ",
     "category": "优秀 Playground",
-    "driveMin": 10,
-    "driveMax": 18,
+    "driveMinutes": 10,
     "status": "区域强项",
     "ratings": {
       "indoor": 0,
@@ -926,8 +900,7 @@
     "shortName": "Wild Duck Pond",
     "location": "Ridgewood, NJ",
     "category": "Local Park",
-    "driveMin": 10,
-    "driveMax": 18,
+    "driveMinutes": 10,
     "status": "近距离组合型",
     "ratings": {
       "indoor": 0,
@@ -961,8 +934,7 @@
     "shortName": "Habernickel Park",
     "location": "Ridgewood, NJ",
     "category": "Local Park",
-    "driveMin": 12,
-    "driveMax": 20,
+    "driveMinutes": 12,
     "status": "高质量本地公园",
     "ratings": {
       "indoor": 0,
@@ -996,8 +968,7 @@
     "shortName": "Ridgewood YMCA Playground",
     "location": "Ridgewood, NJ",
     "category": "优秀 Playground",
-    "driveMin": 12,
-    "driveMax": 20,
+    "driveMinutes": 12,
     "status": "包容性候选",
     "ratings": {
       "indoor": 0,

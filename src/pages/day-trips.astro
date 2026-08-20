@@ -9,13 +9,14 @@ const categories = [...new Set(dayTrips.map((item) => item.category))].sort();
 const statuses = [...new Set(dayTrips.map((item) => item.status))].sort();
 const conditions = [...new Set(dayTrips.flatMap((item) => item.conditions))].sort();
 const ratingOptions = [3, 3.5, 4, 4.5, 5];
+const tripCount = dayTrips.length;
 ---
-<BaseLayout title="Day Trips | Family Hub" description="按车程、天气、家庭适配与使用场景筛选 29 个家庭目的地。" pageClass="module-page theme-evergreen" themeColor="#E7EFE8">
+<BaseLayout title="Day Trips | Family Hub" description={`按车程、天气、家庭适配与使用场景筛选 ${tripCount} 个家庭目的地。`} pageClass="module-page theme-evergreen" themeColor="#E7EFE8">
   <SiteHeader eyebrow="出行与玩乐 · 目的地" title="Day Trips" description="按车程、天气和孩子当天的活动需求，筛选附近的公园、playground、自然中心、动物园和其他适合全家出门的地方。" accent="evergreen" icon="compass">
-    <div class="summary-row"><span>29 个地点</span><span>约 5–60 分钟车程</span><span>无目的地图片</span></div>
+    <div class="summary-row"><span>{tripCount} 个地点</span><span>无目的地图片</span></div>
   </SiteHeader>
 
-  <FilterShell accent="evergreen" filterId="trip-filter-panel" countId="trip-count" clearId="trip-clear" countText="显示 29 / 29 个地点">
+  <FilterShell accent="evergreen" filterId="trip-filter-panel" countId="trip-count" clearId="trip-clear" countText={`显示 ${tripCount} / ${tripCount} 个地点`}>
     <div slot="primary" class="filter-primary__grid">
       <label><span>搜索地点</span><input id="trip-search" type="search" placeholder="动物、雨天、池塘、science…" autocomplete="off" /></label>
       <label><span>排序</span><select id="trip-sort" data-default="recommended"><option value="recommended">家庭推荐</option><option value="drive">最短车程</option><option value="toddler">Toddler 评分</option><option value="parent">家长评分</option><option value="name">名称</option></select></label>
@@ -52,12 +53,12 @@ const ratingOptions = [3, 3.5, 4, 4.5, 5];
     const render = () => {
       const query = controls.q.value.trim().toLocaleLowerCase();
       const visible = cards.filter((card) => {
-        const drive = number(card, 'driveMin');
+        const drive = number(card, 'drive');
         const driveMatches = !controls.drive.value || (controls.drive.value === '20' && drive <= 20) || (controls.drive.value === '40' && drive > 20 && drive <= 40) || (controls.drive.value === '60' && drive > 40 && drive <= 60);
         return (!query || card.dataset.search!.includes(query)) && (!controls.category.value || card.dataset.category === controls.category.value) && driveMatches && (!controls.condition.value || card.dataset.conditions!.split('|').includes(controls.condition.value)) && (!controls.status.value || card.dataset.status === controls.status.value) && ['indoor', 'outdoor', 'stroller', 'weather'].every((key) => !controls[key as keyof typeof controls].value || number(card, key) >= Number(controls[key as keyof typeof controls].value));
       });
       const sorters: Record<string, (a: HTMLElement, b: HTMLElement) => number> = {
-        recommended: (a, b) => number(b, 'score') - number(a, 'score'), drive: (a, b) => number(a, 'driveMin') - number(b, 'driveMin'), toddler: (a, b) => number(b, 'toddler') - number(a, 'toddler'), parent: (a, b) => number(b, 'parent') - number(a, 'parent'), name: (a, b) => a.dataset.name!.localeCompare(b.dataset.name!),
+        recommended: (a, b) => number(b, 'score') - number(a, 'score'), drive: (a, b) => number(a, 'drive') - number(b, 'drive'), toddler: (a, b) => number(b, 'toddler') - number(a, 'toddler'), parent: (a, b) => number(b, 'parent') - number(a, 'parent'), name: (a, b) => a.dataset.name!.localeCompare(b.dataset.name!),
       };
       cards.forEach((card) => card.hidden = !visible.includes(card));
       visible.sort(sorters[controls.sort.value]).forEach((card) => list.append(card));
