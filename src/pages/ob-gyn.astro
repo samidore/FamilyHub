@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import FilterShell from '../components/FilterShell.astro';
+import HospitalComparison from '../modules/ob-gyn/HospitalComparison.astro';
 import ObGynCard from '../modules/ob-gyn/ObGynCard.astro';
 import { obGynProviders } from '../data/catalog';
 import type { ObGynSection } from '../data/obGynTypes';
@@ -18,7 +19,7 @@ const recordsFor = (section: ObGynSection) => placements.filter((item) => item.p
 ---
 <BaseLayout title="OB / GYN · Valley / Hackensack / Englewood | Family Hub" description="按医院接生关系、公开资格与训练、患者体验、实际可用性和证据缺口比较附近 OB 与普通 GYN。" pageClass="module-page theme-ochre" themeColor="#F4EDE0">
   <SiteHeader eyebrow="健康与照护 · 公开资料比较" title="OB / GYN · V / H / E" description="OB 按 Valley、Hackensack、Englewood 各保留 10 位；普通 GYN 合并 10 位。医院 affiliation 可以进入候选，查不到当前接生关系不淘汰，只标为需要电话确认。家庭筛选分与 Tier 只是比较顺序，不是医疗质量评级。" accent="ochre" icon="care">
-    <div class="summary-row"><span>35 位去重医生</span><span>40 个比较席位</span><span>4 个可折叠区块</span><span>Premera / NJ safety 未猜测</span></div>
+    <div class="summary-row"><span>35 位去重医生</span><span>40 个比较席位</span><span>4 个可折叠医生区块</span><span>Premera / NJ safety 未猜测</span></div>
   </SiteHeader>
 
   <FilterShell accent="ochre" filterId="obgyn-filter-panel" countId="obgyn-count" clearId="obgyn-clear" countText="显示 40 / 40 个比较席位">
@@ -35,6 +36,8 @@ const recordsFor = (section: ObGynSection) => placements.filter((item) => item.p
     <div class="trust-note">
       <strong>这版还没把两项当成“已通过”：</strong> NJ physician primary-source license / discipline 逐人核验，以及 Premera 的具体 member/network in-network 状态。两项都不作为本轮淘汰条件；最终由保险公司、practice 和 delivery facility 分别确认。
     </div>
+
+    <HospitalComparison />
 
     <div id="obgyn-sections" class="provider-sections">
       {sections.map((section) => (
