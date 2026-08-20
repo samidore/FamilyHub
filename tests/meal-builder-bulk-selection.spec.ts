@@ -36,6 +36,8 @@ test('global and section bulk controls filter the current meal without changing 
   for (const id of ['ground-pork', 'pork-chops', 'chicken-breast', 'broccoli']) {
     await expect(page.locator(`[data-ingredient-id="${id}"]`)).toHaveAttribute('aria-pressed', 'true');
   }
+  await page.locator('[data-meal-recipe="clear-braised-lions-head-meatballs"] [data-select-recipe]').click();
+  await expect(page.locator('[data-selected-recipe="clear-braised-lions-head-meatballs"]')).toBeVisible();
 
   const porkSection = page.locator('[data-ingredient-section="pork"]');
   const porkClear = porkSection.locator('[data-ingredient-bulk-section="pork"][data-ingredient-bulk="clear"]');
@@ -47,6 +49,7 @@ test('global and section bulk controls filter the current meal without changing 
   await expect(page.locator('[data-ingredient-id="chicken-breast"]')).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('[data-ingredient-id="broccoli"]')).toHaveAttribute('aria-pressed', 'true');
   await expect(porkSection.locator('[data-section-count]')).toHaveText('0 / 2');
+  await expect(page.locator('[data-selected-recipe="clear-braised-lions-head-meatballs"]')).toBeHidden();
 
   const vegetableSection = page.locator('[data-ingredient-section="other-vegetable"]');
   const vegetableClear = vegetableSection.locator('[data-ingredient-bulk-section="other-vegetable"][data-ingredient-bulk="clear"]');
