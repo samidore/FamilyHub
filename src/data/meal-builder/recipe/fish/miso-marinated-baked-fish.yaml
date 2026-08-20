@@ -3,60 +3,40 @@ type: recipe
 status: candidate
 name_zh: 味噌腌烤鱼
 name_en: Miso-Marinated Baked Fish
-tags:
-  - light-seasoning
-  - non-spicy-base
-  - roasted
-  - oven
-  - advance-start
-  - child-support-protein
+tags: [light-seasoning, non-spicy-base, roasted, oven, advance-start, child-support-protein]
 fit:
   hard_rules: pass
   score: 3
   strengths:
+    - 鱼肉烤到刚熟仍柔软；孩子份去掉表面重味噌层并彻底去刺即可。
     - 主烹调设备可释放灶口。
   tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-    - 需要提前启动或较长被动烹调时间。
+    - 需要提前腌制。
 evidence:
   level: reputable-general
   checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 味噌汁比例按 Just One Cookbook miso fish/salmon 结构；鱼种不同的腌制时间明确分开。
+  scope: Culinary identity and executable technique; adapted household-light route.
   sources:
     - Just One Cookbook — Miso Black Cod / Miso Salmon; fish-specific marination times retained as source-dependent
-    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
     - USDA FSIS Safe Minimum Internal Temperature Chart
-notes: |-
-  Do not apply black-cod multi-day marination mechanically to every fish.
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
+notes: Child coverage按实际软鱼肉判断；孩子份不需要保留厚味噌表层。
 primary_role: protein
 main_protein_category: fish
-main_protein_ingredient_ids:
-  - chilean-sea-bass
-  - sablefish
+main_protein_ingredient_ids: [chilean-sea-bass, sablefish]
 supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids: []
-meal_contribution:
-  protein: 1
-  vegetable: 0
-  staple: 0
-child_coverage:
-  protein: false
-  vegetable: false
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
+recommended_staple_ingredient_ids: [rice]
 active_minutes: 15–25
 meal_window_minutes: 15–25
 elapsed_minutes: 45–75 + marination
 advance_start_required: true
-equipment:
-  - gas oven
-  - sheet pan / baking dish
+equipment: [gas oven, sheet pan / baking dish]
 burner_plan: Oven carries the main cooking load and frees both stovetop burners.
-child_suitable: objective-yes-current-preference-low
-child_texture: 鱼肉本身可做得柔软，但孩子目前总体不爱吃鱼。
+child_suitable: yes
+child_texture: 鱼肉柔软易分片；孩子份去掉表面厚味噌和鱼皮，彻底检查鱼刺。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -64,23 +44,18 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - one_of:
-      - chilean-sea-bass
-      - sablefish
+  - one_of: [chilean-sea-bass, sablefish]
     role: main-protein
 steps:
-  - 准备：腌汁搅到味噌完全化开；鱼擦干。；鱼与腌汁冷藏腌：sablefish/黑鳕可较长，智利海鲈先从1–2小时起；不把不同鱼种的腌制时间机械等同。
-  - 烤前把鱼从腌汁取出，用手/刮刀轻轻刮掉表面厚酱，避免糖和味噌先焦。
-  - 烤箱预热425°F/220°C；鱼皮面（如有）朝下放铺纸烤盘。
-  - 烤到表面开始焦糖化；约8分钟起根据厚度测中心。
-  - 中心达到145°F/63°C即出炉；若需要更深颜色，只用上火/高温1分钟并全程看守。
-  - 静置2分钟；孩子份去皮并检查鱼刺。
-  - 完成提示：表面有浅褐味噌焦边而不黑；鱼肉中心熟透仍湿润、可分片。
-  - 安全提示：鱼中心达到145°F/63°C，或肉完全不透明并能轻易分片；给孩子份再次检查鱼刺。
-child_serving: 成人彻底去刺后压碎/撕小；Meal Combo 默认保留软蛋白备选。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
-substitutions:
-  - sablefish
+  - 腌汁搅到味噌完全化开；鱼擦干。Sablefish可较长腌，智利海鲈先从1–2小时起。
+  - 烤前取出鱼，轻轻刮掉表面厚酱，避免糖和味噌先焦。
+  - 烤箱预热425°F/220°C；鱼放铺纸烤盘。
+  - 约8分钟起按厚度测中心；达到145°F/63°C即出炉。
+  - 孩子份去掉表面较咸的酱层和鱼皮，成人检查鱼刺后压碎/撕小。
+  - 完成提示：表面有浅褐味噌焦边而不黑；中心熟透仍湿润、可分片。
+child_serving: 去掉表面厚味噌与鱼皮，彻底去刺后压碎/撕小；本 Recipe 计入 Child Protein。
+adult_finish: 成人可另补味噌汁或辣味。
+substitutions: [sablefish]
 cook_ingredients:
   - 智利海鲈 / Sablefish：450 g，2–3块
   - 味噌腌汁：味噌 1 Tbsp；糖 1 Tbsp；清酒 2 Tbsp；味醂 1 Tbsp；生抽 1.5 Tbsp

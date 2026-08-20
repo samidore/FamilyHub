@@ -1,59 +1,41 @@
 id: simple-stir-fried-broccoli
 type: recipe
 status: candidate
-name_zh: 清炒西兰花
-name_en: Simple Broccoli
-tags:
-  - light-seasoning
-  - non-spicy-base
-  - stir-fried
-  - stovetop-wok
-  - lunch-30
-  - soft-vegetable
+name_zh: 清炒西兰花 / 花菜
+name_en: Simple Stir-Fried Broccoli or Cauliflower
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, soft-vegetable]
 fit:
   hard_rules: pass
   score: 5
   strengths:
-    - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
-    - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+    - 西兰花和花菜共享焯/炒到软熟的基础结构，避免重复 Recipe。
+    - 孩子份可正常多煮至软。
   tradeoffs: []
 evidence:
   level: reputable-general
   checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 来源验证的中式蔬菜快炒结构，按家庭轻盐标准化；不把同一标准汁冒充为地方菜传统原方。
+  scope: Culinary identity and executable technique; adapted household-light vegetable stir-fry route.
   sources:
     - V02 — Made With Lau — Dad’s 10-Minute Weeknight Broccoli / Broccoli Stir Fry
-    - Made With Lau — vegetable stir-fry / broccoli / choy sum recipes; The Woks of Life vegetable stir-fry patterns
-notes: |-
-  Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook calibration.
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
+    - Made With Lau / The Woks of Life — vegetable stir-fry patterns
+notes: Candidate Vegetable-centered route; cauliflower uses the same structure with slightly longer softening as needed.
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
 supporting_protein_ingredient_ids: []
-vegetable_ingredient_ids:
-  - broccoli
-meal_contribution:
-  protein: 0
-  vegetable: 1
-  staple: 0
-child_coverage:
-  protein: false
-  vegetable: true
+vegetable_ingredient_ids: [broccoli, cauliflower]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: true }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
+recommended_staple_ingredient_ids: [rice]
 active_minutes: 10–20
 meal_window_minutes: 10–25
 elapsed_minutes: 10–30
 advance_start_required: false
-equipment:
-  - high-output burner
-  - wok / iron pan
+equipment: [high-output burner, wok / iron pan]
 burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
 child_suitable: yes
-child_texture: 孩子份可将花梗剪小并比成人份多煮 1–2 分钟至更软；成熟来源明确给出幼儿/老人软化路线。
+child_texture: 孩子份把花梗切小并比成人份多煮1–3分钟，直到叉子容易穿透。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -61,20 +43,20 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - ingredient_id: broccoli
+  - one_of: [broccoli, cauliflower]
     role: vegetable
 steps:
-  - 准备：蔬菜洗净后彻底沥干；叶菜把较粗的梗和叶分开，硬菜切成约一口大小。；蒜2瓣切末；把蔬菜汁混匀。
-  - 炒锅大火预热到明显热但不冒浓烟，加2 tsp中性油；下蒜末炒10秒。
-  - 先下较硬的梗/厚片，大火翻炒30–60秒；再下叶片或易熟部分。
-  - 沿锅边加1 tsp绍兴酒（可省略），立刻翻炒；若锅太干，只沿锅边补1 Tbsp水，不要把菜煮在水里。
-  - 蔬菜接近断生时倒入家庭轻盐蔬菜汁，快速翻匀20–30秒。
-  - 看到菜颜色鲜亮、体积刚缩、梗部能咬断但仍有轻微脆感时立即关火。
-  - 完成提示：叶片刚塌、梗能咬断但不软烂；锅底没有一滩水，菜表面只薄薄有味汁。
-  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
-child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+  - 准备：西兰花或花菜300–450 g切成大小接近的小朵，粗梗削皮切薄片；蒜2瓣切末；调味汁混匀。
+  - 炒锅大火预热，加2 tsp中性油，下蒜末炒10秒。
+  - 下蔬菜翻炒约1分钟，沿锅边加2–3 Tbsp水，盖盖焖2分钟。
+  - 开盖翻匀；花菜或较厚的梗还硬时再补1 Tbsp水、盖盖1–2分钟。
+  - 倒入轻盐蔬菜汁，翻20–30秒；孩子份继续焖到叉子容易穿透，再先盛出。
+  - 成人份可保留一点脆度；锅底没有明显积水时关火。
+  - 完成提示：成人份熟而不烂；孩子份明显更软但仍保持形状。
+child_serving: 取较软的小朵和梗，必要时剪小；本 Recipe 计入 Child Vegetable。
+adult_finish: 孩子份盛出后，成人可另加辣椒油或更重调味。
 substitutions: []
 cook_ingredients:
-  - 西兰花：300–450 g
+  - 西兰花或花菜：300–450 g；任选一种
+  - 蒜：2瓣，切末
   - 家庭轻盐蔬菜汁：水 1 Tbsp；生抽 2 tsp；蚝油 1 tsp；糖 1/4 tsp

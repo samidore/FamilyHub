@@ -3,61 +3,39 @@ type: recipe
 status: candidate
 name_zh: 家常豆腐家庭版
 name_en: Homestyle Tofu — Family Version
-tags:
-  - iron-pan-braise
-  - light-seasoning
-  - non-spicy-base
-  - stir-fried
-  - stovetop-wok
-  - lunch-45
-  - child-support-protein
-  - adult-finish-separate
+tags: [iron-pan-braise, light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-45, child-support-protein, adult-finish-separate]
 fit:
   hard_rules: pass
   score: 3
   strengths:
-    - 临近上桌流程相对集中，便于与另一灶口并行。
+    - 豆腐经汁焖后可保持柔软，孩子份可正常从同一道菜中分出。
   tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-    - 家庭版包含明确的受控改编，需首次实做后再校准。
+    - 家庭版包含受控改编，需首次实做后再校准。
 evidence:
   level: inferred
   checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 家庭轻盐豆腐标准汁；不把它冒充原来源的辣味或重油版本。
+  scope: Culinary identity and executable technique; adapted household-light route.
   sources:
     - The Woks of Life — Home Style Tofu; household family version removes chili-heavy base and lowers oil
     - Made With Lau / The Woks of Life / Just One Cookbook — tofu recipes listed in the source KB
-notes: |-
-  Family adaptation preserves home-style tofu stir-fry structure but not a chili-heavy or deep-fried route.
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
+notes: Family adaptation preserves home-style tofu stir-fry structure but not a chili-heavy or deep-fried route.
 primary_role: mixed
 main_protein_category: tofu
-main_protein_ingredient_ids:
-  - firm-tofu
+main_protein_ingredient_ids: [firm-tofu]
 supporting_protein_ingredient_ids: []
-vegetable_ingredient_ids:
-  - bell-pepper
-meal_contribution:
-  protein: 0.5
-  vegetable: 0.5
-  staple: 0
-child_coverage:
-  protein: false
-  vegetable: true
+vegetable_ingredient_ids: [bell-pepper]
+meal_contribution: { protein: 0.5, vegetable: 0.5, staple: 0 }
+child_coverage: { protein: true, vegetable: true }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
+recommended_staple_ingredient_ids: [rice]
 active_minutes: 20–35
 meal_window_minutes: 30–45
 elapsed_minutes: 35–60
 advance_start_required: false
-equipment:
-  - high-output burner
-  - wok / iron pan
+equipment: [high-output burner, wok / iron pan]
 burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
-child_suitable: objective-possible-currently-unlikely
-child_texture: firm tofu 可烹至较嫩，但孩子目前不吃 firm tofu。
+child_suitable: yes
+child_texture: 豆腐用汁焖到内部柔软；孩子份甜椒也继续焖软并切小。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -70,16 +48,14 @@ ingredients:
   - ingredient_id: bell-pepper
     role: vegetable
 steps:
-  - 准备：豆腐沥去包装水；嫩豆腐切2.5–3 cm块并尽量少搬动，硬豆腐可切1.5 cm厚片。；把豆腐汁搅匀；姜切丝5 g、葱切段备用。 甜椒切成一口大小。
-  - 锅中火加1 tsp油，下姜丝炒10秒；加入甜椒先炒到接近熟。
-  - 轻轻滑入豆腐，沿锅边倒入家庭轻盐豆腐汁；用晃锅和锅铲背面轻推，少翻。
-  - 煮开后转中小火2–4分钟，让豆腐中心热透；有配菜时同时煮到完全熟。
-  - 若汁仍像水，用中火再煮30–60秒；不要猛烈翻炒把嫩豆腐搅碎。
-  - 汁变成薄薄挂勺且豆腐仍完整时关火。
-  - 完成提示：豆腐中心热透、块形完整；酱汁薄挂勺，不是厚芡。
-  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
-child_serving: 可少量提供；Meal Combo 另配孩子已接受的嫩豆腐/鸡蛋。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+  - 豆腐沥水切1.5 cm厚片；甜椒切一口大小；调味汁混匀。
+  - 锅中火加1 tsp油，下姜丝炒10秒；加入甜椒炒到开始变软。
+  - 加入豆腐，沿锅边倒入轻盐豆腐汁；少翻，用晃锅和锅铲背面轻推。
+  - 煮开后转中小火3–5分钟，让豆腐中心热透、甜椒完全熟软。
+  - 孩子份先盛出软豆腐和软甜椒并切小；成人份再中火收汁30–60秒。
+  - 完成提示：豆腐内部柔软、酱汁薄挂勺，不是厚芡。
+child_serving: 取焖软豆腐切小；本 Recipe 可计入 Child Protein，甜椒足够软时也计 Child Vegetable。
+adult_finish: 孩子份盛出后，成人可另加辣椒油、辣椒粉或更重调味。
 substitutions: []
 cook_ingredients:
   - 老豆腐 / 硬豆腐：1盒，约400–450 g

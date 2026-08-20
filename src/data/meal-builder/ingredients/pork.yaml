@@ -19,9 +19,7 @@ ingredients:
     evidence:
       level: user-confirmed
       checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
       sources:
         - Family Meal Ingredient brainstorm / retained candidate decisions
     notes: 家庭高价值食材；household-observed preference favors tenderloin dishes.
@@ -45,9 +43,7 @@ ingredients:
     evidence:
       level: inferred
       checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
       sources:
         - Family Meal Ingredient brainstorm / retained candidate decisions
     notes: ""
@@ -71,9 +67,7 @@ ingredients:
     evidence:
       level: inferred
       checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
       sources:
         - Family Meal Ingredient brainstorm / retained candidate decisions
     notes: ""
@@ -97,9 +91,7 @@ ingredients:
     evidence:
       level: inferred
       checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
       sources:
         - Family Meal Ingredient brainstorm / retained candidate decisions
     notes: ""
@@ -123,9 +115,7 @@ ingredients:
     evidence:
       level: user-confirmed
       checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
       sources:
         - Family Meal Ingredient brainstorm / retained candidate decisions
     notes: 家庭接受度高；家庭认为味道优于牛绞肉。
@@ -150,9 +140,7 @@ ingredients:
     evidence:
       level: user-confirmed
       checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
       sources:
         - Family Meal Ingredient brainstorm / retained candidate decisions
     notes: 现有 stable ID 保留；具体 butcher cut 尚未严格核实，不在本次 UI migration 中虚构。
@@ -177,9 +165,7 @@ ingredients:
     evidence:
       level: user-confirmed
       checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
       sources:
         - Family Meal Ingredient brainstorm / retained candidate decisions
     notes: 孩子可以吃；总耗时通常较长。
@@ -203,9 +189,7 @@ ingredients:
     evidence:
       level: inferred
       checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
       sources:
         - Family Meal Ingredient brainstorm / retained candidate decisions
     notes: ""
@@ -231,9 +215,7 @@ ingredients:
     evidence:
       level: user-confirmed
       checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
       sources:
         - Family Meal Ingredient brainstorm / retained candidate decisions
     notes: 用户已明确降为低优先度。
@@ -249,6 +231,7 @@ ingredients:
       order: 100
     tags:
       - supporting-only
+      - addon-only
       - processed
     fit:
       hard_rules: pass
@@ -260,12 +243,10 @@ ingredients:
     evidence:
       level: user-confirmed
       checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
       sources:
         - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: Processed / supporting ingredient。
+    notes: Processed / supporting ingredient；用户确认仅作为顺手加入项，不要求 standalone Recipe。
   - id: chinese-sausage
     type: ingredient
     inventory_tracking: counted
@@ -278,6 +259,7 @@ ingredients:
       order: 110
     tags:
       - supporting-only
+      - addon-only
       - processed
     fit:
       hard_rules: pass
@@ -289,12 +271,10 @@ ingredients:
     evidence:
       level: user-confirmed
       checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
       sources:
         - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: Processed / supporting ingredient。
+    notes: Processed / supporting ingredient；用户确认仅作为 addon，不要求 standalone Recipe。
   - id: pork-meatballs
     type: ingredient
     inventory_tracking: counted
@@ -318,9 +298,7 @@ ingredients:
     evidence:
       level: user-confirmed
       checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
+      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
       sources:
         - Family Meal Ingredient brainstorm / retained candidate decisions
     notes: Processed / supporting ingredient。

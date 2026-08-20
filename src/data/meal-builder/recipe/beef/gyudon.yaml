@@ -3,20 +3,13 @@ type: recipe
 status: candidate
 name_zh: 牛丼
 name_en: Gyudon Beef Rice Bowl
-tags:
-  - iron-pan-braise
-  - light-seasoning
-  - non-spicy-base
-  - stovetop-nonstick
-  - lunch-30
-  - child-support-protein
+tags: [iron-pan-braise, light-seasoning, non-spicy-base, stovetop-nonstick, lunch-30, child-support-protein]
 fit:
   hard_rules: pass
   score: 5
   strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
+    - 薄牛肉在汁中煮熟并保持湿润，孩子份剪短即可作为软蛋白。
+  tradeoffs: []
 evidence:
   level: reputable-general
   checked_on: 2026-08-13
@@ -25,38 +18,24 @@ evidence:
     - Just One Cookbook — Gyudon
     - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
     - USDA FSIS Safe Minimum Internal Temperature Chart
-notes: |-
-  Rice is carried in the recipe; thin beef is tenderer but child support remains prudent unless household experience says otherwise.
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
+notes: Rice is integral to the dish; child coverage is based on the actual simmered texture rather than current preference.
 primary_role: mixed
 main_protein_category: beef
-main_protein_ingredient_ids:
-  - hot-pot-beef-slices
+main_protein_ingredient_ids: [hot-pot-beef-slices]
 supporting_protein_ingredient_ids: []
-vegetable_ingredient_ids:
-  - onion
-meal_contribution:
-  protein: 1
-  vegetable: 0.5
-  staple: 1
-child_coverage:
-  protein: false
-  vegetable: true
-integral_staple_ingredient_ids:
-  - rice
+vegetable_ingredient_ids: [onion]
+meal_contribution: { protein: 1, vegetable: 0.5, staple: 1 }
+child_coverage: { protein: true, vegetable: true }
+integral_staple_ingredient_ids: [rice]
 recommended_staple_ingredient_ids: []
 active_minutes: 15–25
 meal_window_minutes: 20–35
 elapsed_minutes: 20–40
 advance_start_required: false
-equipment:
-  - medium burner
-  - nonstick pan
-  - separately cooked rice
+equipment: [medium burner, nonstick pan, separately cooked rice]
 burner_plan: Medium burner for topping; rice is treated as an already-cooked or separately cooked staple.
-child_suitable: conditional
-child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
+child_suitable: yes
+child_texture: 薄牛肉在汁中煮熟后保持湿润；孩子份剪成短小段，洋葱煮软。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -71,20 +50,18 @@ ingredients:
   - ingredient_id: rice
     role: integral-staple
 steps:
-  - 准备：牛肉片若很长切成8–10 cm；洋葱顺纹薄切。；牛丼汁全部放宽锅中。
-  - 冷锅加入牛丼汁和洋葱，中火煮开后转中小火，煮到洋葱开始透明。
-  - 把牛肉片逐片拨散加入，避免成团；轻轻翻动让肉全部接触汤汁。
-  - 盖盖中小火3–4分钟；撇掉明显浮沫。
-  - 打开检查牛肉无冷生中心，再煮约1分钟让汁味均匀。
-  - 锅中应保留相当一部分可流动汁；直接分到3碗饭上，不收成浓酱。
-  - 孩子份把牛肉片剪短。
-  - 完成提示：洋葱软甜、牛肉熟而仍嫩；锅内保留足够丼汁湿润米饭。
-  - 安全提示：整块牛肉可测处达到145°F/63°C并静置3分钟；薄片炒菜实际炒至无冷生中心。
-child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+  - 牛肉片若很长切短；洋葱薄切；牛丼汁全部放宽锅中。
+  - 冷锅加入牛丼汁和洋葱，中火煮开后转中小火，煮到洋葱透明柔软。
+  - 牛肉片逐片拨散加入，轻轻翻动让肉全部接触汤汁。
+  - 盖盖中小火3–4分钟；打开检查无冷生中心，再煮约1分钟。
+  - 锅中保留可流动汁，直接分到熟饭上，不收成浓酱。
+  - 孩子份把牛肉剪成短小段，连软洋葱和汁一起提供。
+  - 完成提示：洋葱软甜、牛肉熟而湿润；锅内保留足够丼汁。
+child_serving: 牛肉剪短、洋葱煮软；本 Recipe 计入 Child Protein。
+adult_finish: 孩子份盛出后，成人可另加七味粉或更重调味。
 substitutions: []
 cook_ingredients:
-  - 火锅牛肉片/牛腩片：340 g
+  - 火锅牛肉片：340 g
   - 洋葱：约170 g，薄切
   - 米饭：3碗熟饭
   - 牛丼汁：日式高汤 3/4 cup；清酒 3 Tbsp；味醂 3 Tbsp；生抽 4.5 Tbsp；糖 1.5 Tbsp

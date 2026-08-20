@@ -3,61 +3,39 @@ type: recipe
 status: candidate
 name_zh: 豉汁蒸鱼
 name_en: Steamed Fish with Black Bean Sauce
-tags:
-  - light-seasoning
-  - non-spicy-base
-  - steamed
-  - stovetop-nonstick
-  - lunch-45
-  - child-support-protein
+tags: [light-seasoning, non-spicy-base, steamed, stovetop-nonstick, lunch-45, child-support-protein]
 fit:
   hard_rules: pass
   score: 3
-  strengths: []
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
+  strengths:
+    - 蒸熟鱼肉柔软；孩子份可先取清淡鱼肉并彻底去刺。
+  tradeoffs: []
 evidence:
   level: reputable-general
   checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. The Woks of Life Cantonese steamed fish / black-bean fish 结构；家庭减少热油。
+  scope: Culinary identity and executable technique; adapted household-light route.
   sources:
     - The Woks of Life — Steamed Fish with Black Bean Sauce
     - Made With Lau / The Woks of Life — Chinese steaming recipes
     - USDA FSIS Safe Minimum Internal Temperature Chart
-notes: |-
-  Black-bean sauce is a meaningful dish identity, so this remains separate from plain steamed fish.
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
+notes: Child coverage按实际去刺后的软鱼肉判断，不以当前偏好作为硬条件。
 primary_role: protein
 main_protein_category: fish
-main_protein_ingredient_ids:
-  - live-freshwater-bass
-  - branzino
-  - black-sea-bass
-  - grouper
-  - halibut
+main_protein_ingredient_ids: [live-freshwater-bass, branzino, black-sea-bass, grouper, halibut]
 supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids: []
-meal_contribution:
-  protein: 1
-  vegetable: 0
-  staple: 0
-child_coverage:
-  protein: false
-  vegetable: false
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
+recommended_staple_ingredient_ids: [rice]
 active_minutes: 20–35
 meal_window_minutes: 30–45
 elapsed_minutes: 35–60
 advance_start_required: false
-equipment:
-  - medium burner
-  - covered steamer / heatproof plate
+equipment: [medium burner, covered steamer / heatproof plate]
 burner_plan: Medium burner for covered steaming; high-output burner remains available.
-child_suitable: objective-yes-current-preference-low
-child_texture: 鱼肉本身可做得柔软，但孩子目前总体不爱吃鱼。
+child_suitable: yes
+child_texture: 蒸熟鱼肉柔软；孩子份从豉汁较少的位置取肉，彻底去刺后压碎或撕小。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -65,29 +43,18 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - one_of:
-      - live-freshwater-bass
-      - branzino
-      - black-sea-bass
-      - grouper
-      - halibut
+  - one_of: [live-freshwater-bass, branzino, black-sea-bass, grouper, halibut]
     role: main-protein
 steps:
-  - 准备：鱼擦干；整鱼两面各划2–3刀但不要切到骨断。；耐热盘下垫少量姜葱；蒸锅水必须先完全烧开。
-  - 水大开后把鱼盘上锅，立刻盖严，保持中大火稳定蒸汽。
-  - 约7分钟起根据鱼厚度检查；最厚处中心达到145°F/63°C，且鱼肉能轻易分片即可。
-  - 立即出锅，倒掉盘中大部分腥水，不让鱼继续泡在蒸水里。
-  - 把豉汁均匀铺/淋在鱼上，再回锅蒸1分钟让黑豆蒜香热透。
-  - 孩子份从鱼背厚肉处取肉，逐指检查细刺后剪小。
-  - 完成提示：鱼肉刚从半透明转不透明、能沿肌理分片；盘底只有少量清亮调味汁。
-  - 安全提示：鱼中心达到145°F/63°C，或肉完全不透明并能轻易分片；给孩子份再次检查鱼刺。
-child_serving: 成人彻底去刺后压碎/撕小；Meal Combo 默认保留软蛋白备选。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
-substitutions:
-  - branzino
-  - black-sea-bass
-  - grouper
-  - halibut
+  - 鱼擦干并划刀；蒸锅水先完全烧开。
+  - 水大开后上锅，盖严，保持稳定蒸汽。
+  - 约7分钟起按厚度检查；最厚处达到145°F/63°C且鱼肉能轻易分片即可。
+  - 倒掉大部分蒸水，把豉汁铺在鱼上，再蒸约1分钟让黑豆蒜香热透。
+  - 孩子份从调味较轻的厚肉处取肉，成人逐指检查鱼刺后压碎/撕小。
+  - 完成提示：鱼肉刚熟、湿润易分片；豉汁热透但不过咸。
+child_serving: 取豉汁较少的软鱼肉，成人彻底去刺后压碎/撕小；本 Recipe 计入 Child Protein。
+adult_finish: 成人可另补豉汁、辣椒或葱油。
+substitutions: [branzino, black-sea-bass, grouper, halibut]
 cook_ingredients:
-  - 活淡水鲈鱼 / Branzino（欧洲海鲈） / 黑海鲈 / 石斑鱼 / 大比目鱼：1条，约650–800 g，去鳞去内脏；任选一种；实际选中项使用同一批量
-  - 豉汁：发酵黑豆 1 Tbsp，冲洗粗切；蒜 2瓣，末；姜 10 g，丝；生抽 1 Tbsp；糖 1/2 tsp；水 2 Tbsp；芝麻油 1/2 tsp
+  - 活淡水鲈鱼 / Branzino / 黑海鲈 / 石斑鱼 / 大比目鱼：1条，约650–800 g；任选一种
+  - 豉汁：发酵黑豆 1 Tbsp，冲洗粗切；蒜 2瓣；姜 10 g；生抽 1 Tbsp；糖 1/2 tsp；水 2 Tbsp；芝麻油 1/2 tsp

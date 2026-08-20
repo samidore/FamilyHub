@@ -3,18 +3,12 @@ type: recipe
 status: candidate
 name_zh: 日式菌菇蒸 / 焖
 name_en: Japanese-Style Steamed Mushrooms
-tags:
-  - iron-pan-braise
-  - light-seasoning
-  - non-spicy-base
-  - stovetop-nonstick
-  - lunch-45
-  - low-active-time
+tags: [iron-pan-braise, light-seasoning, non-spicy-base, stovetop-nonstick, lunch-45, low-active-time]
 fit:
   hard_rules: pass
   score: 4
   strengths:
-    - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
+    - 菌菇经过盖焖可做到明显柔软；正常切小后可承担孩子蔬菜。
     - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
   tradeoffs: []
 evidence:
@@ -24,40 +18,24 @@ evidence:
   sources:
     - V22 — Just One Cookbook — Miso Butter Mushrooms in Foil
     - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
-notes: |-
-  核心是 covered steam/braise mushroom structure；味噌黄油可作为 variation，家庭版保持轻盐。
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
+notes: 金针菇必须切短；其余菌菇切成小块并焖到完全柔软。
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
 supporting_protein_ingredient_ids: []
-vegetable_ingredient_ids:
-  - fresh-shiitake
-  - oyster-mushrooms
-  - shimeji-mushrooms
-  - enoki-mushrooms
-  - maitake
-meal_contribution:
-  protein: 0
-  vegetable: 1
-  staple: 0
-child_coverage:
-  protein: false
-  vegetable: false
+vegetable_ingredient_ids: [fresh-shiitake, oyster-mushrooms, shimeji-mushrooms, enoki-mushrooms, maitake]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: true }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
+recommended_staple_ingredient_ids: [rice]
 active_minutes: 10–15
 meal_window_minutes: 25–35
 elapsed_minutes: 25–40
 advance_start_required: false
-equipment:
-  - medium burner
-  - covered skillet / foil packet
+equipment: [medium burner, covered skillet / foil packet]
 burner_plan: Medium burner; covered steam/braise route is mostly unattended after packing.
-child_suitable: conditional
-child_texture: 不同菌菇质地差异大，尤其金针菇等不自动视为儿童 Vegetable coverage。
+child_suitable: yes
+child_texture: 菌菇要彻底焖软并切小；金针菇在烹调前先切成短段，不保留长丝状。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -65,25 +43,19 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - one_of:
-      - fresh-shiitake
-      - oyster-mushrooms
-      - shimeji-mushrooms
-      - enoki-mushrooms
-      - maitake
+  - one_of: [fresh-shiitake, oyster-mushrooms, shimeji-mushrooms, enoki-mushrooms, maitake]
     role: vegetable
 steps:
-  - 准备：菌菇去硬根，大朵撕/切成一口大小；混合菌菇尽量尺寸相近。；味噌、清酒、味醂和水调匀，黄油切小块。
-  - 菌菇放深盘/带盖小锅，淋味噌汁，黄油点在表面。
+  - 菌菇去硬根，大朵切/撕成小块；金针菇去根后横切成约2–3 cm短段；味噌、清酒、味醂和水调匀。
+  - 菌菇放深盘或带盖小锅，淋味噌汁，黄油点在表面。
   - 盖严，中小火焖/蒸5分钟。
-  - 开盖翻匀，再盖2–4分钟，直到菌菇明显缩水、完全热透并释放汁。
-  - 开盖中火30秒让汁略集中；不要收干，菌菇应仍湿润。
-  - 关火拌匀；孩子份按原 child coverage 记录，不自动推断。
-  - 完成提示：菌菇完全软熟、释放鲜汁；酱汁乳化湿润而不是油水分离。
-  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
-child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+  - 开盖翻匀，再盖2–5分钟，直到菌菇明显缩水、完全热透并柔软。
+  - 孩子份检查没有长丝或大韧片，必要时再剪小，先盛出。
+  - 开盖中火30秒让成人份汁略集中；不要收干。
+  - 完成提示：菌菇完全软熟、湿润而不是焦韧。
+child_serving: 彻底焖软并切小；金针菇必须切短；本 Recipe 计入 Child Vegetable。
+adult_finish: 孩子份盛出后，成人可另加七味粉、辣油或更重味噌。
 substitutions: []
 cook_ingredients:
-  - 鲜香菇 / 平菇 / 蟹味菇（Shimeji） / 金针菇 / 舞茸：300–450 g；任选一种；实际选中项使用同一批量
+  - 鲜香菇 / 平菇 / 蟹味菇 / 金针菇 / 舞茸：300–450 g；任选一种
   - 味噌黄油汁：味噌 1 Tbsp；清酒 1 Tbsp；味醂 1 Tbsp；无盐黄油 1 Tbsp；水 1 Tbsp

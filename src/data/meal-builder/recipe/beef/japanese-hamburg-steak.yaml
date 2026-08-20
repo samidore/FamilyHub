@@ -3,60 +3,40 @@ type: recipe
 status: candidate
 name_zh: 日式汉堡排
 name_en: Japanese Hambagu
-tags:
-  - light-seasoning
-  - non-spicy-base
-  - pan-seared
-  - stovetop-nonstick
-  - lunch-45
-  - family-shared
+tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, lunch-45, family-shared]
 fit:
   hard_rules: pass
   score: 4
   strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+    - 牛绞肉本身即可做成肉饼；洋葱和经典 binder 保留为推荐完整版本，不阻挡 availability。
     - 可设计为全家共享基础口味。
-    - 临近上桌流程相对集中，便于与另一灶口并行。
   tradeoffs: []
 evidence:
   level: reputable-general
   checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. Just One Cookbook Hambagu 结构；现有 Recipe 只要求 ground beef，故做全牛肉家庭版本。
+  scope: Culinary identity and executable technique; adapted household-light route. Just One Cookbook Hambagu 结构；全牛肉家庭版本允许省略洋葱或 binder 后做简化肉饼。
   sources:
     - Just One Cookbook — Hambagu / Wafu Hambagu
     - USDA FSIS Safe Minimum Internal Temperature Chart
 notes: |-
-  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
+  Availability 只要求 ground beef。洋葱、鸡蛋和 panko 是推荐完整版本；缺少时仍可把充分搅出黏性的调味牛肉直接成饼煎熟。
 primary_role: protein
 main_protein_category: beef
-main_protein_ingredient_ids:
-  - ground-beef
+main_protein_ingredient_ids: [ground-beef]
 supporting_protein_ingredient_ids: []
-vegetable_ingredient_ids:
-  - onion
-meal_contribution:
-  protein: 1
-  vegetable: 0
-  staple: 0
-child_coverage:
-  protein: true
-  vegetable: false
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
-  - bread
+recommended_staple_ingredient_ids: [rice, bread]
 active_minutes: 20–35
 meal_window_minutes: 30–45
 elapsed_minutes: 35–60
 advance_start_required: false
-equipment:
-  - medium burner
-  - nonstick pan or iron pan as appropriate
-burner_plan: Medium burner by default; use the iron pan/high-output burner only when a hard sear is the point of the dish.
+equipment: [medium burner, nonstick pan or iron pan as appropriate]
+burner_plan: Medium burner by default.
 child_suitable: yes
-child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
+child_texture: 绞肉饼盖盖焖熟可保持柔软；孩子份切成小块。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -66,25 +46,21 @@ detail_level: cookable
 ingredients:
   - ingredient_id: ground-beef
     role: main-protein
-  - ingredient_id: onion
-    role: vegetable
 steps:
-  - 准备：洋葱用1 tsp油中火炒软后放凉。Panko与牛奶/水混合5分钟。；牛肉、洋葱、Panko、鸡蛋和调味拌到刚有黏性，分3个肉饼，中间压浅凹。
+  - 完整版本：洋葱用1 tsp油中火炒软后放凉；Panko与牛奶/水混合5分钟。只有牛绞肉时可全部省略，牛肉加盐后同方向搅到明显发黏再成饼。
+  - 牛肉与可用的洋葱、Panko、鸡蛋和调味拌到有黏性，分3个肉饼，中间压浅凹。
   - 不粘锅中火加1 tsp油，肉饼下锅后第一面煎3–4分钟至褐色。
   - 翻面，加2 Tbsp水，盖盖中小火4–6分钟。
-  - 最大肉饼中心达到160°F/71°C后先盛出。
-  - 原锅倒入轻汁，刮起锅底焦香，煮30–60秒到薄挂勺。
-  - 汁淋肉饼；孩子份切小并确认中心无生肉。
-  - 完成提示：肉饼中心160°F/71°C、仍有肉汁；酱汁薄挂而不厚甜。
-  - 安全提示：绞肉或含绞肉馅中心达到160°F/71°C。
-child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+  - 最大肉饼中心达到160°F/71°C后盛出。
+  - 原锅可倒入轻汁，刮起锅底焦香，煮30–60秒到薄挂勺；没有汁料则直接上桌。
+  - 完成提示：肉饼中心160°F/71°C、内部仍湿润；孩子份切小。
+child_serving: 取中心柔软部分切成小块；不需要另配软蛋白才能计入 Child Protein。
+adult_finish: 孩子份盛出后，成人可另加黑胡椒或更重酱汁。
 substitutions: []
 cook_ingredients:
   - 牛绞肉：450 g
-  - 洋葱：150 g，切细丁
-  - 鸡蛋：1个
-  - Panko：1/3 cup
-  - 牛奶或水：3 Tbsp
+  - 洋葱：150 g，切细丁；推荐加入，可省略
+  - 鸡蛋：1个；推荐 binder，可省略
+  - Panko：1/3 cup；牛奶或水 3 Tbsp；推荐 binder，可省略
   - 肉饼调味：盐 3/4 tsp；黑胡椒 1/4 tsp；肉豆蔻 1/4 tsp，可省
-  - 轻汁：番茄酱 2 Tbsp；伍斯特酱 1 Tbsp；水 3 Tbsp；糖 1/2 tsp
+  - 轻汁：番茄酱 2 Tbsp；伍斯特酱 1 Tbsp；水 3 Tbsp；糖 1/2 tsp，可省略

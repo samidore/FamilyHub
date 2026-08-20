@@ -3,58 +3,39 @@ type: recipe
 status: candidate
 name_zh: 简单煎羊排
 name_en: Simple Pan-Seared Lamb Chops
-tags:
-  - light-seasoning
-  - non-spicy-base
-  - pan-seared
-  - stovetop-nonstick
-  - lunch-45
-  - child-support-protein
+tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, lunch-45, child-support-protein]
 fit:
   hard_rules: pass
   score: 3
   strengths:
-    - 临近上桌流程相对集中，便于与另一灶口并行。
+    - 带骨或无骨羊排都可走同一基础煎制结构。
   tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
+    - 整块煎羊排不作为孩子的稳定软蛋白。
 evidence:
   level: reputable-general
   checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 基础煎制流程按安全温度与家庭轻油原则标准化；特定酱汁菜另有专用 override。
+  scope: Culinary identity and executable technique; adapted household-light route. 基础煎制流程按安全温度与家庭轻油原则标准化。
   sources:
     - RecipeTin Eats / RecipeTin Japan — pan-seared lamb-chop techniques
     - USDA FSIS Safe Minimum Internal Temperature Chart
-notes: |-
-  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
+notes: Candidate household route; not household-tested.
 primary_role: protein
 main_protein_category: lamb
-main_protein_ingredient_ids:
-  - bone-in-lamb-chops
+main_protein_ingredient_ids: [bone-in-lamb-chops, boneless-lamb-chops]
 supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids: []
-meal_contribution:
-  protein: 1
-  vegetable: 0
-  staple: 0
-child_coverage:
-  protein: false
-  vegetable: false
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - potato
-  - rice
+recommended_staple_ingredient_ids: [potato, rice]
 active_minutes: 20–35
 meal_window_minutes: 30–45
 elapsed_minutes: 35–60
 advance_start_required: false
-equipment:
-  - medium burner
-  - nonstick pan or iron pan as appropriate
+equipment: [medium burner, nonstick pan or iron pan as appropriate]
 burner_plan: Medium burner by default; use the iron pan/high-output burner only when a hard sear is the point of the dish.
 child_suitable: conditional
-child_texture: 整块煎牛排/羊排即使可切小，也不是稳定的软质主蛋白。
+child_texture: 整块煎羊排即使可切小，也不是稳定的软质主蛋白。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -62,20 +43,18 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - ingredient_id: bone-in-lamb-chops
+  - one_of: [bone-in-lamb-chops, boneless-lamb-chops]
     role: main-protein
 steps:
-  - 准备：带骨羊排用厨房纸彻底擦干；厚薄不一致时尽量整理成接近一致厚度。；下锅前均匀撒基础盐胡椒；不要提前长时间盐腌薄片海鲜。
-  - 厚底不粘锅或铁锅中大火预热；加油并转动锅面，油流动变快时放入带骨羊排。
-  - 带骨羊排放下后先不要移动，让接触面形成完整焦色；锅温过高冒浓烟则立即降一档。
-  - 翻面后转中火；厚件可加盖短暂焖熟，但不要加大量水把煎变成煮。
-  - 从羊排最厚处避骨测中心温度；达到145°F/63°C立即离火。
-  - 静置至少3分钟再切/上桌。
-  - 完成提示：两面有均匀焦色；内部达到安全温度且没有因继续煎而明显出水变柴。
-  - 安全提示：整块羊/山羊肉可测处达到145°F/63°C并静置3分钟；炖菜以更高温度达到软烂质地。
-child_serving: 若提供则逆纹切很小；Meal Combo 另配软蛋白。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+  - 准备：羊排用厨房纸彻底擦干；厚薄不一致时尽量整理成接近一致厚度；下锅前均匀撒盐胡椒。
+  - 厚底不粘锅或铁锅中大火预热；加油并转动锅面，油流动变快时放入羊排。
+  - 第一面先不要移动，形成完整焦色；锅温过高冒浓烟则立即降一档。
+  - 翻面后转中火；无骨羊排通常更快，提前开始测温。厚件可短暂加盖，但不要加大量水。
+  - 最厚处测中心温度；达到145°F/63°C立即离火，静置至少3分钟。
+  - 完成提示：两面有均匀焦色；内部达到安全温度且没有明显变柴。
+child_serving: Meal Combo 另配软蛋白；本 Recipe 不计 Child Protein。
+adult_finish: 可在上桌前另加黑胡椒、孜然或辣椒，不进入孩子 base。
 substitutions: []
 cook_ingredients:
-  - 带骨羊排：4块，共约600–800 g
+  - 带骨羊排或无骨羊排：约600–800 g
   - 基础调味：盐 3/4 tsp；黑胡椒 1/2 tsp；中性油 2 tsp；蒜 2瓣，拍裂

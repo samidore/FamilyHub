@@ -3,60 +3,39 @@ type: recipe
 status: candidate
 name_zh: 烤 Sea Bass / Branzino
 name_en: Baked Sea Bass or Branzino
-tags:
-  - light-seasoning
-  - non-spicy-base
-  - roasted
-  - oven
-  - child-support-protein
+tags: [light-seasoning, non-spicy-base, roasted, oven, child-support-protein]
 fit:
   hard_rules: pass
   score: 4
   strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+    - 烤熟鱼肉柔软；彻底去刺后可承担孩子蛋白。
     - 主烹调设备可释放灶口。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
+  tradeoffs: []
 evidence:
   level: reputable-general
   checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 按 RecipeTin Eats whole baked fish / sea-bass-branzino 烤制结构家庭轻盐化。
+  scope: Culinary identity and executable technique; adapted household-light route.
   sources:
     - RecipeTin Eats — Whole Baked Fish; supports sea-bass/branzino oven route
     - USDA FSIS Safe Minimum Internal Temperature Chart
-notes: |-
-  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
+notes: Child coverage按实际去刺后的软鱼肉判断，不以当前偏好作为硬条件。
 primary_role: protein
 main_protein_category: fish
-main_protein_ingredient_ids:
-  - branzino
-  - black-sea-bass
-  - live-freshwater-bass
+main_protein_ingredient_ids: [branzino, black-sea-bass, live-freshwater-bass]
 supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids: []
-meal_contribution:
-  protein: 1
-  vegetable: 0
-  staple: 0
-child_coverage:
-  protein: false
-  vegetable: false
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
-  - potato
+recommended_staple_ingredient_ids: [rice, potato]
 active_minutes: 15–25
 meal_window_minutes: 15–25
 elapsed_minutes: 45–75
 advance_start_required: false
-equipment:
-  - gas oven
-  - sheet pan / baking dish
+equipment: [gas oven, sheet pan / baking dish]
 burner_plan: Oven carries the main cooking load and frees both stovetop burners.
-child_suitable: objective-yes-current-preference-low
-child_texture: 鱼肉本身可做得柔软，但孩子目前总体不爱吃鱼。
+child_suitable: yes
+child_texture: 烤到刚熟的鱼肉湿润易分片；孩子份彻底去刺后压碎或撕小。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -64,27 +43,18 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - one_of:
-      - branzino
-      - black-sea-bass
-      - live-freshwater-bass
+  - one_of: [branzino, black-sea-bass, live-freshwater-bass]
     role: main-protein
 steps:
-  - 准备：整鱼擦干，两面各划2–3刀；烤箱预热425°F/220°C。；烤盘铺纸，鱼腹可放姜片/柠檬片，不塞得过满。
+  - 整鱼擦干，两面各划2–3刀；烤箱预热425°F/220°C。
   - 鱼表面薄抹1 Tbsp油和盐，放烤盘中层。
-  - 烤约12分钟起按鱼大小检查；整鱼眼白/鳍不是安全判断，仍以最厚肉中心温度为准。
-  - 达到145°F/63°C、鱼肉能沿骨轻松分离时立即出炉。
+  - 烤约12分钟起按大小检查；最厚处达到145°F/63°C且鱼肉能沿骨轻松分离时出炉。
   - 静置2分钟；孩子份从背部厚肉处取肉并逐指检查鱼刺。
-  - 成人可另淋柠檬或酱油，不把酸咸汁全部加到孩子份。
+  - 成人可另淋柠檬或酱油，不把重口汁全部加到孩子份。
   - 完成提示：鱼皮干爽略上色，最厚处熟透且鱼肉仍湿润、易分片。
-  - 安全提示：鱼中心达到145°F/63°C，或肉完全不透明并能轻易分片；给孩子份再次检查鱼刺。
-child_serving: 成人彻底去刺后压碎/撕小；Meal Combo 默认保留软蛋白备选。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
-substitutions:
-  - black-sea-bass
-  - live-freshwater-bass when suitable for baking
-  - lemon-herb finish
-  - soy-citrus finish
+child_serving: 成人彻底去刺后压碎/撕小；本 Recipe 计入 Child Protein。
+adult_finish: 孩子份盛出后，成人可另加柠檬、酱油或辣味。
+substitutions: [black-sea-bass, live-freshwater-bass when suitable for baking, lemon-herb finish, soy-citrus finish]
 cook_ingredients:
-  - Branzino（欧洲海鲈） / 黑海鲈 / 活淡水鲈鱼：1条，约650–800 g，去鳞去内脏；任选一种；实际选中项使用同一批量
+  - Branzino / 黑海鲈 / 活淡水鲈鱼：1条，约650–800 g；任选一种
   - 烤鱼基础调味：中性油/橄榄油 1 Tbsp；盐 1/2 tsp；柠檬片 4片，可选

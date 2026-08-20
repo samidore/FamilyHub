@@ -3,19 +3,13 @@ type: recipe
 status: candidate
 name_zh: 清炖狮子头
 name_en: Clear-Braised Lion’s Head Meatballs
-tags:
-  - light-seasoning
-  - non-spicy-base
-  - braised
-  - stovetop-nonstick
-  - advance-start
-  - family-shared
+tags: [light-seasoning, non-spicy-base, braised, stovetop-nonstick, advance-start, family-shared]
 fit:
   hard_rules: pass
   score: 4
   strengths:
     - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
+    - 只要有猪绞肉就能成立；马蹄和青菜属于完整好吃版本的配料，不阻挡 availability。
   tradeoffs:
     - 需要提前启动或较长被动烹调时间。
 evidence:
@@ -27,37 +21,24 @@ evidence:
     - The Woks of Life — Chinese winter melon / rib / clear soup recipes
     - USDA FSIS Safe Minimum Internal Temperature Chart
 notes: |-
-  Clear-braised route avoids deep-frying; Chinese greens optional but compatible.
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
-primary_role: mixed
+  Clear-braised route avoids deep-frying. 马蹄和青菜保留在 Cook View 的推荐完整做法中，但不是系统 availability 的硬条件。
+primary_role: protein
 main_protein_category: pork
-main_protein_ingredient_ids:
-  - ground-pork
+main_protein_ingredient_ids: [ground-pork]
 supporting_protein_ingredient_ids: []
-vegetable_ingredient_ids:
-  - water-chestnuts
-  - chinese-greens
-meal_contribution:
-  protein: 1
-  vegetable: 0.5
-  staple: 0
-child_coverage:
-  protein: true
-  vegetable: true
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
+recommended_staple_ingredient_ids: [rice]
 active_minutes: 20–35
 meal_window_minutes: 20–35
 elapsed_minutes: 90–180
 advance_start_required: true
-equipment:
-  - medium burner
-  - covered pot / braiser
+equipment: [medium burner, covered pot / braiser]
 burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: yes
-child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
+child_texture: 狮子头长时间轻炖后可很软；孩子份切开压小，不把整颗圆形丸子直接提供。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -67,25 +48,21 @@ detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
-  - ingredient_id: water-chestnuts
-    role: vegetable
-  - ingredient_id: chinese-greens
-    role: vegetable
 steps:
-  - 准备：猪肉与除马蹄外的肉馅调料同一方向搅8–10分钟至明显发黏；加入马蹄再搅1–2分钟。；湿手分成4个大丸子；青菜洗净。
+  - 准备：猪肉与除马蹄外的肉馅调料同一方向搅8–10分钟至明显发黏；有马蹄时加入细丁再搅1–2分钟；没有马蹄也可直接成团。湿手分成4个大丸子；有青菜时洗净备用。
   - 宽锅加入清炖汤底煮到接近沸腾后转小火，液面只保持轻微小泡。
-  - 逐个放入丸子；不要让汤猛烈翻滚，否则丸子容易散。盖盖小火炖25–35分钟。
-  - 丸子明显变紧实并浮起后，从最大丸子中心测温；达到160°F/71°C再继续下一步。
-  - 加入青菜，按叶菜厚度再煮2–5分钟至软而仍有形。
-  - 最后尝汤，只补必要的盐；孩子份把丸子切成小块并配软菜。
-  - 完成提示：丸子定型、中心熟透且仍多汁；汤保持清爽；青菜软而不黄烂。
-  - 安全提示：绞肉或含绞肉馅中心达到160°F/71°C。
-child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+  - 逐个放入丸子；不要让汤猛烈翻滚。盖盖小火炖25–35分钟。
+  - 从最大丸子中心测温，达到160°F/71°C；继续小火到丸子明显柔软、多汁。
+  - 有青菜时最后加入，按叶菜厚度再煮2–5分钟至软；没有则省略。
+  - 最后尝汤，只补必要的盐；孩子份把丸子切开并压成小块。
+  - 完成提示：丸子中心熟透、柔软多汁；汤清爽；有青菜时菜已软。
+  - 安全提示：绞肉中心达到160°F/71°C。
+child_serving: 把炖软的狮子头切开、压成小块再给孩子；不以整颗圆形形状提供。
+adult_finish: 孩子份盛出后，成人可另加白胡椒、辣椒油或更重调味。
 substitutions: []
 cook_ingredients:
   - 猪绞肉：450 g
-  - 马蹄：100 g，切细丁
-  - 青菜：300 g，可用当前 recipe 对应叶菜
+  - 马蹄：100 g，切细丁；推荐加入，可省略
+  - 青菜：300 g；推荐搭配，可省略
   - 狮子头肉馅：鸡蛋 1个；面包糠 25 g；绍兴酒 1 Tbsp；生抽 1 Tbsp；蚝油 1 Tbsp；白胡椒 1/2 tsp；玉米淀粉 1.5 tsp；水 1/4 cup
   - 清炖汤底：水或低盐高汤 4 cups；姜 4片；葱 2段；盐 1/2 tsp，最后调整

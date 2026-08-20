@@ -3,58 +3,39 @@ type: recipe
 status: candidate
 name_zh: 简单煎豆腐
 name_en: Simple Pan-Seared Firm Tofu
-tags:
-  - light-seasoning
-  - non-spicy-base
-  - pan-seared
-  - stovetop-nonstick
-  - lunch-30
-  - child-support-protein
+tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, lunch-30, child-support-protein]
 fit:
   hard_rules: pass
   score: 4
   strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 临近上桌流程相对集中，便于与另一灶口并行。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
+    - 老豆腐本身可煎后加汁焖到内部柔软，能直接承担孩子的软蛋白。
+    - 临近上桌流程集中，便于并行。
+  tradeoffs: []
 evidence:
   level: reputable-general
   checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 家庭轻盐豆腐标准汁；不把它冒充原来源的辣味或重油版本。
+  scope: Culinary identity and executable technique; adapted household-light route.
   sources:
     - Just One Cookbook — pan-fried tofu technique
     - Made With Lau / The Woks of Life / Just One Cookbook — tofu recipes listed in the source KB
-notes: |-
-  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
+notes: Child coverage按可做出的实际软质地判断，不以当前偏好作为硬条件。
 primary_role: protein
 main_protein_category: tofu
-main_protein_ingredient_ids:
-  - firm-tofu
+main_protein_ingredient_ids: [firm-tofu]
 supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids: []
-meal_contribution:
-  protein: 0.5
-  vegetable: 0
-  staple: 0
-child_coverage:
-  protein: false
-  vegetable: false
+meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
+recommended_staple_ingredient_ids: [rice]
 active_minutes: 15–25
 meal_window_minutes: 20–35
 elapsed_minutes: 20–40
 advance_start_required: false
-equipment:
-  - medium burner
-  - nonstick pan or iron pan as appropriate
-burner_plan: Medium burner by default; use the iron pan/high-output burner only when a hard sear is the point of the dish.
-child_suitable: objective-possible-currently-unlikely
-child_texture: firm tofu 可烹至较嫩，但孩子目前不吃 firm tofu。
+equipment: [medium burner, nonstick pan or iron pan as appropriate]
+burner_plan: Medium burner by default.
+child_suitable: yes
+child_texture: 孩子份不追求硬焦壳，煎后用汁焖到中心柔软并切小。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -65,16 +46,15 @@ ingredients:
   - ingredient_id: firm-tofu
     role: main-protein
 steps:
-  - 准备：豆腐沥去包装水；嫩豆腐切2.5–3 cm块并尽量少搬动，硬豆腐可切1.5 cm厚片。；把豆腐汁搅匀；姜切丝5 g、葱切段备用。
-  - 不粘锅中火预热，加2 tsp油；硬豆腐/蛋豆腐擦干后单层排入。
-  - 第一面煎到能轻松铲起且呈浅金黄再翻面；不要频繁移动导致破碎。
-  - 豆腐回锅（无额外配料则留在锅中），把豆腐汁再次搅匀后沿锅边加入。
-  - 轻轻晃锅让汁覆盖豆腐，煮30–60秒到汁刚变薄稠。
-  - 汁能薄薄挂住豆腐、锅底只剩少量时关火。
-  - 完成提示：豆腐外层浅金黄、内部柔软热透；汁薄挂而非厚糊。
-  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
-child_serving: 可少量提供；Meal Combo 另配孩子已接受的嫩豆腐/鸡蛋。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+  - 豆腐沥水，切1.5 cm厚片；调味汁混匀。
+  - 不粘锅中火预热，加2 tsp油；豆腐单层排入，第一面浅金黄后翻面。
+  - 第二面浅金黄后倒入调味汁，转中小火。
+  - 轻轻晃锅，焖2–4分钟，让中心热透、汁薄薄挂住豆腐。
+  - 孩子份可提前少煎、再多焖1–2分钟至叉子容易压开，先盛出切小。
+  - 成人份若要更香，可最后转中火收汁30秒。
+  - 完成提示：内部柔软热透；酱汁薄挂而不是厚糊。
+child_serving: 取焖软的中心和较软边缘，切成小块；本 Recipe 计入 Child Protein。
+adult_finish: 孩子份盛出后，成人可另加辣椒油、辣椒粉或更重调味。
 substitutions: []
 cook_ingredients:
   - 老豆腐 / 硬豆腐：1盒，约400–450 g

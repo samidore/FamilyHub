@@ -3,59 +3,38 @@ type: recipe
 status: candidate
 name_zh: 煎三文鱼
 name_en: Pan-Seared Salmon
-tags:
-  - light-seasoning
-  - non-spicy-base
-  - pan-seared
-  - stovetop-nonstick
-  - lunch-30
-  - child-support-protein
+tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, lunch-30, child-support-protein]
 fit:
   hard_rules: pass
   score: 4
   strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 临近上桌流程相对集中，便于与另一灶口并行。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
+    - 三文鱼即使表面煎香，内部仍可保持柔软湿润并作为孩子蛋白。
+  tradeoffs: []
 evidence:
   level: reputable-general
   checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 基础煎制流程按安全温度与家庭轻油原则标准化；特定酱汁菜另有专用 override。
+  scope: Culinary identity and executable technique; adapted household-light route.
   sources:
     - Just One Cookbook — Teriyaki Salmon and Miso Butter Salmon; variations under one pan-seared salmon record
     - USDA FSIS Safe Minimum Internal Temperature Chart
-notes: |-
-  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
+notes: Child coverage按实际软鱼肉判断，不以当前偏好作为硬条件。
 primary_role: protein
 main_protein_category: fish
-main_protein_ingredient_ids:
-  - salmon
+main_protein_ingredient_ids: [salmon]
 supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids: []
-meal_contribution:
-  protein: 1
-  vegetable: 0
-  staple: 0
-child_coverage:
-  protein: false
-  vegetable: false
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
-  - potato
+recommended_staple_ingredient_ids: [rice, potato]
 active_minutes: 15–25
 meal_window_minutes: 20–35
 elapsed_minutes: 20–40
 advance_start_required: false
-equipment:
-  - medium burner
-  - nonstick pan or iron pan as appropriate
-burner_plan: Medium burner by default; use the iron pan/high-output burner only when a hard sear is the point of the dish.
-child_suitable: objective-yes-current-preference-low
-child_texture: 鱼肉本身可做得柔软，但孩子目前总体不爱吃鱼。
+equipment: [medium burner, nonstick pan or iron pan as appropriate]
+burner_plan: Medium burner by default.
+child_suitable: yes
+child_texture: 表面可煎香，但孩子份取内部柔软鱼肉，去皮去刺后压碎/撕小。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -66,20 +45,15 @@ ingredients:
   - ingredient_id: salmon
     role: main-protein
 steps:
-  - 准备：三文鱼用厨房纸彻底擦干；厚薄不一致时尽量整理成接近一致厚度。；下锅前均匀撒基础盐胡椒；不要提前长时间盐腌薄片海鲜。
-  - 厚底不粘锅或铁锅中大火预热；加油并转动锅面，油流动变快时放入三文鱼。
-  - 三文鱼放下后先不要移动，让接触面形成完整焦色；锅温过高冒浓烟则立即降一档。
-  - 翻面后转中火；厚件可加盖短暂焖熟，但不要加大量水把煎变成煮。
-  - 从三文鱼最厚处测中心温度；达到145°F/63°C立即离火。
-  - 静置1–2分钟；不要长时间留在热锅中让余温继续烤干。
-  - 完成提示：两面有均匀焦色；内部达到安全温度且没有因继续煎而明显出水变柴。
-  - 安全提示：鱼中心达到145°F/63°C，或肉完全不透明并能轻易分片；给孩子份再次检查鱼刺。
-child_serving: 成人彻底去刺后压碎/撕小；Meal Combo 默认保留软蛋白备选。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
-substitutions:
-  - simple finish
-  - teriyaki finish
-  - miso-butter finish
+  - 三文鱼擦干，下锅前轻撒盐；不长时间盐腌。
+  - 不粘锅中火预热，加2 tsp油；三文鱼放下后先不要移动，形成浅金色表面。
+  - 翻面后转中小火；厚件可短暂加盖，让中心均匀熟透而不把外层煎硬。
+  - 最厚处达到145°F/63°C后立即离火，静置1–2分钟。
+  - 孩子份去皮、检查鱼刺，取内部柔软部分压碎/撕小。
+  - 完成提示：表面有焦色，内部熟透仍湿润、轻压能分片。
+child_serving: 去皮并彻底检查鱼刺后，取内部软肉压碎/撕小；本 Recipe 计入 Child Protein。
+adult_finish: 孩子份盛出后，成人可另加照烧、味噌黄油或辣味 finish。
+substitutions: [simple finish, teriyaki finish, miso-butter finish]
 cook_ingredients:
   - 三文鱼：450 g
   - 基础调味：盐 1/2 tsp；黑胡椒 1/4 tsp，可省；中性油 2 tsp
