@@ -77,6 +77,30 @@ ingredients:
       sources:
         - Family Meal Ingredient brainstorm / retained candidate decisions
     notes: ""
+  - id: ground-lamb
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 羊肉末
+    name_en: Ground Lamb
+    starter:
+      visible: true
+      section: lamb-goat
+      order: 35
+    tags: []
+    fit:
+      hard_rules: pass
+      score: 4
+      strengths:
+        - 用户已明确希望作为长期 Meal Builder 食材，并配有独立成菜的家庭做法。
+      tradeoffs: []
+    evidence:
+      level: user-confirmed
+      checked_on: 2026-08-19
+      scope: User-confirmed ingredient and household use; no retailer, price, package-size, or inventory claim.
+      sources:
+        - User-confirmed Meal Builder requirement, 2026-08-19
+    notes: ""
   - id: bone-in-lamb-chops
     type: ingredient
     inventory_tracking: counted
