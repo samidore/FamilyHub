@@ -1,0 +1,79 @@
+id: red-braised-lamb-meatballs
+type: recipe
+status: candidate
+name_zh: 红烧羊肉丸子
+name_en: Red-Braised Lamb Meatballs
+tags:
+  - iron-pan-braise
+  - light-seasoning
+  - non-spicy-base
+  - braised
+  - stovetop-nonstick
+  - family-shared
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+    - 用户明确希望保留为羊肉末的独立家庭菜谱。
+    - 基础锅不辣、少油，并可作为 iron-pan-braise 顺手焖主菜。
+  tradeoffs: []
+evidence:
+  level: user-confirmed
+  checked_on: 2026-08-19
+  scope: Household dish, child-suitable base, and easy-braise capability are user-confirmed; ground-lamb safety endpoint verified against USDA FSIS. Binder and sauce are a household adaptation of existing Meal Builder meatball/red-braise techniques.
+  sources:
+    - User-confirmed Meal Builder requirement, 2026-08-19
+    - USDA FSIS — Lamb From Farm to Table
+notes: Egg and cornstarch are Cook View ingredients only; they are not inventory requirements or tags.
+primary_role: protein
+main_protein_category: lamb
+main_protein_ingredient_ids:
+  - ground-lamb
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 1
+  vegetable: 0
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 25–30
+meal_window_minutes: 35–45
+elapsed_minutes: 35–45
+advance_start_required: false
+equipment:
+  - medium burner
+  - covered wok / iron pan / skillet
+burner_plan: Medium burner for shaping, light browning, covered braise, and final reduction in one pan.
+child_suitable: yes
+child_texture: 丸子焖熟后软嫩；孩子份切开、压小，不整颗提供。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: ground-lamb
+    role: main-protein
+steps:
+  - 羊肉末放大碗；加入鸡蛋、玉米淀粉、生抽、绍兴酒和姜葱水。沿同一方向搅2–3分钟，直到肉馅明显发黏、提起筷子时能抱团。静置5分钟让淀粉吸水。
+  - 双手蘸水，把肉馅分成约12个小丸子；只需轻轻滚圆，不要反复挤压得太紧。
+  - 铁锅或宽煎锅中火加1 tsp油。丸子单层放入，先静置约2分钟让底部定型，再轻轻翻面；共煎4–5分钟，只把外层煎到定型和浅褐，不要求此时中心熟透。
+  - 沿锅边加入红烧汁，煮到轻沸后立刻转小火。盖盖焖12–15分钟，中途轻轻翻一次，让丸子均匀入味。
+  - 从最大的一颗中心测温；达到160°F/71°C后即可进入收汁。未到温度则继续小火焖，并每2分钟复查一次。
+  - 开盖转中火收汁3–5分钟，期间轻推丸子避免粘底；收到汁从水状变成能薄薄挂在丸子表面、锅底仍留少量可流动汁时关火，不要收到发黏发咸。
+  - 静置2–3分钟。孩子份取出后切成小块或压开，少带一点汁；成人需要更重口味时再单独加辣椒油或白胡椒。
+  - 完成提示：丸子中心熟透，切开仍湿润柔软；外层不焦硬；红烧汁能薄薄挂丸子但仍可流动。
+child_serving: 把丸子切开或压成小块后再给孩子；基础锅不加辣，孩子份少带汁。
+adult_finish: 孩子份盛出后，成人可另加辣椒油、白胡椒或少量额外生抽。
+substitutions: []
+cook_ingredients:
+  - 羊肉末：500 g
+  - 丸子肉馅：鸡蛋 1个；玉米淀粉 1 Tbsp；生抽 1 Tbsp；绍兴酒 1 Tbsp；姜葱水 3 Tbsp（姜片和葱段用温水浸泡后取水）
+  - 家庭轻口红烧汁：水或低盐高汤 1.5 cups；生抽 1.5 Tbsp；老抽 1 tsp；绍兴酒 1 Tbsp；糖 1 tsp；姜 3片；葱白 2段
+  - 煎制定型：食用油 1 tsp
