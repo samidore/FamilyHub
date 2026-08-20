@@ -25,6 +25,17 @@ Treat each Recipe or Ingredient change as one transaction:
 - Update root content metadata for active data changes using the existing repository format.
 - Validate the complete transaction before considering the change finished.
 
+### Add / update checklist
+
+- Reuse an existing stable ID for the same identity; otherwise add the new record and its index entry together.
+- Every visible non-`addon-only` Ingredient needs a true standalone fallback Recipe.
+- Recipe hard requirements contain only active inventory Ingredients that are required for the dish to remain that dish.
+- Pantry items, seasonings, binders, and optional cooking ingredients belong in `cook_ingredients` / steps, not in hard requirements or tags unless they independently define a real capability.
+- Set meal contribution, child coverage/suitability, and only the capability tags the Recipe actually supports.
+- A `cookable` Recipe needs complete Cook View ingredients, executable steps, and equipment.
+- Update root content metadata for active data changes and keep all referenced IDs indexed exactly once.
+- Validate the complete Ingredient + Recipe transaction before completion.
+
 ## Ingredient record
 
 ```yaml
