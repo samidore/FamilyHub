@@ -3,63 +3,39 @@ type: recipe
 status: candidate
 name_zh: 清炒叶菜
 name_en: Simple Stir-Fried Leafy Greens
-tags:
-  - light-seasoning
-  - non-spicy-base
-  - stir-fried
-  - stovetop-wok
-  - lunch-30
-  - low-prep
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, low-prep, soft-vegetable]
 fit:
   hard_rules: pass
   score: 5
   strengths:
-    - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
-    - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
+    - 一套清炒结构覆盖适合快速炒软的常见叶菜。
+    - 孩子份可正常切短并单独多焖至软，不需要另做一道菜。
   tradeoffs: []
 evidence:
   level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 来源验证的中式蔬菜快炒结构，按家庭轻盐标准化；不把同一标准汁冒充为地方菜传统原方。
+  checked_on: 2026-08-19
+  scope: Existing V01 vegetable stir-fry structure retained; mustard greens added using The Woks of Life mustard-greens method. Child coverage reflects normal extra-soft child portion, not current preference.
   sources:
     - V01 — Made With Lau — Choy Sum with Garlic; The Woks of Life — Bok Choy / Pea Tips stir-fry patterns
-    - Made With Lau — vegetable stir-fry / broccoli / choy sum recipes; The Woks of Life vegetable stir-fry patterns
-notes: |-
-  Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook calibration.
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
+    - The Woks of Life — Stir-fried Chinese Mustard Greens
+notes: Child coverage is true because every listed one_of can be cut short and given a brief covered softening step for the child portion.
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
 supporting_protein_ingredient_ids: []
-vegetable_ingredient_ids:
-  - chinese-greens
-  - lettuce
-  - youmai-cai
-  - choy-sum
-  - pea-shoots
-  - amaranth-greens
-  - tong-hao
-meal_contribution:
-  protein: 0
-  vegetable: 1
-  staple: 0
-child_coverage:
-  protein: false
-  vegetable: ingredient-dependent
+vegetable_ingredient_ids: [chinese-greens, lettuce, youmai-cai, choy-sum, pea-shoots, amaranth-greens, tong-hao, mustard-greens]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: true }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
+recommended_staple_ingredient_ids: [rice]
 active_minutes: 10–20
 meal_window_minutes: 10–25
 elapsed_minutes: 10–30
 advance_start_required: false
-equipment:
-  - high-output burner
-  - wok / iron pan
+equipment: [high-output burner, wok / iron pan]
 burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
-child_suitable: conditional
-child_texture: 茎叶厚度依实际 one_of Ingredient 而异；可切短、茎先下锅并煮至合适熟度。
+child_suitable: yes
+child_texture: 叶和嫩梗切短；孩子份加少量水盖焖到梗、叶都明显软，再先盛出。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -67,28 +43,19 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - one_of:
-      - chinese-greens
-      - lettuce
-      - youmai-cai
-      - choy-sum
-      - pea-shoots
-      - amaranth-greens
-      - tong-hao
+  - one_of: [chinese-greens, lettuce, youmai-cai, choy-sum, pea-shoots, amaranth-greens, tong-hao, mustard-greens]
     role: vegetable
 steps:
-  - 准备：蔬菜洗净后彻底沥干；叶菜把较粗的梗和叶分开，硬菜切成约一口大小。；蒜2瓣切末；把蔬菜汁混匀。
-  - 炒锅大火预热到明显热但不冒浓烟，加2 tsp中性油；下蒜末炒10秒。
-  - 先下较硬的梗/厚片，大火翻炒30–60秒；再下叶片或易熟部分。
-  - 沿锅边加1 tsp绍兴酒（可省略），立刻翻炒；若锅太干，只沿锅边补1 Tbsp水，不要把菜煮在水里。
-  - 蔬菜接近断生时倒入家庭轻盐蔬菜汁，快速翻匀20–30秒。
-  - 看到菜颜色鲜亮、体积刚缩、梗部能咬断但仍有轻微脆感时立即关火。
-  - 完成提示：叶片刚塌、梗能咬断但不软烂；锅底没有一滩水，菜表面只薄薄有味汁。
-  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
-child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
-substitutions:
-  - 蒜蓉属于同一 cooking structure，不另建 Recipe。
+  - 蔬菜300–450 g洗净并彻底沥干；粗梗和叶分开，长梗切成3–4 cm短段；蒜2瓣切末；轻盐蔬菜汁混匀。
+  - 炒锅大火预热，加2 tsp中性油，下蒜末约10秒。
+  - 先下较粗的梗30–60秒，再下叶片；芥菜苦味较明显时同时加1/4–1/2 tsp糖。
+  - 沿锅边加1 tsp绍兴酒（可省），翻匀；成人份接近断生时倒入轻盐蔬菜汁。
+  - 孩子份在这一步分到锅的一侧或小锅，加1–2 Tbsp水盖焖1–3分钟，直到梗能轻松压断、叶片完全柔软，先盛出。
+  - 成人份再快速翻20–30秒，保持鲜亮；锅底没有明显积水时关火。
+  - 完成提示：成人份熟而不水；孩子份明显软、无长梗长叶。
+child_serving: 切短并额外盖焖至明显柔软；本 Recipe 计入 Child Vegetable。
+adult_finish: 孩子份盛出后，成人可另加辣椒油、辣椒粉或更重调味。
+substitutions: [蒜蓉属于同一 cooking structure，不另建 Recipe。]
 cook_ingredients:
-  - 青菜 / 生菜 / 油麦菜 / 菜心 / 豆苗 / 苋菜 / 茼蒿：300–450 g；任选一种；实际选中项使用同一批量
+  - 青菜 / 生菜 / 油麦菜 / 菜心 / 豆苗 / 苋菜 / 茼蒿 / 芥菜：300–450 g；任选一种
   - 家庭轻盐蔬菜汁：水 1 Tbsp；生抽 2 tsp；蚝油 1 tsp；糖 1/4 tsp

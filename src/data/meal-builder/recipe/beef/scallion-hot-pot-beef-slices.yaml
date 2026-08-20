@@ -1,0 +1,67 @@
+id: scallion-hot-pot-beef-slices
+type: recipe
+status: candidate
+name_zh: 葱爆肥牛
+name_en: Scallion Stir-Fried Hot-Pot Beef Slices
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-30
+fit:
+  hard_rules: pass
+  score: 4
+  strengths:
+    - 火锅牛肉片只配 pantry 葱姜也能独立成菜。
+  tradeoffs:
+    - 快炒牛肉通常仍有嚼劲，不计孩子软蛋白。
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Sauce and high-heat sequence reuse the source-backed canonical scallion-beef-stir-fry; hot-pot slices require no additional inventory identity.
+  sources:
+    - The Woks of Life — Scallion Beef
+    - src/data/meal-builder/recipe/beef/scallion-beef-stir-fry.yaml
+notes: Scallion is pantry display text and does not block availability.
+primary_role: protein
+main_protein_category: beef
+main_protein_ingredient_ids: [hot-pot-beef-slices]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 10–15
+meal_window_minutes: 15–20
+elapsed_minutes: 15–20
+advance_start_required: false
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High-output burner; cook in batches when needed.
+child_suitable: no
+child_texture: 快炒薄牛肉仍有明显纤维嚼劲，不计 Child Protein。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: hot-pot-beef-slices
+    role: main-protein
+steps:
+  - 牛肉片解冻到能逐片分开但仍偏冷；太长的片剪半。加入水1 Tbsp、玉米淀粉1 tsp、中性油1 tsp和蚝油2 tsp抓匀，静置10分钟。
+  - 把低盐蚝油汁预先混匀；葱切段，葱白和葱绿分开。
+  - 炒锅大火预热，加1 Tbsp油；牛肉摊成单层，约30秒内不要频繁翻动。
+  - 快速翻炒至表面变色、约七成熟时立即盛出。
+  - 原锅下葱白10–15秒；牛肉回锅，倒入重新搅匀的炒汁，持续翻炒到无生红且汁薄薄挂肉，立即关火。
+  - 撒葱绿装盘；不要留在热锅中继续变韧。
+child_serving: 本 Recipe 不计 Child Protein；另配软蛋白。
+adult_finish: 可另加黑胡椒、孜然或辣椒。
+substitutions: []
+cook_ingredients:
+  - 火锅牛肉片：340 g
+  - 腌料：水 1 Tbsp；玉米淀粉 1 tsp；中性油 1 tsp；蚝油 2 tsp
+  - 家庭轻盐蚝油汁：低盐高汤或水 1/3 cup；生抽 2 tsp；蚝油 2 tsp；老抽 1/2 tsp；糖 1/2 tsp；白胡椒 1小撮；玉米淀粉 1.5 tsp
+  - 葱：3根，切段

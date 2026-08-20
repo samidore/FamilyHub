@@ -15,27 +15,28 @@ fit:
   hard_rules: pass
   score: 5
   strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
+    - 牛腩、牛肩、牛肋条和无骨牛小排都可用同一长炖红烧结构做到软烂。
     - 可设计为全家共享基础口味。
   tradeoffs:
     - 需要提前启动或较长被动烹调时间。
 evidence:
   level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 家庭轻盐红烧标准化来源配方；辣椒不进基础锅。
+  checked_on: 2026-08-19
+  scope: The Woks of Life red-braised beef provides the canonical household braise structure; beef rib fingers and boneless short ribs are compatible collagen-rich braising cuts, supported by published rib-finger/short-rib braise references. No exact retailer cut equivalence is claimed.
   sources:
     - The Woks of Life — Red Braised Beef
-    - The Woks of Life — Hong Shao Rou / Red Braised Beef and related Chinese red-braise recipes
+    - Le Creuset — Braised Beef Rib Fingers
+    - Serious Eats — Braised Short Ribs
     - USDA FSIS Safe Minimum Internal Temperature Chart
 notes: |-
-  Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
+  One shared braise Recipe intentionally covers compatible beef cuts. Child coverage depends on actually braising until the selected cut is fork/chopstick tender.
 primary_role: protein
 main_protein_category: beef
 main_protein_ingredient_ids:
   - whole-beef-brisket
   - chuck-roast
+  - beef-rib-fingers
+  - boneless-beef-short-ribs
 supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids: []
 meal_contribution:
@@ -57,7 +58,7 @@ equipment:
   - covered pot / braiser
 burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: yes
-child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
+child_texture: 长炖到筷子或叉子能轻松分开；孩子份去掉明显硬筋并剪小。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -68,21 +69,22 @@ ingredients:
   - one_of:
       - whole-beef-brisket
       - chuck-roast
+      - beef-rib-fingers
+      - boneless-beef-short-ribs
     role: main-protein
 steps:
-  - 准备：整块牛腩或牛肩肉切约4–5 cm大块；带骨件冲洗后沥干。若骨渣/血沫明显，冷水下锅煮开2–3分钟，捞出冲净。；把液体调料量好放在手边；糖单独放，避免炒糖时手忙脚乱。
-  - 厚底锅中火加1 tsp油；肉块分批把2–3个面煎到浅褐色，避免一次堆满出水。盛出。
-  - 原锅转中小火，下糖；糖刚融化成浅琥珀色时立刻加入姜葱，再把肉回锅翻匀。不要把糖烧到深褐发苦。
-  - 加入绍兴酒、生抽、老抽和水/高汤；液面应接近但不必完全淹没肉。煮开后撇沫，转小火盖盖。
-  - 保持轻微咕嘟而不是猛烈沸腾，先以90–120分钟作为检查窗口；最终以筷子能较轻松插入、猪蹄则皮筋软糯为准。中途液体低于锅底1/3时补热水。
-  - 肉已软嫩后开盖转中火；每2–3分钟翻一次，防止糖汁粘底。
-  - 当汁量约剩最初的1/4、从水状变成能在肉表面形成薄亮膜，锅底仍有少量可流动汁时关火；不要收到发黏发咸。
-  - 静置5分钟再盛；孩子份选瘦嫩、无骨部分剪小。
-  - 完成提示：肉块软嫩但仍成形；汁能薄薄挂肉且锅底仍有少量流动汁。
-  - 安全提示：整块牛肉可测处达到145°F/63°C并静置3分钟；薄片炒菜实际炒至无冷生中心。
-child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+  - 选中的牛肉切约4–5 cm大块；牛肋条较细时切成适合夹取的段。若骨渣/血沫明显，冷水下锅煮开2–3分钟，捞出冲净并沥干。
+  - 厚底锅中火加1 tsp油；肉块分批把2–3个面煎到浅褐色，避免一次堆满出水，盛出。
+  - 原锅转中小火，下糖；糖刚融化成浅琥珀色时加入姜葱，再把肉回锅翻匀。
+  - 加绍兴酒、生抽、老抽和水/低盐高汤；液面接近肉面即可。煮开撇沫，转小火盖盖。
+  - 保持轻微咕嘟，90分钟开始检查；不同切块继续炖到筷子或叉子能轻松穿入和分开。液体过低时只补热水。
+  - 肉已软嫩后开盖转中火；每2–3分钟翻一次。当汁量约剩最初1/4、能形成薄亮膜且锅底仍有少量流动汁时关火。
+  - 孩子份只取真正软烂、无硬筋的肉，剪小并少带汁。
+  - 完成提示：肉块软嫩仍成形；汁薄挂肉而不黏硬。
+  - 安全提示：整块牛肉至少达到安全熟度；本菜为了软烂会远高于最低安全温度。
+child_serving: 取炖到可轻松分开的软肉，去硬筋并剪小；本 Recipe 计入 Child Protein。
+adult_finish: 孩子份盛出后，成人可另加辣椒油、辣椒粉或更重调味。
 substitutions: []
 cook_ingredients:
-  - 整块牛腩或牛肩肉大块：900 g
-  - 家庭红烧汁：绍兴酒 1/4 cup；生抽 3 Tbsp；老抽 1 Tbsp；冰糖或白糖 2 Tbsp；水或低盐高汤 3 cups；姜 6片；葱白 3段；八角 1个，可省；桂皮 1小段，可省
+  - 牛腩 / 牛肩肉 / 牛肋条 / 无骨牛小排：900 g；任选一种
+  - 家庭红烧汁：绍兴酒 1/4 cup；生抽 3 Tbsp；老抽 1 Tbsp；冰糖或白糖 2 Tbsp；水或低盐高汤 3 cups；姜 6片；葱白 3段；八角 1个可省；桂皮 1小段可省

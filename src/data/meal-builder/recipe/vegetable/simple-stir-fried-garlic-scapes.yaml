@@ -1,0 +1,50 @@
+id: simple-stir-fried-garlic-scapes
+type: recipe
+status: candidate
+name_zh: 清炒蒜苔
+name_en: Simple Stir-Fried Garlic Scapes
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30]
+fit: { hard_rules: pass, score: 3, strengths: [蒜苔有不依赖肉类的 standalone 路线。], tradeoffs: [蒜苔容易纤维化，快炒不计孩子软蔬菜。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Trimming and stir-fry/covered-steam sequence follow The Woks of Life garlic-scapes recipe; pork and carrot are omitted rather than required.
+  sources: [The Woks of Life — Chinese Garlic Scapes Stir-fry with Pork]
+notes: Buy only tender scapes that snap easily; discard woody base.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: [garlic-scapes]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 10–15
+meal_window_minutes: 15–20
+elapsed_minutes: 15–20
+advance_start_required: false
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High-output burner.
+child_suitable: no
+child_texture: 快炒蒜苔仍有纤维，不计 Child Vegetable。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: garlic-scapes
+    role: vegetable
+steps:
+  - 蒜苔约300 g洗净；从基部逐段弯折，明显木质、不能自然折断的部分丢弃；嫩段切约5 cm。
+  - 炒锅中大火加2 tsp油，下姜丝10秒；加蒜苔翻1分钟让表面受热。
+  - 加绍兴酒2 tsp和水1/3 cup，转大火后把菜推到中间，盖盖30秒。
+  - 开盖加生抽2 tsp、糖1/4 tsp、芝麻油1/2 tsp，继续大火翻20–30秒，汁基本收住后关火。
+child_serving: 本 Recipe 不计 Child Vegetable。
+adult_finish: 成人可另加辣椒或豆豉。
+substitutions: []
+cook_ingredients:
+  - 蒜苔：约300 g
+  - 中性油2 tsp；姜少量；绍兴酒2 tsp；水1/3 cup；生抽2 tsp；糖1/4 tsp；芝麻油1/2 tsp

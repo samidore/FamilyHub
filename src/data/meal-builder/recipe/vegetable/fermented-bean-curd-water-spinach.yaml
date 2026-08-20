@@ -3,56 +3,31 @@ type: recipe
 status: candidate
 name_zh: 腐乳空心菜
 name_en: Water Spinach with Fermented Bean Curd
-tags:
-  - light-seasoning
-  - non-spicy-base
-  - stir-fried
-  - stovetop-wok
-  - lunch-30
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
-    - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
-  tradeoffs: []
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, soft-vegetable]
+fit: { hard_rules: pass, score: 4, strengths: [空心菜可把孩子份的梗切短并额外焖软。], tradeoffs: [] }
 evidence:
   level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 腐乳汁比例按 Made With Lau Ong Choy with Fermented Bean Curd；家庭降低油量。
-  sources:
-    - V04 — Made With Lau — Ong Choy with Fermented Bean Curd
-    - Made With Lau — vegetable stir-fry / broccoli / choy sum recipes; The Woks of Life vegetable stir-fry patterns
-notes: |-
-  Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook calibration.
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
+  checked_on: 2026-08-19
+  scope: V04 Made With Lau seasoning structure retained; child portion adds a normal covered softening step and uses less fermented-bean-curd sauce.
+  sources: [V04 — Made With Lau — Ong Choy with Fermented Bean Curd]
+notes: Child coverage reflects chewable texture, not preference for fermented-bean-curd flavor.
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
 supporting_protein_ingredient_ids: []
-vegetable_ingredient_ids:
-  - water-spinach
-meal_contribution:
-  protein: 0
-  vegetable: 1
-  staple: 0
-child_coverage:
-  protein: false
-  vegetable: false
+vegetable_ingredient_ids: [water-spinach]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: true }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
+recommended_staple_ingredient_ids: [rice]
 active_minutes: 15–25
 meal_window_minutes: 20–30
 elapsed_minutes: 20–35
 advance_start_required: false
-equipment:
-  - high-output burner
-  - wok / iron pan
-burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
-child_suitable: conditional
-child_texture: 空心菜茎可能较纤维，且腐乳味型较强；未确认孩子接受度，暂不计 coverage。
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High-output burner.
+child_suitable: yes
+child_texture: 粗梗去掉或切成2–3 cm短段；孩子份加水盖焖到梗明显软。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -63,16 +38,13 @@ ingredients:
   - ingredient_id: water-spinach
     role: vegetable
 steps:
-  - 准备：空心菜洗净，粗梗切5 cm段并和叶分开。；腐乳用水压散，再与糖、绍兴酒、白胡椒混匀。
-  - 炒锅大火烧热，加2 tsp油；下蒜2瓣炒10秒。
-  - 先下粗梗大火翻30秒，再下叶片。
-  - 倒入腐乳汁，持续大火翻炒30–60秒。
-  - 叶片全部塌下、梗刚断生且锅底只剩少量汁时立即关火。
-  - 不要再加盐，先尝腐乳咸度；孩子若吃，取腐乳汁较少的嫩叶。
-  - 完成提示：叶片刚软、梗仍脆嫩；腐乳汁薄薄包菜，不咸湿积汁。
-  - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
-child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+  - 空心菜450 g洗净；老硬梗去掉，剩余梗切2–3 cm短段并与叶分开；腐乳汁混匀。
+  - 炒锅大火加2 tsp油，下蒜2瓣约10秒；先下梗30秒，再下叶。
+  - 倒入腐乳汁快速翻30–60秒。
+  - 孩子份取到锅的一侧，加1–2 Tbsp水盖焖1–3分钟到梗明显柔软，少带腐乳汁先盛出。
+  - 成人份再大火翻到叶刚软、锅底只剩少量汁时关火。
+child_serving: 切短并额外焖软，少带腐乳汁；本 Recipe 计入 Child Vegetable。
+adult_finish: 成人可另加辣椒油或更多腐乳。
 substitutions: []
 cook_ingredients:
   - 空心菜：450 g

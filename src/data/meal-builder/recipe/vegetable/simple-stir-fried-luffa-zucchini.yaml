@@ -1,0 +1,52 @@
+id: simple-stir-fried-luffa-zucchini
+type: recipe
+status: candidate
+name_zh: 清炒丝瓜 / 西葫芦
+name_en: Simple Stir-Fried Luffa or Zucchini
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, soft-vegetable]
+fit: { hard_rules: pass, score: 4, strengths: [丝瓜和西葫芦都能用短炒加少量汁做到柔软，适合同一结构。], tradeoffs: [] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Luffa prep and tender-in-sauce endpoint follow The Woks of Life loofah stir-fry; zucchini uses the same everyday-vegetable stir-fry family with earlier doneness checks.
+  sources: [The Woks of Life — Loofah Stir-fry; The Woks of Life — Everyday Vegetable Stir-Fry]
+notes: One shared Recipe for two compatible soft squash vegetables.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: [luffa, zucchini]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: true }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 10–15
+meal_window_minutes: 15–25
+elapsed_minutes: 15–25
+advance_start_required: false
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High-output burner.
+child_suitable: yes
+child_texture: 切薄并用少量汁焖到叉子容易压开；孩子份可再多焖1分钟。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - one_of: [luffa, zucchini]
+    role: vegetable
+steps:
+  - 丝瓜去硬皮并去掉明显老籽；西葫芦洗净。任选一种切约1 cm斜片，300–450 g。
+  - 炒锅大火加2 tsp油，下蒜末10秒；加入蔬菜翻20–30秒。
+  - 加水或低盐高汤1/3 cup、生抽2 tsp、蚝油1 tsp、糖1/4 tsp，煮开后盖盖。
+  - 中火焖2分钟开始检查；丝瓜应柔嫩但保持形状，西葫芦通常更快。孩子份继续到叉子容易压开后先盛出。
+  - 开盖大火把汁收成薄薄挂菜的状态，立即关火。
+child_serving: 选完全柔软的片切小；本 Recipe 计入 Child Vegetable。
+adult_finish: 成人可另加白胡椒、辣椒或葱油。
+substitutions: []
+cook_ingredients:
+  - 丝瓜或西葫芦：300–450 g；任选一种
+  - 轻汁：水或低盐高汤 1/3 cup；生抽 2 tsp；蚝油 1 tsp；糖 1/4 tsp
+  - 蒜：2瓣；中性油 2 tsp

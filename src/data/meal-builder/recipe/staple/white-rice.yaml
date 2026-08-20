@@ -1,0 +1,51 @@
+id: white-rice
+type: recipe
+status: candidate
+name_zh: 白米饭
+name_en: White Jasmine Rice
+tags: [light-seasoning, non-spicy-base, rice-cooker, low-prep, family-shared]
+fit: { hard_rules: pass, score: 5, strengths: [大米有最基础、不依赖其他库存的主食 fallback。], tradeoffs: [] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Rice-cooker and stovetop methods follow The Woks of Life jasmine-rice guide; rice cooker markings remain authoritative for that appliance.
+  sources: [The Woks of Life — How to Cook Jasmine Rice]
+notes: Standalone staple fallback; only rice is required.
+primary_role: staple
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 0, vegetable: 0, staple: 1 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: [rice]
+recommended_staple_ingredient_ids: []
+active_minutes: 5–10
+meal_window_minutes: 25–40
+elapsed_minutes: 25–40
+advance_start_required: false
+equipment: [rice cooker or thick-bottomed covered pot]
+burner_plan: Rice cooker preferred; stovetop uses medium/low burner.
+child_suitable: yes
+child_texture: 正常熟米饭柔软；孩子份按需要加少量水/汤拌松。
+spicy_in_base: false
+deep_fried: false
+salt_level: none
+oil_level: none
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: rice
+    role: integral-staple
+steps:
+  - 饭锅路线：量取大米并淘洗，沥去大部分洗米水；按饭锅对应米量刻度加水，启动正常白米程序。
+  - 炉灶路线：1.5 cups茉莉香米用足量水浸15–20分钟后彻底沥水，再加入等体积1.5 cups清水。
+  - 加盖中大火煮到刚沸，立即转最低火；保持盖严约15分钟，直到水被吸收。
+  - 关火后保持盖盖静置5–10分钟，再用饭勺轻轻翻松。
+  - 完成提示：米粒熟透无硬芯，粒粒分明但能自然黏合。
+child_serving: 正常熟饭即可；过干时拌少量温水或汤使其更湿润。
+adult_finish: 无。
+substitutions: []
+cook_ingredients:
+  - 茉莉香米：1.5 cups
+  - 水：饭锅按刻度；炉灶浸泡沥干后用1.5 cups

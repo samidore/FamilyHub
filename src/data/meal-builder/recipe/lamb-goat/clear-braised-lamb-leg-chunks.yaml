@@ -1,0 +1,54 @@
+id: clear-braised-lamb-leg-chunks
+type: recipe
+status: candidate
+name_zh: 清炖羊腿肉
+name_en: Clear-Braised Lamb Leg Chunks
+tags: [light-seasoning, non-spicy-base, simmered, stovetop-nonstick, advance-start, family-shared, child-support-protein]
+fit: { hard_rules: pass, score: 4, strengths: [羊腿肉块可不依赖白萝卜等库存，直接清炖到软。], tradeoffs: [总耗时较长。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Clear Chinese lamb soup proportions and roughly one-hour gentle simmer are supported by published Mongolian-style/Chinese lamb soup references; household route omits optional vegetables.
+  sources:
+    - China Daily — Mongolian lamb soup
+    - DayDayCook — Warming Lamb Soup
+notes: Standalone fallback; only lamb-leg-chunks is a hard inventory requirement.
+primary_role: protein
+main_protein_category: lamb
+main_protein_ingredient_ids: [lamb-leg-chunks]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 15–20
+meal_window_minutes: 20–30
+elapsed_minutes: 75–120
+advance_start_required: true
+equipment: [medium burner, soup pot]
+burner_plan: Medium burner; long simmer is passive.
+child_suitable: yes
+child_texture: 清炖到筷子能轻松夹断；孩子份去明显筋膜并剪小。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: lamb-leg-chunks
+    role: main-protein
+steps:
+  - 羊腿肉块冷水下锅，煮开2–3分钟，捞出用温水冲净浮沫。
+  - 汤锅加入500–700 g羊腿肉、约2 L水、姜4–6片和葱2段；大火煮开后再次撇净浮沫。
+  - 转小火保持零星小泡，盖盖约60分钟开始检查。
+  - 取一块用筷子测试；不能轻松夹断时继续每次15–20分钟，水位过低只补热水。
+  - 肉达到柔软后再加盐，煮5分钟；撇掉明显浮油。
+  - 孩子份去掉明显筋膜，剪小并加少量清汤保持湿润。
+child_serving: 只取炖到容易夹断的软肉，剪小；本 Recipe 计入 Child Protein。
+adult_finish: 成人可另加白胡椒、香菜或辣椒。
+substitutions: []
+cook_ingredients:
+  - 羊腿肉块：500–700 g
+  - 水：约2 L；姜 4–6片；葱白 2段；盐最后分次加

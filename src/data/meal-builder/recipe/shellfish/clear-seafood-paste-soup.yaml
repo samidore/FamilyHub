@@ -1,0 +1,52 @@
+id: clear-seafood-paste-soup
+type: recipe
+status: candidate
+name_zh: 清汤虾滑 / 鱼滑
+name_en: Clear Shrimp-Paste or Fish-Paste Soup
+tags: [light-seasoning, non-spicy-base, simmered, stovetop-nonstick, lunch-30, processed]
+fit: { hard_rules: pass, score: 3, strengths: [虾滑和鱼滑共享清汤下丸结构，一道 Recipe 覆盖两项。], tradeoffs: [成形后通常有弹性，不计孩子软蛋白。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Clear-soup poaching structure is adapted from the source-backed fish-ball soup pattern; product package directions control any brand-specific heating requirement.
+  sources:
+    - The Woks of Life — Fish Ball Soup
+    - product package cooking directions
+notes: One shared standalone fallback for shrimp-paste and fish-paste.
+primary_role: protein
+main_protein_category: shellfish
+main_protein_ingredient_ids: [shrimp-paste, fish-paste]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice, noodles]
+active_minutes: 10–15
+meal_window_minutes: 15–25
+elapsed_minutes: 15–25
+advance_start_required: false
+equipment: [medium burner, saucepan]
+burner_plan: Medium burner.
+child_suitable: no
+child_texture: 虾滑/鱼滑成形后通常有弹性，不计 Child Protein。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - one_of: [shrimp-paste, fish-paste]
+    role: main-protein
+steps:
+  - 锅中加4 cups水或低盐高汤和姜片，煮到微滚。
+  - 用两把小勺把虾滑或鱼滑分成约2–3 cm小团逐个下锅；保持汤稳定微滚，不猛烈沸腾。
+  - 全部浮起后继续煮；有包装加热说明时按包装执行，否则切开最大一团确认中心完全熟、无半透明生芯或冷芯。
+  - 少量盐和白胡椒调味，关火撒葱花。
+child_serving: 本 Recipe 不计 Child Protein。
+adult_finish: 可加白胡椒、香油或辣椒油。
+substitutions: []
+cook_ingredients:
+  - 虾滑或鱼滑：350–450 g；任选一种
+  - 水或低盐高汤：4 cups；姜3片；葱1根；盐和白胡椒少量

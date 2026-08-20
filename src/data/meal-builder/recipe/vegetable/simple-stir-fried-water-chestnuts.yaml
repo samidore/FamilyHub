@@ -1,0 +1,51 @@
+id: simple-stir-fried-water-chestnuts
+type: recipe
+status: candidate
+name_zh: 清炒马蹄
+name_en: Simple Stir-Fried Water Chestnuts
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30]
+fit: { hard_rules: pass, score: 4, strengths: [马蹄有不依赖肉类或其他蔬菜的独立成菜路线。], tradeoffs: [马蹄保留脆口，不计孩子软蔬菜。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Water-chestnut quick stir-fry handling is supported by The Woks of Life cashew-chicken and everyday-vegetable stir-fry patterns; household version uses the canonical light vegetable sauce.
+  sources: [The Woks of Life — Cashew Chicken; The Woks of Life — Everyday Vegetable Stir-Fry]
+notes: Standalone fallback; only water-chestnuts is required.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: [water-chestnuts]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 10–15
+meal_window_minutes: 15–20
+elapsed_minutes: 15–20
+advance_start_required: false
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High-output burner.
+child_suitable: no
+child_texture: 马蹄即使熟后仍明显脆，不计 Child Vegetable。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: water-chestnuts
+    role: vegetable
+steps:
+  - 马蹄去皮洗净，切约3–4 mm片，300–400 g；蒜2瓣切末。
+  - 炒锅大火加2 tsp油，下蒜末10秒；加马蹄片大火翻约1分钟。
+  - 沿锅边加1–2 Tbsp水，盖20–30秒；开盖倒入轻盐蔬菜汁。
+  - 再翻20–30秒到汁薄薄挂片、马蹄完全热透，立即关火保持脆度。
+child_serving: 本 Recipe 不计 Child Vegetable。
+adult_finish: 可另加黑胡椒、辣椒或葱花。
+substitutions: []
+cook_ingredients:
+  - 马蹄：300–400 g，切薄片
+  - 家庭轻盐蔬菜汁：水1 Tbsp；生抽2 tsp；蚝油1 tsp；糖1/4 tsp
+  - 蒜2瓣；中性油2 tsp

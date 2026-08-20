@@ -1,0 +1,52 @@
+id: ginger-scallion-pork-liver
+type: recipe
+status: candidate
+name_zh: 姜葱炒猪肝
+name_en: Ginger-Scallion Pork Liver
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30]
+fit: { hard_rules: pass, score: 2, strengths: [猪肝有独立成菜路线。], tradeoffs: [猪肝本身为低优先度；快炒不计孩子软蛋白。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Slice thickness, short marinade, high-heat stir-fry and doneness cues follow published Chinese pork-liver stir-fry methods; family version omits chili from the base.
+  sources: [Simple Chinese Food — Stir-fried Pork Liver with Green Onions; Serious Eats — On Not Overcooking Liver]
+notes: Standalone fallback; only pork-liver is required.
+primary_role: protein
+main_protein_category: pork
+main_protein_ingredient_ids: [pork-liver]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 15–25
+meal_window_minutes: 20–30
+elapsed_minutes: 20–30
+advance_start_required: false
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High-output burner; keep batches small to avoid steaming.
+child_suitable: no
+child_texture: 快炒猪肝熟度窗口窄，过熟会发硬；本 Recipe 不计 Child Protein。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: pork-liver
+    role: main-protein
+steps:
+  - 猪肝切约4–5 mm薄片，快速冲洗后彻底沥干；加1 Tbsp生抽、1 Tbsp绍兴酒和2 tsp玉米淀粉抓匀10分钟。
+  - 炒锅大火烧到很热，加2 tsp油；先下姜片和葱白约10秒。
+  - 猪肝单层下锅，快速翻炒；量大时分两批。
+  - 表面全部变色后继续短炒，切开最厚一片确认中心完全熟、无生红或冷生部分；不要为了焦色继续久炒。
+  - 加葱绿和少量盐，翻10–15秒立即关火。
+child_serving: 本 Recipe 不计 Child Protein。
+adult_finish: 成人可另加黑胡椒、辣椒或更多葱姜。
+substitutions: []
+cook_ingredients:
+  - 猪肝：400–450 g，切4–5 mm薄片
+  - 腌料：生抽 1 Tbsp；绍兴酒 1 Tbsp；玉米淀粉 2 tsp
+  - 姜：6片；葱：3根；中性油 2 tsp；盐少量

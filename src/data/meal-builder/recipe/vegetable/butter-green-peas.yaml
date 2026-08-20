@@ -1,0 +1,52 @@
+id: butter-green-peas
+type: recipe
+status: candidate
+name_zh: 黄油青豆
+name_en: Buttered Green Peas
+tags: [light-seasoning, non-spicy-base, stovetop-nonstick, lunch-30, frozen, soft-vegetable]
+fit: { hard_rules: pass, score: 4, strengths: [冷冻青豆可用简单黄油小菜路线独立成菜。], tradeoffs: [商品若有更具体加热说明，包装优先。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Base quantity and butter ratio follow Food Network Basic Buttered Peas (1 lb peas, 1 Tbsp butter). Household child portion is cooked beyond the adult endpoint only until fork-soft; no unsupported extra time is asserted.
+  sources:
+    - Food Network — Basic Buttered Peas
+    - product package cooking directions
+notes: Standalone fallback; only frozen-green-peas is required.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: [frozen-green-peas]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: true }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 5–10
+meal_window_minutes: 10–20
+elapsed_minutes: 10–20
+advance_start_required: false
+equipment: [medium burner, saucepan]
+burner_plan: Medium burner.
+child_suitable: yes
+child_texture: 孩子份继续煮到豆粒能被叉子轻松压扁，再压裂/压扁，不整颗提供。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: frozen-green-peas
+    role: vegetable
+steps:
+  - 先读冷冻青豆包装；若包装要求解冻或给出更严格加热方式，按包装执行。
+  - 按来源量取约1 lb / 450 g青豆。锅中水充分沸腾后下青豆；成人份煮到完全热透且熟嫩即可。
+  - 孩子份留在锅中继续煮，只以“叉子能轻松压扁”为终点；达到后捞出并逐粒压裂/压扁。
+  - 全部沥水；成人份拌无盐黄油1 Tbsp并按需少量加盐。孩子份可少带或不带额外盐。
+child_serving: 煮到叉子能轻松压扁，并压裂/压扁；本 Recipe 计入 Child Vegetable。
+adult_finish: 成人可另加黑胡椒或香草。
+substitutions: []
+cook_ingredients:
+  - 冷冻青豆：1 lb / 约450 g
+  - 无盐黄油：1 Tbsp；盐少量

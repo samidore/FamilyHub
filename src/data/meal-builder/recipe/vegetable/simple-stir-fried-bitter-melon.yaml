@@ -1,0 +1,51 @@
+id: simple-stir-fried-bitter-melon
+type: recipe
+status: candidate
+name_zh: 清炒苦瓜
+name_en: Simple Stir-Fried Bitter Melon
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, soft-vegetable]
+fit: { hard_rules: pass, score: 2, strengths: [苦瓜有单独成菜路线。], tradeoffs: [家庭低优先度；苦味保留。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Salt/blanch preparation and brief stir-fry structure follow The Woks of Life bitter-melon recipes; household version omits meat/egg/black bean so bitter melon remains the only hard inventory identity.
+  sources: [The Woks of Life — Bitter Melon with Eggs; The Woks of Life — Bitter Melon with Black Bean Sauce]
+notes: Low-priority ingredient, but still has a true standalone fallback.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: [bitter-melon]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: true }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 15–20
+meal_window_minutes: 20–30
+elapsed_minutes: 20–30
+advance_start_required: false
+equipment: [medium burner, high-output burner, saucepan, wok / iron pan]
+burner_plan: Brief blanch, then wok.
+child_suitable: yes
+child_texture: 苦瓜切薄并焯/炒到柔软；苦味可能影响喜好，但不作为 coverage 硬条件。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: bitter-melon
+    role: vegetable
+steps:
+  - 苦瓜2根纵剖，刮净籽和白瓤，切约5 mm片；撒1/2 tsp盐抓匀10分钟后冲洗沥干。
+  - 沸水下苦瓜焯约30–60秒，捞出沥干；孩子份可多焯到片明显变软。
+  - 炒锅大火加2 tsp油和蒜末10秒，下苦瓜翻1分钟。
+  - 加生抽1 tsp、糖1/2 tsp和水1 Tbsp，翻到水基本蒸发、苦瓜熟透。
+  - 孩子份选最软的片剪小；成人可保持略脆。
+child_serving: 选焯炒到明显柔软的薄片剪小；本 Recipe 计入 Child Vegetable。
+adult_finish: 成人可另加豆豉、辣椒或黑胡椒。
+substitutions: []
+cook_ingredients:
+  - 苦瓜：约2根
+  - 盐 1/2 tsp；蒜 2瓣；中性油 2 tsp；生抽 1 tsp；糖 1/2 tsp；水 1 Tbsp

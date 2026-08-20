@@ -1,0 +1,52 @@
+id: steamed-chinese-yam
+type: recipe
+status: candidate
+name_zh: 清蒸山药
+name_en: Steamed Chinese Yam
+tags: [light-seasoning, non-spicy-base, steamed, stovetop-nonstick, low-prep, soft-vegetable]
+fit: { hard_rules: pass, score: 2, strengths: [山药可用最少处理直接蒸熟成菜。], tradeoffs: [家庭低优先度；生山药处理可能刺激手部。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Water-boiling-before-steaming and roughly 15-minute steam time follow the checked 快手清蒸山药 source; the child endpoint is the same source-supported fully cooked texture, verified by easy fork/chopstick penetration rather than a fixed extra time.
+  sources:
+    - 下厨房 — 快手清蒸山药
+notes: Raw-yam skin handling remains a household nuisance; use gloves when it irritates skin.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: [chinese-yam]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: true }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 5–10
+meal_window_minutes: 20–30
+elapsed_minutes: 20–30
+advance_start_required: false
+equipment: [medium burner, covered steamer]
+burner_plan: Medium burner for steaming.
+child_suitable: yes
+child_texture: 蒸到中心无硬芯、筷子或叉子能轻松穿透；孩子份压成小块。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: none
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: chinese-yam
+    role: vegetable
+steps:
+  - 戴手套处理山药；取2根或足够全家一餐的量，去皮后切成长条段或粗细接近的段。
+  - 蒸锅水先充分烧开，再把山药单层放入耐热盘上并盖严。
+  - 按来源先蒸约15分钟；用筷子/叉子检查最粗一段中心，能轻松穿透、没有白硬芯才完成。
+  - 若仍有硬芯，继续蒸并用同一质地终点复查；孩子份趁热压成小块。
+  - 成人可淋少量生抽和现成葱油；孩子份保持清淡。
+child_serving: 蒸到中心完全软并压小；本 Recipe 计入 Child Vegetable。
+adult_finish: 成人可另加葱油或生抽。
+substitutions: []
+cook_ingredients:
+  - 山药：2根或足够全家一餐的量
+  - 生抽、现成葱油：成人可选

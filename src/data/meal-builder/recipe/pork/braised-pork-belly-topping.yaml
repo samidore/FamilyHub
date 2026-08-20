@@ -1,0 +1,53 @@
+id: braised-pork-belly-topping
+type: recipe
+status: candidate
+name_zh: 卤肉盖头
+name_en: Braised Pork Belly Topping
+tags: [iron-pan-braise, non-spicy-base, braised, stovetop-nonstick, family-shared, advance-start]
+fit: { hard_rules: pass, score: 4, strengths: [薄切五花肉单独即可做成卤肉盖头。], tradeoffs: [总耗时较长。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Technique and exact base ratios follow The Woks of Life Lu Rou Fan; thin-sliced pork belly is cut into short strips and uses the same low braise until fall-apart tender. Onion, mushroom, egg and spice packet are optional text ingredients and do not block availability.
+  sources: [The Woks of Life — Lu Rou Fan (Taiwanese Braised Pork Rice Bowl)]
+notes: Standalone fallback; only thin-sliced-pork-belly is a hard inventory requirement.
+primary_role: protein
+main_protein_category: pork
+main_protein_ingredient_ids: [thin-sliced-pork-belly]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice, noodles]
+active_minutes: 20–30
+meal_window_minutes: 20–30
+elapsed_minutes: 100–130
+advance_start_required: true
+equipment: [medium burner, covered pot / braiser]
+burner_plan: Medium burner; long low braise is mostly passive.
+child_suitable: yes
+child_texture: 低火卤到肉可轻易夹断；孩子份选较瘦软肉并剪小。
+spicy_in_base: false
+deep_fried: false
+salt_level: medium
+oil_level: medium
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: thin-sliced-pork-belly
+    role: main-protein
+steps:
+  - 薄切五花肉横切成约1.5 cm宽短条；沸水快速焯1分钟，捞出冲净。
+  - 锅中小火加2 tsp油和25 g冰糖，糖开始融化后可加入切碎洋葱/红葱头，炒约1分钟；没有则直接继续。
+  - 加五花肉、绍兴酒60 ml、生抽45 ml、老抽30 ml和水475 ml；有香菇或卤蛋可加入，没有不影响成菜。
+  - 煮开后转最低火盖盖，按来源路线卤约90分钟，中途偶尔翻动并防止烧干。
+  - 肉达到一夹即断、脂肪软糯后，开盖中大火约5分钟收汁；收至能挂勺但仍留足可流动卤汁。
+  - 孩子份先取较瘦软肉剪小；成人份再按需加辣椒或白胡椒。
+child_serving: 取炖到一夹即断的较瘦部分剪小；本 Recipe 计 Child Protein。
+adult_finish: 可另加辣椒油、白胡椒或卤蛋。
+substitutions: []
+cook_ingredients:
+  - 薄切五花肉：450 g，横切短条
+  - 来源基础卤汁：绍兴酒 60 ml；生抽 45 ml；老抽 30 ml；冰糖 25 g；水 475 ml
+  - 洋葱/红葱头、香菇、卤蛋、八角等：按手头情况可选，不影响 availability

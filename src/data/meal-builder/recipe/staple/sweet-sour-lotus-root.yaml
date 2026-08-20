@@ -1,0 +1,52 @@
+id: sweet-sour-lotus-root
+type: recipe
+status: candidate
+name_zh: 糖醋藕片
+name_en: Sweet-and-Sour Lotus Root
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30]
+fit: { hard_rules: pass, score: 4, strengths: [莲藕有不依赖黑木耳等库存的独立主食路线。], tradeoffs: [糖醋藕片目标保留脆嫩口感。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Blanch, sweet-vinegar sauce and short wok finish follow published 糖醋藕片 recipes; household version uses the lighter exact 15 g sugar / 15 ml vinegar / 10 ml soy formula.
+  sources: [下厨房 — 糖醋藕片（糖15克、醋15ml、生抽10ml版本）; MiNDFOOD / Yang Liu — Sweet and Sour Lotus Root]
+notes: Lotus root is treated as Staple by household Meal Builder classification.
+primary_role: staple
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 0, vegetable: 0, staple: 1 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: [lotus-root]
+recommended_staple_ingredient_ids: []
+active_minutes: 15–20
+meal_window_minutes: 20–30
+elapsed_minutes: 20–30
+advance_start_required: false
+equipment: [medium burner, high-output burner, saucepan, wok / nonstick pan]
+burner_plan: Brief blanch, then wok.
+child_suitable: conditional
+child_texture: 糖醋藕片保留脆嫩质地，不作为孩子软质食物；Staple completion本身无 Child coverage 条件。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: lotus-root
+    role: integral-staple
+steps:
+  - 莲藕约400 g去皮切2–3 mm薄片，立即泡清水并换水冲掉表面淀粉。
+  - 锅中水煮开，下藕片焯到约八九成熟，约1–2分钟；捞出沥干。
+  - 调糖醋汁：糖15 g、黑醋或米醋15 ml、生抽10 ml、盐2 g、清水20 ml；另调1 tsp玉米淀粉加1 Tbsp水。
+  - 炒锅大火加2 tsp油和蒜末10秒，下藕片快速翻30秒。
+  - 倒入糖醋汁翻匀；汁沸后细线加入淀粉水，继续翻到汁薄薄挂藕片即关火。
+child_serving: 本 Recipe 不承担 Child Protein/Vegetable；若孩子吃，按实际咀嚼能力切小并单独判断。
+adult_finish: 可另加葱花、辣椒或更多醋。
+substitutions: []
+cook_ingredients:
+  - 莲藕：约400 g
+  - 糖醋汁：糖15 g；黑醋或米醋15 ml；生抽10 ml；盐2 g；清水20 ml
+  - 蒜2瓣；中性油2 tsp；玉米淀粉1 tsp+水1 Tbsp

@@ -1,0 +1,50 @@
+id: salted-shelled-edamame
+type: recipe
+status: candidate
+name_zh: 盐水毛豆仁
+name_en: Salted Shelled Edamame
+tags: [light-seasoning, non-spicy-base, simmered, stovetop-nonstick, lunch-30, frozen, soft-vegetable]
+fit: { hard_rules: pass, score: 4, strengths: [冷冻去壳毛豆可以直接煮成独立小菜。], tradeoffs: [不同商品可能已熟，时间必须先看包装。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Frozen edamame package state must be checked; boiling method and doneness guidance follow Just One Cookbook. Shelled beans are checked earlier than pods and package directions remain authoritative.
+  sources: [Just One Cookbook — How to Cook Edamame (Fresh and Frozen); product package directions]
+notes: Standalone fallback; only frozen-shelled-edamame is required.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: [frozen-shelled-edamame]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: true }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 5–10
+meal_window_minutes: 10–20
+elapsed_minutes: 10–20
+advance_start_required: false
+equipment: [medium burner, saucepan]
+burner_plan: Medium burner.
+child_suitable: yes
+child_texture: 孩子份煮到豆仁容易压扁，并用叉子压裂/压扁，不整颗提供。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: none
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: frozen-shelled-edamame
+    role: vegetable
+steps:
+  - 先读包装，确认冷冻毛豆仁是生制、部分熟制还是熟制；包装时间优先。
+  - 锅中水煮开，加少量盐，下冷冻毛豆仁。
+  - 按包装范围煮；没有明确时间时从2分钟开始检查，目标是中心完全热透且豆仁能被叉子压扁，不追求硬脆。
+  - 捞出沥水；孩子份趁软用叉子压裂/压扁，再少量提供。
+child_serving: 煮软并压裂/压扁；本 Recipe 计入 Child Vegetable。
+adult_finish: 成人可另加盐、芝麻油或七味粉。
+substitutions: []
+cook_ingredients:
+  - 冷冻去壳毛豆：300–400 g；熟制状态和时间以包装为准
+  - 水：足量；盐：少量

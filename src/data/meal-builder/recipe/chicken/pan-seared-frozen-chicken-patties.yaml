@@ -1,0 +1,49 @@
+id: pan-seared-frozen-chicken-patties
+type: recipe
+status: candidate
+name_zh: 香煎冷冻鸡肉饼
+name_en: Pan-Seared Frozen Chicken Patties
+tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, lunch-30, processed]
+fit: { hard_rules: pass, score: 3, strengths: [冷冻鸡肉饼有不依赖其他库存的直接做法。], tradeoffs: [不同商品可能是生制或熟制，必须优先遵循包装。] }
+evidence:
+  level: government-standard
+  checked_on: 2026-08-19
+  scope: Package directions control product-specific method; 165°F/74°C is the USDA safe endpoint for poultry.
+  sources: [USDA FSIS — Safe Minimum Internal Temperature Chart; product package cooking directions]
+notes: Do not assume a frozen chicken patty is pre-cooked.
+primary_role: protein
+main_protein_category: chicken
+main_protein_ingredient_ids: [frozen-chicken-patties]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [bread, rice]
+active_minutes: 10–20
+meal_window_minutes: 10–30
+elapsed_minutes: 10–30
+advance_start_required: false
+equipment: [medium burner, nonstick pan]
+burner_plan: Medium burner.
+child_suitable: conditional
+child_texture: 商品质地差异大，未建立稳定软质地前不计 Child Protein。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: frozen-chicken-patties
+    role: main-protein
+steps:
+  - 先读包装，确认 raw / fully cooked、是否需要解冻以及是否允许平底锅加热；包装步骤优先。
+  - 包装允许平底锅时按其火力和时间加热，途中按说明翻面；表面过快上色而中心仍冷时降低火力并加盖。
+  - 生制或熟制状态不明确时，用温度计确认中心达到165°F/74°C；不要只靠外观判断。
+  - 离火静置1–2分钟再切。
+child_serving: 暂不计 Child Protein；确认具体商品可保持柔软后再更新。
+adult_finish: 可配番茄酱、芥末或辣酱。
+substitutions: []
+cook_ingredients:
+  - 冷冻鸡肉饼：3块；具体重量和加热方式以包装为准

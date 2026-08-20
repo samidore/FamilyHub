@@ -1,0 +1,53 @@
+id: ginger-scallion-squid
+type: recipe
+status: candidate
+name_zh: 姜葱鱿鱼
+name_en: Ginger-Scallion Squid
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30]
+fit: { hard_rules: pass, score: 3, strengths: [鱿鱼只配 pantry 姜葱也能独立成菜。], tradeoffs: [快炒鱿鱼有弹性，不计孩子软蛋白。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Very brief blanch/high-heat stir-fry timing is supported by The Woks of Life squid stir-fry references; household version removes required pickled vegetables and uses pantry ginger/scallion.
+  sources:
+    - The Woks of Life — Squid Stir-Fry with Pickled Mustard Greens
+notes: Ginger and scallion are pantry text and do not block availability.
+primary_role: protein
+main_protein_category: shellfish
+main_protein_ingredient_ids: [squid]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 10–15
+meal_window_minutes: 15–25
+elapsed_minutes: 15–25
+advance_start_required: false
+equipment: [high-output burner, wok / iron pan, saucepan for blanching]
+burner_plan: Brief blanch on medium burner, then high-output wok.
+child_suitable: no
+child_texture: 快炒鱿鱼仍有弹性和嚼劲，不计 Child Protein。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: squid
+    role: main-protein
+steps:
+  - 鱿鱼清理后切一口大小并擦干；姜切丝、葱切段；调味汁预混。
+  - 另锅水大开，鱿鱼下锅约30秒、刚开始卷曲就立即捞出彻底沥干。
+  - 炒锅大火预热，加2 tsp油，下姜丝和葱白10秒。
+  - 下鱿鱼大火快速翻炒，沿锅边淋绍兴酒和调味汁；汁一沸、鱿鱼全部不透明时立即关火。
+  - 撒葱绿装盘；不要留在热锅中继续变韧。
+child_serving: 本 Recipe 不计 Child Protein。
+adult_finish: 成人可加辣椒、黑胡椒或孜然。
+substitutions: []
+cook_ingredients:
+  - 鱿鱼：450 g
+  - 姜：10 g；葱：3根；中性油 2 tsp
+  - 调味汁：生抽 2 tsp；绍兴酒 1 Tbsp；糖 1/4 tsp；水 1 Tbsp

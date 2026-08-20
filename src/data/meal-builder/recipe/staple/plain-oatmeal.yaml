@@ -1,0 +1,50 @@
+id: plain-oatmeal
+type: recipe
+status: candidate
+name_zh: 燕麦粥
+name_en: Stovetop Oatmeal
+tags: [light-seasoning, non-spicy-base, simmered, stovetop-nonstick, lunch-30, soft-staple]
+fit: { hard_rules: pass, score: 4, strengths: [燕麦可直接煮成柔软主食，不依赖鸡蛋。], tradeoffs: [不同燕麦类型时间不同；本记录针对 old-fashioned rolled oats。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Stovetop ratio and five-minute simmer follow the package-directed method tested by Simply Recipes for old-fashioned rolled oats.
+  sources: [Simply Recipes — stovetop oatmeal test / package method]
+notes: Standalone staple fallback; only oats is required.
+primary_role: staple
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 0, vegetable: 0, staple: 1 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: [oats]
+recommended_staple_ingredient_ids: []
+active_minutes: 5–10
+meal_window_minutes: 10–15
+elapsed_minutes: 10–15
+advance_start_required: false
+equipment: [medium burner, saucepan]
+burner_plan: Medium burner.
+child_suitable: yes
+child_texture: 煮到柔软浓稠；孩子份按需要多加温水/奶调稀并降温。
+spicy_in_base: false
+deep_fried: false
+salt_level: none
+oil_level: none
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: oats
+    role: integral-staple
+steps:
+  - 本记录按 old-fashioned rolled oats：锅中加入牛奶或水2.6 cups和一小撮盐，煮到刚沸。
+  - 加入燕麦1.5 cups，转中小火保持轻微沸腾约5分钟，偶尔搅动，不持续猛搅。
+  - 燕麦已经柔软、液体大部分被吸收但仍能流动时关火；静置2分钟会继续变稠。
+  - 孩子份如果太稠，用少量温水或奶调到容易吞咽的稠度并充分降温。
+child_serving: 煮软并按需要调稀、降温。
+adult_finish: 可另加红糖、枫糖、肉桂或水果。
+substitutions: []
+cook_ingredients:
+  - old-fashioned rolled oats：1.5 cups
+  - 牛奶或水：约2.6 cups；盐一小撮

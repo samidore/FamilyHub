@@ -1,0 +1,50 @@
+id: simple-stir-fried-chives
+type: recipe
+status: candidate
+name_zh: 清炒韭黄 / 韭菜
+name_en: Simple Stir-Fried Yellow or Garlic Chives
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30]
+fit: { hard_rules: pass, score: 4, strengths: [韭黄和韭菜共享极短时间快炒结构。], tradeoffs: [长纤维快炒菜不计孩子软蔬菜。] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Chive cooking time and wilted endpoint follow The Woks of Life garlic/yellow chive stir-fry references; household version removes meat/tofu from hard requirements.
+  sources: [The Woks of Life — Spiced Tofu Stir-Fry with Garlic Chives; The Woks of Life — Stir-fried Chinese Yellow Chives with Pork]
+notes: One shared Recipe for yellow-chives and garlic-chives.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: [yellow-chives, garlic-chives]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 5–10
+meal_window_minutes: 10–15
+elapsed_minutes: 10–15
+advance_start_required: false
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High-output burner; very brief cook.
+child_suitable: no
+child_texture: 韭菜类长纤维且快炒目标不是软烂，不计 Child Vegetable。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - one_of: [yellow-chives, garlic-chives]
+    role: vegetable
+steps:
+  - 韭黄或韭菜300–350 g洗净彻底沥干，切约3 cm段；粗白梗和叶段分开。
+  - 炒锅大火加2 tsp油，先下粗白梗约20秒。
+  - 加叶段大火翻约40–60秒，到整体刚塌下。
+  - 加生抽1 tsp、盐少量和芝麻油1/2 tsp，翻10秒立即关火，不久炒出水。
+child_serving: 本 Recipe 不计 Child Vegetable。
+adult_finish: 成人可另加辣椒、豆豉或黑胡椒。
+substitutions: []
+cook_ingredients:
+  - 韭黄或韭菜：300–350 g；任选一种
+  - 中性油2 tsp；生抽1 tsp；盐少量；芝麻油1/2 tsp

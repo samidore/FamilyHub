@@ -1,0 +1,50 @@
+id: dressed-tomato
+type: recipe
+status: candidate
+name_zh: 凉拌番茄
+name_en: Sugar-Dressed Tomato
+tags: [light-seasoning, non-spicy-base, cold-dish, lunch-30, low-prep, soft-vegetable]
+fit: { hard_rules: pass, score: 4, strengths: [番茄只需简单切片调味即可单独成菜。], tradeoffs: [] }
+evidence:
+  level: reputable-general
+  checked_on: 2026-08-19
+  scope: Classic Chinese sugar-dressed tomato structure verified against published 凉拌番茄 recipes; sugar is kept light for the household version.
+  sources: [下厨房 — 凉拌番茄]
+notes: Standalone fallback; only tomato is required.
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: [tomato]
+meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: true }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 5–10
+meal_window_minutes: 5–15
+elapsed_minutes: 5–15
+advance_start_required: false
+equipment: [cutting board, chef knife]
+burner_plan: No burner required.
+child_suitable: yes
+child_texture: 选成熟软番茄，去硬蒂并切成小软块。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: tomato
+    role: vegetable
+steps:
+  - 成熟番茄3个洗净，切去硬蒂；成人份切片，孩子份直接切成更小软块。
+  - 均匀撒糖1–2 tsp，轻拌后静置5分钟，让番茄自身汁水把糖化开。
+  - 尝味；只在番茄很酸时再少量补糖，不做成甜点浓度。
+  - 孩子份确认没有硬蒂或大块厚皮后直接提供。
+child_serving: 选成熟软番茄切小；本 Recipe 计入 Child Vegetable。
+adult_finish: 成人可另加梅粉或少量盐，不进入基础版。
+substitutions: []
+cook_ingredients:
+  - 成熟番茄：3个
+  - 白糖：1–2 tsp，按番茄酸度调整
