@@ -88,12 +88,38 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       </section>
 
       <section class="meal-ingredients" aria-labelledby="meal-ingredients-heading">
-        <div class="meal-section-heading"><div><p class="eyebrow">02 · 今天有什么</p><h2 id="meal-ingredients-heading">可用食材</h2><p>只选这顿可以拿来做菜的食材。收起分组不会清除选择。</p></div><span id="meal-ingredient-count" class="meal-count">已选 0</span></div>
+        <div class="meal-section-heading">
+          <div><p class="eyebrow">02 · 今天有什么</p><h2 id="meal-ingredients-heading">可用食材</h2><p>只选这顿可以拿来做菜的食材。收起分组不会清除选择。</p></div>
+          <div class="meal-ingredient-toolbar">
+            <span id="meal-ingredient-count" class="meal-count">已选 0</span>
+            <div class="meal-bulk-actions" aria-label="全部食材筛选">
+              <button class="meal-bulk-icon meal-bulk-icon--select" type="button" data-ingredient-bulk="select" data-ingredient-bulk-scope="all" aria-label="全选所有可用食材">
+                <svg viewBox="0 0 24 24" aria-hidden="true" data-bulk-icon="circle-check"><circle cx="12" cy="12" r="9.5"></circle><path d="m7.8 12.4 2.6 2.7 5.8-6.1"></path></svg>
+              </button>
+              <button class="meal-bulk-icon meal-bulk-icon--clear" type="button" data-ingredient-bulk="clear" data-ingredient-bulk-scope="all" aria-label="全不选所有可用食材">
+                <svg viewBox="0 0 24 24" aria-hidden="true" data-bulk-icon="circle-x"><circle cx="12" cy="12" r="9.5"></circle><path d="m8.7 8.7 6.6 6.6m0-6.6-6.6 6.6"></path></svg>
+              </button>
+            </div>
+          </div>
+        </div>
         <div class="meal-ingredient-sections">
           {mealData.starterSections.map((section: StarterSection, index: number) => {
             const sectionIngredients = visibleIngredients.filter((ingredient) => ingredient.section === section.id);
             return <details class="meal-ingredient-section" data-ingredient-section={section.id} open={index < 2}>
-              <summary><span><strong>{section.labelZh}</strong><small>{section.labelEn}</small></span><span data-section-count>0 / {sectionIngredients.length}</span></summary>
+              <summary>
+                <span><strong>{section.labelZh}</strong><small>{section.labelEn}</small></span>
+                <span class="meal-ingredient-section__tools">
+                  <span data-section-count>0 / {sectionIngredients.length}</span>
+                  <span class="meal-bulk-actions" aria-label={`${section.labelZh}食材筛选`}>
+                    <button class="meal-bulk-icon meal-bulk-icon--select" type="button" data-ingredient-bulk="select" data-ingredient-bulk-section={section.id} aria-label={`全选${section.labelZh}食材`}>
+                      <svg viewBox="0 0 24 24" aria-hidden="true" data-bulk-icon="circle-check"><circle cx="12" cy="12" r="9.5"></circle><path d="m7.8 12.4 2.6 2.7 5.8-6.1"></path></svg>
+                    </button>
+                    <button class="meal-bulk-icon meal-bulk-icon--clear" type="button" data-ingredient-bulk="clear" data-ingredient-bulk-section={section.id} aria-label={`全不选${section.labelZh}食材`}>
+                      <svg viewBox="0 0 24 24" aria-hidden="true" data-bulk-icon="circle-x"><circle cx="12" cy="12" r="9.5"></circle><path d="m8.7 8.7 6.6 6.6m0-6.6-6.6 6.6"></path></svg>
+                    </button>
+                  </span>
+                </span>
+              </summary>
               <div class="meal-chip-grid">{sectionIngredients.map((ingredient) => <button class="meal-chip" type="button" aria-pressed="false" data-ingredient-id={ingredient.id}><span aria-hidden="true">✓</span><strong>{ingredient.nameZh}</strong><small>{ingredient.nameEn}</small></button>)}</div>
             </details>;
           })}
@@ -269,6 +295,10 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
     };
     const selectedRecipes = () => state.selectedRecipeIds.map((id) => byId.get(id)).filter((recipe): recipe is MealRecipe => Boolean(recipe));
     const stockedIds = (inventory = household.inventory) => ingredients.filter((item) => { const value = inventory[item.id]; return item.inventoryTracking === 'presence-only' ? value === true : typeof value === 'number' && value > 0; }).map((item) => item.id);
+    const bulkIngredientIds = (sectionId?: string) => {
+      const stocked = new Set(stockedIds());
+      return ingredients.filter((item) => item.visible !== false && stocked.has(item.id) && (!sectionId || item.section === sectionId)).map((item) => item.id);
+    };
     const resnapshotMeal = (meal: CurrentMeal, inventory = household.inventory) => {
       const stocked = new Set(stockedIds(inventory));
       const excluded = meal.excludedIngredientIds.filter((id) => stocked.has(id));
@@ -426,6 +456,11 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       const stocked = new Set(stockedIds());
       document.querySelectorAll<HTMLButtonElement>('[data-ingredient-id]').forEach((button) => { const inStock = stocked.has(button.dataset.ingredientId!); button.hidden = !inStock; button.setAttribute('aria-pressed', String(inStock && available.has(button.dataset.ingredientId!))); });
       document.querySelectorAll<HTMLElement>('[data-ingredient-section]').forEach((section) => { const buttons = [...section.querySelectorAll<HTMLButtonElement>('[data-ingredient-id]')]; const visible = buttons.filter((button) => !button.hidden); section.hidden = visible.length === 0; section.querySelector<HTMLElement>('[data-section-count]')!.textContent = `${visible.filter((button) => button.getAttribute('aria-pressed') === 'true').length} / ${visible.length}`; });
+      document.querySelectorAll<HTMLButtonElement>('[data-ingredient-bulk]').forEach((button) => {
+        const ids = bulkIngredientIds(button.dataset.ingredientBulkSection);
+        const selectedCount = ids.filter((id) => available.has(id)).length;
+        button.disabled = !writesEnabled || !hasMeal || ids.length === 0 || (button.dataset.ingredientBulk === 'select' ? selectedCount === ids.length : selectedCount === 0);
+      });
       document.querySelector<HTMLElement>('#meal-ingredient-count')!.textContent = `已选 ${available.size}`;
       const selected = selectedRecipes(); const totals = aggregateSelection(recipes, state, ingredients);
       document.querySelector('#progress-protein')!.textContent = `${totals.protein} / ${state.proteinTarget}`; document.querySelector('#progress-vegetable')!.textContent = `${totals.vegetable} / ${state.vegetableTarget}`;
@@ -460,6 +495,18 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
     accessRefresh.addEventListener('click', () => safeWrite(repository.refreshAccess()));
     logout.addEventListener('click', () => safeWrite(repository.signOut()));
     document.querySelectorAll<HTMLButtonElement>('[data-ingredient-id]').forEach((button) => button.addEventListener('click', () => { if (!household.currentMeal || !canWrite()) return; const id = button.dataset.ingredientId!; const available = new Set(state.availableIngredientIds); const before = state.selectedRecipeIds.length; const shouldBeOn = !available.has(id); shouldBeOn ? available.add(id) : available.delete(id); state = reconcileMealState({ ...state, availableIngredientIds: [...available] }, recipes, ingredients); void persistMeal((meal) => { const excluded = new Set(meal.excludedIngredientIds); shouldBeOn ? excluded.delete(id) : excluded.add(id); return resnapshotMeal({ ...meal, excludedIngredientIds: [...excluded], checkoutDraft: {} }); }); render(); announce(before > state.selectedRecipeIds.length ? `已取消食材，并移除 ${before - state.selectedRecipeIds.length} 道无法制作的已选菜。` : `已${shouldBeOn ? '选择' : '取消'}食材。`); }));
+    document.querySelectorAll<HTMLButtonElement>('[data-ingredient-bulk]').forEach((button) => button.addEventListener('click', (event) => {
+      event.preventDefault(); event.stopPropagation();
+      if (!household.currentMeal || !canWrite()) return;
+      const ids = bulkIngredientIds(button.dataset.ingredientBulkSection); if (ids.length === 0) return;
+      const shouldBeOn = button.dataset.ingredientBulk === 'select'; const available = new Set(state.availableIngredientIds); const before = state.selectedRecipeIds.length;
+      ids.forEach((id) => shouldBeOn ? available.add(id) : available.delete(id));
+      state = reconcileMealState({ ...state, availableIngredientIds: [...available] }, recipes, ingredients);
+      void persistMeal((meal) => { const excluded = new Set(meal.excludedIngredientIds); ids.forEach((id) => shouldBeOn ? excluded.delete(id) : excluded.add(id)); return resnapshotMeal({ ...meal, excludedIngredientIds: [...excluded], checkoutDraft: {} }); });
+      render();
+      const removed = before - state.selectedRecipeIds.length;
+      announce(removed > 0 ? `已批量取消食材，并移除 ${removed} 道无法制作的已选菜。` : `已${shouldBeOn ? '全选' : '全不选'} ${ids.length} 种食材。`);
+    }));
     inventoryList.addEventListener('click', (event) => { const target = (event.target as HTMLElement); const toggle = target.closest<HTMLButtonElement>('[data-inventory-toggle]'); const step = target.closest<HTMLButtonElement>('[data-inventory-step]'); const ingredientId = toggle?.dataset.inventoryToggle ?? step?.dataset.inventoryIngredient; if (!ingredientId || !canWrite()) return; if (toggle) { const tracking = toggle.dataset.inventoryTracking === 'presence-only' ? 'presence-only' : 'counted'; safeWrite(repository.updateInventory((inventory) => { const current = typeof inventory[ingredientId] === 'number' ? inventory[ingredientId] as number : inventory[ingredientId] === true ? 1 : 0; const next = { ...inventory }; if (tracking === 'presence-only') { if (inventory[ingredientId] === true) delete next[ingredientId]; else next[ingredientId] = true; } else { if (current > 0) delete next[ingredientId]; else next[ingredientId] = 1; } return next; }).then((next) => { household = next; render(); })); } else if (step) { const delta = Number(step.dataset.inventoryStep); safeWrite(repository.updateInventory((inventory) => { const current = typeof inventory[ingredientId] === 'number' ? inventory[ingredientId] as number : 0; const nextValue = Math.max(0, roundCountedInventoryValue(current + delta)); const next = { ...inventory }; if (nextValue > 0) next[ingredientId] = nextValue; else delete next[ingredientId]; return next; }).then((next) => { household = next; render(); })); } });
     recipeGrid.addEventListener('change', (event) => { const select = (event.target as HTMLElement).closest<HTMLSelectElement>('[data-binding-recipe]'); if (!select || !household.currentMeal || !canWrite()) return; const recipe = byId.get(select.dataset.bindingRecipe!); if (!recipe) return; const index = Number(select.dataset.bindingIndex); const binding = draftBindingFor(recipe, new Set(state.availableIngredientIds)); binding[index] = select.value; draftBindings[recipe.id] = binding; state = reconcileMealState({ ...state, recipeIngredientBindings: { ...state.recipeIngredientBindings, [recipe.id]: binding.filter((value): value is string => Boolean(value)) } }, recipes, ingredients); void persistMeal((meal) => { const remoteBinding = [...(meal.recipeIngredientBindings[recipe.id] ?? [])]; remoteBinding[index] = select.value; return reconcileCurrentMeal({ ...meal, recipeIngredientBindings: { ...meal.recipeIngredientBindings, [recipe.id]: remoteBinding.filter((value): value is string => Boolean(value)) }, checkoutDraft: {} }, recipes, ingredients); }); render(); announce('已更新这道菜的食材选择。'); });
     document.querySelectorAll<HTMLButtonElement>('[data-select-recipe]').forEach((button) => button.addEventListener('click', () => { if (!household.currentMeal || !canWrite()) return; const id = button.dataset.selectRecipe!; const recipe = byId.get(id)!; const binding = draftBindingFor(recipe, new Set(state.availableIngredientIds)); state = reconcileMealState({ ...state, selectedRecipeIds: [...state.selectedRecipeIds, id], recipeIngredientBindings: { ...state.recipeIngredientBindings, [id]: binding.filter((value): value is string => Boolean(value)) } }, recipes, ingredients); void persistMeal((meal) => { const remoteState = mealStateFromCurrentMeal(meal); if (remoteState.selectedRecipeIds.includes(id)) return meal; const remoteBinding = bindRecipeIngredients(recipe, remoteState.availableIngredientIds, binding); return reconcileCurrentMeal({ ...meal, selectedRecipeIds: [...meal.selectedRecipeIds, id], recipeIngredientBindings: { ...meal.recipeIngredientBindings, [id]: remoteBinding.filter((value): value is string => Boolean(value)) }, checkoutDraft: {} }, recipes, ingredients); }); render(); announce('已加入一道菜。'); }));
@@ -486,4 +533,24 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
     repository.ready?.catch(() => render());
     render();
   </script>
+
+  <style>
+    .meal-ingredient-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px 12px; }
+    .meal-bulk-actions { display: inline-flex; align-items: center; gap: 6px; }
+    .meal-bulk-icon { display: inline-grid; width: 44px; height: 44px; flex: 0 0 44px; place-items: center; padding: 0; border: 1px solid currentColor; border-radius: 999px; cursor: pointer; }
+    .meal-bulk-icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .meal-bulk-icon--select { background: #e8f4eb; color: #2f7448; }
+    .meal-bulk-icon--clear { background: #faeaea; color: #a34242; }
+    .meal-bulk-icon:disabled { opacity: .38; cursor: default; }
+    .meal-ingredient-section__tools { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 8px; }
+    .meal-ingredient-section__tools .meal-bulk-icon { width: 40px; height: 40px; flex-basis: 40px; }
+    .meal-ingredient-section summary { gap: 10px; }
+    .meal-ingredient-section summary > span:first-child { min-width: 0; }
+    @media (max-width: 560px) {
+      .meal-ingredient-toolbar { width: 100%; justify-content: space-between; }
+      .meal-ingredient-section__tools { gap: 5px; }
+      .meal-ingredient-section__tools .meal-bulk-actions { gap: 4px; }
+      .meal-ingredient-section__tools .meal-bulk-icon { width: 38px; height: 38px; flex-basis: 38px; }
+    }
+  </style>
 </BaseLayout>
