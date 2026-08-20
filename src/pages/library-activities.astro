@@ -4,13 +4,13 @@ import SiteHeader from '../components/SiteHeader.astro';
 import FilterShell from '../components/FilterShell.astro';
 import LibraryEventCard from '../modules/library-activities/LibraryEventCard.astro';
 import { libraryEvents } from '../data/catalog';
-const days = [...new Set(libraryEvents.map((event) => event.day))];
+const days = [...new Set([...libraryEvents].sort((a, b) => a.dayOrder - b.dayOrder).map((event) => event.day))];
 const ages = [...new Set(libraryEvents.map((event) => event.ageGroup))];
 const eventCount = libraryEvents.length;
 ---
-<BaseLayout title="Library Activities | Family Hub" description="查看 Fair Lawn 已核实、适合 2 岁儿童的当前 library 活动。" pageClass="module-page theme-lake" themeColor="#E7F0F3">
-  <SiteHeader eyebrow="出行与玩乐 · Fair Lawn" title="Library Activities" description="只看 Maurice M. Pine Library 当前或即将举行、且官方年龄要求明确包含 2 岁的儿童活动。" accent="lake" icon="calendar">
-    <div class="summary-row"><span id="event-total">{eventCount} 个已核实活动</span><span>Fair Lawn only</span><span>2 岁适龄</span></div>
+<BaseLayout title="Library Activities | Family Hub" description="查看 Fair Lawn 当前 library 儿童活动，并区分 2 岁适龄与年龄待确认状态。" pageClass="module-page theme-lake" themeColor="#E7F0F3">
+  <SiteHeader eyebrow="出行与玩乐 · Fair Lawn" title="Library Activities" description="只看 Maurice M. Pine Library 当前或即将举行的儿童活动；明确不适合 2 岁的排除，官网未公开年龄的保留并标记待确认。" accent="lake" icon="calendar">
+    <div class="summary-row"><span id="event-total">{eventCount} 个当前活动</span><span>Fair Lawn only</span><span>2 岁适龄优先</span></div>
   </SiteHeader>
 
   <FilterShell accent="lake" filterId="event-filter-panel" countId="event-count" clearId="event-clear" countText={`显示 ${eventCount} / ${eventCount} 个活动`}>
@@ -29,11 +29,11 @@ const eventCount = libraryEvents.length;
   <main id="main-content" class="shell listing-main">
     <div id="event-list" class="event-list">{libraryEvents.map((event) => <LibraryEventCard event={event} />)}</div>
     <div id="event-empty" class="empty-state" hidden={eventCount > 0}>
-      <p>这里暂时没有已核实、适合 2 岁且尚未过期的 Fair Lawn 活动。</p>
+      <p>这里暂时没有尚未过期的 Fair Lawn 儿童活动。</p>
       <p><a class="button button--secondary" href="https://www.fairlawnlibrary.org/children" target="_blank" rel="noopener noreferrer">查看官方儿童活动页</a></p>
     </div>
   </main>
-  <footer class="module-footer"><div class="shell note-box"><strong>只收录已确认年龄的项目。</strong> Registration、居民资格、年龄限制、季节日期和取消安排会变化；年龄未在官方来源中确认的活动不会先行加入。</div></footer>
+  <footer class="module-footer"><div class="shell note-box"><strong>年龄未知的当前活动也会保留。</strong> Registration、居民资格、年龄限制、时间、地点和取消安排会变化；官网没有公开的字段明确标记待确认，不做推测。</div></footer>
 
   <script>
     import { bindListState, clearListState, restoreListState } from '../lib/listState';
@@ -66,7 +66,7 @@ const eventCount = libraryEvents.length;
       cards.forEach((card) => card.hidden = !visible.includes(card));
       visible.sort(sorters[controls.sort.value]).forEach((card) => list.append(card));
       count.textContent = `显示 ${visible.length} / ${active.length} 个活动`;
-      total.textContent = `${active.length} 个已核实活动`;
+      total.textContent = `${active.length} 个当前活动`;
       empty.hidden = visible.length > 0;
     };
     restoreListState(controls);
