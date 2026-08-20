@@ -9,6 +9,7 @@ Compare nearby obstetricians by delivery-hospital context and keep a separate ge
 - Route: `/ob-gyn/`
 - Provider dataset: `src/data/ob-gyn.json`
 - External review-link directory: `src/data/obGynExternalProfiles.ts`
+- Hospital comparison component: `src/modules/ob-gyn/HospitalComparison.astro`
 - Parser: `parseObGynProviders` in `src/data/obGynSchema.mjs`
 - Type: `ObGynProvider` in `src/data/obGynTypes.ts`
 - Baseline: 35 unique physicians and 40 ranked placements
@@ -21,7 +22,9 @@ A physician who appears in both OB and GYN is stored once with multiple placemen
 
 ## Page behavior
 
-The four comparison groups are native collapsible `<details>` sections. Each section keeps a deterministic 1–10 family order. Search and Tier filters work across placements; active filters open sections containing matches. Complete reference content remains server-rendered without JavaScript.
+The first collapsible block is the Valley / Hackensack / Englewood hospital comparison. It keeps hospital-level rescue capacity, maternity/NICU evidence, public maternity metrics, room/comfort evidence, and trade-offs separate from physician scoring. Source dates must be shown when reporting periods differ; do not present noncontemporaneous maternity metrics as a precise head-to-head ranking.
+
+After the hospital comparison, the four physician comparison groups are native collapsible `<details>` sections. Each section keeps a deterministic 1–10 family order. Search and Tier filters work across physician placements; active filters open sections containing matches. Complete reference content remains server-rendered without JavaScript.
 
 Provider cards separate:
 
@@ -37,7 +40,7 @@ Provider cards separate:
 Every provider has three fixed outbound review/reference actions:
 
 1. **Official** — the health-system or practice source used for identity, scope, training, and current practice facts.
-2. **Healthgrades** — required for every provider. Prefer a direct doctor profile. If a direct profile slug cannot be reliably verified, use a Healthgrades group page that lists the doctor; a specialty-directory fallback is allowed only when neither direct nor group URL can be reliably confirmed. The page labels `profile`, `group`, and `directory` link scope instead of pretending every link is doctor-level.
+2. **Healthgrades** — required for every provider. Use a direct doctor profile only after the current URL has been verified. If a reliable direct profile cannot be confirmed, use a working local Healthgrades specialty-directory search fallback and label it as search/directory rather than doctor-level evidence. Do not guess provider or group slugs.
 3. **Google · office** — a Maps search for the physician/practice/location. Treat resulting ratings as office/practice experience unless the review scope clearly identifies the individual physician.
 
 Zocdoc and WebMD are optional and appear only when a reliable direct provider profile has been identified. Vitals and RateMDs are research supplements rather than fixed UI links.
@@ -47,6 +50,7 @@ Never combine Healthgrades, health-system patient surveys, Google, Zocdoc, WebMD
 ## Trust and maintenance
 
 - `confirmed-delivery`, `likely-delivery`, `affiliation-only`, and `unclear` are evidence labels, not quality grades.
+- Hospital comparison judgments are separate from physician scores. A higher-acuity hospital does not automatically make every affiliated physician a better choice.
 - Do not remove a reasonable candidate only because current delivery status, new-patient status, or insurance cannot be verified online; mark it for phone confirmation.
 - Premera status is not a screening gate. A specific member/network must be confirmed with Premera, the physician practice, and the delivery facility.
 - Do not claim a clean NJ license/discipline record unless the primary-source physician lookup was actually checked for that provider.
