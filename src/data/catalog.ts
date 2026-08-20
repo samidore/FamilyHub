@@ -16,7 +16,17 @@ export const libraryEvents = parseLibraryEvents(rawLibraryEvents) as LibraryEven
 export const pediatricDentists = parsePediatricDentists(rawPediatricDentists) as PediatricDentist[];
 export const adultDermatologists = parseAdultDermatologists(rawAdultDermatologists) as AdultDermatologist[];
 export const colonoscopySpecialists = parseColonoscopySpecialists(rawColonoscopySpecialists) as ColonoscopySpecialist[];
-export const obGynProviders = parseObGynProviders(rawObGynProviders) as ObGynProvider[];
+
+const obGynNameCorrections: Partial<Record<string, string>> = {
+  'emily-howell': 'Emily Ruth Howell, DO',
+  'zachary-merriam': 'Zachary Merriam, DO',
+  'sara-brescia': 'Sara Brescia, DO',
+};
+const parsedObGynProviders = parseObGynProviders(rawObGynProviders) as ObGynProvider[];
+export const obGynProviders = parsedObGynProviders.map((provider) => ({
+  ...provider,
+  name: obGynNameCorrections[provider.id] ?? provider.name,
+}));
 
 export const moduleRecords: Record<ModuleId, readonly unknown[]> = {
   'day-trips': dayTrips,
