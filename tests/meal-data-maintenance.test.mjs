@@ -97,9 +97,13 @@ test('legacy KB parsing validates records without requiring current active count
 });
 
 test('read-only maintenance helper inspects names, references, ordering, and validation', async () => {
+  const files = await readMealFiles();
+  const chickenRecipes = parse(files['recipe/chicken/index.yaml']).recipes;
+  const recipeOrder = await nextOrder('recipe', 'chicken');
   assert.equal((await inspect('chicken teriyaki'))[0].id, 'chicken-teriyaki-thighs');
   assert((await references('chicken-teriyaki-thighs')).some((hit) => hit.path === 'recipe/chicken/index.yaml'));
   assert.equal((await nextOrder('ingredient', 'chicken')).order % 10, 0);
-  assert.equal((await nextOrder('recipe', 'chicken')).after_id, 'hainanese-chicken-rice');
+  assert.equal(recipeOrder.after_id, chickenRecipes.at(-1));
+  assert.equal(recipeOrder.append_position, chickenRecipes.length + 1);
   assert.equal((await verifyItem('chicken-teriyaki-thighs')).valid, true);
 });
