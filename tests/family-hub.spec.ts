@@ -1,3 +1,4 @@
+import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 import { loadMealData } from '../scripts/load-meal-data.mjs';
 import { moduleRegistry } from '../src/config/modules';
@@ -6,6 +7,7 @@ const mealData = await loadMealData();
 const activeRecipeCount = mealData.recipes.length;
 const visibleIngredientCount = mealData.ingredients.filter((ingredient) => ingredient.visible).length;
 const visibleSectionCount = mealData.starterSections.length;
+const libraryEventCount = JSON.parse(await readFile(new URL('../src/data/library-events.json', import.meta.url), 'utf8')).length;
 
 async function inventoryItem(page: Page, id: string) {
   const row = page.locator(`[data-inventory-item="${id}"]`);
@@ -64,12 +66,16 @@ test('day-trip filters combine, persist in the URL, and clear', async ({ page })
   await expect(page).not.toHaveURL(/drive=/);
 });
 
-test('library, dentist, dermatologist, colonoscopy, and OB GYN domain filters work', async ({ page }) => {
+test('library scope and medical domain filters work', async ({ page }) => {
   await page.goto('library-activities/');
-  await page.getByText('更多筛选').click();
-  await page.getByLabel('活动类型').selectOption('story');
-  expect(await page.locator('[data-event]:visible').count()).toBeGreaterThan(0);
-  expect(await page.locator('[data-event]:visible').count()).toBeLessThan(18);
+  await expect(page.locator('#event-library')).toHaveCount(0);
+  await expect(page.locator('#event-sort option[value="library"]')).toHaveCount(0);
+  await expect(page.locator('[data-event]')).toHaveCount(libraryEventCount);
+  for (const card of await page.locator('[data-event]').all()) {
+    await expect(card).toContainText('Maurice M. Pine Library');
+    await expect(card).toContainText('Fair Lawn');
+  }
+  if (libraryEventCount === 0) await expect(page.locator('#event-empty')).toBeVisible();
 
   await page.goto('pediatric-dentists/');
   await page.getByText('更多筛选').click();
@@ -157,7 +163,7 @@ test('complete records remain available without JavaScript', async ({ browser })
   await page.goto('day-trips/');
   await expect(page.locator('[data-destination]')).toHaveCount(29);
   await page.goto('library-activities/');
-  await expect(page.locator('[data-event]')).toHaveCount(18);
+  await expect(page.locator('[data-event]')).toHaveCount(libraryEventCount);
   await page.goto('pediatric-dentists/');
   await expect(page.locator('[data-dentist]')).toHaveCount(10);
   await page.goto('adult-dermatologists/');
