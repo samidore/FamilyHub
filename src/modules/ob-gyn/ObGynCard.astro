@@ -12,10 +12,10 @@ const relationLabels: Record<string, string> = {
   unclear: 'Unclear',
 };
 const healthgradesKindLabels = {
-  profile: 'direct doctor profile',
-  group: 'practice / group page listing this doctor',
-  directory: 'specialty directory fallback; direct profile not reliably verified',
+  profile: 'direct doctor profile verified to open',
+  directory: `current ${p.location.split(',')[0]} OB/GYN directory; search this doctor by name`,
 } as const;
+const healthgradesButtonLabel = external.healthgradesLinkKind === 'profile' ? 'Healthgrades' : 'Healthgrades search';
 const scopeLabel = p.scopes.includes('ob') && p.scopes.includes('gyn') ? 'OB + GYN' : p.scopes.includes('ob') ? 'OB' : 'GYN';
 const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${p.name} ${p.practice} ${p.location}`)}`;
 const searchable = [p.name, p.practice, p.location, p.evidence, p.reviews, p.availability, ...p.strengths, ...p.checks].join(' ').toLocaleLowerCase();
@@ -57,7 +57,7 @@ const searchable = [p.name, p.practice, p.location, p.evidence, p.reviews, p.ava
 
     <div class="actions review-actions">
       <a class="button button--primary" href={p.officialUrl} target="_blank" rel="noopener noreferrer">Official</a>
-      <a class="button button--secondary" data-review-source="healthgrades" href={external.healthgradesUrl} target="_blank" rel="noopener noreferrer">Healthgrades</a>
+      <a class="button button--secondary" data-review-source="healthgrades" href={external.healthgradesUrl} target="_blank" rel="noopener noreferrer">{healthgradesButtonLabel}</a>
       <a class="button button--secondary" data-review-source="google" href={googleMapsUrl} target="_blank" rel="noopener noreferrer">Google · office</a>
       {external.zocdocUrl && <a class="button button--secondary" data-review-source="zocdoc" href={external.zocdocUrl} target="_blank" rel="noopener noreferrer">Zocdoc</a>}
       {external.webmdUrl && <a class="button button--secondary" data-review-source="webmd" href={external.webmdUrl} target="_blank" rel="noopener noreferrer">WebMD</a>}
