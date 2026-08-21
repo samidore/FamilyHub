@@ -5,7 +5,6 @@ name_zh: 姜葱炒猪肝
 name_en: Ginger-Scallion Pork Liver
 tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30]
 fit_score: 2
-notes: Standalone fallback; only pork-liver is required.
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids: [pork-liver]

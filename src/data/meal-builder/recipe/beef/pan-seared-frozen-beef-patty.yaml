@@ -5,7 +5,6 @@ name_zh: 香煎冷冻牛肉饼
 name_en: Pan-Seared Frozen Beef Patty
 tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, lunch-30, child-support-protein]
 fit_score: 3
-notes: Burger recipe仍保留；本记录专门解决无面包时的 standalone fallback。
 primary_role: protein
 main_protein_category: beef
 main_protein_ingredient_ids: [frozen-beef-patties]

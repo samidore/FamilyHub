@@ -5,7 +5,6 @@ name_zh: 清汤鱼丸 / 海鲜丸
 name_en: Clear Fish Ball or Assorted Seafood Ball Soup
 tags: [light-seasoning, non-spicy-base, simmered, stovetop-nonstick, lunch-30, processed]
 fit_score: 3
-notes: One shared standalone fallback for fish-balls and assorted-seafood-balls.
 primary_role: protein
 main_protein_category: shellfish
 main_protein_ingredient_ids: [fish-balls, assorted-seafood-balls]

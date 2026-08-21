@@ -64,6 +64,15 @@ test('vegetable-centered is an explicit Recipe tag', async () => {
   assert.equal(chicken?.vegetableCentered, false);
 });
 
+test('active Meal Builder records exclude retired metadata', async () => {
+  const files = await readMealFiles();
+  for (const [path, text] of Object.entries(files)) {
+    if (!path.startsWith('ingredients/') && !(path.startsWith('recipe/') && !path.endsWith('index.yaml'))) continue;
+    const record = parse(text);
+    for (const field of ['fit', 'evidence', 'notes']) assert.equal(field in record, false, `${path} retains ${field}`);
+  }
+});
+
 test('active capability tags are data-driven rather than count-gated', async () => {
   const files = await readMealFiles();
   const chicken = parse(files['ingredients/chicken.yaml']);

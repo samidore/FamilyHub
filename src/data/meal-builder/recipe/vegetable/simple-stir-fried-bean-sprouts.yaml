@@ -12,10 +12,6 @@ tags:
   - low-prep
   - vegetable-centered
 fit_score: 4
-notes: |-
-  Candidate Vegetable-centered route. Display ingredient remains generic 豆芽 rather than forcing mung-bean versus soybean-sprout inventory splits.
-
-  Cook basis: source-derived-household-adaptation. Omnivore's Cookbook supports a roughly 454 g bean-sprout batch and a short high-heat stir-fry; The Woks of Life supports thorough draining, high heat, and short cooking with bean sprouts. CDC guidance for children under 5 requires sprouts to be cooked until steaming hot. Oil and seasoning are reduced for the household-light base; not household-tested. Child acceptance is user-confirmed on 2026-08-19.
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []

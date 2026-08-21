@@ -5,7 +5,6 @@ name_zh: 卤肉盖头
 name_en: Braised Pork Belly Topping
 tags: [iron-pan-braise, non-spicy-base, braised, stovetop-nonstick, family-shared, advance-start]
 fit_score: 4
-notes: Standalone fallback; only thin-sliced-pork-belly is a hard inventory requirement.
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids: [thin-sliced-pork-belly]

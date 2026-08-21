@@ -5,7 +5,6 @@ name_zh: 卤鸡胗
 name_en: Soy-Braised Chicken Gizzards
 tags: [light-seasoning, non-spicy-base, braised, stovetop-nonstick, advance-start]
 fit_score: 3
-notes: Standalone fallback; only chicken-gizzards is required.
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids: [chicken-gizzards]

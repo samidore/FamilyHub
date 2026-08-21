@@ -13,7 +13,6 @@ tags:
   - soft-vegetable
   - vegetable-centered
 fit_score: 5
-notes: Child coverage is true because every listed one_of can be cut short and given a brief covered softening step for the child portion.
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []

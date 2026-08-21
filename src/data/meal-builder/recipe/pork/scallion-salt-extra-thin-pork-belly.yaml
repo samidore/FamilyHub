@@ -5,7 +5,6 @@ name_zh: 葱盐煎超薄五花肉
 name_en: Scallion-Salt Extra-Thin Pork Belly
 tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-wok, lunch-30]
 fit_score: 3
-notes: Standalone fallback; only extra-thin-sliced-pork-belly is required.
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids: [extra-thin-sliced-pork-belly]

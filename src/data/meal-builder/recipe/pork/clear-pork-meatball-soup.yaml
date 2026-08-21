@@ -5,7 +5,6 @@ name_zh: 清汤贡丸
 name_en: Clear Pork Meatball Soup
 tags: [light-seasoning, non-spicy-base, simmered, stovetop-nonstick, lunch-30, processed]
 fit_score: 3
-notes: Standalone fallback; only pork-meatballs is required.
 primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids: [pork-meatballs]

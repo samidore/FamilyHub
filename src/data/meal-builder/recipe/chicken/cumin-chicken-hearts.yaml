@@ -5,7 +5,6 @@ name_zh: 孜然鸡心
 name_en: Cumin Chicken Hearts
 tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-wok, lunch-30]
 fit_score: 3
-notes: Standalone fallback; only chicken-hearts is required.
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids: [chicken-hearts]

@@ -29,7 +29,6 @@ export interface MealDataRecipe extends MealRecipe {
   adultFinish: string;
   substitutions: string[];
   childTexture: string;
-  notes: string;
   vegetableCentered: boolean;
 }
 

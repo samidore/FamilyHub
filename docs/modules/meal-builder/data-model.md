@@ -66,7 +66,6 @@ name_zh: 照烧鸡腿
 name_en: Chicken Teriyaki Thighs
 tags: [family-shared, non-spicy-base]
 fit_score: 5
-notes: ''
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids: []

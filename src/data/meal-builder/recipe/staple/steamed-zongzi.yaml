@@ -10,10 +10,6 @@ tags:
   - low-active-time
   - minimal-cutting
 fit_score: 5
-notes: |-
-  使用现成粽子；不推断具体馅料或产品。
-
-  Cook basis: user-confirmed. 蒸制时间为用户确认的15分钟；尚未标记为 household-tested。
 primary_role: staple
 main_protein_category: none
 main_protein_ingredient_ids: []

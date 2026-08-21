@@ -5,7 +5,6 @@ name_zh: 清汤虾滑 / 鱼滑
 name_en: Clear Shrimp-Paste or Fish-Paste Soup
 tags: [light-seasoning, non-spicy-base, simmered, stovetop-nonstick, lunch-30, processed]
 fit_score: 3
-notes: One shared standalone fallback for shrimp-paste and fish-paste.
 primary_role: protein
 main_protein_category: shellfish
 main_protein_ingredient_ids: [shrimp-paste, fish-paste]

@@ -5,7 +5,6 @@ name_zh: 酱油焖鸡肝
 name_en: Soy-Braised Chicken Liver
 tags: [light-seasoning, non-spicy-base, braised, stovetop-nonstick, lunch-30, child-support-protein]
 fit_score: 3
-notes: Standalone fallback; only chicken-liver is required.
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids: [chicken-liver]

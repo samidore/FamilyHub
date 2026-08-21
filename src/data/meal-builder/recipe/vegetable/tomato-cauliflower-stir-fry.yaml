@@ -11,10 +11,6 @@ tags:
   - lunch-30
   - vegetable-centered
 fit_score: 4
-notes: |-
-  虽然含两种 Vegetable Ingredient，整盘仍按一个 Vegetable side 记 `vegetable: 1`。
-
-  Cook basis: source-derived-household-adaptation. 约3人家庭份；精确量为来源配方的算术缩放或明确标注的家庭标准化来源配方；尚未标记为 household-tested。
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []

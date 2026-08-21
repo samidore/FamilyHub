@@ -5,7 +5,6 @@ name_zh: 清炒苦瓜
 name_en: Simple Stir-Fried Bitter Melon
 tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, soft-vegetable]
 fit_score: 2
-notes: Low-priority ingredient, but still has a true standalone fallback.
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
