@@ -7,7 +7,6 @@ Family Hub is a mobile-first Astro site for recurring family decisions, includin
 - `src/config/modules.ts` — active modules, routes, categories, and navigation metadata.
 - `docs/modules/` — module documentation.
 - `docs/project/` — shared project rules.
-- `docs/archive/` — historical material.
 - `src/data/` — application data.
 
 Use code and structured data as the source of truth for dynamic state and counts.
