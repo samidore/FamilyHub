@@ -4,7 +4,7 @@ These rules apply to every public page. A page may have its own information arch
 
 ## Layout and interaction
 
-- Start with a narrow phone viewport and one-handed use. Verify at 375, 390, 430, 768, 1024, and 1440 CSS pixels.
+- Start with a narrow phone viewport and one-handed use. Verify at 375, 768, 1024, and 1440 CSS pixels.
 - Keep body text at least 18px, controls at least 17px, card titles in the 28–32px range, and interactive targets at least 48px.
 - Keep the home page a directory of working tools, not a dashboard. Use the shared header, back link, filter shell, result count, empty state, source link, and trust-note patterns.
 - Keep filters discoverable and collapsible where appropriate. Query state should be bookmarkable, clearing filters should recover an empty state, and list sorting must have a deterministic default.
