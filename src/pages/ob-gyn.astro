@@ -8,21 +8,23 @@ import { obGynProviders } from '../data/catalog';
 import type { ObGynSection } from '../data/obGynTypes';
 
 const sections: { id: ObGynSection; title: string; short: string; description: string }[] = [
-  { id: 'valley-ob', title: 'V · The Valley Hospital', short: 'Valley OB', description: '10 位 OB 候选。医院关系可为 likely delivery；未在线确认的接生关系保留并标明电话确认。' },
-  { id: 'hackensack-ob', title: 'H · Hackensack University Medical Center', short: 'Hackensack OB', description: '10 位 OB 候选。Academic Practice、laborist 和 affiliation-only 分开显示，不把 affiliation 自动当作本人接生。' },
-  { id: 'englewood-ob', title: 'E · Englewood Hospital', short: 'Englewood OB', description: '10 位 OB 候选。已明确“deliver babies”的 group 与仅有 network / affiliation 证据的医生分开标记。' },
-  { id: 'gyn', title: 'G · General Gynecology', short: 'GYN', description: '10 位普通 GYN 候选合并比较；同时做 OB 的医生保留 OB + GYN 标记。' },
+  { id: 'valley-ob', title: 'V · The Valley Hospital', short: 'Valley OB', description: 'OB 候选。医院关系可为 likely delivery；未在线确认的接生关系保留并标明电话确认。' },
+  { id: 'hackensack-ob', title: 'H · Hackensack University Medical Center', short: 'Hackensack OB', description: 'OB 候选。Academic Practice、laborist 和 affiliation-only 分开显示，不把 affiliation 自动当作本人接生。' },
+  { id: 'englewood-ob', title: 'E · Englewood Hospital', short: 'Englewood OB', description: 'OB 候选。已明确“deliver babies”的 group 与仅有 network / affiliation 证据的医生分开标记。' },
+  { id: 'gyn', title: 'G · General Gynecology', short: 'GYN', description: '普通 GYN 候选合并比较；同时做 OB 的医生保留 OB + GYN 标记。' },
 ];
 
 const placements = obGynProviders.flatMap((provider) => provider.placements.map((placement) => ({ provider, placement })));
 const recordsFor = (section: ObGynSection) => placements.filter((item) => item.placement.section === section).sort((a, b) => a.placement.rank - b.placement.rank);
+const sectionCount = (section: ObGynSection) => recordsFor(section).length;
+const headerDescription = `OB 按 Valley ${sectionCount('valley-ob')} 位、Hackensack ${sectionCount('hackensack-ob')} 位、Englewood ${sectionCount('englewood-ob')} 位；普通 GYN 合并 ${sectionCount('gyn')} 位。医院 affiliation 可以进入候选，查不到当前接生关系不淘汰，只标为需要电话确认。家庭筛选分与 Tier 只是比较顺序，不是医疗质量评级。`;
 ---
 <BaseLayout title="OB / GYN · Valley / Hackensack / Englewood | Family Hub" description="按医院接生关系、公开资格与训练、患者体验、实际可用性和证据缺口比较附近 OB 与普通 GYN。" pageClass="module-page theme-ochre" themeColor="#F4EDE0">
-  <SiteHeader eyebrow="健康与照护 · 公开资料比较" title="OB / GYN · V / H / E" description="OB 按 Valley、Hackensack、Englewood 各保留 10 位；普通 GYN 合并 10 位。医院 affiliation 可以进入候选，查不到当前接生关系不淘汰，只标为需要电话确认。家庭筛选分与 Tier 只是比较顺序，不是医疗质量评级。" accent="ochre" icon="care">
-    <div class="summary-row"><span>35 位去重医生</span><span>40 个比较席位</span><span>4 个可折叠医生区块</span><span>Premera / NJ safety 未猜测</span></div>
+  <SiteHeader eyebrow="健康与照护 · 公开资料比较" title="OB / GYN · V / H / E" description={headerDescription} accent="ochre" icon="care">
+    <div class="summary-row"><span>{obGynProviders.length} 位去重医生</span><span>{placements.length} 个比较席位</span><span>{sections.length} 个可折叠医生区块</span><span>Premera / NJ safety 未猜测</span></div>
   </SiteHeader>
 
-  <FilterShell accent="ochre" filterId="obgyn-filter-panel" countId="obgyn-count" clearId="obgyn-clear" countText="显示 40 / 40 个比较席位">
+  <FilterShell accent="ochre" filterId="obgyn-filter-panel" countId="obgyn-count" clearId="obgyn-clear" countText={`显示 ${placements.length} / ${placements.length} 个比较席位`}>
     <div slot="primary" class="filter-primary__grid">
       <label><span>搜索医生、practice、地点或证据</span><input id="obgyn-search" type="search" placeholder="Fair Lawn、high-risk、menopause…" autocomplete="off" /></label>
     </div>
@@ -44,8 +46,8 @@ const recordsFor = (section: ObGynSection) => placements.filter((item) => item.p
         <details class="provider-section" data-provider-section data-section={section.id}>
           <summary>
             <h2>
-              <span class="section-summary-copy"><span class="section-title">{section.title}</span><small>{section.description}</small></span>
-              <span class="section-count" data-section-count>10</span>
+              <span class="section-summary-copy"><span class="section-title">{section.title}</span><small>{sectionCount(section.id)} 位 {section.description}</small></span>
+              <span class="section-count" data-section-count>{sectionCount(section.id)}</span>
             </h2>
           </summary>
           <div class="section-grid">
