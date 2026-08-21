@@ -42,7 +42,7 @@ export const moduleRegistry = [
     route: '/library-activities/',
     categoryId: 'explore-play',
     title: 'Library Activities',
-    summary: 'Fair Lawn 当前儿童 library 活动；2 岁适龄优先，官网未公开年龄时明确标记待确认。',
+    summary: 'Fair Lawn 当前儿童 library 活动；按公开的 2024 Q3 基准做宽松年龄适配，明显偏大的才排除。',
     keywords: ['图书馆', '活动', '故事', '音乐', '手工', 'Fair Lawn', 'library', 'storytime', 'crafts', 'schedule'],
     itemLabel: '个活动',
     accent: 'lake',
