@@ -8,9 +8,9 @@ const days = [...new Set([...libraryEvents].sort((a, b) => a.dayOrder - b.dayOrd
 const ages = [...new Set(libraryEvents.map((event) => event.ageGroup))];
 const eventCount = libraryEvents.length;
 ---
-<BaseLayout title="Library Activities | Family Hub" description="查看 Fair Lawn 当前 library 儿童活动，并区分 2 岁适龄与年龄待确认状态。" pageClass="module-page theme-lake" themeColor="#E7F0F3">
-  <SiteHeader eyebrow="出行与玩乐 · Fair Lawn" title="Library Activities" description="只看 Maurice M. Pine Library 当前或即将举行的儿童活动；明确不适合 2 岁的排除，官网未公开年龄的保留并标记待确认。" accent="lake" icon="calendar">
-    <div class="summary-row"><span id="event-total">{eventCount} 个当前活动</span><span>Fair Lawn only</span><span>2 岁适龄优先</span></div>
+<BaseLayout title="Library Activities | Family Hub" description="查看 Fair Lawn 当前 library 儿童活动，并按公开的 2024 Q3 基准做实际年龄适配。" pageClass="module-page theme-lake" themeColor="#E7F0F3">
+  <SiteHeader eyebrow="出行与玩乐 · Fair Lawn" title="Library Activities" description="只看 Maurice M. Pine Library 当前或即将举行的儿童活动。家庭适配以 2024 Q3 出生为公开基准；年龄边界只差几个月不会硬排除，明显偏大才排除。" accent="lake" icon="calendar">
+    <div class="summary-row"><span id="event-total">{eventCount} 个当前活动</span><span>Fair Lawn only</span><span>2024 Q3 基准</span></div>
   </SiteHeader>
 
   <FilterShell accent="lake" filterId="event-filter-panel" countId="event-count" clearId="event-clear" countText={`显示 ${eventCount} / ${eventCount} 个活动`}>
@@ -20,7 +20,7 @@ const eventCount = libraryEvents.length;
     </div>
     <div slot="filters" class="contents">
       <label><span>星期</span><select id="event-day"><option value="">全部日期</option>{days.map((item) => <option value={item}>{item}</option>)}</select></label>
-      <label><span>年龄状态</span><select id="event-age"><option value="">全部年龄</option>{ages.map((item) => <option value={item}>{item}</option>)}</select></label>
+      <label><span>家庭适配</span><select id="event-age"><option value="">全部状态</option>{ages.map((item) => <option value={item}>{item}</option>)}</select></label>
       <label><span>活动类型</span><select id="event-type"><option value="">全部类型</option><option value="story">Storytime</option><option value="movement">音乐与运动</option><option value="craft">手工</option><option value="play">自由玩耍</option><option value="other">其他</option></select></label>
       <label><span>报名方式</span><select id="event-registration"><option value="">全部方式</option><option value="drop-in">无需预先报名 / 先到先得</option><option value="registration">需要报名或确认</option></select></label>
     </div>
@@ -33,7 +33,7 @@ const eventCount = libraryEvents.length;
       <p><a class="button button--secondary" href="https://www.fairlawnlibrary.org/children" target="_blank" rel="noopener noreferrer">查看官方儿童活动页</a></p>
     </div>
   </main>
-  <footer class="module-footer"><div class="shell note-box"><strong>年龄未知的当前活动也会保留。</strong> Registration、居民资格、年龄限制、时间、地点和取消安排会变化；官网没有公开的字段明确标记待确认，不做推测。</div></footer>
+  <footer class="module-footer"><div class="shell note-box"><strong>年龄是实际适配判断，不是出生证明 gate。</strong> 与当前年龄只差几个月的门槛不作为自动排除理由；只有明显偏大才排除。来源真正没写清的字段才单独标记未知。</div></footer>
 
   <script>
     import { bindListState, clearListState, restoreListState } from '../lib/listState';
