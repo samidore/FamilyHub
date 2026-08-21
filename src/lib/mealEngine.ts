@@ -202,7 +202,7 @@ export function rankCandidates(recipes: MealRecipe[], state: MealState, ingredie
   });
 }
 
-/** Keep selected Recipes, bindings, and add-ons coherent after any state change. */
+/** Keep selected Recipes and bindings coherent without letting the availability filter rewrite an existing selection. */
 export function reconcileMealState(input: Partial<MealState>, recipes: MealRecipe[], _ingredients: MealIngredient[] | Record<string, MealIngredient> = []): MealState {
   const state: MealState = { ...defaultMealState(), ...input, recipeIngredientBindings: { ...(input.recipeIngredientBindings ?? {}) } };
   const available = asSet(state.availableIngredientIds);
@@ -211,8 +211,13 @@ export function reconcileMealState(input: Partial<MealState>, recipes: MealRecip
   for (const id of [...new Set(state.selectedRecipeIds)]) {
     const recipe = recipes.find((item) => item.id === id);
     if (!recipe) continue;
-    const binding = bindRecipeIngredients(recipe, available, state.recipeIngredientBindings[id] ?? []);
-    if (!isFeasible(recipe, available, binding)) continue;
+    const existing = state.recipeIngredientBindings[id] ?? [];
+    const binding = recipe.requirements.map((requirement, index) => {
+      const prior = existing[index];
+      if (prior && requirement.anyOf.includes(prior)) return prior;
+      return requirement.anyOf.find((ingredientId) => available.has(ingredientId)) ?? null;
+    });
+    if (binding.some((value) => value === null)) continue;
     keptRecipes.push(id); bindings[id] = binding.filter((value): value is string => Boolean(value));
   }
   return { ...state, availableIngredientIds: [...available], selectedRecipeIds: keptRecipes, recipeIngredientBindings: bindings };
