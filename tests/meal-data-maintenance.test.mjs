@@ -3,7 +3,7 @@ import test from 'node:test';
 import { parse, stringify } from 'yaml';
 import { readMealFiles } from '../scripts/load-meal-data.mjs';
 import { inspect, nextOrder, references, verifyItem } from '../.agents/skills/manage-meal-data/scripts/meal-data.mjs';
-import { parseMealFiles, parseMealKb } from '../src/data/mealParser.mjs';
+import { parseMealFiles } from '../src/data/mealParser.mjs';
 
 const recipePath = 'recipe/chicken/chicken-teriyaki-thighs.yaml';
 
@@ -85,15 +85,6 @@ test('archived tagged records do not change active easy-braise or iron-pan membe
   const ironPanIds = (value) => value.recipes.filter((item) => item.tags.includes('iron-pan-braise')).map((item) => item.id).sort();
   assert.deepEqual(easyBraiseIds(data), easyBraiseIds(before));
   assert.deepEqual(ironPanIds(data), ironPanIds(before));
-});
-
-test('legacy KB parsing validates records without requiring current active counts', async () => {
-  const files = await readMealFiles();
-  const ingredient = parse(files['ingredients/chicken.yaml']).ingredients[0];
-  const recipe = parse(files[recipePath]);
-  recipe.ingredients = []; recipe.tags = [];
-  const text = `---\nkb_version: 1\nlast_updated: '2026-08-14'\n---\n\`\`\`yaml\nstarter_sections:\n  - id: ${ingredient.starter.section}\n    label_zh: 测试\n    label_en: Test\n    order: 1\n    visible: true\n\`\`\`\n\`\`\`yaml\n${stringify(ingredient)}\`\`\`\n\`\`\`yaml\n${stringify(recipe)}\`\`\``;
-  assert.equal(parseMealKb(text).recipes.length, 1);
 });
 
 test('read-only maintenance helper inspects names, references, ordering, and validation', async () => {

@@ -7,13 +7,42 @@ const mealData = await loadMealData();
 const activeRecipeCount = mealData.recipes.length;
 const visibleIngredientCount = mealData.ingredients.filter((ingredient) => ingredient.visible).length;
 const visibleSectionCount = mealData.starterSections.length;
+
 const dayTripData = JSON.parse(await readFile(new URL('../src/data/day-trips.json', import.meta.url), 'utf8')) as Array<{ name: string; location: string; driveMinutes: number; distanceMiles?: number | null }>;
 const dayTripCount = dayTripData.length;
 const within20DayTripCount = dayTripData.filter((trip) => trip.driveMinutes <= 20).length;
 const mcfaulData = dayTripData.find((trip) => trip.name === 'J.A. McFaul Environmental Center');
 if (!mcfaulData) throw new Error('J.A. McFaul Environmental Center is missing from Day Trips data');
 const mcfaulDriveText = `${mcfaulData.location} · ${mcfaulData.driveMinutes} 分钟${mcfaulData.distanceMiles != null ? ` · ${mcfaulData.distanceMiles} miles` : ''}`;
+
 const libraryEventCount = JSON.parse(await readFile(new URL('../src/data/library-events.json', import.meta.url), 'utf8')).length;
+
+const pediatricDentistData = JSON.parse(await readFile(new URL('../src/data/pediatric-dentists.json', import.meta.url), 'utf8')) as Array<{ tier: number }>;
+const pediatricDentistCount = pediatricDentistData.length;
+const tierOneDentistCount = pediatricDentistData.filter((item) => item.tier === 1).length;
+
+const dermatologistData = JSON.parse(await readFile(new URL('../src/data/adult-dermatologists.json', import.meta.url), 'utf8')) as Array<{
+  locationScope: string;
+  capabilities: string[];
+  evidenceBands: { perianalDermatitisFit: string };
+}>;
+const dermatologistCount = dermatologistData.length;
+const strongDermatologistCount = dermatologistData.filter((item) => item.evidenceBands.perianalDermatitisFit === 'strong').length;
+const nycDermatologistCount = dermatologistData.filter((item) => item.locationScope === 'nyc').length;
+const nycPatchTestingCount = dermatologistData.filter((item) => item.locationScope === 'nyc' && item.capabilities.includes('patch-testing')).length;
+
+const colonoscopyData = JSON.parse(await readFile(new URL('../src/data/colonoscopy-specialists.json', import.meta.url), 'utf8')) as Array<{
+  evidenceBands: { complexPolypFit: string };
+  networkVerification: { facilityStatus: string };
+}>;
+const colonoscopyCount = colonoscopyData.length;
+const strongColonoscopyCount = colonoscopyData.filter((item) => item.evidenceBands.complexPolypFit === 'strong').length;
+const publiclySupportedColonoscopyCount = colonoscopyData.filter((item) => item.networkVerification.facilityStatus === 'publicly-supported').length;
+
+const obGynData = JSON.parse(await readFile(new URL('../src/data/ob-gyn.json', import.meta.url), 'utf8')) as Array<{ placements: Array<{ section: string }> }>;
+const obGynPlacementCount = obGynData.reduce((count, provider) => count + provider.placements.length, 0);
+const obGynSectionCount = (section: string) => obGynData.reduce((count, provider) => count + provider.placements.filter((placement) => placement.section === section).length, 0);
+const obGynSections = ['valley-ob', 'hackensack-ob', 'englewood-ob', 'gyn'] as const;
 
 async function inventoryItem(page: Page, id: string) {
   const row = page.locator(`[data-inventory-item="${id}"]`);
@@ -87,33 +116,32 @@ test('library scope and medical domain filters work', async ({ page }) => {
   await page.goto('pediatric-dentists/');
   await page.getByText('更多筛选').click();
   await page.getByLabel('家庭比较 Tier').selectOption('1');
-  expect(await page.locator('[data-dentist]:visible').count()).toBeGreaterThan(0);
-  expect(await page.locator('[data-dentist]:visible').count()).toBeLessThan(10);
+  await expect(page.locator('[data-dentist]:visible')).toHaveCount(tierOneDentistCount);
 
   await page.goto('adult-dermatologists/');
   await page.getByText('更多筛选').click();
   await page.locator('#dermatologist-fit').selectOption('strong');
-  expect(await page.locator('[data-dermatologist]:visible').count()).toBeGreaterThan(0);
-  expect(await page.locator('[data-dermatologist]:visible').count()).toBeLessThan(10);
+  await expect(page.locator('[data-dermatologist]:visible')).toHaveCount(strongDermatologistCount);
 
   await page.goto('colonoscopy-specialists/');
   await page.getByText('更多筛选').click();
   await page.getByLabel('复杂息肉能力').selectOption('strong');
-  expect(await page.locator('[data-colonoscopy]:visible').count()).toBeGreaterThan(0);
-  expect(await page.locator('[data-colonoscopy]:visible').count()).toBeLessThan(18);
+  await expect(page.locator('[data-colonoscopy]:visible')).toHaveCount(strongColonoscopyCount);
 
   await page.goto('ob-gyn/');
   await page.getByText('更多筛选').click();
   await page.getByLabel('区块').selectOption('hackensack-ob');
-  await expect(page.locator('[data-ob-gyn]:visible')).toHaveCount(10);
+  await expect(page.locator('[data-ob-gyn]:visible')).toHaveCount(obGynSectionCount('hackensack-ob'));
   await expect(page).toHaveURL(/section=hackensack-ob/);
 });
 
-test('OB GYN groups are collapsible and keep ten ranked placements each', async ({ page }) => {
+test('OB GYN groups are collapsible and keep complete ranked placements', async ({ page }) => {
   await page.goto('ob-gyn/');
   const sections = page.locator('[data-provider-section]');
-  await expect(sections).toHaveCount(4);
-  for (const section of await sections.all()) await expect(section.locator('[data-ob-gyn]')).toHaveCount(10);
+  await expect(sections).toHaveCount(obGynSections.length);
+  for (const section of obGynSections) {
+    await expect(page.locator(`[data-provider-section][data-section="${section}"] [data-ob-gyn]`)).toHaveCount(obGynSectionCount(section));
+  }
 
   const valley = page.locator('[data-provider-section][data-section="valley-ob"]');
   await expect(valley).not.toHaveAttribute('open', '');
@@ -132,23 +160,22 @@ test('dermatologist location and diagnostic-capability filters expose NYC altern
   await page.getByText('更多筛选').click();
   await page.locator('#dermatologist-location').selectOption('nyc');
   const nyc = page.locator('[data-dermatologist]:visible');
-  expect(await nyc.count()).toBeGreaterThanOrEqual(3);
-  expect(await nyc.count()).toBeLessThanOrEqual(5);
-  await expect(nyc.first()).toContainText('NYC 专科备选');
+  await expect(nyc).toHaveCount(nycDermatologistCount);
+  if (nycDermatologistCount > 0) await expect(nyc.first()).toContainText('NYC 专科备选');
   await page.locator('#dermatologist-capability').selectOption('patch-testing');
-  expect(await page.locator('[data-dermatologist]:visible').count()).toBeGreaterThan(0);
+  await expect(page.locator('[data-dermatologist]:visible')).toHaveCount(nycPatchTestingCount);
   await expect(page).toHaveURL(/capability=patch-testing/);
   await page.reload();
   await expect(page.locator('#dermatologist-location')).toHaveValue('nyc');
   await expect(page.locator('#dermatologist-capability')).toHaveValue('patch-testing');
   await page.locator('#dermatologist-clear').click();
-  await expect(page.locator('[data-dermatologist]:visible')).toHaveCount(10);
+  await expect(page.locator('[data-dermatologist]:visible')).toHaveCount(dermatologistCount);
   await expect(page).not.toHaveURL(/location=|capability=/);
 
   const cards = page.locator('[data-dermatologist]:visible');
   await page.locator('#dermatologist-sort').selectOption('drive');
   await expect(cards.first()).not.toHaveAttribute('data-drive-max', '999');
-  await expect(cards.last()).toHaveAttribute('data-drive-max', '999');
+  if (nycDermatologistCount > 0) await expect(cards.last()).toHaveAttribute('data-drive-max', '999');
   await page.locator('#dermatologist-sort').selectOption('rating');
   await expect(cards.first()).not.toHaveAttribute('data-primary-rating', '-1');
   await expect(cards.last()).toHaveAttribute('data-primary-rating', '-1');
@@ -158,7 +185,7 @@ test('colonoscopy network plan filter preserves candidates without private field
   await page.goto('colonoscopy-specialists/');
   await page.locator('.filter-disclosure summary').click();
   await page.getByLabel('Network evidence').selectOption('publicly-supported');
-  await expect(page.locator('[data-colonoscopy]:visible')).toHaveCount(13);
+  await expect(page.locator('[data-colonoscopy]:visible')).toHaveCount(publiclySupportedColonoscopyCount);
   await expect(page.getByText('BlueCard PPO').first()).toBeVisible();
   await expect(page.locator('body')).not.toContainText('groupNumber');
   await expect(page.locator('body')).not.toContainText('memberId');
@@ -172,13 +199,13 @@ test('complete records remain available without JavaScript', async ({ browser })
   await page.goto('library-activities/');
   await expect(page.locator('[data-event]')).toHaveCount(libraryEventCount);
   await page.goto('pediatric-dentists/');
-  await expect(page.locator('[data-dentist]')).toHaveCount(10);
+  await expect(page.locator('[data-dentist]')).toHaveCount(pediatricDentistCount);
   await page.goto('adult-dermatologists/');
-  await expect(page.locator('[data-dermatologist]')).toHaveCount(10);
+  await expect(page.locator('[data-dermatologist]')).toHaveCount(dermatologistCount);
   await page.goto('colonoscopy-specialists/');
-  await expect(page.locator('[data-colonoscopy]')).toHaveCount(18);
+  await expect(page.locator('[data-colonoscopy]')).toHaveCount(colonoscopyCount);
   await page.goto('ob-gyn/');
-  await expect(page.locator('[data-ob-gyn]')).toHaveCount(40);
+  await expect(page.locator('[data-ob-gyn]')).toHaveCount(obGynPlacementCount);
   await page.goto('meal-builder/');
   await expect(page.locator('[data-meal-recipe]')).toHaveCount(activeRecipeCount);
   await context.close();

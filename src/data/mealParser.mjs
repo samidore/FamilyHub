@@ -15,7 +15,7 @@ const INVENTORY_TRACKING = new Set(['counted', 'presence-only']);
 const ACTIVE_STATUSES = new Set(['candidate', 'approved']);
 const DETAIL_LEVELS = new Set(['discoverable', 'cookable', 'household-tested']);
 
-const assert = (condition, message) => { if (!condition) throw new Error(`Meal KB: ${message}`); };
+const assert = (condition, message) => { if (!condition) throw new Error(`Meal data: ${message}`); };
 const assertKeys = (record, allowed) => {
   const unknown = Object.keys(record ?? {}).filter((key) => !allowed.has(key));
   assert(!unknown.length, `${record?.id ?? record?.type ?? 'record'} has unknown fields: ${unknown.join(', ')}`);
@@ -26,18 +26,8 @@ const coverageValue = (value, label) => {
   return value;
 };
 
-export function parseMealKb(text) {
-  const frontmatter = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-  assert(frontmatter, 'frontmatter is missing');
-  const metadata = parseYaml(frontmatter[1]);
-  const blocks = [...text.matchAll(/```yaml\r?\n([\s\S]*?)```/g)].map((match) => parseYaml(match[1])).filter(Boolean);
-  const sectionBlock = blocks.find((block) => Array.isArray(block.starter_sections));
-  assert(sectionBlock, 'starter section registry is missing');
-  return parseMealRecords(metadata, sectionBlock.starter_sections, blocks.filter((block) => block.type === 'ingredient' && typeof block.id === 'string'), blocks.filter((block) => block.type === 'recipe' && typeof block.id === 'string'), false);
-}
-
 function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRecords, enforceCurrentContent = true) {
-  assert(typeof metadata.kb_version === 'number' || typeof metadata.kb_version === 'string', 'kb_version must be a number or string');
+  assert(typeof metadata.version === 'number' || typeof metadata.version === 'string', 'content version must be a number or string');
   assert(/^\d{4}-\d{2}-\d{2}$/.test(metadata.last_updated), 'last_updated must use YYYY-MM-DD');
   const starterSections = sectionRecords.map((section) => {
     assertKeys(section, SECTION_KEYS);
@@ -134,7 +124,7 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
   }
 
   return {
-    metadata: { version: String(metadata.kb_version), lastUpdated: String(metadata.last_updated) },
+    metadata: { version: String(metadata.version), lastUpdated: String(metadata.last_updated) },
     starterSections: starterSections.filter((section) => section.visible).sort((a, b) => a.order - b.order),
     ingredients: ingredients.sort((a, b) => a.order - b.order), recipes,
   };
@@ -227,7 +217,7 @@ export function parseMealFiles(files) {
     assert(!allIds.has(record.id), `archived ID conflicts with active ID ${record.id}`); allIds.add(record.id);
     (record.type === 'ingredient' ? archivedIngredients : archivedRecipes).push(record);
   }
-  const metadata = { kb_version: root.content_version, last_updated: root.last_updated };
+  const metadata = { version: root.content_version, last_updated: root.last_updated };
   const activeData = parseMealRecords(metadata, starterSections, ingredientRecords, recipeRecords);
   if (archivedIngredients.length || archivedRecipes.length) {
     parseMealRecords(metadata, starterSections, [...ingredientRecords, ...archivedIngredients], [...recipeRecords, ...archivedRecipes], false);
