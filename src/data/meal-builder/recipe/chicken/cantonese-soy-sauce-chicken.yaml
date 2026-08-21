@@ -10,21 +10,7 @@ tags:
   - stovetop-nonstick
   - advance-start
   - family-shared
-fit:
-  hard_rules: pass
-  score: 3
-  strengths:
-    - 可设计为全家共享基础口味。
-  tradeoffs:
-    - 需要提前启动或较长被动烹调时间。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 采用 The Woks of Life Soy Sauce Chicken 的4 lb整鸡与完整master sauce原方；家庭轻盐通过“成品少带卤汁/孩子份不淋浓汁”实现，而不擅自重写master sauce比例。
-  sources:
-    - Made With Lau — Soy Sauce Chicken
-    - "The Woks of Life — Soy Sauce Chicken: A Chinatown Classic — exact ingredient card and master-sauce method"
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 3
 notes: |-
   Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
 

@@ -10,21 +10,7 @@ tags:
   - stovetop-nonstick
   - advance-start
   - family-shared
-fit:
-  hard_rules: pass
-  score: 3
-  strengths:
-    - 可设计为全家共享基础口味。
-  tradeoffs:
-    - 需要提前启动或较长被动烹调时间。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 采用 The Woks of Life Hainan Chicken Rice 的1.5 kg整鸡原流程；米饭和两种不辣蘸汁按原方做1/2算术缩放。辣椒汁不进入家庭基础版本。
-  sources:
-    - The Woks of Life — Hainan Chicken and Rice
-    - The Woks of Life — Hainan Chicken Rice — exact chicken, rice and sauce ingredient cards/method
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 3
 notes: |-
   Rice is carried in the recipe; lower-frequency because whole-chicken workflow is larger.
 

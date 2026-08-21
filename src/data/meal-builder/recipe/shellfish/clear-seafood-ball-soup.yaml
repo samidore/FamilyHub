@@ -4,14 +4,7 @@ status: candidate
 name_zh: 清汤鱼丸 / 海鲜丸
 name_en: Clear Fish Ball or Assorted Seafood Ball Soup
 tags: [light-seasoning, non-spicy-base, simmered, stovetop-nonstick, lunch-30, processed]
-fit: { hard_rules: pass, score: 3, strengths: [鱼丸和综合海鲜丸共享清汤结构，一道 Recipe 覆盖两项。], tradeoffs: [弹性圆形丸子不计孩子软蛋白。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: The Woks of Life Fish Ball Soup supports a simple stock-and-fish-ball standalone dish; package directions control product-specific heating.
-  sources:
-    - The Woks of Life — Fish Ball Soup
-    - product package cooking directions
+fit_score: 3
 notes: One shared standalone fallback for fish-balls and assorted-seafood-balls.
 primary_role: protein
 main_protein_category: shellfish

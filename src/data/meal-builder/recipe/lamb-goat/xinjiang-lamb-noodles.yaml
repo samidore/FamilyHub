@@ -11,20 +11,7 @@ tags:
   - child-support-protein
   - two-vegetable-ready
   - adult-finish-separate
-fit:
-  hard_rules: pass
-  score: 3
-  strengths: []
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-    - 家庭版包含明确的受控改编，需首次实做后再校准。
-evidence:
-  level: inferred
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 葱爆羊肉成熟结构按家庭轻盐标准化。
-  sources:
-    - Omnivore’s Cookbook — Laghman / Xinjiang lamb noodles
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 3
 notes: |-
   Noodles are carried in recipe; two-vegetable structure.
 

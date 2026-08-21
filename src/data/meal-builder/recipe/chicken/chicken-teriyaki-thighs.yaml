@@ -11,22 +11,7 @@ tags:
   - stovetop-nonstick
   - lunch-30
   - family-shared
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-    - 临近上桌流程相对集中，便于与另一灶口并行。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. Just One Cookbook 经典照烧汁2:2:2:1结构，家庭基础锅不辣。
-  sources:
-    - Just One Cookbook — Chicken Teriyaki
-    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
 

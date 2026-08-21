@@ -1,12 +1,10 @@
 import { parse as parseYaml } from 'yaml';
 
-const INGREDIENT_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'starter', 'tags', 'child_coverage', 'inventory_tracking', 'fit', 'evidence', 'notes']);
-const RECIPE_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'tags', 'fit', 'evidence', 'notes', 'primary_role', 'main_protein_category', 'main_protein_ingredient_ids', 'supporting_protein_ingredient_ids', 'vegetable_ingredient_ids', 'meal_contribution', 'child_coverage', 'integral_staple_ingredient_ids', 'recommended_staple_ingredient_ids', 'active_minutes', 'meal_window_minutes', 'elapsed_minutes', 'advance_start_required', 'equipment', 'burner_plan', 'child_suitable', 'child_texture', 'spicy_in_base', 'deep_fried', 'salt_level', 'oil_level', 'servings', 'detail_level', 'ingredients', 'cook_ingredients', 'steps', 'child_serving', 'adult_finish', 'substitutions', 'checkout_units']);
+const INGREDIENT_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'starter', 'tags', 'child_coverage', 'inventory_tracking']);
+const RECIPE_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'tags', 'fit_score', 'notes', 'primary_role', 'main_protein_category', 'main_protein_ingredient_ids', 'supporting_protein_ingredient_ids', 'vegetable_ingredient_ids', 'meal_contribution', 'child_coverage', 'integral_staple_ingredient_ids', 'recommended_staple_ingredient_ids', 'active_minutes', 'meal_window_minutes', 'elapsed_minutes', 'advance_start_required', 'equipment', 'burner_plan', 'child_suitable', 'child_texture', 'spicy_in_base', 'deep_fried', 'salt_level', 'oil_level', 'servings', 'detail_level', 'ingredients', 'cook_ingredients', 'steps', 'child_serving', 'adult_finish', 'substitutions', 'checkout_units']);
 const CONTRIBUTIONS = new Set([0, 0.5, 1, 2]);
 const STARTER_KEYS = new Set(['visible', 'section', 'order']);
 const SECTION_KEYS = new Set(['id', 'label_zh', 'label_en', 'order', 'visible']);
-const FIT_KEYS = new Set(['hard_rules', 'score', 'strengths', 'tradeoffs']);
-const EVIDENCE_KEYS = new Set(['level', 'checked_on', 'scope', 'sources']);
 const CONTRIBUTION_KEYS = new Set(['protein', 'vegetable', 'staple']);
 const RECIPE_CHILD_KEYS = new Set(['protein', 'vegetable']);
 const INGREDIENT_CHILD_KEYS = new Set(['vegetable']);
@@ -46,7 +44,7 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
     assert(ACTIVE_STATUSES.has(record.status) || record.status === 'archived', `${record.id} has invalid status`);
     assert(!ingredientIds.has(record.id), `duplicate ingredient ID ${record.id}`);
     ingredientIds.add(record.id);
-    assertKeys(record.starter ?? {}, STARTER_KEYS); assertKeys(record.fit ?? {}, FIT_KEYS); assertKeys(record.evidence ?? {}, EVIDENCE_KEYS); assertKeys(record.child_coverage ?? {}, INGREDIENT_CHILD_KEYS);
+    assertKeys(record.starter ?? {}, STARTER_KEYS); assertKeys(record.child_coverage ?? {}, INGREDIENT_CHILD_KEYS);
     assert(INVENTORY_TRACKING.has(record.inventory_tracking), `${record.id} has invalid inventory_tracking`);
     assert(record.starter && typeof record.starter.visible === 'boolean', `${record.id} has invalid starter visibility`);
     assert(sectionIds.has(record.starter.section), `${record.id} has unknown starter section ${record.starter.section}`);
@@ -72,7 +70,8 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
     assert(ACTIVE_STATUSES.has(record.status) || record.status === 'archived', `${record.id} has invalid status`);
     assert(!recipeIds.has(record.id), `duplicate recipe ID ${record.id}`);
     recipeIds.add(record.id);
-    assertKeys(record.fit ?? {}, FIT_KEYS); assertKeys(record.evidence ?? {}, EVIDENCE_KEYS); assertKeys(record.meal_contribution ?? {}, CONTRIBUTION_KEYS); assertKeys(record.child_coverage ?? {}, RECIPE_CHILD_KEYS);
+    assert(Number.isInteger(record.fit_score) && record.fit_score >= 0 && record.fit_score <= 5, `${record.id} has invalid fit_score`);
+    assertKeys(record.meal_contribution ?? {}, CONTRIBUTION_KEYS); assertKeys(record.child_coverage ?? {}, RECIPE_CHILD_KEYS);
     for (const key of ['protein', 'vegetable', 'staple']) assert(CONTRIBUTIONS.has(record.meal_contribution?.[key]), `${record.id} has invalid ${key} contribution`);
     const childCoverage = { protein: coverageValue(record.child_coverage?.protein, `${record.id}.protein`), vegetable: coverageValue(record.child_coverage?.vegetable, `${record.id}.vegetable`) };
     assert(typeof record.advance_start_required === 'boolean', `${record.id} has invalid advance-start flag`);
@@ -103,13 +102,13 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
     }
     return {
       id: record.id, nameZh: String(record.name_zh), nameEn: String(record.name_en), tags: stringArray(record.tags), primaryRole: String(record.primary_role),
-      mainProteinCategory: String(record.main_protein_category ?? 'none'), fitScore: Number(record.fit?.score ?? 0), order,
+      mainProteinCategory: String(record.main_protein_category ?? 'none'), fitScore: Number(record.fit_score), order,
       contribution: { protein: Number(record.meal_contribution.protein), vegetable: Number(record.meal_contribution.vegetable), staple: Number(record.meal_contribution.staple) },
       childCoverage, requirements, cookIngredientLines: stringArray(record.cook_ingredients),
       checkoutUnits,
       ingredientChildCoverage: Object.fromEntries(requirements.flatMap((requirement) => requirement.anyOf).map((id) => [id, ingredients.find((item) => item.id === id)?.childCoverage?.vegetable ?? 'unknown'])),
       activeMinutes: String(record.active_minutes ?? ''), mealWindowMinutes: String(record.meal_window_minutes ?? ''), elapsedMinutes: String(record.elapsed_minutes ?? ''), advanceStartRequired: record.advance_start_required,
-      equipment: stringArray(record.equipment), detailLevel: String(record.detail_level), steps: stringArray(record.steps), childServing: String(record.child_serving ?? ''), adultFinish: String(record.adult_finish ?? ''), substitutions: stringArray(record.substitutions), childTexture: String(record.child_texture ?? ''), notes: String(record.notes ?? ''), vegetableCentered: stringArray(record.evidence?.sources).some((source) => /^V\d{2}\s*[—-]/.test(source)),
+      equipment: stringArray(record.equipment), detailLevel: String(record.detail_level), steps: stringArray(record.steps), childServing: String(record.child_serving ?? ''), adultFinish: String(record.adult_finish ?? ''), substitutions: stringArray(record.substitutions), childTexture: String(record.child_texture ?? ''), notes: String(record.notes ?? ''), vegetableCentered: stringArray(record.tags).includes('vegetable-centered'),
     };
   });
   if (enforceCurrentContent) {
@@ -152,7 +151,7 @@ export function parseMealFiles(files) {
   assert(paths.every((path) => pathIsSafe(path)), 'meal data contains an invalid path');
   const root = yamlFile(files, 'index.yaml');
   assertKeys(root, ROOT_KEYS);
-  assert(root.schema_version === 1, 'unsupported schema_version');
+  assert(root.schema_version === 2, 'unsupported schema_version');
   assert(typeof root.content_version === 'string' && root.content_version.length > 0, 'content_version must be a string');
   assert(/^\d{4}-\d{2}-\d{2}$/.test(root.last_updated), 'last_updated must use YYYY-MM-DD');
   assert(root.ingredients === 'ingredients/index.yaml' && root.recipes === 'recipe/index.yaml', 'root data indexes are invalid');

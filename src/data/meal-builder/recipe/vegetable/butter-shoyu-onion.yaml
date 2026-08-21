@@ -4,13 +4,7 @@ status: candidate
 name_zh: 黄油酱油洋葱
 name_en: Butter-Soy Onion
 tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, lunch-30, soft-vegetable]
-fit: { hard_rules: pass, score: 4, strengths: [洋葱单独即可做成柔软的黄油酱油小菜。], tradeoffs: [] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Onion slicing, softening endpoint, butter and soy proportions are a 1.5x arithmetic scale of Kurashiru's 200 g onion / 20 g butter / 2 tsp soy onion component. Enoki is intentionally omitted because it is not required for the standalone onion dish.
-  sources:
-    - Kurashiru — あと一品に えのきと玉ねぎのバター醤油炒め
+fit_score: 4
 notes: Standalone fallback; only onion is required. Child coverage depends on continuing the same pan-softening step until the onion is genuinely soft.
 primary_role: vegetable
 main_protein_category: none

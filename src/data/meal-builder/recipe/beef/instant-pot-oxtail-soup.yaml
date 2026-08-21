@@ -10,23 +10,7 @@ tags:
   - low-active-time
   - advance-start
   - family-shared
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-    - 主烹调设备可释放灶口。
-  tradeoffs:
-    - 需要提前启动或较长被动烹调时间。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 压力段采用 Omnivore’s Cookbook Instant Pot Oxtail Soup 的 High Pressure 45分钟 + 10分钟自然泄压；家庭版本去掉番茄/土豆/卷心菜等配料，保留清汤路线，因此这些删减不改变已核实的牛尾压力时间。
-  sources:
-    - Instant Pot official oxtail soup pressure-cooking references
-    - Omnivore’s Cookbook — Pressure Cooker Oxtail Soup (An Instant Pot Recipe) — High Pressure 45 min + 10 min natural release
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 4
 notes: |-
   Pressure-cooking route is supported; exact household pressure/release remains test data.
 

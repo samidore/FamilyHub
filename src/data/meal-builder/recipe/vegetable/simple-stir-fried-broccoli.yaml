@@ -3,21 +3,15 @@ type: recipe
 status: candidate
 name_zh: 清炒西兰花 / 花菜
 name_en: Simple Stir-Fried Broccoli or Cauliflower
-tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, soft-vegetable]
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 西兰花和花菜共享焯/炒到软熟的基础结构，避免重复 Recipe。
-    - 孩子份可正常多煮至软。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light vegetable stir-fry route.
-  sources:
-    - V02 — Made With Lau — Dad’s 10-Minute Weeknight Broccoli / Broccoli Stir Fry
-    - Made With Lau / The Woks of Life — vegetable stir-fry patterns
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-30
+  - soft-vegetable
+  - vegetable-centered
+fit_score: 5
 notes: Candidate Vegetable-centered route; cauliflower uses the same structure with slightly longer softening as needed.
 primary_role: vegetable
 main_protein_category: none

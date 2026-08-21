@@ -4,20 +4,7 @@ status: candidate
 name_zh: 家常豆腐家庭版
 name_en: Homestyle Tofu — Family Version
 tags: [iron-pan-braise, light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-45, child-support-protein, adult-finish-separate]
-fit:
-  hard_rules: pass
-  score: 3
-  strengths:
-    - 豆腐经汁焖后可保持柔软，孩子份可正常从同一道菜中分出。
-  tradeoffs:
-    - 家庭版包含受控改编，需首次实做后再校准。
-evidence:
-  level: inferred
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route.
-  sources:
-    - The Woks of Life — Home Style Tofu; household family version removes chili-heavy base and lowers oil
-    - Made With Lau / The Woks of Life / Just One Cookbook — tofu recipes listed in the source KB
+fit_score: 3
 notes: Family adaptation preserves home-style tofu stir-fry structure but not a chili-heavy or deep-fried route.
 primary_role: mixed
 main_protein_category: tofu

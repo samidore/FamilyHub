@@ -12,21 +12,8 @@ tags:
   - family-shared
   - soft-protein
   - soft-vegetable
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
-    - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. Omnivore’s Cookbook spinach-and-egg structure；菠菜按家庭已确认去草酸 workflow 先焯水弃水。
-  sources:
-    - V08 — Omnivore’s Cookbook — Spinach and Egg Stir Fry
-    - Made With Lau / The Woks of Life — Chinese steamed eggs / tomato eggs / egg drop soup
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+  - vegetable-centered
+fit_score: 5
 notes: |-
   Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook calibration.
 

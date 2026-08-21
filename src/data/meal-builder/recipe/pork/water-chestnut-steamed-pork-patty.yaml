@@ -10,21 +10,7 @@ tags:
   - stovetop-nonstick
   - lunch-45
   - family-shared
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 蒸肉饼结构按现有可靠来源标准化；家庭加入马蹄并控制盐油。
-  sources:
-    - Bon Appétit — Chinese Steamed Pork Patty
-    - Made With Lau / The Woks of Life — Chinese steaming recipes
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
 

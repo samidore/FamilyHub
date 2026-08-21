@@ -10,20 +10,7 @@ tags:
   - stovetop-nonstick
   - lunch-30
   - family-shared
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 家庭嫩豆腐清汤/荠菜豆腐羹标准化。
-  sources:
-    - Made With Lau — tofu soup patterns; household soft-tofu soup simplified
-    - Made With Lau / The Woks of Life / Just One Cookbook — tofu recipes listed in the source KB
+fit_score: 5
 notes: |-
   Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
 

@@ -9,21 +9,7 @@ tags:
   - roasted
   - oven
   - child-support-protein
-fit:
-  hard_rules: pass
-  score: 2
-  strengths:
-    - 主烹调设备可释放灶口。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-    - 已在 brainstorm 中标为低优先度/低频。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 烤Panko生蚝成熟结构，明确为烤制而非油炸。
-  sources:
-    - Taste of Home / Mediterranean Dish — oven-baked breadcrumb oysters
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 2
 notes: |-
   Low priority.
 

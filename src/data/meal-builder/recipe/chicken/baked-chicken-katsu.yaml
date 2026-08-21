@@ -9,21 +9,7 @@ tags:
   - roasted
   - oven
   - family-shared
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-    - 主烹调设备可释放灶口。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 日式 chicken katsu 的粉—蛋—Panko结构改为烤箱路线，不油炸。
-  sources:
-    - Just One Cookbook — Baked Chicken Katsu
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 4
 notes: |-
   Baked route preserves katsu identity without violating the no-deep-fry rule.
 

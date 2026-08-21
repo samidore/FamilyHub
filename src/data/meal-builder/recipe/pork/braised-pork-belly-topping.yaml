@@ -4,12 +4,7 @@ status: candidate
 name_zh: 卤肉盖头
 name_en: Braised Pork Belly Topping
 tags: [iron-pan-braise, non-spicy-base, braised, stovetop-nonstick, family-shared, advance-start]
-fit: { hard_rules: pass, score: 4, strengths: [薄切五花肉单独即可做成卤肉盖头。], tradeoffs: [总耗时较长。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Technique and exact base ratios follow The Woks of Life Lu Rou Fan; thin-sliced pork belly is cut into short strips and uses the same low braise until fall-apart tender. Onion, mushroom, egg and spice packet are optional text ingredients and do not block availability.
-  sources: [The Woks of Life — Lu Rou Fan (Taiwanese Braised Pork Rice Bowl)]
+fit_score: 4
 notes: Standalone fallback; only thin-sliced-pork-belly is a hard inventory requirement.
 primary_role: protein
 main_protein_category: pork

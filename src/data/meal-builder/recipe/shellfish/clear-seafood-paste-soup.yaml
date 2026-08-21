@@ -4,14 +4,7 @@ status: candidate
 name_zh: 清汤虾滑 / 鱼滑
 name_en: Clear Shrimp-Paste or Fish-Paste Soup
 tags: [light-seasoning, non-spicy-base, simmered, stovetop-nonstick, lunch-30, processed]
-fit: { hard_rules: pass, score: 3, strengths: [虾滑和鱼滑共享清汤下丸结构，一道 Recipe 覆盖两项。], tradeoffs: [成形后通常有弹性，不计孩子软蛋白。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Clear-soup poaching structure is adapted from the source-backed fish-ball soup pattern; product package directions control any brand-specific heating requirement.
-  sources:
-    - The Woks of Life — Fish Ball Soup
-    - product package cooking directions
+fit_score: 3
 notes: One shared standalone fallback for shrimp-paste and fish-paste.
 primary_role: protein
 main_protein_category: shellfish

@@ -3,21 +3,16 @@ type: recipe
 status: candidate
 name_zh: 清炒叶菜
 name_en: Simple Stir-Fried Leafy Greens
-tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, low-prep, soft-vegetable]
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 一套清炒结构覆盖适合快速炒软的常见叶菜。
-    - 孩子份可正常切短并单独多焖至软，不需要另做一道菜。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Existing V01 vegetable stir-fry structure retained; mustard greens added using The Woks of Life mustard-greens method. Child coverage reflects normal extra-soft child portion, not current preference.
-  sources:
-    - V01 — Made With Lau — Choy Sum with Garlic; The Woks of Life — Bok Choy / Pea Tips stir-fry patterns
-    - The Woks of Life — Stir-fried Chinese Mustard Greens
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-30
+  - low-prep
+  - soft-vegetable
+  - vegetable-centered
+fit_score: 5
 notes: Child coverage is true because every listed one_of can be cut short and given a brief covered softening step for the child portion.
 primary_role: vegetable
 main_protein_category: none

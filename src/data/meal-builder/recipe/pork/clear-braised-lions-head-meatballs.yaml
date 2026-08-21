@@ -4,22 +4,7 @@ status: candidate
 name_zh: 清炖狮子头
 name_en: Clear-Braised Lion’s Head Meatballs
 tags: [light-seasoning, non-spicy-base, braised, stovetop-nonstick, advance-start, family-shared]
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 只要有猪绞肉就能成立；马蹄和青菜属于完整好吃版本的配料，不阻挡 availability。
-  tradeoffs:
-    - 需要提前启动或较长被动烹调时间。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 肉馅比例源自 The Woks of Life Lion’s Head；家庭 route 明确不油炸，改为清汤轻煨，因此不声称是来源原法。
-  sources:
-    - The Woks of Life — Lion’s Head Meatballs; 下厨房 — 清炖狮子头
-    - The Woks of Life — Chinese winter melon / rib / clear soup recipes
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 4
 notes: |-
   Clear-braised route avoids deep-frying. 马蹄和青菜保留在 Cook View 的推荐完整做法中，但不是系统 availability 的硬条件。
 primary_role: protein

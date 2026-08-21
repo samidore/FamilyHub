@@ -4,12 +4,7 @@ status: candidate
 name_zh: 清炒莴笋
 name_en: Simple Stir-Fried Celtuce
 tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30]
-fit: { hard_rules: pass, score: 2, strengths: [莴笋无需木耳等其他库存也能单独成菜。], tradeoffs: [家庭低优先度；本菜目标保留轻脆口感。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Peel, 1/8-inch slicing and clear-sauce stir-fry structure follow The Woks of Life celtuce stir-fry; wood ear and pepper are omitted rather than required.
-  sources: [The Woks of Life — Stir-fried Celtuce with Wood Ear Mushrooms]
+fit_score: 2
 notes: Standalone fallback; only celtuce is required.
 primary_role: vegetable
 main_protein_category: none

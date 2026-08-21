@@ -10,21 +10,6 @@ ingredients:
       section: beef
       order: 10
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: sliced-beef-brisket
     type: ingredient
     inventory_tracking: counted
@@ -36,21 +21,6 @@ ingredients:
       section: beef
       order: 20
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: hot-pot-beef-slices
     type: ingredient
     inventory_tracking: counted
@@ -62,21 +32,6 @@ ingredients:
       section: beef
       order: 30
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: beef-shank
     type: ingredient
     inventory_tracking: counted
@@ -88,21 +43,6 @@ ingredients:
       section: beef
       order: 40
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: chuck-roast
     type: ingredient
     inventory_tracking: counted
@@ -114,21 +54,6 @@ ingredients:
       section: beef
       order: 50
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: oxtail
     type: ingredient
     inventory_tracking: counted
@@ -140,21 +65,6 @@ ingredients:
       section: beef
       order: 60
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: cross-cut-beef-short-ribs
     type: ingredient
     inventory_tracking: counted
@@ -166,21 +76,6 @@ ingredients:
       section: beef
       order: 70
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: ground-beef
     type: ingredient
     inventory_tracking: counted
@@ -192,21 +87,6 @@ ingredients:
       section: beef
       order: 80
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: frozen-beef-patties
     type: ingredient
     inventory_tracking: counted
@@ -220,21 +100,6 @@ ingredients:
     tags:
       - processed
       - frozen
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: beef-rib-fingers
     type: ingredient
     inventory_tracking: counted
@@ -247,22 +112,6 @@ ingredients:
       order: 100
     tags:
       - low-priority
-    fit:
-      hard_rules: pass
-      score: 2
-      strengths:
-        - 保留为可用候选，特定场景仍有价值。
-      tradeoffs:
-        - 用户已明确降低优先度或使用频率。
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 用户已明确降为低优先度。
   - id: flat-iron-steak
     type: ingredient
     inventory_tracking: counted
@@ -274,21 +123,6 @@ ingredients:
       section: beef
       order: 110
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: denver-steak
     type: ingredient
     inventory_tracking: counted
@@ -300,21 +134,6 @@ ingredients:
       section: beef
       order: 120
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: boneless-beef-short-ribs
     type: ingredient
     inventory_tracking: counted
@@ -326,21 +145,6 @@ ingredients:
       section: beef
       order: 130
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: beef-steak
     type: ingredient
     inventory_tracking: counted
@@ -352,18 +156,3 @@ ingredients:
       section: beef
       order: 140
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""

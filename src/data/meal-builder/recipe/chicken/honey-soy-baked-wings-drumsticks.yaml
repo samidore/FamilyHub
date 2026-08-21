@@ -9,21 +9,7 @@ tags:
   - roasted
   - oven
   - family-shared
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-    - 主烹调设备可释放灶口。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 家庭烤制蜂蜜酱油标准化；用分装刷汁避免生熟交叉污染。
-  sources:
-    - The Woks of Life — baked chicken wings
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 4
 notes: |-
   Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
 

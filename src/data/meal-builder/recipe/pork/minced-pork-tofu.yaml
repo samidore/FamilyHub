@@ -11,22 +11,7 @@ tags:
   - stovetop-nonstick
   - lunch-30
   - family-shared
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-  tradeoffs:
-    - 家庭版包含明确的受控改编，需首次实做后再校准。
-evidence:
-  level: inferred
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 本菜为家庭清淡肉末豆腐；旧 KB 的麻婆豆腐来源仅证明结构，不作为调味来源。Cook View 使用项目中式家庭轻盐标准汁。
-  sources:
-    - Made With Lau — Mapo Tofu with Pork; used only to verify ground-pork + soft-tofu structure, with chili/bean-sauce identity not carried into household 肉末豆腐
-    - Made With Lau / The Woks of Life / Just One Cookbook — tofu recipes listed in the source KB
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Main category remains pork; soft tofu is supporting protein. This is a mild household adaptation, not Mapo Tofu.
 

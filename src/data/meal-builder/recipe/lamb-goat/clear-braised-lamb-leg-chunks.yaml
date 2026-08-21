@@ -4,14 +4,7 @@ status: candidate
 name_zh: 清炖羊腿肉
 name_en: Clear-Braised Lamb Leg Chunks
 tags: [light-seasoning, non-spicy-base, simmered, stovetop-nonstick, advance-start, family-shared, child-support-protein]
-fit: { hard_rules: pass, score: 4, strengths: [羊腿肉块可不依赖白萝卜等库存，直接清炖到软。], tradeoffs: [总耗时较长。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Clear Chinese lamb soup proportions and roughly one-hour gentle simmer are supported by published Mongolian-style/Chinese lamb soup references; household route omits optional vegetables.
-  sources:
-    - China Daily — Mongolian lamb soup
-    - DayDayCook — Warming Lamb Soup
+fit_score: 4
 notes: Standalone fallback; only lamb-leg-chunks is a hard inventory requirement.
 primary_role: protein
 main_protein_category: lamb

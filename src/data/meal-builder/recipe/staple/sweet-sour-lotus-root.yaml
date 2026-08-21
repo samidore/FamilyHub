@@ -4,12 +4,7 @@ status: candidate
 name_zh: 糖醋藕片
 name_en: Sweet-and-Sour Lotus Root
 tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30]
-fit: { hard_rules: pass, score: 4, strengths: [莲藕有不依赖黑木耳等库存的独立主食路线。], tradeoffs: [糖醋藕片目标保留脆嫩口感。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Blanch, sweet-vinegar sauce and short wok finish follow published 糖醋藕片 recipes; household version uses the lighter exact 15 g sugar / 15 ml vinegar / 10 ml soy formula.
-  sources: [下厨房 — 糖醋藕片（糖15克、醋15ml、生抽10ml版本）; MiNDFOOD / Yang Liu — Sweet and Sour Lotus Root]
+fit_score: 4
 notes: Lotus root is treated as Staple by household Meal Builder classification.
 primary_role: staple
 main_protein_category: none

@@ -4,19 +4,7 @@ status: candidate
 name_zh: 煎三文鱼
 name_en: Pan-Seared Salmon
 tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, lunch-30, child-support-protein]
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 三文鱼即使表面煎香，内部仍可保持柔软湿润并作为孩子蛋白。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route.
-  sources:
-    - Just One Cookbook — Teriyaki Salmon and Miso Butter Salmon; variations under one pan-seared salmon record
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 4
 notes: Child coverage按实际软鱼肉判断，不以当前偏好作为硬条件。
 primary_role: protein
 main_protein_category: fish

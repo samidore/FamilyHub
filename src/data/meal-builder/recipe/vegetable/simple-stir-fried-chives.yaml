@@ -4,12 +4,7 @@ status: candidate
 name_zh: 清炒韭黄 / 韭菜
 name_en: Simple Stir-Fried Yellow or Garlic Chives
 tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30]
-fit: { hard_rules: pass, score: 4, strengths: [韭黄和韭菜共享极短时间快炒结构。], tradeoffs: [长纤维快炒菜不计孩子软蔬菜。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Chive cooking time and wilted endpoint follow The Woks of Life garlic/yellow chive stir-fry references; household version removes meat/tofu from hard requirements.
-  sources: [The Woks of Life — Spiced Tofu Stir-Fry with Garlic Chives; The Woks of Life — Stir-fried Chinese Yellow Chives with Pork]
+fit_score: 4
 notes: One shared Recipe for yellow-chives and garlic-chives.
 primary_role: vegetable
 main_protein_category: none

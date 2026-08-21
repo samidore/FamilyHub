@@ -10,21 +10,7 @@ tags:
   - advance-start
   - family-shared
   - two-vegetable-ready
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-  tradeoffs:
-    - 需要提前启动或较长被动烹调时间。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. The Woks of Life Xinjiang Lamb Rice 6人配方约半量标准化为家庭份。
-  sources:
-    - The Woks of Life — Xinjiang Lamb Rice
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 4
 notes: |-
   Rice carried in recipe.
 

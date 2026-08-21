@@ -10,22 +10,7 @@ tags:
   - stovetop-wok
   - lunch-45
   - family-shared
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-    - 临近上桌流程相对集中，便于与另一灶口并行。
-  tradeoffs: []
-evidence:
-  level: user-confirmed
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 使用来源验证的中式肉片炒法，统一成家庭轻盐标准汁；若旧记录有特定传统酱汁，则由专用 recipe override 替代。
-  sources:
-    - 下厨房 — 韭黄香干肉丝; plus user-confirmed household preference
-    - The Woks of Life — shredded-pork / pork-tofu stir-fry technique; normalized family-light sauce
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Household preference favors this dish. Observed household workflow is 30–45 min.
 

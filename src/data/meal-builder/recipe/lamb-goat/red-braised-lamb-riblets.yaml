@@ -4,14 +4,7 @@ status: candidate
 name_zh: 红烧羊肋排
 name_en: Red-Braised Lamb Riblets
 tags: [iron-pan-braise, light-seasoning, non-spicy-base, braised, stovetop-nonstick, advance-start, family-shared, child-support-protein]
-fit: { hard_rules: pass, score: 4, strengths: [羊肋排适合长炖红烧，能单独成菜。], tradeoffs: [孩子份必须由成人彻底拆骨。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Omnivore’s Cookbook Red Braised Lamb explicitly supports lamb ribs; exact household braising-liquid quantities reuse the already source-backed canonical red-braised-lamb record for the same 900 g batch. Chili remains outside the family base.
-  sources:
-    - Omnivore’s Cookbook — Red Braised Lamb
-    - src/data/meal-builder/recipe/lamb-goat/red-braised-lamb.yaml
+fit_score: 4
 notes: Standalone fallback; only lamb-riblets is required. The seasoning formula is deliberately reused rather than invented.
 primary_role: protein
 main_protein_category: lamb

@@ -4,12 +4,7 @@ status: candidate
 name_zh: 盐水毛豆仁
 name_en: Salted Shelled Edamame
 tags: [light-seasoning, non-spicy-base, simmered, stovetop-nonstick, lunch-30, frozen, soft-vegetable]
-fit: { hard_rules: pass, score: 4, strengths: [冷冻去壳毛豆可以直接煮成独立小菜。], tradeoffs: [不同商品可能已熟，时间必须先看包装。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Frozen edamame package state must be checked; boiling method and doneness guidance follow Just One Cookbook. Shelled beans are checked earlier than pods and package directions remain authoritative.
-  sources: [Just One Cookbook — How to Cook Edamame (Fresh and Frozen); product package directions]
+fit_score: 4
 notes: Standalone fallback; only frozen-shelled-edamame is required.
 primary_role: vegetable
 main_protein_category: none

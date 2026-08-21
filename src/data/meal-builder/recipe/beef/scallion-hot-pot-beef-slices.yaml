@@ -9,20 +9,7 @@ tags:
   - stir-fried
   - stovetop-wok
   - lunch-30
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 火锅牛肉片只配 pantry 葱姜也能独立成菜。
-  tradeoffs:
-    - 快炒牛肉通常仍有嚼劲，不计孩子软蛋白。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Sauce and high-heat sequence reuse the source-backed canonical scallion-beef-stir-fry; hot-pot slices require no additional inventory identity.
-  sources:
-    - The Woks of Life — Scallion Beef
-    - src/data/meal-builder/recipe/beef/scallion-beef-stir-fry.yaml
+fit_score: 4
 notes: Scallion is pantry display text and does not block availability.
 primary_role: protein
 main_protein_category: beef

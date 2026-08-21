@@ -11,19 +11,7 @@ tags:
   - stovetop-nonstick
   - lunch-45
   - child-support-protein
-fit:
-  hard_rules: pass
-  score: 3
-  strengths: []
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 来源传统版本含较多油；家庭 route 按已定规则改为少油煎封后焖，不深/浅炸。
-  sources:
-    - The Woks of Life — Braised Pork Chops, Shanghai-style
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 3
 notes: |-
   Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
 

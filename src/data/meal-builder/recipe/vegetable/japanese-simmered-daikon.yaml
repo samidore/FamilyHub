@@ -12,20 +12,8 @@ tags:
   - lunch-45
   - soft-vegetable
   - low-active-time
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
-    - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
-  tradeoffs: []
-evidence:
-  level: inferred
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. Just One Cookbook 日式萝卜煮物结构家庭轻盐化。
-  sources:
-    - V15 — Just One Cookbook — Japanese daikon simmering references (Buri Daikon / daikon soup patterns)
-    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
+  - vegetable-centered
+fit_score: 4
 notes: |-
   定义为清淡日式煮萝卜 household structure，不绑定鱼类或肉类。
 

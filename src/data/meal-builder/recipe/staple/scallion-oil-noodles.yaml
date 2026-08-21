@@ -9,20 +9,7 @@ tags:
   - stovetop-nonstick
   - lunch-30
   - child-support-protein
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-evidence:
-  level: user-confirmed
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. The Woks of Life 上海葱油拌面酱油/糖结构；按家庭已确认使用现成罐装葱油。
-  sources:
-    - The Woks of Life — Shanghai Scallion Oil Noodles; household uses ready-made canned scallion oil
-    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
+fit_score: 5
 notes: |-
   Household has ready-made canned scallion oil; do not model frying scallions from scratch.
 

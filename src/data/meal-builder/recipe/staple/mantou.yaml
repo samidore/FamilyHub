@@ -9,19 +9,7 @@ tags:
   - stovetop-nonstick
   - lunch-30
   - child-support-protein
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 本项目 `steamed-buns` 为现成馒头；Cook View 只写复热，不写从面粉制作。
-  sources:
-    - The Woks of Life — Mantou / steamed bun references; household uses existing ready-made `steamed-buns` ingredient
+fit_score: 5
 notes: |-
   Keep simply as 馒头; do not expand into homemade dough production.
 

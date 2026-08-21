@@ -10,21 +10,7 @@ tags:
   - low-active-time
   - lunch-45
   - family-shared
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-    - 主烹调设备可释放灶口。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 压力段采用家庭常用10–15分钟范围中的10分钟，并与官方 Instant Pot 鸡腿类似程序核对；不附 leafy finish add-on。
-  sources:
-    - Instant Pot official chicken-thigh pressure-cooking recipes; household soy route adaptation
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Exact household pressure/release/liquid parameters remain recipe-test data, not a reason to block the record.
 

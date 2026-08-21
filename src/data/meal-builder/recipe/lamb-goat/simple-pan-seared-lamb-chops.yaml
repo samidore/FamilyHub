@@ -4,20 +4,7 @@ status: candidate
 name_zh: 简单煎羊排
 name_en: Simple Pan-Seared Lamb Chops
 tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, lunch-45, child-support-protein]
-fit:
-  hard_rules: pass
-  score: 3
-  strengths:
-    - 带骨或无骨羊排都可走同一基础煎制结构。
-  tradeoffs:
-    - 整块煎羊排不作为孩子的稳定软蛋白。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 基础煎制流程按安全温度与家庭轻油原则标准化。
-  sources:
-    - RecipeTin Eats / RecipeTin Japan — pan-seared lamb-chop techniques
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 3
 notes: Candidate household route; not household-tested.
 primary_role: protein
 main_protein_category: lamb

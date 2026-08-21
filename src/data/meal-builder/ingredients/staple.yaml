@@ -10,21 +10,6 @@ ingredients:
       section: staple
       order: 10
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: noodles
     type: ingredient
     inventory_tracking: presence-only
@@ -36,21 +21,6 @@ ingredients:
       section: staple
       order: 20
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: potato
     type: ingredient
     inventory_tracking: presence-only
@@ -61,22 +31,8 @@ ingredients:
       visible: true
       section: staple
       order: 30
-    tags: [easy-braise-addon]
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 项目分类为 Staple，不按 Vegetable slot 计算。
+    tags:
+      - easy-braise-addon
   - id: sweet-potato
     type: ingredient
     inventory_tracking: counted
@@ -88,21 +44,6 @@ ingredients:
       section: staple
       order: 40
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 项目分类为 Staple，不按 Vegetable slot 计算。
   - id: taro
     type: ingredient
     inventory_tracking: counted
@@ -113,22 +54,8 @@ ingredients:
       visible: true
       section: staple
       order: 50
-    tags: [easy-braise-addon]
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 项目分类为 Staple，不按 Vegetable slot 计算。
+    tags:
+      - easy-braise-addon
   - id: lotus-root
     type: ingredient
     inventory_tracking: counted
@@ -140,21 +67,6 @@ ingredients:
       section: staple
       order: 60
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 项目分类为 Staple，不按 Vegetable slot 计算。
   - id: kabocha-squash
     type: ingredient
     inventory_tracking: counted
@@ -165,22 +77,8 @@ ingredients:
       visible: true
       section: staple
       order: 70
-    tags: [easy-braise-addon]
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 项目分类为 Staple，不按 Vegetable slot 计算。
+    tags:
+      - easy-braise-addon
   - id: corn
     type: ingredient
     inventory_tracking: counted
@@ -192,21 +90,6 @@ ingredients:
       section: staple
       order: 80
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 项目分类为 Staple，不按 Vegetable slot 计算。
   - id: bread
     type: ingredient
     inventory_tracking: presence-only
@@ -218,21 +101,6 @@ ingredients:
       section: staple
       order: 90
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: steamed-buns
     type: ingredient
     inventory_tracking: presence-only
@@ -244,21 +112,6 @@ ingredients:
       section: staple
       order: 100
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: oats
     type: ingredient
     inventory_tracking: presence-only
@@ -270,21 +123,6 @@ ingredients:
       section: staple
       order: 110
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: zongzi
     type: ingredient
     inventory_tracking: presence-only
@@ -296,16 +134,3 @@ ingredients:
       section: staple
       order: 120
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 用户确认可作为常备主食候选，并可用 Instant Pot 蒸制。
-      tradeoffs: []
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-13
-      scope: 用户确认 Ingredient 身份，以及蒸15分钟和可使用 Instant Pot 的家庭做法；未指定馅料、份量、产品或儿童接受度。
-      sources:
-        - User-confirmed household ingredient and steaming workflow
-    notes: 馅料未指定；作为 Staple 计算，不推断蛋白或蔬菜贡献。

@@ -10,21 +10,7 @@ tags:
   - stovetop-nonstick
   - lunch-30
   - family-shared
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 水蛋比例和分阶段蒸法来自 Made With Lau 蒸蛋/肉末蒸蛋资料；按家庭轻盐处理。
-  sources:
-    - PBS Food / Made With Lau — Chinese Steamed Eggs with Minced Pork
-    - Made With Lau / The Woks of Life — Chinese steamed eggs / tomato eggs / egg drop soup
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Main category is pork per finalized classification rule.
 

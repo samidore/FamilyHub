@@ -4,12 +4,7 @@ status: candidate
 name_zh: 酱油焖鸡肝
 name_en: Soy-Braised Chicken Liver
 tags: [light-seasoning, non-spicy-base, braised, stovetop-nonstick, lunch-30, child-support-protein]
-fit: { hard_rules: pass, score: 3, strengths: [鸡肝可在卤汁中短焖至熟并保持柔软。], tradeoffs: [] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Epicurious giblet guidance supports adding liver only for the final ~15 minutes of a red braise because it cooks faster; USDA poultry endpoint controls doneness.
-  sources: [Epicurious — Heart, Liver, Neck, and Gizzards: How to Cook Every Part of the Chicken; USDA FSIS — Safe Minimum Internal Temperature Chart]
+fit_score: 3
 notes: Standalone fallback; only chicken-liver is required.
 primary_role: protein
 main_protein_category: chicken

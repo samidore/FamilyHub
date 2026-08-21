@@ -11,22 +11,7 @@ tags:
   - stovetop-nonstick
   - advance-start
   - family-shared
-fit:
-  hard_rules: pass
-  score: 3
-  strengths:
-    - 可设计为全家共享基础口味。
-  tradeoffs:
-    - 需要提前启动或较长被动烹调时间。
-    - 家庭版包含明确的受控改编，需首次实做后再校准。
-evidence:
-  level: inferred
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 家庭轻盐红烧标准化来源配方；辣椒不进基础锅。
-  sources:
-    - Inferred goat adaptation from verified Chinese red-braised lamb/goat cooking patterns
-    - The Woks of Life — Hong Shao Rou / Red Braised Beef and related Chinese red-braise recipes
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 3
 notes: |-
   Goat remains in lamb main category.
 

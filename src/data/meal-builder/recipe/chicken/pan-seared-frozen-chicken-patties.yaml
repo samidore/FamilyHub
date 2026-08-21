@@ -4,12 +4,7 @@ status: candidate
 name_zh: 香煎冷冻鸡肉饼
 name_en: Pan-Seared Frozen Chicken Patties
 tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, lunch-30, processed]
-fit: { hard_rules: pass, score: 3, strengths: [冷冻鸡肉饼有不依赖其他库存的直接做法。], tradeoffs: [不同商品可能是生制或熟制，必须优先遵循包装。] }
-evidence:
-  level: government-standard
-  checked_on: 2026-08-19
-  scope: Package directions control product-specific method; 165°F/74°C is the USDA safe endpoint for poultry.
-  sources: [USDA FSIS — Safe Minimum Internal Temperature Chart; product package cooking directions]
+fit_score: 3
 notes: Do not assume a frozen chicken patty is pre-cooked.
 primary_role: protein
 main_protein_category: chicken

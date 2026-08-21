@@ -10,20 +10,7 @@ tags:
   - braised
   - stovetop-nonstick
   - family-shared
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 用户明确希望保留为羊肉末的独立家庭菜谱。
-    - 基础锅不辣、少油，并可作为 iron-pan-braise 顺手焖主菜。
-  tradeoffs: []
-evidence:
-  level: user-confirmed
-  checked_on: 2026-08-19
-  scope: Household dish, child-suitable base, and easy-braise capability are user-confirmed; ground-lamb safety endpoint verified against USDA FSIS. Binder and sauce are a household adaptation of existing Meal Builder meatball/red-braise techniques.
-  sources:
-    - User-confirmed Meal Builder requirement, 2026-08-19
-    - USDA FSIS — Lamb From Farm to Table
+fit_score: 4
 notes: Egg and cornstarch are Cook View ingredients only; they are not inventory requirements or tags.
 primary_role: protein
 main_protein_category: lamb

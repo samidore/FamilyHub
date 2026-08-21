@@ -10,22 +10,7 @@ tags:
   - stovetop-nonstick
   - lunch-30
   - family-shared
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-    - 临近上桌流程相对集中，便于与另一灶口并行。
-  tradeoffs:
-    - 家庭版包含明确的受控改编，需首次实做后再校准。
-evidence:
-  level: inferred
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 家庭葱姜酱油鸡胸标准化，中心温度控制防柴。
-  sources:
-    - Made With Lau — Easy Pan-Fried Chicken Breast
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
 

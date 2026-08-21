@@ -12,20 +12,7 @@ tags:
   - advance-start
   - family-shared
   - two-vegetable-ready
-fit:
-  hard_rules: pass
-  score: 3
-  strengths:
-    - 可设计为全家共享基础口味。
-  tradeoffs:
-    - 需要提前启动或较长被动烹调时间。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 按韩式 galbijjim 经典甜咸炖小排结构家庭轻盐化。
-  sources:
-    - Korean Bapsang — Galbijjim
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 3
 notes: |-
   Premium/lower-frequency route.
 

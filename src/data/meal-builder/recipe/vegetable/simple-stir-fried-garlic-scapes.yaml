@@ -4,12 +4,7 @@ status: candidate
 name_zh: 清炒蒜苔
 name_en: Simple Stir-Fried Garlic Scapes
 tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30]
-fit: { hard_rules: pass, score: 3, strengths: [蒜苔有不依赖肉类的 standalone 路线。], tradeoffs: [蒜苔容易纤维化，快炒不计孩子软蔬菜。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Trimming and stir-fry/covered-steam sequence follow The Woks of Life garlic-scapes recipe; pork and carrot are omitted rather than required.
-  sources: [The Woks of Life — Chinese Garlic Scapes Stir-fry with Pork]
+fit_score: 3
 notes: Buy only tender scapes that snap easily; discard woody base.
 primary_role: vegetable
 main_protein_category: none

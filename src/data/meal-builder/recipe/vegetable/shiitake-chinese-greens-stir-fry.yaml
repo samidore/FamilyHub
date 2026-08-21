@@ -9,20 +9,8 @@ tags:
   - stir-fried
   - stovetop-wok
   - lunch-30
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
-    - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 来源验证的中式蔬菜快炒结构，按家庭轻盐标准化；不把同一标准汁冒充为地方菜传统原方。
-  sources:
-    - V20 — The Woks of Life — Braised Chinese Mushrooms with Bok Choy / mushroom-greens pattern
-    - Made With Lau — vegetable stir-fry / broccoli / choy sum recipes; The Woks of Life vegetable stir-fry patterns
+  - vegetable-centered
+fit_score: 4
 notes: |-
   香菇 + 青菜整体仍按 `vegetable: 1`；不因两个 Vegetable Ingredient 自动变成 V2。
 

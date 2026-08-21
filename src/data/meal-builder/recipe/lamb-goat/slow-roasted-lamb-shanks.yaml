@@ -10,21 +10,7 @@ tags:
   - oven
   - advance-start
   - family-shared
-fit:
-  hard_rules: pass
-  score: 3
-  strengths:
-    - 可设计为全家共享基础口味。
-    - 主烹调设备可释放灶口。
-  tradeoffs:
-    - 需要提前启动或较长被动烹调时间。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 家庭基础烤制模板；特定腌料/裹粉菜由专用 override 覆盖。
-  sources:
-    - RecipeTin Eats — slow-cooked lamb shanks
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 3
 notes: |-
   Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
 

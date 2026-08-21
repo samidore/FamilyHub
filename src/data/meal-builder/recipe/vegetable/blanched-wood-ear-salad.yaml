@@ -4,12 +4,7 @@ status: candidate
 name_zh: 焯拌黑木耳
 name_en: Blanched Wood Ear Mushroom Salad
 tags: [light-seasoning, non-spicy-base, blanched, cold-dish, lunch-30, child-support-vegetable]
-fit: { hard_rules: pass, score: 4, strengths: [新鲜黑木耳可单独焯熟凉拌；孩子份延长煮并切小。], tradeoffs: [] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Dressing and required cooking step follow The Woks of Life Wood Ear Mushroom Salad. Source uses dried/reconstituted wood ears; fresh wood ears skip rehydration but are still fully cooked before serving.
-  sources: [The Woks of Life — Wood Ear Mushroom Salad 凉拌木耳]
+fit_score: 4
 notes: User explicitly confirmed wood ear can count for the child when cooked and cut appropriately.
 primary_role: vegetable
 main_protein_category: none

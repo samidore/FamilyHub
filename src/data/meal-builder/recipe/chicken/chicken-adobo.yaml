@@ -11,22 +11,7 @@ tags:
   - stovetop-nonstick
   - lunch-45
   - family-shared
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 采用菲律宾 Chicken Adobo 的醋/酱油/水/蒜/胡椒/月桂叶结构，并按约900 g家庭鸡肉批量算术缩放；基础锅不辣。
-  sources:
-    - RecipeTin Eats — Filipino Chicken Adobo
-    - Lemons + Anchovies — Filipino Chicken Adobo — measured vinegar/soy/water/garlic/pepper/bay-leaf formula
-    - Serious Eats — Filipino-Style Chicken Adobo — classic technique context
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 4
 notes: |-
   Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
 

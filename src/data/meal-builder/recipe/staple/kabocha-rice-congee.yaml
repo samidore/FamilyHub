@@ -8,19 +8,7 @@ tags:
   - non-spicy-base
   - stovetop-nonstick
   - child-support-protein
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 南瓜粥按家庭3人份标准化；水量明确为5 cups，并以最终稠度允许热水微调。
-  sources:
-    - Food & Wine — Kabocha Squash Congee (congee roundup)
+fit_score: 5
 notes: |-
   Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
 

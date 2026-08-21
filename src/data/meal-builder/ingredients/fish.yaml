@@ -10,21 +10,6 @@ ingredients:
       section: fish
       order: 10
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: chilean-sea-bass
     type: ingredient
     inventory_tracking: counted
@@ -36,21 +21,6 @@ ingredients:
       section: fish
       order: 20
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: live-freshwater-bass
     type: ingredient
     inventory_tracking: counted
@@ -62,21 +32,6 @@ ingredients:
       section: fish
       order: 30
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: branzino
     type: ingredient
     inventory_tracking: counted
@@ -88,21 +43,6 @@ ingredients:
       section: fish
       order: 40
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: sablefish
     type: ingredient
     inventory_tracking: counted
@@ -115,22 +55,6 @@ ingredients:
       order: 50
     tags:
       - exploratory
-    fit:
-      hard_rules: pass
-      score: 3
-      strengths:
-        - 保留为探索性候选，可扩展现有 Recipe 路线。
-      tradeoffs:
-        - 家庭接受度 / 重复使用价值尚未充分验证。
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 探索性鱼类候选。
   - id: halibut
     type: ingredient
     inventory_tracking: counted
@@ -143,22 +67,6 @@ ingredients:
       order: 60
     tags:
       - exploratory
-    fit:
-      hard_rules: pass
-      score: 3
-      strengths:
-        - 保留为探索性候选，可扩展现有 Recipe 路线。
-      tradeoffs:
-        - 家庭接受度 / 重复使用价值尚未充分验证。
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 探索性鱼类候选。
   - id: black-sea-bass
     type: ingredient
     inventory_tracking: counted
@@ -171,22 +79,6 @@ ingredients:
       order: 70
     tags:
       - exploratory
-    fit:
-      hard_rules: pass
-      score: 3
-      strengths:
-        - 保留为探索性候选，可扩展现有 Recipe 路线。
-      tradeoffs:
-        - 家庭接受度 / 重复使用价值尚未充分验证。
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 探索性鱼类候选。
   - id: grouper
     type: ingredient
     inventory_tracking: counted
@@ -199,19 +91,3 @@ ingredients:
       order: 80
     tags:
       - exploratory
-    fit:
-      hard_rules: pass
-      score: 3
-      strengths:
-        - 保留为探索性候选，可扩展现有 Recipe 路线。
-      tradeoffs:
-        - 家庭接受度 / 重复使用价值尚未充分验证。
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 探索性鱼类候选。

@@ -11,22 +11,7 @@ tags:
   - stovetop-nonstick
   - advance-start
   - family-shared
-fit:
-  hard_rules: pass
-  score: 3
-  strengths:
-    - 可设计为全家共享基础口味。
-  tradeoffs:
-    - 需要提前启动或较长被动烹调时间。
-    - 家庭版包含明确的受控改编，需首次实做后再校准。
-evidence:
-  level: inferred
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. Just One Cookbook 日式煮物比例结构按家庭轻盐标准化；具体菜名的传统配料由原 recipe required ingredients 保留。
-  sources:
-    - Japanese soy/miso daikon + boneless short-rib braise references
-    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 3
 notes: |-
   Premium/lower-frequency route.
 

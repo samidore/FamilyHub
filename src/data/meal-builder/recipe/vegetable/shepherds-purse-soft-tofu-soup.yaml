@@ -3,19 +3,17 @@ type: recipe
 status: candidate
 name_zh: 荠菜羹 / 荠菜豆腐羹
 name_en: Shepherd’s Purse Soup, with Optional Soft Tofu
-tags: [light-seasoning, non-spicy-base, simmered, stovetop-nonstick, lunch-30, family-shared, soft-vegetable, low-prep]
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 冷冻荠菜末本身即可做羹；有嫩豆腐时可加入做完整荠菜豆腐羹。
-  tradeoffs: []
-evidence:
-  level: inferred
-  checked_on: 2026-08-19
-  scope: Existing V09 shepherd's-purse soup structure retained. Soft tofu is moved to optional Cook View text because the soup remains a valid dish without it.
-  sources:
-    - V09 — Chinese 荠菜豆腐羹 household cooking pattern; soft-tofu soup structure verified elsewhere in KB
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - simmered
+  - stovetop-nonstick
+  - lunch-30
+  - family-shared
+  - soft-vegetable
+  - low-prep
+  - vegetable-centered
+fit_score: 5
 notes: 冷冻荠菜末可直接下锅；嫩豆腐是推荐加料，不阻挡 availability。
 primary_role: vegetable
 main_protein_category: none

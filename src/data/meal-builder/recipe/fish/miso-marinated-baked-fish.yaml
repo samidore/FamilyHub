@@ -4,21 +4,7 @@ status: candidate
 name_zh: 味噌腌烤鱼
 name_en: Miso-Marinated Baked Fish
 tags: [light-seasoning, non-spicy-base, roasted, oven, advance-start, child-support-protein]
-fit:
-  hard_rules: pass
-  score: 3
-  strengths:
-    - 鱼肉烤到刚熟仍柔软；孩子份去掉表面重味噌层并彻底去刺即可。
-    - 主烹调设备可释放灶口。
-  tradeoffs:
-    - 需要提前腌制。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route.
-  sources:
-    - Just One Cookbook — Miso Black Cod / Miso Salmon; fish-specific marination times retained as source-dependent
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 3
 notes: Child coverage按实际软鱼肉判断；孩子份不需要保留厚味噌表层。
 primary_role: protein
 main_protein_category: fish

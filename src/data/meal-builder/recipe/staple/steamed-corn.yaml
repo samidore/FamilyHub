@@ -4,12 +4,7 @@ status: candidate
 name_zh: 蒸玉米
 name_en: Steamed Corn
 tags: [light-seasoning, non-spicy-base, steamed, low-prep, family-shared]
-fit: { hard_rules: pass, score: 4, strengths: [玉米无需其他库存即可直接做主食。], tradeoffs: [] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Covered steaming route follows standard steamed-vegetable guidance; exact time varies with ear size and is checked by kernel tenderness.
-  sources: [Just One Cookbook — Steamed Vegetables]
+fit_score: 4
 notes: Corn is treated as Staple by household Meal Builder classification.
 primary_role: staple
 main_protein_category: none

@@ -4,12 +4,7 @@ status: candidate
 name_zh: 姜葱炒猪肝
 name_en: Ginger-Scallion Pork Liver
 tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30]
-fit: { hard_rules: pass, score: 2, strengths: [猪肝有独立成菜路线。], tradeoffs: [猪肝本身为低优先度；快炒不计孩子软蛋白。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Slice thickness, short marinade, high-heat stir-fry and doneness cues follow published Chinese pork-liver stir-fry methods; family version omits chili from the base.
-  sources: [Simple Chinese Food — Stir-fried Pork Liver with Green Onions; Serious Eats — On Not Overcooking Liver]
+fit_score: 2
 notes: Standalone fallback; only pork-liver is required.
 primary_role: protein
 main_protein_category: pork

@@ -3,21 +3,15 @@ type: recipe
 status: candidate
 name_zh: 日式菌菇蒸 / 焖
 name_en: Japanese-Style Steamed Mushrooms
-tags: [iron-pan-braise, light-seasoning, non-spicy-base, stovetop-nonstick, lunch-45, low-active-time]
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 菌菇经过盖焖可做到明显柔软；正常切小后可承担孩子蔬菜。
-    - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. Just One Cookbook Miso Butter Mushrooms in Foil 的味噌黄油蒸焖结构家庭化。
-  sources:
-    - V22 — Just One Cookbook — Miso Butter Mushrooms in Foil
-    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
+tags:
+  - iron-pan-braise
+  - light-seasoning
+  - non-spicy-base
+  - stovetop-nonstick
+  - lunch-45
+  - low-active-time
+  - vegetable-centered
+fit_score: 4
 notes: 金针菇必须切短；其余菌菇切成小块并焖到完全柔软。
 primary_role: vegetable
 main_protein_category: none

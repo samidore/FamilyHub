@@ -9,20 +9,8 @@ tags:
   - stir-fried
   - stovetop-wok
   - lunch-30
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
-    - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. The Woks of Life hot & sour napa cabbage 结构；家庭删除辣椒并保留醋香。
-  sources:
-    - V07 — The Woks of Life — Hot & Sour Napa Cabbage Stir-fry; household version omits chili
-    - Made With Lau — vegetable stir-fry / broccoli / choy sum recipes; The Woks of Life vegetable stir-fry patterns
+  - vegetable-centered
+fit_score: 4
 notes: |-
   Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook calibration.
 

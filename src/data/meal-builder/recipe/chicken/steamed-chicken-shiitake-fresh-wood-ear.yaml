@@ -11,21 +11,7 @@ tags:
   - lunch-45
   - family-shared
   - two-vegetable-ready
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 按来源蒸制结构家庭化：浅盘单层、轻盐、不额外淋大量热油。
-  sources:
-    - The Woks of Life / Made With Lau — steamed chicken with mushrooms; fresh wood-ear substitution per household handoff
-    - Made With Lau / The Woks of Life — Chinese steaming recipes
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Uses fresh wood ear; no soaking.
 

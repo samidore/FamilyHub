@@ -4,20 +4,7 @@ status: candidate
 name_zh: 姜葱清蒸鱼
 name_en: Cantonese Steamed Fish with Ginger and Scallion
 tags: [light-seasoning, non-spicy-base, steamed, stovetop-nonstick, lunch-30, child-support-protein]
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 蒸鱼肉质柔软；彻底去刺后可直接承担孩子蛋白。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route.
-  sources:
-    - The Woks of Life — Cantonese Steamed Fish
-    - Made With Lau / The Woks of Life — Chinese steaming recipes
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 4
 notes: Child coverage按实际可提供的去刺软鱼肉判断，不以当前偏好作为硬条件。
 primary_role: protein
 main_protein_category: fish

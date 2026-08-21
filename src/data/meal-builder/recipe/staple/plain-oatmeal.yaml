@@ -4,12 +4,7 @@ status: candidate
 name_zh: 燕麦粥
 name_en: Stovetop Oatmeal
 tags: [light-seasoning, non-spicy-base, simmered, stovetop-nonstick, lunch-30, soft-staple]
-fit: { hard_rules: pass, score: 4, strengths: [燕麦可直接煮成柔软主食，不依赖鸡蛋。], tradeoffs: [不同燕麦类型时间不同；本记录针对 old-fashioned rolled oats。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Stovetop ratio and five-minute simmer follow the package-directed method tested by Simply Recipes for old-fashioned rolled oats.
-  sources: [Simply Recipes — stovetop oatmeal test / package method]
+fit_score: 4
 notes: Standalone staple fallback; only oats is required.
 primary_role: staple
 main_protein_category: none

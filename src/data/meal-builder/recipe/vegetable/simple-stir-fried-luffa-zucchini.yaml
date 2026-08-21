@@ -4,12 +4,7 @@ status: candidate
 name_zh: 清炒丝瓜 / 西葫芦
 name_en: Simple Stir-Fried Luffa or Zucchini
 tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, soft-vegetable]
-fit: { hard_rules: pass, score: 4, strengths: [丝瓜和西葫芦都能用短炒加少量汁做到柔软，适合同一结构。], tradeoffs: [] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Luffa prep and tender-in-sauce endpoint follow The Woks of Life loofah stir-fry; zucchini uses the same everyday-vegetable stir-fry family with earlier doneness checks.
-  sources: [The Woks of Life — Loofah Stir-fry; The Woks of Life — Everyday Vegetable Stir-Fry]
+fit_score: 4
 notes: One shared Recipe for two compatible soft squash vegetables.
 primary_role: vegetable
 main_protein_category: none

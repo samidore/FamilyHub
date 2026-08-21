@@ -4,20 +4,7 @@ status: candidate
 name_zh: 牛丼
 name_en: Gyudon Beef Rice Bowl
 tags: [iron-pan-braise, light-seasoning, non-spicy-base, stovetop-nonstick, lunch-30, child-support-protein]
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 薄牛肉在汁中煮熟并保持湿润，孩子份剪短即可作为软蛋白。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. Just One Cookbook Gyudon 2人配方按1.5倍算术缩放为约3人份。
-  sources:
-    - Just One Cookbook — Gyudon
-    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: Rice is integral to the dish; child coverage is based on the actual simmered texture rather than current preference.
 primary_role: mixed
 main_protein_category: beef

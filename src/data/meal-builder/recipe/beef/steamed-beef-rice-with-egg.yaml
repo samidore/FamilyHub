@@ -9,21 +9,7 @@ tags:
   - stovetop-nonstick
   - lunch-45
   - family-shared
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 粤式蒸牛肉饭/煲仔饭类成熟结构家庭化；鸡蛋做全熟。
-  sources:
-    - Made With Lau — Minced Beef with Rice / 窝蛋免治牛肉飯
-    - The Woks of Life — Beef & Broccoli / Beef with Mushrooms
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Main category remains beef; rice carried in recipe.
 

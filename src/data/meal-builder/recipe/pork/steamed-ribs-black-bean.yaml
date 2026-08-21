@@ -10,21 +10,7 @@ tags:
   - stovetop-nonstick
   - lunch-45
   - family-shared
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 按现有可靠豉汁蒸排骨来源标准化为家庭轻盐版本。
-  sources:
-    - The Woks of Life — Dim Sum Steamed Spare Ribs with Black Beans
-    - Made With Lau / The Woks of Life — Chinese steaming recipes
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 4
 notes: |-
   Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
 

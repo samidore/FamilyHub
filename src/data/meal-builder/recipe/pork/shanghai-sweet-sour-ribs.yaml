@@ -11,22 +11,7 @@ tags:
   - stovetop-nonstick
   - advance-start
   - family-shared
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-  tradeoffs:
-    - 需要提前启动或较长被动烹调时间。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 比例与流程按 The Woks of Life Shanghai Sweet and Sour Ribs；家庭保持轻油。
-  sources:
-    - The Woks of Life — Shanghai Sweet and Sour Ribs
-    - The Woks of Life — Hong Shao Rou / Red Braised Beef and related Chinese red-braise recipes
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Household has a preferred Instant Pot-then-wok route in another chat; this library record keeps the dish identity and non-fried rule.
 

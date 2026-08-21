@@ -4,13 +4,7 @@ status: candidate
 name_zh: 清蒸山药
 name_en: Steamed Chinese Yam
 tags: [light-seasoning, non-spicy-base, steamed, stovetop-nonstick, low-prep, soft-vegetable]
-fit: { hard_rules: pass, score: 2, strengths: [山药可用最少处理直接蒸熟成菜。], tradeoffs: [家庭低优先度；生山药处理可能刺激手部。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Water-boiling-before-steaming and roughly 15-minute steam time follow the checked 快手清蒸山药 source; the child endpoint is the same source-supported fully cooked texture, verified by easy fork/chopstick penetration rather than a fixed extra time.
-  sources:
-    - 下厨房 — 快手清蒸山药
+fit_score: 2
 notes: Raw-yam skin handling remains a household nuisance; use gloves when it irritates skin.
 primary_role: vegetable
 main_protein_category: none

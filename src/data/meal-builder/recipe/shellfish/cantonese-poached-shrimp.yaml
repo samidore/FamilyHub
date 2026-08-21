@@ -10,20 +10,7 @@ tags:
   - lunch-30
   - child-support-protein
   - poached
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. Cantonese 白灼虾成熟结构，蘸汁独立以保持孩子份清淡。
-  sources:
-    - Cantonese 白灼虾 / poached shrimp references
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Adult peels shell completely before any child portion.
 

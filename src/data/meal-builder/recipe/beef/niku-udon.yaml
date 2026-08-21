@@ -9,21 +9,7 @@ tags:
   - stovetop-nonstick
   - lunch-30
   - child-support-protein
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. Just One Cookbook Niku Udon 的‘清汤乌冬+另煮甜咸牛肉’结构。
-  sources:
-    - Just One Cookbook — Niku Udon
-    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Noodles are carried in the recipe.
 

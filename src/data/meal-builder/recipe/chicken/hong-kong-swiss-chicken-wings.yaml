@@ -11,20 +11,7 @@ tags:
   - stovetop-nonstick
   - lunch-45
   - family-shared
-fit:
-  hard_rules: pass
-  score: 3
-  strengths:
-    - 可设计为全家共享基础口味。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 直接采用 Christine’s Recipes Swiss Chicken Wings 的约870 g配方量；家庭份可按鸡翅实际数量略有剩余，不再自行改写瑞士汁比例。
-  sources:
-    - Christine’s Recipes / Hong Kong home-cooking references — Swiss Chicken Wings
-    - Christine’s Recipes — Swiss Chicken Wings (Homemade Recipe) — exact ingredient card
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 3
 notes: |-
   Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
 

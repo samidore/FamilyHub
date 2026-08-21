@@ -10,23 +10,7 @@ tags:
   - stovetop-wok
   - lunch-45
   - family-shared
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-    - 临近上桌流程相对集中，便于与另一灶口并行。
-  tradeoffs:
-    - 家庭版包含明确的受控改编，需首次实做后再校准。
-evidence:
-  level: inferred
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. Made With Lau / The Woks of Life 鸡片嫩化法按家庭轻盐标准化，省略鸡粉。
-  sources:
-    - Made With Lau — Chicken & Broccoli Stir-fry
-    - Made With Lau — Chicken & Broccoli; The Woks of Life — Moo Goo Gai Pan
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 4
 notes: |-
   Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
 

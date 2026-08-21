@@ -4,12 +4,7 @@ status: candidate
 name_zh: 葱盐煎超薄五花肉
 name_en: Scallion-Salt Extra-Thin Pork Belly
 tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-wok, lunch-30]
-fit: { hard_rules: pass, score: 3, strengths: [超薄五花肉可单独快速煎香。], tradeoffs: [快煎口感不作为孩子软蛋白。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: High-heat thin-slice searing follows standard pork-belly yakiniku / stir-fry technique; seasoning is intentionally minimal and endpoint-driven rather than timing-dependent.
-  sources: [Just One Cookbook — Japanese BBQ / thin-sliced pork cooking patterns]
+fit_score: 3
 notes: Standalone fallback; only extra-thin-sliced-pork-belly is required.
 primary_role: protein
 main_protein_category: pork

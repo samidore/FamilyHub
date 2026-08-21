@@ -10,21 +10,7 @@ tags:
   - stovetop-nonstick
   - lunch-45
   - family-shared
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 按来源蒸制结构家庭化：浅盘单层、轻盐、不额外淋大量热油。
-  sources:
-    - Made With Lau — steamed chicken with mushroom and Chinese sausage
-    - Made With Lau / The Woks of Life — Chinese steaming recipes
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 4
 notes: |-
   Chinese sausage is supporting protein/processed flavoring, not main category.
 

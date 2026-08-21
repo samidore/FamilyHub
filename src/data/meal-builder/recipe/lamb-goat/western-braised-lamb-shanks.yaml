@@ -11,22 +11,7 @@ tags:
   - advance-start
   - family-shared
   - two-vegetable-ready
-fit:
-  hard_rules: pass
-  score: 3
-  strengths:
-    - 可设计为全家共享基础口味。
-  tradeoffs:
-    - 需要提前启动或较长被动烹调时间。
-    - 已在 brainstorm 中标为第二优先度。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 采用 RecipeTin Eats Slow Cooked Lamb Shanks in Red Wine Sauce 的4只羊腱配方做1/2算术缩放，保留350°F/180°C 2小时盖盖 + 30分钟开盖的流程。
-  sources:
-    - Western braised lamb-shank references
-    - RecipeTin Eats — Slow Cooked Lamb Shanks in Red Wine Sauce — exact ingredient card and oven method
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 3
 notes: |-
   Second priority.
 

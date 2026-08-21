@@ -10,21 +10,7 @@ tags:
   - stovetop-nonstick
   - lunch-30
   - family-shared
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. Made With Lau 蒸蛋水蛋比例：4蛋配约1.5–2 cups水；家庭做全熟。
-  sources:
-    - Made With Lau — Chinese Steamed Eggs
-    - Made With Lau / The Woks of Life — Chinese steamed eggs / tomato eggs / egg drop soup
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   鸡蛋豆腐蒸蛋 stays a variation/substitution unless later testing shows a distinct workflow.
 

@@ -4,20 +4,7 @@ status: candidate
 name_zh: 香煎冷冻牛肉饼
 name_en: Pan-Seared Frozen Beef Patty
 tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, lunch-30, child-support-protein]
-fit:
-  hard_rules: pass
-  score: 3
-  strengths:
-    - 不需要面包即可把冷冻牛肉饼单独做成主蛋白。
-  tradeoffs:
-    - 具体商品厚度和包装说明不同，时间不能写死。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Ground-beef safety endpoint is USDA-derived; product-specific thawing/cooking directions remain package-controlled.
-  sources:
-    - USDA FSIS Safe Minimum Internal Temperature Chart
-    - product package cooking directions
+fit_score: 3
 notes: Burger recipe仍保留；本记录专门解决无面包时的 standalone fallback。
 primary_role: protein
 main_protein_category: beef

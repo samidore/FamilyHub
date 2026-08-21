@@ -11,20 +11,7 @@ tags:
   - stovetop-nonstick
   - lunch-30
   - family-shared
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 依据现有 tomato-tofu 来源；家庭版不用重蚝油，以番茄+少量生抽为主。
-  sources:
-    - The Woks of Life / Made With Lau — tomato tofu recipes
-    - Made With Lau / The Woks of Life / Just One Cookbook — tofu recipes listed in the source KB
+fit_score: 5
 notes: |-
   Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
 

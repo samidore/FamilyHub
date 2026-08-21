@@ -10,21 +10,7 @@ tags:
   - stovetop-nonstick
   - advance-start
   - child-support-protein
-fit:
-  hard_rules: pass
-  score: 3
-  strengths:
-    - 临近上桌流程相对集中，便于与另一灶口并行。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-    - 需要提前启动或较长被动烹调时间。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 采用韩式 galbi 梨/苹果+酱油腌制结构并按家庭轻盐标准化。
-  sources:
-    - Korean Bapsang — LA Galbi
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 3
 notes: |-
   Premium/lower-frequency route; cross-cut bones require careful child separation.
 

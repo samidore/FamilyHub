@@ -11,23 +11,7 @@ tags:
   - lunch-45
   - child-support-protein
   - adult-finish-separate
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 临近上桌流程相对集中，便于与另一灶口并行。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-    - 家庭版包含明确的受控改编，需首次实做后再校准。
-evidence:
-  level: inferred
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 牛肉嫩化和轻蚝油汁按来源标准化；孜然在最后加入，成人辣味另加。
-  sources:
-    - Omnivore’s Cookbook — Cumin Beef; household adaptation omits chili from base
-    - The Woks of Life — Beef & Broccoli / Beef with Mushrooms
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 4
 notes: |-
   Cumin is the defining flavor; source chili is optionalized to adult finish rather than kept in the family base.
 

@@ -9,21 +9,7 @@ tags:
   - stovetop-nonstick
   - lunch-30
   - family-shared
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. savory oatmeal + egg 结构家庭轻盐化；以 rolled oats 为明确基线。
-  sources:
-    - Epicurious / Simply Recipes — savory oatmeal with egg
-    - Made With Lau / The Woks of Life — Chinese steamed eggs / tomato eggs / egg drop soup
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Oats carried as staple; egg is main protein per finalized rule.
 

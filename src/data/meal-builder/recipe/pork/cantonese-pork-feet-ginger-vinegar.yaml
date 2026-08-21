@@ -10,20 +10,7 @@ tags:
   - stovetop-nonstick
   - advance-start
   - child-support-protein
-fit:
-  hard_rules: pass
-  score: 3
-  strengths: []
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-    - 需要提前启动或较长被动烹调时间。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 比例依据已核实的 Cantonese Pork Knuckles with Ginger and Vinegar 配方；家庭不另加辣。
-  sources:
-    - The Woks of Life — Cantonese Pork Knuckles with Ginger and Vinegar
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 3
 notes: |-
   Strong sweet-vinegar/ginger identity makes this lower-frequency for the household.
 

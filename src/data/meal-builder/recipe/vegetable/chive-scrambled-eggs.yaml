@@ -11,21 +11,8 @@ tags:
   - lunch-30
   - family-shared
   - soft-protein
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
-    - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 来源验证的中式炒蛋结构，按家庭轻油轻盐标准化。
-  sources:
-    - V18 — Omnivore’s Cookbook — Chinese Chive and Egg / Yellow Chives and Eggs Stir Fry
-    - Made With Lau / The Woks of Life — Chinese steamed eggs / tomato eggs / egg drop soup
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+  - vegetable-centered
+fit_score: 5
 notes: |-
   Candidate Vegetable-centered route; exact household seasoning quantities remain for Cook View / first-cook calibration.
 

@@ -4,12 +4,7 @@ status: candidate
 name_zh: 拍黄瓜
 name_en: Smashed Cucumber Salad
 tags: [light-seasoning, non-spicy-base, cold-dish, lunch-30, low-prep]
-fit: { hard_rules: pass, score: 4, strengths: [黄瓜无需其他库存即可做经典凉菜。], tradeoffs: [成品保持脆口，不计孩子软蔬菜。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Salt-drain and vinegar/soy/sesame dressing structure follows The Woks of Life smashed Asian cucumber salad; chili omitted from the family base.
-  sources: [The Woks of Life — Smashed Asian Cucumber Salad]
+fit_score: 4
 notes: Standalone fallback; only cucumber is required.
 primary_role: vegetable
 main_protein_category: none

@@ -10,23 +10,7 @@ tags:
   - stovetop-nonstick
   - lunch-45
   - family-shared
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-    - 临近上桌流程相对集中，便于与另一灶口并行。
-  tradeoffs: []
-evidence:
-  level: user-confirmed
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 糖醋汁比例来自 Made With Lau；烹调路线按家庭确认改为少油平底锅煎，不深炸，并参考 Omnivore’s Cookbook 的 pan-fried sweet-and-sour pork technique。
-  sources:
-    - User-confirmed household recipe/preference — non-deep-fried 糖醋里脊
-    - Made With Lau — Sweet and Sour Pork — sweet-sour sauce ratio
-    - Omnivore’s Cookbook — pan-fried / non-deep-fried sweet-and-sour pork technique
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Household preference favors this dish. Household route is explicitly non-deep-fried. Observed household workflow is about 1 hour from starting prep to table.
 

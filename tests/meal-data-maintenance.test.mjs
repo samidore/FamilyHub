@@ -25,7 +25,7 @@ test('cookable Recipe rejects missing Cook View lines, steps, or equipment', asy
   await assert.rejects(async () => parseMealFiles(await withCookableRecipe((record) => { record.cook_ingredients = []; })), /cook_ingredients/);
   await assert.rejects(async () => parseMealFiles(await withCookableRecipe((record) => { record.steps = []; })), /requires executable steps/);
   await assert.rejects(async () => parseMealFiles(await withCookableRecipe((record) => { record.equipment = []; })), /requires equipment/);
-  await assert.doesNotReject(async () => parseMealFiles(await withCookableRecipe((record) => { record.evidence.sources = []; })));
+  await assert.rejects(async () => parseMealFiles(await withCookableRecipe((record) => { record.fit_score = 6; })), /fit_score/);
 });
 
 test('operational Recipe requirements reject obsolete tracking fields', async () => {
@@ -53,6 +53,15 @@ test('all migrated Recipes keep Cook View text separate from operational require
     const recipe = parse(text);
     return recipe.ingredients.every((entry) => !('availability' in entry) && !('amount' in entry) && !('preparation' in entry) && !('pantry_core' in entry));
   }), true);
+});
+
+test('vegetable-centered is an explicit Recipe tag', async () => {
+  const data = parseMealFiles(await readMealFiles());
+  const vegetable = data.recipes.find((item) => item.id === 'simple-stir-fried-leafy-greens');
+  const chicken = data.recipes.find((item) => item.id === 'chicken-teriyaki-thighs');
+  assert.equal(vegetable?.tags.includes('vegetable-centered'), true);
+  assert.equal(vegetable?.vegetableCentered, true);
+  assert.equal(chicken?.vegetableCentered, false);
 });
 
 test('active capability tags are data-driven rather than count-gated', async () => {

@@ -12,20 +12,7 @@ tags:
   - two-vegetable-ready
   - stir-fried
   - stovetop-wok
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. Just One Cookbook Yaki Udon 调味比例；家庭不辣。
-  sources:
-    - Just One Cookbook — Yaki Udon
-    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
+fit_score: 4
 notes: |-
   Staple-centered base version; main protein is added later by Meal Combo if desired.
 

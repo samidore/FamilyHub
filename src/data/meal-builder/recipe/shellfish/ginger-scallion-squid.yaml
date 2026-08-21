@@ -4,13 +4,7 @@ status: candidate
 name_zh: 姜葱鱿鱼
 name_en: Ginger-Scallion Squid
 tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30]
-fit: { hard_rules: pass, score: 3, strengths: [鱿鱼只配 pantry 姜葱也能独立成菜。], tradeoffs: [快炒鱿鱼有弹性，不计孩子软蛋白。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Very brief blanch/high-heat stir-fry timing is supported by The Woks of Life squid stir-fry references; household version removes required pickled vegetables and uses pantry ginger/scallion.
-  sources:
-    - The Woks of Life — Squid Stir-Fry with Pickled Mustard Greens
+fit_score: 3
 notes: Ginger and scallion are pantry text and do not block availability.
 primary_role: protein
 main_protein_category: shellfish

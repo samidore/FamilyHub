@@ -10,22 +10,7 @@ tags:
   - stovetop-wok
   - lunch-30
   - family-shared
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-    - 临近上桌流程相对集中，便于与另一灶口并行。
-  tradeoffs: []
-evidence:
-  level: user-confirmed
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 家庭肉末快炒标准化来源配方；具体蔬菜按原 recipe identity 保留。
-  sources:
-    - User-confirmed household pattern — ground pork + Chinese greens
-    - The Woks of Life — shredded-pork / pork-tofu stir-fry technique; normalized family-light sauce
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Explicit household addition and a genuine household cooking pattern; vegetable can use compatible leafy greens via substitutions.
 

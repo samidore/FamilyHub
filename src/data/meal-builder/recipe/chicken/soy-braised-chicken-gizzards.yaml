@@ -4,12 +4,7 @@ status: candidate
 name_zh: 卤鸡胗
 name_en: Soy-Braised Chicken Gizzards
 tags: [light-seasoning, non-spicy-base, braised, stovetop-nonstick, advance-start]
-fit: { hard_rules: pass, score: 3, strengths: [鸡胗可单独卤制。], tradeoffs: [即使长炖仍有嚼劲，不计孩子软蛋白。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Cleaning, soy/Shaoxing braise and 90–120 minute simmer are arithmetic-scaled from Gradual Gastronomy Soy Braised Chicken Gizzards; chili omitted from the family base.
-  sources: [Gradual Gastronomy — Soy Braised Chicken Gizzards]
+fit_score: 3
 notes: Standalone fallback; only chicken-gizzards is required.
 primary_role: protein
 main_protein_category: chicken

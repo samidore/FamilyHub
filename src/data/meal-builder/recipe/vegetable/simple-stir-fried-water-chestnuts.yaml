@@ -4,12 +4,7 @@ status: candidate
 name_zh: 清炒马蹄
 name_en: Simple Stir-Fried Water Chestnuts
 tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30]
-fit: { hard_rules: pass, score: 4, strengths: [马蹄有不依赖肉类或其他蔬菜的独立成菜路线。], tradeoffs: [马蹄保留脆口，不计孩子软蔬菜。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Water-chestnut quick stir-fry handling is supported by The Woks of Life cashew-chicken and everyday-vegetable stir-fry patterns; household version uses the canonical light vegetable sauce.
-  sources: [The Woks of Life — Cashew Chicken; The Woks of Life — Everyday Vegetable Stir-Fry]
+fit_score: 4
 notes: Standalone fallback; only water-chestnuts is required.
 primary_role: vegetable
 main_protein_category: none

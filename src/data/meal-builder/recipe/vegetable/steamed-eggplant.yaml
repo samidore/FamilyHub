@@ -11,20 +11,8 @@ tags:
   - lunch-45
   - soft-vegetable
   - low-active-time
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 补充 Vegetable-centered coverage，能直接参与动态 Meal Builder。
-    - 与家庭现有轻盐、少油、无辣 base 和现有厨具兼容。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. Made With Lau steamed eggplant technique；家庭用轻量蒜香酱油汁。
-  sources:
-    - V14 — Made With Lau — steamed eggplant technique within Eggplant with Garlic Sauce
-    - Made With Lau / The Woks of Life — Chinese steaming recipes
+  - vegetable-centered
+fit_score: 5
 notes: |-
   采用蒸制主体以符合家庭低油规则；不复制来源中后续辣味/重酱鱼香步骤。
 

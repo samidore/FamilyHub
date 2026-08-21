@@ -12,21 +12,7 @@ tags:
   - family-shared
   - pot-in-pot
   - one-pot
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-    - 主烹调设备可释放灶口。
-  tradeoffs: []
-evidence:
-  level: user-confirmed
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 家庭 Instant Pot 十三香酱油鸡翅：High Pressure 10分钟+自然泄压5分钟；十三香明确量化，收汁只到薄挂勺。
-  sources:
-    - Household-confirmed Instant Pot Party Wings pattern; current user update 2026-08-11
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Household commonly cooks meat below and rice in an elevated upper bowl; pressure segment is commonly around 10–15 min. Exact release/liquid/rice ratio remains recipe-specific.
 

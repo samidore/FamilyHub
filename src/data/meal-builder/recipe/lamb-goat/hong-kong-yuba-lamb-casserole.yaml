@@ -11,21 +11,7 @@ tags:
   - stovetop-nonstick
   - advance-start
   - child-support-protein
-fit:
-  hard_rules: pass
-  score: 2
-  strengths: []
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-    - 需要提前启动或较长被动烹调时间。
-    - 已在 brainstorm 中标为第二优先度。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 配比按 The Woks of Life Hong Kong Style Lamb Casserole；来源允许 lamb shoulder，家庭基础锅不辣。
-  sources:
-    - The Woks of Life — Hong Kong Style Lamb Casserole; source explicitly accepts lamb shoulder and goat substitutions
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 2
 notes: |-
   Second priority; dried yuba requires advance soaking. Source supports lamb shoulder as a substitute for lamb breast.
 

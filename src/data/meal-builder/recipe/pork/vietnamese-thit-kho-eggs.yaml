@@ -11,21 +11,7 @@ tags:
   - stovetop-nonstick
   - advance-start
   - family-shared
-fit:
-  hard_rules: pass
-  score: 3
-  strengths:
-    - 可设计为全家共享基础口味。
-  tradeoffs:
-    - 需要提前启动或较长被动烹调时间。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 以 Wok & Kin 的1 kg猪肉、6 Tbsp鱼露、5 tsp糖、4 cups椰子水、3/4 cup水为明确基准；家庭版本把鱼露降至5 Tbsp并省略2 Tbsp鸡粉，以符合已确认的轻盐偏好。这个差异是有意 household adaptation，不冒充来源原方。
-  sources:
-    - Vietnamese Thịt Kho references — pork + eggs + coconut-water/fish-sauce caramel braise
-    - Wok & Kin — Thit Kho (Vietnamese Braised Pork Belly and Eggs in Coconut Water) — 1 kg formula
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 3
 notes: |-
   Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
 

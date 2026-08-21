@@ -10,20 +10,7 @@ tags:
   - stovetop-nonstick
   - lunch-45
   - child-support-protein
-fit:
-  hard_rules: pass
-  score: 3
-  strengths:
-    - 临近上桌流程相对集中，便于与另一灶口并行。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 基础煎制流程按安全温度与家庭轻油原则标准化；特定酱汁菜另有专用 override。
-  sources:
-    - Made With Lau beef collection / standard pan-seared steak technique
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 3
 notes: |-
   One Recipe covers compatible steak cuts; do not split by flat iron, Denver, or generic steak cut.
 

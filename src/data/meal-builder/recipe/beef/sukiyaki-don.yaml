@@ -10,21 +10,7 @@ tags:
   - stovetop-nonstick
   - lunch-30
   - child-support-protein
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. Just One Cookbook sukiyaki-don 甜咸煮牛肉结构家庭轻盐标准化。
-  sources:
-    - Just One Cookbook — Sukiyaki Don
-    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 4
 notes: |-
   Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
 

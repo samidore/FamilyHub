@@ -4,20 +4,7 @@ status: candidate
 name_zh: 简单煎豆腐
 name_en: Simple Pan-Seared Firm Tofu
 tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, lunch-30, child-support-protein]
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 老豆腐本身可煎后加汁焖到内部柔软，能直接承担孩子的软蛋白。
-    - 临近上桌流程集中，便于并行。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route.
-  sources:
-    - Just One Cookbook — pan-fried tofu technique
-    - Made With Lau / The Woks of Life / Just One Cookbook — tofu recipes listed in the source KB
+fit_score: 4
 notes: Child coverage按可做出的实际软质地判断，不以当前偏好作为硬条件。
 primary_role: protein
 main_protein_category: tofu

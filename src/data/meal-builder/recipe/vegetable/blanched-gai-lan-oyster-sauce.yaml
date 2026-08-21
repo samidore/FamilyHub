@@ -3,13 +3,15 @@ type: recipe
 status: candidate
 name_zh: 白灼 / 蚝油芥兰
 name_en: Blanched Gai Lan with Oyster Sauce
-tags: [light-seasoning, non-spicy-base, stovetop-wok, lunch-30, low-prep, soft-vegetable]
-fit: { hard_rules: pass, score: 4, strengths: [芥兰可通过孩子份延长焯煮做到软。], tradeoffs: [] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: V03 source structure retained; child coverage changed because a normal longer blanch/longitudinal stem cut can make the same dish soft enough without changing its identity.
-  sources: [V03 — Made With Lau — Chinese Broccoli with Oyster Sauce]
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stovetop-wok
+  - lunch-30
+  - low-prep
+  - soft-vegetable
+  - vegetable-centered
+fit_score: 4
 notes: Current preference is not a hard Child coverage condition.
 primary_role: vegetable
 main_protein_category: none

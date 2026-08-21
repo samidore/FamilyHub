@@ -12,21 +12,7 @@ tags:
   - lunch-45
   - family-shared
   - two-vegetable-ready
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 配比按 Just One Cookbook Nikujaga；省略不在现有 Recipe availability 中的魔芋丝。
-  sources:
-    - Just One Cookbook — Nikujaga
-    - Just One Cookbook — Japanese simmered / donburi / teriyaki recipes
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Potato is the staple carried in the recipe; onion/carrot count as vegetables.
 

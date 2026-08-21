@@ -11,23 +11,7 @@ tags:
   - lunch-45
   - family-shared
   - two-vegetable-ready
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-    - 临近上桌流程相对集中，便于与另一灶口并行。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 按 The Woks of Life Moo Shu Pork 的分次炒制结构；使用项目固定的新鲜黑木耳。
-  sources:
-    - "The Woks of Life — Moo Shu Pork: The Authentic Chinese Recipe"
-    - The Woks of Life — shredded-pork / pork-tofu stir-fry technique; normalized family-light sauce
-    - Made With Lau / The Woks of Life — Chinese steamed eggs / tomato eggs / egg drop soup
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 4
 notes: |-
   Uses fresh wood ear; no soaking time.
 

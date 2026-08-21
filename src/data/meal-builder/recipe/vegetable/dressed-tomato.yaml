@@ -4,12 +4,7 @@ status: candidate
 name_zh: 凉拌番茄
 name_en: Sugar-Dressed Tomato
 tags: [light-seasoning, non-spicy-base, cold-dish, lunch-30, low-prep, soft-vegetable]
-fit: { hard_rules: pass, score: 4, strengths: [番茄只需简单切片调味即可单独成菜。], tradeoffs: [] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Classic Chinese sugar-dressed tomato structure verified against published 凉拌番茄 recipes; sugar is kept light for the household version.
-  sources: [下厨房 — 凉拌番茄]
+fit_score: 4
 notes: Standalone fallback; only tomato is required.
 primary_role: vegetable
 main_protein_category: none

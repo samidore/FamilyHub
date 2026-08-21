@@ -10,21 +10,7 @@ tags:
   - stovetop-nonstick
   - advance-start
   - family-shared
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 可设计为全家共享基础口味。
-  tradeoffs:
-    - 需要提前启动或较长被动烹调时间。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 调味比例按 The Woks of Life Taiwanese Braised Minced Pork；家庭将干香菇改为已确认的新鲜香菇。
-  sources:
-    - The Woks of Life — Taiwanese Braised Minced Pork (肉燥饭)
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 4
 notes: |-
   Rice is carried by the recipe. Use fresh shiitake or a no-dried-mushroom version; do not add dried shiitake soaking burden.
 

@@ -10,21 +10,8 @@ tags:
   - stovetop-wok
   - lunch-30
   - low-prep
-fit:
-  hard_rules: pass
-  score: 4
-  strengths:
-    - 用户明确要求加入清炒豆芽，补充 Vegetable-centered coverage。
-    - 与家庭现有轻盐、少油、无辣 base 和现有炒锅路线兼容。
-  tradeoffs: []
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Culinary identity, high-heat bean-sprout technique, under-5 sprout safety, and user-confirmed child acceptance; household-light seasoning/oil adaptation.
-  sources:
-    - V24 — Omnivore's Cookbook — Bean Sprout Stir Fry
-    - The Woks of Life — Chicken and Bean Sprouts Stir Fry
-    - CDC — Safer Food Choices for Children Under 5 Years Old
+  - vegetable-centered
+fit_score: 4
 notes: |-
   Candidate Vegetable-centered route. Display ingredient remains generic 豆芽 rather than forcing mung-bean versus soybean-sprout inventory splits.
 

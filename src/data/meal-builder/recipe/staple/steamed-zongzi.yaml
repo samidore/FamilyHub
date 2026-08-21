@@ -9,20 +9,7 @@ tags:
   - lunch-30
   - low-active-time
   - minimal-cutting
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 做法简单，蒸制时可释放灶口。
-    - 用户确认可使用 Instant Pot。
-  tradeoffs:
-    - 馅料、盐油和儿童接受度取决于实际粽子，当前未指定。
-evidence:
-  level: user-confirmed
-  checked_on: 2026-08-13
-  scope: 用户确认核心做法为蒸15分钟，并可使用 Instant Pot；未补写压力、泄压、水量、馅料或份量参数。
-  sources:
-    - User-confirmed household steaming workflow
+fit_score: 5
 notes: |-
   使用现成粽子；不推断具体馅料或产品。
 

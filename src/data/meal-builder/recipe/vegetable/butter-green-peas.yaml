@@ -4,14 +4,7 @@ status: candidate
 name_zh: 黄油青豆
 name_en: Buttered Green Peas
 tags: [light-seasoning, non-spicy-base, stovetop-nonstick, lunch-30, frozen, soft-vegetable]
-fit: { hard_rules: pass, score: 4, strengths: [冷冻青豆可用简单黄油小菜路线独立成菜。], tradeoffs: [商品若有更具体加热说明，包装优先。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Base quantity and butter ratio follow Food Network Basic Buttered Peas (1 lb peas, 1 Tbsp butter). Household child portion is cooked beyond the adult endpoint only until fork-soft; no unsupported extra time is asserted.
-  sources:
-    - Food Network — Basic Buttered Peas
-    - product package cooking directions
+fit_score: 4
 notes: Standalone fallback; only frozen-green-peas is required.
 primary_role: vegetable
 main_protein_category: none

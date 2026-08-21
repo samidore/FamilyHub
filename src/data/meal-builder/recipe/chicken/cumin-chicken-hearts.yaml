@@ -4,12 +4,7 @@ status: candidate
 name_zh: 孜然鸡心
 name_en: Cumin Chicken Hearts
 tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-wok, lunch-30]
-fit: { hard_rules: pass, score: 3, strengths: [鸡心有独立孜然成菜路线。], tradeoffs: [鸡心肌肉有弹性，不计孩子软蛋白。] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Butterfly cut, marinade and cumin proportions follow Jason Wang's Xi'an Famous Foods chicken-heart recipe; skillet route replaces charcoal grilling while keeping the same fully-cooked endpoint. Chili is adult finish only.
-  sources: [Epicurious / Xi'an Famous Foods — Spicy Cumin Chicken Heart Skewers; USDA FSIS — Safe Minimum Internal Temperature Chart]
+fit_score: 3
 notes: Standalone fallback; only chicken-hearts is required.
 primary_role: protein
 main_protein_category: chicken

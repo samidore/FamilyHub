@@ -11,23 +11,7 @@ tags:
   - stovetop-nonstick
   - advance-start
   - family-shared
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 牛腩、牛肩、牛肋条和无骨牛小排都可用同一长炖红烧结构做到软烂。
-    - 可设计为全家共享基础口味。
-  tradeoffs:
-    - 需要提前启动或较长被动烹调时间。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: The Woks of Life red-braised beef provides the canonical household braise structure; beef rib fingers and boneless short ribs are compatible collagen-rich braising cuts, supported by published rib-finger/short-rib braise references. No exact retailer cut equivalence is claimed.
-  sources:
-    - The Woks of Life — Red Braised Beef
-    - Le Creuset — Braised Beef Rib Fingers
-    - Serious Eats — Braised Short Ribs
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   One shared braise Recipe intentionally covers compatible beef cuts. Child coverage depends on actually braising until the selected cut is fork/chopstick tender.
 primary_role: protein

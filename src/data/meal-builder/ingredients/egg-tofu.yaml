@@ -5,11 +5,14 @@ ingredients:
     status: candidate
     name_zh: 百叶结
     name_en: Tofu Skin Knots
-    starter: { visible: true, section: egg-tofu, order: 90 }
-    tags: [supporting-only, addon-only, easy-braise-addon]
-    fit: { hard_rules: pass, score: 3, strengths: [作为 supporting ingredient 有明确的顺手焖用途。], tradeoffs: [] }
-    evidence: { level: user-confirmed, checked_on: 2026-08-14, scope: User requested tofu-skin knots as an easy-braise supporting Ingredient; no package or child-acceptance claim is added., sources: [User-confirmed Family Meal easy-braise decision] }
-    notes: 作为 supporting ingredient，适合加入已有焖汁中顺手焖；用户确认不要求 standalone Recipe。
+    starter:
+      visible: true
+      section: egg-tofu
+      order: 90
+    tags:
+      - supporting-only
+      - addon-only
+      - easy-braise-addon
   - id: eggs
     type: ingredient
     inventory_tracking: presence-only
@@ -21,19 +24,6 @@ ingredients:
       section: egg-tofu
       order: 10
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: soft-tofu
     type: ingredient
     inventory_tracking: counted
@@ -44,20 +34,9 @@ ingredients:
       visible: true
       section: egg-tofu
       order: 20
-    tags: [child-eaten, easy-braise-addon]
-    fit:
-      hard_rules: pass
-      score: 5
-      strengths:
-        - 有明确家庭高价值 / 接受度信息。
-      tradeoffs: []
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 孩子明确喜欢；软质地。
+    tags:
+      - child-eaten
+      - easy-braise-addon
   - id: firm-tofu
     type: ingredient
     inventory_tracking: counted
@@ -68,21 +47,8 @@ ingredients:
       visible: true
       section: egg-tofu
       order: 30
-    tags: [easy-braise-addon]
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs:
-        - 孩子当前不稳定接受。
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 成人偏好；孩子当前不稳定接受。偏好不作为 Child coverage 硬条件。
+    tags:
+      - easy-braise-addon
   - id: egg-tofu
     type: ingredient
     inventory_tracking: counted
@@ -95,19 +61,6 @@ ingredients:
       order: 40
     tags:
       - child-eaten
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 当前修正规则：质地软，孩子会吃。
   - id: pressed-tofu
     type: ingredient
     inventory_tracking: counted
@@ -121,20 +74,6 @@ ingredients:
     tags:
       - supporting-only
       - addon-only
-    fit:
-      hard_rules: pass
-      score: 3
-      strengths:
-        - 作为 supporting ingredient 有明确菜单价值。
-      tradeoffs:
-        - 默认不承担 main-protein base；用途比核心主料窄。
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 用户喜欢；作为 addon / supporting ingredient，不要求 standalone Recipe。
   - id: tofu-sheets
     type: ingredient
     inventory_tracking: counted
@@ -148,20 +87,6 @@ ingredients:
     tags:
       - supporting-only
       - addon-only
-    fit:
-      hard_rules: pass
-      score: 3
-      strengths:
-        - 作为 supporting ingredient 有明确菜单价值。
-      tradeoffs:
-        - 默认不承担 main-protein base；用途比核心主料窄。
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 用户喜欢；作为顺手焖 addon，不要求 standalone Recipe。
   - id: dried-yuba-sticks
     type: ingredient
     inventory_tracking: counted
@@ -176,21 +101,6 @@ ingredients:
       - supporting-only
       - addon-only
       - easy-braise-addon
-    fit:
-      hard_rules: pass
-      score: 3
-      strengths:
-        - 作为 supporting ingredient 有明确菜单价值。
-      tradeoffs:
-        - 默认不承担 main-protein base；用途比核心主料窄。
-        - 需要泡发，属于 advance-start ingredient。
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 需要泡发；advance-start；作为顺手焖 addon，不要求 standalone Recipe。
   - id: fried-tofu-puffs
     type: ingredient
     inventory_tracking: counted
@@ -206,18 +116,3 @@ ingredients:
       - addon-only
       - processed
       - easy-braise-addon
-    fit:
-      hard_rules: pass
-      score: 3
-      strengths:
-        - 作为 supporting ingredient 有明确菜单价值。
-      tradeoffs:
-        - 默认不承担 main-protein base；用途比核心主料窄。
-        - 家庭喜欢但使用频率较低。
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is conservative where priority was not explicit. No retailer, price, package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 用户很喜欢但低频；作为顺手焖 addon，不要求 standalone Recipe。

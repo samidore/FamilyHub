@@ -10,21 +10,7 @@ tags:
   - stovetop-nonstick
   - lunch-30
   - child-support-protein
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 清汤结构按来源标准化；盐最后加入，避免长炖后过咸。
-  sources:
-    - The Woks of Life — Tomato Hot Pot with Beef; used for tomato + thin-beef soup structure
-    - The Woks of Life — Chinese winter melon / rib / clear soup recipes
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Candidate household route; exact seasoning quantities are intentionally left for first-cook calibration rather than invented.
 

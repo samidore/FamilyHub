@@ -10,22 +10,7 @@ tags:
   - stovetop-wok
   - lunch-45
   - child-support-protein
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 临近上桌流程相对集中，便于与另一灶口并行。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. The Woks of Life 牛肉嫩化/蚝油汁结构按家庭3人份轻盐标准化。
-  sources:
-    - The Woks of Life — Beef & Mushroom Stir-fry
-    - The Woks of Life — Beef & Broccoli / Beef with Mushrooms
-    - USDA FSIS Safe Minimum Internal Temperature Chart
+fit_score: 5
 notes: |-
   Uses sliced-beef-brisket; canonical stir-fry steak cuts are optional substitutions, not new Ingredient dependencies. Child support recommended because quick-cooked beef slices may be chewy.
 

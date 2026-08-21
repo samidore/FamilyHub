@@ -11,21 +11,7 @@ tags:
   - advance-start
   - child-support-protein
   - low-active-time
-fit:
-  hard_rules: pass
-  score: 5
-  strengths:
-    - 与现有家庭食材/厨具兼容，重复使用价值较高。
-    - 主烹调设备可释放灶口。
-  tradeoffs:
-    - Meal Combo 需要考虑额外软蛋白或儿童当前接受度。
-    - 需要提前启动或较长被动烹调时间。
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-13
-  scope: Culinary identity and executable technique; adapted household-light route. 按 Just One Cookbook Yaki Imo 低温慢烤思路；时间按红薯大小用质地判断。
-  sources:
-    - Just One Cookbook — Baked Japanese Sweet Potatoes (Yaki Imo)
+fit_score: 5
 notes: |-
   Low-active-time staple; baking elapsed time is long but scheduling-flexible.
 

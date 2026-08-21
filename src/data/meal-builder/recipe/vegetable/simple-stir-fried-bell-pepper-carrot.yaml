@@ -4,12 +4,7 @@ status: candidate
 name_zh: 清炒甜椒 / 胡萝卜
 name_en: Simple Stir-Fried Bell Pepper or Carrot
 tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, soft-vegetable]
-fit: { hard_rules: pass, score: 4, strengths: [甜椒和胡萝卜都能用同一轻汁炒法，并为孩子单独加水焖软。], tradeoffs: [] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Vegetable choice and stir-fry structure are supported by The Woks of Life Everyday Vegetable Stir-Fry; household light sauce reuses the canonical Meal Builder vegetable sauce.
-  sources: [The Woks of Life — Everyday Vegetable Stir-Fry; src/data/meal-builder/recipe/vegetable/simple-stir-fried-broccoli.yaml]
+fit_score: 4
 notes: Shared Recipe only for two vegetables that tolerate the same slice-and-soften path.
 primary_role: vegetable
 main_protein_category: none

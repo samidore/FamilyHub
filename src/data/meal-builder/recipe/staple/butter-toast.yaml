@@ -4,12 +4,7 @@ status: candidate
 name_zh: 黄油烤吐司
 name_en: Butter Toast
 tags: [light-seasoning, non-spicy-base, pan-seared, low-prep]
-fit: { hard_rules: pass, score: 4, strengths: [面包有不依赖其他库存的快速主食 fallback。], tradeoffs: [] }
-evidence:
-  level: reputable-general
-  checked_on: 2026-08-19
-  scope: Buttered bread toasted on a skillet until golden is a standard documented technique; exact time is endpoint-driven because bread thickness varies.
-  sources: [Serious Eats — butter-and-toast skillet technique]
+fit_score: 4
 notes: Standalone staple fallback; only bread is required.
 primary_role: staple
 main_protein_category: none

@@ -10,21 +10,6 @@ ingredients:
       section: lamb-goat
       order: 10
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: lamb-shoulder-chunks
     type: ingredient
     inventory_tracking: counted
@@ -36,21 +21,6 @@ ingredients:
       section: lamb-goat
       order: 20
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: lamb-leg-chunks
     type: ingredient
     inventory_tracking: counted
@@ -62,21 +32,6 @@ ingredients:
       section: lamb-goat
       order: 30
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: ground-lamb
     type: ingredient
     inventory_tracking: counted
@@ -88,19 +43,6 @@ ingredients:
       section: lamb-goat
       order: 35
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 用户已明确希望作为长期 Meal Builder 食材，并配有独立成菜的家庭做法。
-      tradeoffs: []
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-19
-      scope: User-confirmed ingredient and household use; no retailer, price, package-size, or inventory claim.
-      sources:
-        - User-confirmed Meal Builder requirement, 2026-08-19
-    notes: ""
   - id: bone-in-lamb-chops
     type: ingredient
     inventory_tracking: counted
@@ -112,21 +54,6 @@ ingredients:
       section: lamb-goat
       order: 40
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: boneless-lamb-chops
     type: ingredient
     inventory_tracking: counted
@@ -138,21 +65,6 @@ ingredients:
       section: lamb-goat
       order: 50
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: lamb-shanks
     type: ingredient
     inventory_tracking: counted
@@ -164,21 +76,6 @@ ingredients:
       section: lamb-goat
       order: 60
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: lamb-riblets
     type: ingredient
     inventory_tracking: counted
@@ -190,21 +87,6 @@ ingredients:
       section: lamb-goat
       order: 70
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: skin-on-bone-in-goat-pieces
     type: ingredient
     inventory_tracking: counted
@@ -216,21 +98,6 @@ ingredients:
       section: lamb-goat
       order: 80
     tags: []
-    fit:
-      hard_rules: pass
-      score: 4
-      strengths:
-        - 已通过 Ingredient brainstorm 保留，适合作为长期可用候选。
-      tradeoffs: []
-    evidence:
-      level: inferred
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: ""
   - id: lamb-spine-sections
     type: ingredient
     inventory_tracking: counted
@@ -243,19 +110,3 @@ ingredients:
       order: 90
     tags:
       - low-priority
-    fit:
-      hard_rules: pass
-      score: 2
-      strengths:
-        - 保留为可用候选，特定场景仍有价值。
-      tradeoffs:
-        - 用户已明确降低优先度或使用频率。
-    evidence:
-      level: user-confirmed
-      checked_on: 2026-08-12
-      scope: Accepted Ingredient brainstorm + v1.4 Starter/UI migration; fit is
-        conservative where priority was not explicit. No retailer, price,
-        package-size, prep-minute, or new child-acceptance claim.
-      sources:
-        - Family Meal Ingredient brainstorm / retained candidate decisions
-    notes: 低频候选。
