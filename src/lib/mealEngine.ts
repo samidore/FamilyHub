@@ -1,11 +1,13 @@
 export const MEAL_TARGET_OPTIONS = [1, 2, 3] as const;
 export const TIME_PREFERENCES = ['any', '30', '45', '60'] as const;
 export const PROTEIN_TARGET_TOLERANCE = 0.5;
+export const STALE_INGREDIENT_PRIORITY_DAYS = 3;
 
 export type TimePreference = (typeof TIME_PREFERENCES)[number];
 export type RecipeChildCoverage = boolean | 'ingredient-dependent';
 export type IngredientChildCoverage = boolean | 'unknown';
 export type InventoryTracking = 'counted' | 'presence-only';
+export type InventoryFreshness = 'fifo';
 
 export interface MealIngredient {
   id: string;
@@ -13,6 +15,7 @@ export interface MealIngredient {
   nameEn?: string;
   tags?: string[];
   inventoryTracking: InventoryTracking;
+  inventoryFreshness?: InventoryFreshness;
   childCoverage?: { vegetable: IngredientChildCoverage };
 }
 
@@ -48,6 +51,8 @@ export interface MealState {
   timePreference: TimePreference;
   selectedRecipeIds: string[];
   recipeIngredientBindings: Record<string, string[]>;
+  /** Oldest stocked-on date per freshness-tracked Ingredient for this meal snapshot. */
+  ingredientFreshnessDates: Record<string, string>;
 }
 
 export interface MealTotals {
@@ -60,18 +65,49 @@ export interface MealTotals {
 
 export const defaultMealState = (): MealState => ({
   availableIngredientIds: [], proteinTarget: 1, vegetableTarget: 2, stapleRequired: true, childMode: true, timePreference: 'any', selectedRecipeIds: [],
-  recipeIngredientBindings: {},
+  recipeIngredientBindings: {}, ingredientFreshnessDates: {},
 });
 
 const asSet = (value: Set<string> | string[] | undefined) => value instanceof Set ? value : new Set(value ?? []);
+const DATE_KEY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
-/** Pick a deterministic available Ingredient for every required group. */
-export function bindRecipeIngredients(recipe: MealRecipe, available: Set<string> | string[], existing: (string | null | undefined)[] = []) {
+/** Local calendar date used for household stock entry; persisted dates contain no time zone. */
+export function calendarDateKey(value: Date | number = new Date()) {
+  const date = value instanceof Date ? value : new Date(value);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function calendarDayNumber(value: string) {
+  if (!DATE_KEY_PATTERN.test(value)) return null;
+  const [year, month, day] = value.split('-').map(Number);
+  const timestamp = Date.UTC(year, month - 1, day);
+  const date = new Date(timestamp);
+  if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) return null;
+  return Math.floor(timestamp / 86_400_000);
+}
+
+export function freshnessAgeDays(stockedOn: string, today = calendarDateKey()) {
+  const stocked = calendarDayNumber(stockedOn); const current = calendarDayNumber(today);
+  return stocked === null || current === null ? 0 : Math.max(0, current - stocked);
+}
+
+function preferredFreshnessChoice(ids: string[], freshnessDates: Record<string, string>) {
+  const dated = ids.filter((id) => DATE_KEY_PATTERN.test(freshnessDates[id] ?? ''));
+  if (!dated.length) return ids[0] ?? null;
+  return dated.reduce((oldest, id) => freshnessDates[id] < freshnessDates[oldest] ? id : oldest);
+}
+
+/** Pick a deterministic available Ingredient for every required group. Existing choices are never silently rebound. */
+export function bindRecipeIngredients(recipe: MealRecipe, available: Set<string> | string[], existing: (string | null | undefined)[] = [], ingredientFreshnessDates: Record<string, string> = {}) {
   const availableSet = asSet(available);
   return recipe.requirements.map((requirement, index) => {
     const prior = existing[index];
     if (prior && requirement.anyOf.includes(prior) && availableSet.has(prior)) return prior;
-    return requirement.anyOf.find((id) => availableSet.has(id)) ?? null;
+    const options = requirement.anyOf.filter((id) => availableSet.has(id));
+    return preferredFreshnessChoice(options, ingredientFreshnessDates);
   });
 }
 
@@ -173,38 +209,59 @@ export function recentRecipePenalty(recipeId: string, recentRecipeIds: string[][
   return recentRecipeIds.reduce((penalty, ids, index) => ids.includes(recipeId) ? Math.max(penalty, recentRecipeIds.length - index) : penalty, 0);
 }
 
-export function rankCandidates(recipes: MealRecipe[], state: MealState, ingredients: MealIngredient[] | Record<string, MealIngredient> = [], draftBindings: Record<string, (string | null | undefined)[]> = {}, recentRecipeIds: string[][] = []) {
+export function rankCandidates(recipes: MealRecipe[], state: MealState, ingredients: MealIngredient[] | Record<string, MealIngredient> = [], draftBindings: Record<string, (string | null | undefined)[]> = {}, recentRecipeIds: string[][] = [], today = calendarDateKey()) {
   const available = asSet(state.availableIngredientIds);
   const selectedIds = new Set(state.selectedRecipeIds);
   const selected = recipes.filter((recipe) => selectedIds.has(recipe.id));
   const totals = aggregateMeal(selected, { recipeIngredientBindings: state.recipeIngredientBindings, availableIngredientIds: state.availableIngredientIds, ingredients });
   const proteinLimit = state.proteinTarget + PROTEIN_TARGET_TOLERANCE;
-  const measures = (recipe: MealRecipe) => {
-    const binding = bindRecipeIngredients(recipe, available, draftBindings[recipe.id] ?? state.recipeIngredientBindings?.[recipe.id] ?? []);
-    const coverage = resolveRecipeChildCoverage(recipe, binding, ingredients);
+  const freshnessDates = state.ingredientFreshnessDates ?? {};
+  const cache = new Map<string, ReturnType<typeof measure>>();
+
+  function measure(recipe: MealRecipe) {
+    const existing = draftBindings[recipe.id] ?? state.recipeIngredientBindings?.[recipe.id] ?? [];
+    const baselineBinding = bindRecipeIngredients(recipe, available, existing);
+    const freshnessBinding = bindRecipeIngredients(recipe, available, existing, freshnessDates);
+    const baselineCoverage = resolveRecipeChildCoverage(recipe, baselineBinding, ingredients);
+    const freshnessCoverage = resolveRecipeChildCoverage(recipe, freshnessBinding, ingredients);
+    const childValue = (coverage: ReturnType<typeof resolveRecipeChildCoverage>) => Number(state.childMode && !totals.childProtein && coverage.protein) + Number(state.childMode && !totals.childVegetable && coverage.vegetable);
+    const binding = childValue(freshnessCoverage) < childValue(baselineCoverage) ? baselineBinding : freshnessBinding;
+    const coverage = binding === baselineBinding ? baselineCoverage : freshnessCoverage;
+    if (!selectedIds.has(recipe.id)) draftBindings[recipe.id] = [...binding];
     const next = { protein: totals.protein + recipe.contribution.protein, vegetable: totals.vegetable + recipe.contribution.vegetable, staple: totals.staple + recipe.contribution.staple };
-    const childSolved = Number(state.childMode && !totals.childProtein && coverage.protein) + Number(state.childMode && !totals.childVegetable && coverage.vegetable);
+    const childSolved = childValue(coverage);
     const normalGaps = Number(totals.protein < state.proteinTarget && recipe.contribution.protein > 0) + Number(totals.vegetable < state.vegetableTarget && recipe.contribution.vegetable > 0) + Number(state.stapleRequired && totals.staple < 1 && recipe.contribution.staple > 0);
     const withinProteinTolerance = next.protein <= proteinLimit;
     const overage = Math.max(0, next.protein - proteinLimit) + Math.max(0, next.vegetable - state.vegetableTarget) + Math.max(0, next.staple - (state.stapleRequired ? 1 : 0));
-    return { childSolved, normalGaps, withinProteinTolerance, overage, time: timeFit(recipe, state.timePreference) };
+    const oldestAgeDays = binding.reduce((oldest, id) => id ? Math.max(oldest, freshnessAgeDays(freshnessDates[id] ?? '', today)) : oldest, 0);
+    const stalePriority = oldestAgeDays > STALE_INGREDIENT_PRIORITY_DAYS;
+    return { binding, childSolved, normalGaps, withinProteinTolerance, overage, oldestAgeDays, stalePriority, time: timeFit(recipe, state.timePreference) };
+  }
+
+  const measures = (recipe: MealRecipe) => {
+    const cached = cache.get(recipe.id); if (cached) return cached;
+    const value = measure(recipe); cache.set(recipe.id, value); return value;
   };
+
   return recipes.filter((recipe) => {
-    if (selectedIds.has(recipe.id) || !isFeasible(recipe, available, bindRecipeIngredients(recipe, available, draftBindings[recipe.id] ?? state.recipeIngredientBindings?.[recipe.id] ?? []))) return false;
+    if (selectedIds.has(recipe.id)) return false;
     const value = measures(recipe);
+    if (!isFeasible(recipe, available, value.binding)) return false;
     if (value.childSolved > 0) return true;
     if (value.normalGaps === 0) return false;
     if (!value.withinProteinTolerance && value.normalGaps === 1 && recipe.contribution.protein > 0 && totals.protein >= state.proteinTarget) return false;
     return true;
   }).sort((a, b) => {
     const x = measures(a); const y = measures(b);
-    return recentRecipePenalty(a.id, recentRecipeIds) - recentRecipePenalty(b.id, recentRecipeIds) || y.childSolved - x.childSolved || Number(y.withinProteinTolerance) - Number(x.withinProteinTolerance) || y.normalGaps - x.normalGaps || x.overage - y.overage || b.fitScore - a.fitScore || x.time.rank - y.time.rank || a.order - b.order;
+    const staleOrder = Number(y.stalePriority) - Number(x.stalePriority);
+    const staleAgeOrder = x.stalePriority && y.stalePriority ? y.oldestAgeDays - x.oldestAgeDays : 0;
+    return staleOrder || staleAgeOrder || recentRecipePenalty(a.id, recentRecipeIds) - recentRecipePenalty(b.id, recentRecipeIds) || y.childSolved - x.childSolved || Number(y.withinProteinTolerance) - Number(x.withinProteinTolerance) || y.normalGaps - x.normalGaps || x.overage - y.overage || b.fitScore - a.fitScore || x.time.rank - y.time.rank || a.order - b.order;
   });
 }
 
 /** Keep selected Recipes and bindings coherent without letting the availability filter rewrite an existing selection. */
 export function reconcileMealState(input: Partial<MealState>, recipes: MealRecipe[], _ingredients: MealIngredient[] | Record<string, MealIngredient> = []): MealState {
-  const state: MealState = { ...defaultMealState(), ...input, recipeIngredientBindings: { ...(input.recipeIngredientBindings ?? {}) } };
+  const state: MealState = { ...defaultMealState(), ...input, recipeIngredientBindings: { ...(input.recipeIngredientBindings ?? {}) }, ingredientFreshnessDates: { ...(input.ingredientFreshnessDates ?? {}) } };
   const available = asSet(state.availableIngredientIds);
   const keptRecipes: string[] = [];
   const bindings: Record<string, string[]> = {};
