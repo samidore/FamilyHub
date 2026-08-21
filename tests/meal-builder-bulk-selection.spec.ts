@@ -11,7 +11,7 @@ async function setInventory(page: Page, ids: string[]) {
   for (const id of ids) await (await inventoryItem(page, id)).locator('[data-inventory-toggle]').click();
 }
 
-test('global and section bulk controls filter the current meal without changing inventory', async ({ page }) => {
+test('global and section bulk controls filter future candidates without changing inventory or selected recipes', async ({ page }) => {
   await page.goto('meal-builder/');
   await setInventory(page, ['ground-pork', 'pork-chops', 'chicken-breast', 'broccoli']);
   await page.locator('#meal-start-current').click();
@@ -49,7 +49,7 @@ test('global and section bulk controls filter the current meal without changing 
   await expect(page.locator('[data-ingredient-id="chicken-breast"]')).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('[data-ingredient-id="broccoli"]')).toHaveAttribute('aria-pressed', 'true');
   await expect(porkSection.locator('[data-section-count]')).toHaveText('0 / 2');
-  await expect(page.locator('[data-selected-recipe="clear-braised-lions-head-meatballs"]')).toBeHidden();
+  await expect(page.locator('[data-selected-recipe="clear-braised-lions-head-meatballs"]')).toBeVisible();
 
   const vegetableSection = page.locator('[data-ingredient-section="other-vegetable"]');
   const vegetableClear = vegetableSection.locator('[data-ingredient-bulk-section="other-vegetable"][data-ingredient-bulk="clear"]');
@@ -59,4 +59,5 @@ test('global and section bulk controls filter the current meal without changing 
   await expect(page.locator('[data-ingredient-id="broccoli"]')).toHaveAttribute('aria-pressed', 'false');
   await expect(page.locator('[data-ingredient-id="chicken-breast"]')).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('[data-inventory-value="broccoli"]')).toHaveText('1');
+  await expect(page.locator('[data-selected-recipe="clear-braised-lions-head-meatballs"]')).toBeVisible();
 });
