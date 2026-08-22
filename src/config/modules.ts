@@ -8,6 +8,7 @@ export type CategoryId = (typeof categoryDefinitions)[number]['id'];
 export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists' | 'adult-dermatologists' | 'colonoscopy-specialists' | 'ob-gyn' | 'meal-builder';
 export type ModuleAccent = 'evergreen' | 'lake' | 'ochre' | 'berry';
 export type ModuleIcon = 'compass' | 'calendar' | 'care' | 'meal';
+export type ModulePrivacyClass = 'public-reference' | 'authenticated-household';
 
 export interface ModuleDefinition {
   id: ModuleId;
@@ -19,7 +20,7 @@ export interface ModuleDefinition {
   itemLabel: string;
   accent: ModuleAccent;
   icon: ModuleIcon;
-  privacyClass: 'public-reference';
+  privacyClass: ModulePrivacyClass;
   status: 'active';
 }
 

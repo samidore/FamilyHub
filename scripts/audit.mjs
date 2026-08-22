@@ -35,13 +35,22 @@ const cardAttributes = {
   'ob-gyn': 'data-ob-gyn',
   'meal-builder': 'data-meal-recipe',
 };
+const supportedPrivacyClasses = new Set(['public-reference', 'authenticated-household']);
 const cardCount = (html, attribute) => (html.match(new RegExp(`<article[^>]+${attribute}`, 'g')) ?? []).length;
 
 assert((home.match(/<a\b[^>]+data-module/g) ?? []).length === moduleRegistry.length, 'Home module cards do not match the active registry');
+const moduleOutputs = [];
 for (const module of moduleRegistry) {
+  assert(supportedPrivacyClasses.has(module.privacyClass), `${module.id} has an unsupported privacy class`);
   const output = await readFile(`dist${module.route}index.html`, 'utf8');
-  assert(cardCount(output, cardAttributes[module.id]) === records[module.id].length, `${module.id} rendered card count does not match validated data`);
+  moduleOutputs.push(output);
   assert(output.includes('id="main-content"'), `${module.id} is missing the main-content target`);
+  if (module.privacyClass === 'public-reference') {
+    const recordSet = records[module.id];
+    const cardAttribute = cardAttributes[module.id];
+    assert(Array.isArray(recordSet) && typeof cardAttribute === 'string', `${module.id} is missing public-reference audit metadata`);
+    assert(cardCount(output, cardAttribute) === recordSet.length, `${module.id} rendered card count does not match validated data`);
+  }
 }
 
 for (const section of ['valley-ob', 'hackensack-ob', 'englewood-ob', 'gyn']) {
@@ -80,7 +89,7 @@ assert([...colonoscopy].sort((a, b) => a.rank - b.rank).every((item, index) => i
 assert(!/(memberId|groupNumber|insuranceId|insuranceCard|cardImage|codex-remote-attachments)/i.test(JSON.stringify(colonoscopy)), 'Private insurance fields or attachment paths were found in colonoscopy data');
 assert(!/(memberId|groupNumber|insuranceId|insuranceCard|cardImage|codex-remote-attachments)/i.test(JSON.stringify(obGyn)), 'Private insurance fields or attachment paths were found in OB/GYN data');
 
-const htmlFiles = [home, ...(await Promise.all(moduleRegistry.map((module) => readFile(`dist${module.route}index.html`, 'utf8'))))];
+const htmlFiles = [home, ...moduleOutputs];
 assert(htmlFiles.every((html) => !/(memberId|groupNumber|insuranceId|insuranceCard|cardImage|codex-remote-attachments)/i.test(html)), 'Private insurance fields or attachment paths were found in build output');
 assert(htmlFiles.every((html) => !/(2024\s*年\s*8\s*月|\bwife\b|\bhusband\b|妻子|丈夫|\buser\s+(likes?|reports?)\b)/i.test(html)), 'Private household phrasing was found in build output');
 assert(htmlFiles.every((html) => !/<iframe|google-analytics|googletagmanager|fonts\.googleapis/i.test(html)), 'A forbidden embed, analytics script, or remote font was found');
