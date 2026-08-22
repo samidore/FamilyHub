@@ -3,6 +3,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 猪里脊
     name_en: Whole Pork Tenderloin
@@ -15,6 +16,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 梅花肉块
     name_en: Pork Shoulder Chunks
@@ -27,6 +29,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 薄切五花肉
     name_en: Thin-Sliced Pork Belly
@@ -39,6 +42,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 超薄切五花肉
     name_en: Extra-Thin-Sliced Pork Belly
@@ -51,6 +55,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 猪绞肉
     name_en: Ground Pork
@@ -63,6 +68,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 软排骨
     name_en: Soft Pork Ribs
@@ -75,6 +81,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 猪脚
     name_en: Pork Feet
@@ -88,6 +95,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 猪排
     name_en: Pork Chops
@@ -100,6 +108,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 猪肝
     name_en: Pork Liver
