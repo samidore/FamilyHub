@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import {
   LEGACY_FIFO_MIGRATION_DATE,
@@ -148,4 +149,16 @@ test('one_of prefers older stock only when that does not lose required child cov
   const ranked = rankCandidates([chooseVegetable], state, ingredients, draftBindings, [], '2026-08-21');
   assert.deepEqual(ranked.map((item) => item.id), ['choose-veg']);
   assert.deepEqual(draftBindings['choose-veg'], ['child-veg']);
+});
+
+test('Recipes shows only compact hourglass 临期 freshness badges', async () => {
+  const page = await readFile('src/pages/meal-builder.astro', 'utf8');
+  assert.match(page, /data-selected-freshness-badge/);
+  assert.match(page, /data-candidate-freshness-badge/);
+  assert.equal(page.match(/data-freshness-icon="hourglass"/g)?.length, 2);
+  assert.equal(page.match(/<span>临期<\/span>/g)?.length, 2);
+  assert.match(page, /freshnessAgeDays\(state\.ingredientFreshnessDates/);
+  assert.match(page, /> STALE_INGREDIENT_PRIORITY_DAYS/);
+  assert.doesNotMatch(page, /优先消耗/);
+  assert.doesNotMatch(page, /最老\s*\d+\s*天/);
 });
