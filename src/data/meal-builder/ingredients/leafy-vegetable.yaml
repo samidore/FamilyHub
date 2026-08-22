@@ -3,6 +3,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 娃娃菜
     name_en: Baby Napa Cabbage
@@ -18,6 +19,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 大白菜
     name_en: Napa Cabbage
@@ -31,6 +33,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 青菜
     name_en: Chinese Greens
@@ -46,6 +49,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 菠菜
     name_en: Spinach
@@ -58,6 +62,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 生菜
     name_en: Lettuce
@@ -73,6 +78,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 油麦菜
     name_en: Youmai Cai
@@ -88,6 +94,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 菜心
     name_en: Choy Sum
@@ -103,6 +110,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 芥兰
     name_en: Gai Lan
@@ -117,6 +125,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 空心菜
     name_en: Water Spinach
@@ -129,6 +138,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 豆苗
     name_en: Pea Shoots
@@ -143,6 +153,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 苋菜
     name_en: Amaranth Greens
@@ -157,6 +168,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 茼蒿
     name_en: Tong Hao
@@ -171,6 +183,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 芥菜
     name_en: Mustard Greens
