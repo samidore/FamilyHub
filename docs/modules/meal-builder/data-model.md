@@ -29,7 +29,7 @@ Treat each Recipe or Ingredient change as one transaction:
 - Recipe hard requirements contain only active inventory Ingredients required for the dish to remain that dish.
 - Pantry items, seasonings, binders, and optional cooking ingredients belong in `cook_ingredients` / steps, not hard requirements or tags unless they define a real capability.
 - Set meal contribution, child coverage/suitability, and only the capability tags the Recipe actually supports.
-- Use `inventory_freshness: fifo` only when dated stock age should affect FIFO consumption and candidate priority. It is valid only with `inventory_tracking: counted` and must be an explicit Ingredient fact, never inferred from ID, section, display name, or tags.
+- Use `inventory_freshness: fifo` only when dated stock age should affect FIFO consumption and candidate priority. It is valid only with `inventory_tracking: counted`, requires a positive-integer `freshness_priority_days`, and must be an explicit Ingredient fact, never inferred from ID, section, display name, or tags. Do not set `freshness_priority_days` on a non-FIFO Ingredient.
 - A `cookable` Recipe needs complete Cook View ingredients, executable steps, and equipment.
 - Keep referenced IDs indexed exactly once and validate the full Ingredient + Recipe transaction.
 
@@ -40,6 +40,7 @@ id: boneless-skinless-chicken-thighs
 type: ingredient
 inventory_tracking: counted # counted | presence-only
 inventory_freshness: fifo   # optional; fifo only
+freshness_priority_days: 3  # required with fifo; strict age > threshold
 status: candidate
 name_zh: 无骨去皮鸡腿肉
 name_en: Boneless Skinless Chicken Thighs
@@ -54,9 +55,9 @@ child_coverage:
 
 `starter.visible: false` retains a long-term ID without showing a button. Every visible Ingredient has one controlled section and a unique positive order. `inventory_tracking` is the source of truth: `counted` uses half-unit quantities and `presence-only` stores boolean presence. Runtime code must not infer tracking mode from Ingredient IDs.
 
-`inventory_freshness` is optional. `fifo` means the household runtime keeps dated half-unit batches for that counted Ingredient, consumes the oldest batch first, and may use the oldest date as a candidate-ranking signal. The aggregate inventory quantity remains the user-facing total; batch quantities must sum to that total. Runtime age is derived from batch dates and is never stored as a separate age counter.
+`inventory_freshness` is optional. `fifo` means the household runtime keeps dated half-unit batches for that counted Ingredient and consumes the oldest batch first. Every FIFO Ingredient also declares `freshness_priority_days`, a positive integer used by candidate ranking and the Recipes `临期` badge. The threshold is strict: an Ingredient becomes freshness-priority only when its oldest snapshot age is greater than the declared value; equality does not qualify. `freshness_priority_days` is static Ingredient data and is not stored in Firebase household state. The aggregate inventory quantity remains the user-facing total; batch quantities must sum to that total. Runtime age is derived from batch dates and is never stored as a separate age counter.
 
-The current explicit FIFO scope is fresh pork, chicken, beef, lamb/goat; non-frozen leafy and other vegetables; and soft tofu, firm tofu, egg tofu, and pressed tofu. Fish/shellfish, mushrooms, eggs, dry tofu products, frozen/processed meats, frozen vegetables, staples, and pantry items currently omit the field. Changing that scope later means changing the canonical Ingredient record, not adding ID-based runtime rules.
+The current explicit FIFO scope is fresh pork, chicken, beef, lamb/goat; non-frozen leafy and other vegetables; and soft tofu, firm tofu, egg tofu, and pressed tofu. Their current `freshness_priority_days` values are 3 for fresh meat, 5 for non-frozen vegetables, and 7 for the four fresh tofu Ingredients. Fish/shellfish, mushrooms, eggs, dry tofu products, frozen/processed meats, frozen vegetables, staples, and pantry items currently omit both freshness fields. Changing the scope or threshold later means changing the canonical Ingredient record, not adding ID- or section-based runtime rules.
 
 The optional Ingredient `child_coverage.vegetable` is read only when a Recipe declares ingredient-dependent coverage. `unknown` stays unknown.
 
@@ -84,7 +85,7 @@ A current meal stores only the oldest date needed for its ranking snapshot:
 currentMeal/ingredientFreshnessDates/{ingredientId} = YYYY-MM-DD
 ```
 
-This is deliberately not a copy of full batch quantities. Entering/resnapshotting Recipes refreshes the availability and oldest-date snapshot; later inventory edits do not rewrite a meal already being planned. Checkout still validates against live aggregate inventory and live FIFO batches atomically.
+This is deliberately not a copy of full batch quantities or static threshold data. Entering/resnapshotting Recipes refreshes the availability and oldest-date snapshot; later inventory edits do not rewrite a meal already being planned. Candidate ranking and the `临期` badge combine that frozen date with the current canonical Ingredient's `freshness_priority_days`. Checkout still validates against live aggregate inventory and live FIFO batches atomically.
 
 Pre-existing aggregate FIFO stock that has no batch metadata is migrated once to `2026-08-18`. The migration date is intentionally coarse: it provides deterministic ordering for stock known to predate the feature without claiming a historical purchase date that was never recorded.
 
@@ -142,7 +143,7 @@ substitutions: []
 ## Controlled values and invariants
 
 - Main protein categories: `pork`, `beef`, `lamb`, `chicken`, `egg`, `tofu`, `fish`, `shellfish`, `mixed`, `none`; goat maps to `lamb`.
-- `inventory_tracking` is `counted` or `presence-only`; optional `inventory_freshness` is `fifo` and requires `counted`.
+- `inventory_tracking` is `counted` or `presence-only`; optional `inventory_freshness` is `fifo` and requires `counted`. Every FIFO Ingredient requires a positive-integer `freshness_priority_days`; that field is invalid without `inventory_freshness`.
 - Tags express product capabilities and preparation facts. `easy-braise-addon` is a checkout-only Ingredient tag; `addon-only` exempts an Ingredient from standalone fallback; `iron-pan-braise` identifies Recipes compatible with that checkout add-on flow.
 - `vegetable-centered` is an explicit Recipe tag. It must never be inferred from category, name, or historical provenance. Runtime `vegetableCentered` is derived from this tag.
 - Every visible Ingredient without `addon-only` must have at least one active Recipe with a single required identity group containing that Ingredient.
