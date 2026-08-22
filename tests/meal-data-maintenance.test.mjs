@@ -39,9 +39,23 @@ test('Ingredient inventory tracking is data-driven rather than ID-whitelisted', 
   const chicken = parse(files['ingredients/chicken.yaml']);
   const ingredient = chicken.ingredients.find((item) => item.inventory_tracking === 'counted');
   delete ingredient.inventory_freshness;
+  delete ingredient.freshness_priority_days;
   ingredient.inventory_tracking = 'presence-only';
   const data = parseMealFiles({ ...files, 'ingredients/chicken.yaml': stringify(chicken) });
   assert.equal(data.ingredients.find((item) => item.id === ingredient.id)?.inventoryTracking, 'presence-only');
+});
+
+test('FIFO freshness requires an explicit positive integer priority threshold', async () => {
+  const files = await readMealFiles();
+  const chicken = parse(files['ingredients/chicken.yaml']);
+  const tracked = chicken.ingredients.find((item) => item.inventory_freshness === 'fifo');
+  delete tracked.freshness_priority_days;
+  await assert.rejects(async () => parseMealFiles({ ...files, 'ingredients/chicken.yaml': stringify(chicken) }), /freshness_priority_days/);
+
+  const chickenWithDetachedThreshold = parse(files['ingredients/chicken.yaml']);
+  const untracked = chickenWithDetachedThreshold.ingredients.find((item) => item.inventory_freshness === undefined);
+  untracked.freshness_priority_days = 5;
+  await assert.rejects(async () => parseMealFiles({ ...files, 'ingredients/chicken.yaml': stringify(chickenWithDetachedThreshold) }), /requires inventory_freshness/);
 });
 
 test('all migrated Recipes keep Cook View text separate from operational requirements', async () => {
