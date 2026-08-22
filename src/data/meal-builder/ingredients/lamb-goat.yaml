@@ -2,6 +2,7 @@ ingredients:
   - id: hot-pot-lamb-slices
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 火锅羊肉片
     name_en: Hot-Pot Lamb Slices
@@ -13,6 +14,7 @@ ingredients:
   - id: lamb-shoulder-chunks
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 羊肩肉块
     name_en: Lamb Shoulder Chunks
@@ -24,6 +26,7 @@ ingredients:
   - id: lamb-leg-chunks
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 羊腿肉块
     name_en: Lamb Leg Chunks
@@ -35,6 +38,7 @@ ingredients:
   - id: ground-lamb
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 羊肉末
     name_en: Ground Lamb
@@ -46,6 +50,7 @@ ingredients:
   - id: bone-in-lamb-chops
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 带骨羊排
     name_en: Bone-In Lamb Chops
@@ -57,6 +62,7 @@ ingredients:
   - id: boneless-lamb-chops
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 无骨羊排
     name_en: Boneless Lamb Chops
@@ -68,6 +74,7 @@ ingredients:
   - id: lamb-shanks
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 羊腱
     name_en: Lamb Shanks
@@ -79,6 +86,7 @@ ingredients:
   - id: lamb-riblets
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 羊肋排
     name_en: Lamb Riblets
@@ -90,6 +98,7 @@ ingredients:
   - id: skin-on-bone-in-goat-pieces
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 带皮带骨山羊肉块
     name_en: Skin-On Bone-In Goat Pieces
@@ -101,6 +110,7 @@ ingredients:
   - id: lamb-spine-sections
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 羊蝎子
     name_en: Lamb Spine Sections

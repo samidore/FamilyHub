@@ -8,12 +8,14 @@ Time is a workload signal, not an automatic hard filter. Account for opening, wa
 
 ## Shared four-step flow
 
-1. **Inventory** — connected household users adjust categorized ingredient inventory. Counted items use half-unit quantities; presence-only staples/pantry items use a boolean presence value.
+1. **Inventory** — connected household users adjust categorized ingredient inventory. Counted items use half-unit quantities; presence-only staples/pantry items use a boolean presence value. Ingredients explicitly marked `inventory_freshness: fifo` also keep dated quantity batches. Additions on the same local calendar date merge into that date; additions on different dates stay separate. Aggregate decreases consume the oldest dated batch first.
 2. **Recipes** — users set Protein and Vegetable planning targets, optional Staple, time preference, and Child mode; select available ingredients; review ranked candidates; bind `one_of` choices; select or remove controlled add-ons.
 3. **Cook** — selected recipes and their child-serving/adult-finish notes render in Cook View. The household can return to Recipes while preserving the current meal.
-4. **Checkout** — mark consumed quantities or “used up,” review the draft, confirm, and commit atomically. A stale meal or invalid quantity does not partially mutate inventory.
+4. **Checkout** — mark consumed quantities or “used up,” review the draft, confirm, and commit atomically. Counted FIFO ingredients are deducted from the oldest batch first in the same transaction. A stale meal or invalid quantity does not partially mutate inventory or batch metadata.
 
-`activeStep`, current meal status, selected recipes, ingredient bindings, add-ons, and checkout draft are household state shared across connected devices. The page observes remote changes and reconciles unknown/archived IDs safely.
+`activeStep`, current meal status, selected recipes, ingredient bindings, add-ons, checkout draft, and current-meal freshness snapshot are household state shared across connected devices. The page observes remote changes and reconciles unknown/archived IDs safely.
+
+Inventory quantity/batches and current-meal availability/freshness are independent snapshots. Entering Recipes resnapshots the currently stocked ingredients and each FIFO ingredient's oldest date. Later inventory edits do not rewrite the current meal's ingredient filter or freshness priority. Checkout always validates and consumes the latest live inventory in its atomic transaction.
 
 ## Targets, completion, and ranking
 
@@ -22,9 +24,17 @@ Time is a workload signal, not an automatic hard filter. Account for opening, wa
 - Child mode defaults **on**. With it enabled, both child protein and child vegetable coverage are hard meal-completion requirements. This is dynamic state aggregation, not a simple recipe-category filter.
 - `child_coverage` answers whether the same Recipe can provide a realistically chewable child portion through normal serving adjustments such as cutting shorter/smaller, a brief extra softening step, or adult deboning/checking. Current preference or willingness to eat is not a hard coverage condition. A quick stir-fry whose defining result remains chewy does not count merely because it can be cut smaller; meat braised/stewed genuinely soft can count, including ribs only after adult deboning and bone-fragment checks.
 - `child_coverage` may be `true`, `false`, or `ingredient-dependent`. An ingredient-dependent recipe reads the selected ingredient's `child_coverage`; `unknown` never satisfies a hard child requirement. General `child_suitable`, `child_texture`, and `child_serving` notes remain separate facts.
+- Candidate ranking preserves meal correctness first: child coverage solved, Protein tolerance, number of normal gaps filled, and overage are compared before freshness. Among otherwise comparable candidates, a Recipe using a FIFO ingredient whose oldest batch is **more than 3 local calendar days old** ranks first; exactly 3 days old does not receive the boost, and older stale stock ranks before less-old stale stock. Freshness then precedes recent-Recipe repetition, fit score, time fit, and stable order.
+- For an unselected Recipe with a `one_of` requirement, the default binding prefers the oldest available FIFO option, but never if that choice would solve fewer currently unmet child-coverage requirements than the normal deterministic option. An existing selected/manual binding is never silently rebound because another ingredient becomes older.
 - Recipe availability is evaluated from each `ingredients[]` identity and any matching `one_of` option. Pantry items are display-only Cook View text and never participate in availability or inventory. A Starter ingredient is available for this meal; it is not mandatory to consume.
 - Recipes exposes global and per-section bulk availability controls for stocked visible Starter ingredients. Bulk select/deselect changes only the current meal filter, never shared inventory. Ingredient availability filters affect future Recipe discovery only: once a Recipe is selected, later filter changes do not hide, remove, rebind, or otherwise change that selected Recipe; it continues to contribute to completion, Cook View, and checkout until explicitly removed or reset.
 - The UI sections are data-driven by `starter.section`; every visible section can collapse, and collapsing never clears selections. `starter.order` is stable and not alphabetic.
+
+## FIFO inventory scope and migration
+
+FIFO is explicit Ingredient data, not a category inference. The current tracked scope is fresh pork, chicken, beef, lamb/goat; non-frozen leafy and other vegetables; and soft tofu, firm tofu, egg tofu, and pressed tofu. Fish/shellfish, mushrooms, eggs, dry tofu products, frozen/processed meats, frozen vegetables, staples, and pantry items are not freshness-tracked unless their canonical Ingredient record is deliberately changed later.
+
+When this feature first reads aggregate stock for a FIFO Ingredient without batch metadata, that pre-existing quantity is assigned the one-time migration date `2026-08-18`. This preserves FIFO ordering without inventing a more precise historical purchase date. New additions always use the local calendar date of the inventory write.
 
 ## Vegetable structures and add-on
 
@@ -34,4 +44,4 @@ Vegetable Recipes represent a real cooking structure, not every seasoning label.
 
 ## Reset, errors, and privacy
 
-Resetting recipe selection keeps the shared inventory unchanged. Clearing shared inventory requires explicit confirmation and does not change current-meal availability. Firebase/auth errors are shown; there is no local-data fallback. The page never stores names, birthdays, addresses, schedules, diagnoses, Gmail addresses, UIDs, tokens, or private notes.
+Resetting recipe selection keeps the shared inventory unchanged. Clearing shared inventory requires explicit confirmation and removes any FIFO batch metadata with the aggregate inventory; it does not change current-meal availability/freshness snapshots. Firebase/auth errors are shown; there is no local-data fallback. The page never stores names, birthdays, addresses, schedules, diagnoses, Gmail addresses, UIDs, tokens, or private notes.

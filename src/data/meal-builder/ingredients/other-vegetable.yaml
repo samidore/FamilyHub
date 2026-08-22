@@ -2,6 +2,7 @@ ingredients:
   - id: broccoli
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 西兰花
     name_en: Broccoli
@@ -13,6 +14,7 @@ ingredients:
   - id: cauliflower
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 花菜
     name_en: Cauliflower
@@ -24,6 +26,7 @@ ingredients:
   - id: green-cabbage
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 卷心菜
     name_en: Green Cabbage
@@ -35,6 +38,7 @@ ingredients:
   - id: winter-melon
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 冬瓜
     name_en: Winter Melon
@@ -47,6 +51,7 @@ ingredients:
   - id: luffa
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 丝瓜
     name_en: Luffa
@@ -58,6 +63,7 @@ ingredients:
   - id: zucchini
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 西葫芦
     name_en: Zucchini
@@ -69,6 +75,7 @@ ingredients:
   - id: cucumber
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 黄瓜
     name_en: Cucumber
@@ -80,6 +87,7 @@ ingredients:
   - id: bitter-melon
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 苦瓜
     name_en: Bitter Melon
@@ -92,6 +100,7 @@ ingredients:
   - id: tomato
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 番茄
     name_en: Tomato
@@ -103,6 +112,7 @@ ingredients:
   - id: eggplant
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 茄子
     name_en: Eggplant
@@ -114,6 +124,7 @@ ingredients:
   - id: bell-pepper
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 甜椒
     name_en: Bell Pepper
@@ -125,6 +136,7 @@ ingredients:
   - id: carrot
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 胡萝卜
     name_en: Carrot
@@ -137,6 +149,7 @@ ingredients:
   - id: daikon
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 白萝卜
     name_en: Daikon
@@ -149,6 +162,7 @@ ingredients:
   - id: chinese-yam
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 山药
     name_en: Chinese Yam
@@ -161,6 +175,7 @@ ingredients:
   - id: celtuce
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 莴笋
     name_en: Celtuce
@@ -173,6 +188,7 @@ ingredients:
   - id: water-chestnuts
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 马蹄
     name_en: Water Chestnuts
@@ -184,6 +200,7 @@ ingredients:
   - id: sugar-snap-peas
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 甜豆
     name_en: Sugar Snap Peas
@@ -219,6 +236,7 @@ ingredients:
   - id: yellow-chives
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 韭黄
     name_en: Yellow Chives
@@ -230,6 +248,7 @@ ingredients:
   - id: garlic-chives
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 韭菜
     name_en: Garlic Chives
@@ -241,6 +260,7 @@ ingredients:
   - id: chinese-celery
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 香芹
     name_en: Chinese Celery
@@ -252,6 +272,7 @@ ingredients:
   - id: celery
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 西芹
     name_en: Celery
@@ -263,6 +284,7 @@ ingredients:
   - id: onion
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 洋葱
     name_en: Onion
@@ -275,6 +297,7 @@ ingredients:
   - id: garlic-scapes
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 蒜苔
     name_en: Garlic Scapes
@@ -286,6 +309,7 @@ ingredients:
   - id: bean-sprouts
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 豆芽
     name_en: Bean Sprouts
