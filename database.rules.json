@@ -35,6 +35,13 @@
               ".validate": "(newData.isBoolean() && newData.val() == true) || (newData.isNumber() && newData.val() > 0 && newData.val() % 0.5 == 0)"
             }
           },
+          "inventoryBatches": {
+            "$ingredientId": {
+              "$date": {
+                ".validate": "$date.matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) && newData.isNumber() && newData.val() > 0 && newData.val() % 0.5 == 0"
+              }
+            }
+          },
           "recentMeals": {
             "$index": {
               ".validate": "($index == '0' || $index == '1' || $index == '2' || $index == '3') && newData.hasChildren(['mealId', 'completedAt', 'recipeIds'])",
@@ -49,7 +56,8 @@
           "currentMeal": {
             ".validate": "newData.val() == null || (newData.hasChildren(['mealId', 'status', 'proteinTarget', 'vegetableTarget', 'stapleRequired', 'childMode', 'timePreference']) && newData.child('mealId').isString() && newData.child('mealId').val().length > 0 && newData.child('status').isString() && (newData.child('status').val() == 'selecting' || newData.child('status').val() == 'ready' || newData.child('status').val() == 'cooking') && newData.child('proteinTarget').isNumber() && (newData.child('proteinTarget').val() == 1 || newData.child('proteinTarget').val() == 2 || newData.child('proteinTarget').val() == 3) && newData.child('vegetableTarget').isNumber() && (newData.child('vegetableTarget').val() == 1 || newData.child('vegetableTarget').val() == 2 || newData.child('vegetableTarget').val() == 3) && newData.child('stapleRequired').isBoolean() && newData.child('childMode').isBoolean() && newData.child('timePreference').isString() && (newData.child('timePreference').val() == 'any' || newData.child('timePreference').val() == '30' || newData.child('timePreference').val() == '45' || newData.child('timePreference').val() == '60'))",
             "checkoutDraft": { "$ingredientId": { ".validate": "(newData.isBoolean()) || (newData.isNumber() && newData.val() >= 0 && newData.val() % 0.5 == 0)" } },
-            "excludedIngredientIds": { "$index": { ".validate": "newData.isString() && newData.val().length > 0" } }
+            "excludedIngredientIds": { "$index": { ".validate": "newData.isString() && newData.val().length > 0" } },
+            "ingredientFreshnessDates": { "$ingredientId": { ".validate": "newData.isString() && newData.val().matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)" } }
           },
           "activeStep": {
             ".validate": "newData.isString() && (newData.val() == 'inventory' || newData.val() == 'recipes' || newData.val() == 'cook' || newData.val() == 'checkout')"
