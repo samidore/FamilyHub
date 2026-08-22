@@ -28,6 +28,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 7
     status: candidate
     name_zh: 嫩豆腐
     name_en: Soft Tofu
@@ -42,6 +43,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 7
     status: candidate
     name_zh: 老豆腐 / 硬豆腐
     name_en: Firm Tofu
@@ -55,6 +57,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 7
     status: candidate
     name_zh: 鸡蛋豆腐（日本豆腐）
     name_en: Egg Tofu
@@ -68,6 +71,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 7
     status: candidate
     name_zh: 香干
     name_en: Pressed Tofu
