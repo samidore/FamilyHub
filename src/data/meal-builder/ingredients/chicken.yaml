@@ -3,6 +3,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 无骨去皮鸡腿肉
     name_en: Boneless Skinless Chicken Thighs
@@ -15,6 +16,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 鸡胸
     name_en: Chicken Breast
@@ -27,6 +29,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 整鸡翅
     name_en: Whole Chicken Wings
@@ -39,6 +42,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: Party Wings
     name_en: Party Wings
@@ -51,6 +55,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 鸡小腿
     name_en: Chicken Drumsticks
@@ -63,6 +68,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 带骨鸡腿
     name_en: Bone-In Chicken Thighs
@@ -88,6 +94,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 整鸡
     name_en: Whole Chicken
@@ -100,6 +107,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 鸡胗
     name_en: Chicken Gizzards
@@ -113,6 +121,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 鸡心
     name_en: Chicken Hearts
@@ -126,6 +135,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 鸡肝
     name_en: Chicken Liver
