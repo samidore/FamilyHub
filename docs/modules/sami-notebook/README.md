@@ -4,7 +4,9 @@ Status: design only. No implementation is authorized by this document.
 
 ## Goal
 
-Add a mobile-first shared household organizer immediately after Meal Builder in Family Hub navigation. The module is authenticated household state, not public-reference content.
+Add `Sami的小本本` as an independent top-level Family Hub module, at the same level as Meal Builder, Day Trips, Library Activities, and the other registered modules. It is not part of Meal Builder and does not live under the Meal Builder route or domain. Its module card/navigation position should appear immediately after Meal Builder.
+
+The module is a mobile-first shared household organizer. It is authenticated household state, not public-reference content.
 
 The live system uses the existing Firebase project/authentication/household membership. Notebook data is a separate domain and must not be added to Meal Builder's `HouseholdState`.
 
@@ -16,11 +18,19 @@ households/{householdId}/notebook
 
 The public repository stores code, schema, tests, and module documentation only. It must never contain live notebook data, Gmail addresses, Firebase UIDs, or private household notes.
 
+## Module placement and routing
+
+- `Sami的小本本` is a sibling module in the Family Hub module registry.
+- It gets its own top-level route, for example `/sami-notebook/`.
+- Its registry entry is ordered immediately after `meal-builder`.
+- The Developer page is a subpage of this module only, for example `/sami-notebook/developer/`.
+- Sharing Firebase authentication/household infrastructure with Meal Builder does not make the notebook a Meal Builder feature or submodule.
+
 ## Privacy boundary required before activation
 
 Current project rules and module registry assume every active module is `public-reference`. Before this module enters navigation, add an explicit authenticated-household privacy class and update the shared privacy rules accordingly.
 
-The route may be publicly reachable as a shell, but no notebook content may be server-rendered into the static site. Private content loads only after the existing verified Google + household membership check succeeds. Production configuration errors must not fall back to local notebook data.
+The top-level notebook route may be publicly reachable as a shell, but no notebook content may be server-rendered into the static site. Private content loads only after the existing verified Google + household membership check succeeds. Production configuration errors must not fall back to local notebook data.
 
 ## Page structure
 
@@ -332,8 +342,8 @@ Firebase rules should authorize the notebook path only to existing verified hous
 
 ### Phase 2 — core mobile page
 
-- Add module registry metadata immediately after Meal Builder.
-- Add authenticated page shell and connection/error states.
+- Add `Sami的小本本` as its own top-level module registry entry immediately after Meal Builder.
+- Add its own authenticated top-level page shell and connection/error states.
 - Add Active/Completed/All, smart Urgent, board registry, board visibility/order/collapse, fixed priority sections, item controls, comments, and quick Inbox.
 - Add touch/keyboard-safe reorder controls. Drag must not be the only accessible way to reorder.
 
@@ -362,6 +372,7 @@ Verify mobile widths, two-phone realtime synchronization, member authorization, 
 
 This design is ready for implementation when all of the following are fixed:
 
+- `Sami的小本本` is an independent top-level sibling module, not part of Meal Builder; its navigation/module-card position is immediately after Meal Builder.
 - Live state is Firebase, with a separate notebook domain/path.
 - Git backup is a private portable snapshot, not runtime storage.
 - Module privacy classification is explicitly authenticated-household before activation.
