@@ -3,6 +3,7 @@ import {
   createCurrentMealFromInventory,
   createMealId,
   normalizeHouseholdState,
+  reconcileInventoryBatchState,
   type CheckoutConsumption,
   type CheckoutResult,
   type CurrentMeal,
@@ -100,7 +101,8 @@ export class LocalHouseholdRepository implements HouseholdRepository {
 
   async update(mutator: (current: HouseholdState) => HouseholdState) {
     const current = normalizeHouseholdState(JSON.parse(this.storage.getItem(this.key) ?? 'null'), this.ingredients);
-    const next = normalizeHouseholdState(mutator(cloneState(current)), this.ingredients);
+    const proposed = mutator(cloneState(current));
+    const next = normalizeHouseholdState(reconcileInventoryBatchState(current, proposed, this.ingredients), this.ingredients);
     this.persist(next); return this.getSnapshot();
   }
   transaction(mutator: (current: HouseholdState) => HouseholdState) { return this.update(mutator); }
@@ -108,7 +110,7 @@ export class LocalHouseholdRepository implements HouseholdRepository {
   async updateInventory(mutator: (inventory: Inventory) => Inventory) { return this.update((state) => ({ ...state, inventory: mutator({ ...state.inventory }) })); }
   async setCurrentMeal(currentMeal: CurrentMeal | null) { return this.update((state) => ({ ...state, currentMeal })); }
   async startCurrentMeal(options: Partial<MealState> = {}) {
-    return this.update((state) => state.currentMeal ? state : ({ ...state, currentMeal: createCurrentMealFromInventory(state.inventory, options, this.ingredients) }));
+    return this.update((state) => state.currentMeal ? state : ({ ...state, currentMeal: createCurrentMealFromInventory(state.inventory, options, this.ingredients, state.inventoryBatches) }));
   }
   async updateCurrentMeal(mutator: (currentMeal: CurrentMeal) => CurrentMeal) {
     return this.update((state) => state.currentMeal ? { ...state, currentMeal: mutator({ ...state.currentMeal }) } : state);
@@ -193,7 +195,7 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
   setInventory(inventory: Inventory) { return this.update((state) => ({ ...state, inventory })); }
   updateInventory(mutator: (inventory: Inventory) => Inventory) { return this.update((state) => ({ ...state, inventory: mutator({ ...state.inventory }) })); }
   setCurrentMeal(currentMeal: CurrentMeal | null) { return this.update((state) => ({ ...state, currentMeal })); }
-  startCurrentMeal(options: Partial<MealState> = {}) { return this.update((state) => state.currentMeal ? state : ({ ...state, currentMeal: createCurrentMealFromInventory(state.inventory, options, this.ingredients) })); }
+  startCurrentMeal(options: Partial<MealState> = {}) { return this.update((state) => state.currentMeal ? state : ({ ...state, currentMeal: createCurrentMealFromInventory(state.inventory, options, this.ingredients, state.inventoryBatches) })); }
   updateCurrentMeal(mutator: (currentMeal: CurrentMeal) => CurrentMeal) { return this.update((state) => state.currentMeal ? { ...state, currentMeal: mutator({ ...state.currentMeal }) } : state); }
   resetInventory() { return this.setInventory({}); }
   async checkout(mealId: string, consumption: CheckoutConsumption) {
@@ -267,7 +269,11 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
     this.unsubscribeState = onValue(this.stateRef, (next) => this.setStateFromSnapshot(next), (error) => { if (!this.disposed) this.fail('Firebase 实时连接中断', error); });
   }
   private async remoteTransaction(mutator: (state: HouseholdState) => HouseholdState) {
-    const transaction = await runTransaction(this.stateRef, (value) => normalizeHouseholdState(mutator(normalizeHouseholdState(value, this.ingredients)), this.ingredients));
+    const transaction = await runTransaction(this.stateRef, (value) => {
+      const current = normalizeHouseholdState(value, this.ingredients);
+      const proposed = mutator(cloneState(current));
+      return normalizeHouseholdState(reconcileInventoryBatchState(current, proposed, this.ingredients), this.ingredients);
+    });
     return normalizeHouseholdState(transaction.snapshot.val(), this.ingredients);
   }
   private assertReady() { if (this.status.connection !== 'connected') throw new Error(this.status.error ?? 'Firebase repository is not ready'); }
