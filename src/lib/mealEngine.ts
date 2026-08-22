@@ -255,7 +255,16 @@ export function rankCandidates(recipes: MealRecipe[], state: MealState, ingredie
     const x = measures(a); const y = measures(b);
     const staleOrder = Number(y.stalePriority) - Number(x.stalePriority);
     const staleAgeOrder = x.stalePriority && y.stalePriority ? y.oldestAgeDays - x.oldestAgeDays : 0;
-    return staleOrder || staleAgeOrder || recentRecipePenalty(a.id, recentRecipeIds) - recentRecipePenalty(b.id, recentRecipeIds) || y.childSolved - x.childSolved || Number(y.withinProteinTolerance) - Number(x.withinProteinTolerance) || y.normalGaps - x.normalGaps || x.overage - y.overage || b.fitScore - a.fitScore || x.time.rank - y.time.rank || a.order - b.order;
+    return y.childSolved - x.childSolved
+      || Number(y.withinProteinTolerance) - Number(x.withinProteinTolerance)
+      || y.normalGaps - x.normalGaps
+      || x.overage - y.overage
+      || staleOrder
+      || staleAgeOrder
+      || recentRecipePenalty(a.id, recentRecipeIds) - recentRecipePenalty(b.id, recentRecipeIds)
+      || b.fitScore - a.fitScore
+      || x.time.rank - y.time.rank
+      || a.order - b.order;
   });
 }
 
