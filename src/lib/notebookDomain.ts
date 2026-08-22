@@ -36,6 +36,7 @@ export interface NotebookItem {
   completedAt?: number;
   platform?: string;
   imdbRating?: number;
+  myRating?: number;
   notes?: string;
   review?: string;
 }
@@ -92,6 +93,7 @@ const finitePositive = (value: unknown): value is number => typeof value === 'nu
 const nonNegativeInteger = (value: unknown): value is number => typeof value === 'number' && Number.isInteger(value) && value >= 0;
 const nonEmptyString = (value: unknown): value is string => typeof value === 'string' && value.trim().length > 0;
 const optionalString = (value: unknown) => typeof value === 'string' ? value.trim() : undefined;
+const optionalRating = (value: unknown) => value === undefined ? undefined : (typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 10 ? value : null);
 
 export function normalizeMemberDisplayName(value: unknown): string | null {
   if (!nonEmptyString(value)) return null;
@@ -137,8 +139,9 @@ function normalizeItem(id: string, value: unknown): NotebookItem | null {
   const completedAt = finitePositive(value.completedAt) ? value.completedAt : undefined;
   if (status === 'completed' && (!completedAt || recurrence)) return null;
   if (status === 'active' && value.completedAt !== undefined) return null;
-  const imdbRating = value.imdbRating === undefined ? undefined : (typeof value.imdbRating === 'number' && Number.isFinite(value.imdbRating) && value.imdbRating >= 0 && value.imdbRating <= 10 ? value.imdbRating : null);
-  if (imdbRating === null) return null;
+  const imdbRating = optionalRating(value.imdbRating);
+  const myRating = optionalRating(value.myRating);
+  if (imdbRating === null || myRating === null) return null;
   const platform = optionalString(value.platform);
   const notes = optionalString(value.notes);
   const review = optionalString(value.review);
@@ -156,6 +159,7 @@ function normalizeItem(id: string, value: unknown): NotebookItem | null {
     ...(completedAt ? { completedAt } : {}),
     ...(platform ? { platform } : {}),
     ...(imdbRating !== undefined ? { imdbRating } : {}),
+    ...(myRating !== undefined ? { myRating } : {}),
     ...(notes ? { notes } : {}),
     ...(review ? { review } : {}),
   };

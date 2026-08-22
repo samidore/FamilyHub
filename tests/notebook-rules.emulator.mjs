@@ -51,12 +51,14 @@ test('notebook schema accepts canonical records and rejects unsupported fields o
   await assertSucceeds(alice.ref(`${household}/notebook/memberships/todo/task-1`).set({ order: 0 }));
   await assertSucceeds(alice.ref(`${household}/notebook/inbox/ticket-1`).set({ id: 'ticket-1', text: 'remember this', createdAt: 3, updatedAt: 3 }));
   await assertSucceeds(alice.ref(`${household}/notebook/settings`).set({ viewFilter: 'completed' }));
+  await assertSucceeds(alice.ref(`${household}/notebook/items/media-good`).set({ ...item, id: 'media-good', platform: 'Max', imdbRating: 8.2, myRating: 9.5 }));
 
   await assertFails(alice.ref(`${household}/notebook/items/bad-media`).set({ ...item, id: 'bad-media', mediaType: 'movie' }));
   await assertFails(alice.ref(`${household}/notebook/items/bad-complete`).set({ ...item, id: 'bad-complete', status: 'completed' }));
   await assertFails(alice.ref(`${household}/notebook/items/bad-recurring`).set({ ...item, id: 'bad-recurring', status: 'completed', completedAt: 4, recurrence: { unit: 'month', interval: 3 } }));
   await assertFails(alice.ref(`${household}/notebook/items/bad-time`).set({ ...item, id: 'bad-time', dueTime: '15:00' }));
   await assertFails(alice.ref(`${household}/notebook/items/bad-rating`).set({ ...item, id: 'bad-rating', imdbRating: 11 }));
+  await assertFails(alice.ref(`${household}/notebook/items/bad-my-rating`).set({ ...item, id: 'bad-my-rating', myRating: 11 }));
 });
 
 test('comments snapshot the configured member name, never an email, and preserve the original author on edit', async () => {

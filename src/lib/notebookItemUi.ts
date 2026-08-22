@@ -1,5 +1,5 @@
-import { NOTEBOOK_PRIORITIES, cloneNotebookState, type NotebookItem, type NotebookPriority, type NotebookState } from './notebookDomain.ts';
-import { addNotebookItem, notebookItemsForSection, orderedNotebookBoards, reorderNotebookSection, setNotebookItemBoards, setNotebookItemPriority, setNotebookItemStatus } from './notebookActions.ts';
+import { NOTEBOOK_PRIORITIES, cloneNotebookState, isSupportedRecurrence, type NotebookItem, type NotebookPriority, type NotebookRecurrenceUnit, type NotebookState } from './notebookDomain.ts';
+import { addNotebookItem, completeRecurringNotebookItem, notebookItemsForSection, orderedNotebookBoards, reorderNotebookSection, setNotebookItemBoards, setNotebookItemPriority, setNotebookItemStatus } from './notebookActions.ts';
 import { renderNotebookBoardChoices } from './notebookView.ts';
 import type { NotebookRepository } from './notebookRepository.ts';
 
@@ -13,6 +13,17 @@ export interface NotebookItemUiContext {
 const stamp = () => Date.now();
 const makeId = (prefix: string) => `${prefix}-${crypto.randomUUID()}`;
 const selectedBoards = (form: HTMLFormElement) => [...form.querySelectorAll<HTMLInputElement>('input[name="boardIds"]')].filter((input) => input.checked).map((input) => input.value);
+const localDate = () => {
+  const now = new Date();
+  const pad = (value: number) => String(value).padStart(2, '0');
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+};
+const optionalRating = (data: FormData, name: string) => {
+  const raw = String(data.get(name) ?? '').trim();
+  if (!raw) return undefined;
+  const rating = Number(raw);
+  return Number.isFinite(rating) && rating >= 0 && rating <= 10 ? rating : null;
+};
 
 export function setupNotebookItemUi(context: NotebookItemUiContext) {
   const host = document.querySelector<HTMLElement>('#notebook-boards')!;
@@ -20,23 +31,54 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
   const form = document.querySelector<HTMLFormElement>('#notebook-item-form')!;
   const dialogTitle = document.querySelector<HTMLElement>('#notebook-item-dialog-title')!;
   const boardChoices = document.querySelector<HTMLElement>('#notebook-item-board-choices')!;
+  const recurrenceUnit = form.elements.namedItem('recurrenceUnit') as HTMLSelectElement;
+  const recurrenceInterval = form.elements.namedItem('recurrenceInterval') as HTMLInputElement;
+  const recurrenceIntervalLabel = document.querySelector<HTMLElement>('#notebook-recurrence-interval-label')!;
+  const mediaFields = document.querySelector<HTMLElement>('#notebook-media-fields')!;
   let editingItemId: string | null = null;
   let draggedItem: { itemId: string; boardId: string; priority: NotebookPriority } | null = null;
+
+  const refreshRecurrence = () => {
+    const unit = recurrenceUnit.value;
+    const fixed = unit === 'week' || unit === 'year';
+    recurrenceIntervalLabel.hidden = unit === 'none' || fixed;
+    if (fixed) recurrenceInterval.value = '1';
+    if (!recurrenceInterval.value) recurrenceInterval.value = '1';
+  };
+  const refreshMedia = () => {
+    const state = context.getState();
+    mediaFields.hidden = !selectedBoards(form).some((boardId) => state.boards[boardId]?.kind === 'media');
+  };
+  const setValue = (name: string, value: string | number | undefined) => {
+    const input = form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement | null;
+    if (input) input.value = value === undefined ? '' : String(value);
+  };
 
   const openItem = (itemId?: string, boardId?: string) => {
     editingItemId = itemId ?? null;
     const state = context.getState();
     const item = itemId ? state.items[itemId] : undefined;
     dialogTitle.textContent = item ? '编辑事项' : '新事项';
-    (form.elements.namedItem('title') as HTMLInputElement).value = item?.title ?? '';
-    (form.elements.namedItem('details') as HTMLTextAreaElement).value = item?.details ?? '';
+    setValue('title', item?.title);
+    setValue('details', item?.details);
     (form.elements.namedItem('priority') as HTMLSelectElement).value = item?.priority ?? 'normal';
-    (form.elements.namedItem('dueDate') as HTMLInputElement).value = item?.dueDate ?? '';
-    (form.elements.namedItem('dueTime') as HTMLInputElement).value = item?.dueTime ?? '';
+    setValue('dueDate', item?.dueDate);
+    setValue('dueTime', item?.dueTime);
+    recurrenceUnit.value = item?.recurrence?.unit ?? 'none';
+    recurrenceInterval.value = String(item?.recurrence?.interval ?? 1);
+    recurrenceUnit.disabled = item?.status === 'completed';
+    recurrenceInterval.disabled = item?.status === 'completed';
+    setValue('platform', item?.platform);
+    setValue('imdbRating', item?.imdbRating);
+    setValue('myRating', item?.myRating);
+    setValue('notes', item?.notes);
+    setValue('review', item?.review);
     const selected = new Set(item
       ? orderedNotebookBoards(state).filter((board) => state.memberships[board.id]?.[item.id]).map((board) => board.id)
       : boardId ? [boardId] : []);
     boardChoices.innerHTML = renderNotebookBoardChoices(state, selected);
+    refreshRecurrence();
+    refreshMedia();
     dialog.showModal();
   };
 
@@ -49,6 +91,14 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
         const board = current.boards[boardId];
         return board ? { ...current, boards: { ...current.boards, [boardId]: { ...board, collapsed: !board.collapsed, updatedAt: stamp() } } } : current;
       });
+      return;
+    }
+    const recurring = target.closest('[data-complete-recurring]') as HTMLButtonElement | null;
+    if (recurring?.dataset.completeRecurring) {
+      const itemId = recurring.dataset.completeRecurring;
+      const eventId = makeId('completion');
+      const time = stamp();
+      void context.mutate('完成本次', (current) => completeRecurringNotebookItem(current, itemId, eventId, time, localDate()));
       return;
     }
     const add = target.closest('[data-new-item]') as HTMLButtonElement | null;
@@ -142,6 +192,9 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
     void context.mutate('调整事项顺序', (current) => reorderNotebookSection(current, boardId, priority, ids));
   });
 
+  recurrenceUnit.addEventListener('change', refreshRecurrence);
+  boardChoices.addEventListener('change', refreshMedia);
+
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     const data = new FormData(form);
@@ -153,26 +206,72 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
     const boardIds = selectedBoards(form);
     if (!title || !NOTEBOOK_PRIORITIES.includes(priority) || boardIds.length === 0) { context.status('事项需要标题和至少一个 Board', true); return; }
     if (dueTime && !dueDate) { context.status('设置时间前请先设置日期', true); return; }
+
+    const recurrenceUnitValue = String(data.get('recurrenceUnit') ?? 'none') as NotebookRecurrenceUnit | 'none';
+    const recurrenceIntervalValue = Number(data.get('recurrenceInterval') ?? 1);
+    const recurrence = recurrenceUnitValue === 'none' ? undefined : { unit: recurrenceUnitValue, interval: (recurrenceUnitValue === 'week' || recurrenceUnitValue === 'year') ? 1 : recurrenceIntervalValue };
+    if (recurrence && !isSupportedRecurrence(recurrence)) { context.status('重复周期无效', true); return; }
+
+    const state = context.getState();
+    const hasMediaBoard = boardIds.some((boardId) => state.boards[boardId]?.kind === 'media');
+    const platform = String(data.get('platform') ?? '').trim();
+    const imdbRating = optionalRating(data, 'imdbRating');
+    const myRating = optionalRating(data, 'myRating');
+    const notes = String(data.get('notes') ?? '').trim();
+    const review = String(data.get('review') ?? '').trim();
+    if (imdbRating === null || myRating === null) { context.status('评分必须在 0–10 之间', true); return; }
+
     const time = stamp();
     if (!editingItemId) {
       const itemId = makeId('item');
-      const item: NotebookItem = { id: itemId, title, details, priority, status: 'active', ...(dueDate ? { dueDate } : {}), ...(dueTime ? { dueTime } : {}), createdAt: time, updatedAt: time };
+      const item: NotebookItem = {
+        id: itemId,
+        title,
+        details,
+        priority,
+        status: 'active',
+        ...(dueDate ? { dueDate } : {}),
+        ...(dueTime ? { dueTime } : {}),
+        ...(recurrence ? { recurrence } : {}),
+        ...(hasMediaBoard && platform ? { platform } : {}),
+        ...(hasMediaBoard && imdbRating !== undefined ? { imdbRating } : {}),
+        ...(hasMediaBoard && myRating !== undefined ? { myRating } : {}),
+        ...(hasMediaBoard && notes ? { notes } : {}),
+        ...(hasMediaBoard && review ? { review } : {}),
+        createdAt: time,
+        updatedAt: time,
+      };
       void context.mutate('创建事项', (current) => addNotebookItem(current, item, boardIds)).then(() => dialog.close());
       return;
     }
     const itemId = editingItemId;
+    const existing = state.items[itemId];
+    if (existing?.status === 'completed' && recurrence) { context.status('已完成的一次性事项不能改成循环事项；请先恢复为未完成', true); return; }
     void context.mutate('保存事项', (current) => {
-      const existing = current.items[itemId];
-      if (!existing) return current;
+      const currentItem = current.items[itemId];
+      if (!currentItem) return current;
       let next = cloneNotebookState(current);
       const edited = { ...next.items[itemId], title, details, updatedAt: time };
-      delete edited.dueDate; delete edited.dueTime;
+      delete edited.dueDate; delete edited.dueTime; delete edited.recurrence;
       if (dueDate) edited.dueDate = dueDate;
       if (dueTime) edited.dueTime = dueTime;
+      if (recurrence) edited.recurrence = recurrence;
+      if (hasMediaBoard) {
+        delete edited.platform; delete edited.imdbRating; delete edited.myRating; delete edited.notes; delete edited.review;
+        if (platform) edited.platform = platform;
+        if (imdbRating !== undefined) edited.imdbRating = imdbRating;
+        if (myRating !== undefined) edited.myRating = myRating;
+        if (notes) edited.notes = notes;
+        if (review) edited.review = review;
+      }
       next.items[itemId] = edited;
-      if (existing.priority !== priority) next = setNotebookItemPriority(next, itemId, priority, time);
+      if (currentItem.priority !== priority) next = setNotebookItemPriority(next, itemId, priority, time);
       return setNotebookItemBoards(next, itemId, boardIds, time);
     }).then(() => dialog.close());
   });
-  dialog.addEventListener('close', () => { editingItemId = null; });
+  dialog.addEventListener('close', () => {
+    editingItemId = null;
+    recurrenceUnit.disabled = false;
+    recurrenceInterval.disabled = false;
+  });
 }

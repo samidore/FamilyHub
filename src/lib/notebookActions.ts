@@ -2,8 +2,10 @@ import {
   cloneNotebookState,
   normalizeNotebookState,
   type NotebookBoard,
+  type NotebookCompletionEvent,
   type NotebookItem,
   type NotebookPriority,
+  type NotebookRecurrence,
   type NotebookState,
   type NotebookViewFilter,
 } from './notebookDomain.ts';
@@ -14,6 +16,20 @@ export const NOTEBOOK_PRIORITY_LABELS: Record<NotebookPriority, string> = {
   normal: '普通',
   low: '低',
 };
+
+export interface NotebookCompletedEntry {
+  kind: 'item' | 'recurrence';
+  item: NotebookItem;
+  completedAt: number;
+  event?: NotebookCompletionEvent;
+}
+
+export interface NotebookSectionEntry {
+  kind: 'item' | 'recurrence';
+  item: NotebookItem;
+  completedAt?: number;
+  event?: NotebookCompletionEvent;
+}
 
 export function orderedNotebookBoards(state: NotebookState, visibleOnly = false): NotebookBoard[] {
   return Object.values(state.boards)
@@ -69,6 +85,26 @@ export function notebookItemsForSection(state: NotebookState, boardId: string, p
   const completed = items
     .filter((item) => item.status === 'completed')
     .sort((left, right) => (right.completedAt ?? 0) - (left.completedAt ?? 0) || right.updatedAt - left.updatedAt || left.id.localeCompare(right.id));
+  if (filter === 'active') return active;
+  if (filter === 'completed') return completed;
+  return [...active, ...completed];
+}
+
+export function notebookCompletedEntriesForSection(state: NotebookState, boardId: string, priority: NotebookPriority): NotebookCompletedEntry[] {
+  const oneTime: NotebookCompletedEntry[] = notebookItemsForSection(state, boardId, priority, 'completed').map((item) => ({
+    kind: 'item',
+    item,
+    completedAt: item.completedAt ?? 0,
+  }));
+  const recurring: NotebookCompletedEntry[] = Object.values(state.completionEvents)
+    .filter((event) => event.priority === priority && event.boardIds.includes(boardId) && Boolean(state.items[event.itemId]))
+    .map((event) => ({ kind: 'recurrence', item: state.items[event.itemId], completedAt: event.completedAt, event }));
+  return [...oneTime, ...recurring].sort((left, right) => right.completedAt - left.completedAt || left.item.id.localeCompare(right.item.id));
+}
+
+export function notebookSectionEntries(state: NotebookState, boardId: string, priority: NotebookPriority, filter: NotebookViewFilter): NotebookSectionEntry[] {
+  const active = notebookItemsForSection(state, boardId, priority, 'active').map((item): NotebookSectionEntry => ({ kind: 'item', item }));
+  const completed = notebookCompletedEntriesForSection(state, boardId, priority);
   if (filter === 'active') return active;
   if (filter === 'completed') return completed;
   return [...active, ...completed];
@@ -143,6 +179,51 @@ export function setNotebookItemStatus(state: NotebookState, itemId: string, stat
     next.items[itemId] = restored;
     for (const boardId of boardIds) insertAtSectionTop(next, boardId, itemId, existing.priority);
   }
+  return normalizeNotebookState(next);
+}
+
+const parseCalendarDate = (value: string) => {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return null;
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) return null;
+  return { year, month, day };
+};
+const formatCalendarDate = (year: number, month: number, day: number) => `${String(year).padStart(4, '0')}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+const daysInMonth = (year: number, month: number) => new Date(Date.UTC(year, month, 0)).getUTCDate();
+
+export function advanceNotebookDueDate(dueDate: string, recurrence: NotebookRecurrence): string | null {
+  const parsed = parseCalendarDate(dueDate);
+  if (!parsed) return null;
+  if (recurrence.unit === 'day' || recurrence.unit === 'week') {
+    const date = new Date(Date.UTC(parsed.year, parsed.month - 1, parsed.day));
+    date.setUTCDate(date.getUTCDate() + recurrence.interval * (recurrence.unit === 'week' ? 7 : 1));
+    return formatCalendarDate(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate());
+  }
+  if (recurrence.unit === 'month') {
+    const index = parsed.year * 12 + (parsed.month - 1) + recurrence.interval;
+    const year = Math.floor(index / 12);
+    const month = (index % 12) + 1;
+    return formatCalendarDate(year, month, Math.min(parsed.day, daysInMonth(year, month)));
+  }
+  const year = parsed.year + recurrence.interval;
+  return formatCalendarDate(year, parsed.month, Math.min(parsed.day, daysInMonth(year, parsed.month)));
+}
+
+export function completeRecurringNotebookItem(state: NotebookState, itemId: string, eventId: string, completedAt: number, completedOn: string): NotebookState {
+  const existing = state.items[itemId];
+  if (!existing || existing.status !== 'active' || !existing.recurrence || state.completionEvents[eventId]) return state;
+  const boardIds = notebookBoardIdsForItem(state, itemId);
+  if (boardIds.length === 0) return state;
+  const baseDueDate = existing.dueDate ?? completedOn;
+  const nextDueDate = advanceNotebookDueDate(baseDueDate, existing.recurrence);
+  if (!nextDueDate) return state;
+  const next = cloneNotebookState(state);
+  next.completionEvents[eventId] = { id: eventId, itemId, completedAt, priority: existing.priority, boardIds };
+  next.items[itemId] = { ...existing, dueDate: nextDueDate, updatedAt: completedAt };
   return normalizeNotebookState(next);
 }
 

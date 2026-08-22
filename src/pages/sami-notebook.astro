@@ -86,7 +86,21 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
         <label>截止日期<input name="dueDate" type="date" /></label>
         <label>时间（可选）<input name="dueTime" type="time" /></label>
       </div>
+      <div class="form-grid recurrence-grid">
+        <label>重复<select name="recurrenceUnit"><option value="none">不重复</option><option value="day">每 N 天</option><option value="week">每周</option><option value="month">每 N 月</option><option value="year">每年</option></select></label>
+        <label id="notebook-recurrence-interval-label" hidden>间隔 N<input name="recurrenceInterval" type="number" min="1" step="1" value="1" /></label>
+      </div>
       <fieldset><legend>属于哪些 Boards</legend><div id="notebook-item-board-choices" class="board-choice-list"></div></fieldset>
+      <fieldset id="notebook-media-fields" hidden>
+        <legend>影视信息</legend>
+        <div class="form-grid">
+          <label>Platform<input name="platform" placeholder="Netflix / Max / Disney+…" /></label>
+          <label>IMDb 评分<input name="imdbRating" type="number" min="0" max="10" step="0.1" inputmode="decimal" /></label>
+          <label>我的评分<input name="myRating" type="number" min="0" max="10" step="0.1" inputmode="decimal" /></label>
+        </div>
+        <label>Notes<textarea name="notes" rows="3"></textarea></label>
+        <label>看后评价<textarea name="review" rows="4"></textarea></label>
+      </fieldset>
       <button type="submit">保存事项</button>
     </form>
   </dialog>
@@ -106,5 +120,3 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
     mountNotebookUi(firebaseConfig, { allowLocal: import.meta.env.DEV });
   </script>
 </BaseLayout>
-
-
