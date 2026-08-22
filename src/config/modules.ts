@@ -5,9 +5,9 @@ export const categoryDefinitions = [
 ] as const;
 
 export type CategoryId = (typeof categoryDefinitions)[number]['id'];
-export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists' | 'adult-dermatologists' | 'colonoscopy-specialists' | 'ob-gyn' | 'meal-builder';
+export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists' | 'adult-dermatologists' | 'colonoscopy-specialists' | 'ob-gyn' | 'meal-builder' | 'sami-notebook';
 export type ModuleAccent = 'evergreen' | 'lake' | 'ochre' | 'berry';
-export type ModuleIcon = 'compass' | 'calendar' | 'care' | 'meal';
+export type ModuleIcon = 'compass' | 'calendar' | 'care' | 'meal' | 'notebook';
 export type ModulePrivacyClass = 'public-reference' | 'authenticated-household';
 
 export interface ModuleDefinition {
@@ -114,6 +114,19 @@ export const moduleRegistry = [
     accent: 'berry',
     icon: 'meal',
     privacyClass: 'public-reference',
+    status: 'active',
+  },
+  {
+    id: 'sami-notebook',
+    route: '/sami-notebook/',
+    categoryId: 'food-home',
+    title: 'Sami的小本本',
+    summary: '家庭共享的 Todo、项目、影视清单和随手记；完成状态、Board 和评论实时同步。',
+    keywords: ['家庭', '记事', 'todo', '任务', '项目', '电影', '电视', 'notebook', 'board'],
+    itemLabel: '个事项',
+    accent: 'berry',
+    icon: 'notebook',
+    privacyClass: 'authenticated-household',
     status: 'active',
   },
 ] as const satisfies readonly ModuleDefinition[];

@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/notebook.css';
+const base = import.meta.env.BASE_URL;
+const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
+---
+<BaseLayout title="Sami的小本本 · Family Hub" description="家庭共享的事项、项目、影视清单和随手记。" pageClass="notebook-page" themeColor="#F5F1E8">
+  <header class="notebook-site-header shell">
+    <a class="back-link" href={withBase('/')}>← Family Hub</a>
+    <div>
+      <p class="eyebrow">Shared household notebook</p>
+      <h1>Sami的小本本</h1>
+    </div>
+  </header>
+
+  <main id="main-content" class="shell notebook-shell">
+    <section id="notebook-auth-shell" class="notebook-auth" data-authenticated-shell>
+      <h2>家庭共享内容</h2>
+      <p id="notebook-auth-message">正在检查登录状态…</p>
+      <div class="notebook-auth__actions">
+        <button id="notebook-sign-in" type="button" hidden>使用 Google 登录</button>
+        <button id="notebook-refresh-access" type="button" hidden>重新检查权限</button>
+        <button id="notebook-sign-out" type="button" class="secondary-button" hidden>退出登录</button>
+      </div>
+      <p class="notebook-private-note">页面的静态版本不包含任何家庭记事内容；只有通过家庭成员权限后才会从 Firebase 读取。</p>
+    </section>
+
+    <section id="notebook-app" hidden>
+      <div id="notebook-display-name-panel" class="display-name-panel"></div>
+
+      <section class="notebook-toolbar" aria-label="小本本控制">
+        <div class="segmented-control" aria-label="完成状态筛选">
+          <button type="button" data-view-filter="active" aria-pressed="true">未完成</button>
+          <button type="button" data-view-filter="completed" aria-pressed="false">已完成</button>
+          <button type="button" data-view-filter="all" aria-pressed="false">全部</button>
+        </div>
+        <div class="notebook-toolbar__actions">
+          <button id="notebook-collapse-all" type="button" class="secondary-button">全部收起</button>
+          <button id="notebook-manage-boards" type="button" class="secondary-button">管理 Boards</button>
+          <a class="button-link secondary-button" href={withBase('/sami-notebook/developer/')}>Developer</a>
+        </div>
+      </section>
+
+      <p id="notebook-live-status" class="notebook-live" aria-live="polite"></p>
+      <div id="notebook-boards" class="notebook-boards"></div>
+
+      <section class="notebook-inbox" aria-labelledby="notebook-inbox-title">
+        <div>
+          <p class="eyebrow">Inbox</p>
+          <h2 id="notebook-inbox-title">随手记</h2>
+          <p>一句话就可以，之后再到 Developer 页整理。</p>
+        </div>
+        <form id="notebook-inbox-form">
+          <label for="notebook-inbox-input">记一条</label>
+          <div class="notebook-inbox__row">
+            <input id="notebook-inbox-input" name="text" autocomplete="off" placeholder="例如：下周二再催地下室 contractor" required />
+            <button type="submit">记下</button>
+          </div>
+        </form>
+        <p id="notebook-inbox-count" class="notebook-muted">暂无待整理</p>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="notebook-board-dialog" class="notebook-dialog">
+    <form method="dialog" class="dialog-close-row"><button type="submit" class="secondary-button">关闭</button></form>
+    <div class="dialog-heading"><p class="eyebrow">Shared registry</p><h2>管理 Boards</h2><p>拖动排序；手机和键盘也可以用 ↑ ↓。显示开关、顺序和收起状态都会同步。</p></div>
+    <div id="notebook-board-list" class="board-manager-list"></div>
+    <form id="notebook-board-create" class="board-create-form">
+      <h3>新 Board</h3>
+      <label>名称<input name="title" required /></label>
+      <label>类型<select name="kind"><option value="task">任务</option><option value="media">影视</option></select></label>
+      <label>说明（可选）<input name="description" /></label>
+      <button type="submit">创建 Board</button>
+    </form>
+  </dialog>
+
+  <dialog id="notebook-item-dialog" class="notebook-dialog notebook-item-dialog">
+    <form method="dialog" class="dialog-close-row"><button type="submit" class="secondary-button">取消</button></form>
+    <form id="notebook-item-form">
+      <h2 id="notebook-item-dialog-title">新事项</h2>
+      <label>标题<input name="title" required /></label>
+      <label>内容<textarea name="details" rows="5"></textarea></label>
+      <div class="form-grid">
+        <label>优先级<select name="priority"><option value="urgent">紧急</option><option value="high">高</option><option value="normal" selected>普通</option><option value="low">低</option></select></label>
+        <label>截止日期<input name="dueDate" type="date" /></label>
+        <label>时间（可选）<input name="dueTime" type="time" /></label>
+      </div>
+      <fieldset><legend>属于哪些 Boards</legend><div id="notebook-item-board-choices" class="board-choice-list"></div></fieldset>
+      <button type="submit">保存事项</button>
+    </form>
+  </dialog>
+
+  <script>
+    import { mountNotebookUi } from '../lib/notebookUi.ts';
+    const firebaseConfig = {
+      apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
+      authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
+      projectId: import.meta.env.PUBLIC_FIREBASE_PROJECT_ID,
+      databaseURL: import.meta.env.PUBLIC_FIREBASE_DATABASE_URL,
+      storageBucket: import.meta.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: import.meta.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+      appId: import.meta.env.PUBLIC_FIREBASE_APP_ID,
+      householdId: import.meta.env.PUBLIC_FAMILY_HOUSEHOLD_ID,
+    };
+    mountNotebookUi(firebaseConfig, { allowLocal: import.meta.env.DEV });
+  </script>
+</BaseLayout>
+
+

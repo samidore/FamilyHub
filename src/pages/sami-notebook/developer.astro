@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/notebook.css';
+const base = import.meta.env.BASE_URL;
+const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
+---
+<BaseLayout title="Developer · Sami的小本本" description="Sami的小本本 Developer 工具入口。" pageClass="notebook-page" themeColor="#F5F1E8">
+  <main id="main-content" class="shell developer-shell" data-authenticated-shell>
+    <a class="back-link" href={withBase('/sami-notebook/')}>← Sami的小本本</a>
+    <p class="eyebrow">Developer</p>
+    <h1>Developer</h1>
+    <section class="developer-placeholder">
+      <h2>下一阶段启用</h2>
+      <p>Inbox 批量复制、Chat patch、数据库导出会在 Developer workflow 阶段加入。当前页面不会读取或显示任何家庭记事数据。</p>
+    </section>
+  </main>
+</BaseLayout>
+<style>
+  :global(.notebook-page) { background:#f5f1e8; color:#26231f; }
+  .developer-shell { padding-top:1.4rem; padding-bottom:4rem; }
+  .back-link { display:inline-block; margin-bottom:1.5rem; font-weight:700; }
+  h1 { font-size:clamp(2.2rem,8vw,4rem); margin:.3rem 0 1.2rem; }
+  .developer-placeholder { max-width:44rem; border:1px solid #cfc5b5; border-radius:18px; background:#fffdf8; padding:1rem; }
+  .developer-placeholder h2 { margin-top:0; }
+</style>

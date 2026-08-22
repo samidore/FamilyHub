@@ -1,15 +1,18 @@
 ---
 import ModuleIcon from './ModuleIcon.astro';
 import type { ModuleDefinition } from '../config/modules';
-interface Props { module: ModuleDefinition; href: string; count: number; verifiedDate: string; }
+interface Props { module: ModuleDefinition; href: string; count?: number; verifiedDate?: string; }
 const { module, href, count, verifiedDate } = Astro.props;
 const searchText = [module.title, module.summary, ...module.keywords].join(' ').toLocaleLowerCase();
+const authenticated = module.privacyClass === 'authenticated-household';
 ---
 <a class:list={['module-card', `theme-${module.accent}`]} href={href} data-module data-category={module.categoryId} data-search={searchText}>
   <span class="module-card__tab" aria-hidden="true"><ModuleIcon icon={module.icon} /></span>
   <span class="module-card__body">
     <span class="module-card__heading"><strong>{module.title}</strong><span aria-hidden="true">→</span></span>
     <span class="module-card__summary">{module.summary}</span>
-    <span class="module-card__meta"><b>{count}{module.itemLabel}</b><span>{verifiedDate ? `资料核实 ${verifiedDate}` : '核实日期未记录'}</span></span>
+    <span class="module-card__meta">
+      {authenticated ? <><b>家庭共享</b><span>需要登录</span></> : <><b>{count ?? 0}{module.itemLabel}</b><span>{verifiedDate ? `资料核实 ${verifiedDate}` : '核实日期未记录'}</span></>}
+    </span>
   </span>
 </a>

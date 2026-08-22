@@ -28,7 +28,7 @@ export const obGynProviders = parsedObGynProviders.map((provider) => ({
   name: obGynNameCorrections[provider.id] ?? provider.name,
 }));
 
-export const moduleRecords: Record<ModuleId, readonly unknown[]> = {
+export const moduleRecords: Partial<Record<ModuleId, readonly unknown[]>> = {
   'day-trips': dayTrips,
   'library-activities': libraryEvents,
   'pediatric-dentists': pediatricDentists,
