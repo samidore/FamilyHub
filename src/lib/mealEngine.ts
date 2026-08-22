@@ -1,7 +1,6 @@
 export const MEAL_TARGET_OPTIONS = [1, 2, 3] as const;
 export const TIME_PREFERENCES = ['any', '30', '45', '60'] as const;
 export const PROTEIN_TARGET_TOLERANCE = 0.5;
-export const STALE_INGREDIENT_PRIORITY_DAYS = 3;
 
 export type TimePreference = (typeof TIME_PREFERENCES)[number];
 export type RecipeChildCoverage = boolean | 'ingredient-dependent';
@@ -16,6 +15,7 @@ export interface MealIngredient {
   tags?: string[];
   inventoryTracking: InventoryTracking;
   inventoryFreshness?: InventoryFreshness;
+  freshnessPriorityDays?: number;
   childCoverage?: { vegetable: IngredientChildCoverage };
 }
 
@@ -127,6 +127,24 @@ const ingredientMap = (ingredients?: MealIngredient[] | Record<string, MealIngre
   return new Map(Object.entries(ingredients));
 };
 
+/** Oldest bound FIFO Ingredient age that has crossed its own priority threshold; zero means no freshness priority. */
+export function freshnessPriorityAgeDays(
+  binding: (string | null | undefined)[],
+  ingredientFreshnessDates: Record<string, string>,
+  ingredients: MealIngredient[] | Record<string, MealIngredient>,
+  today = calendarDateKey(),
+) {
+  const map = ingredientMap(ingredients);
+  return binding.reduce((oldest, id) => {
+    if (!id) return oldest;
+    const ingredient = map.get(id);
+    const threshold = ingredient?.freshnessPriorityDays;
+    if (ingredient?.inventoryFreshness !== 'fifo' || threshold === undefined || !Number.isInteger(threshold) || threshold <= 0) return oldest;
+    const age = freshnessAgeDays(ingredientFreshnessDates[id] ?? '', today);
+    return age > threshold ? Math.max(oldest, age) : oldest;
+  }, 0);
+}
+
 function resolveCoverage(recipe: MealRecipe, slot: 'protein' | 'vegetable', binding: (string | null | undefined)[] = [], ingredients?: MealIngredient[] | Record<string, MealIngredient>) {
   const declared = recipe.childCoverage?.[slot];
   if (declared === true || declared === false) return declared;
@@ -233,8 +251,8 @@ export function rankCandidates(recipes: MealRecipe[], state: MealState, ingredie
     const normalGaps = Number(totals.protein < state.proteinTarget && recipe.contribution.protein > 0) + Number(totals.vegetable < state.vegetableTarget && recipe.contribution.vegetable > 0) + Number(state.stapleRequired && totals.staple < 1 && recipe.contribution.staple > 0);
     const withinProteinTolerance = next.protein <= proteinLimit;
     const overage = Math.max(0, next.protein - proteinLimit) + Math.max(0, next.vegetable - state.vegetableTarget) + Math.max(0, next.staple - (state.stapleRequired ? 1 : 0));
-    const oldestAgeDays = binding.reduce((oldest, id) => id ? Math.max(oldest, freshnessAgeDays(freshnessDates[id] ?? '', today)) : oldest, 0);
-    const stalePriority = oldestAgeDays > STALE_INGREDIENT_PRIORITY_DAYS;
+    const oldestAgeDays = freshnessPriorityAgeDays(binding, freshnessDates, ingredients, today);
+    const stalePriority = oldestAgeDays > 0;
     return { binding, childSolved, normalGaps, withinProteinTolerance, overage, oldestAgeDays, stalePriority, time: timeFit(recipe, state.timePreference) };
   }
 

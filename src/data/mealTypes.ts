@@ -10,6 +10,7 @@ export interface MealDataIngredient {
   tags: string[];
   inventoryTracking: InventoryTracking;
   inventoryFreshness?: InventoryFreshness;
+  freshnessPriorityDays?: number;
   childCoverage?: { vegetable: IngredientChildCoverage };
 }
 

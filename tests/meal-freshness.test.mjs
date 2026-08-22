@@ -9,16 +9,17 @@ import {
   reconcileInventoryBatchState,
 } from '../src/lib/household.ts';
 import {
-  STALE_INGREDIENT_PRIORITY_DAYS,
   freshnessAgeDays,
+  freshnessPriorityAgeDays,
   rankCandidates,
 } from '../src/lib/mealEngine.ts';
 
 const ingredients = [
-  { id: 'old-meat', inventoryTracking: 'counted', inventoryFreshness: 'fifo' },
-  { id: 'fresh-meat', inventoryTracking: 'counted', inventoryFreshness: 'fifo' },
-  { id: 'old-veg', inventoryTracking: 'counted', inventoryFreshness: 'fifo', childCoverage: { vegetable: false } },
-  { id: 'child-veg', inventoryTracking: 'counted', inventoryFreshness: 'fifo', childCoverage: { vegetable: true } },
+  { id: 'old-meat', inventoryTracking: 'counted', inventoryFreshness: 'fifo', freshnessPriorityDays: 3 },
+  { id: 'fresh-meat', inventoryTracking: 'counted', inventoryFreshness: 'fifo', freshnessPriorityDays: 3 },
+  { id: 'old-veg', inventoryTracking: 'counted', inventoryFreshness: 'fifo', freshnessPriorityDays: 5, childCoverage: { vegetable: false } },
+  { id: 'child-veg', inventoryTracking: 'counted', inventoryFreshness: 'fifo', freshnessPriorityDays: 5, childCoverage: { vegetable: true } },
+  { id: 'old-tofu', inventoryTracking: 'counted', inventoryFreshness: 'fifo', freshnessPriorityDays: 7 },
   { id: 'frozen', inventoryTracking: 'counted' },
   { id: 'eggs', inventoryTracking: 'presence-only' },
 ];
@@ -108,24 +109,28 @@ test('current meal freezes oldest freshness dates independently from later inven
   assert.deepEqual(meal.ingredientFreshnessDates, { 'old-meat': '2026-08-17' });
 });
 
-test('freshness priority is strictly older than three calendar days', () => {
-  assert.equal(STALE_INGREDIENT_PRIORITY_DAYS, 3);
+test('freshness priority uses strict per-Ingredient thresholds for meat, vegetables, and tofu', () => {
   assert.equal(freshnessAgeDays('2026-08-18', '2026-08-21'), 3);
-  assert.equal(freshnessAgeDays('2026-08-17', '2026-08-21'), 4);
+  assert.equal(freshnessPriorityAgeDays(['old-meat'], { 'old-meat': '2026-08-18' }, ingredients, '2026-08-21'), 0);
+  assert.equal(freshnessPriorityAgeDays(['old-meat'], { 'old-meat': '2026-08-17' }, ingredients, '2026-08-21'), 4);
+  assert.equal(freshnessPriorityAgeDays(['old-veg'], { 'old-veg': '2026-08-16' }, ingredients, '2026-08-21'), 0);
+  assert.equal(freshnessPriorityAgeDays(['old-veg'], { 'old-veg': '2026-08-15' }, ingredients, '2026-08-21'), 6);
+  assert.equal(freshnessPriorityAgeDays(['old-tofu'], { 'old-tofu': '2026-08-14' }, ingredients, '2026-08-21'), 0);
+  assert.equal(freshnessPriorityAgeDays(['old-tofu'], { 'old-tofu': '2026-08-13' }, ingredients, '2026-08-21'), 8);
 
-  const threeDay = recipe('three-day', ['old-meat'], { protein: 1 }, { order: 20 });
+  const thresholdMeat = recipe('threshold-meat', ['old-meat'], { protein: 1 }, { order: 20 });
   const fresh = recipe('fresh', ['fresh-meat'], { protein: 1 }, { order: 10 });
   const stateAtThreeDays = baseMealState(['old-meat', 'fresh-meat'], { 'old-meat': '2026-08-18', 'fresh-meat': '2026-08-21' });
-  assert.deepEqual(rankCandidates([threeDay, fresh], stateAtThreeDays, ingredients, {}, [], '2026-08-21').map((item) => item.id), ['fresh', 'three-day']);
+  assert.deepEqual(rankCandidates([thresholdMeat, fresh], stateAtThreeDays, ingredients, {}, [], '2026-08-21').map((item) => item.id), ['fresh', 'threshold-meat']);
 
   const stateAtFourDays = baseMealState(['old-meat', 'fresh-meat'], { 'old-meat': '2026-08-17', 'fresh-meat': '2026-08-21' });
-  assert.deepEqual(rankCandidates([threeDay, fresh], stateAtFourDays, ingredients, {}, [], '2026-08-21').map((item) => item.id), ['three-day', 'fresh']);
+  assert.deepEqual(rankCandidates([thresholdMeat, fresh], stateAtFourDays, ingredients, {}, [], '2026-08-21').map((item) => item.id), ['threshold-meat', 'fresh']);
 });
 
 test('meal correctness outranks stale inventory, then stale inventory outranks repetition', () => {
   const staleVegetableOnly = recipe('stale-veg', ['old-veg'], { vegetable: 1 }, { order: 20 });
   const freshMixed = recipe('fresh-mixed', ['fresh-meat'], { protein: 1, vegetable: 1 }, { order: 30 });
-  const correctnessState = baseMealState(['old-veg', 'fresh-meat'], { 'old-veg': '2026-08-17', 'fresh-meat': '2026-08-21' });
+  const correctnessState = baseMealState(['old-veg', 'fresh-meat'], { 'old-veg': '2026-08-15', 'fresh-meat': '2026-08-21' });
   assert.deepEqual(rankCandidates([staleVegetableOnly, freshMixed], correctnessState, ingredients, {}, [], '2026-08-21').map((item) => item.id), ['fresh-mixed', 'stale-veg']);
 
   const staleProtein = recipe('stale-protein', ['old-meat'], { protein: 1 }, { order: 20 });
@@ -157,8 +162,10 @@ test('Recipes shows only compact hourglass 临期 freshness badges', async () =>
   assert.match(page, /data-candidate-freshness-badge/);
   assert.equal(page.match(/data-freshness-icon="hourglass"/g)?.length, 2);
   assert.equal(page.match(/<span>临期<\/span>/g)?.length, 2);
-  assert.match(page, /freshnessAgeDays\(state\.ingredientFreshnessDates/);
-  assert.match(page, /> STALE_INGREDIENT_PRIORITY_DAYS/);
+  assert.match(page, /freshnessPriorityDays: ingredient\.freshnessPriorityDays/);
+  assert.match(page, /freshnessPriorityAgeDays\(binding, state\.ingredientFreshnessDates, ingredients\)/);
+  assert.doesNotMatch(page, /STALE_INGREDIENT_PRIORITY_DAYS/);
   assert.doesNotMatch(page, /优先消耗/);
+  assert.doesNotMatch(page, /超过 3 天的鲜肉、蔬菜和豆腐/);
   assert.doesNotMatch(page, /最老\s*\d+\s*天/);
 });

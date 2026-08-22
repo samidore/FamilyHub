@@ -1,6 +1,6 @@
 import { parse as parseYaml } from 'yaml';
 
-const INGREDIENT_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'starter', 'tags', 'child_coverage', 'inventory_tracking', 'inventory_freshness']);
+const INGREDIENT_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'starter', 'tags', 'child_coverage', 'inventory_tracking', 'inventory_freshness', 'freshness_priority_days']);
 const RECIPE_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'tags', 'fit_score', 'primary_role', 'main_protein_category', 'main_protein_ingredient_ids', 'supporting_protein_ingredient_ids', 'vegetable_ingredient_ids', 'meal_contribution', 'child_coverage', 'integral_staple_ingredient_ids', 'recommended_staple_ingredient_ids', 'active_minutes', 'meal_window_minutes', 'elapsed_minutes', 'advance_start_required', 'equipment', 'burner_plan', 'child_suitable', 'child_texture', 'spicy_in_base', 'deep_fried', 'salt_level', 'oil_level', 'servings', 'detail_level', 'ingredients', 'cook_ingredients', 'steps', 'child_serving', 'adult_finish', 'substitutions', 'checkout_units']);
 const CONTRIBUTIONS = new Set([0, 0.5, 1, 2]);
 const STARTER_KEYS = new Set(['visible', 'section', 'order']);
@@ -50,6 +50,9 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
     if (record.inventory_freshness !== undefined) {
       assert(INVENTORY_FRESHNESS.has(record.inventory_freshness), `${record.id} has invalid inventory_freshness`);
       assert(record.inventory_tracking === 'counted', `${record.id} inventory_freshness requires counted inventory_tracking`);
+      assert(Number.isInteger(record.freshness_priority_days) && record.freshness_priority_days > 0, `${record.id} inventory_freshness requires positive integer freshness_priority_days`);
+    } else {
+      assert(record.freshness_priority_days === undefined, `${record.id} freshness_priority_days requires inventory_freshness`);
     }
     assert(record.starter && typeof record.starter.visible === 'boolean', `${record.id} has invalid starter visibility`);
     assert(sectionIds.has(record.starter.section), `${record.id} has unknown starter section ${record.starter.section}`);
@@ -61,6 +64,7 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
     id: record.id, nameZh: String(record.name_zh), nameEn: String(record.name_en),
     visible: record.starter.visible, section: String(record.starter.section), order: Number(record.starter.order),
     tags: stringArray(record.tags), inventoryTracking: record.inventory_tracking, inventoryFreshness: record.inventory_freshness,
+    freshnessPriorityDays: record.freshness_priority_days === undefined ? undefined : Number(record.freshness_priority_days),
     childCoverage: record.child_coverage ? { vegetable: record.child_coverage.vegetable } : undefined,
   }));
   for (const section of starterSections) {
