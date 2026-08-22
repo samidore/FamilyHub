@@ -3,6 +3,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 西兰花
     name_en: Broccoli
@@ -15,6 +16,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 花菜
     name_en: Cauliflower
@@ -27,6 +29,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 卷心菜
     name_en: Green Cabbage
@@ -39,6 +42,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 冬瓜
     name_en: Winter Melon
@@ -52,6 +56,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 丝瓜
     name_en: Luffa
@@ -64,6 +69,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 西葫芦
     name_en: Zucchini
@@ -76,6 +82,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 黄瓜
     name_en: Cucumber
@@ -88,6 +95,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 苦瓜
     name_en: Bitter Melon
@@ -101,6 +109,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 番茄
     name_en: Tomato
@@ -113,6 +122,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 茄子
     name_en: Eggplant
@@ -125,6 +135,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 甜椒
     name_en: Bell Pepper
@@ -137,6 +148,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 胡萝卜
     name_en: Carrot
@@ -150,6 +162,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 白萝卜
     name_en: Daikon
@@ -163,6 +176,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 山药
     name_en: Chinese Yam
@@ -176,6 +190,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 莴笋
     name_en: Celtuce
@@ -189,6 +204,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 马蹄
     name_en: Water Chestnuts
@@ -201,6 +217,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 甜豆
     name_en: Sugar Snap Peas
@@ -237,6 +254,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 韭黄
     name_en: Yellow Chives
@@ -249,6 +267,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 韭菜
     name_en: Garlic Chives
@@ -261,6 +280,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 香芹
     name_en: Chinese Celery
@@ -273,6 +293,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 西芹
     name_en: Celery
@@ -285,6 +306,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 洋葱
     name_en: Onion
@@ -298,6 +320,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 蒜苔
     name_en: Garlic Scapes
@@ -310,6 +333,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 5
     status: candidate
     name_zh: 豆芽
     name_en: Bean Sprouts
