@@ -38,6 +38,7 @@ test('Ingredient inventory tracking is data-driven rather than ID-whitelisted', 
   const files = await readMealFiles();
   const chicken = parse(files['ingredients/chicken.yaml']);
   const ingredient = chicken.ingredients.find((item) => item.inventory_tracking === 'counted');
+  delete ingredient.inventory_freshness;
   ingredient.inventory_tracking = 'presence-only';
   const data = parseMealFiles({ ...files, 'ingredients/chicken.yaml': stringify(chicken) });
   assert.equal(data.ingredients.find((item) => item.id === ingredient.id)?.inventoryTracking, 'presence-only');
