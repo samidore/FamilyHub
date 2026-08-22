@@ -3,6 +3,7 @@ import { renderNotebookBoards, escapeNotebookHtml } from './notebookView.ts';
 import { createNotebookRepository, type CreateNotebookRepositoryOptions } from './notebookRepository.ts';
 import { setupNotebookBoardManager } from './notebookBoardManager.ts';
 import { setupNotebookItemUi } from './notebookItemUi.ts';
+import { setupNotebookPointerReorder } from './notebookPointerReorder.ts';
 import type { FirebaseConfig } from './householdRepository.ts';
 
 const get = <T extends Element>(selector: string) => {
@@ -37,6 +38,7 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
   const context = { repository, getState: () => state, mutate, status };
   const manager = setupNotebookBoardManager(context);
   setupNotebookItemUi(context);
+  setupNotebookPointerReorder(context);
 
   const renderApp = () => {
     const displayName = repository.getCurrentMemberDisplayName();

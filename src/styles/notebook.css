@@ -18,7 +18,10 @@
   .secondary-button, .quiet-button, .icon-button, .drag-handle { background: #fffdf8; color: #2f4f45; border-color: #b6aa99; }
   .quiet-button { min-height: 40px; padding: .35rem .65rem; }
   .icon-button, .drag-handle { min-width: 48px; padding: .35rem; }
-  .drag-handle { cursor: grab; }
+  .drag-handle { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-user-drag: none; -webkit-touch-callout: none; }
+  .is-pointer-dragging { position: relative; z-index: 4; opacity: .72; box-shadow: 0 8px 24px rgb(38 35 31 / 18%); }
+  .is-pointer-dragging .drag-handle { cursor: grabbing; }
+  .is-pointer-reordering { user-select: none; -webkit-user-select: none; }
   .button-link { display: inline-flex; align-items: center; text-decoration: none; }
   input, select, textarea { width: 100%; min-height: 48px; border: 1px solid #a99f90; border-radius: 10px; background: white; color: inherit; padding: .55rem .7rem; }
   textarea { min-height: 5rem; resize: vertical; }
@@ -68,7 +71,8 @@
   .display-name-panel { margin-bottom: 1rem; padding: .8rem 1rem; }
   .display-name-panel p { margin: .25rem 0; }
   .display-name-panel form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .6rem; align-items: end; }
-  .notebook-dialog { width: min(94vw, 760px); max-height: 90vh; overflow: auto; border: 1px solid #b9ad9e; border-radius: 18px; background: #fffdf8; color: #26231f; padding: 1rem; }
+  .notebook-dialog { width: min(760px, calc(100vw - 16px)); max-width: calc(100vw - 16px); max-height: 90dvh; overflow-y: auto; overflow-x: hidden; overscroll-behavior-x: none; border: 1px solid #b9ad9e; border-radius: 18px; background: #fffdf8; color: #26231f; padding: 1rem; }
+  .notebook-dialog form, .notebook-dialog form > *, .notebook-dialog label, .notebook-dialog fieldset, .notebook-dialog input, .notebook-dialog select, .notebook-dialog textarea, .board-manager-row, .board-manager-row__fields, .board-manager-row__actions { min-width: 0; max-width: 100%; }
   .notebook-dialog::backdrop { background: rgb(25 22 18 / .55); }
   .dialog-close-row { display: flex; justify-content: flex-end; }
   .dialog-heading h2 { margin: .2rem 0; font-size: 2rem; }
