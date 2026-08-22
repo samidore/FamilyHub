@@ -3,6 +3,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 整块牛腩
     name_en: Whole Beef Brisket
@@ -15,6 +16,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 牛腩片
     name_en: Sliced Beef Brisket
@@ -27,6 +29,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 火锅牛肉片
     name_en: Hot-Pot Beef Slices
@@ -39,6 +42,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 牛腱
     name_en: Beef Shank
@@ -51,6 +55,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 牛肩肉大块
     name_en: Chuck Roast
@@ -63,6 +68,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 牛尾
     name_en: Oxtail
@@ -75,6 +81,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 横切牛小排
     name_en: Cross-Cut Beef Short Ribs
@@ -87,6 +94,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 牛绞肉
     name_en: Ground Beef
@@ -112,6 +120,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 牛肋条
     name_en: Beef Rib Fingers
@@ -125,6 +134,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 板腱牛排
     name_en: Flat Iron Steak
@@ -137,6 +147,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 丹佛牛排
     name_en: Denver Steak
@@ -149,6 +160,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 无骨牛小排
     name_en: Boneless Beef Short Ribs
@@ -161,6 +173,7 @@ ingredients:
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
+    freshness_priority_days: 3
     status: candidate
     name_zh: 牛排
     name_en: Beef Steak
