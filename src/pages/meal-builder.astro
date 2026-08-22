@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import { mealData } from '../data/meal';
-import { MEAL_TARGET_OPTIONS, STALE_INGREDIENT_PRIORITY_DAYS, TIME_PREFERENCES, defaultMealState, freshnessAgeDays } from '../lib/mealEngine';
+import { MEAL_TARGET_OPTIONS, TIME_PREFERENCES, defaultMealState } from '../lib/mealEngine';
 import { COUNTED_INVENTORY_STEP } from '../lib/household';
 
 const visibleIngredients = mealData.ingredients.filter((ingredient) => ingredient.visible);
@@ -12,7 +12,7 @@ type StarterSection = { id: string; labelZh: string; labelEn: string; order: num
 const clientData = JSON.stringify({
   version: mealData.metadata.version,
   starterSections: mealData.starterSections,
-  ingredients: mealData.ingredients.map((ingredient) => ({ id: ingredient.id, nameZh: ingredient.nameZh, nameEn: ingredient.nameEn, visible: ingredient.visible, section: ingredient.section, tags: ingredient.tags, inventoryTracking: ingredient.inventoryTracking, inventoryFreshness: ingredient.inventoryFreshness, childCoverage: ingredient.childCoverage })),
+  ingredients: mealData.ingredients.map((ingredient) => ({ id: ingredient.id, nameZh: ingredient.nameZh, nameEn: ingredient.nameEn, visible: ingredient.visible, section: ingredient.section, tags: ingredient.tags, inventoryTracking: ingredient.inventoryTracking, inventoryFreshness: ingredient.inventoryFreshness, freshnessPriorityDays: ingredient.freshnessPriorityDays, childCoverage: ingredient.childCoverage })),
   recipes: recipes.map((recipe) => ({
     id: recipe.id, order: recipe.order, fitScore: recipe.fitScore, contribution: recipe.contribution,
     childCoverage: recipe.childCoverage, requirements: recipe.requirements, tags: recipe.tags,
@@ -195,7 +195,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
   <script id="meal-data" type="application/json" is:inline set:html={clientData}></script>
   <script id="meal-firebase-config" type="application/json" is:inline set:html={clientFirebaseConfig}></script>
   <script>
-    import { STALE_INGREDIENT_PRIORITY_DAYS, aggregateSelection, bindRecipeIngredients, defaultMealState, easyBraiseAddonIngredientIds, freshnessAgeDays, isMealComplete, rankCandidates, reconcileMealState, resolveRecipeChildCoverage, timeFit, unmetCompletionRequirements } from '../lib/mealEngine';
+    import { aggregateSelection, bindRecipeIngredients, defaultMealState, easyBraiseAddonIngredientIds, freshnessPriorityAgeDays, isMealComplete, rankCandidates, reconcileMealState, resolveRecipeChildCoverage, timeFit, unmetCompletionRequirements } from '../lib/mealEngine';
     import type { MealIngredient, MealRecipe, MealState, TimePreference } from '../lib/mealEngine';
     import { COUNTED_INVENTORY_STEP, OPTIONAL_ADDON_INITIAL_UNITS, advanceMealToCooking, checkoutDraftForMeal, createCurrentMealFromInventory, freshnessDatesForInventory, reconcileCurrentMeal, resetRecipeSelection, roundCountedInventoryValue, setCurrentMealStatus, trackingForIngredient, updateCheckoutDraft, usedIngredientIds, type CheckoutConsumption, type CurrentMeal, type HouseholdState } from '../lib/household';
     import { createHouseholdRepository, type RepositoryStatus } from '../lib/householdRepository';
@@ -307,7 +307,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       return reconcileCurrentMeal({ ...meal, availableIngredientIds, ingredientFreshnessDates, excludedIngredientIds: excluded }, recipes, ingredients);
     };
     const setView = (next: View) => { view = next; builder.hidden = next !== 'build'; complete.hidden = next !== 'complete'; cook.hidden = next !== 'cook'; save(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
-    const bindingIsExpiring = (binding: (string | null | undefined)[]) => binding.some((id) => Boolean(id) && freshnessAgeDays(state.ingredientFreshnessDates[id!] ?? '') > STALE_INGREDIENT_PRIORITY_DAYS);
+    const bindingIsExpiring = (binding: (string | null | undefined)[]) => freshnessPriorityAgeDays(binding, state.ingredientFreshnessDates, ingredients) > 0;
 
     function draftBindingFor(recipe: MealRecipe, available: Set<string>) {
       const existing = draftBindings[recipe.id] ?? state.recipeIngredientBindings[recipe.id] ?? [];
@@ -501,7 +501,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
         const badge = card.querySelector<HTMLElement>('[data-time-badge]')!; const fit = timeFit(recipe, state.timePreference); badge.hidden = !fit.label; badge.textContent = fit.label; recipeGrid.append(card);
       });
       document.querySelector('#meal-result-count')!.textContent = `${candidates.length} 道可选`; document.querySelector<HTMLElement>('#meal-empty')!.hidden = candidates.length > 0;
-      document.querySelector('#meal-guidance')!.textContent = available.size === 0 ? '先选择可用食材，候选菜会在这里出现。' : candidates.length ? '候选先按当前缺口筛选；其中优先使用超过 3 天的鲜肉、蔬菜和豆腐。' : '增加可用食材，或调整组餐目标。';
+      document.querySelector('#meal-guidance')!.textContent = available.size === 0 ? '先选择可用食材，候选菜会在这里出现。' : candidates.length ? '候选会先按当前组餐缺口排序。' : '增加可用食材，或调整组餐目标。';
       if (!hasMeal) view = 'build';
       if (!done && view !== 'build' && household.currentMeal?.status !== 'cooking') view = 'build';
       builder.hidden = !hasMeal || household.activeStep !== 'recipes'; complete.hidden = true; cook.hidden = !hasMeal || (household.activeStep !== 'cook' && household.activeStep !== 'checkout'); checkout.hidden = household.activeStep !== 'checkout'; save();
