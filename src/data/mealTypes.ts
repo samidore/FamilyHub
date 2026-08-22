@@ -1,4 +1,4 @@
-import type { IngredientChildCoverage, InventoryTracking, MealRecipe } from '../lib/mealEngine';
+import type { IngredientChildCoverage, InventoryFreshness, InventoryTracking, MealRecipe } from '../lib/mealEngine';
 
 export interface MealDataIngredient {
   id: string;
@@ -9,6 +9,7 @@ export interface MealDataIngredient {
   order: number;
   tags: string[];
   inventoryTracking: InventoryTracking;
+  inventoryFreshness?: InventoryFreshness;
   childCoverage?: { vegetable: IngredientChildCoverage };
 }
 
