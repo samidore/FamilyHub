@@ -2,6 +2,7 @@ ingredients:
   - id: baby-napa-cabbage
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 娃娃菜
     name_en: Baby Napa Cabbage
@@ -16,6 +17,7 @@ ingredients:
   - id: napa-cabbage
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 大白菜
     name_en: Napa Cabbage
@@ -28,6 +30,7 @@ ingredients:
   - id: chinese-greens
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 青菜
     name_en: Chinese Greens
@@ -42,6 +45,7 @@ ingredients:
   - id: spinach
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 菠菜
     name_en: Spinach
@@ -53,6 +57,7 @@ ingredients:
   - id: lettuce
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 生菜
     name_en: Lettuce
@@ -67,6 +72,7 @@ ingredients:
   - id: youmai-cai
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 油麦菜
     name_en: Youmai Cai
@@ -81,6 +87,7 @@ ingredients:
   - id: choy-sum
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 菜心
     name_en: Choy Sum
@@ -95,6 +102,7 @@ ingredients:
   - id: gai-lan
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 芥兰
     name_en: Gai Lan
@@ -108,6 +116,7 @@ ingredients:
   - id: water-spinach
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 空心菜
     name_en: Water Spinach
@@ -119,6 +128,7 @@ ingredients:
   - id: pea-shoots
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 豆苗
     name_en: Pea Shoots
@@ -132,6 +142,7 @@ ingredients:
   - id: amaranth-greens
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 苋菜
     name_en: Amaranth Greens
@@ -145,6 +156,7 @@ ingredients:
   - id: tong-hao
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 茼蒿
     name_en: Tong Hao
@@ -158,6 +170,7 @@ ingredients:
   - id: mustard-greens
     type: ingredient
     inventory_tracking: counted
+    inventory_freshness: fifo
     status: candidate
     name_zh: 芥菜
     name_en: Mustard Greens
