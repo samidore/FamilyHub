@@ -1,4 +1,5 @@
 import { cloneNotebookState, defaultNotebookState, normalizeMemberDisplayName, normalizeNotebookState, type NotebookState } from './notebookDomain.ts';
+import { attributeNewNotebookItems } from './notebookAttribution.ts';
 import type { FirebaseConfig } from './householdRepository.ts';
 import { getApps, initializeApp, type FirebaseApp } from 'firebase/app';
 import {
@@ -84,7 +85,9 @@ export class LocalNotebookRepository implements NotebookRepository {
   subscribe(listener: NotebookStateListener) { this.listeners.add(listener); listener(this.getSnapshot(), this.getStatus()); return () => this.listeners.delete(listener); }
   async update(mutator: (current: NotebookState) => NotebookState) { return this.transaction(mutator); }
   async transaction(mutator: (current: NotebookState) => NotebookState) {
-    this.state = normalizeNotebookState(mutator(this.getSnapshot()));
+    const current = this.getSnapshot();
+    const next = mutator(cloneNotebookState(current));
+    this.state = normalizeNotebookState(attributeNewNotebookItems(current, next, this.displayName));
     this.emit();
     return this.getSnapshot();
   }
@@ -133,7 +136,8 @@ export class FirebaseNotebookRepository implements NotebookRepository {
     this.assertReady();
     const transaction = await runTransaction(this.notebookRef, (value) => {
       const current = normalizeNotebookState(value);
-      return normalizeNotebookState(mutator(cloneNotebookState(current)));
+      const next = mutator(cloneNotebookState(current));
+      return normalizeNotebookState(attributeNewNotebookItems(current, next, this.getCurrentMemberDisplayName()));
     });
     this.setStateFromSnapshot(transaction.snapshot);
     return this.getSnapshot();
