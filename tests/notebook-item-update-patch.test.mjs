@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { readFile } from 'node:fs/promises';
 import { defaultNotebookState } from '../src/lib/notebookDomain.ts';
 import {
   applyNotebookItemUpdatePatch,
@@ -76,4 +77,13 @@ test('preview names the exact existing items and parser rejects malformed JSON',
   assert.equal(result.ok, true);
   assert.deepEqual(createNotebookItemUpdatePreview(result.patch, state), { updateCount: 1, items: [{ itemId: 'movie', title: 'Movie' }] });
   assert.equal(parseNotebookItemUpdatePatchJson('{', state).ok, false);
+});
+
+test('Developer patch validation feedback stays beside the JSON input', async () => {
+  const page = await readFile(new URL('../src/pages/sami-notebook/developer.astro', import.meta.url), 'utf8');
+  const ui = await readFile(new URL('../src/lib/notebookDeveloperUi.ts', import.meta.url), 'utf8');
+  assert.match(page, /id="developer-patch-status"/);
+  assert.ok(page.indexOf('developer-patch-input') < page.indexOf('developer-patch-status'));
+  assert.match(ui, /patchStatus\(result\.error, true\)/);
+  assert.doesNotMatch(ui, /status\(result\.error, true\)/);
 });
