@@ -15,6 +15,11 @@ import {
   notebookDueSoonLabel,
   notebookLocalDateKey,
 } from './notebookDueSoon.ts';
+import {
+  notebookAuthorIconKind,
+  notebookCommentWindow,
+  notebookItemAuthorName,
+} from './notebookCardPresentation.ts';
 
 export const escapeNotebookHtml = (value: unknown) => String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
 const fmt = (value?: number) => value ? new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'numeric', day: 'numeric' }).format(new Date(value)) : '';
@@ -26,6 +31,20 @@ function commentsFor(state: NotebookState, itemId: string) {
 function commentHtml(comment: NotebookComment) {
   const e = escapeNotebookHtml;
   return `<li class="notebook-comment" data-comment-id="${e(comment.id)}"><div class="notebook-comment__meta"><strong>${e(comment.authorName)}</strong><span>${e(fmt(comment.createdAt))}${comment.updatedAt ? ' · 已编辑' : ''}</span></div><p>${e(comment.body)}</p><div class="notebook-inline-actions"><button type="button" class="quiet-button" data-edit-comment="${e(comment.id)}">编辑</button><button type="button" class="quiet-button" data-delete-comment="${e(comment.id)}">删除</button></div></li>`;
+}
+
+function authorIconHtml(item: NotebookItem) {
+  const e = escapeNotebookHtml;
+  const authorName = notebookItemAuthorName(item);
+  const kind = notebookAuthorIconKind(authorName);
+  const common = `class="notebook-author-icon notebook-author-icon--${kind}" role="img" aria-label="${e(authorName)}发起" title="${e(authorName)}" data-author-name="${e(authorName)}"`;
+  if (kind === 'cat') {
+    return `<span ${common}><svg viewBox="0 0 36 36" aria-hidden="true" focusable="false"><path class="face" d="M7.5 14.2 9.2 5.5l7 5.2c1.2-.25 2.4-.25 3.6 0l7-5.2 1.7 8.7c1.3 1.8 2 4 2 6.3 0 6.5-5.4 11.7-12.5 11.7S5.5 27 5.5 20.5c0-2.3.7-4.5 2-6.3Z"/><path class="ear" d="m10.7 9.7.7-3 3 2.3-3.7.7Zm14.6 0-.7-3-3 2.3 3.7.7Z"/><path class="muzzle" d="M12.2 23.3c1.5-1.6 3.5-2.4 5.8-2.4s4.3.8 5.8 2.4c-1.1 3.1-3.1 4.7-5.8 4.7s-4.7-1.6-5.8-4.7Z"/><path class="line" d="M12.3 17.7c.8-.9 1.7-1.3 2.7-1.3m6 0c1 0 1.9.4 2.7 1.3M16.2 22.2c1.1.8 2.5.8 3.6 0M18 21.7v2.2"/><circle class="nose" cx="18" cy="21.5" r="1.1"/></svg></span>`;
+  }
+  if (kind === 'dog') {
+    return `<span ${common}><svg viewBox="0 0 36 36" aria-hidden="true" focusable="false"><path class="ear" d="M10.6 10.2C6.9 8.2 4 10.4 4.7 14.5c.7 4.2 3.2 7.4 6.3 7.1l3-5.1-3.4-6.3Zm14.8 0c3.7-2 6.6.2 5.9 4.3-.7 4.2-3.2 7.4-6.3 7.1l-3-5.1 3.4-6.3Z"/><path class="face" d="M9 17.2C9 10.9 13 7 18 7s9 3.9 9 10.2v5.2c0 6.2-4 9.6-9 9.6s-9-3.4-9-9.6v-5.2Z"/><ellipse class="muzzle" cx="18" cy="23.5" rx="5.3" ry="4.3"/><circle class="eye" cx="14.5" cy="17.2" r="1.3"/><circle class="eye" cx="21.5" cy="17.2" r="1.3"/><path class="nose" d="M15.8 22.2c.8-1 3.6-1 4.4 0 .4.6-.7 2.1-2.2 2.1s-2.6-1.5-2.2-2.1Z"/><path class="line" d="M18 24.3v1.5c-1.1 1.1-2.2 1.4-3.3.8m3.3-.8c1.1 1.1 2.2 1.4 3.3.8"/><path class="tongue" d="M16.4 27.1c.4 2.2 2.8 2.2 3.2 0"/></svg></span>`;
+  }
+  return `<span ${common}><svg viewBox="0 0 36 36" aria-hidden="true" focusable="false"><circle class="generic-bg" cx="18" cy="18" r="15"/><circle class="generic-head" cx="18" cy="14" r="5"/><path class="generic-body" d="M9.5 29c.8-5.2 4-8 8.5-8s7.7 2.8 8.5 8"/></svg></span>`;
 }
 
 function recurrenceText(item: NotebookItem) {
@@ -62,6 +81,14 @@ function dueSoonIcon(item: NotebookItem, today: string) {
   };
 }
 
+function commentsHtml(comments: NotebookComment[], itemId: string, displayName: string | null) {
+  const e = escapeNotebookHtml;
+  const windowed = notebookCommentWindow(comments);
+  const list = comments.length ? `<ul class="notebook-comment-list">${windowed.leading.map(commentHtml).join('')}${windowed.middle.length ? `<li class="notebook-comment-expand-row"><details class="notebook-comment-expand"><summary><span class="notebook-comment-expand__closed">展开中间 ${windowed.middle.length} 条</span><span class="notebook-comment-expand__open">收起中间 ${windowed.middle.length} 条</span></summary><ul>${windowed.middle.map(commentHtml).join('')}</ul></details></li>` : ''}${windowed.trailing.map(commentHtml).join('')}</ul>` : '';
+  const add = `<details class="notebook-comment-add"><summary>＋ 添加评论</summary><form data-comment-add="${e(itemId)}" class="notebook-comment-form"><textarea name="comment" rows="2" aria-label="评论内容" required ${displayName ? '' : 'disabled'}></textarea><button type="submit" ${displayName ? '' : 'disabled'}>添加</button></form>${displayName ? '' : '<p class="notebook-warning">添加评论前，需要先配置你的显示名字。</p>'}</details>`;
+  return `<section class="notebook-comments">${list}${add}</section>`;
+}
+
 function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | null, movable: boolean, displayName: string | null, showGrace: boolean, now: number, today: string) {
   const e = escapeNotebookHtml;
   const comments = commentsFor(state, item.id);
@@ -81,14 +108,14 @@ function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | nu
     ? Math.max(1, Math.ceil((item.completedAt + NOTEBOOK_COMPLETION_GRACE_MS - now) / 60000))
     : null;
   const grace = graceMinutes ? `<span class="notebook-grace-note">已完成 · 还会在这里保留 ${graceMinutes} 分钟</span>` : '';
-  const detailSections = `${item.details ? `<p class="notebook-details-text">${e(item.details)}</p>` : '<p class="notebook-muted">暂无内容。</p>'}${media.text ? `<section class="notebook-media-detail">${media.text}</section>` : ''}`;
-  return `<article class="notebook-item${graceMinutes ? ' notebook-item--grace' : ''}"${dueSoon.cardStyle} data-item-id="${e(item.id)}" data-board-id="${e(boardId ?? '')}">${dueSoon.html}<div class="notebook-item__topline"${dueSoon.topLineStyle}><strong>${e(item.title)}</strong><div class="notebook-inline-actions">${moves}<button type="button" class="quiet-button" data-edit-item="${e(item.id)}">编辑</button></div></div><div class="notebook-item__controls"><label>优先级<select data-item-priority="${e(item.id)}">${NOTEBOOK_PRIORITIES.map((p) => `<option value="${p}" ${item.priority === p ? 'selected' : ''}>${NOTEBOOK_PRIORITY_LABELS[p]}</option>`).join('')}</select></label>${statusControl}</div>${(due || completed || recurrence || grace || boardNames || media.summary) ? `<div class="notebook-item__meta">${due}${completed}${recurrence}${grace}${media.summary}${boardNames ? `<span>${e(boardNames)}</span>` : ''}</div>` : ''}<details class="notebook-item__details"><summary>内容与评论${comments.length ? ` · ${comments.length}` : ''}</summary><div class="notebook-item__details-body">${detailSections}<section class="notebook-comments">${comments.length ? `<ul>${comments.map(commentHtml).join('')}</ul>` : '<p class="notebook-muted">暂无评论。</p>'}<form data-comment-add="${e(item.id)}" class="notebook-comment-form"><label>添加评论<textarea name="comment" rows="2" required ${displayName ? '' : 'disabled'}></textarea></label><button type="submit" ${displayName ? '' : 'disabled'}>添加</button></form>${displayName ? '' : '<p class="notebook-warning">添加评论前，需要先配置你的显示名字。</p>'}</section></div></details></article>`;
+  const body = `${item.details ? `<p class="notebook-details-text">${e(item.details)}</p>` : ''}${media.text ? `<section class="notebook-media-detail">${media.text}</section>` : ''}${commentsHtml(comments, item.id, displayName)}`;
+  return `<article class="notebook-item${graceMinutes ? ' notebook-item--grace' : ''}"${dueSoon.cardStyle} data-item-id="${e(item.id)}" data-board-id="${e(boardId ?? '')}">${dueSoon.html}<div class="notebook-item__topline"${dueSoon.topLineStyle}><div class="notebook-item__heading">${authorIconHtml(item)}<strong>${e(item.title)}</strong></div><div class="notebook-inline-actions">${moves}<button type="button" class="quiet-button" data-edit-item="${e(item.id)}">编辑</button></div></div><div class="notebook-item__controls"><label>优先级<select data-item-priority="${e(item.id)}">${NOTEBOOK_PRIORITIES.map((p) => `<option value="${p}" ${item.priority === p ? 'selected' : ''}>${NOTEBOOK_PRIORITY_LABELS[p]}</option>`).join('')}</select></label>${statusControl}</div>${(due || completed || recurrence || grace || boardNames || media.summary) ? `<div class="notebook-item__meta">${due}${completed}${recurrence}${grace}${media.summary}${boardNames ? `<span>${e(boardNames)}</span>` : ''}</div>` : ''}<div class="notebook-item__body">${body}</div></article>`;
 }
 
 function historyHtml(entry: NotebookSectionEntry) {
   const e = escapeNotebookHtml;
   if (entry.kind !== 'recurrence' || !entry.event) return '';
-  return `<article class="notebook-item notebook-item--history" data-completion-event-id="${e(entry.event.id)}"><div class="notebook-item__topline"><strong>${e(entry.item.title)}</strong><span class="notebook-history-badge">循环记录</span></div><div class="notebook-item__meta"><span>完成 ${e(fmt(entry.event.completedAt))}</span></div></article>`;
+  return `<article class="notebook-item notebook-item--history" data-completion-event-id="${e(entry.event.id)}"><div class="notebook-item__topline"><div class="notebook-item__heading">${authorIconHtml(entry.item)}<strong>${e(entry.item.title)}</strong></div><span class="notebook-history-badge">循环记录</span></div><div class="notebook-item__meta"><span>完成 ${e(fmt(entry.event.completedAt))}</span></div></article>`;
 }
 
 function sectionEntryHtml(state: NotebookState, entry: NotebookSectionEntry, boardId: string, displayName: string | null, filter: string, now: number, today: string) {
