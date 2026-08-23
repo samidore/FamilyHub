@@ -84,7 +84,7 @@
           },
           "items": {
             "$itemId": {
-              ".validate": "newData.hasChildren(['id', 'title', 'details', 'priority', 'status', 'createdAt', 'updatedAt']) && newData.child('id').val() == $itemId && ((!newData.child('dueTime').exists()) || newData.child('dueDate').exists()) && ((newData.child('status').val() == 'active' && !newData.child('completedAt').exists()) || (newData.child('status').val() == 'completed' && newData.child('completedAt').isNumber() && newData.child('completedAt').val() > 0 && !newData.child('recurrence').exists()))",
+              ".validate": "newData.hasChildren(['id', 'title', 'details', 'priority', 'status', 'createdAt', 'updatedAt']) && newData.child('id').val() == $itemId && ((!newData.child('dueTime').exists()) || newData.child('dueDate').exists()) && ((newData.child('status').val() == 'active' && !newData.child('completedAt').exists()) || (newData.child('status').val() == 'completed' && newData.child('completedAt').isNumber() && newData.child('completedAt').val() > 0 && !newData.child('recurrence').exists())) && (!data.child('authorName').exists() || newData.child('authorName').val() == data.child('authorName').val())",
               "id": { ".validate": "newData.isString() && newData.val() == $itemId" },
               "title": { ".validate": "newData.isString() && newData.val().length > 0" },
               "details": { ".validate": "newData.isString()" },
