@@ -61,6 +61,16 @@ test('notebook schema accepts canonical records and rejects unsupported fields o
   await assertFails(alice.ref(`${household}/notebook/items/bad-my-rating`).set({ ...item, id: 'bad-my-rating', myRating: 11 }));
 });
 
+test('new items may snapshot the current member display name and cannot later change authors', async () => {
+  await resetWithMember({ displayName: 'Sami' });
+  const alice = google('alice', 'alice@gmail.com');
+  const authoredRef = alice.ref(`${household}/notebook/items/authored`);
+  await assertSucceeds(authoredRef.set({ ...item, id: 'authored', authorName: 'Sami' }));
+  await assertFails(alice.ref(`${household}/notebook/items/wrong-author`).set({ ...item, id: 'wrong-author', authorName: 'Someone Else' }));
+  await assertFails(authoredRef.update({ authorName: 'Someone Else', updatedAt: 3 }));
+  await assertSucceeds(authoredRef.update({ title: 'Edited title', updatedAt: 3 }));
+});
+
 test('comments snapshot the configured member name, never an email, and preserve the original author on edit', async () => {
   await resetWithMember();
   const alice = google('alice', 'alice@gmail.com');
