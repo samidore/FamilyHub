@@ -351,7 +351,7 @@ export function usedIngredientIds(meal: CurrentMeal, recipes?: MealRecipe[]): st
 export function defaultCheckoutConsumption(meal: CurrentMeal, inventory: Inventory, ingredients?: MealIngredient[] | Record<string, MealIngredient>, recipes?: MealRecipe[]): CheckoutConsumption {
   const units = recipes ? checkoutUnitsForSelection(recipes, mealToEngineState(meal)) : {};
   const ids = recipes ? Object.keys(units) : usedIngredientIds(meal);
-  const optionalIds = recipes ? easyBraiseAddonIngredientIds(recipes, mealToEngineState(meal), meal.availableIngredientIds, ingredients ?? []) : [];
+  const optionalIds = recipes ? easyBraiseAddonIngredientIds(recipes, mealToEngineState(meal), availableIngredientIds(inventory, ingredients), ingredients ?? []) : [];
   const entries: [string, number | boolean][] = ids.map((id): [string, number | boolean] => {
     const tracking = trackingForIngredient(id, ingredients);
     if (tracking === 'presence-only') return [id, false];
@@ -375,7 +375,7 @@ export function applyCheckout(state: HouseholdState, mealId: string, consumption
   const meal = state.currentMeal;
   if (!meal || meal.mealId !== mealId || meal.status !== 'cooking' || (state.activeStep !== undefined && state.activeStep !== 'checkout')) return { committed: false, reason: 'stale-meal', state };
   const normal = new Set(options.recipes ? Object.keys(checkoutUnitsForSelection(options.recipes, mealToEngineState(meal))) : usedIngredientIds(meal));
-  const optional = new Set(options.recipes ? easyBraiseAddonIngredientIds(options.recipes, mealToEngineState(meal), meal.availableIngredientIds, ingredients ?? []) : []);
+  const optional = new Set(options.recipes ? easyBraiseAddonIngredientIds(options.recipes, mealToEngineState(meal), availableIngredientIds(state.inventory, ingredients), ingredients ?? []) : []);
   const used = new Set([...normal, ...optional]);
   const nextInventory = { ...state.inventory };
   const nextBatches: InventoryBatches = Object.fromEntries(Object.entries(normalizeInventoryBatches(state.inventoryBatches, state.inventory, ingredients)).map(([id, batches]) => [id, { ...batches }]));
