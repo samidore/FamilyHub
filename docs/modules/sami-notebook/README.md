@@ -137,18 +137,19 @@ Within each board and priority section, show Active items first using their manu
 
 ## Completion and recurrence
 
-One-time completion uses explicit buttons rather than a status dropdown:
+One-time item completion:
 
-- an Active one-time item shows `✓ 完成`;
-- a completed one-time item shows `撤销完成`;
-- pressing `✓ 完成` immediately writes `status = completed` and `completedAt` to shared Firebase state;
-- the item is immediately present in `Completed` and synchronized to other devices;
-- for one hour after `completedAt`, the `Active` view continues to render that completed item in its board and, when applicable, Smart Urgent, with a visible completed/grace treatment and the undo button;
-- the one-hour grace is display-only and must not delay or defer the database completion write;
-- after the grace expires, the item disappears from `Active` automatically without another database mutation;
-- restoring clears `completedAt`, sets the item back to Active, and places it at the top of its current priority section.
+- set `status = completed`;
+- set `completedAt`;
+- use a direct completion button rather than a status dropdown;
+- keep the completed card visible in the Active view for a one-hour grace period, with an explicit undo action;
+- the grace period is display-only: Firebase records completion immediately, other devices synchronize immediately, and Completed views include the item immediately;
+- after the grace period, the item disappears from Active without another database write;
+- retain the item indefinitely unless the user explicitly deletes it later.
 
-Recurring completion must preserve history while keeping the next occurrence active. Do not overwrite the only completion timestamp. Store a completion event for each occurrence, then advance the same item's next due date and leave the item active. Completed views render those recurring completion events as historical rows, grouped by the priority recorded at completion time. Recurring items continue to use `完成本次`; the one-hour one-time completion grace does not apply because the live recurring item remains Active.
+Restoring it clears `completedAt` and returns it to Active at the top of its priority section.
+
+Recurring completion must preserve history while keeping the next occurrence active. Do not overwrite the only completion timestamp. Store a completion event for each occurrence, then advance the same item's next due date and leave the item active. Completed views render those recurring completion events as historical rows, grouped by the priority recorded at completion time.
 
 A recurrence completion event needs only the minimum snapshot required for stable history:
 
@@ -226,23 +227,16 @@ The Developer page uses the same household authentication and contains:
 - Delete a ticket.
 - `Copy all` button.
 
-`Copy all` produces a self-contained prompt that can be pasted directly into ChatGPT. The prompt contains only the context required to convert Inbox tickets into a version-1 patch:
-
-- the user's current local date;
-- current board IDs, titles, and kinds;
-- Inbox ticket IDs and text;
-- the supported patch fields and recurrence constraints;
-- instructions to return plain JSON only and preserve ticket IDs.
-
-It intentionally omits Inbox timestamps and does not copy the rest of the private notebook database, authentication identity, or Firebase configuration.
-
-For any ticket assigned to a `kind = media` Board, the copied prompt must require ChatGPT to search the web and verify the matching IMDb page before filling `imdbRating`. If the work is uniquely identified and the current IMDb rating is reliably available, `imdbRating` must be filled from IMDb rather than memory or another rating source. If the work is ambiguous or the rating cannot be reliably verified, omit `imdbRating` and note what requires confirmation. `myRating` may be filled only when the Inbox text explicitly states the user's personal rating; it must never be inferred from IMDb or another score.
+`Copy all` copies a self-contained prompt that can be pasted directly to ChatGPT. It contains only the current board IDs/titles/kinds and Inbox ticket IDs/text that ChatGPT needs for classification; it does not expose the rest of the private notebook database. The prompt requires live IMDb verification for media items, forbids guessed ratings, and requires `myRating` to come only from an explicit user rating.
 
 ### Chat patch input
 
-A textarea accepts a complete JSON patch returned by ChatGPT. Version 1 is intentionally narrow: it converts Inbox tickets into normalized items using existing board IDs. Board creation/renaming remains normal website UI rather than arbitrary patch behavior.
+A textarea accepts a complete JSON patch returned by ChatGPT. Version 1 intentionally supports only two narrow patch modes:
 
-Patch shape:
+1. convert Inbox tickets into new normalized items using existing board IDs;
+2. update a safe allowlist of fields on existing items.
+
+Inbox conversion shape:
 
 ```text
 NotebookPatch
@@ -263,16 +257,36 @@ NotebookPatch
     - review?
 ```
 
+Existing-item update shape:
+
+```text
+NotebookItemUpdatePatch
+- patchVersion: 1
+- itemUpdates[]
+    - itemId
+    - details?
+    - platform?
+    - imdbRating?
+    - myRating?
+    - notes?
+    - review?
+```
+
+Existing-item updates are intentionally metadata-only. They must not change title, Board membership, priority, status, due date, recurrence, manual order, comments, completion history, Inbox, auth, or any arbitrary Firebase path. Media-specific fields are accepted only for items that already belong to at least one `kind = media` Board. Ratings remain constrained to 0–10.
+
 Apply flow:
 
 1. Parse JSON.
-2. Validate the complete patch against the notebook patch schema.
-3. Reject unknown board IDs, duplicate ticket IDs, invalid enums/dates/times, malformed ratings, or tickets no longer present.
-4. Show a compact preview: number of tickets to convert and target boards.
-5. One Apply action performs one transaction: create generated item IDs, create board memberships, then delete only the successfully converted Inbox tickets.
-6. A validation or transaction failure writes nothing.
+2. Detect the supported narrow patch mode and validate the complete payload against its strict schema.
+3. Reject unknown item/ticket IDs, duplicate IDs, unsupported fields, malformed ratings, unknown board IDs, invalid enums/dates/times, or tickets no longer present.
+4. Show a compact preview of exactly what will be created or updated.
+5. One Apply action performs one Firebase transaction. Inbox conversion creates generated item IDs and memberships and deletes only the successfully converted Inbox tickets. Existing-item updates change only the allowlisted fields.
+6. Revalidate against the current transaction state so concurrent changes cannot bypass validation.
+7. A validation or transaction failure writes nothing.
 
-Do not allow version-1 patches to write arbitrary Firebase paths, modify unrelated existing items, alter membership/auth records, or execute deletes outside the referenced Inbox tickets.
+Patch parse/validation/apply feedback belongs in the Chat patch panel beside the JSON input. Do not surface patch-format errors as a page-level Developer status message.
+
+Do not allow version-1 patches to write arbitrary Firebase paths, create/rename Boards, alter membership/auth records, change item lifecycle/order, or execute deletes outside the referenced Inbox tickets.
 
 ## Portable database export and Git backup
 
@@ -365,7 +379,7 @@ Firebase rules should authorize the notebook path only to existing verified hous
 ### Phase 4 — Developer workflow + export
 
 - Add Inbox edit/delete/copy-all.
-- Add schema-validated atomic Chat patch apply.
+- Add schema-validated atomic Chat patch apply for Inbox conversion and safe existing-item metadata updates.
 - Add portable database export.
 
 ### Phase 5 — release verification
@@ -391,11 +405,9 @@ This design is ready for implementation when all of the following are fixed:
 - One item may belong to multiple boards with per-board manual ordering.
 - Priority sections are fixed Urgent/High/Normal/Low.
 - Active ordering is new-first with persistent manual overrides; Completed keeps the same priority sections and sorts each by completion date descending.
-- One-time completion is an immediate shared-state write with `✓ 完成` / `撤销完成` buttons and a one-hour Active-view undo grace; recurring completion remains `完成本次`.
 - Media items do not have `mediaType`.
 - Board description is optional; board comments do not exist.
 - Item comments are editable and show private display names, never email.
 - Inbox accepts unrestricted one-line capture.
-- Developer `Copy all` is a self-contained ChatGPT prompt; media classification requires live IMDb verification for `imdbRating`, while `myRating` is never inferred.
-- Developer patching is schema-limited and atomic.
+- Developer patching is schema-limited and atomic, including safe existing-item metadata updates only.
 - Export is complete for notebook business state and excludes authentication identity data.
