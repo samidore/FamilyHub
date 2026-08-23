@@ -43,11 +43,25 @@ Top controls:
 
 Then:
 
-1. Fixed smart `Urgent` board, always first. It is computed from active items with `priority = urgent`; it is not a normal membership target.
+1. Fixed smart `Urgent` board, always first. It is computed from active items with `priority = urgent` plus the hidden derived `due-soon` state; it is not a normal membership target.
 2. Visible registered boards in shared board order.
 3. Quick Inbox input at the bottom. Submitting any non-empty sentence creates a ticket immediately with no schema gate.
 
 All board visibility, board order, collapse state, and top filter state are household-shared state, not per-user preferences.
+
+### Hidden due-soon state
+
+`due-soon` is a computed display state only; it is never persisted to Firebase and never replaces or rewrites `priority`.
+
+An item is `due-soon` when all of the following hold:
+
+- `status = active`;
+- it has a valid `dueDate`;
+- the user's local calendar date is the day before `dueDate`, the due date itself, or later.
+
+The hidden state starts at local midnight on the day before the deadline and remains until the item is completed or its due date is changed/removed. The page schedules a local-midnight rerender, so entering `due-soon` does not require a Firebase write or another user action.
+
+Only Smart Urgent uses `due-soon` as an inclusion rule. Ordinary Boards keep the item's stored priority section and manual order unchanged. A due-soon card shows a small red hourglass in its upper-right corner; the icon's accessible label distinguishes `明天截止`, `今天截止`, and `已逾期`.
 
 ## Board registry
 
@@ -390,7 +404,7 @@ Run focused checks during implementation, then the repository release gate:
 pnpm run verify
 ```
 
-Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, comment author names, all ordering transitions, recurrence history, patch atomicity, and export exclusion of auth identity data.
+Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, comment author names, all ordering transitions, recurrence history, due-soon midnight rollover/Smart Urgent inclusion, patch atomicity, and export exclusion of auth identity data.
 
 ## Design acceptance criteria
 
@@ -401,7 +415,8 @@ This design is ready for implementation when all of the following are fixed:
 - Git backup is a private portable snapshot, not runtime storage.
 - Module privacy classification is explicitly authenticated-household before activation.
 - Boards are dynamic and may be reordered/hidden/collapsed as household-shared state.
-- Smart Urgent is computed and fixed first.
+- Smart Urgent is computed and fixed first, combining stored `priority = urgent` with the hidden derived `due-soon` state.
+- `due-soon` never rewrites stored priority or ordinary Board ordering and rolls over at local midnight.
 - One item may belong to multiple boards with per-board manual ordering.
 - Priority sections are fixed Urgent/High/Normal/Low.
 - Active ordering is new-first with persistent manual overrides; Completed keeps the same priority sections and sorts each by completion date descending.
