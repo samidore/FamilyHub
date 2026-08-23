@@ -137,15 +137,18 @@ Within each board and priority section, show Active items first using their manu
 
 ## Completion and recurrence
 
-One-time item completion:
+One-time completion uses explicit buttons rather than a status dropdown:
 
-- set `status = completed`;
-- set `completedAt`;
-- retain the item indefinitely unless the user explicitly deletes it later.
+- an Active one-time item shows `✓ 完成`;
+- a completed one-time item shows `撤销完成`;
+- pressing `✓ 完成` immediately writes `status = completed` and `completedAt` to shared Firebase state;
+- the item is immediately present in `Completed` and synchronized to other devices;
+- for one hour after `completedAt`, the `Active` view continues to render that completed item in its board and, when applicable, Smart Urgent, with a visible completed/grace treatment and the undo button;
+- the one-hour grace is display-only and must not delay or defer the database completion write;
+- after the grace expires, the item disappears from `Active` automatically without another database mutation;
+- restoring clears `completedAt`, sets the item back to Active, and places it at the top of its current priority section.
 
-Restoring it clears `completedAt` and returns it to Active at the top of its priority section.
-
-Recurring completion must preserve history while keeping the next occurrence active. Do not overwrite the only completion timestamp. Store a completion event for each occurrence, then advance the same item's next due date and leave the item active. Completed views render those recurring completion events as historical rows, grouped by the priority recorded at completion time.
+Recurring completion must preserve history while keeping the next occurrence active. Do not overwrite the only completion timestamp. Store a completion event for each occurrence, then advance the same item's next due date and leave the item active. Completed views render those recurring completion events as historical rows, grouped by the priority recorded at completion time. Recurring items continue to use `完成本次`; the one-hour one-time completion grace does not apply because the live recurring item remains Active.
 
 A recurrence completion event needs only the minimum snapshot required for stable history:
 
@@ -223,13 +226,17 @@ The Developer page uses the same household authentication and contains:
 - Delete a ticket.
 - `Copy all` button.
 
-`Copy all` produces one JSON payload containing:
+`Copy all` produces a self-contained prompt that can be pasted directly into ChatGPT. The prompt contains only the context required to convert Inbox tickets into a version-1 patch:
 
-- protocol version;
-- current board IDs/titles/kinds;
-- all Inbox ticket IDs/text/timestamps.
+- the user's current local date;
+- current board IDs, titles, and kinds;
+- Inbox ticket IDs and text;
+- the supported patch fields and recurrence constraints;
+- instructions to return plain JSON only and preserve ticket IDs.
 
-It intentionally does not copy the rest of the private notebook database.
+It intentionally omits Inbox timestamps and does not copy the rest of the private notebook database, authentication identity, or Firebase configuration.
+
+For any ticket assigned to a `kind = media` Board, the copied prompt must require ChatGPT to search the web and verify the matching IMDb page before filling `imdbRating`. If the work is uniquely identified and the current IMDb rating is reliably available, `imdbRating` must be filled from IMDb rather than memory or another rating source. If the work is ambiguous or the rating cannot be reliably verified, omit `imdbRating` and note what requires confirmation. `myRating` may be filled only when the Inbox text explicitly states the user's personal rating; it must never be inferred from IMDb or another score.
 
 ### Chat patch input
 
@@ -384,9 +391,11 @@ This design is ready for implementation when all of the following are fixed:
 - One item may belong to multiple boards with per-board manual ordering.
 - Priority sections are fixed Urgent/High/Normal/Low.
 - Active ordering is new-first with persistent manual overrides; Completed keeps the same priority sections and sorts each by completion date descending.
+- One-time completion is an immediate shared-state write with `✓ 完成` / `撤销完成` buttons and a one-hour Active-view undo grace; recurring completion remains `完成本次`.
 - Media items do not have `mediaType`.
 - Board description is optional; board comments do not exist.
 - Item comments are editable and show private display names, never email.
 - Inbox accepts unrestricted one-line capture.
+- Developer `Copy all` is a self-contained ChatGPT prompt; media classification requires live IMDb verification for `imdbRating`, while `myRating` is never inferred.
 - Developer patching is schema-limited and atomic.
 - Export is complete for notebook business state and excludes authentication identity data.
