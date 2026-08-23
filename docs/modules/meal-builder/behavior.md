@@ -39,7 +39,7 @@ When this feature first reads aggregate stock for a FIFO Ingredient without batc
 
 ## Vegetable structures and add-on
 
-Vegetable Recipes represent a real cooking structure, not every seasoning label. Compatible alternatives use `one_of` rather than duplicate stable IDs. Easy-braise is checkout-only: an Ingredient tagged `easy-braise-addon` appears once only when this meal snapshot contains it, it is not a bound Recipe ingredient, and a selected Recipe has `iron-pan-braise`. It does not contribute planning slots or Cook View content. Checkout defaults are zero/false and the atomic transaction rechecks eligibility.
+Vegetable Recipes represent a real cooking structure, not every seasoning label. Compatible alternatives use `one_of` rather than duplicate stable IDs. Easy-braise is checkout-only: an Ingredient tagged `easy-braise-addon` appears once when it is currently in the live household inventory, it is not a bound Recipe ingredient, and a selected Recipe has `iron-pan-braise`. Recipe-stage availability filters and the current meal's availability snapshot do not hide an otherwise eligible Easy-braise Ingredient; stock added after the meal started can appear at Checkout. It does not contribute planning slots or Cook View content. Checkout defaults are zero/false, and the atomic transaction rechecks eligibility against the latest live inventory so removed/depleted add-ons cannot be consumed.
 
 `addon-only` is a data-quality exemption from standalone Recipe coverage for an Ingredient intentionally used only as a controlled add-on/supporting item. It does not itself make an Ingredient eligible for Easy-braise or any other add-on UI; the corresponding add-on mechanism/tag still controls actual behavior.
 

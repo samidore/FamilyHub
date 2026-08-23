@@ -393,7 +393,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       syncCheckoutDraft(meal);
       checkoutList.replaceChildren();
       const normalIds = usedIngredientIds(meal, recipes);
-      const optionalIds = easyBraiseAddonIngredientIds(recipes, mealStateFromCurrentMeal(meal), meal.availableIngredientIds, ingredients);
+      const optionalIds = easyBraiseAddonIngredientIds(recipes, mealStateFromCurrentMeal(meal), stockedIds(), ingredients);
       const renderRow = (id: string, optional = false) => {
         const item = ingredientById.get(id); if (!item) return;
         const tracking = trackingForIngredient(id, ingredients); const row = document.createElement('div'); row.className = 'meal-checkout-row'; row.dataset.checkoutIngredient = id;

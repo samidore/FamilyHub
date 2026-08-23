@@ -131,22 +131,34 @@ test('checkout ignores bindings retained for unknown or archived Recipes', () =>
   assert.equal(applyCheckout(state, meal.mealId, { other: 1 }, ingredients, { recipes }).committed, false);
 });
 
-test('easy-braise checkout defaults to zero and atomically authorizes only eligible snapshot Ingredients', () => {
+test('easy-braise checkout uses live inventory, defaults add-ons to zero, and rechecks atomically', () => {
   const recipes = [{ id: 'braise', tags: ['iron-pan-braise'], requirements: [], contribution: { protein: 1, vegetable: 0, staple: 0 }, childCoverage: { protein: true, vegetable: false } }];
   const meal = {
-    ...createCurrentMealFromInventory({ pork: 2, tofu: 2, potato: true, other: 1 }, { mealId: 'easy-braise' }, ingredients),
+    ...createCurrentMealFromInventory({ pork: 2 }, { mealId: 'easy-braise' }, ingredients),
     status: 'cooking', selectedRecipeIds: ['braise'], recipeIngredientBindings: { braise: ['pork'] },
   };
-  assert.deepEqual(defaultCheckoutConsumption(meal, { pork: 2, tofu: 2, potato: true, other: 1 }, ingredients, recipes), { pork: 1, tofu: 0, potato: false });
+  assert.deepEqual(meal.availableIngredientIds, ['pork']);
+  const liveInventory = { pork: 2, tofu: 2, potato: true, other: 1 };
+  assert.deepEqual(defaultCheckoutConsumption(meal, liveInventory, ingredients, recipes), { pork: 1, potato: false, tofu: 0 });
 
-  const state = { inventory: { pork: 2, tofu: 2, potato: true, other: 1 }, currentMeal: meal, activeStep: 'checkout', recentMeals: [] };
+  const state = { inventory: liveInventory, currentMeal: meal, activeStep: 'checkout', recentMeals: [] };
   const rejected = applyCheckout(state, meal.mealId, { pork: 1, other: 1 }, ingredients, { recipes });
   assert.equal(rejected.committed, false);
   assert.deepEqual(rejected.state.inventory, state.inventory);
 
+  const removedBeforeCommit = { ...state, inventory: { pork: 2, potato: true, other: 1 } };
+  const staleOptional = applyCheckout(removedBeforeCommit, meal.mealId, { pork: 1, tofu: 0.5 }, ingredients, { recipes });
+  assert.equal(staleOptional.committed, false);
+
   const accepted = applyCheckout(state, meal.mealId, { pork: 1, tofu: 1.5, potato: true }, ingredients, { recipes, nextMealId: 'next', completedAt: 2 });
   assert.equal(accepted.committed, true);
   assert.deepEqual(accepted.state.inventory, { pork: 1, tofu: 0.5, other: 1 });
+});
+
+test('Checkout renders easy-braise options from live inventory rather than the meal availability snapshot', async () => {
+  const page = await readFile('src/pages/meal-builder.astro', 'utf8');
+  assert.match(page, /easyBraiseAddonIngredientIds\(recipes, mealStateFromCurrentMeal\(meal\), stockedIds\(\), ingredients\)/);
+  assert.doesNotMatch(page, /easyBraiseAddonIngredientIds\(recipes, mealStateFromCurrentMeal\(meal\), meal\.availableIngredientIds, ingredients\)/);
 });
 
 test('current-meal status transitions are transaction-safe and reject stale jumps', () => {
