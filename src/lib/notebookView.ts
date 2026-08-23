@@ -1,5 +1,14 @@
 import { NOTEBOOK_PRIORITIES, type NotebookComment, type NotebookItem, type NotebookPriority, type NotebookState } from './notebookDomain.ts';
-import { NOTEBOOK_PRIORITY_LABELS, notebookBoardIdsForItem, notebookSectionEntries, notebookUrgentActiveItems, orderedNotebookBoards, type NotebookSectionEntry } from './notebookActions.ts';
+import {
+  NOTEBOOK_COMPLETION_GRACE_MS,
+  NOTEBOOK_PRIORITY_LABELS,
+  notebookBoardIdsForItem,
+  notebookSectionEntries,
+  notebookUrgentActiveItems,
+  notebookUrgentVisibleItems,
+  orderedNotebookBoards,
+  type NotebookSectionEntry,
+} from './notebookActions.ts';
 
 export const escapeNotebookHtml = (value: unknown) => String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
 const fmt = (value?: number) => value ? new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'numeric', day: 'numeric' }).format(new Date(value)) : '';
@@ -36,7 +45,7 @@ function mediaDetails(item: NotebookItem) {
   return { summary, text };
 }
 
-function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | null, movable: boolean, displayName: string | null) {
+function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | null, movable: boolean, displayName: string | null, showGrace: boolean, now: number) {
   const e = escapeNotebookHtml;
   const comments = commentsFor(state, item.id);
   const boardNames = notebookBoardIdsForItem(state, item.id).map((id) => state.boards[id]?.title).filter(Boolean).join(' · ');
@@ -47,9 +56,15 @@ function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | nu
   const media = mediaDetails(item);
   const statusControl = item.recurrence
     ? `<div class="notebook-recurring-status"><span>未完成</span><button type="button" class="secondary-button" data-complete-recurring="${e(item.id)}">完成本次</button></div>`
-    : `<label>状态<select data-item-status="${e(item.id)}"><option value="active" ${item.status === 'active' ? 'selected' : ''}>未完成</option><option value="completed" ${item.status === 'completed' ? 'selected' : ''}>完成</option></select></label>`;
+    : item.status === 'active'
+      ? `<div class="notebook-completion-control"><span>未完成</span><button type="button" class="secondary-button" data-complete-item="${e(item.id)}">✓ 完成</button></div>`
+      : `<div class="notebook-completion-control"><span>已完成</span><button type="button" class="secondary-button" data-restore-item="${e(item.id)}">撤销完成</button></div>`;
+  const graceMinutes = showGrace && item.completedAt
+    ? Math.max(1, Math.ceil((item.completedAt + NOTEBOOK_COMPLETION_GRACE_MS - now) / 60000))
+    : null;
+  const grace = graceMinutes ? `<span class="notebook-grace-note">已完成 · 还会在这里保留 ${graceMinutes} 分钟</span>` : '';
   const detailSections = `${item.details ? `<p class="notebook-details-text">${e(item.details)}</p>` : '<p class="notebook-muted">暂无内容。</p>'}${media.text ? `<section class="notebook-media-detail">${media.text}</section>` : ''}`;
-  return `<article class="notebook-item" data-item-id="${e(item.id)}" data-board-id="${e(boardId ?? '')}"><div class="notebook-item__topline"><strong>${e(item.title)}</strong><div class="notebook-inline-actions">${moves}<button type="button" class="quiet-button" data-edit-item="${e(item.id)}">编辑</button></div></div><div class="notebook-item__controls"><label>优先级<select data-item-priority="${e(item.id)}">${NOTEBOOK_PRIORITIES.map((p) => `<option value="${p}" ${item.priority === p ? 'selected' : ''}>${NOTEBOOK_PRIORITY_LABELS[p]}</option>`).join('')}</select></label>${statusControl}</div>${(due || completed || recurrence || boardNames || media.summary) ? `<div class="notebook-item__meta">${due}${completed}${recurrence}${media.summary}${boardNames ? `<span>${e(boardNames)}</span>` : ''}</div>` : ''}<details class="notebook-item__details"><summary>内容与评论${comments.length ? ` · ${comments.length}` : ''}</summary><div class="notebook-item__details-body">${detailSections}<section class="notebook-comments">${comments.length ? `<ul>${comments.map(commentHtml).join('')}</ul>` : '<p class="notebook-muted">暂无评论。</p>'}<form data-comment-add="${e(item.id)}" class="notebook-comment-form"><label>添加评论<textarea name="comment" rows="2" required ${displayName ? '' : 'disabled'}></textarea></label><button type="submit" ${displayName ? '' : 'disabled'}>添加</button></form>${displayName ? '' : '<p class="notebook-warning">添加评论前，需要先配置你的显示名字。</p>'}</section></div></details></article>`;
+  return `<article class="notebook-item${graceMinutes ? ' notebook-item--grace' : ''}" data-item-id="${e(item.id)}" data-board-id="${e(boardId ?? '')}"><div class="notebook-item__topline"><strong>${e(item.title)}</strong><div class="notebook-inline-actions">${moves}<button type="button" class="quiet-button" data-edit-item="${e(item.id)}">编辑</button></div></div><div class="notebook-item__controls"><label>优先级<select data-item-priority="${e(item.id)}">${NOTEBOOK_PRIORITIES.map((p) => `<option value="${p}" ${item.priority === p ? 'selected' : ''}>${NOTEBOOK_PRIORITY_LABELS[p]}</option>`).join('')}</select></label>${statusControl}</div>${(due || completed || recurrence || grace || boardNames || media.summary) ? `<div class="notebook-item__meta">${due}${completed}${recurrence}${grace}${media.summary}${boardNames ? `<span>${e(boardNames)}</span>` : ''}</div>` : ''}<details class="notebook-item__details"><summary>内容与评论${comments.length ? ` · ${comments.length}` : ''}</summary><div class="notebook-item__details-body">${detailSections}<section class="notebook-comments">${comments.length ? `<ul>${comments.map(commentHtml).join('')}</ul>` : '<p class="notebook-muted">暂无评论。</p>'}<form data-comment-add="${e(item.id)}" class="notebook-comment-form"><label>添加评论<textarea name="comment" rows="2" required ${displayName ? '' : 'disabled'}></textarea></label><button type="submit" ${displayName ? '' : 'disabled'}>添加</button></form>${displayName ? '' : '<p class="notebook-warning">添加评论前，需要先配置你的显示名字。</p>'}</section></div></details></article>`;
 }
 
 function historyHtml(entry: NotebookSectionEntry) {
@@ -58,21 +73,23 @@ function historyHtml(entry: NotebookSectionEntry) {
   return `<article class="notebook-item notebook-item--history" data-completion-event-id="${e(entry.event.id)}"><div class="notebook-item__topline"><strong>${e(entry.item.title)}</strong><span class="notebook-history-badge">循环记录</span></div><div class="notebook-item__meta"><span>完成 ${e(fmt(entry.event.completedAt))}</span></div></article>`;
 }
 
-function sectionEntryHtml(state: NotebookState, entry: NotebookSectionEntry, boardId: string, displayName: string | null) {
-  return entry.kind === 'recurrence' ? historyHtml(entry) : itemHtml(state, entry.item, boardId, true, displayName);
+function sectionEntryHtml(state: NotebookState, entry: NotebookSectionEntry, boardId: string, displayName: string | null, filter: string, now: number) {
+  return entry.kind === 'recurrence'
+    ? historyHtml(entry)
+    : itemHtml(state, entry.item, boardId, true, displayName, filter === 'active' && entry.item.status === 'completed', now);
 }
 
-export function renderNotebookBoards(state: NotebookState, displayName: string | null) {
+export function renderNotebookBoards(state: NotebookState, displayName: string | null, now = Date.now()) {
   const filter = state.settings.viewFilter;
-  const urgent = filter === 'completed' ? [] : notebookUrgentActiveItems(state);
-  const smart = urgent.length ? `<section class="notebook-board notebook-board--urgent" data-smart-urgent><header class="notebook-board__header"><div><p class="eyebrow">Smart board</p><h2>紧急</h2></div><span class="notebook-board__count">${urgent.length}</span></header><div class="notebook-item-list">${urgent.map((item) => itemHtml(state, item, null, false, displayName)).join('')}</div></section>` : '';
+  const urgent = filter === 'completed' ? [] : filter === 'active' ? notebookUrgentVisibleItems(state, now) : notebookUrgentActiveItems(state);
+  const smart = urgent.length ? `<section class="notebook-board notebook-board--urgent" data-smart-urgent><header class="notebook-board__header"><div><p class="eyebrow">Smart board</p><h2>紧急</h2></div><span class="notebook-board__count">${urgent.length}</span></header><div class="notebook-item-list">${urgent.map((item) => itemHtml(state, item, null, false, displayName, filter === 'active' && item.status === 'completed', now)).join('')}</div></section>` : '';
   const boards = orderedNotebookBoards(state, true).map((board) => {
     let count = 0;
     const sections = NOTEBOOK_PRIORITIES.map((priority: NotebookPriority) => {
-      const entries = notebookSectionEntries(state, board.id, priority, filter);
+      const entries = notebookSectionEntries(state, board.id, priority, filter, now);
       if (!entries.length) return '';
       count += entries.length;
-      return `<section class="notebook-priority" data-priority-section data-board-id="${escapeNotebookHtml(board.id)}" data-priority="${priority}"><h3>${NOTEBOOK_PRIORITY_LABELS[priority]} <span>${entries.length}</span></h3><div class="notebook-item-list" data-item-list data-board-id="${escapeNotebookHtml(board.id)}" data-priority="${priority}">${entries.map((entry) => sectionEntryHtml(state, entry, board.id, displayName)).join('')}</div></section>`;
+      return `<section class="notebook-priority" data-priority-section data-board-id="${escapeNotebookHtml(board.id)}" data-priority="${priority}"><h3>${NOTEBOOK_PRIORITY_LABELS[priority]} <span>${entries.length}</span></h3><div class="notebook-item-list" data-item-list data-board-id="${escapeNotebookHtml(board.id)}" data-priority="${priority}">${entries.map((entry) => sectionEntryHtml(state, entry, board.id, displayName, filter, now)).join('')}</div></section>`;
     }).join('');
     return `<section class="notebook-board" data-board-id="${escapeNotebookHtml(board.id)}"><header class="notebook-board__header"><button type="button" class="collapse-button" data-toggle-board="${escapeNotebookHtml(board.id)}" aria-expanded="${board.collapsed ? 'false' : 'true'}" aria-label="${board.collapsed ? '展开' : '收起'} ${escapeNotebookHtml(board.title)}">${board.collapsed ? '＋' : '−'}</button><div class="notebook-board__heading"><h2>${escapeNotebookHtml(board.title)}</h2>${board.description ? `<p>${escapeNotebookHtml(board.description)}</p>` : ''}</div><button type="button" class="quiet-button" data-new-item="${escapeNotebookHtml(board.id)}">＋事项</button></header><div class="notebook-board__body" ${board.collapsed ? 'hidden' : ''}>${count ? sections : '<p class="notebook-empty">这个筛选下没有事项。</p>'}</div></section>`;
   }).join('');

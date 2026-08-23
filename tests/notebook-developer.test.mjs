@@ -3,6 +3,7 @@ import test from 'node:test';
 import { defaultNotebookState } from '../src/lib/notebookDomain.ts';
 import {
   applyNotebookPatch,
+  createNotebookInboxChatPrompt,
   createNotebookInboxCopyPayload,
   parseNotebookPatchJson,
   prepareNotebookPatchItemIds,
@@ -33,6 +34,21 @@ test('Copy all exposes only protocol boards and inbox', () => {
   assert.deepEqual(Object.keys(payload), ['protocolVersion', 'boards', 'inbox']);
   assert.deepEqual(payload.boards.map((entry) => Object.keys(entry)), [['id', 'title', 'kind'], ['id', 'title', 'kind']]);
   assert.equal(JSON.stringify(payload).includes('private'), false);
+});
+
+test('Copy all ChatGPT prompt requires live IMDb lookup and contains only useful board/inbox context', () => {
+  const state = stateWithInbox();
+  state.boards.movies.title = '电影';
+  state.inbox.a.text = '看 The Godfather';
+  const prompt = createNotebookInboxChatPrompt(state, '2026-08-22');
+  assert.match(prompt, /联网查找并核实对应作品的 IMDb 页面/);
+  assert.match(prompt, /必须把当前 IMDb 评分填入 imdbRating/);
+  assert.match(prompt, /myRating 只在 Inbox 原文明示/);
+  assert.match(prompt, /只返回纯 JSON/);
+  assert.match(prompt, /电影 — movies — kind=media/);
+  assert.match(prompt, /看 The Godfather/);
+  assert.match(prompt, /2026-08-22/);
+  assert.equal(prompt.includes('createdAt'), false);
 });
 
 test('valid patch applies atomically, deletes only referenced tickets, and preserves patch order at section top', () => {

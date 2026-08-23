@@ -43,6 +43,7 @@
   .notebook-priority h3 span { color: #746b61; font-size: .9rem; }
   .notebook-item-list { display: grid; gap: .65rem; }
   .notebook-item { border: 1px solid #d8d0c5; border-radius: 14px; padding: .85rem; background: white; }
+  .notebook-item--grace { background: #f4f8f5; border-color: #9eb5a5; }
   .notebook-item--history { background: #f7f4ee; border-style: dashed; }
   .notebook-history-badge { align-self: flex-start; border: 1px solid #c7beb1; border-radius: 999px; padding: .15rem .5rem; color: #665f56; font-size: .82rem; font-weight: 700; }
   .notebook-item__topline { display: flex; align-items: flex-start; justify-content: space-between; gap: .65rem; }
@@ -50,8 +51,9 @@
   .notebook-item__controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; margin-top: .7rem; }
   .notebook-item__controls label { font-size: .88rem; color: #615a51; }
   .notebook-item__controls select { min-height: 44px; }
-  .notebook-recurring-status { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; align-items: center; color: #615a51; font-size: .88rem; font-weight: 700; }
-  .notebook-recurring-status button { min-height: 44px; }
+  .notebook-recurring-status, .notebook-completion-control { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; align-items: center; color: #615a51; font-size: .88rem; font-weight: 700; }
+  .notebook-recurring-status button, .notebook-completion-control button { min-height: 44px; }
+  .notebook-grace-note { color: #315d48; font-weight: 700; }
   .notebook-item__meta { display: flex; flex-wrap: wrap; gap: .4rem .75rem; margin-top: .65rem; color: #665f56; font-size: .92rem; }
   .notebook-item__details { margin-top: .7rem; border-top: 1px solid #eee8df; padding-top: .6rem; }
   .notebook-item__details summary { min-height: 44px; display: flex; align-items: center; font-weight: 700; cursor: pointer; }
@@ -107,5 +109,5 @@
   @media (max-width: 390px) {
     .notebook-item__controls { grid-template-columns: 1fr; }
     .segmented-control button { min-width: 0; padding-inline: .4rem; }
-    .notebook-recurring-status { grid-template-columns: 1fr; }
+    .notebook-recurring-status, .notebook-completion-control { grid-template-columns: 1fr; }
   }

@@ -1,9 +1,13 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
+  NOTEBOOK_COMPLETION_GRACE_MS,
   addNotebookItem,
   notebookItemsForSection,
+  notebookNextGraceExpiry,
+  notebookSectionEntries,
   notebookUrgentActiveItems,
+  notebookUrgentVisibleItems,
   orderedNotebookBoards,
   reorderNotebookBoards,
   reorderNotebookSection,
@@ -41,6 +45,19 @@ test('manual ordering persists and completion views sort newest completion first
   assert.deepEqual(notebookItemsForSection(state, 'a', 'high', 'completed').map((entry) => entry.id), ['a2', 'a1']);
 });
 
+test('one-time completion stays visible in Active for one hour and then expires', () => {
+  let state = baseState();
+  state = addNotebookItem(state, item('old', 'normal', 1), ['a']);
+  state = addNotebookItem(state, item('done', 'normal', 2), ['a']);
+  state = setNotebookItemStatus(state, 'done', 'completed', 1000);
+  assert.equal(state.items.done.status, 'completed');
+  assert.equal(state.items.done.completedAt, 1000);
+  assert.deepEqual(notebookSectionEntries(state, 'a', 'normal', 'active', 1001).map((entry) => entry.item.id), ['done', 'old']);
+  assert.equal(notebookNextGraceExpiry(state, 1001), 1000 + NOTEBOOK_COMPLETION_GRACE_MS);
+  assert.deepEqual(notebookSectionEntries(state, 'a', 'normal', 'active', 1000 + NOTEBOOK_COMPLETION_GRACE_MS).map((entry) => entry.item.id), ['old']);
+  assert.deepEqual(notebookSectionEntries(state, 'a', 'normal', 'completed', 1001).map((entry) => entry.item.id), ['done']);
+});
+
 test('changing active priority moves an item to the top in every board', () => {
   let state = baseState();
   state = addNotebookItem(state, item('high-old', 'high', 1), ['a', 'b']);
@@ -73,6 +90,14 @@ test('smart urgent board deduplicates by item and orders newly added first', () 
   state = addNotebookItem(state, item('u1', 'urgent', 1), ['a', 'b']);
   state = addNotebookItem(state, item('u2', 'urgent', 2), ['a']);
   assert.deepEqual(notebookUrgentActiveItems(state).map((entry) => entry.id), ['u2', 'u1']);
+});
+
+test('recently completed urgent item stays in Smart Urgent during grace', () => {
+  let state = baseState();
+  state = addNotebookItem(state, item('urgent-done', 'urgent', 1), ['a']);
+  state = setNotebookItemStatus(state, 'urgent-done', 'completed', 1000);
+  assert.deepEqual(notebookUrgentVisibleItems(state, 1001).map((entry) => entry.id), ['urgent-done']);
+  assert.deepEqual(notebookUrgentVisibleItems(state, 1000 + NOTEBOOK_COMPLETION_GRACE_MS).map((entry) => entry.id), []);
 });
 
 test('board reorder rewrites dense shared order', () => {

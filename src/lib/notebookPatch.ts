@@ -96,6 +96,64 @@ export function createNotebookInboxCopyPayload(state: NotebookState): NotebookIn
   };
 }
 
+export function createNotebookInboxChatPrompt(state: NotebookState, today?: string): string {
+  const boards = orderedBoards(state);
+  const inbox = orderedInbox(state);
+  const boardLines = boards.length
+    ? boards.map((board) => `- ${board.title} — ${board.id} — kind=${board.kind}`).join('\n')
+    : '- 无可用 Board';
+  const inboxLines = inbox.length
+    ? inbox.map((ticket) => `- ${ticket.id}\n  ${ticket.text}`).join('\n')
+    : '- Inbox 为空';
+  const dateLine = today ? `\n当前日期（用户浏览器本地日期）：${today}\n` : '\n';
+  return [
+    '请整理下面 Sami的小本本 Inbox，并生成可直接粘回 Developer 页的 Chat patch。',
+    dateLine.trimEnd(),
+    '通用规则：',
+    '- 每个 Inbox ticket 转成一个正式事项；ticketId 必须原样保留。',
+    '- 只能使用下面列出的现有 board ID；不要创建、重命名或猜测 Board。',
+    '- 根据原文选择 priority：urgent | high | normal | low。',
+    '- 不确定的信息不要编造；没有可靠依据的可选字段直接省略。',
+    '- dueDate 只有在原文能可靠确定日期时填写，格式 YYYY-MM-DD；dueTime 只有在同时有 dueDate 时填写，格式 HH:MM。',
+    '- recurrence 只允许：每 N 天 {unit:"day",interval:N}、每周 {unit:"week",interval:1}、每 N 月 {unit:"month",interval:N}、每年 {unit:"year",interval:1}。',
+    '',
+    'Media 规则：',
+    '- 任何归入 kind="media" Board 的事项，都必须先联网查找并核实对应作品的 IMDb 页面。',
+    '- 如果作品可以唯一确认且 IMDb 当前评分可可靠查到，必须把当前 IMDb 评分填入 imdbRating（0–10）；不得凭记忆、猜测或其他网站评分代替。',
+    '- 如果作品重名、无法唯一确认，或无法可靠查到 IMDb 评分，则省略 imdbRating，并在 notes 中简短说明需要确认什么。',
+    '- myRating 只在 Inbox 原文明示用户个人评分时填写；不得从 IMDb 或其他评分推断。',
+    '- platform / notes / review 也不要无依据编造；review 只记录原文明确表达的用户评价。',
+    '',
+    '返回要求：',
+    '- 只返回纯 JSON；不要 Markdown 代码块，不要解释，不要在 JSON 前后加文字。',
+    '- patchVersion 必须为 1。',
+    '- details 必须存在；没有补充内容时使用空字符串。',
+    '- 可选字段没有值时直接省略。',
+    '',
+    '返回 JSON 结构示例：',
+    '{',
+    '  "patchVersion": 1,',
+    '  "items": [',
+    '    {',
+    '      "ticketId": "TICKET_ID",',
+    '      "title": "标题",',
+    '      "details": "",',
+    '      "boardIds": ["BOARD_ID"],',
+    '      "priority": "normal"',
+    '    }',
+    '  ]',
+    '}',
+    '',
+    '可选字段：dueDate, dueTime, recurrence, platform, imdbRating, myRating, notes, review。',
+    '',
+    '可用 Boards：',
+    boardLines,
+    '',
+    'Inbox：',
+    inboxLines,
+  ].filter((line, index, lines) => !(line === '' && lines[index - 1] === '')).join('\n').trim() + '\n';
+}
+
 export function validateNotebookPatch(value: unknown, state: NotebookState): NotebookPatchValidation {
   if (!isRecord(value) || !hasOnlyKeys(value, PATCH_KEYS)) return { ok: false, error: 'Patch 顶层格式无效或包含不支持的字段' };
   if (value.patchVersion !== NOTEBOOK_PATCH_VERSION) return { ok: false, error: `只支持 patchVersion ${NOTEBOOK_PATCH_VERSION}` };

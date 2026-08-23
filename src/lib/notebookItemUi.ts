@@ -101,6 +101,18 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
       void context.mutate('完成本次', (current) => completeRecurringNotebookItem(current, itemId, eventId, time, localDate()));
       return;
     }
+    const complete = target.closest('[data-complete-item]') as HTMLButtonElement | null;
+    if (complete?.dataset.completeItem) {
+      const itemId = complete.dataset.completeItem;
+      void context.mutate('完成事项', (current) => setNotebookItemStatus(current, itemId, 'completed', stamp()));
+      return;
+    }
+    const restore = target.closest('[data-restore-item]') as HTMLButtonElement | null;
+    if (restore?.dataset.restoreItem) {
+      const itemId = restore.dataset.restoreItem;
+      void context.mutate('撤销完成', (current) => setNotebookItemStatus(current, itemId, 'active', stamp()));
+      return;
+    }
     const add = target.closest('[data-new-item]') as HTMLButtonElement | null;
     if (add?.dataset.newItem) { openItem(undefined, add.dataset.newItem); return; }
     const edit = target.closest('[data-edit-item]') as HTMLButtonElement | null;
@@ -140,10 +152,7 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
     const priority = (event.target as HTMLElement).closest('[data-item-priority]') as HTMLSelectElement | null;
     if (priority?.dataset.itemPriority) {
       void context.mutate('修改优先级', (current) => setNotebookItemPriority(current, priority.dataset.itemPriority!, priority.value as NotebookPriority, stamp()));
-      return;
     }
-    const status = (event.target as HTMLElement).closest('[data-item-status]') as HTMLSelectElement | null;
-    if (status?.dataset.itemStatus) void context.mutate('修改状态', (current) => setNotebookItemStatus(current, status.dataset.itemStatus!, status.value === 'completed' ? 'completed' : 'active', stamp()));
   });
 
   host.addEventListener('submit', (event) => {

@@ -1,4 +1,5 @@
 import { cloneNotebookState, type NotebookState, type NotebookViewFilter } from './notebookDomain.ts';
+import { notebookNextGraceExpiry } from './notebookActions.ts';
 import { renderNotebookBoards, escapeNotebookHtml } from './notebookView.ts';
 import { createNotebookRepository, type CreateNotebookRepositoryOptions } from './notebookRepository.ts';
 import { setupNotebookBoardManager } from './notebookBoardManager.ts';
@@ -29,7 +30,12 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
   const inboxCount = get<HTMLElement>('#notebook-inbox-count');
   const displayNamePanel = get<HTMLElement>('#notebook-display-name-panel');
   let state = repository.getSnapshot();
+  let graceTimer: number | undefined;
 
+  const clearGraceTimer = () => {
+    if (graceTimer !== undefined) window.clearTimeout(graceTimer);
+    graceTimer = undefined;
+  };
   const status = (message: string, error = false) => { live.textContent = message; live.dataset.error = error ? 'true' : 'false'; };
   const mutate = async (label: string, fn: (current: NotebookState) => NotebookState) => {
     try { status(`${label}…`); await repository.transaction(fn); status(`${label}完成`); }
@@ -41,6 +47,8 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
   setupNotebookPointerReorder(context);
 
   const renderApp = () => {
+    clearGraceTimer();
+    const now = Date.now();
     const displayName = repository.getCurrentMemberDisplayName();
     displayNamePanel.innerHTML = displayName
       ? `<p>评论显示名：<strong>${escapeNotebookHtml(displayName)}</strong></p>`
@@ -52,8 +60,12 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
     });
     const ticketCount = Object.keys(state.inbox).length;
     inboxCount.textContent = ticketCount ? `${ticketCount} 条待整理` : '暂无待整理';
-    boardsHost.innerHTML = renderNotebookBoards(state, displayName);
+    boardsHost.innerHTML = renderNotebookBoards(state, displayName, now);
     if (manager.dialog.open) manager.render();
+    if (state.settings.viewFilter === 'active') {
+      const expiry = notebookNextGraceExpiry(state, now);
+      if (expiry !== null) graceTimer = window.setTimeout(renderApp, Math.max(50, expiry - Date.now() + 50));
+    }
   };
   const renderStatus = (current = repository.getStatus()) => {
     const connected = current.connection === 'connected' || current.connection === 'local';
@@ -64,6 +76,7 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
     refresh.hidden = current.connection !== 'pending' && !(current.connection === 'error' && Boolean(current.email));
     signOut.hidden = !current.email;
     if (connected) renderApp();
+    else clearGraceTimer();
   };
 
   repository.subscribe((next, repoStatus) => { state = next; renderStatus(repoStatus); });
@@ -93,6 +106,6 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
       inboxInput.focus();
     });
   });
-  window.addEventListener('beforeunload', () => repository.dispose(), { once: true });
+  window.addEventListener('beforeunload', () => { clearGraceTimer(); repository.dispose(); }, { once: true });
   renderStatus();
 }

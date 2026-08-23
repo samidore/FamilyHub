@@ -3,7 +3,7 @@ import { createNotebookRepository, type CreateNotebookRepositoryOptions } from '
 import type { FirebaseConfig } from './householdRepository.ts';
 import {
   applyNotebookPatch,
-  createNotebookInboxCopyPayload,
+  createNotebookInboxChatPrompt,
   createNotebookPatchPreview,
   parseNotebookPatchJson,
   prepareNotebookPatchItemIds,
@@ -19,6 +19,11 @@ const get = <T extends Element>(selector: string) => {
 const escapeHtml = (value: unknown) => String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
 const stamp = () => Date.now();
 const makeItemId = () => `item-${crypto.randomUUID()}`;
+const localDate = () => {
+  const now = new Date();
+  const pad = (value: number) => String(value).padStart(2, '0');
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+};
 
 async function copyText(text: string) {
   if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(text); return; }
@@ -152,8 +157,8 @@ export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, option
   });
 
   copyAll.addEventListener('click', () => {
-    const text = `${JSON.stringify(createNotebookInboxCopyPayload(state), null, 2)}\n`;
-    void copyText(text).then(() => status('Inbox payload 已复制')).catch((error) => status(error instanceof Error ? error.message : String(error), true));
+    const text = createNotebookInboxChatPrompt(state, localDate());
+    void copyText(text).then(() => status('ChatGPT prompt 已复制')).catch((error) => status(error instanceof Error ? error.message : String(error), true));
   });
 
   patchInput.addEventListener('input', clearPatchPreview);

@@ -17,6 +17,8 @@ export const NOTEBOOK_PRIORITY_LABELS: Record<NotebookPriority, string> = {
   low: '低',
 };
 
+export const NOTEBOOK_COMPLETION_GRACE_MS = 60 * 60 * 1000;
+
 export interface NotebookCompletedEntry {
   kind: 'item' | 'recurrence';
   item: NotebookItem;
@@ -41,6 +43,24 @@ export function notebookBoardIdsForItem(state: NotebookState, itemId: string): s
   return orderedNotebookBoards(state)
     .filter((board) => Boolean(state.memberships[board.id]?.[itemId]))
     .map((board) => board.id);
+}
+
+export function isNotebookCompletionInGrace(item: NotebookItem, now = Date.now()): boolean {
+  return item.status === 'completed'
+    && !item.recurrence
+    && typeof item.completedAt === 'number'
+    && item.completedAt > 0
+    && item.completedAt + NOTEBOOK_COMPLETION_GRACE_MS > now;
+}
+
+export function notebookNextGraceExpiry(state: NotebookState, now = Date.now()): number | null {
+  let next: number | null = null;
+  for (const item of Object.values(state.items)) {
+    if (!isNotebookCompletionInGrace(item, now) || item.completedAt === undefined) continue;
+    const expiry = item.completedAt + NOTEBOOK_COMPLETION_GRACE_MS;
+    if (next === null || expiry < next) next = expiry;
+  }
+  return next;
 }
 
 function activeSectionIds(state: NotebookState, boardId: string, priority: NotebookPriority, excludeId?: string): string[] {
@@ -90,6 +110,21 @@ export function notebookItemsForSection(state: NotebookState, boardId: string, p
   return [...active, ...completed];
 }
 
+function notebookActiveEntriesWithGrace(state: NotebookState, boardId: string, priority: NotebookPriority, now: number): NotebookSectionEntry[] {
+  const memberships = state.memberships[boardId] ?? {};
+  return Object.keys(memberships)
+    .map((itemId) => state.items[itemId])
+    .filter((item): item is NotebookItem => Boolean(item && item.priority === priority && (item.status === 'active' || isNotebookCompletionInGrace(item, now))))
+    .sort((left, right) => {
+      const leftOrder = memberships[left.id]?.order ?? Number.MAX_SAFE_INTEGER;
+      const rightOrder = memberships[right.id]?.order ?? Number.MAX_SAFE_INTEGER;
+      if (leftOrder !== rightOrder) return leftOrder - rightOrder;
+      if (left.status !== right.status) return left.status === 'completed' ? -1 : 1;
+      return right.createdAt - left.createdAt || left.id.localeCompare(right.id);
+    })
+    .map((item) => ({ kind: 'item', item }));
+}
+
 export function notebookCompletedEntriesForSection(state: NotebookState, boardId: string, priority: NotebookPriority): NotebookCompletedEntry[] {
   const oneTime: NotebookCompletedEntry[] = notebookItemsForSection(state, boardId, priority, 'completed').map((item) => ({
     kind: 'item',
@@ -102,10 +137,10 @@ export function notebookCompletedEntriesForSection(state: NotebookState, boardId
   return [...oneTime, ...recurring].sort((left, right) => right.completedAt - left.completedAt || left.item.id.localeCompare(right.item.id));
 }
 
-export function notebookSectionEntries(state: NotebookState, boardId: string, priority: NotebookPriority, filter: NotebookViewFilter): NotebookSectionEntry[] {
+export function notebookSectionEntries(state: NotebookState, boardId: string, priority: NotebookPriority, filter: NotebookViewFilter, now = Date.now()): NotebookSectionEntry[] {
+  if (filter === 'active') return notebookActiveEntriesWithGrace(state, boardId, priority, now);
   const active = notebookItemsForSection(state, boardId, priority, 'active').map((item): NotebookSectionEntry => ({ kind: 'item', item }));
   const completed = notebookCompletedEntriesForSection(state, boardId, priority);
-  if (filter === 'active') return active;
   if (filter === 'completed') return completed;
   return [...active, ...completed];
 }
@@ -113,6 +148,12 @@ export function notebookSectionEntries(state: NotebookState, boardId: string, pr
 export function notebookUrgentActiveItems(state: NotebookState): NotebookItem[] {
   return Object.values(state.items)
     .filter((item) => item.status === 'active' && item.priority === 'urgent')
+    .sort((left, right) => right.createdAt - left.createdAt || right.updatedAt - left.updatedAt || left.id.localeCompare(right.id));
+}
+
+export function notebookUrgentVisibleItems(state: NotebookState, now = Date.now()): NotebookItem[] {
+  return Object.values(state.items)
+    .filter((item) => item.priority === 'urgent' && (item.status === 'active' || isNotebookCompletionInGrace(item, now)))
     .sort((left, right) => right.createdAt - left.createdAt || right.updatedAt - left.updatedAt || left.id.localeCompare(right.id));
 }
 
