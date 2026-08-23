@@ -5,10 +5,16 @@ import {
   applyNotebookPatch,
   createNotebookInboxChatPrompt,
   createNotebookPatchPreview,
-  parseNotebookPatchJson,
   prepareNotebookPatchItemIds,
+  validateNotebookPatch,
   type NotebookPatch,
 } from './notebookPatch.ts';
+import {
+  applyNotebookItemUpdatePatch,
+  createNotebookItemUpdatePreview,
+  validateNotebookItemUpdatePatch,
+  type NotebookItemUpdatePatch,
+} from './notebookItemUpdatePatch.ts';
 import { serializeNotebookExport } from './notebookExport.ts';
 
 const get = <T extends Element>(selector: string) => {
@@ -25,6 +31,14 @@ const localDate = () => {
   return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
 };
 
+type ValidatedDeveloperPatch =
+  | { kind: 'inbox'; patch: NotebookPatch }
+  | { kind: 'item-updates'; patch: NotebookItemUpdatePatch };
+
+type ParsedDeveloperPatch =
+  | { ok: true; value: ValidatedDeveloperPatch }
+  | { ok: false; error: string };
+
 async function copyText(text: string) {
   if (navigator.clipboard?.writeText) { await navigator.clipboard.writeText(text); return; }
   const textarea = document.createElement('textarea');
@@ -36,6 +50,20 @@ async function copyText(text: string) {
   const copied = document.execCommand('copy');
   textarea.remove();
   if (!copied) throw new Error('浏览器不允许自动复制');
+}
+
+function parseDeveloperPatch(text: string, state: NotebookState): ParsedDeveloperPatch {
+  let value: unknown;
+  try { value = JSON.parse(text); }
+  catch { return { ok: false, error: 'Chat patch 不是有效 JSON' }; }
+  if (value && typeof value === 'object' && !Array.isArray(value) && Object.prototype.hasOwnProperty.call(value, 'itemUpdates')) {
+    const result = validateNotebookItemUpdatePatch(value, state);
+    if (!result.ok) return { ok: false, error: result.error };
+    return { ok: true, value: { kind: 'item-updates', patch: result.patch } };
+  }
+  const result = validateNotebookPatch(value, state);
+  if (!result.ok) return { ok: false, error: result.error };
+  return { ok: true, value: { kind: 'inbox', patch: result.patch } };
 }
 
 export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, options: CreateNotebookRepositoryOptions = {}) {
@@ -51,16 +79,21 @@ export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, option
   const inboxCount = get<HTMLElement>('#developer-inbox-count');
   const copyAll = get<HTMLButtonElement>('#developer-copy-all');
   const patchInput = get<HTMLTextAreaElement>('#developer-patch-input');
+  const patchMessage = get<HTMLElement>('#developer-patch-status');
   const validateButton = get<HTMLButtonElement>('#developer-validate-patch');
   const previewHost = get<HTMLElement>('#developer-patch-preview');
   const applyButton = get<HTMLButtonElement>('#developer-apply-patch');
   const exportButton = get<HTMLButtonElement>('#developer-export');
   let state = repository.getSnapshot();
-  let validatedPatch: NotebookPatch | null = null;
+  let validatedPatch: ValidatedDeveloperPatch | null = null;
 
   const status = (message: string, error = false) => {
     live.textContent = message;
     live.dataset.error = error ? 'true' : 'false';
+  };
+  const patchStatus = (message: string, error = false) => {
+    patchMessage.textContent = message;
+    patchMessage.dataset.error = error ? 'true' : 'false';
   };
   const mutate = async (label: string, fn: (current: NotebookState) => NotebookState) => {
     try {
@@ -70,6 +103,17 @@ export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, option
       return true;
     } catch (error) {
       status(error instanceof Error ? error.message : String(error), true);
+      return false;
+    }
+  };
+  const mutatePatch = async (label: string, fn: (current: NotebookState) => NotebookState) => {
+    try {
+      patchStatus(`${label}…`);
+      await repository.transaction(fn);
+      patchStatus(`${label}完成`);
+      return true;
+    } catch (error) {
+      patchStatus(error instanceof Error ? error.message : String(error), true);
       return false;
     }
   };
@@ -91,19 +135,25 @@ export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, option
   };
 
   const validateAndRenderPatch = () => {
-    const result = parseNotebookPatchJson(patchInput.value.trim(), state);
+    const result = parseDeveloperPatch(patchInput.value.trim(), state);
     if (!result.ok) {
       clearPatchPreview();
-      status(result.error, true);
+      patchStatus(result.error, true);
       return false;
     }
-    validatedPatch = result.patch;
-    const preview = createNotebookPatchPreview(result.patch, state);
-    previewHost.innerHTML = `<h3>准备转换 ${preview.ticketCount} 条 Inbox</h3><ul>${preview.boardCounts.map((entry) => `<li><strong>${escapeHtml(entry.title)}</strong><span>${entry.count}</span></li>`).join('')}</ul><p>${preview.ticketCount} 条 Inbox 将被删除，并创建 ${preview.ticketCount} 个新事项。</p>`;
+    validatedPatch = result.value;
+    if (result.value.kind === 'inbox') {
+      const preview = createNotebookPatchPreview(result.value.patch, state);
+      previewHost.innerHTML = `<h3>准备转换 ${preview.ticketCount} 条 Inbox</h3><ul>${preview.boardCounts.map((entry) => `<li><strong>${escapeHtml(entry.title)}</strong><span>${entry.count}</span></li>`).join('')}</ul><p>${preview.ticketCount} 条 Inbox 将被删除，并创建 ${preview.ticketCount} 个新事项。</p>`;
+      applyButton.textContent = `Apply ${preview.ticketCount} items`;
+    } else {
+      const preview = createNotebookItemUpdatePreview(result.value.patch, state);
+      previewHost.innerHTML = `<h3>准备更新 ${preview.updateCount} 个现有事项</h3><ul>${preview.items.map((entry) => `<li><strong>${escapeHtml(entry.title)}</strong></li>`).join('')}</ul><p>只更新允许的内容与影视资料；Board、状态、优先级和排序不会改变。</p>`;
+      applyButton.textContent = `Apply ${preview.updateCount} updates`;
+    }
     previewHost.hidden = false;
-    applyButton.textContent = `Apply ${preview.ticketCount} items`;
     applyButton.hidden = false;
-    status('Patch 验证通过');
+    patchStatus('Patch 验证通过');
     return true;
   };
 
@@ -161,15 +211,27 @@ export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, option
     void copyText(text).then(() => status('ChatGPT prompt 已复制')).catch((error) => status(error instanceof Error ? error.message : String(error), true));
   });
 
-  patchInput.addEventListener('input', clearPatchPreview);
+  patchInput.addEventListener('input', () => {
+    clearPatchPreview();
+    patchStatus('');
+  });
   validateButton.addEventListener('click', validateAndRenderPatch);
   applyButton.addEventListener('click', () => {
-    const latest = parseNotebookPatchJson(patchInput.value.trim(), state);
-    if (!latest.ok) { clearPatchPreview(); status(latest.error, true); return; }
-    const patch = latest.patch;
-    const itemIds = prepareNotebookPatchItemIds(patch, makeItemId);
+    const latest = parseDeveloperPatch(patchInput.value.trim(), state);
+    if (!latest.ok) { clearPatchPreview(); patchStatus(latest.error, true); return; }
     const now = stamp();
-    void mutate('应用 Chat patch', (current) => applyNotebookPatch(current, patch, itemIds, now)).then((ok) => {
+    if (latest.value.kind === 'item-updates') {
+      const patch = latest.value.patch;
+      void mutatePatch('应用事项更新', (current) => applyNotebookItemUpdatePatch(current, patch, now)).then((ok) => {
+        if (!ok) return;
+        patchInput.value = '';
+        clearPatchPreview();
+      });
+      return;
+    }
+    const patch = latest.value.patch;
+    const itemIds = prepareNotebookPatchItemIds(patch, makeItemId);
+    void mutatePatch('应用 Inbox patch', (current) => applyNotebookPatch(current, patch, itemIds, now)).then((ok) => {
       if (!ok) return;
       patchInput.value = '';
       clearPatchPreview();
