@@ -28,6 +28,7 @@ export interface NotebookItem {
   details: string;
   priority: NotebookPriority;
   status: NotebookStatus;
+  authorName?: string;
   dueDate?: string;
   dueTime?: string;
   recurrence?: NotebookRecurrence;
@@ -130,6 +131,8 @@ function normalizeItem(id: string, value: unknown): NotebookItem | null {
   if (!isRecord(value) || value.id !== id || !nonEmptyString(value.title) || typeof value.details !== 'string') return null;
   if (!priorities.has(value.priority as NotebookPriority) || !statuses.has(value.status as NotebookStatus)) return null;
   if (!finitePositive(value.createdAt) || !finitePositive(value.updatedAt)) return null;
+  const authorName = value.authorName === undefined ? undefined : normalizeMemberDisplayName(value.authorName);
+  if (value.authorName !== undefined && !authorName) return null;
   const dueDate = typeof value.dueDate === 'string' && DATE_PATTERN.test(value.dueDate) ? value.dueDate : undefined;
   const dueTime = typeof value.dueTime === 'string' && TIME_PATTERN.test(value.dueTime) ? value.dueTime : undefined;
   if (value.dueTime !== undefined && (!dueDate || !dueTime)) return null;
@@ -151,6 +154,7 @@ function normalizeItem(id: string, value: unknown): NotebookItem | null {
     details: value.details.trim(),
     priority: value.priority as NotebookPriority,
     status,
+    ...(authorName ? { authorName } : {}),
     ...(dueDate ? { dueDate } : {}),
     ...(dueTime ? { dueTime } : {}),
     ...(recurrence ? { recurrence } : {}),
