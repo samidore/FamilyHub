@@ -90,6 +90,7 @@
               "details": { ".validate": "newData.isString()" },
               "priority": { ".validate": "newData.isString() && (newData.val() == 'urgent' || newData.val() == 'high' || newData.val() == 'normal' || newData.val() == 'low')" },
               "status": { ".validate": "newData.isString() && (newData.val() == 'active' || newData.val() == 'completed')" },
+              "authorName": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 80 && newData.val().matches(/^[^@]+$/) && ((!data.exists() && newData.val() == root.child('households').child($householdId).child('members').child(auth.uid).child('displayName').val()) || (data.exists() && newData.val() == data.val()))" },
               "dueDate": { ".validate": "newData.isString() && newData.val().matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)" },
               "dueTime": { ".validate": "newData.isString() && newData.val().matches(/^([01][0-9]|2[0-3]):[0-5][0-9]$/)" },
               "recurrence": {
