@@ -1,0 +1,19 @@
+.developer-shell { padding-top: 1.4rem; padding-bottom: 4rem; }
+.developer-shell > h1 { margin: .3rem 0 1.2rem; font-size: clamp(2.2rem, 8vw, 4rem); }
+.developer-app { display: grid; gap: 1rem; }
+.developer-panel { display: grid; min-width: 0; gap: .8rem; border: 1px solid #cfc5b5; border-radius: 18px; background: #fffdf8; padding: 1rem; }
+.developer-panel h2, .developer-panel h3, .developer-panel p { margin-block: 0; }
+.developer-panel__header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .8rem; align-items: start; }
+.developer-inbox-list { display: grid; gap: .65rem; }
+.developer-inbox-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .7rem; align-items: start; border: 1px solid #ddd4c8; border-radius: 12px; background: white; padding: .75rem; }
+.developer-inbox-row p { min-width: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
+.developer-row-actions, .developer-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+#developer-patch-input { width: 100%; min-width: 0; max-width: 100%; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .9rem; }
+.developer-preview { display: grid; gap: .6rem; border: 1px solid #c8c0b5; border-radius: 12px; background: #f7f4ee; padding: .8rem; }
+.developer-preview ul { display: grid; gap: .35rem; margin: 0; padding: 0; list-style: none; }
+.developer-preview li { display: flex; justify-content: space-between; gap: 1rem; }
+@media (max-width: 640px) {
+  .developer-panel__header { display: grid; }
+  .developer-panel__header > button { justify-self: start; }
+  .developer-inbox-row { grid-template-columns: 1fr; }
+}

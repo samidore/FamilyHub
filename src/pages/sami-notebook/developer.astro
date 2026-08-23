@@ -1,25 +1,73 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import '../../styles/notebook.css';
+import '../../styles/notebook-developer.css';
 const base = import.meta.env.BASE_URL;
 const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
 ---
-<BaseLayout title="Developer · Sami的小本本" description="Sami的小本本 Developer 工具入口。" pageClass="notebook-page" themeColor="#F5F1E8">
-  <main id="main-content" class="shell developer-shell" data-authenticated-shell>
+<BaseLayout title="Developer · Sami的小本本" description="Sami的小本本 Inbox 整理、Chat patch 和数据库导出。" pageClass="notebook-page" themeColor="#F5F1E8">
+  <main id="main-content" class="shell developer-shell">
     <a class="back-link" href={withBase('/sami-notebook/')}>← Sami的小本本</a>
     <p class="eyebrow">Developer</p>
     <h1>Developer</h1>
-    <section class="developer-placeholder">
-      <h2>下一阶段启用</h2>
-      <p>Inbox 批量复制、Chat patch、数据库导出会在 Developer workflow 阶段加入。当前页面不会读取或显示任何家庭记事数据。</p>
+
+    <section id="developer-auth-shell" class="notebook-auth" data-authenticated-shell>
+      <h2>家庭共享内容</h2>
+      <p id="developer-auth-message">正在检查登录状态…</p>
+      <div class="notebook-auth__actions">
+        <button id="developer-sign-in" type="button" hidden>使用 Google 登录</button>
+        <button id="developer-refresh-access" type="button" hidden>重新检查权限</button>
+        <button id="developer-sign-out" type="button" class="secondary-button" hidden>退出登录</button>
+      </div>
+      <p class="notebook-private-note">静态页面不包含 Inbox、事项或数据库内容；通过家庭成员权限后才读取 Firebase。</p>
+    </section>
+
+    <section id="developer-app" class="developer-app" hidden>
+      <p id="developer-live-status" class="notebook-live" aria-live="polite"></p>
+
+      <section class="developer-panel" aria-labelledby="developer-inbox-title">
+        <div class="developer-panel__header">
+          <div>
+            <p class="eyebrow">Inbox</p>
+            <h2 id="developer-inbox-title">待整理</h2>
+            <p id="developer-inbox-count" class="notebook-muted">暂无待整理</p>
+          </div>
+          <button id="developer-copy-all" type="button" class="secondary-button">Copy all</button>
+        </div>
+        <div id="developer-inbox-list" class="developer-inbox-list"></div>
+      </section>
+
+      <section class="developer-panel" aria-labelledby="developer-patch-title">
+        <p class="eyebrow">Chat patch</p>
+        <h2 id="developer-patch-title">整理结果</h2>
+        <p>粘贴完整 JSON patch。这里只允许把现有 Inbox 转成新事项；不能修改已有事项、Board 或其他 Firebase 路径。</p>
+        <label>JSON patch<textarea id="developer-patch-input" rows="16" spellcheck="false" autocapitalize="off" autocomplete="off"></textarea></label>
+        <div class="developer-actions"><button id="developer-validate-patch" type="button">Validate</button></div>
+        <div id="developer-patch-preview" class="developer-preview" hidden></div>
+        <button id="developer-apply-patch" type="button" hidden>Apply items</button>
+      </section>
+
+      <section class="developer-panel" aria-labelledby="developer-export-title">
+        <p class="eyebrow">Backup</p>
+        <h2 id="developer-export-title">Portable database</h2>
+        <p>导出 Notebook 的完整业务状态；不包含 email、UID、登录信息、household access-control 或 Firebase config。</p>
+        <button id="developer-export" type="button" class="secondary-button">Export database</button>
+      </section>
     </section>
   </main>
+
+  <script>
+    import { mountNotebookDeveloperUi } from '../../lib/notebookDeveloperUi.ts';
+    const firebaseConfig = {
+      apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
+      authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
+      projectId: import.meta.env.PUBLIC_FIREBASE_PROJECT_ID,
+      databaseURL: import.meta.env.PUBLIC_FIREBASE_DATABASE_URL,
+      storageBucket: import.meta.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: import.meta.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+      appId: import.meta.env.PUBLIC_FIREBASE_APP_ID,
+      householdId: import.meta.env.PUBLIC_FAMILY_HOUSEHOLD_ID,
+    };
+    mountNotebookDeveloperUi(firebaseConfig, { allowLocal: import.meta.env.DEV });
+  </script>
 </BaseLayout>
-<style>
-  :global(.notebook-page) { background:#f5f1e8; color:#26231f; }
-  .developer-shell { padding-top:1.4rem; padding-bottom:4rem; }
-  .back-link { display:inline-block; margin-bottom:1.5rem; font-weight:700; }
-  h1 { font-size:clamp(2.2rem,8vw,4rem); margin:.3rem 0 1.2rem; }
-  .developer-placeholder { max-width:44rem; border:1px solid #cfc5b5; border-radius:18px; background:#fffdf8; padding:1rem; }
-  .developer-placeholder h2 { margin-top:0; }
-</style>
