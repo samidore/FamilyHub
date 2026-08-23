@@ -95,6 +95,7 @@ Item
 - details
 - priority: urgent | high | normal | low
 - status: active | completed
+- authorName?: string
 - dueDate?: YYYY-MM-DD
 - dueTime?: HH:MM
 - recurrence?: supported recurrence rule
@@ -109,6 +110,10 @@ Optional media fields
 - notes?: string
 - review?: string
 ```
+
+`authorName` is the private household display-name snapshot of the member who creates the item. The repository adds it only when the item is first created; normal edits, status changes, drag ordering, and Developer metadata patches must not rewrite it. Firebase rules keep a persisted author immutable and require a newly persisted author to match the creating member's current private display name.
+
+Legacy items may have no persisted `authorName`. For current household data, those items are intentionally rendered as `猫猫` without a migration write. The title row starts with an author icon rather than visible author text: `猫猫` uses the cute cat-head icon, `呜哇` uses the dog-head icon, and any future unmatched display name uses a neutral fallback icon. The icon retains an accessible author label.
 
 Do not add an item-level media type.
 
@@ -202,7 +207,18 @@ Comment
 - updatedAt?
 ```
 
-The UI shows `authorName`, never email. The public repo must not contain an email-to-name map. Resolve the signed-in member to a private household display name in Firebase and snapshot that display name onto a new comment. Authentication identity data is not part of notebook export data.
+The UI shows comment `authorName`, never email. The public repo must not contain an email-to-name map. Resolve the signed-in member to a private household display name in Firebase and snapshot that display name onto a new comment. Authentication identity data is not part of notebook export data.
+
+Item content and comments are no longer hidden behind a `内容与评论` disclosure row. Item `details` render directly when present; an empty item does not show a `暂无内容` placeholder.
+
+Comment presentation is intentionally compact on mobile:
+
+- 0 comments: show only `＋ 添加评论`;
+- 1 comment: show that comment, then `＋ 添加评论`;
+- 2 comments: show both comments, then `＋ 添加评论`;
+- 3 or more comments: show the first comment, a compact `展开中间 N 条` disclosure, then the last comment, followed by `＋ 添加评论`;
+- opening the middle disclosure shows the comments in their normal chronological order and changes the control to `收起中间 N 条`;
+- `＋ 添加评论` expands the textarea only when needed instead of keeping an editor open on every card.
 
 ## Media boards
 
@@ -286,7 +302,7 @@ NotebookItemUpdatePatch
     - review?
 ```
 
-Existing-item updates are intentionally metadata-only. They must not change title, Board membership, priority, status, due date, recurrence, manual order, comments, completion history, Inbox, auth, or any arbitrary Firebase path. Media-specific fields are accepted only for items that already belong to at least one `kind = media` Board. Ratings remain constrained to 0–10.
+Existing-item updates are intentionally metadata-only. They must not change title, Board membership, priority, status, due date, recurrence, manual order, comments, completion history, Inbox, auth, item author, or any arbitrary Firebase path. Media-specific fields are accepted only for items that already belong to at least one `kind = media` Board. Ratings remain constrained to 0–10.
 
 Apply flow:
 
@@ -295,12 +311,13 @@ Apply flow:
 3. Reject unknown item/ticket IDs, duplicate IDs, unsupported fields, malformed ratings, unknown board IDs, invalid enums/dates/times, or tickets no longer present.
 4. Show a compact preview of exactly what will be created or updated.
 5. One Apply action performs one Firebase transaction. Inbox conversion creates generated item IDs and memberships and deletes only the successfully converted Inbox tickets. Existing-item updates change only the allowlisted fields.
-6. Revalidate against the current transaction state so concurrent changes cannot bypass validation.
-7. A validation or transaction failure writes nothing.
+6. The repository snapshots the current member display name onto any newly created item before the transaction is normalized and written.
+7. Revalidate against the current transaction state so concurrent changes cannot bypass validation.
+8. A validation or transaction failure writes nothing.
 
 Patch parse/validation/apply feedback belongs in the Chat patch panel beside the JSON input. Do not surface patch-format errors as a page-level Developer status message.
 
-Do not allow version-1 patches to write arbitrary Firebase paths, create/rename Boards, alter membership/auth records, change item lifecycle/order, or execute deletes outside the referenced Inbox tickets.
+Do not allow version-1 patches to write arbitrary Firebase paths, create/rename Boards, alter membership/auth records, change item lifecycle/order/author, or execute deletes outside the referenced Inbox tickets.
 
 ## Portable database export and Git backup
 
@@ -327,7 +344,7 @@ NotebookExport
 - settings
 ```
 
-The export must contain all notebook business state needed to reconstruct the module, but must exclude:
+The export must contain all notebook business state needed to reconstruct the module, including persisted item author snapshots, but must exclude:
 
 - Gmail addresses
 - Firebase UIDs
@@ -376,7 +393,7 @@ Firebase rules should authorize the notebook path only to existing verified hous
 - Add typed normalization/validation for boards, items, memberships, comments, completion events, inbox, and settings.
 - Add notebook Firebase repository at the separate notebook path.
 - Add database rules and emulator tests.
-- Add private display-name resolution for comment author names.
+- Add private display-name resolution for item/comment author snapshots.
 
 ### Phase 2 — core mobile page
 
@@ -404,7 +421,7 @@ Run focused checks during implementation, then the repository release gate:
 pnpm run verify
 ```
 
-Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, comment author names, all ordering transitions, recurrence history, due-soon midnight rollover/Smart Urgent inclusion, patch atomicity, and export exclusion of auth identity data.
+Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, item/comment author names, comment collapsing, all ordering transitions, recurrence history, due-soon midnight rollover/Smart Urgent inclusion, patch atomicity, and export exclusion of auth identity data.
 
 ## Design acceptance criteria
 
@@ -420,6 +437,9 @@ This design is ready for implementation when all of the following are fixed:
 - One item may belong to multiple boards with per-board manual ordering.
 - Priority sections are fixed Urgent/High/Normal/Low.
 - Active ordering is new-first with persistent manual overrides; Completed keeps the same priority sections and sorts each by completion date descending.
+- New items snapshot the creating member's private display name; legacy missing authors render as 猫猫; persisted authors are immutable.
+- Author icons lead the title row: 猫猫 = cat head, 呜哇 = dog head, unmatched names = neutral fallback.
+- Item content is directly visible; comments use 0/1/2/3+ compact presentation with first/last preservation for long threads.
 - Media items do not have `mediaType`.
 - Board description is optional; board comments do not exist.
 - Item comments are editable and show private display names, never email.
