@@ -1,6 +1,6 @@
 # Sami的小本本 — module design
 
-Status: design only. No implementation is authorized by this document.
+Status: implemented through Phase 4; Phase 5 release verification pending.
 
 ## Goal
 
@@ -91,6 +91,7 @@ Item
 Optional media fields
 - platform?: string
 - imdbRating?: number
+- myRating?: number
 - notes?: string
 - review?: string
 ```
@@ -191,6 +192,7 @@ A media board uses the same item lifecycle, priority sections, memberships, comm
 
 - platform
 - IMDb score
+- personal score (`myRating`)
 - notes
 - watched review
 
@@ -249,6 +251,7 @@ NotebookPatch
     - recurrence?
     - platform?
     - imdbRating?
+    - myRating?
     - notes?
     - review?
 ```
