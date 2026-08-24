@@ -5,6 +5,7 @@ import {
   applyNotebookPatch,
   createNotebookInboxChatPrompt,
   createNotebookInboxCopyPayload,
+  createNotebookPatchPreview,
   parseNotebookPatchJson,
   prepareNotebookPatchItemIds,
   validateNotebookPatch,
@@ -62,6 +63,23 @@ test('valid patch applies atomically, deletes only referenced tickets, and prese
   assert.deepEqual(Object.entries(next.memberships.todo).sort((a, b) => a[1].order - b[1].order).map(([id]) => id), ['new-1', 'new-2', 'existing']);
   assert.equal(next.items['new-3'].myRating, 9);
   assert.equal(next.items['new-3'].platform, 'Max');
+});
+
+test('direct item patch creates items without requiring or deleting Inbox tickets', () => {
+  const state = stateWithInbox();
+  const value = patch([{ title: 'Direct movie', details: '', boardIds: ['movies'], priority: 'normal', platform: 'Paramount+', imdbRating: 7.6 }]);
+  const validation = validateNotebookPatch(value, state);
+  assert.equal(validation.ok, true);
+  const preview = createNotebookPatchPreview(validation.patch, state);
+  assert.equal(preview.itemCount, 1);
+  assert.equal(preview.ticketCount, 0);
+  const ids = prepareNotebookPatchItemIds(validation.patch, () => 'direct-1');
+  const next = applyNotebookPatch(state, validation.patch, ids, 100);
+  assert.deepEqual(Object.keys(next.inbox).sort(), ['a', 'b', 'c']);
+  assert.equal(next.items['direct-1'].title, 'Direct movie');
+  assert.equal(next.items['direct-1'].platform, 'Paramount+');
+  assert.equal(next.items['direct-1'].imdbRating, 7.6);
+  assert.equal(next.memberships.movies['direct-1'].order, 0);
 });
 
 test('unreferenced Inbox tickets remain untouched', () => {
