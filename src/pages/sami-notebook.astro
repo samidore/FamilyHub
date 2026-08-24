@@ -101,7 +101,10 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
         <label>Notes<textarea name="notes" rows="3"></textarea></label>
         <label>看后评价<textarea name="review" rows="4"></textarea></label>
       </fieldset>
-      <button type="submit">保存事项</button>
+      <div class="notebook-item-dialog__actions">
+        <button type="submit">保存事项</button>
+        <button id="notebook-delete-item" type="button" class="danger-button" hidden>删除事项</button>
+      </div>
     </form>
   </dialog>
 
