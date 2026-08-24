@@ -43,7 +43,7 @@ function authorIconHtml(item: NotebookItem) {
     return `<span ${common}><img src="${NOTEBOOK_CAT_ICON_DATA_URI}" alt="" aria-hidden="true" /></span>`;
   }
   if (kind === 'dog') {
-    return `<span ${common}><svg viewBox="0 0 36 36" aria-hidden="true" focusable="false"><path class="ear" d="M10.6 10.2C6.9 8.2 4 10.4 4.7 14.5c.7 4.2 3.2 7.4 6.3 7.1l3-5.1-3.4-6.3Zm14.8 0c3.7-2 6.6.2 5.9 4.3-.7 4.2-3.2 7.4-6.3 7.1l-3-5.1 3.4-6.3Z"/><path class="face" d="M9 17.2C9 10.9 13 7 18 7s9 3.9 9 10.2v5.2c0 6.2-4 9.6-9 9.6s-9-3.4-9-9.6v-5.2Z"/><ellipse class="muzzle" cx="18" cy="23.5" rx="5.3" ry="4.3"/><circle class="eye" cx="14.5" cy="17.2" r="1.3"/><circle class="eye" cx="21.5" cy="17.2" r="1.3"/><path class="nose" d="M15.8 22.2c.8-1 3.6-1 4.4 0 .4.6-.7 2.1-2.2 2.1s-2.6-1.5-2.2-2.1Z"/><path class="line" d="M18 24.3v1.5c-1.1 1.1-2.2 1.4-3.3.8m3.3-.8c1.1 1.1 2.2 1.4 3.3.8"/><path class="tongue" d="M16.4 27.1c.4 2.2 2.8 2.2 3.2 0"/></svg></span>`;
+    return `<span ${common} aria-hidden="false">🐶</span>`;
   }
   return `<span ${common}><svg viewBox="0 0 36 36" aria-hidden="true" focusable="false"><circle class="generic-bg" cx="18" cy="18" r="15"/><circle class="generic-head" cx="18" cy="14" r="5"/><path class="generic-body" d="M9.5 29c.8-5.2 4-8 8.5-8s7.7 2.8 8.5 8"/></svg></span>`;
 }
