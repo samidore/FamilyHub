@@ -67,13 +67,18 @@ test('comment window shows all of 0-2 comments and only first/middle/last for 3+
   assert.deepEqual(windowed.trailing.map((entry) => entry.id), ['c4']);
 });
 
-test('card markup no longer hides content/comments behind the old details row', () => {
+test('card markup keeps compact comments and renders 呜哇 with the dog emoji', () => {
   const view = readFileSync(new URL('../src/lib/notebookView.ts', import.meta.url), 'utf8');
+  const css = readFileSync(new URL('../src/styles/notebook.css', import.meta.url), 'utf8');
   assert.equal(view.includes('内容与评论'), false);
   assert.equal(view.includes('暂无内容。'), false);
   assert.match(view, /notebook-item__heading/);
   assert.match(view, /notebook-comment-expand/);
   assert.match(view, /＋ 添加评论/);
+  assert.match(view, /🐶/);
+  assert.match(css, /\.notebook-author-icon--dog \{ font-size: 1\.85rem; line-height: 1; \}/);
+  assert.equal(css.includes('.notebook-author-icon--dog .face'), false);
+  assert.equal(css.includes('.notebook-author-icon--dog .ear'), false);
 });
 
 test('Firebase rules allow immutable item authors tied to the creating member display name', () => {
