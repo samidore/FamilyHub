@@ -51,7 +51,7 @@ test('All keeps active rows before one-time and recurring completion history', (
   state = completeRecurringNotebookItem(state, 'repeat', 'event-1', 30, '2026-08-22');
   const entries = notebookSectionEntries(state, 'a', 'normal', 'all');
   assert.deepEqual(entries.map((entry) => entry.kind), ['item', 'item', 'recurrence', 'item']);
-  assert.deepEqual(entries.map((entry) => entry.item.id), ['repeat', 'active', 'repeat', 'done']);
+  assert.deepEqual(entries.map((entry) => entry.item.id), ['active', 'repeat', 'repeat', 'done']);
 });
 
 test('media ratings are independent 0-10 fields and mediaType remains unsupported', () => {
