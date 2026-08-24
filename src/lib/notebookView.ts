@@ -2,7 +2,6 @@ import { NOTEBOOK_PRIORITIES, type NotebookComment, type NotebookItem, type Note
 import {
   NOTEBOOK_COMPLETION_GRACE_MS,
   NOTEBOOK_PRIORITY_LABELS,
-  notebookBoardIdsForItem,
   notebookSectionEntries,
   notebookUrgentActiveItems,
   notebookUrgentVisibleItems,
@@ -20,6 +19,7 @@ import {
   notebookCommentWindow,
   notebookItemAuthorName,
 } from './notebookCardPresentation.ts';
+import { NOTEBOOK_CAT_ICON_DATA_URI } from './notebookAuthorAssets.ts';
 import { notebookBoardShowsQueueAge, notebookQueueAgeDays } from './notebookQueueAge.ts';
 
 export const escapeNotebookHtml = (value: unknown) => String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
@@ -40,7 +40,7 @@ function authorIconHtml(item: NotebookItem) {
   const kind = notebookAuthorIconKind(authorName);
   const common = `class="notebook-author-icon notebook-author-icon--${kind}" role="img" aria-label="${e(authorName)}发起" title="${e(authorName)}" data-author-name="${e(authorName)}"`;
   if (kind === 'cat') {
-    return `<span ${common}><svg viewBox="0 0 36 36" aria-hidden="true" focusable="false"><path class="face" d="M7.5 14.2 9.2 5.5l7 5.2c1.2-.25 2.4-.25 3.6 0l7-5.2 1.7 8.7c1.3 1.8 2 4 2 6.3 0 6.5-5.4 11.7-12.5 11.7S5.5 27 5.5 20.5c0-2.3.7-4.5 2-6.3Z"/><path class="ear" d="m10.7 9.7.7-3 3 2.3-3.7.7Zm14.6 0-.7-3-3 2.3 3.7.7Z"/><path class="muzzle" d="M12.2 23.3c1.5-1.6 3.5-2.4 5.8-2.4s4.3.8 5.8 2.4c-1.1 3.1-3.1 4.7-5.8 4.7s-4.7-1.6-5.8-4.7Z"/><path class="line" d="M12.3 17.7c.8-.9 1.7-1.3 2.7-1.3m6 0c1 0 1.9.4 2.7 1.3M16.2 22.2c1.1.8 2.5.8 3.6 0M18 21.7v2.2"/><circle class="nose" cx="18" cy="21.5" r="1.1"/></svg></span>`;
+    return `<span ${common}><img src="${NOTEBOOK_CAT_ICON_DATA_URI}" alt="" aria-hidden="true" /></span>`;
   }
   if (kind === 'dog') {
     return `<span ${common}><svg viewBox="0 0 36 36" aria-hidden="true" focusable="false"><path class="ear" d="M10.6 10.2C6.9 8.2 4 10.4 4.7 14.5c.7 4.2 3.2 7.4 6.3 7.1l3-5.1-3.4-6.3Zm14.8 0c3.7-2 6.6.2 5.9 4.3-.7 4.2-3.2 7.4-6.3 7.1l-3-5.1 3.4-6.3Z"/><path class="face" d="M9 17.2C9 10.9 13 7 18 7s9 3.9 9 10.2v5.2c0 6.2-4 9.6-9 9.6s-9-3.4-9-9.6v-5.2Z"/><ellipse class="muzzle" cx="18" cy="23.5" rx="5.3" ry="4.3"/><circle class="eye" cx="14.5" cy="17.2" r="1.3"/><circle class="eye" cx="21.5" cy="17.2" r="1.3"/><path class="nose" d="M15.8 22.2c.8-1 3.6-1 4.4 0 .4.6-.7 2.1-2.2 2.1s-2.6-1.5-2.2-2.1Z"/><path class="line" d="M18 24.3v1.5c-1.1 1.1-2.2 1.4-3.3.8m3.3-.8c1.1 1.1 2.2 1.4 3.3.8"/><path class="tongue" d="M16.4 27.1c.4 2.2 2.8 2.2 3.2 0"/></svg></span>`;
@@ -102,7 +102,6 @@ function commentsHtml(comments: NotebookComment[], itemId: string, displayName: 
 function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | null, movable: boolean, displayName: string | null, showGrace: boolean, now: number, today: string, showQueueAge: boolean) {
   const e = escapeNotebookHtml;
   const comments = commentsFor(state, item.id);
-  const boardNames = notebookBoardIdsForItem(state, item.id).map((id) => state.boards[id]?.title).filter(Boolean).join(' · ');
   const moves = movable && item.status === 'active' && boardId ? `<button type="button" class="icon-button" data-move-item="up" aria-label="上移 ${e(item.title)}">↑</button><button type="button" class="icon-button" data-move-item="down" aria-label="下移 ${e(item.title)}">↓</button><button type="button" class="drag-handle" draggable="true" data-item-drag-handle aria-label="拖动排序">↕</button>` : '';
   const due = item.dueDate ? `<span>截止 ${e(item.dueDate)}${item.dueTime ? ` ${e(item.dueTime)}` : ''}</span>` : '';
   const completed = item.completedAt ? `<span>完成 ${e(fmt(item.completedAt))}</span>` : '';
@@ -119,7 +118,7 @@ function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | nu
     : null;
   const grace = graceMinutes ? `<span class="notebook-grace-note">已完成 · 还会在这里保留 ${graceMinutes} 分钟</span>` : '';
   const body = `${item.details ? `<p class="notebook-details-text">${e(item.details)}</p>` : ''}${media.text ? `<section class="notebook-media-detail">${media.text}</section>` : ''}${commentsHtml(comments, item.id, displayName)}`;
-  return `<article class="notebook-item${graceMinutes ? ' notebook-item--grace' : ''}"${corner.cardStyle} data-item-id="${e(item.id)}" data-board-id="${e(boardId ?? '')}">${corner.html}<div class="notebook-item__topline"${corner.topLineStyle}><div class="notebook-item__heading">${authorIconHtml(item)}<strong>${e(item.title)}</strong></div><div class="notebook-inline-actions">${moves}<button type="button" class="quiet-button" data-edit-item="${e(item.id)}">编辑</button></div></div><div class="notebook-item__controls"><label>优先级<select data-item-priority="${e(item.id)}">${NOTEBOOK_PRIORITIES.map((p) => `<option value="${p}" ${item.priority === p ? 'selected' : ''}>${NOTEBOOK_PRIORITY_LABELS[p]}</option>`).join('')}</select></label>${statusControl}</div>${(due || completed || recurrence || grace || boardNames || media.summary) ? `<div class="notebook-item__meta">${due}${completed}${recurrence}${grace}${media.summary}${boardNames ? `<span>${e(boardNames)}</span>` : ''}</div>` : ''}<div class="notebook-item__body">${body}</div></article>`;
+  return `<article class="notebook-item${graceMinutes ? ' notebook-item--grace' : ''}"${corner.cardStyle} data-item-id="${e(item.id)}" data-board-id="${e(boardId ?? '')}">${corner.html}<div class="notebook-item__topline"${corner.topLineStyle}><div class="notebook-item__heading">${authorIconHtml(item)}<strong>${e(item.title)}</strong></div><div class="notebook-inline-actions">${moves}<button type="button" class="quiet-button" data-edit-item="${e(item.id)}">编辑</button></div></div><div class="notebook-item__controls"><label>优先级<select data-item-priority="${e(item.id)}">${NOTEBOOK_PRIORITIES.map((p) => `<option value="${p}" ${item.priority === p ? 'selected' : ''}>${NOTEBOOK_PRIORITY_LABELS[p]}</option>`).join('')}</select></label>${statusControl}</div>${(due || completed || recurrence || grace || media.summary) ? `<div class="notebook-item__meta">${due}${completed}${recurrence}${grace}${media.summary}</div>` : ''}<div class="notebook-item__body">${body}</div></article>`;
 }
 
 function historyHtml(entry: NotebookSectionEntry) {
