@@ -8,14 +8,14 @@ Time is a workload signal, not an automatic hard filter. Account for opening, wa
 
 ## Shared four-step flow
 
-1. **Inventory** — connected household users adjust categorized ingredient inventory. Counted items use half-unit quantities; presence-only staples/pantry items use a boolean presence value. Ingredients explicitly marked `inventory_freshness: fifo` also keep dated quantity batches. Additions on the same local calendar date merge into that date; additions on different dates stay separate. Aggregate decreases consume the oldest dated batch first.
+1. **Inventory** — connected household users adjust categorized ingredient inventory. Counted items use half-unit quantities; presence-only staples/pantry items use a boolean presence value. Ingredients explicitly marked `inventory_freshness: fifo` also keep dated quantity batches. Additions on the same local calendar date merge into that date; additions on different dates stay separate. Aggregate decreases consume the oldest dated batch first. Inventory also accepts the reviewed Chat-assisted JSON contract in [`inventory-import.md`](inventory-import.md): parsing has no side effects, matched visible Ingredients can be removed or quantity-adjusted before import, unmatched items remain visible but unwritten, and a second confirmation is required before one additive transaction commits the retained rows.
 2. **Recipes** — users set Protein and Vegetable planning targets, optional Staple, time preference, and Child mode; select available ingredients; review ranked candidates; bind `one_of` choices; select or remove controlled add-ons.
 3. **Cook** — selected recipes and their child-serving/adult-finish notes render in Cook View. The household can return to Recipes while preserving the current meal.
 4. **Checkout** — mark consumed quantities or “used up,” review the draft, confirm, and commit atomically. Counted FIFO ingredients are deducted from the oldest batch first in the same transaction. A stale meal or invalid quantity does not partially mutate inventory or batch metadata.
 
 `activeStep`, current meal status, selected recipes, ingredient bindings, add-ons, checkout draft, and current-meal freshness snapshot are household state shared across connected devices. The page observes remote changes and reconciles unknown/archived IDs safely.
 
-Inventory quantity/batches and current-meal availability/freshness are independent snapshots. Entering Recipes resnapshots the currently stocked ingredients and each FIFO ingredient's oldest date. Later inventory edits do not rewrite the current meal's ingredient filter or freshness priority. Checkout always validates and consumes the latest live inventory in its atomic transaction.
+Inventory quantity/batches and current-meal availability/freshness are independent snapshots. Entering Recipes resnapshots the currently stocked ingredients and each FIFO ingredient's oldest date. Later inventory edits, including bulk imports, do not rewrite the current meal's ingredient filter or freshness priority. Checkout always validates and consumes the latest live inventory in its atomic transaction.
 
 ## Targets, completion, and ranking
 
@@ -35,7 +35,7 @@ Inventory quantity/batches and current-meal availability/freshness are independe
 
 FIFO is explicit Ingredient data, not a category inference. The current tracked scope is fresh pork, chicken, beef, lamb/goat; non-frozen leafy and other vegetables; and soft tofu, firm tofu, egg tofu, and pressed tofu. Each FIFO Ingredient also declares its own positive-integer `freshness_priority_days`; current values are 3 for fresh meat, 5 for non-frozen vegetables, and 7 for the four fresh tofu Ingredients. Fish/shellfish, mushrooms, eggs, dry tofu products, frozen/processed meats, frozen vegetables, staples, and pantry items are not freshness-tracked unless their canonical Ingredient record is deliberately changed later.
 
-When this feature first reads aggregate stock for a FIFO Ingredient without batch metadata, that pre-existing quantity is assigned the one-time migration date `2026-08-18`. This preserves FIFO ordering without inventing a more precise historical purchase date. New additions always use the local calendar date of the inventory write.
+When this feature first reads aggregate stock for a FIFO Ingredient without batch metadata, that pre-existing quantity is assigned the one-time migration date `2026-08-18`. This preserves FIFO ordering without inventing a more precise historical purchase date. Normal manual additions use the local calendar date of the inventory write. A reviewed Chat-assisted bulk import instead uses its validated, editable `stocked_on` date and adds the imported quantity to that dated batch; same-date imports merge without rewriting older batches.
 
 ## Vegetable structures and add-on
 
@@ -45,4 +45,4 @@ Vegetable Recipes represent a real cooking structure, not every seasoning label.
 
 ## Reset, errors, and privacy
 
-Resetting recipe selection keeps the shared inventory unchanged. Clearing shared inventory requires explicit confirmation and removes any FIFO batch metadata with the aggregate inventory; it does not change current-meal availability/freshness snapshots. Firebase/auth errors are shown; there is no local-data fallback. The page never stores names, birthdays, addresses, schedules, diagnoses, Gmail addresses, UIDs, tokens, or private notes.
+Resetting recipe selection keeps the shared inventory unchanged. Clearing shared inventory requires explicit confirmation and removes any FIFO batch metadata with the aggregate inventory; it does not change current-meal availability/freshness snapshots. Firebase/auth errors are shown; there is no local-data fallback. The Chat-assisted importer persists only the resulting normal inventory and FIFO batch state, not pasted JSON, images, Chat transcripts, or import history. The page never stores names, birthdays, addresses, schedules, diagnoses, Gmail addresses, UIDs, tokens, or private notes.
