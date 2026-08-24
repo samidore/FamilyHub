@@ -280,13 +280,13 @@ The Developer page uses the same household authentication and contains:
 - Delete a ticket.
 - `Copy all` button.
 
-`Copy all` copies a self-contained prompt that can be pasted directly to ChatGPT. It contains only the current board IDs/titles/kinds and Inbox ticket IDs/text that ChatGPT needs for classification; it does not expose the rest of the private notebook database. The prompt requires live IMDb verification for media items, forbids guessed ratings, and requires `myRating` to come only from an explicit user rating.
+`Copy all` copies a self-contained prompt that can be pasted directly to ChatGPT. It contains only the current board IDs/titles/kinds and Inbox ticket IDs/text that ChatGPT needs for classification; it does not expose the rest of the private notebook database. The prompt requires live IMDb verification for media items, forbids guessed ratings, requires `myRating` to come only from an explicit user rating, and tells ChatGPT it may use a unique exact Board title instead of copying an opaque Board UUID.
 
 ### Chat patch input
 
 A textarea accepts a complete JSON patch returned by ChatGPT. Version 1 supports two schema-limited patch modes:
 
-1. create normalized items using existing board IDs; `ticketId` is optional, so a patch may create brand-new items directly, convert Inbox tickets, or mix both in one `items[]` payload;
+1. create normalized items using existing Board references; each `boardIds[]` entry may be a real Board ID or a unique exact Board title. `ticketId` is optional, so a patch may create brand-new items directly, convert Inbox tickets, or mix both in one `items[]` payload;
 2. update a safe allowlist of fields on existing items.
 
 New-item / Inbox-conversion shape:
@@ -298,7 +298,7 @@ NotebookPatch
     - ticketId?      # only when converting a real Inbox ticket
     - title
     - details
-    - boardIds[]
+    - boardIds[]     # real Board ID or unique exact Board title
     - priority
     - dueDate?
     - dueTime?
@@ -311,6 +311,8 @@ NotebookPatch
 ```
 
 A direct new item omits `ticketId`. A ticket-backed item must reference a currently existing Inbox ticket. Only referenced ticket-backed items delete Inbox tickets; direct items never delete Inbox state.
+
+Board references are resolved during patch validation. An exact Board ID wins first. If no ID matches, the resolver requires exactly one Board whose `title` exactly matches the supplied text. Zero matches are rejected as unknown; multiple title matches are rejected as ambiguous rather than guessed. The validated patch is normalized to canonical Board IDs before preview/apply. Firebase remains the only runtime source of truth for the Board registry; the public Git repo must not maintain a duplicate title-to-UUID mapping.
 
 Existing-item update shape:
 
@@ -333,7 +335,7 @@ Apply flow:
 
 1. Parse JSON.
 2. Detect the supported narrow patch mode and validate the complete payload against its strict schema.
-3. Reject unknown item/ticket IDs, duplicate referenced ticket IDs, unsupported fields, malformed ratings, unknown board IDs, invalid enums/dates/times, or referenced tickets no longer present.
+3. Resolve Board references, then reject unknown/ambiguous Boards, duplicate references to the same resolved Board, unknown item/ticket IDs, duplicate referenced ticket IDs, unsupported fields, malformed ratings, invalid enums/dates/times, or referenced tickets no longer present.
 4. Show a compact preview of exactly what will be created or updated, including how many referenced Inbox tickets will be removed.
 5. One Apply action performs one Firebase transaction. New-item patches create generated item IDs and memberships; only items carrying a valid `ticketId` delete that referenced Inbox ticket. Existing-item updates change only the allowlisted fields.
 6. The repository snapshots the current member display name onto any newly created item before the transaction is normalized and written.
@@ -435,7 +437,7 @@ Firebase rules should authorize the notebook path only to existing verified hous
 ### Phase 4 — Developer workflow + export
 
 - Add Inbox edit/delete/copy-all.
-- Add schema-validated atomic Chat patch apply for direct new items, Inbox conversion, and safe existing-item metadata updates.
+- Add schema-validated atomic Chat patch apply for direct new items, Inbox conversion, unique-title/ID Board resolution, and safe existing-item metadata updates.
 - Add portable database export.
 
 ### Phase 5 — release verification
@@ -446,7 +448,7 @@ Run focused checks during implementation, then the repository release gate:
 pnpm run verify
 ```
 
-Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, item/comment author names, comment collapsing, all ordering transitions, item deletion cleanup, recurring requeue-to-bottom behavior, queue-age calendar math and midnight rollover, due-soon/Smart Urgent inclusion, Board `showQueueAge` rules, direct/Inbox patch atomicity, and export exclusion of auth identity data.
+Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, item/comment author names, comment collapsing, all ordering transitions, item deletion cleanup, recurring requeue-to-bottom behavior, queue-age calendar math and midnight rollover, due-soon/Smart Urgent inclusion, Board `showQueueAge` rules, direct/Inbox patch atomicity and Board-reference resolution, and export exclusion of auth identity data.
 
 ## Design acceptance criteria
 
@@ -474,5 +476,5 @@ This design is ready for implementation when all of the following are fixed:
 - Board description is optional; board comments do not exist.
 - Item comments are editable and show private display names, never email.
 - Inbox accepts unrestricted one-line capture.
-- Developer patching is schema-limited and atomic: `items[]` can create direct items without a ticket or convert referenced Inbox tickets, and `itemUpdates[]` remains safe existing-item metadata only.
+- Developer patching is schema-limited and atomic: `items[]` can create direct items without a ticket or convert referenced Inbox tickets; Board references may use canonical IDs or unique exact titles and normalize to IDs before apply; `itemUpdates[]` remains safe existing-item metadata only.
 - Export is complete for notebook business state and excludes authentication identity data.

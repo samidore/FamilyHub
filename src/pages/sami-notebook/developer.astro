@@ -41,7 +41,7 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
       <section class="developer-panel" aria-labelledby="developer-patch-title">
         <p class="eyebrow">Chat patch</p>
         <h2 id="developer-patch-title">整理结果</h2>
-        <p>粘贴完整 JSON patch。items 可以直接创建新事项；只有带 ticketId 的 item 才会同时删除对应 Inbox。也可以用 itemUpdates 更新现有事项的 details / platform / IMDb / 我的评分 / notes / review；不能改 Board、状态、优先级、排序或其他 Firebase 路径。</p>
+        <p>粘贴完整 JSON patch。items 可以直接创建新事项；boardIds 可以填写真实 Board ID，也可以填写唯一的精确 Board 标题（例如“电影”）。只有带 ticketId 的 item 才会同时删除对应 Inbox。也可以用 itemUpdates 更新现有事项的 details / platform / IMDb / 我的评分 / notes / review；不能改 Board、状态、优先级、排序或其他 Firebase 路径。</p>
         <label>JSON patch<textarea id="developer-patch-input" rows="16" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="developer-patch-status"></textarea></label>
         <p id="developer-patch-status" class="developer-patch-status" aria-live="polite"></p>
         <div class="developer-actions"><button id="developer-validate-patch" type="button">Validate</button></div>

@@ -90,6 +90,14 @@ function orderedInbox(state: NotebookState) {
   return Object.values(state.inbox).sort((left, right) => left.createdAt - right.createdAt || left.id.localeCompare(right.id));
 }
 
+function resolveBoardRef(state: NotebookState, ref: string) {
+  if (state.boards[ref]) return { ok: true as const, boardId: ref };
+  const matches = Object.values(state.boards).filter((board) => board.title === ref);
+  if (matches.length === 1) return { ok: true as const, boardId: matches[0].id };
+  if (matches.length > 1) return { ok: false as const, error: `Board 名称不唯一：${ref}` };
+  return { ok: false as const, error: `Board 不存在：${ref}` };
+}
+
 export function createNotebookInboxCopyPayload(state: NotebookState): NotebookInboxCopyPayload {
   return {
     protocolVersion: NOTEBOOK_INBOX_PROTOCOL_VERSION,
@@ -113,7 +121,7 @@ export function createNotebookInboxChatPrompt(state: NotebookState, today?: stri
     dateLine.trimEnd(),
     '通用规则：',
     '- 每个 Inbox ticket 转成一个正式事项；ticketId 必须原样保留。',
-    '- 只能使用下面列出的现有 board ID；不要创建、重命名或猜测 Board。',
+    '- boardIds 可使用下面现有 Board 的真实 ID，或唯一的精确 Board 标题；标题唯一时优先使用标题，方便人工阅读。不要创建、重命名或猜测 Board。',
     '- 根据原文选择 priority：urgent | high | normal | low。',
     '- 不确定的信息不要编造；没有可靠依据的可选字段直接省略。',
     '- dueDate 只有在原文能可靠确定日期时填写，格式 YYYY-MM-DD；dueTime 只有在同时有 dueDate 时填写，格式 HH:MM。',
@@ -140,7 +148,7 @@ export function createNotebookInboxChatPrompt(state: NotebookState, today?: stri
     '      "ticketId": "TICKET_ID",',
     '      "title": "标题",',
     '      "details": "",',
-    '      "boardIds": ["BOARD_ID"],',
+    '      "boardIds": ["BOARD_TITLE_OR_ID"],',
     '      "priority": "normal"',
     '    }',
     '  ]',
@@ -180,11 +188,17 @@ export function validateNotebookPatch(value: unknown, state: NotebookState): Not
     if (!nonEmptyString(raw.title)) return { ok: false, error: `${prefix}.title 不能为空` };
     if (typeof raw.details !== 'string') return { ok: false, error: `${prefix}.details 必须是字符串` };
     if (!Array.isArray(raw.boardIds) || raw.boardIds.length === 0 || raw.boardIds.some((boardId) => !nonEmptyString(boardId))) {
-      return { ok: false, error: `${prefix}.boardIds 至少需要一个有效 Board ID` };
+      return { ok: false, error: `${prefix}.boardIds 至少需要一个有效 Board ID 或标题` };
     }
-    const boardIds = raw.boardIds.map((boardId) => (boardId as string).trim());
-    if (new Set(boardIds).size !== boardIds.length) return { ok: false, error: `${prefix}.boardIds 不能重复` };
-    for (const boardId of boardIds) if (!state.boards[boardId]) return { ok: false, error: `Board 不存在：${boardId}` };
+    const boardRefs = raw.boardIds.map((boardId) => (boardId as string).trim());
+    if (new Set(boardRefs).size !== boardRefs.length) return { ok: false, error: `${prefix}.boardIds 不能重复` };
+    const boardIds: string[] = [];
+    for (const boardRef of boardRefs) {
+      const resolved = resolveBoardRef(state, boardRef);
+      if (!resolved.ok) return { ok: false, error: resolved.error };
+      boardIds.push(resolved.boardId);
+    }
+    if (new Set(boardIds).size !== boardIds.length) return { ok: false, error: `${prefix}.boardIds 不能通过不同引用指向同一个 Board` };
 
     if (typeof raw.priority !== 'string' || !prioritySet.has(raw.priority)) return { ok: false, error: `${prefix}.priority 无效` };
     const priority = raw.priority as NotebookPriority;
