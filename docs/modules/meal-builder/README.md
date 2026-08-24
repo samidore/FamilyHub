@@ -6,9 +6,10 @@ Meal Builder is a dynamic household meal-planning tool. Available ingredients pl
 
 - [`behavior.md`](behavior.md): four-step flow, ranking, child coverage, Cook View, checkout, and household rules.
 - [`data-model.md`](data-model.md): YAML layout, schemas, stable IDs, indexes, controlled values, and Recipe/Ingredient data-change transactions.
+- [`inventory-import.md`](inventory-import.md): Chat/image-assisted inventory JSON contract, quantity inference, review, and import semantics.
 - [`firebase.md`](firebase.md): Google sign-in, Realtime Database membership, shared state, repository variables, and rules verification.
 
-Read only what the change needs: `behavior.md` for UI or meal logic, `data-model.md` for YAML/records/indexes/loaders, and `firebase.md` for shared state.
+Read only what the change needs: `behavior.md` for UI or meal logic, `data-model.md` for YAML/records/indexes/loaders, `inventory-import.md` for Chat-assisted bulk inventory entry, and `firebase.md` for shared state.
 
 ## Data source
 
