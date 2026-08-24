@@ -265,6 +265,10 @@ export function completeRecurringNotebookItem(state: NotebookState, itemId: stri
   const next = cloneNotebookState(state);
   next.completionEvents[eventId] = { id: eventId, itemId, completedAt, priority: existing.priority, boardIds };
   next.items[itemId] = { ...existing, dueDate: nextDueDate, updatedAt: completedAt };
+  for (const boardId of boardIds) {
+    const remaining = activeSectionIds(next, boardId, existing.priority, itemId);
+    rewriteActiveSection(next, boardId, existing.priority, [...remaining, itemId]);
+  }
   return normalizeNotebookState(next);
 }
 

@@ -15,6 +15,7 @@ export interface NotebookBoard {
   title: string;
   kind: NotebookBoardKind;
   description?: string;
+  showQueueAge?: boolean;
   visible: boolean;
   collapsed: boolean;
   order: number;
@@ -113,12 +114,14 @@ function normalizeBoard(id: string, value: unknown): NotebookBoard | null {
   if (!isRecord(value) || value.id !== id || !nonEmptyString(value.title) || !boardKinds.has(value.kind as NotebookBoardKind)) return null;
   if (typeof value.visible !== 'boolean' || typeof value.collapsed !== 'boolean' || !nonNegativeInteger(value.order)) return null;
   if (!finitePositive(value.createdAt) || !finitePositive(value.updatedAt)) return null;
+  if (value.showQueueAge !== undefined && typeof value.showQueueAge !== 'boolean') return null;
   const description = optionalString(value.description);
   return {
     id,
     title: value.title.trim(),
     kind: value.kind as NotebookBoardKind,
     ...(description ? { description } : {}),
+    ...(typeof value.showQueueAge === 'boolean' ? { showQueueAge: value.showQueueAge } : {}),
     visible: value.visible,
     collapsed: value.collapsed,
     order: value.order,

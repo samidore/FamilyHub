@@ -61,7 +61,19 @@ An item is `due-soon` when all of the following hold:
 
 The hidden state starts at local midnight on the day before the deadline and remains until the item is completed or its due date is changed/removed. The page schedules a local-midnight rerender, so entering `due-soon` does not require a Firebase write or another user action.
 
-Only Smart Urgent uses `due-soon` as an inclusion rule. Ordinary Boards keep the item's stored priority section and manual order unchanged. A due-soon card shows a small red hourglass in its upper-right corner; the icon's accessible label distinguishes `明天截止`, `今天截止`, and `已逾期`.
+Only Smart Urgent uses `due-soon` as an inclusion rule. Ordinary Boards keep the item's stored priority section and manual order unchanged. A due-soon card shows a small red hourglass in its upper-right status area; the icon's accessible label distinguishes `明天截止`, `今天截止`, and `已逾期`. When queue age is also shown, the hourglass appears first and the `x天` queue-age text follows it.
+
+### Queue age
+
+Queue age is derived display state; it is not stored as `queuedAt` and does not require a daily Firebase write.
+
+- A one-time item's queue start is its immutable `createdAt`.
+- A recurring item's queue start is its latest `CompletionEvent.completedAt`; before the first completion it uses `createdAt`.
+- Age is the difference between local calendar dates, so `今天创建 = 0天`, the next local day is `1天`, and DST does not distort the count.
+- Only active live items show queue age. Completed items, one-time grace cards, and recurring completion-history rows do not.
+- Smart Urgent always shows queue age.
+- An ordinary Board shows queue age when its effective `showQueueAge` setting is true.
+- The card displays only the compact text `x天` in the upper-right status area. The page's existing local-midnight rerender updates the number automatically.
 
 ## Board registry
 
@@ -73,6 +85,7 @@ Board
 - title
 - kind: task | media
 - description?: string
+- showQueueAge?: boolean
 - visible: boolean
 - collapsed: boolean
 - order: integer
@@ -81,6 +94,8 @@ Board
 ```
 
 `description` is optional and normally absent. There are no board-level comments.
+
+`showQueueAge` is independently editable in Board Manager. New task Boards persist `true` by default and new media Boards persist `false` by default. Legacy Boards may lack the field; for backward compatibility a legacy `task` Board behaves as `true` and a legacy `media` Board behaves as `false` until the setting is explicitly saved. This keeps the normal task queue such as `开干` showing queue age while movie/TV media Boards do not, without hard-coding Board names.
 
 `kind = media` only changes the fields/editing UI offered by that board. Do not add a separate `mediaType` field to items; `Movies` and `TV` are simply board names.
 
@@ -143,6 +158,7 @@ Within each priority section:
 - Dragging only reorders within the same board + priority section.
 - Changing priority uses the priority control, not drag-and-drop; the item moves to the top of its new priority section in every board it belongs to.
 - Restoring a completed one-time item to Active also places it at the top of its current priority section.
+- Completing one occurrence of a recurring item keeps the live item active but moves it to the bottom of its current priority section in every Board it belongs to, starting a new queue-age cycle.
 
 For the expected household scale, use simple dense integer ordering and rewrite the affected section after insertion/drag. Do not introduce fractional ranking unless a measured need appears.
 
@@ -168,7 +184,9 @@ One-time item completion:
 
 Restoring it clears `completedAt` and returns it to Active at the top of its priority section.
 
-Recurring completion must preserve history while keeping the next occurrence active. Do not overwrite the only completion timestamp. Store a completion event for each occurrence, then advance the same item's next due date and leave the item active. Completed views render those recurring completion events as historical rows, grouped by the priority recorded at completion time.
+Recurring completion must preserve history while keeping the next occurrence active. Do not overwrite the only completion timestamp. Store a completion event for each occurrence, advance the same item's next due date, leave the item active, and move the live item to the bottom of the current priority section in every Board membership. The new queue-age cycle starts from that completion timestamp. Completed views render recurring completion events as historical rows, grouped by the priority recorded at completion time.
+
+After the next due date advances, the existing hidden `due-soon` rule decides Smart Urgent membership. A recurring item that is no longer due soon drops out unless it is manually `priority = urgent`; when its next deadline reaches the due-soon window it automatically re-enters Smart Urgent. A daily recurrence may therefore remain due-soon immediately after completion because its next due date is tomorrow.
 
 A recurrence completion event needs only the minimum snapshot required for stable history:
 
@@ -344,7 +362,7 @@ NotebookExport
 - settings
 ```
 
-The export must contain all notebook business state needed to reconstruct the module, including persisted item author snapshots, but must exclude:
+The export must contain all notebook business state needed to reconstruct the module, including persisted item author snapshots and any persisted Board `showQueueAge` overrides, but must exclude:
 
 - Gmail addresses
 - Firebase UIDs
@@ -421,7 +439,7 @@ Run focused checks during implementation, then the repository release gate:
 pnpm run verify
 ```
 
-Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, item/comment author names, comment collapsing, all ordering transitions, recurrence history, due-soon midnight rollover/Smart Urgent inclusion, patch atomicity, and export exclusion of auth identity data.
+Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, item/comment author names, comment collapsing, all ordering transitions, recurring requeue-to-bottom behavior, queue-age calendar math and midnight rollover, due-soon/Smart Urgent inclusion, Board `showQueueAge` rules, patch atomicity, and export exclusion of auth identity data.
 
 ## Design acceptance criteria
 
@@ -434,9 +452,12 @@ This design is ready for implementation when all of the following are fixed:
 - Boards are dynamic and may be reordered/hidden/collapsed as household-shared state.
 - Smart Urgent is computed and fixed first, combining stored `priority = urgent` with the hidden derived `due-soon` state.
 - `due-soon` never rewrites stored priority or ordinary Board ordering and rolls over at local midnight.
+- Smart Urgent always shows active queue age; ordinary Boards use `showQueueAge`, with legacy task/media defaults of true/false and no Board-name hard-coding.
+- Queue age is local-calendar-day based, uses `createdAt` for one-time items, resets to the latest recurring completion timestamp, and is never stored as a daily counter.
+- The upper-right card status shows red hourglass first when due-soon, then compact `x天` when queue age is enabled.
 - One item may belong to multiple boards with per-board manual ordering.
 - Priority sections are fixed Urgent/High/Normal/Low.
-- Active ordering is new-first with persistent manual overrides; Completed keeps the same priority sections and sorts each by completion date descending.
+- Active ordering is new-first with persistent manual overrides; completing a recurring occurrence moves the live item to the bottom of its current priority section in every Board; Completed keeps the same priority sections and sorts each by completion date descending.
 - New items snapshot the creating member's private display name; legacy missing authors render as 猫猫; persisted authors are immutable.
 - Author icons lead the title row: 猫猫 = cat head, 呜哇 = dog head, unmatched names = neutral fallback.
 - Item content is directly visible; comments use 0/1/2/3+ compact presentation with first/last preservation for long threads.

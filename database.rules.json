@@ -74,6 +74,7 @@
               "title": { ".validate": "newData.isString() && newData.val().length > 0" },
               "kind": { ".validate": "newData.isString() && (newData.val() == 'task' || newData.val() == 'media')" },
               "description": { ".validate": "newData.isString()" },
+              "showQueueAge": { ".validate": "newData.isBoolean()" },
               "visible": { ".validate": "newData.isBoolean()" },
               "collapsed": { ".validate": "newData.isBoolean()" },
               "order": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() % 1 == 0" },

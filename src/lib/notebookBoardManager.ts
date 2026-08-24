@@ -37,6 +37,7 @@ export function setupNotebookBoardManager(context: NotebookBoardManagerContext) 
         title,
         kind,
         ...(description ? { description } : {}),
+        showQueueAge: kind === 'task',
         visible: true,
         collapsed: false,
         order: orderedNotebookBoards(next).length,
@@ -69,11 +70,12 @@ export function setupNotebookBoardManager(context: NotebookBoardManagerContext) 
       if (!title) { context.status('Board 名称不能为空', true); return; }
       const kind = row.querySelector<HTMLSelectElement>('[data-board-kind]')!.value === 'media' ? 'media' : 'task';
       const description = row.querySelector<HTMLInputElement>('[data-board-description]')!.value.trim();
+      const showQueueAge = row.querySelector<HTMLInputElement>('[data-board-show-queue-age]')!.checked;
       void context.mutate('保存 Board', (current) => {
         const board = current.boards[boardId];
         if (!board) return current;
         const next = cloneNotebookState(current);
-        next.boards[boardId] = { ...board, title, kind, updatedAt: stamp() };
+        next.boards[boardId] = { ...board, title, kind, showQueueAge, updatedAt: stamp() };
         if (description) next.boards[boardId].description = description;
         else delete next.boards[boardId].description;
         return next;

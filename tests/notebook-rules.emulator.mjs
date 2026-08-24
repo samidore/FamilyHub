@@ -7,7 +7,7 @@ const env = await initializeTestEnvironment({ projectId: 'family-hub-rules', dat
 const google = (uid, email) => env.authenticatedContext(uid, { email, email_verified: true, firebase: { sign_in_provider: 'google.com' } }).database();
 const password = (uid, email) => env.authenticatedContext(uid, { email, email_verified: true, firebase: { sign_in_provider: 'password' } }).database();
 const household = 'households/test-notebook-household';
-const board = { id: 'todo', title: 'Todo', kind: 'task', visible: true, collapsed: false, order: 0, createdAt: 1, updatedAt: 1 };
+const board = { id: 'todo', title: 'Todo', kind: 'task', showQueueAge: true, visible: true, collapsed: false, order: 0, createdAt: 1, updatedAt: 1 };
 const item = { id: 'task-1', title: 'Call contractor', details: '', priority: 'high', status: 'active', createdAt: 2, updatedAt: 2 };
 
 async function resetWithMember({ displayName = 'Sami' } = {}) {
@@ -47,6 +47,7 @@ test('notebook schema accepts canonical records and rejects unsupported fields o
   await resetWithMember();
   const alice = google('alice', 'alice@gmail.com');
   await assertSucceeds(alice.ref(`${household}/notebook/boards/todo`).set(board));
+  await assertFails(alice.ref(`${household}/notebook/boards/bad-queue`).set({ ...board, id: 'bad-queue', showQueueAge: 'yes' }));
   await assertSucceeds(alice.ref(`${household}/notebook/items/task-1`).set(item));
   await assertSucceeds(alice.ref(`${household}/notebook/memberships/todo/task-1`).set({ order: 0 }));
   await assertSucceeds(alice.ref(`${household}/notebook/inbox/ticket-1`).set({ id: 'ticket-1', text: 'remember this', createdAt: 3, updatedAt: 3 }));
