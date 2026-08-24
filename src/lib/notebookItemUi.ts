@@ -1,5 +1,6 @@
 import { NOTEBOOK_PRIORITIES, cloneNotebookState, isSupportedRecurrence, type NotebookItem, type NotebookPriority, type NotebookRecurrenceUnit, type NotebookState } from './notebookDomain.ts';
 import { addNotebookItem, completeRecurringNotebookItem, notebookItemsForSection, orderedNotebookBoards, reorderNotebookSection, setNotebookItemBoards, setNotebookItemPriority, setNotebookItemStatus } from './notebookActions.ts';
+import { deleteNotebookItem } from './notebookItemDelete.ts';
 import { renderNotebookBoardChoices } from './notebookView.ts';
 import type { NotebookRepository } from './notebookRepository.ts';
 
@@ -30,6 +31,7 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
   const dialog = document.querySelector<HTMLDialogElement>('#notebook-item-dialog')!;
   const form = document.querySelector<HTMLFormElement>('#notebook-item-form')!;
   const dialogTitle = document.querySelector<HTMLElement>('#notebook-item-dialog-title')!;
+  const deleteButton = document.querySelector<HTMLButtonElement>('#notebook-delete-item')!;
   const boardChoices = document.querySelector<HTMLElement>('#notebook-item-board-choices')!;
   const recurrenceUnit = form.elements.namedItem('recurrenceUnit') as HTMLSelectElement;
   const recurrenceInterval = form.elements.namedItem('recurrenceInterval') as HTMLInputElement;
@@ -59,6 +61,7 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
     const state = context.getState();
     const item = itemId ? state.items[itemId] : undefined;
     dialogTitle.textContent = item ? '编辑事项' : '新事项';
+    deleteButton.hidden = !item;
     setValue('title', item?.title);
     setValue('details', item?.details);
     (form.elements.namedItem('priority') as HTMLSelectElement).value = item?.priority ?? 'normal';
@@ -203,6 +206,13 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
 
   recurrenceUnit.addEventListener('change', refreshRecurrence);
   boardChoices.addEventListener('change', refreshMedia);
+  deleteButton.addEventListener('click', () => {
+    const itemId = editingItemId;
+    if (!itemId) return;
+    const item = context.getState().items[itemId];
+    if (!item || !window.confirm(`删除“${item.title}”？评论和循环完成记录也会一起删除。`)) return;
+    void context.mutate('删除事项', (current) => deleteNotebookItem(current, itemId)).then(() => dialog.close());
+  });
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -280,6 +290,7 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
   });
   dialog.addEventListener('close', () => {
     editingItemId = null;
+    deleteButton.hidden = true;
     recurrenceUnit.disabled = false;
     recurrenceInterval.disabled = false;
   });
