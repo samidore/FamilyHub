@@ -32,7 +32,7 @@ const localDate = () => {
 };
 
 type ValidatedDeveloperPatch =
-  | { kind: 'inbox'; patch: NotebookPatch }
+  | { kind: 'create-items'; patch: NotebookPatch }
   | { kind: 'item-updates'; patch: NotebookItemUpdatePatch };
 
 type ParsedDeveloperPatch =
@@ -63,7 +63,7 @@ function parseDeveloperPatch(text: string, state: NotebookState): ParsedDevelope
   }
   const result = validateNotebookPatch(value, state);
   if (!result.ok) return { ok: false, error: result.error };
-  return { ok: true, value: { kind: 'inbox', patch: result.patch } };
+  return { ok: true, value: { kind: 'create-items', patch: result.patch } };
 }
 
 export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, options: CreateNotebookRepositoryOptions = {}) {
@@ -142,10 +142,13 @@ export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, option
       return false;
     }
     validatedPatch = result.value;
-    if (result.value.kind === 'inbox') {
+    if (result.value.kind === 'create-items') {
       const preview = createNotebookPatchPreview(result.value.patch, state);
-      previewHost.innerHTML = `<h3>准备转换 ${preview.ticketCount} 条 Inbox</h3><ul>${preview.boardCounts.map((entry) => `<li><strong>${escapeHtml(entry.title)}</strong><span>${entry.count}</span></li>`).join('')}</ul><p>${preview.ticketCount} 条 Inbox 将被删除，并创建 ${preview.ticketCount} 个新事项。</p>`;
-      applyButton.textContent = `Apply ${preview.ticketCount} items`;
+      const inboxNote = preview.ticketCount
+        ? `${preview.ticketCount} 条引用的 Inbox 将被删除；其余 Inbox 保留。`
+        : '这个 patch 不引用 Inbox，不会删除任何 Inbox。';
+      previewHost.innerHTML = `<h3>准备创建 ${preview.itemCount} 个事项</h3><ul>${preview.boardCounts.map((entry) => `<li><strong>${escapeHtml(entry.title)}</strong><span>${entry.count}</span></li>`).join('')}</ul><p>${inboxNote}</p>`;
+      applyButton.textContent = `Apply ${preview.itemCount} items`;
     } else {
       const preview = createNotebookItemUpdatePreview(result.value.patch, state);
       previewHost.innerHTML = `<h3>准备更新 ${preview.updateCount} 个现有事项</h3><ul>${preview.items.map((entry) => `<li><strong>${escapeHtml(entry.title)}</strong></li>`).join('')}</ul><p>只更新允许的内容与影视资料；Board、状态、优先级和排序不会改变。</p>`;
@@ -231,7 +234,7 @@ export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, option
     }
     const patch = latest.value.patch;
     const itemIds = prepareNotebookPatchItemIds(patch, makeItemId);
-    void mutatePatch('应用 Inbox patch', (current) => applyNotebookPatch(current, patch, itemIds, now)).then((ok) => {
+    void mutatePatch('应用事项 patch', (current) => applyNotebookPatch(current, patch, itemIds, now)).then((ok) => {
       if (!ok) return;
       patchInput.value = '';
       clearPatchPreview();
