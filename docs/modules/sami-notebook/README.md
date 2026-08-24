@@ -97,6 +97,8 @@ Board
 
 `showQueueAge` is independently editable in Board Manager. New task Boards persist `true` by default and new media Boards persist `false` by default. Legacy Boards may lack the field; for backward compatibility a legacy `task` Board behaves as `true` and a legacy `media` Board behaves as `false` until the setting is explicitly saved. This keeps the normal task queue such as `开干` showing queue age while movie/TV media Boards do not, without hard-coding Board names.
 
+Each regular Board header keeps the collapse control, Board title, and `＋事项` on one row, including mobile widths; `＋事项` is aligned to the far right. Item cards do not repeat their Board membership names in metadata because the containing Board already supplies that context.
+
 `kind = media` only changes the fields/editing UI offered by that board. Do not add a separate `mediaType` field to items; `Movies` and `TV` are simply board names.
 
 ## Items
@@ -128,7 +130,9 @@ Optional media fields
 
 `authorName` is the private household display-name snapshot of the member who creates the item. The repository adds it only when the item is first created; normal edits, status changes, drag ordering, and Developer metadata patches must not rewrite it. Firebase rules keep a persisted author immutable and require a newly persisted author to match the creating member's current private display name.
 
-Legacy items may have no persisted `authorName`. For current household data, those items are intentionally rendered as `猫猫` without a migration write. The title row starts with an author icon rather than visible author text: `猫猫` uses the cute cat-head icon, `呜哇` uses the dog-head icon, and any future unmatched display name uses a neutral fallback icon. The icon retains an accessible author label.
+Legacy items may have no persisted `authorName`. For current household data, those items are intentionally rendered as `猫猫` without a migration write. The title row starts with an author icon rather than visible author text: `猫猫` uses the supplied fluffy gray/white cat portrait as a compact image icon, `呜哇` keeps the dog-head icon, and any future unmatched display name uses a neutral fallback icon. The icon retains an accessible author label.
+
+The item editor exposes an explicit destructive `删除事项` action only while editing an existing item. Deletion requires confirmation and removes the item together with all Board memberships, comments, and recurring completion history for that item. It does not affect Inbox tickets or unrelated items.
 
 Do not add an item-level media type.
 
@@ -159,6 +163,7 @@ Within each priority section:
 - Changing priority uses the priority control, not drag-and-drop; the item moves to the top of its new priority section in every board it belongs to.
 - Restoring a completed one-time item to Active also places it at the top of its current priority section.
 - Completing one occurrence of a recurring item keeps the live item active but moves it to the bottom of its current priority section in every Board it belongs to, starting a new queue-age cycle.
+- Deleting an active item closes the ordering gap in its affected Board + priority sections.
 
 For the expected household scale, use simple dense integer ordering and rewrite the affected section after insertion/drag. Do not introduce fractional ranking unless a measured need appears.
 
@@ -279,18 +284,18 @@ The Developer page uses the same household authentication and contains:
 
 ### Chat patch input
 
-A textarea accepts a complete JSON patch returned by ChatGPT. Version 1 intentionally supports only two narrow patch modes:
+A textarea accepts a complete JSON patch returned by ChatGPT. Version 1 supports two schema-limited patch modes:
 
-1. convert Inbox tickets into new normalized items using existing board IDs;
+1. create normalized items using existing board IDs; `ticketId` is optional, so a patch may create brand-new items directly, convert Inbox tickets, or mix both in one `items[]` payload;
 2. update a safe allowlist of fields on existing items.
 
-Inbox conversion shape:
+New-item / Inbox-conversion shape:
 
 ```text
 NotebookPatch
-- patchVersion
+- patchVersion: 1
 - items[]
-    - ticketId
+    - ticketId?      # only when converting a real Inbox ticket
     - title
     - details
     - boardIds[]
@@ -304,6 +309,8 @@ NotebookPatch
     - notes?
     - review?
 ```
+
+A direct new item omits `ticketId`. A ticket-backed item must reference a currently existing Inbox ticket. Only referenced ticket-backed items delete Inbox tickets; direct items never delete Inbox state.
 
 Existing-item update shape:
 
@@ -326,16 +333,16 @@ Apply flow:
 
 1. Parse JSON.
 2. Detect the supported narrow patch mode and validate the complete payload against its strict schema.
-3. Reject unknown item/ticket IDs, duplicate IDs, unsupported fields, malformed ratings, unknown board IDs, invalid enums/dates/times, or tickets no longer present.
-4. Show a compact preview of exactly what will be created or updated.
-5. One Apply action performs one Firebase transaction. Inbox conversion creates generated item IDs and memberships and deletes only the successfully converted Inbox tickets. Existing-item updates change only the allowlisted fields.
+3. Reject unknown item/ticket IDs, duplicate referenced ticket IDs, unsupported fields, malformed ratings, unknown board IDs, invalid enums/dates/times, or referenced tickets no longer present.
+4. Show a compact preview of exactly what will be created or updated, including how many referenced Inbox tickets will be removed.
+5. One Apply action performs one Firebase transaction. New-item patches create generated item IDs and memberships; only items carrying a valid `ticketId` delete that referenced Inbox ticket. Existing-item updates change only the allowlisted fields.
 6. The repository snapshots the current member display name onto any newly created item before the transaction is normalized and written.
 7. Revalidate against the current transaction state so concurrent changes cannot bypass validation.
 8. A validation or transaction failure writes nothing.
 
 Patch parse/validation/apply feedback belongs in the Chat patch panel beside the JSON input. Do not surface patch-format errors as a page-level Developer status message.
 
-Do not allow version-1 patches to write arbitrary Firebase paths, create/rename Boards, alter membership/auth records, change item lifecycle/order/author, or execute deletes outside the referenced Inbox tickets.
+Do not allow version-1 patches to write arbitrary Firebase paths, create/rename Boards, alter membership/auth records, change item lifecycle/order/author, or execute deletes outside the explicitly referenced Inbox tickets.
 
 ## Portable database export and Git backup
 
@@ -428,7 +435,7 @@ Firebase rules should authorize the notebook path only to existing verified hous
 ### Phase 4 — Developer workflow + export
 
 - Add Inbox edit/delete/copy-all.
-- Add schema-validated atomic Chat patch apply for Inbox conversion and safe existing-item metadata updates.
+- Add schema-validated atomic Chat patch apply for direct new items, Inbox conversion, and safe existing-item metadata updates.
 - Add portable database export.
 
 ### Phase 5 — release verification
@@ -439,7 +446,7 @@ Run focused checks during implementation, then the repository release gate:
 pnpm run verify
 ```
 
-Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, item/comment author names, comment collapsing, all ordering transitions, recurring requeue-to-bottom behavior, queue-age calendar math and midnight rollover, due-soon/Smart Urgent inclusion, Board `showQueueAge` rules, patch atomicity, and export exclusion of auth identity data.
+Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, item/comment author names, comment collapsing, all ordering transitions, item deletion cleanup, recurring requeue-to-bottom behavior, queue-age calendar math and midnight rollover, due-soon/Smart Urgent inclusion, Board `showQueueAge` rules, direct/Inbox patch atomicity, and export exclusion of auth identity data.
 
 ## Design acceptance criteria
 
@@ -450,20 +457,22 @@ This design is ready for implementation when all of the following are fixed:
 - Git backup is a private portable snapshot, not runtime storage.
 - Module privacy classification is explicitly authenticated-household before activation.
 - Boards are dynamic and may be reordered/hidden/collapsed as household-shared state.
+- Regular Board headers keep `＋事项` on the title row at the far right on mobile and desktop.
 - Smart Urgent is computed and fixed first, combining stored `priority = urgent` with the hidden derived `due-soon` state.
 - `due-soon` never rewrites stored priority or ordinary Board ordering and rolls over at local midnight.
 - Smart Urgent always shows active queue age; ordinary Boards use `showQueueAge`, with legacy task/media defaults of true/false and no Board-name hard-coding.
 - Queue age is local-calendar-day based, uses `createdAt` for one-time items, resets to the latest recurring completion timestamp, and is never stored as a daily counter.
 - The upper-right card status shows red hourglass first when due-soon, then compact `x天` when queue age is enabled.
-- One item may belong to multiple boards with per-board manual ordering.
+- One item may belong to multiple boards with per-board manual ordering, but item cards do not repeat Board names in metadata.
 - Priority sections are fixed Urgent/High/Normal/Low.
 - Active ordering is new-first with persistent manual overrides; completing a recurring occurrence moves the live item to the bottom of its current priority section in every Board; Completed keeps the same priority sections and sorts each by completion date descending.
 - New items snapshot the creating member's private display name; legacy missing authors render as 猫猫; persisted authors are immutable.
-- Author icons lead the title row: 猫猫 = cat head, 呜哇 = dog head, unmatched names = neutral fallback.
+- Author icons lead the title row: 猫猫 = supplied fluffy cat portrait, 呜哇 = dog head, unmatched names = neutral fallback.
+- Existing items can be explicitly deleted from the editor after confirmation; deletion removes memberships, comments, and recurrence history for that item.
 - Item content is directly visible; comments use 0/1/2/3+ compact presentation with first/last preservation for long threads.
 - Media items do not have `mediaType`.
 - Board description is optional; board comments do not exist.
 - Item comments are editable and show private display names, never email.
 - Inbox accepts unrestricted one-line capture.
-- Developer patching is schema-limited and atomic, including safe existing-item metadata updates only.
+- Developer patching is schema-limited and atomic: `items[]` can create direct items without a ticket or convert referenced Inbox tickets, and `itemUpdates[]` remains safe existing-item metadata only.
 - Export is complete for notebook business state and excludes authentication identity data.
