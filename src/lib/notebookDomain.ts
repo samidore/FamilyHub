@@ -36,6 +36,7 @@ export interface NotebookItem {
   createdAt: number;
   updatedAt: number;
   completedAt?: number;
+  completedByName?: string;
   platform?: string;
   imdbRating?: number;
   myRating?: number;
@@ -59,6 +60,7 @@ export interface NotebookCompletionEvent {
   id: string;
   itemId: string;
   completedAt: number;
+  completedByName?: string;
   priority: NotebookPriority;
   boardIds: string[];
 }
@@ -136,6 +138,8 @@ function normalizeItem(id: string, value: unknown): NotebookItem | null {
   if (!finitePositive(value.createdAt) || !finitePositive(value.updatedAt)) return null;
   const authorName = value.authorName === undefined ? undefined : normalizeMemberDisplayName(value.authorName);
   if (value.authorName !== undefined && !authorName) return null;
+  const completedByName = value.completedByName === undefined ? undefined : normalizeMemberDisplayName(value.completedByName);
+  if (value.completedByName !== undefined && !completedByName) return null;
   const dueDate = typeof value.dueDate === 'string' && DATE_PATTERN.test(value.dueDate) ? value.dueDate : undefined;
   const dueTime = typeof value.dueTime === 'string' && TIME_PATTERN.test(value.dueTime) ? value.dueTime : undefined;
   if (value.dueTime !== undefined && (!dueDate || !dueTime)) return null;
@@ -164,6 +168,7 @@ function normalizeItem(id: string, value: unknown): NotebookItem | null {
     createdAt: value.createdAt,
     updatedAt: value.updatedAt,
     ...(completedAt ? { completedAt } : {}),
+    ...(status === 'completed' && completedByName ? { completedByName } : {}),
     ...(platform ? { platform } : {}),
     ...(imdbRating !== undefined ? { imdbRating } : {}),
     ...(myRating !== undefined ? { myRating } : {}),
@@ -190,9 +195,18 @@ function normalizeComment(id: string, value: unknown): NotebookComment | null {
 function normalizeCompletionEvent(id: string, value: unknown): NotebookCompletionEvent | null {
   if (!isRecord(value) || value.id !== id || !nonEmptyString(value.itemId) || !finitePositive(value.completedAt)) return null;
   if (!priorities.has(value.priority as NotebookPriority) || !Array.isArray(value.boardIds)) return null;
+  const completedByName = value.completedByName === undefined ? undefined : normalizeMemberDisplayName(value.completedByName);
+  if (value.completedByName !== undefined && !completedByName) return null;
   const boardIds = [...new Set(value.boardIds.filter(nonEmptyString).map((boardId) => boardId.trim()))];
   if (boardIds.length !== value.boardIds.length || boardIds.length === 0) return null;
-  return { id, itemId: value.itemId.trim(), completedAt: value.completedAt, priority: value.priority as NotebookPriority, boardIds };
+  return {
+    id,
+    itemId: value.itemId.trim(),
+    completedAt: value.completedAt,
+    ...(completedByName ? { completedByName } : {}),
+    priority: value.priority as NotebookPriority,
+    boardIds,
+  };
 }
 
 function normalizeInboxTicket(id: string, value: unknown): NotebookInboxTicket | null {

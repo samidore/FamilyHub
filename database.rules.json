@@ -85,7 +85,7 @@
           },
           "items": {
             "$itemId": {
-              ".validate": "newData.hasChildren(['id', 'title', 'details', 'priority', 'status', 'createdAt', 'updatedAt']) && newData.child('id').val() == $itemId && ((!newData.child('dueTime').exists()) || newData.child('dueDate').exists()) && ((newData.child('status').val() == 'active' && !newData.child('completedAt').exists()) || (newData.child('status').val() == 'completed' && newData.child('completedAt').isNumber() && newData.child('completedAt').val() > 0 && !newData.child('recurrence').exists())) && (!data.child('authorName').exists() || newData.child('authorName').val() == data.child('authorName').val())",
+              ".validate": "newData.hasChildren(['id', 'title', 'details', 'priority', 'status', 'createdAt', 'updatedAt']) && newData.child('id').val() == $itemId && ((!newData.child('dueTime').exists()) || newData.child('dueDate').exists()) && ((newData.child('status').val() == 'active' && !newData.child('completedAt').exists() && !newData.child('completedByName').exists()) || (newData.child('status').val() == 'completed' && newData.child('completedAt').isNumber() && newData.child('completedAt').val() > 0 && !newData.child('recurrence').exists() && (data.child('status').val() == 'completed' || newData.child('completedByName').val() == root.child('households').child($householdId).child('members').child(auth.uid).child('displayName').val()))) && (!data.child('authorName').exists() || newData.child('authorName').val() == data.child('authorName').val())",
               "id": { ".validate": "newData.isString() && newData.val() == $itemId" },
               "title": { ".validate": "newData.isString() && newData.val().length > 0" },
               "details": { ".validate": "newData.isString()" },
@@ -103,6 +103,7 @@
               "createdAt": { ".validate": "newData.isNumber() && newData.val() > 0 && (!data.exists() || newData.val() == data.val())" },
               "updatedAt": { ".validate": "newData.isNumber() && newData.val() > 0" },
               "completedAt": { ".validate": "newData.isNumber() && newData.val() > 0" },
+              "completedByName": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 80 && newData.val().matches(/^[^@]+$/) && ((!data.exists() && newData.val() == root.child('households').child($householdId).child('members').child(auth.uid).child('displayName').val()) || (data.exists() && newData.val() == data.val()))" },
               "platform": { ".validate": "newData.isString()" },
               "imdbRating": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10" },
               "myRating": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10" },
@@ -134,10 +135,11 @@
           },
           "completionEvents": {
             "$eventId": {
-              ".validate": "newData.hasChildren(['id', 'itemId', 'completedAt', 'priority', 'boardIds']) && newData.child('id').val() == $eventId",
+              ".validate": "newData.hasChildren(['id', 'itemId', 'completedAt', 'priority', 'boardIds']) && newData.child('id').val() == $eventId && (data.exists() || newData.child('completedByName').val() == root.child('households').child($householdId).child('members').child(auth.uid).child('displayName').val())",
               "id": { ".validate": "newData.isString() && newData.val() == $eventId" },
               "itemId": { ".validate": "newData.isString() && newData.val().length > 0" },
               "completedAt": { ".validate": "newData.isNumber() && newData.val() > 0" },
+              "completedByName": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 80 && newData.val().matches(/^[^@]+$/) && ((!data.exists() && newData.val() == root.child('households').child($householdId).child('members').child(auth.uid).child('displayName').val()) || (data.exists() && newData.val() == data.val()))" },
               "priority": { ".validate": "newData.isString() && (newData.val() == 'urgent' || newData.val() == 'high' || newData.val() == 'normal' || newData.val() == 'low')" },
               "boardIds": {
                 ".validate": "newData.hasChildren(['0'])",

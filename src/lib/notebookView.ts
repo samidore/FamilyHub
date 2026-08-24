@@ -17,9 +17,11 @@ import {
 import {
   notebookAuthorIconKind,
   notebookCommentWindow,
+  notebookCompletedByName,
   notebookItemAuthorName,
 } from './notebookCardPresentation.ts';
 import { NOTEBOOK_CAT_ICON_DATA_URI } from './notebookAuthorAssets.ts';
+import { NOTEBOOK_DOG_ICON_DATA_URI } from './notebookDogAuthorAsset.ts';
 import { notebookBoardShowsQueueAge, notebookQueueAgeDays } from './notebookQueueAge.ts';
 
 export const escapeNotebookHtml = (value: unknown) => String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
@@ -34,18 +36,28 @@ function commentHtml(comment: NotebookComment) {
   return `<li class="notebook-comment" data-comment-id="${e(comment.id)}"><div class="notebook-comment__meta"><strong>${e(comment.authorName)}</strong><span>${e(fmt(comment.createdAt))}${comment.updatedAt ? ' · 已编辑' : ''}</span></div><p>${e(comment.body)}</p><div class="notebook-inline-actions"><button type="button" class="quiet-button" data-edit-comment="${e(comment.id)}">编辑</button><button type="button" class="quiet-button" data-delete-comment="${e(comment.id)}">删除</button></div></li>`;
 }
 
-function authorIconHtml(item: NotebookItem) {
+function personIconHtml(name: string, action: '发起' | '完成', compact = false) {
   const e = escapeNotebookHtml;
-  const authorName = notebookItemAuthorName(item);
-  const kind = notebookAuthorIconKind(authorName);
-  const common = `class="notebook-author-icon notebook-author-icon--${kind}" role="img" aria-label="${e(authorName)}发起" title="${e(authorName)}" data-author-name="${e(authorName)}"`;
+  const kind = notebookAuthorIconKind(name);
+  const compactClass = compact ? ' notebook-completer-icon' : '';
+  const compactStyle = compact ? ' style="width:1.45rem;height:1.45rem;flex-basis:1.45rem"' : '';
+  const common = `class="notebook-author-icon notebook-author-icon--${kind}${compactClass}" role="img" aria-label="${e(name)}${action}" title="${e(name)}" data-author-name="${e(name)}"${compactStyle}`;
   if (kind === 'cat') {
-    return `<span ${common}><img src="${NOTEBOOK_CAT_ICON_DATA_URI}" alt="" aria-hidden="true" /></span>`;
+    return `<span ${common}><img src="${NOTEBOOK_CAT_ICON_DATA_URI}" alt="" aria-hidden="true" style="display:block;width:100%;height:100%;object-fit:contain" /></span>`;
   }
   if (kind === 'dog') {
-    return `<span ${common} aria-hidden="false">🐶</span>`;
+    return `<span ${common}><img src="${NOTEBOOK_DOG_ICON_DATA_URI}" alt="" aria-hidden="true" style="display:block;width:100%;height:100%;object-fit:contain" /></span>`;
   }
   return `<span ${common}><svg viewBox="0 0 36 36" aria-hidden="true" focusable="false"><circle class="generic-bg" cx="18" cy="18" r="15"/><circle class="generic-head" cx="18" cy="14" r="5"/><path class="generic-body" d="M9.5 29c.8-5.2 4-8 8.5-8s7.7 2.8 8.5 8"/></svg></span>`;
+}
+
+function authorIconHtml(item: NotebookItem) {
+  return personIconHtml(notebookItemAuthorName(item), '发起');
+}
+
+function completionMetaHtml(record: { completedAt: number; completedByName?: string }) {
+  const completedByName = notebookCompletedByName(record);
+  return `<span style="display:inline-flex;align-items:center;gap:.3rem">${personIconHtml(completedByName, '完成', true)}<span>完成 ${escapeNotebookHtml(fmt(record.completedAt))}</span></span>`;
 }
 
 function recurrenceText(item: NotebookItem) {
@@ -104,7 +116,7 @@ function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | nu
   const comments = commentsFor(state, item.id);
   const moves = movable && item.status === 'active' && boardId ? `<button type="button" class="icon-button" data-move-item="up" aria-label="上移 ${e(item.title)}">↑</button><button type="button" class="icon-button" data-move-item="down" aria-label="下移 ${e(item.title)}">↓</button><button type="button" class="drag-handle" draggable="true" data-item-drag-handle aria-label="拖动排序">↕</button>` : '';
   const due = item.dueDate ? `<span>截止 ${e(item.dueDate)}${item.dueTime ? ` ${e(item.dueTime)}` : ''}</span>` : '';
-  const completed = item.completedAt ? `<span>完成 ${e(fmt(item.completedAt))}</span>` : '';
+  const completed = item.completedAt ? completionMetaHtml({ completedAt: item.completedAt, completedByName: item.completedByName }) : '';
   const recurrence = item.recurrence ? `<span>循环 ${e(recurrenceText(item))}</span>` : '';
   const media = mediaDetails(item);
   const corner = cornerStatus(state, item, today, now, showQueueAge);
@@ -124,7 +136,7 @@ function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | nu
 function historyHtml(entry: NotebookSectionEntry) {
   const e = escapeNotebookHtml;
   if (entry.kind !== 'recurrence' || !entry.event) return '';
-  return `<article class="notebook-item notebook-item--history" data-completion-event-id="${e(entry.event.id)}"><div class="notebook-item__topline"><div class="notebook-item__heading">${authorIconHtml(entry.item)}<strong>${e(entry.item.title)}</strong></div><span class="notebook-history-badge">循环记录</span></div><div class="notebook-item__meta"><span>完成 ${e(fmt(entry.event.completedAt))}</span></div></article>`;
+  return `<article class="notebook-item notebook-item--history" data-completion-event-id="${e(entry.event.id)}"><div class="notebook-item__topline"><div class="notebook-item__heading">${authorIconHtml(entry.item)}<strong>${e(entry.item.title)}</strong></div><span class="notebook-history-badge">循环记录</span></div><div class="notebook-item__meta">${completionMetaHtml(entry.event)}</div></article>`;
 }
 
 function sectionEntryHtml(state: NotebookState, entry: NotebookSectionEntry, boardId: string, displayName: string | null, filter: string, now: number, today: string, showQueueAge: boolean) {

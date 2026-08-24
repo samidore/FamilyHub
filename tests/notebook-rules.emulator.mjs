@@ -56,7 +56,7 @@ test('notebook schema accepts canonical records and rejects unsupported fields o
 
   await assertFails(alice.ref(`${household}/notebook/items/bad-media`).set({ ...item, id: 'bad-media', mediaType: 'movie' }));
   await assertFails(alice.ref(`${household}/notebook/items/bad-complete`).set({ ...item, id: 'bad-complete', status: 'completed' }));
-  await assertFails(alice.ref(`${household}/notebook/items/bad-recurring`).set({ ...item, id: 'bad-recurring', status: 'completed', completedAt: 4, recurrence: { unit: 'month', interval: 3 } }));
+  await assertFails(alice.ref(`${household}/notebook/items/bad-recurring`).set({ ...item, id: 'bad-recurring', status: 'completed', completedAt: 4, completedByName: 'Sami', recurrence: { unit: 'month', interval: 3 } }));
   await assertFails(alice.ref(`${household}/notebook/items/bad-time`).set({ ...item, id: 'bad-time', dueTime: '15:00' }));
   await assertFails(alice.ref(`${household}/notebook/items/bad-rating`).set({ ...item, id: 'bad-rating', imdbRating: 11 }));
   await assertFails(alice.ref(`${household}/notebook/items/bad-my-rating`).set({ ...item, id: 'bad-my-rating', myRating: 11 }));
@@ -71,6 +71,27 @@ test('new items may snapshot the current member display name and cannot later ch
   await assertFails(authoredRef.update({ authorName: 'Someone Else', updatedAt: 3 }));
   await assertFails(authoredRef.child('authorName').remove());
   await assertSucceeds(authoredRef.update({ title: 'Edited title', updatedAt: 3 }));
+});
+
+test('one-time completion snapshots the completing member and restore removes the snapshot', async () => {
+  await resetWithMember({ displayName: 'Sami' });
+  const alice = google('alice', 'alice@gmail.com');
+  const taskRef = alice.ref(`${household}/notebook/items/task-1`);
+  await assertSucceeds(taskRef.set(item));
+  await assertFails(taskRef.update({ status: 'completed', completedAt: 9, completedByName: 'Someone Else', updatedAt: 9 }));
+  await assertFails(taskRef.update({ status: 'completed', completedAt: 9, updatedAt: 9 }));
+  await assertSucceeds(taskRef.update({ status: 'completed', completedAt: 9, completedByName: 'Sami', updatedAt: 9 }));
+  await assertFails(taskRef.update({ completedByName: 'Someone Else', updatedAt: 10 }));
+  await assertSucceeds(taskRef.update({ status: 'active', completedAt: null, completedByName: null, updatedAt: 11 }));
+});
+
+test('legacy completed items without completedByName remain writable without backfill', async () => {
+  await resetWithMember({ displayName: 'Sami' });
+  await env.withSecurityRulesDisabled(async (context) => {
+    await context.database().ref(`${household}/notebook/items/legacy-done`).set({ ...item, id: 'legacy-done', status: 'completed', completedAt: 8, updatedAt: 8 });
+  });
+  const alice = google('alice', 'alice@gmail.com');
+  await assertSucceeds(alice.ref(`${household}/notebook/items/legacy-done`).update({ title: 'Legacy edited', updatedAt: 9 }));
 });
 
 test('comments snapshot the configured member name, never an email, and preserve the original author on edit', async () => {
@@ -91,10 +112,17 @@ test('comments cannot be created until the member has a private display name', a
   await assertFails(alice.ref(`${household}/notebook/comments/comment-1`).set({ id: 'comment-1', itemId: 'task-1', body: 'hello', authorName: 'Sami', createdAt: 5 }));
 });
 
-test('completion events preserve priority and board membership snapshots', async () => {
+test('completion events snapshot the completing member while legacy events remain valid', async () => {
   await resetWithMember();
   const alice = google('alice', 'alice@gmail.com');
-  await assertSucceeds(alice.ref(`${household}/notebook/completionEvents/event-1`).set({ id: 'event-1', itemId: 'task-1', completedAt: 9, priority: 'urgent', boardIds: ['todo'] }));
-  await assertFails(alice.ref(`${household}/notebook/completionEvents/event-2`).set({ id: 'event-2', itemId: 'task-1', completedAt: 9, priority: 'urgent', boardIds: [] }));
-  await assertFails(alice.ref(`${household}/notebook/completionEvents/event-3`).set({ id: 'event-3', itemId: 'task-1', completedAt: 9, priority: 'critical', boardIds: ['todo'] }));
+  await assertSucceeds(alice.ref(`${household}/notebook/completionEvents/event-1`).set({ id: 'event-1', itemId: 'task-1', completedAt: 9, completedByName: 'Sami', priority: 'urgent', boardIds: ['todo'] }));
+  await assertFails(alice.ref(`${household}/notebook/completionEvents/event-missing-actor`).set({ id: 'event-missing-actor', itemId: 'task-1', completedAt: 9, priority: 'urgent', boardIds: ['todo'] }));
+  await assertFails(alice.ref(`${household}/notebook/completionEvents/event-wrong-actor`).set({ id: 'event-wrong-actor', itemId: 'task-1', completedAt: 9, completedByName: 'Someone Else', priority: 'urgent', boardIds: ['todo'] }));
+  await assertFails(alice.ref(`${household}/notebook/completionEvents/event-2`).set({ id: 'event-2', itemId: 'task-1', completedAt: 9, completedByName: 'Sami', priority: 'urgent', boardIds: [] }));
+  await assertFails(alice.ref(`${household}/notebook/completionEvents/event-3`).set({ id: 'event-3', itemId: 'task-1', completedAt: 9, completedByName: 'Sami', priority: 'critical', boardIds: ['todo'] }));
+
+  await env.withSecurityRulesDisabled(async (context) => {
+    await context.database().ref(`${household}/notebook/completionEvents/legacy-event`).set({ id: 'legacy-event', itemId: 'task-1', completedAt: 8, priority: 'normal', boardIds: ['todo'] });
+  });
+  await assertSucceeds(alice.ref(`${household}/notebook/completionEvents/legacy-event`).update({ priority: 'high' }));
 });

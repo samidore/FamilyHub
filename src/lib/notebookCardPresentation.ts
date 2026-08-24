@@ -1,10 +1,15 @@
-import type { NotebookComment, NotebookItem } from './notebookDomain.ts';
+import type { NotebookComment, NotebookCompletionEvent, NotebookItem } from './notebookDomain.ts';
 
 export const NOTEBOOK_LEGACY_AUTHOR_NAME = '猫猫';
+export const NOTEBOOK_LEGACY_COMPLETER_NAME = '呜哇';
 export type NotebookAuthorIconKind = 'cat' | 'dog' | 'generic';
 
 export function notebookItemAuthorName(item: NotebookItem): string {
   return item.authorName ?? NOTEBOOK_LEGACY_AUTHOR_NAME;
+}
+
+export function notebookCompletedByName(record: Pick<NotebookItem, 'completedByName'> | Pick<NotebookCompletionEvent, 'completedByName'>): string {
+  return record.completedByName ?? NOTEBOOK_LEGACY_COMPLETER_NAME;
 }
 
 export function notebookAuthorIconKind(authorName: string): NotebookAuthorIconKind {

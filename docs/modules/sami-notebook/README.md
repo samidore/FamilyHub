@@ -119,6 +119,7 @@ Item
 - createdAt
 - updatedAt
 - completedAt?: timestamp
+- completedByName?: string
 
 Optional media fields
 - platform?: string
@@ -130,7 +131,9 @@ Optional media fields
 
 `authorName` is the private household display-name snapshot of the member who creates the item. The repository adds it only when the item is first created; normal edits, status changes, drag ordering, and Developer metadata patches must not rewrite it. Firebase rules keep a persisted author immutable and require a newly persisted author to match the creating member's current private display name.
 
-Legacy items may have no persisted `authorName`. For current household data, those items are intentionally rendered as `猫猫` without a migration write. The title row starts with an author icon rather than visible author text: `猫猫` uses the supplied fluffy gray/white cat portrait as a compact image icon, `呜哇` keeps the dog-head icon, and any future unmatched display name uses a neutral fallback icon. The icon retains an accessible author label.
+Legacy items may have no persisted `authorName`. For current household data, those items are intentionally rendered as `猫猫` without a migration write. The title row starts with an author icon rather than visible author text: `猫猫` uses the supplied fluffy gray/white cat portrait as a compact image icon, `呜哇` uses the supplied watercolor shaggy-dog portrait, and any future unmatched display name uses a neutral fallback icon. The icon retains an accessible author label.
+
+`completedByName` is a separate private display-name snapshot of the member who completes a one-time item. It is written only on the transition to `completed` and is cleared when that completion is undone. The completion metadata line shows the completer icon next to the completion date. Existing completed records that predate this field intentionally fall back to `呜哇` for display, matching the known legacy completion history, without backfilling Firebase.
 
 The item editor exposes an explicit destructive `删除事项` action only while editing an existing item. Deletion requires confirmation and removes the item together with all Board memberships, comments, and recurring completion history for that item. It does not affect Inbox tickets or unrelated items.
 
@@ -181,15 +184,16 @@ One-time item completion:
 
 - set `status = completed`;
 - set `completedAt`;
+- snapshot the completing member's private display name into `completedByName`;
 - use a direct completion button rather than a status dropdown;
 - keep the completed card visible in the Active view for a one-hour grace period, with an explicit undo action;
 - the grace period is display-only: Firebase records completion immediately, other devices synchronize immediately, and Completed views include the item immediately;
 - after the grace period, the item disappears from Active without another database write;
 - retain the item indefinitely unless the user explicitly deletes it later.
 
-Restoring it clears `completedAt` and returns it to Active at the top of its priority section.
+Restoring it clears both `completedAt` and `completedByName`, then returns it to Active at the top of its priority section.
 
-Recurring completion must preserve history while keeping the next occurrence active. Do not overwrite the only completion timestamp. Store a completion event for each occurrence, advance the same item's next due date, leave the item active, and move the live item to the bottom of the current priority section in every Board membership. The new queue-age cycle starts from that completion timestamp. Completed views render recurring completion events as historical rows, grouped by the priority recorded at completion time.
+Recurring completion must preserve history while keeping the next occurrence active. Do not overwrite the only completion timestamp. Store a completion event for each occurrence, snapshot the completing member into that event, advance the same item's next due date, leave the item active, and move the live item to the bottom of the current priority section in every Board membership. The new queue-age cycle starts from that completion timestamp. Completed views render recurring completion events as historical rows, grouped by the priority recorded at completion time, with the completer icon next to the completion date.
 
 After the next due date advances, the existing hidden `due-soon` rule decides Smart Urgent membership. A recurring item that is no longer due soon drops out unless it is manually `priority = urgent`; when its next deadline reaches the due-soon window it automatically re-enters Smart Urgent. A daily recurrence may therefore remain due-soon immediately after completion because its next due date is tomorrow.
 
@@ -200,9 +204,12 @@ CompletionEvent
 - id
 - itemId
 - completedAt
+- completedByName?: string
 - priority
 - boardIds[]
 ```
+
+New completion events persist `completedByName`. Existing legacy events may omit it and render as `呜哇` without migration.
 
 Comments remain attached to the live recurring item, not duplicated into each event.
 
@@ -329,7 +336,7 @@ NotebookItemUpdatePatch
     - review?
 ```
 
-Existing-item updates are intentionally metadata-only. They must not change title, Board membership, priority, status, due date, recurrence, manual order, comments, completion history, Inbox, auth, item author, or any arbitrary Firebase path. Media-specific fields are accepted only for items that already belong to at least one `kind = media` Board. Ratings remain constrained to 0–10.
+Existing-item updates are intentionally metadata-only. They must not change title, Board membership, priority, status, due date, recurrence, manual order, comments, completion history, Inbox, auth, item author, completion actor, or any arbitrary Firebase path. Media-specific fields are accepted only for items that already belong to at least one `kind = media` Board. Ratings remain constrained to 0–10.
 
 Apply flow:
 
@@ -338,13 +345,13 @@ Apply flow:
 3. Resolve Board references, then reject unknown/ambiguous Boards, duplicate references to the same resolved Board, unknown item/ticket IDs, duplicate referenced ticket IDs, unsupported fields, malformed ratings, invalid enums/dates/times, or referenced tickets no longer present.
 4. Show a compact preview of exactly what will be created or updated, including how many referenced Inbox tickets will be removed.
 5. One Apply action performs one Firebase transaction. New-item patches create generated item IDs and memberships; only items carrying a valid `ticketId` delete that referenced Inbox ticket. Existing-item updates change only the allowlisted fields.
-6. The repository snapshots the current member display name onto any newly created item before the transaction is normalized and written.
+6. The repository snapshots the current member display name onto any newly created item and any new completion actor before the transaction is normalized and written.
 7. Revalidate against the current transaction state so concurrent changes cannot bypass validation.
 8. A validation or transaction failure writes nothing.
 
 Patch parse/validation/apply feedback belongs in the Chat patch panel beside the JSON input. Do not surface patch-format errors as a page-level Developer status message.
 
-Do not allow version-1 patches to write arbitrary Firebase paths, create/rename Boards, alter membership/auth records, change item lifecycle/order/author, or execute deletes outside the explicitly referenced Inbox tickets.
+Do not allow version-1 patches to write arbitrary Firebase paths, create/rename Boards, alter membership/auth records, change item lifecycle/order/author/completion actor, or execute deletes outside the explicitly referenced Inbox tickets.
 
 ## Portable database export and Git backup
 
@@ -371,7 +378,7 @@ NotebookExport
 - settings
 ```
 
-The export must contain all notebook business state needed to reconstruct the module, including persisted item author snapshots and any persisted Board `showQueueAge` overrides, but must exclude:
+The export must contain all notebook business state needed to reconstruct the module, including persisted item author/completion-actor snapshots and any persisted Board `showQueueAge` overrides, but must exclude:
 
 - Gmail addresses
 - Firebase UIDs
@@ -420,7 +427,7 @@ Firebase rules should authorize the notebook path only to existing verified hous
 - Add typed normalization/validation for boards, items, memberships, comments, completion events, inbox, and settings.
 - Add notebook Firebase repository at the separate notebook path.
 - Add database rules and emulator tests.
-- Add private display-name resolution for item/comment author snapshots.
+- Add private display-name resolution for item/comment author and completion-actor snapshots.
 
 ### Phase 2 — core mobile page
 
@@ -448,7 +455,7 @@ Run focused checks during implementation, then the repository release gate:
 pnpm run verify
 ```
 
-Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, item/comment author names, comment collapsing, all ordering transitions, item deletion cleanup, recurring requeue-to-bottom behavior, queue-age calendar math and midnight rollover, due-soon/Smart Urgent inclusion, Board `showQueueAge` rules, direct/Inbox patch atomicity and Board-reference resolution, and export exclusion of auth identity data.
+Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, item/comment author names, completion-actor snapshots/icons, comment collapsing, all ordering transitions, item deletion cleanup, recurring requeue-to-bottom behavior, queue-age calendar math and midnight rollover, due-soon/Smart Urgent inclusion, Board `showQueueAge` rules, direct/Inbox patch atomicity and Board-reference resolution, and export exclusion of auth identity data.
 
 ## Design acceptance criteria
 
@@ -469,7 +476,8 @@ This design is ready for implementation when all of the following are fixed:
 - Priority sections are fixed Urgent/High/Normal/Low.
 - Active ordering is new-first with persistent manual overrides; completing a recurring occurrence moves the live item to the bottom of its current priority section in every Board; Completed keeps the same priority sections and sorts each by completion date descending.
 - New items snapshot the creating member's private display name; legacy missing authors render as 猫猫; persisted authors are immutable.
-- Author icons lead the title row: 猫猫 = supplied fluffy cat portrait, 呜哇 = dog head, unmatched names = neutral fallback.
+- Author icons lead the title row: 猫猫 = supplied fluffy cat portrait, 呜哇 = supplied watercolor shaggy-dog portrait, unmatched names = neutral fallback.
+- New one-time and recurring completions snapshot the completing member's display name; completion rows show that member's icon; legacy missing completion actors render as 呜哇 without a migration.
 - Existing items can be explicitly deleted from the editor after confirmation; deletion removes memberships, comments, and recurrence history for that item.
 - Item content is directly visible; comments use 0/1/2/3+ compact presentation with first/last preservation for long threads.
 - Media items do not have `mediaType`.
