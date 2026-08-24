@@ -1,12 +1,5 @@
 import { expect, test } from '@playwright/test';
 
-const dateKey = (value: Date) => {
-  const year = value.getFullYear();
-  const month = String(value.getMonth() + 1).padStart(2, '0');
-  const day = String(value.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
-
 test('Chat inventory import reviews, edits, confirms twice, and writes FIFO inventory additively', async ({ page }) => {
   await page.goto('meal-builder/');
 
@@ -43,12 +36,13 @@ test('Chat inventory import reviews, edits, confirms twice, and writes FIFO inve
 
   await page.locator('[data-import-ingredient="broccoli"] .meal-inventory-import__remove').click();
   await page.locator('#meal-inventory-import-date').fill(dates.yesterday);
+  await page.locator('#meal-inventory-import-date').blur();
 
   await expect(page.locator('[data-inventory-value="whole-pork-tenderloin"]')).toHaveText('0');
   await expect(page.locator('[data-inventory-value="eggs"]')).toHaveText('无');
   await page.locator('#meal-inventory-import-open-confirm').click();
   await expect(page.locator('#meal-inventory-import-dialog')).toBeVisible();
-  await expect(page.locator('#meal-inventory-import-dialog-copy')).toContainText(`2 种食材`);
+  await expect(page.locator('#meal-inventory-import-dialog-copy')).toContainText('2 种食材');
   await expect(page.locator('#meal-inventory-import-dialog-copy')).toContainText(dates.yesterday);
 
   await expect(page.locator('[data-inventory-value="whole-pork-tenderloin"]')).toHaveText('0');
