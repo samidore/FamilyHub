@@ -92,14 +92,18 @@ test('inventory import is additive, uses reviewed FIFO date, keeps presence-only
   assert.equal(next.activeStep, 'inventory');
 });
 
-test('inventory import protocol keeps the only current quantity exception and page integrates review confirmation UI', async () => {
-  const [protocol, page] = await Promise.all([
+test('inventory import protocol keeps the only current quantity exception and Meal Builder mounts review confirmation UI', async () => {
+  const [protocol, layout, component] = await Promise.all([
     readFile('docs/modules/meal-builder/inventory-import.md', 'utf8'),
-    readFile('src/pages/meal-builder.astro', 'utf8'),
+    readFile('src/layouts/BaseLayout.astro', 'utf8'),
+    readFile('src/components/MealInventoryImport.astro', 'utf8'),
   ]);
   assert.match(protocol, /whole-pork-tenderloin[^\n]*2 inventory units/);
-  assert.match(page, /meal-inventory-import-json/);
-  assert.match(page, /meal-inventory-import-review/);
-  assert.match(page, /meal-inventory-import-dialog/);
-  assert.match(page, /applyInventoryImport/);
+  assert.match(layout, /MealInventoryImport/);
+  assert.match(layout, /meal-builder-page/);
+  assert.match(component, /meal-inventory-import-json/);
+  assert.match(component, /meal-inventory-import-review/);
+  assert.match(component, /meal-inventory-import-dialog/);
+  assert.match(component, /applyInventoryImport/);
+  assert.match(component, /repository\.transaction/);
 });

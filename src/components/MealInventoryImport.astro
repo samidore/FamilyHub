@@ -1,0 +1,350 @@
+<section id="meal-inventory-import" class="meal-inventory-import" hidden aria-labelledby="meal-inventory-import-heading">
+  <div class="meal-inventory-import__heading">
+    <div>
+      <p class="eyebrow">Chat Import</p>
+      <h3 id="meal-inventory-import-heading">批量入库</h3>
+      <p>粘贴按仓库协议生成的 JSON。解析只生成草稿；确认前可以删掉冷冻项、调整数量和入库日期。</p>
+    </div>
+  </div>
+
+  <label class="meal-inventory-import__json">
+    <span>入库 JSON</span>
+    <textarea id="meal-inventory-import-json" rows="7" spellcheck="false" autocomplete="off" placeholder='{"schema":"meal-builder-inventory-import",...}'></textarea>
+  </label>
+  <div class="meal-inventory-import__actions">
+    <button id="meal-inventory-import-parse" class="button button--secondary" type="button">解析 JSON</button>
+  </div>
+  <p id="meal-inventory-import-status" class="note-box" role="status" hidden></p>
+
+  <div id="meal-inventory-import-review" class="meal-inventory-import__review" hidden>
+    <div class="meal-inventory-import__date-row">
+      <label for="meal-inventory-import-date">入库日期</label>
+      <input id="meal-inventory-import-date" type="date" />
+    </div>
+    <div id="meal-inventory-import-items" class="meal-inventory-import__items"></div>
+    <section id="meal-inventory-import-unmatched" class="meal-inventory-import__unmatched" hidden aria-labelledby="meal-inventory-import-unmatched-heading">
+      <h4 id="meal-inventory-import-unmatched-heading">未匹配</h4>
+      <ul id="meal-inventory-import-unmatched-list"></ul>
+    </section>
+    <div class="meal-inventory-import__footer">
+      <span id="meal-inventory-import-summary" class="meal-count"></span>
+      <button id="meal-inventory-import-open-confirm" class="button button--primary" type="button">确认入库</button>
+    </div>
+  </div>
+</section>
+
+<dialog id="meal-inventory-import-dialog" class="meal-inventory-import-dialog" aria-labelledby="meal-inventory-import-dialog-heading">
+  <div class="meal-inventory-import-dialog__body">
+    <p class="eyebrow">Confirm</p>
+    <h3 id="meal-inventory-import-dialog-heading">确认入库？</h3>
+    <p id="meal-inventory-import-dialog-copy"></p>
+    <div class="meal-inventory-import-dialog__actions">
+      <button id="meal-inventory-import-cancel" class="button button--secondary" type="button">取消</button>
+      <button id="meal-inventory-import-final" class="button button--primary" type="button">确认入库</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  import { COUNTED_INVENTORY_STEP, roundCountedInventoryValue, trackingForIngredient } from '../lib/household';
+  import { applyInventoryImport, isValidInventoryImportDate, parseInventoryImport, type InventoryImportDraft, type InventoryImportIngredient, type InventoryImportItem } from '../lib/inventoryImport';
+  import { createHouseholdRepository } from '../lib/householdRepository';
+
+  type MealPagePayload = { ingredients: InventoryImportIngredient[] };
+  type ReviewItem = InventoryImportItem;
+
+  function setupMealInventoryImport() {
+    const inventoryView = document.querySelector<HTMLElement>('#meal-inventory-view');
+    const inventoryList = document.querySelector<HTMLElement>('#meal-inventory-list');
+    const inventoryActions = inventoryView?.querySelector<HTMLElement>('.meal-inventory-actions');
+    const dataScript = document.querySelector<HTMLScriptElement>('#meal-data');
+    const firebaseScript = document.querySelector<HTMLScriptElement>('#meal-firebase-config');
+    const panel = document.querySelector<HTMLElement>('#meal-inventory-import');
+    const dialog = document.querySelector<HTMLDialogElement>('#meal-inventory-import-dialog');
+    if (!inventoryView || !inventoryList || !inventoryActions || !dataScript || !firebaseScript || !panel || !dialog) return;
+
+    const payload = JSON.parse(dataScript.textContent || '{}') as MealPagePayload;
+    const firebaseConfig = JSON.parse(firebaseScript.textContent || '{}') as Record<string, string>;
+    const ingredients = payload.ingredients ?? [];
+    const ingredientById = new Map(ingredients.map((ingredient) => [ingredient.id, ingredient]));
+
+    const textarea = panel.querySelector<HTMLTextAreaElement>('#meal-inventory-import-json')!;
+    const parseButton = panel.querySelector<HTMLButtonElement>('#meal-inventory-import-parse')!;
+    const status = panel.querySelector<HTMLElement>('#meal-inventory-import-status')!;
+    const review = panel.querySelector<HTMLElement>('#meal-inventory-import-review')!;
+    const dateInput = panel.querySelector<HTMLInputElement>('#meal-inventory-import-date')!;
+    const itemsHost = panel.querySelector<HTMLElement>('#meal-inventory-import-items')!;
+    const unmatchedSection = panel.querySelector<HTMLElement>('#meal-inventory-import-unmatched')!;
+    const unmatchedList = panel.querySelector<HTMLUListElement>('#meal-inventory-import-unmatched-list')!;
+    const summary = panel.querySelector<HTMLElement>('#meal-inventory-import-summary')!;
+    const openConfirm = panel.querySelector<HTMLButtonElement>('#meal-inventory-import-open-confirm')!;
+    const dialogCopy = dialog.querySelector<HTMLElement>('#meal-inventory-import-dialog-copy')!;
+    const cancelConfirm = dialog.querySelector<HTMLButtonElement>('#meal-inventory-import-cancel')!;
+    const finalConfirm = dialog.querySelector<HTMLButtonElement>('#meal-inventory-import-final')!;
+
+    inventoryList.before(panel);
+    document.body.append(dialog);
+
+    const toggle = document.createElement('button');
+    toggle.id = 'meal-inventory-import-toggle';
+    toggle.type = 'button';
+    toggle.className = 'clear-button';
+    toggle.textContent = '批量入库';
+    toggle.setAttribute('aria-controls', panel.id);
+    toggle.setAttribute('aria-expanded', 'false');
+    inventoryActions.insertBefore(toggle, inventoryActions.lastElementChild);
+
+    let draft: InventoryImportDraft | null = null;
+    let reviewItems: ReviewItem[] = [];
+    let stockedOn = '';
+    let message = '';
+    let messageIsError = false;
+
+    const announce = (text: string) => {
+      const live = document.querySelector<HTMLElement>('#meal-live');
+      if (!live) return;
+      live.textContent = '';
+      requestAnimationFrame(() => { live.textContent = text; });
+    };
+
+    const setMessage = (text: string, isError = false) => {
+      message = text;
+      messageIsError = isError;
+      status.hidden = !text;
+      status.textContent = text;
+      status.dataset.error = isError ? 'true' : 'false';
+    };
+
+    const inventoryRowFor = (id: string) => [...inventoryList.querySelectorAll<HTMLElement>('[data-inventory-item]')].find((row) => row.dataset.inventoryItem === id);
+
+    const currentValue = (id: string) => {
+      const tracking = trackingForIngredient(id, ingredients);
+      const row = inventoryRowFor(id);
+      const output = row?.querySelector<HTMLOutputElement>('[data-inventory-value]');
+      if (tracking === 'presence-only') return output?.textContent?.trim() === '有' ? true : undefined;
+      const value = Number(output?.textContent ?? '0');
+      return Number.isFinite(value) && value > 0 ? value : undefined;
+    };
+
+    const actualChangeCount = () => reviewItems.filter((item) => {
+      const tracking = trackingForIngredient(item.ingredientId, ingredients);
+      return tracking === 'presence-only' ? currentValue(item.ingredientId) !== true : item.quantity > 0;
+    }).length;
+
+    const createName = (id: string) => {
+      const ingredient = ingredientById.get(id);
+      const host = document.createElement('span');
+      host.className = 'meal-inventory-import__name';
+      const zh = document.createElement('strong'); zh.textContent = ingredient?.nameZh ?? id;
+      const en = document.createElement('small'); en.textContent = ingredient?.nameEn ?? id;
+      host.append(zh, en);
+      return host;
+    };
+
+    const renderReview = () => {
+      status.hidden = !message;
+      status.textContent = message;
+      status.dataset.error = messageIsError ? 'true' : 'false';
+      review.hidden = !draft;
+      if (!draft) {
+        itemsHost.replaceChildren(); unmatchedList.replaceChildren(); unmatchedSection.hidden = true; summary.textContent = ''; openConfirm.disabled = true;
+        return;
+      }
+
+      dateInput.value = stockedOn;
+      const dateValid = isValidInventoryImportDate(stockedOn);
+      itemsHost.replaceChildren();
+
+      for (const item of reviewItems) {
+        const ingredient = ingredientById.get(item.ingredientId);
+        if (!ingredient) continue;
+        const tracking = trackingForIngredient(item.ingredientId, ingredients);
+        const row = document.createElement('div'); row.className = 'meal-inventory-import__item'; row.dataset.importIngredient = item.ingredientId;
+        const description = document.createElement('div'); description.className = 'meal-inventory-import__description'; description.append(createName(item.ingredientId));
+        const meta = document.createElement('small'); meta.className = 'meal-inventory-import__meta';
+        const existing = currentValue(item.ingredientId);
+        if (tracking === 'presence-only') {
+          meta.textContent = existing === true ? '已在库 · 无需修改' : '当前无 · 本次设为有';
+        } else {
+          const current = typeof existing === 'number' ? existing : 0;
+          meta.textContent = `现有 ${current} · 本次 +${item.quantity} · 入库后 ${roundCountedInventoryValue(current + item.quantity)}`;
+        }
+        description.append(meta);
+
+        const controls = document.createElement('div'); controls.className = 'meal-inventory-import__controls';
+        if (tracking === 'counted') {
+          const minus = document.createElement('button'); minus.type = 'button'; minus.className = 'meal-inventory-step'; minus.textContent = '−'; minus.setAttribute('aria-label', `${ingredient.nameZh ?? item.ingredientId} 本次减少 ${COUNTED_INVENTORY_STEP}`); minus.disabled = item.quantity <= COUNTED_INVENTORY_STEP;
+          const amount = document.createElement('output'); amount.textContent = String(item.quantity); amount.setAttribute('aria-label', `${ingredient.nameZh ?? item.ingredientId} 本次入库数量`);
+          const plus = document.createElement('button'); plus.type = 'button'; plus.className = 'meal-inventory-step'; plus.textContent = '+'; plus.setAttribute('aria-label', `${ingredient.nameZh ?? item.ingredientId} 本次增加 ${COUNTED_INVENTORY_STEP}`);
+          minus.addEventListener('click', () => { item.quantity = roundCountedInventoryValue(item.quantity - COUNTED_INVENTORY_STEP); renderReview(); });
+          plus.addEventListener('click', () => { item.quantity = roundCountedInventoryValue(item.quantity + COUNTED_INVENTORY_STEP); renderReview(); });
+          controls.append(minus, amount, plus);
+        }
+        const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'meal-inventory-import__remove'; remove.textContent = '×'; remove.setAttribute('aria-label', `从本次入库中移除 ${ingredient.nameZh ?? item.ingredientId}`);
+        remove.addEventListener('click', () => { reviewItems = reviewItems.filter((candidate) => candidate !== item); renderReview(); });
+        controls.append(remove);
+        row.append(description, controls); itemsHost.append(row);
+      }
+
+      unmatchedList.replaceChildren();
+      for (const unmatched of draft.unmatched) {
+        const item = document.createElement('li');
+        const label = document.createElement('strong'); label.textContent = unmatched.label;
+        const reason = document.createElement('small'); reason.textContent = unmatched.reason === 'invalid-ingredient-id' ? '当前 Meal Builder 没有可入库的对应 ID' : 'Chat 未能可靠匹配';
+        item.append(label, reason); unmatchedList.append(item);
+      }
+      unmatchedSection.hidden = draft.unmatched.length === 0;
+
+      const changeCount = actualChangeCount();
+      summary.textContent = `${reviewItems.length} 项草稿 · ${changeCount} 项会修改库存${draft.unmatched.length ? ` · ${draft.unmatched.length} 项未匹配` : ''}`;
+      openConfirm.disabled = !dateValid || changeCount === 0;
+      if (!dateValid) setMessage('入库日期必须是真实且不晚于今天的日期。', true);
+      else if (messageIsError && message.startsWith('入库日期')) setMessage('', false);
+    };
+
+    toggle.addEventListener('click', () => {
+      panel.hidden = !panel.hidden;
+      toggle.setAttribute('aria-expanded', String(!panel.hidden));
+      if (!panel.hidden) textarea.focus();
+    });
+
+    parseButton.addEventListener('click', () => {
+      const result = parseInventoryImport(textarea.value, ingredients);
+      if (!result.ok) {
+        draft = null; reviewItems = []; stockedOn = ''; setMessage(result.error, true); renderReview(); return;
+      }
+      draft = result.draft;
+      reviewItems = result.draft.items.map((item) => ({ ...item }));
+      stockedOn = result.draft.stockedOn;
+      setMessage(`已解析 ${reviewItems.length} 项${result.draft.unmatched.length ? `，另有 ${result.draft.unmatched.length} 项未匹配` : ''}。`);
+      renderReview();
+    });
+
+    dateInput.addEventListener('change', () => { stockedOn = dateInput.value; renderReview(); });
+
+    openConfirm.addEventListener('click', () => {
+      if (!draft || !isValidInventoryImportDate(stockedOn)) return;
+      const changeCount = actualChangeCount();
+      if (changeCount === 0) return;
+      dialogCopy.textContent = `将 ${changeCount} 种食材加入共享库存。入库日期：${stockedOn}。已在库的 presence-only 食材不会重复增加。`;
+      dialog.showModal();
+    });
+
+    cancelConfirm.addEventListener('click', () => dialog.close());
+
+    finalConfirm.addEventListener('click', async () => {
+      if (!draft || !isValidInventoryImportDate(stockedOn)) { dialog.close(); renderReview(); return; }
+      finalConfirm.disabled = true; cancelConfirm.disabled = true;
+      const repository = createHouseholdRepository(firebaseConfig, { ingredients, firebase: { ingredients } });
+      try {
+        await repository.ready?.catch(() => undefined);
+        const repositoryStatus = repository.getStatus();
+        if (repositoryStatus.connection !== 'local' && repositoryStatus.connection !== 'connected') throw new Error(repositoryStatus.error ?? '共享库存暂时不可写。');
+        const items = reviewItems.map((item) => ({ ...item }));
+        await repository.transaction((current) => applyInventoryImport(current, { stockedOn, items }, ingredients));
+        dialog.close();
+        textarea.value = '';
+        draft = null; reviewItems = []; stockedOn = '';
+        setMessage(`已完成批量入库。`);
+        renderReview();
+        announce('批量入库完成。');
+      } catch (error) {
+        dialog.close();
+        setMessage(error instanceof Error ? error.message : '批量入库失败。', true);
+        renderReview();
+      } finally {
+        repository.dispose();
+        finalConfirm.disabled = false; cancelConfirm.disabled = false;
+      }
+    });
+
+    const inventoryObserver = new MutationObserver(() => { if (draft) renderReview(); });
+    inventoryObserver.observe(inventoryList, { childList: true, subtree: true, characterData: true });
+    window.addEventListener('pagehide', () => inventoryObserver.disconnect(), { once: true });
+  }
+
+  setupMealInventoryImport();
+</script>
+
+<style is:global>
+  .meal-inventory-import {
+    display: grid;
+    gap: 16px;
+    margin: 18px 0 22px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--surface);
+  }
+  .meal-inventory-import__heading h3,
+  .meal-inventory-import-dialog h3 { margin: 2px 0 4px; }
+  .meal-inventory-import__heading p:last-child { margin: 0; color: var(--muted); }
+  .meal-inventory-import__json { display: grid; gap: 7px; font-weight: 700; }
+  .meal-inventory-import__json textarea {
+    width: 100%;
+    min-height: 150px;
+    resize: vertical;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+    color: var(--ink);
+    font: 15px/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+  .meal-inventory-import__actions,
+  .meal-inventory-import__footer,
+  .meal-inventory-import-dialog__actions { display: flex; gap: 10px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+  .meal-inventory-import__review { display: grid; gap: 14px; }
+  .meal-inventory-import__date-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-weight: 700; }
+  .meal-inventory-import__date-row input { min-height: 44px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--ink); }
+  .meal-inventory-import__items { display: grid; gap: 8px; }
+  .meal-inventory-import__item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    padding: 11px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .meal-inventory-import__description,
+  .meal-inventory-import__name { display: grid; min-width: 0; }
+  .meal-inventory-import__name small,
+  .meal-inventory-import__meta { color: var(--muted); }
+  .meal-inventory-import__controls { display: flex; align-items: center; gap: 7px; }
+  .meal-inventory-import__controls output { min-width: 34px; text-align: center; font-weight: 700; }
+  .meal-inventory-import__remove {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 24px;
+    line-height: 1;
+  }
+  .meal-inventory-import__unmatched { padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
+  .meal-inventory-import__unmatched h4 { margin: 0 0 8px; }
+  .meal-inventory-import__unmatched ul { display: grid; gap: 7px; margin: 0; padding-left: 22px; }
+  .meal-inventory-import__unmatched li { padding-left: 2px; }
+  .meal-inventory-import__unmatched li small { display: block; color: var(--muted); }
+  #meal-inventory-import-status[data-error='true'] { border-color: color-mix(in srgb, var(--risk) 45%, var(--line)); }
+  .meal-inventory-import-dialog {
+    width: min(calc(100% - 28px), 480px);
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: var(--shadow);
+  }
+  .meal-inventory-import-dialog::backdrop { background: rgb(23 35 28 / 40%); }
+  .meal-inventory-import-dialog__body { display: grid; gap: 14px; padding: 22px; }
+  .meal-inventory-import-dialog__body p { margin: 0; }
+  @media (max-width: 640px) {
+    .meal-inventory-import { padding: 14px; }
+    .meal-inventory-import__item { grid-template-columns: 1fr; }
+    .meal-inventory-import__controls { justify-content: flex-end; }
+    .meal-inventory-import__footer { align-items: stretch; }
+    .meal-inventory-import__footer .meal-count { width: 100%; }
+  }
+</style>
