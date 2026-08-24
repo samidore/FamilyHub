@@ -20,7 +20,7 @@ export interface NotebookInboxCopyPayload {
 }
 
 export interface NotebookPatchItem {
-  ticketId: string;
+  ticketId?: string;
   title: string;
   details: string;
   boardIds: string[];
@@ -45,6 +45,7 @@ export type NotebookPatchValidation =
   | { ok: false; error: string };
 
 export interface NotebookPatchPreview {
+  itemCount: number;
   ticketCount: number;
   boardCounts: Array<{ boardId: string; title: string; count: number }>;
 }
@@ -79,6 +80,7 @@ const isCalendarDate = (value: string) => {
   const date = new Date(Date.UTC(year, month - 1, day));
   return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
 };
+const patchItemKey = (item: NotebookPatchItem, index: number) => item.ticketId ?? `direct:${index}`;
 
 function orderedBoards(state: NotebookState) {
   return Object.values(state.boards).sort((left, right) => left.order - right.order || left.createdAt - right.createdAt || left.id.localeCompare(right.id));
@@ -165,11 +167,15 @@ export function validateNotebookPatch(value: unknown, state: NotebookState): Not
     const raw: unknown = value.items[index];
     const prefix = `items[${index}]`;
     if (!isRecord(raw) || !hasOnlyKeys(raw, ITEM_KEYS)) return { ok: false, error: `${prefix} 格式无效或包含不支持的字段` };
-    if (!nonEmptyString(raw.ticketId)) return { ok: false, error: `${prefix}.ticketId 不能为空` };
-    const ticketId = raw.ticketId.trim();
-    if (seenTickets.has(ticketId)) return { ok: false, error: `ticketId 重复：${ticketId}` };
-    seenTickets.add(ticketId);
-    if (!state.inbox[ticketId]) return { ok: false, error: `Inbox ticket 不存在：${ticketId}` };
+
+    let ticketId: string | undefined;
+    if (raw.ticketId !== undefined) {
+      if (!nonEmptyString(raw.ticketId)) return { ok: false, error: `${prefix}.ticketId 必须是非空字符串` };
+      ticketId = raw.ticketId.trim();
+      if (seenTickets.has(ticketId)) return { ok: false, error: `ticketId 重复：${ticketId}` };
+      seenTickets.add(ticketId);
+      if (!state.inbox[ticketId]) return { ok: false, error: `Inbox ticket 不存在：${ticketId}` };
+    }
 
     if (!nonEmptyString(raw.title)) return { ok: false, error: `${prefix}.title 不能为空` };
     if (typeof raw.details !== 'string') return { ok: false, error: `${prefix}.details 必须是字符串` };
@@ -214,7 +220,7 @@ export function validateNotebookPatch(value: unknown, state: NotebookState): Not
     }
 
     normalizedItems.push({
-      ticketId,
+      ...(ticketId ? { ticketId } : {}),
       title: raw.title.trim(),
       details: raw.details.trim(),
       boardIds,
@@ -243,7 +249,8 @@ export function createNotebookPatchPreview(patch: NotebookPatch, state: Notebook
   const counts = new Map<string, number>();
   for (const item of patch.items) for (const boardId of item.boardIds) counts.set(boardId, (counts.get(boardId) ?? 0) + 1);
   return {
-    ticketCount: patch.items.length,
+    itemCount: patch.items.length,
+    ticketCount: patch.items.filter((item) => Boolean(item.ticketId)).length,
     boardCounts: orderedBoards(state).filter((board) => counts.has(board.id)).map((board) => ({ boardId: board.id, title: board.title, count: counts.get(board.id)! })),
   };
 }
@@ -251,12 +258,12 @@ export function createNotebookPatchPreview(patch: NotebookPatch, state: Notebook
 export function prepareNotebookPatchItemIds(patch: NotebookPatch, makeId: () => string): Record<string, string> {
   const result: Record<string, string> = {};
   const ids = new Set<string>();
-  for (const item of patch.items) {
+  patch.items.forEach((item, index) => {
     const id = makeId();
     if (!nonEmptyString(id) || ids.has(id)) throw new Error('生成的 item ID 无效或重复');
     ids.add(id);
-    result[item.ticketId] = id;
-  }
+    result[patchItemKey(item, index)] = id;
+  });
   return result;
 }
 
@@ -280,14 +287,14 @@ export function applyNotebookPatch(state: NotebookState, patchValue: NotebookPat
   const patch = validation.patch;
   if (!Number.isFinite(now) || now <= 0) throw new Error('Apply timestamp 无效');
 
-  const generatedIds = patch.items.map((item) => itemIds[item.ticketId]);
+  const generatedIds = patch.items.map((item, index) => itemIds[patchItemKey(item, index)]);
   if (generatedIds.some((id) => !nonEmptyString(id)) || new Set(generatedIds).size !== generatedIds.length) throw new Error('Prepared item IDs 缺失或重复');
   for (const id of generatedIds) if (state.items[id]) throw new Error(`Prepared item ID 已存在：${id}`);
 
   const next = cloneNotebookState(state);
   const groups = new Map<string, { boardId: string; priority: NotebookPriority; itemIds: string[] }>();
-  for (const patchItem of patch.items) {
-    const id = itemIds[patchItem.ticketId];
+  patch.items.forEach((patchItem, index) => {
+    const id = itemIds[patchItemKey(patchItem, index)];
     const item: NotebookItem = {
       id,
       title: patchItem.title,
@@ -313,7 +320,7 @@ export function applyNotebookPatch(state: NotebookState, patchValue: NotebookPat
       group.itemIds.push(id);
       groups.set(key, group);
     }
-  }
+  });
 
   for (const { boardId, priority, itemIds: patchIds } of groups.values()) {
     const existingIds = activeSectionIds(state, boardId, priority);
@@ -321,6 +328,6 @@ export function applyNotebookPatch(state: NotebookState, patchValue: NotebookPat
     [...patchIds, ...existingIds].forEach((itemId, order) => { memberships[itemId] = { order }; });
     next.memberships[boardId] = memberships;
   }
-  for (const patchItem of patch.items) delete next.inbox[patchItem.ticketId];
+  for (const patchItem of patch.items) if (patchItem.ticketId) delete next.inbox[patchItem.ticketId];
   return normalizeNotebookState(next);
 }
