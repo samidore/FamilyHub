@@ -50,7 +50,8 @@
   .notebook-item__topline { display: flex; align-items: flex-start; justify-content: space-between; gap: .65rem; }
   .notebook-item__heading { display: flex; min-width: 0; align-items: center; gap: .55rem; }
   .notebook-item__heading > strong { min-width: 0; font-size: 1.15rem; line-height: 1.25; overflow-wrap: anywhere; }
-  .notebook-author-icon { width: 2.15rem; height: 2.15rem; flex: 0 0 2.15rem; display: inline-grid; place-items: center; }
+  .notebook-author-icon { width: 2.5rem; height: 2.5rem; flex: 0 0 2.5rem; display: inline-grid; place-items: center; }
+  .notebook-completer-icon { width: 1.7rem !important; height: 1.7rem !important; flex-basis: 1.7rem !important; }
   .notebook-author-icon svg { display: block; width: 100%; height: 100%; overflow: visible; }
   .notebook-author-icon--cat img { display: block; width: 100%; height: 100%; object-fit: contain; }
   .notebook-author-icon--dog { font-size: 1.85rem; line-height: 1; }
