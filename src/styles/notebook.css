@@ -16,6 +16,7 @@
   button, .button-link { min-height: 48px; border: 1px solid #2f4f45; border-radius: 12px; background: #2f4f45; color: white; padding: .55rem .85rem; font-weight: 700; cursor: pointer; }
   button:disabled { opacity: .45; cursor: not-allowed; }
   .secondary-button, .quiet-button, .icon-button, .drag-handle { background: #fffdf8; color: #2f4f45; border-color: #b6aa99; }
+  .danger-button { background: #fff8f7; color: #9a3027; border-color: #c97c73; }
   .quiet-button { min-height: 40px; padding: .35rem .65rem; }
   .icon-button, .drag-handle { min-width: 48px; padding: .35rem; }
   .drag-handle { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-user-drag: none; -webkit-touch-callout: none; }
@@ -51,11 +52,7 @@
   .notebook-item__heading > strong { min-width: 0; font-size: 1.15rem; line-height: 1.25; overflow-wrap: anywhere; }
   .notebook-author-icon { width: 2.15rem; height: 2.15rem; flex: 0 0 2.15rem; display: inline-grid; place-items: center; }
   .notebook-author-icon svg { display: block; width: 100%; height: 100%; overflow: visible; }
-  .notebook-author-icon--cat .face { fill: #f4ad67; stroke: #8a5638; stroke-width: 1.15; }
-  .notebook-author-icon--cat .ear { fill: #ffd7c0; }
-  .notebook-author-icon--cat .muzzle { fill: #fff2df; }
-  .notebook-author-icon--cat .line { fill: none; stroke: #59453b; stroke-width: 1.35; stroke-linecap: round; }
-  .notebook-author-icon--cat .nose { fill: #d77172; }
+  .notebook-author-icon--cat img { display: block; width: 100%; height: 100%; object-fit: contain; }
   .notebook-author-icon--dog .face { fill: #e8b36f; stroke: #805838; stroke-width: 1.15; }
   .notebook-author-icon--dog .ear { fill: #b87942; stroke: #805838; stroke-width: 1.05; }
   .notebook-author-icon--dog .muzzle { fill: #fff0d4; }
@@ -111,6 +108,8 @@
   .check-label input, .board-choice input { width: 1.35rem; min-height: 1.35rem; }
   .board-create-form, #notebook-item-form { display: grid; gap: .8rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #d7cec1; }
   .board-create-form h3, #notebook-item-form h2 { margin: 0; }
+  .notebook-item-dialog__actions { display: flex; flex-wrap: wrap; gap: .6rem; justify-content: space-between; }
+  .notebook-item-dialog__actions > button { flex: 1 1 10rem; }
   .form-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .65rem; }
   .recurrence-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   fieldset { border: 1px solid #d7cec1; border-radius: 12px; padding: .75rem; }
@@ -121,8 +120,8 @@
     .notebook-toolbar, .notebook-toolbar__actions { align-items: stretch; }
     .notebook-toolbar, .notebook-toolbar__actions, .segmented-control { width: 100%; }
     .notebook-toolbar__actions > * { flex: 1 1 auto; justify-content: center; }
-    .notebook-board__header { grid-template-columns: auto minmax(0, 1fr); }
-    .notebook-board__header > .quiet-button { grid-column: 2; justify-self: start; }
+    .notebook-board__header { grid-template-columns: auto minmax(0, 1fr) auto; }
+    .notebook-board__header > .quiet-button { grid-column: auto; justify-self: end; }
     .notebook-item__topline { display: grid; }
     .notebook-item__controls { grid-template-columns: 1fr 1fr; }
     .notebook-inbox__row, .display-name-panel form { grid-template-columns: 1fr; }
