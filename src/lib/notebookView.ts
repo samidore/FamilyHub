@@ -2,6 +2,7 @@ import { NOTEBOOK_PRIORITIES, type NotebookComment, type NotebookItem, type Note
 import {
   NOTEBOOK_COMPLETION_GRACE_MS,
   NOTEBOOK_PRIORITY_LABELS,
+  isNotebookCompletionInGrace,
   notebookSectionEntries,
   notebookUrgentActiveItems,
   notebookUrgentVisibleItems,
@@ -124,7 +125,9 @@ function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | nu
     ? `<div class="notebook-recurring-status"><span>未完成</span><button type="button" class="secondary-button" data-complete-recurring="${e(item.id)}">完成本次</button></div>`
     : item.status === 'active'
       ? `<div class="notebook-completion-control"><span>未完成</span><button type="button" class="secondary-button" data-complete-item="${e(item.id)}">✓ 完成</button></div>`
-      : `<div class="notebook-completion-control"><span>已完成</span><button type="button" class="secondary-button" data-restore-item="${e(item.id)}">撤销完成</button></div>`;
+      : isNotebookCompletionInGrace(item, now)
+        ? `<div class="notebook-completion-control"><span>已完成</span><button type="button" class="secondary-button" data-restore-item="${e(item.id)}">撤销完成</button></div>`
+        : `<div class="notebook-completion-control"><span>已完成</span></div>`;
   const graceMinutes = showGrace && item.completedAt
     ? Math.max(1, Math.ceil((item.completedAt + NOTEBOOK_COMPLETION_GRACE_MS - now) / 60000))
     : null;
