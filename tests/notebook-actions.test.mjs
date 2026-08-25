@@ -77,6 +77,20 @@ test('restoring a completed item puts it back at the top', () => {
   assert.deepEqual(notebookItemsForSection(state, 'a', 'normal', 'active').map((entry) => entry.id), ['restore', 'newer', 'old']);
 });
 
+test('restoring a completed item is allowed only before the one-hour grace expires', () => {
+  let completed = baseState();
+  completed = addNotebookItem(completed, item('done', 'normal', 1), ['a']);
+  completed = setNotebookItemStatus(completed, 'done', 'completed', 1000);
+
+  const withinGrace = setNotebookItemStatus(completed, 'done', 'active', 1000 + NOTEBOOK_COMPLETION_GRACE_MS - 1);
+  assert.equal(withinGrace.items.done.status, 'active');
+  assert.equal(withinGrace.items.done.completedAt, undefined);
+
+  const expired = setNotebookItemStatus(completed, 'done', 'active', 1000 + NOTEBOOK_COMPLETION_GRACE_MS);
+  assert.equal(expired.items.done.status, 'completed');
+  assert.equal(expired.items.done.completedAt, 1000);
+});
+
 test('board membership can change without duplicating an item and new memberships enter at the top', () => {
   let state = baseState();
   state = addNotebookItem(state, item('other', 'normal', 1), ['b']);
