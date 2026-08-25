@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { readFileSync } from 'node:fs';
 import { attributeNewNotebookItems } from '../src/lib/notebookAttribution.ts';
+import { NOTEBOOK_COMPLETION_GRACE_MS } from '../src/lib/notebookActions.ts';
 import {
   defaultNotebookState,
   normalizeNotebookState,
@@ -118,6 +119,21 @@ test('card markup uses the supplied dog portrait and shows completer icons', () 
   state.items.done.completedByName = '猫猫';
   const explicitHtml = renderNotebookBoards(state, '猫猫', 3);
   assert.match(explicitHtml, /aria-label="猫猫完成"/);
+});
+
+test('completed cards show undo only during the one-hour grace period', () => {
+  const state = defaultNotebookState();
+  state.boards.b = { id: 'b', title: 'B', kind: 'task', visible: true, collapsed: false, order: 0, createdAt: 1, updatedAt: 1 };
+  state.items.done = { ...item('done', '猫猫'), status: 'completed', completedAt: 1000, updatedAt: 1000 };
+  state.memberships.b = { done: { order: 0 } };
+  state.settings.viewFilter = 'completed';
+
+  const duringGrace = renderNotebookBoards(state, '猫猫', 1000 + NOTEBOOK_COMPLETION_GRACE_MS - 1);
+  assert.match(duringGrace, /data-restore-item="done"/);
+
+  const expired = renderNotebookBoards(state, '猫猫', 1000 + NOTEBOOK_COMPLETION_GRACE_MS);
+  assert.doesNotMatch(expired, /data-restore-item="done"/);
+  assert.match(expired, /<span>已完成<\/span>/);
 });
 
 test('Firebase rules allow immutable item authors tied to the creating member display name', () => {
