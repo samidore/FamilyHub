@@ -50,6 +50,11 @@
   .notebook-item__topline { display: flex; align-items: flex-start; justify-content: space-between; gap: .65rem; }
   .notebook-item__heading { display: flex; min-width: 0; align-items: center; gap: .55rem; }
   .notebook-item__heading > strong { min-width: 0; font-size: 1.15rem; line-height: 1.25; overflow-wrap: anywhere; }
+  .notebook-item[data-item-id] > .notebook-item__topline { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto auto; column-gap: .65rem; row-gap: .45rem; align-items: center; justify-content: normal; }
+  .notebook-item[data-item-id] > .notebook-item__topline > .notebook-item__heading { display: contents; }
+  .notebook-item[data-item-id] > .notebook-item__topline > .notebook-item__heading > .notebook-author-icon { grid-column: 1; grid-row: 1 / span 2; align-self: center; }
+  .notebook-item[data-item-id] > .notebook-item__topline > .notebook-item__heading > strong { grid-column: 2; grid-row: 1; align-self: center; }
+  .notebook-item[data-item-id] > .notebook-item__topline > .notebook-inline-actions { grid-column: 2; grid-row: 2; justify-content: flex-start; }
   .notebook-author-icon { width: 2.8rem; height: 2.8rem; flex: 0 0 2.8rem; display: inline-grid; place-items: center; }
   .notebook-completer-icon { width: 1.95rem !important; height: 1.95rem !important; flex-basis: 1.95rem !important; }
   .notebook-author-icon svg { display: block; width: 100%; height: 100%; overflow: visible; }
