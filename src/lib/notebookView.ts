@@ -95,11 +95,11 @@ function cornerStatus(state: NotebookState, item: NotebookItem, today: string, n
   const dueSoon = dueSoonIconHtml(item, today);
   const ageDays = showQueueAge ? notebookQueueAgeDays(state, item, now) : null;
   const age = ageDays === null ? '' : `<span aria-label="已排队 ${ageDays} 天" title="已排队 ${ageDays} 天" style="white-space:nowrap;border-radius:999px;background:#f3eee6;color:#665f56;padding:.2rem .45rem;font-size:.82rem;font-weight:700;line-height:1.25">${ageDays}天</span>`;
-  if (!dueSoon && !age) return { cardStyle: '', topLineStyle: '', html: '' };
+  if (!dueSoon && !age) return { cardStyle: '', titleStyle: '', html: '' };
   const reserve = dueSoon && age ? '5.5rem' : dueSoon ? '2.25rem' : '3.3rem';
   return {
     cardStyle: ' style="position:relative"',
-    topLineStyle: ` style="padding-right:${reserve}"`,
+    titleStyle: ` style="padding-right:${reserve}"`,
     html: `<div style="position:absolute;top:.5rem;right:.5rem;display:flex;align-items:center;gap:.3rem;z-index:1">${dueSoon}${age}</div>`,
   };
 }
@@ -133,7 +133,7 @@ function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | nu
     : null;
   const grace = graceMinutes ? `<span class="notebook-grace-note">已完成 · 还会在这里保留 ${graceMinutes} 分钟</span>` : '';
   const body = `${item.details ? `<p class="notebook-details-text">${e(item.details)}</p>` : ''}${media.text ? `<section class="notebook-media-detail">${media.text}</section>` : ''}${commentsHtml(comments, item.id, displayName)}`;
-  return `<article class="notebook-item${graceMinutes ? ' notebook-item--grace' : ''}"${corner.cardStyle} data-item-id="${e(item.id)}" data-board-id="${e(boardId ?? '')}">${corner.html}<div class="notebook-item__topline"${corner.topLineStyle}><div class="notebook-item__heading">${authorIconHtml(item)}<strong>${e(item.title)}</strong></div><div class="notebook-inline-actions">${moves}<button type="button" class="quiet-button" data-edit-item="${e(item.id)}">编辑</button></div></div><div class="notebook-item__controls"><label>优先级<select data-item-priority="${e(item.id)}">${NOTEBOOK_PRIORITIES.map((p) => `<option value="${p}" ${item.priority === p ? 'selected' : ''}>${NOTEBOOK_PRIORITY_LABELS[p]}</option>`).join('')}</select></label>${statusControl}</div>${(due || completed || recurrence || grace || media.summary) ? `<div class="notebook-item__meta">${due}${completed}${recurrence}${grace}${media.summary}</div>` : ''}<div class="notebook-item__body">${body}</div></article>`;
+  return `<article class="notebook-item${graceMinutes ? ' notebook-item--grace' : ''}"${corner.cardStyle} data-item-id="${e(item.id)}" data-board-id="${e(boardId ?? '')}">${corner.html}<div class="notebook-item__topline"><div class="notebook-item__heading">${authorIconHtml(item)}<strong${corner.titleStyle}>${e(item.title)}</strong></div><div class="notebook-inline-actions">${moves}<button type="button" class="quiet-button" data-edit-item="${e(item.id)}">编辑</button></div></div><div class="notebook-item__controls"><label>优先级<select data-item-priority="${e(item.id)}">${NOTEBOOK_PRIORITIES.map((p) => `<option value="${p}" ${item.priority === p ? 'selected' : ''}>${NOTEBOOK_PRIORITY_LABELS[p]}</option>`).join('')}</select></label>${statusControl}</div>${(due || completed || recurrence || grace || media.summary) ? `<div class="notebook-item__meta">${due}${completed}${recurrence}${grace}${media.summary}</div>` : ''}<div class="notebook-item__body">${body}</div></article>`;
 }
 
 function historyHtml(entry: NotebookSectionEntry) {
