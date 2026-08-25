@@ -209,6 +209,7 @@ export function setNotebookItemPriority(state: NotebookState, itemId: string, pr
 export function setNotebookItemStatus(state: NotebookState, itemId: string, status: 'active' | 'completed', now: number): NotebookState {
   const existing = state.items[itemId];
   if (!existing || existing.status === status || existing.recurrence) return state;
+  if (status === 'active' && !isNotebookCompletionInGrace(existing, now)) return state;
   const next = cloneNotebookState(state);
   const boardIds = notebookBoardIdsForItem(next, itemId);
   if (status === 'completed') {
