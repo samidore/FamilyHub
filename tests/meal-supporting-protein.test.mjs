@@ -14,6 +14,25 @@ test('supporting protein allow-lists are preserved and validated', async () => {
   assert(leafy.supportingProteinIngredientIds.includes('peeled-shrimp'));
   assert.equal(leafy.supportingProteinIngredientIds.includes('ground-pork'), false);
 
+  const compatibleRecipeIds = [
+    'simple-stir-fried-leafy-greens',
+    'simple-stir-fried-green-cabbage',
+    'simple-stir-fried-bean-sprouts',
+    'simple-stir-fried-broccoli',
+    'simple-stir-fried-celery',
+    'simple-stir-fried-luffa-zucchini',
+  ];
+  for (const id of compatibleRecipeIds) {
+    const recipe = data.recipes.find((candidate) => candidate.id === id);
+    assert(recipe, `${id} is missing`);
+    assert(recipe.supportingProteinIngredientIds.includes('pork-chops'), `${id} should allow pork chops`);
+  }
+
+  const cabbage = data.recipes.find((recipe) => recipe.id === 'simple-stir-fried-green-cabbage');
+  const luffa = data.recipes.find((recipe) => recipe.id === 'simple-stir-fried-luffa-zucchini');
+  assert(cabbage?.supportingProteinIngredientIds.includes('ground-pork'));
+  assert(luffa?.supportingProteinIngredientIds.includes('ground-pork'));
+
   const bad = parse(files['recipe/vegetable/simple-stir-fried-leafy-greens.yaml']);
   bad.supporting_protein_ingredient_ids = ['missing-supporting-protein'];
   await assert.rejects(
