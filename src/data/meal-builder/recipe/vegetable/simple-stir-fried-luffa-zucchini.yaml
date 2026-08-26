@@ -8,7 +8,13 @@ fit_score: 4
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
-supporting_protein_ingredient_ids: []
+supporting_protein_ingredient_ids:
+  - whole-pork-tenderloin
+  - ground-pork
+  - pork-chops
+  - boneless-skinless-chicken-thighs
+  - chicken-breast
+  - peeled-shrimp
 vegetable_ingredient_ids: [luffa, zucchini]
 meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
 child_coverage: { protein: false, vegetable: true }

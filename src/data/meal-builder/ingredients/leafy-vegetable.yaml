@@ -96,8 +96,8 @@ ingredients:
     inventory_freshness: fifo
     freshness_priority_days: 5
     status: candidate
-    name_zh: 菜心
-    name_en: Choy Sum
+    name_zh: 油菜心 / 菜心
+    name_en: Choy Sum / Yu Choy Sum
     starter:
       visible: true
       section: leafy-vegetable

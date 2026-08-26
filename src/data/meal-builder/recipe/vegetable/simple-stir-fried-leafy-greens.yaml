@@ -16,8 +16,18 @@ fit_score: 5
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
-supporting_protein_ingredient_ids: []
-vegetable_ingredient_ids: [chinese-greens, lettuce, youmai-cai, choy-sum, pea-shoots, amaranth-greens, tong-hao, mustard-greens]
+supporting_protein_ingredient_ids:
+  - whole-pork-tenderloin
+  - thin-sliced-pork-belly
+  - extra-thin-sliced-pork-belly
+  - pork-chops
+  - sliced-beef-brisket
+  - hot-pot-beef-slices
+  - hot-pot-lamb-slices
+  - boneless-skinless-chicken-thighs
+  - chicken-breast
+  - peeled-shrimp
+vegetable_ingredient_ids: [chinese-greens, spinach, lettuce, youmai-cai, choy-sum, water-spinach, pea-shoots, amaranth-greens, tong-hao, mustard-greens]
 meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
 child_coverage: { protein: false, vegetable: true }
 integral_staple_ingredient_ids: []
@@ -37,7 +47,7 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - one_of: [chinese-greens, lettuce, youmai-cai, choy-sum, pea-shoots, amaranth-greens, tong-hao, mustard-greens]
+  - one_of: [chinese-greens, spinach, lettuce, youmai-cai, choy-sum, water-spinach, pea-shoots, amaranth-greens, tong-hao, mustard-greens]
     role: vegetable
 steps:
   - 蔬菜300–450 g洗净并彻底沥干；粗梗和叶分开，长梗切成3–4 cm短段；蒜2瓣切末；轻盐蔬菜汁混匀。
@@ -51,5 +61,5 @@ child_serving: 切短并额外盖焖至明显柔软；本 Recipe 计入 Child Ve
 adult_finish: 孩子份盛出后，成人可另加辣椒油、辣椒粉或更重调味。
 substitutions: [蒜蓉属于同一 cooking structure，不另建 Recipe。]
 cook_ingredients:
-  - 青菜 / 生菜 / 油麦菜 / 菜心 / 豆苗 / 苋菜 / 茼蒿 / 芥菜：300–450 g；任选一种
+  - 青菜 / 菠菜 / 生菜 / 油麦菜 / 油菜心（菜心）/ 空心菜 / 豆苗 / 苋菜 / 茼蒿 / 芥菜：300–450 g；任选一种
   - 家庭轻盐蔬菜汁：水 1 Tbsp；生抽 2 tsp；蚝油 1 tsp；糖 1/4 tsp

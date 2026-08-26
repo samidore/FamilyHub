@@ -20,6 +20,7 @@ export interface MealDataRecipe extends MealRecipe {
   tags: string[];
   primaryRole: string;
   mainProteinCategory: string;
+  supportingProteinIngredientIds: string[];
   checkoutUnits: Record<string, number>;
   ingredientChildCoverage: Record<string, IngredientChildCoverage>;
   activeMinutes: string;

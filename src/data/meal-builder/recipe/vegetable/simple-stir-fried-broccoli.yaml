@@ -15,7 +15,14 @@ fit_score: 5
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
-supporting_protein_ingredient_ids: []
+supporting_protein_ingredient_ids:
+  - whole-pork-tenderloin
+  - pork-chops
+  - sliced-beef-brisket
+  - hot-pot-beef-slices
+  - boneless-skinless-chicken-thighs
+  - chicken-breast
+  - peeled-shrimp
 vegetable_ingredient_ids: [broccoli, cauliflower]
 meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
 child_coverage: { protein: false, vegetable: true }

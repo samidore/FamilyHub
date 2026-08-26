@@ -95,6 +95,12 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
       for (const id of anyOf) assert(ingredientIds.has(id), `${record.id} references missing ingredient ${id}`);
       requirements.push({ anyOf, role: String(entry.role ?? '') });
     }
+    const supportingProteinIngredientIds = stringArray(record.supporting_protein_ingredient_ids);
+    assert(new Set(supportingProteinIngredientIds).size === supportingProteinIngredientIds.length, `${record.id} has duplicate supporting_protein_ingredient_ids`);
+    for (const id of supportingProteinIngredientIds) {
+      assert(ingredientIds.has(id), `${record.id} supporting_protein_ingredient_ids references missing ingredient ${id}`);
+      assert(!requirements.some((requirement) => requirement.anyOf.includes(id)), `${record.id} supporting protein ${id} cannot also be a hard requirement`);
+    }
     if (record.detail_level !== 'discoverable') {
       assert(Array.isArray(record.cook_ingredients) && record.cook_ingredients.length > 0 && record.cook_ingredients.every((entry) => typeof entry === 'string' && entry.trim().length > 0), `${record.id} cookable record requires cook_ingredients`);
       assert(Array.isArray(record.steps) && record.steps.length > 0 && record.steps.every((step) => typeof step === 'string' && step.trim().length > 0), `${record.id} cookable record requires executable steps`);
@@ -113,7 +119,7 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
       id: record.id, nameZh: String(record.name_zh), nameEn: String(record.name_en), tags: stringArray(record.tags), primaryRole: String(record.primary_role),
       mainProteinCategory: String(record.main_protein_category ?? 'none'), fitScore: Number(record.fit_score), order,
       contribution: { protein: Number(record.meal_contribution.protein), vegetable: Number(record.meal_contribution.vegetable), staple: Number(record.meal_contribution.staple) },
-      childCoverage, requirements, cookIngredientLines: stringArray(record.cook_ingredients),
+      childCoverage, requirements, supportingProteinIngredientIds, cookIngredientLines: stringArray(record.cook_ingredients),
       checkoutUnits,
       ingredientChildCoverage: Object.fromEntries(requirements.flatMap((requirement) => requirement.anyOf).map((id) => [id, ingredients.find((item) => item.id === id)?.childCoverage?.vegetable ?? 'unknown'])),
       activeMinutes: String(record.active_minutes ?? ''), mealWindowMinutes: String(record.meal_window_minutes ?? ''), elapsedMinutes: String(record.elapsed_minutes ?? ''), advanceStartRequired: record.advance_start_required,

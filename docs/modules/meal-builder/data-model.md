@@ -136,6 +136,8 @@ substitutions: []
 
 `meal_contribution` is the only slot-calculation source; `primary_role` is UI grouping. `integral_staple_ingredient_ids` means the Recipe includes the staple; `recommended_staple_ingredient_ids` is a pairing suggestion only. Each `ingredients[]` entry contains one required `ingredient_id` or `one_of` identity plus its role and must resolve to the active Ingredient library.
 
+`supporting_protein_ingredient_ids` is a per-Recipe compatibility allow-list for optional proteins that can be folded into the same cooking structure without turning the supporting protein into a hard requirement. Entries must resolve to active Ingredients, must not duplicate a hard requirement in the same Recipe, and are preserved by the loader as runtime metadata. The allow-list alone does not change Recipe feasibility, `meal_contribution`, child coverage, Cook View, or checkout; any controlled selection flow must bind the chosen supporting protein explicitly before those operating behaviors change.
+
 `ingredients[]` is the hard availability contract, not a transcription of the full recipe. Put an inventory Ingredient there only when the dish stops being that dish without it. Recommended but omittable inventory items, pantry aromatics, and the complete version of the recipe stay in `cook_ingredients`/steps. `meal_contribution` counts only slots guaranteed by hard requirements.
 
 `cook_ingredients` is display-only and never affects availability or inventory. `cookable` and `household-tested` records require nonempty Cook View lines, executable steps, and equipment.
@@ -147,6 +149,6 @@ substitutions: []
 - Tags express product capabilities and preparation facts. `easy-braise-addon` is a checkout-only Ingredient tag; `addon-only` exempts an Ingredient from standalone fallback; `iron-pan-braise` identifies Recipes compatible with that checkout add-on flow.
 - `vegetable-centered` is an explicit Recipe tag. It must never be inferred from category, name, or historical provenance. Runtime `vegetableCentered` is derived from this tag.
 - Every visible Ingredient without `addon-only` must have at least one active Recipe with a single required identity group containing that Ingredient.
-- Recipe Ingredient IDs, `one_of` options, starter sections, and active index entries must resolve. No duplicate IDs, unknown fields, invalid values, unsafe paths, filename/ID mismatch, or unindexed active file is allowed.
+- Recipe Ingredient IDs, `one_of` options, supporting-protein allow-list IDs, starter sections, and active index entries must resolve. No duplicate IDs, unknown fields, invalid values, unsafe paths, filename/ID mismatch, or unindexed active file is allowed.
 - Deprecated fields `vegetable_count`, `staple_pairings`, and `child_support_protein_needed` must not return in active records.
 - Archive records are validated for schema and privacy but never emitted as active candidates. Unknown archived IDs already present in Firebase household state are ignored by reconciliation; new IDs are never silently reused.
