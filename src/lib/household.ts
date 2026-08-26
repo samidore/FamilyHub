@@ -51,6 +51,7 @@ export type CheckoutConsumption = Record<string, number | boolean>;
 export const COUNTED_INVENTORY_STEP = 0.5;
 export const RECENT_MEAL_LIMIT = 4;
 export const OPTIONAL_ADDON_INITIAL_UNITS = 1;
+export const SUPPORTING_PROTEIN_ADDON_TYPE = 'supporting-protein';
 /** One-time canonical date for counted FIFO stock that existed before dated tracking shipped on 2026-08-21. */
 export const LEGACY_FIFO_MIGRATION_DATE = '2026-08-18';
 
@@ -302,14 +303,53 @@ export function mealToEngineState(meal: CurrentMeal): MealState {
   return { availableIngredientIds: [...meal.availableIngredientIds], ingredientFreshnessDates: { ...meal.ingredientFreshnessDates }, proteinTarget: meal.proteinTarget, vegetableTarget: meal.vegetableTarget, stapleRequired: meal.stapleRequired, childMode: meal.childMode, timePreference: meal.timePreference, selectedRecipeIds: [...meal.selectedRecipeIds], recipeIngredientBindings: { ...meal.recipeIngredientBindings } };
 }
 
+function supportingProteinIds(recipe: MealRecipe | undefined) {
+  const value = recipe?.supportingProteinIngredientIds;
+  return Array.isArray(value) ? value.filter((id): id is string => typeof id === 'string' && id.length > 0) : [];
+}
+
+function validSupportingAddons(meal: CurrentMeal, recipes?: MealRecipe[]) {
+  const selected = new Set(meal.selectedRecipeIds);
+  const recipeMap = recipes ? new Map(recipes.map((recipe) => [recipe.id, recipe])) : undefined;
+  const seen = new Set<string>();
+  return meal.selectedAddons.filter((addon) => {
+    if (addon.addonType !== SUPPORTING_PROTEIN_ADDON_TYPE || !selected.has(addon.mainRecipeId)) return false;
+    if (recipeMap && !supportingProteinIds(recipeMap.get(addon.mainRecipeId)).includes(addon.ingredientId)) return false;
+    if (seen.has(addon.mainRecipeId)) return false;
+    seen.add(addon.mainRecipeId);
+    return true;
+  });
+}
+
+export function selectedSupportingProteinId(meal: CurrentMeal, recipeId: string, recipes?: MealRecipe[]) {
+  return validSupportingAddons(meal, recipes).find((addon) => addon.mainRecipeId === recipeId)?.ingredientId ?? null;
+}
+
+export function setSupportingProteinAddon(meal: CurrentMeal, recipeId: string, ingredientId: string | null, recipes: MealRecipe[]): CurrentMeal {
+  if (!meal.selectedRecipeIds.includes(recipeId)) return meal;
+  const recipe = recipes.find((item) => item.id === recipeId);
+  const allowed = supportingProteinIds(recipe);
+  if (ingredientId && (!allowed.includes(ingredientId) || !meal.availableIngredientIds.includes(ingredientId))) return meal;
+  const selectedAddons = validSupportingAddons(meal, recipes).filter((addon) => addon.mainRecipeId !== recipeId);
+  if (ingredientId) selectedAddons.push({ mainRecipeId: recipeId, addonType: SUPPORTING_PROTEIN_ADDON_TYPE, ingredientId });
+  return { ...meal, selectedAddons, checkoutDraft: {} };
+}
+
+function checkoutUnitsIncludingSupporting(meal: CurrentMeal, recipes: MealRecipe[]) {
+  const units = { ...checkoutUnitsForSelection(recipes, mealToEngineState(meal)) };
+  for (const addon of validSupportingAddons(meal, recipes)) units[addon.ingredientId] = (units[addon.ingredientId] ?? 0) + 1;
+  return units;
+}
+
 export function engineStateToMeal(meal: CurrentMeal, state: MealState): CurrentMeal {
-  return { ...meal, availableIngredientIds: [...state.availableIngredientIds], ingredientFreshnessDates: { ...(state.ingredientFreshnessDates ?? meal.ingredientFreshnessDates) }, proteinTarget: state.proteinTarget, vegetableTarget: state.vegetableTarget, stapleRequired: state.stapleRequired, childMode: state.childMode, timePreference: state.timePreference, selectedRecipeIds: [...state.selectedRecipeIds], recipeIngredientBindings: { ...state.recipeIngredientBindings }, selectedAddons: [] };
+  return { ...meal, availableIngredientIds: [...state.availableIngredientIds], ingredientFreshnessDates: { ...(state.ingredientFreshnessDates ?? meal.ingredientFreshnessDates) }, proteinTarget: state.proteinTarget, vegetableTarget: state.vegetableTarget, stapleRequired: state.stapleRequired, childMode: state.childMode, timePreference: state.timePreference, selectedRecipeIds: [...state.selectedRecipeIds], recipeIngredientBindings: { ...state.recipeIngredientBindings }, selectedAddons: [...meal.selectedAddons] };
 }
 
 /** Reconcile only current-meal selections; household inventory is deliberately untouched. */
 export function reconcileCurrentMeal(meal: CurrentMeal, recipes: Parameters<typeof reconcileMealState>[1], ingredients: Parameters<typeof reconcileMealState>[2] = []): CurrentMeal {
   const state = reconcileMealState(mealToEngineState(meal), recipes, ingredients);
-  return { ...engineStateToMeal(meal, state), selectedAddons: [] };
+  const reconciled = engineStateToMeal(meal, state);
+  return { ...reconciled, selectedAddons: validSupportingAddons(reconciled, recipes) };
 }
 
 export function setCurrentMealStatus(meal: CurrentMeal, status: CurrentMealStatus): CurrentMeal {
@@ -345,11 +385,13 @@ export function resetRecipeSelection(meal: CurrentMeal): CurrentMeal {
 
 export function usedIngredientIds(meal: CurrentMeal, recipes?: MealRecipe[]): string[] {
   const known = recipes ? new Set(recipes.map((recipe) => recipe.id)) : undefined;
-  return [...new Set(meal.selectedRecipeIds.filter((id) => !known || known.has(id)).flatMap((id) => meal.recipeIngredientBindings[id] ?? []).filter(Boolean))].sort();
+  const bound = meal.selectedRecipeIds.filter((id) => !known || known.has(id)).flatMap((id) => meal.recipeIngredientBindings[id] ?? []).filter(Boolean);
+  const supporting = validSupportingAddons(meal, recipes).map((addon) => addon.ingredientId);
+  return [...new Set([...bound, ...supporting])].sort();
 }
 
 export function defaultCheckoutConsumption(meal: CurrentMeal, inventory: Inventory, ingredients?: MealIngredient[] | Record<string, MealIngredient>, recipes?: MealRecipe[]): CheckoutConsumption {
-  const units = recipes ? checkoutUnitsForSelection(recipes, mealToEngineState(meal)) : {};
+  const units = recipes ? checkoutUnitsIncludingSupporting(meal, recipes) : {};
   const ids = recipes ? Object.keys(units) : usedIngredientIds(meal);
   const optionalIds = recipes ? easyBraiseAddonIngredientIds(recipes, mealToEngineState(meal), availableIngredientIds(inventory, ingredients), ingredients ?? []) : [];
   const entries: [string, number | boolean][] = ids.map((id): [string, number | boolean] => {
@@ -358,7 +400,7 @@ export function defaultCheckoutConsumption(meal: CurrentMeal, inventory: Invento
     const available = typeof inventory[id] === 'number' ? inventory[id] : 0;
     return [id, Math.min(units[id] ?? 1, available)];
   });
-  entries.push(...optionalIds.map((id): [string, number | boolean] => [id, trackingForIngredient(id, ingredients) === 'presence-only' ? false : 0]));
+  entries.push(...optionalIds.filter((id) => !ids.includes(id)).map((id): [string, number | boolean] => [id, trackingForIngredient(id, ingredients) === 'presence-only' ? false : 0]));
   return Object.fromEntries(entries);
 }
 
@@ -374,7 +416,7 @@ export type CheckoutResult = { committed: true; state: HouseholdState } | { comm
 export function applyCheckout(state: HouseholdState, mealId: string, consumption: CheckoutConsumption, ingredients?: MealIngredient[] | Record<string, MealIngredient>, options: { nextMealId?: string; completedAt?: number; recipes?: MealRecipe[] } = {}): CheckoutResult {
   const meal = state.currentMeal;
   if (!meal || meal.mealId !== mealId || meal.status !== 'cooking' || (state.activeStep !== undefined && state.activeStep !== 'checkout')) return { committed: false, reason: 'stale-meal', state };
-  const normal = new Set(options.recipes ? Object.keys(checkoutUnitsForSelection(options.recipes, mealToEngineState(meal))) : usedIngredientIds(meal));
+  const normal = new Set(options.recipes ? Object.keys(checkoutUnitsIncludingSupporting(meal, options.recipes)) : usedIngredientIds(meal));
   const optional = new Set(options.recipes ? easyBraiseAddonIngredientIds(options.recipes, mealToEngineState(meal), availableIngredientIds(state.inventory, ingredients), ingredients ?? []) : []);
   const used = new Set([...normal, ...optional]);
   const nextInventory = { ...state.inventory };
