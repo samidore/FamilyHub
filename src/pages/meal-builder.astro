@@ -15,7 +15,7 @@ const clientData = JSON.stringify({
   ingredients: mealData.ingredients.map((ingredient) => ({ id: ingredient.id, nameZh: ingredient.nameZh, nameEn: ingredient.nameEn, visible: ingredient.visible, section: ingredient.section, tags: ingredient.tags, inventoryTracking: ingredient.inventoryTracking, inventoryFreshness: ingredient.inventoryFreshness, freshnessPriorityDays: ingredient.freshnessPriorityDays, childCoverage: ingredient.childCoverage })),
   recipes: recipes.map((recipe) => ({
     id: recipe.id, order: recipe.order, fitScore: recipe.fitScore, contribution: recipe.contribution,
-    childCoverage: recipe.childCoverage, requirements: recipe.requirements, tags: recipe.tags,
+    childCoverage: recipe.childCoverage, requirements: recipe.requirements, supportingProteinIngredientIds: recipe.supportingProteinIngredientIds, tags: recipe.tags,
     ingredientChildCoverage: recipe.ingredientChildCoverage, mealWindowMinutes: recipe.mealWindowMinutes,
     elapsedMinutes: recipe.elapsedMinutes, advanceStartRequired: recipe.advanceStartRequired,
   })),
@@ -197,7 +197,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
   <script>
     import { aggregateSelection, bindRecipeIngredients, defaultMealState, easyBraiseAddonIngredientIds, freshnessPriorityAgeDays, isMealComplete, rankCandidates, reconcileMealState, resolveRecipeChildCoverage, timeFit, unmetCompletionRequirements } from '../lib/mealEngine';
     import type { MealIngredient, MealRecipe, MealState, TimePreference } from '../lib/mealEngine';
-    import { COUNTED_INVENTORY_STEP, OPTIONAL_ADDON_INITIAL_UNITS, advanceMealToCooking, checkoutDraftForMeal, createCurrentMealFromInventory, freshnessDatesForInventory, reconcileCurrentMeal, resetRecipeSelection, roundCountedInventoryValue, setCurrentMealStatus, trackingForIngredient, updateCheckoutDraft, usedIngredientIds, type CheckoutConsumption, type CurrentMeal, type HouseholdState } from '../lib/household';
+    import { COUNTED_INVENTORY_STEP, OPTIONAL_ADDON_INITIAL_UNITS, advanceMealToCooking, checkoutDraftForMeal, createCurrentMealFromInventory, freshnessDatesForInventory, reconcileCurrentMeal, resetRecipeSelection, roundCountedInventoryValue, selectedSupportingProteinId, setCurrentMealStatus, setSupportingProteinAddon, trackingForIngredient, updateCheckoutDraft, usedIngredientIds, type CheckoutConsumption, type CurrentMeal, type HouseholdState } from '../lib/household';
     import { createHouseholdRepository, type RepositoryStatus } from '../lib/householdRepository';
     import { CheckoutDraftSync } from '../lib/checkoutDraftSync';
     type View = 'build' | 'complete' | 'cook';
@@ -214,6 +214,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
     let state: MealState = household.currentMeal ? { ...mealStateFromCurrentMeal(household.currentMeal) } : defaultMealState(); let view: View = household.activeStep === 'cook' || household.activeStep === 'checkout' ? 'cook' : household.activeStep === 'recipes' ? 'build' : 'build';
     let repositoryStatus: RepositoryStatus = repository.getStatus();
     let draftBindings: Record<string, (string | null)[]> = {};
+    let draftSupportingProteins: Record<string, string> = {};
     try {
       const saved = JSON.parse(sessionStorage.getItem(storageKey) ?? 'null');
       if (!household.currentMeal && saved?.state) state = reconcileMealState({ ...defaultMealState(), ...saved.state }, recipes, ingredients);
@@ -316,6 +317,11 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       return binding;
     }
 
+    function supportingProteinIds(recipe: MealRecipe) {
+      const value = recipe.supportingProteinIngredientIds;
+      return Array.isArray(value) ? value.filter((id): id is string => typeof id === 'string' && ingredientById.has(id)) : [];
+    }
+
     function renderRecipeBindings(recipe: MealRecipe, card: HTMLElement, available: Set<string>) {
       const binding = draftBindingFor(recipe, available);
       const host = card.querySelector<HTMLElement>('[data-recipe-bindings]'); if (!host) return binding;
@@ -329,6 +335,17 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
         options.forEach((id) => { const option = document.createElement('option'); option.value = id; option.textContent = ingredientById.get(id)?.nameZh ?? id; option.selected = binding[index] === id; select.append(option); });
         label.append(text, select); host.append(label);
       });
+      const supporting = supportingProteinIds(recipe).filter((id) => available.has(id));
+      if (supporting.length) {
+        const current = supporting.includes(draftSupportingProteins[recipe.id]) ? draftSupportingProteins[recipe.id] : '';
+        if (!current) delete draftSupportingProteins[recipe.id];
+        const label = document.createElement('label'); label.className = 'meal-binding-control';
+        const text = document.createElement('span'); text.textContent = '顺手加蛋白（可选）';
+        const select = document.createElement('select'); select.dataset.supportingRecipe = recipe.id; select.setAttribute('aria-label', `${recipe.nameZh} 顺手加蛋白`); select.disabled = !canWrite() || !household.currentMeal;
+        const none = document.createElement('option'); none.value = ''; none.textContent = '不加'; select.append(none);
+        supporting.forEach((id) => { const option = document.createElement('option'); option.value = id; option.textContent = ingredientById.get(id)?.nameZh ?? id; option.selected = current === id; select.append(option); });
+        label.append(text, select); host.append(label);
+      }
       const childBadge = card.querySelector<HTMLElement>('[data-child-vegetable-badge]');
       if (childBadge) childBadge.textContent = resolveRecipeChildCoverage(recipe, binding, ingredients).vegetable ? '孩子蔬菜 ✓' : '孩子蔬菜：按食材';
       return binding;
@@ -450,7 +467,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       document.querySelector<HTMLButtonElement>('#meal-recipe-reset')!.disabled = !writesEnabled || !hasMeal;
       document.querySelectorAll<HTMLButtonElement>('[data-inventory-toggle], [data-inventory-step]').forEach((button) => { button.disabled = !writesEnabled; });
       document.querySelectorAll<HTMLButtonElement>('[data-ingredient-id], [data-select-recipe], [data-remove-recipe]').forEach((button) => { button.disabled = !writesEnabled || !hasMeal; });
-      document.querySelectorAll<HTMLSelectElement>('#meal-protein, #meal-vegetable, #meal-time, #meal-staple, #meal-child, [data-binding-recipe]').forEach((control) => { control.disabled = !writesEnabled || !hasMeal; });
+      document.querySelectorAll<HTMLSelectElement>('#meal-protein, #meal-vegetable, #meal-time, #meal-staple, #meal-child, [data-binding-recipe], [data-supporting-recipe], [data-selected-supporting-recipe]').forEach((control) => { control.disabled = !writesEnabled || !hasMeal; });
       document.querySelectorAll<HTMLButtonElement>('#meal-reset, #meal-next, #meal-force-next, #meal-modify, #meal-start-cooking').forEach((button) => { button.disabled = !writesEnabled || !hasMeal; });
       document.querySelector<HTMLElement>('#meal-current-copy')!.textContent = hasMeal ? '本顿可用食材是库存快照，之后调整库存不会改写本顿。' : '请先从当前库存开始本顿；本顿开始后，两台设备会共享选菜和状态。';
       renderInventory(); renderCheckout();
@@ -485,12 +502,34 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       const selectedSet = new Set(state.selectedRecipeIds); selectedPanel.hidden = selectedSet.size === 0;
       document.querySelectorAll<HTMLElement>('[data-selected-recipe]').forEach((item) => item.hidden = !selectedSet.has(item.dataset.selectedRecipe!));
       document.querySelectorAll<HTMLElement>('[data-complete-recipe]').forEach((item) => item.hidden = !selectedSet.has(item.dataset.completeRecipe!)); document.querySelectorAll<HTMLElement>('[data-cook-recipe]').forEach((item) => item.hidden = !selectedSet.has(item.dataset.cookRecipe!));
+      document.querySelectorAll<HTMLElement>('[data-selected-supporting-control], [data-cook-supporting-note]').forEach((node) => node.remove());
       selected.forEach((recipe) => {
         const binding = state.recipeIngredientBindings[recipe.id] ?? bindRecipeIngredients(recipe, state.availableIngredientIds, [], state.ingredientFreshnessDates);
         const host = document.querySelector<HTMLElement>(`[data-selected-bindings="${CSS.escape(recipe.id)}"]`);
         if (host) { const labels = binding.filter(Boolean).map((id) => ingredientById.get(id!)?.nameZh ?? id); host.textContent = labels.length ? `食材：${labels.join('、')}` : ''; }
         const freshnessBadge = document.querySelector<HTMLElement>(`[data-selected-freshness-badge="${CSS.escape(recipe.id)}"]`);
         if (freshnessBadge) freshnessBadge.hidden = !bindingIsExpiring(binding);
+        const selectedSupporting = household.currentMeal ? selectedSupportingProteinId(household.currentMeal, recipe.id, recipes) : null;
+        const supporting = supportingProteinIds(recipe).filter((id) => available.has(id) || id === selectedSupporting);
+        if (supporting.length) {
+          const item = document.querySelector<HTMLElement>(`[data-selected-recipe="${CSS.escape(recipe.id)}"] > span`);
+          if (item) {
+            const label = document.createElement('label'); label.className = 'meal-binding-control'; label.dataset.selectedSupportingControl = recipe.id;
+            const text = document.createElement('span'); text.textContent = '顺手加蛋白';
+            const select = document.createElement('select'); select.dataset.selectedSupportingRecipe = recipe.id; select.setAttribute('aria-label', `${recipe.nameZh} 顺手加蛋白`); select.disabled = !writesEnabled || !hasMeal;
+            const none = document.createElement('option'); none.value = ''; none.textContent = '不加'; select.append(none);
+            supporting.forEach((id) => { const option = document.createElement('option'); option.value = id; option.textContent = ingredientById.get(id)?.nameZh ?? id; option.selected = selectedSupporting === id; select.append(option); });
+            label.append(text, select); item.append(label);
+          }
+        }
+        if (selectedSupporting) {
+          const body = document.querySelector<HTMLElement>(`[data-cook-recipe="${CSS.escape(recipe.id)}"] .meal-cook-card__body`);
+          if (body) {
+            const note = document.createElement('p'); note.className = 'note-box'; note.dataset.cookSupportingNote = recipe.id;
+            note.textContent = `顺手蛋白：${ingredientById.get(selectedSupporting)?.nameZh ?? selectedSupporting}。按该食材正常方式切薄或切小，先炒至安全熟度后暂盛出；蔬菜临近完成时回锅翻匀。`;
+            body.querySelector<HTMLElement>('.badges')?.after(note);
+          }
+        }
       });
       const candidates = rankCandidates(recipes, state, ingredients, draftBindings, household.recentMeals.map((meal) => meal.recipeIds)); const candidateIds = new Set(candidates.map((recipe) => recipe.id));
       document.querySelectorAll<HTMLElement>('[data-meal-recipe]').forEach((card) => { card.hidden = !candidateIds.has(card.dataset.mealRecipe!); });
@@ -527,11 +566,22 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       announce(removed > 0 ? `已批量取消食材，并移除 ${removed} 道无法制作的已选菜。` : `已${shouldBeOn ? '全选' : '全不选'} ${ids.length} 种食材。`);
     }));
     inventoryList.addEventListener('click', (event) => { const target = (event.target as HTMLElement); const toggle = target.closest<HTMLButtonElement>('[data-inventory-toggle]'); const step = target.closest<HTMLButtonElement>('[data-inventory-step]'); const ingredientId = toggle?.dataset.inventoryToggle ?? step?.dataset.inventoryIngredient; if (!ingredientId || !canWrite()) return; if (toggle) { const tracking = toggle.dataset.inventoryTracking === 'presence-only' ? 'presence-only' : 'counted'; safeWrite(repository.updateInventory((inventory) => { const current = typeof inventory[ingredientId] === 'number' ? inventory[ingredientId] as number : inventory[ingredientId] === true ? 1 : 0; const next = { ...inventory }; if (tracking === 'presence-only') { if (inventory[ingredientId] === true) delete next[ingredientId]; else next[ingredientId] = true; } else { if (current > 0) delete next[ingredientId]; else next[ingredientId] = 1; } return next; }).then((next) => { household = next; render(); })); } else if (step) { const delta = Number(step.dataset.inventoryStep); safeWrite(repository.updateInventory((inventory) => { const current = typeof inventory[ingredientId] === 'number' ? inventory[ingredientId] as number : 0; const nextValue = Math.max(0, roundCountedInventoryValue(current + delta)); const next = { ...inventory }; if (nextValue > 0) next[ingredientId] = nextValue; else delete next[ingredientId]; return next; }).then((next) => { household = next; render(); })); } });
-    recipeGrid.addEventListener('change', (event) => { const select = (event.target as HTMLElement).closest<HTMLSelectElement>('[data-binding-recipe]'); if (!select || !household.currentMeal || !canWrite()) return; const recipe = byId.get(select.dataset.bindingRecipe!); if (!recipe) return; const index = Number(select.dataset.bindingIndex); const binding = draftBindingFor(recipe, new Set(state.availableIngredientIds)); binding[index] = select.value; draftBindings[recipe.id] = binding; state = reconcileMealState({ ...state, recipeIngredientBindings: { ...state.recipeIngredientBindings, [recipe.id]: binding.filter((value): value is string => Boolean(value)) } }, recipes, ingredients); void persistMeal((meal) => { const remoteBinding = [...(meal.recipeIngredientBindings[recipe.id] ?? [])]; remoteBinding[index] = select.value; return reconcileCurrentMeal({ ...meal, recipeIngredientBindings: { ...meal.recipeIngredientBindings, [recipe.id]: remoteBinding.filter((value): value is string => Boolean(value)) }, checkoutDraft: {} }, recipes, ingredients); }); render(); announce('已更新这道菜的食材选择。'); });
-    document.querySelectorAll<HTMLButtonElement>('[data-select-recipe]').forEach((button) => button.addEventListener('click', () => { if (!household.currentMeal || !canWrite()) return; const id = button.dataset.selectRecipe!; const recipe = byId.get(id)!; const binding = draftBindingFor(recipe, new Set(state.availableIngredientIds)); state = reconcileMealState({ ...state, selectedRecipeIds: [...state.selectedRecipeIds, id], recipeIngredientBindings: { ...state.recipeIngredientBindings, [id]: binding.filter((value): value is string => Boolean(value)) } }, recipes, ingredients); void persistMeal((meal) => { const remoteState = mealStateFromCurrentMeal(meal); if (remoteState.selectedRecipeIds.includes(id)) return meal; const remoteBinding = bindRecipeIngredients(recipe, remoteState.availableIngredientIds, binding, remoteState.ingredientFreshnessDates); return reconcileCurrentMeal({ ...meal, selectedRecipeIds: [...meal.selectedRecipeIds, id], recipeIngredientBindings: { ...meal.recipeIngredientBindings, [id]: remoteBinding.filter((value): value is string => Boolean(value)) }, checkoutDraft: {} }, recipes, ingredients); }); render(); announce('已加入一道菜。'); }));
+    recipeGrid.addEventListener('change', (event) => {
+      const target = event.target as HTMLElement;
+      const supporting = target.closest<HTMLSelectElement>('[data-supporting-recipe]');
+      if (supporting) { draftSupportingProteins[supporting.dataset.supportingRecipe!] = supporting.value; if (!supporting.value) delete draftSupportingProteins[supporting.dataset.supportingRecipe!]; announce(supporting.value ? '已选择顺手蛋白。' : '已取消顺手蛋白。'); return; }
+      const select = target.closest<HTMLSelectElement>('[data-binding-recipe]'); if (!select || !household.currentMeal || !canWrite()) return; const recipe = byId.get(select.dataset.bindingRecipe!); if (!recipe) return; const index = Number(select.dataset.bindingIndex); const binding = draftBindingFor(recipe, new Set(state.availableIngredientIds)); binding[index] = select.value; draftBindings[recipe.id] = binding; state = reconcileMealState({ ...state, recipeIngredientBindings: { ...state.recipeIngredientBindings, [recipe.id]: binding.filter((value): value is string => Boolean(value)) } }, recipes, ingredients); void persistMeal((meal) => { const remoteBinding = [...(meal.recipeIngredientBindings[recipe.id] ?? [])]; remoteBinding[index] = select.value; return reconcileCurrentMeal({ ...meal, recipeIngredientBindings: { ...meal.recipeIngredientBindings, [recipe.id]: remoteBinding.filter((value): value is string => Boolean(value)) }, checkoutDraft: {} }, recipes, ingredients); }); render(); announce('已更新这道菜的食材选择。');
+    });
+    selectedPanel.addEventListener('change', (event) => {
+      const select = (event.target as HTMLElement).closest<HTMLSelectElement>('[data-selected-supporting-recipe]'); if (!select || !household.currentMeal || !canWrite()) return;
+      const recipeId = select.dataset.selectedSupportingRecipe!;
+      void persistMeal((meal) => setSupportingProteinAddon(meal, recipeId, select.value || null, recipes));
+      announce(select.value ? '已更新顺手蛋白。' : '已取消顺手蛋白。');
+    });
+    document.querySelectorAll<HTMLButtonElement>('[data-select-recipe]').forEach((button) => button.addEventListener('click', () => { if (!household.currentMeal || !canWrite()) return; const id = button.dataset.selectRecipe!; const recipe = byId.get(id)!; const binding = draftBindingFor(recipe, new Set(state.availableIngredientIds)); const supporting = draftSupportingProteins[id] || null; state = reconcileMealState({ ...state, selectedRecipeIds: [...state.selectedRecipeIds, id], recipeIngredientBindings: { ...state.recipeIngredientBindings, [id]: binding.filter((value): value is string => Boolean(value)) } }, recipes, ingredients); void persistMeal((meal) => { const remoteState = mealStateFromCurrentMeal(meal); if (remoteState.selectedRecipeIds.includes(id)) return meal; const remoteBinding = bindRecipeIngredients(recipe, remoteState.availableIngredientIds, binding, remoteState.ingredientFreshnessDates); const reconciled = reconcileCurrentMeal({ ...meal, selectedRecipeIds: [...meal.selectedRecipeIds, id], recipeIngredientBindings: { ...meal.recipeIngredientBindings, [id]: remoteBinding.filter((value): value is string => Boolean(value)) }, checkoutDraft: {} }, recipes, ingredients); return supporting ? setSupportingProteinAddon(reconciled, id, supporting, recipes) : reconciled; }); delete draftSupportingProteins[id]; render(); announce('已加入一道菜。'); }));
     document.querySelectorAll<HTMLButtonElement>('[data-remove-recipe]').forEach((button) => button.addEventListener('click', () => { if (!household.currentMeal || !canWrite()) return; const id = button.dataset.removeRecipe!; state = reconcileMealState({ ...state, selectedRecipeIds: state.selectedRecipeIds.filter((selectedId) => selectedId !== id) }, recipes, ingredients); void persistMeal((meal) => reconcileCurrentMeal({ ...meal, selectedRecipeIds: meal.selectedRecipeIds.filter((selectedId) => selectedId !== id), checkoutDraft: {} }, recipes, ingredients)); render(); announce('已移除一道菜。'); }));
     protein.addEventListener('change', () => { if (!canWrite() || !household.currentMeal) return; const value = Number(protein.value); state = { ...state, proteinTarget: value }; void persistMeal((meal) => ({ ...meal, proteinTarget: value })); render(); }); vegetable.addEventListener('change', () => { if (!canWrite() || !household.currentMeal) return; const value = Number(vegetable.value); state = { ...state, vegetableTarget: value }; void persistMeal((meal) => ({ ...meal, vegetableTarget: value })); render(); }); time.addEventListener('change', () => { if (!canWrite() || !household.currentMeal) return; const value = time.value as TimePreference; state = { ...state, timePreference: value }; void persistMeal((meal) => ({ ...meal, timePreference: value })); render(); }); staple.addEventListener('change', () => { if (!canWrite() || !household.currentMeal) return; const value = staple.checked; state = { ...state, stapleRequired: value }; void persistMeal((meal) => ({ ...meal, stapleRequired: value })); render(); }); child.addEventListener('change', () => { if (!canWrite() || !household.currentMeal) return; const value = child.checked; state = { ...state, childMode: value }; void persistMeal((meal) => ({ ...meal, childMode: value })); render(); });
-    const resetRecipes = () => { if (!household.currentMeal || !canWrite()) return; state = { ...state, selectedRecipeIds: [], recipeIngredientBindings: {} }; view = 'build'; checkoutDraft = {}; void persistMeal((meal) => resetRecipeSelection(meal)); render(); announce('已重置本顿选菜；库存和本顿可用食材未改变。'); };
+    const resetRecipes = () => { if (!household.currentMeal || !canWrite()) return; state = { ...state, selectedRecipeIds: [], recipeIngredientBindings: {} }; draftSupportingProteins = {}; view = 'build'; checkoutDraft = {}; void persistMeal((meal) => resetRecipeSelection(meal)); render(); announce('已重置本顿选菜；库存和本顿可用食材未改变。'); };
     document.querySelector('#meal-reset')!.addEventListener('click', resetRecipes); document.querySelector('#meal-recipe-reset')!.addEventListener('click', resetRecipes);
     document.querySelector('#meal-inventory-reset')!.addEventListener('click', () => { if (canWrite() && window.confirm('确定清空共享库存吗？')) { safeWrite(repository.resetInventory().then((next) => { household = next; render(); })); announce('已清空库存；本顿可用食材保持不变。'); } });
     document.querySelectorAll<HTMLButtonElement>('[data-step-target]').forEach((button) => button.addEventListener('click', async () => { if (button.disabled) return; const target = button.dataset.stepTarget as 'inventory' | 'recipes' | 'cook' | 'checkout'; await persistStep(target); render(); announce(`已进入第 ${target === 'inventory' ? '一' : target === 'recipes' ? '二' : target === 'cook' ? '三' : '四'} 步。`); }));
@@ -548,7 +598,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
     checkoutList.addEventListener('change', (event) => { const input = (event.target as HTMLInputElement).closest<HTMLInputElement>('[data-checkout-used-up]'); if (input) { checkoutDraft = { ...checkoutDraft, [input.dataset.checkoutUsedUp!]: input.checked }; queueCheckoutDraft(); renderCheckout(); } });
     confirmCheckout.addEventListener('click', () => { checkoutStatus.textContent = '请再次确认后清除本顿和已用库存。'; finalizeCheckout.hidden = false; finalizeCheckout.focus(); });
     finalizeCheckout.addEventListener('click', async () => { const meal = household.currentMeal; if (!meal || !canWrite()) return; try { const result = await repository.checkout(meal.mealId, checkoutDraft); if (result.committed) { household = result.state; state = result.state.currentMeal ? mealStateFromCurrentMeal(result.state.currentMeal) : defaultMealState(); checkoutDraft = {}; checkout.hidden = true; view = 'build'; announce('结算已完成，已按剩余库存开始新一顿选菜。'); } else { checkoutStatus.textContent = result.reason === 'stale-meal' ? '本顿已被另一台设备修改或结算，请刷新当前状态。' : 'Checkout 数量无效，请重新检查。'; } render(); } catch (error) { reportWriteError(error); } });
-    repository.subscribe((next, status) => { household = next; repositoryStatus = status; if (next.currentMeal) { state = reconcileMealState(mealStateFromCurrentMeal(next.currentMeal), recipes, ingredients); view = next.activeStep === 'cook' || next.activeStep === 'checkout' ? 'cook' : 'build'; syncCheckoutDraft(next.currentMeal); } else { state = defaultMealState(); draftBindings = {}; checkoutDraftSync.clear(); checkoutDraft = {}; checkout.hidden = true; view = 'build'; } render(); });
+    repository.subscribe((next, status) => { household = next; repositoryStatus = status; if (next.currentMeal) { state = reconcileMealState(mealStateFromCurrentMeal(next.currentMeal), recipes, ingredients); view = next.activeStep === 'cook' || next.activeStep === 'checkout' ? 'cook' : 'build'; syncCheckoutDraft(next.currentMeal); } else { state = defaultMealState(); draftBindings = {}; draftSupportingProteins = {}; checkoutDraftSync.clear(); checkoutDraft = {}; checkout.hidden = true; view = 'build'; } render(); });
     repository.ready?.catch(() => render());
     render();
   </script>
