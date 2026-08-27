@@ -16,7 +16,8 @@ fit_score: 5
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
-supporting_protein_ingredient_ids:
+supporting_protein_ingredient_ids: []
+optional_supporting_protein_ingredient_ids:
   - whole-pork-tenderloin
   - thin-sliced-pork-belly
   - extra-thin-sliced-pork-belly
