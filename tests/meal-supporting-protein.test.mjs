@@ -4,7 +4,7 @@ import { parse, stringify } from 'yaml';
 import { readMealFiles } from '../scripts/load-meal-data.mjs';
 import { parseMealFiles } from '../src/data/mealParser.mjs';
 
-test('supporting protein allow-lists are preserved and validated', async () => {
+test('optional supporting protein allow-lists are preserved and validated without replacing required supporting metadata', async () => {
   const files = await readMealFiles();
   const data = parseMealFiles(files);
   const leafy = data.recipes.find((recipe) => recipe.id === 'simple-stir-fried-leafy-greens');
@@ -13,6 +13,11 @@ test('supporting protein allow-lists are preserved and validated', async () => {
   assert(leafy.supportingProteinIngredientIds.includes('thin-sliced-pork-belly'));
   assert(leafy.supportingProteinIngredientIds.includes('peeled-shrimp'));
   assert.equal(leafy.supportingProteinIngredientIds.includes('ground-pork'), false);
+
+  const requiredSupporting = data.recipes.find((recipe) => recipe.id === 'pressed-tofu-pork-strips');
+  assert(requiredSupporting);
+  assert(requiredSupporting.requiredSupportingProteinIngredientIds.includes('pressed-tofu'));
+  assert.equal(requiredSupporting.supportingProteinIngredientIds.length, 0);
 
   const compatibleRecipeIds = [
     'simple-stir-fried-leafy-greens',
@@ -34,13 +39,13 @@ test('supporting protein allow-lists are preserved and validated', async () => {
   assert(luffa?.supportingProteinIngredientIds.includes('ground-pork'));
 
   const bad = parse(files['recipe/vegetable/simple-stir-fried-leafy-greens.yaml']);
-  bad.supporting_protein_ingredient_ids = ['missing-supporting-protein'];
+  bad.optional_supporting_protein_ingredient_ids = ['missing-supporting-protein'];
   await assert.rejects(
     async () => parseMealFiles({
       ...files,
       'recipe/vegetable/simple-stir-fried-leafy-greens.yaml': stringify(bad),
     }),
-    /supporting_protein_ingredient_ids references missing ingredient/,
+    /optional_supporting_protein_ingredient_ids references missing ingredient/,
   );
 });
 
