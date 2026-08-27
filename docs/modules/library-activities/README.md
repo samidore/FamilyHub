@@ -23,6 +23,7 @@ Records contain public schedule facts, location, age group, activity type, regis
 - Unknown factual details still stay unknown. Mark only the specific unresolved field instead of turning the entire record into a generic "待确认" entry.
 - `verifiedDate` must be populated when an event is added or refreshed.
 - `dateRange` is the expiry source for the page. Use `YYYY-MM-DD` for a one-day event or `YYYY-MM-DD – YYYY-MM-DD` for a bounded series. The final ISO date is treated as the last valid date.
+- If a current official source confirms a seasonal program but gives only a season such as `Fall`, `dateRange` may use a conservative maintenance estimate so the entry can be sorted and expired. The displayed value and badges/description must clearly say `暂估`, must not present the estimate as an official date, and must be replaced when exact source dates become available.
 - Remove obsolete records during a source refresh even though the page also hides records automatically after their final date.
 
 ## Page behavior
