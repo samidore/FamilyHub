@@ -107,13 +107,13 @@
     justify-content: space-between;
     gap: 12px;
     padding: 12px 14px;
-    border: 1px solid #dccdd3;
+    border: 1px solid var(--line);
     border-radius: 16px;
-    background: #fffafc;
+    background: color-mix(in srgb, var(--surface) 88%, var(--berry-soft));
     cursor: pointer;
   }
   .meal-ingredient-overall-fold__summary > span:first-child { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
-  .meal-ingredient-overall-fold__summary small { color: #776b70; font-size: .86rem; font-weight: 600; }
+  .meal-ingredient-overall-fold__summary small { color: var(--muted); font-size: .86rem; font-weight: 600; }
   .meal-ingredient-overall-fold[open] > .meal-ingredient-overall-fold__summary { margin-bottom: 16px; }
 
   .meal-inventory-jump-nav {
@@ -122,7 +122,7 @@
     z-index: 30;
     margin: 10px 0 14px;
     padding: 8px 0;
-    background: rgba(255, 255, 255, .96);
+    background: color-mix(in srgb, var(--surface) 96%, transparent);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
@@ -140,15 +140,15 @@
     min-height: 40px;
     flex: 0 0 auto;
     padding: 8px 13px;
-    border: 1px solid #d8cbd1;
+    border: 1px solid var(--line);
     border-radius: 999px;
-    background: #fff;
-    color: inherit;
+    background: var(--surface);
+    color: var(--ink);
     font: inherit;
     font-weight: 700;
     white-space: nowrap;
     cursor: pointer;
   }
-  .meal-inventory-jump-nav button:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
+  .meal-inventory-jump-nav button:focus-visible { outline: 3px solid color-mix(in srgb, var(--berry) 70%, white); outline-offset: 2px; }
   .meal-inventory-group { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 64px); }
 </style>
