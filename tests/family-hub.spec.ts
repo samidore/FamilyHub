@@ -243,6 +243,7 @@ test('meal builder filters live, completes a meal, and preserves state', async (
 test('meal ingredient sections keep selection while collapsed', async ({ page }) => {
   await page.goto('meal-builder/');
   await startMeal(page, ['whole-pork-tenderloin']);
+  await page.locator('[data-meal-ingredient-fold] > summary').click();
   const section = page.locator('[data-ingredient-section="pork"]');
   await expect(section.locator('[data-ingredient-id="whole-pork-tenderloin"]')).toHaveAttribute('aria-pressed', 'true');
   await section.locator('summary').click();
@@ -378,6 +379,7 @@ test('turning a current-meal ingredient off does not change shared inventory', a
   await startMeal(page, ['whole-pork-tenderloin']);
   const row = page.locator('[data-inventory-item="whole-pork-tenderloin"]');
   await expect(row.locator('[data-inventory-value="whole-pork-tenderloin"]')).toHaveText('1');
+  await page.locator('[data-meal-ingredient-fold] > summary').click();
   await page.locator('[data-ingredient-id="whole-pork-tenderloin"]').click();
   await expect(page.locator('[data-ingredient-id="whole-pork-tenderloin"]')).toHaveAttribute('aria-pressed', 'false');
   await expect(row.locator('[data-inventory-value="whole-pork-tenderloin"]')).toHaveText('1');
@@ -386,10 +388,12 @@ test('turning a current-meal ingredient off does not change shared inventory', a
 test('returning through inventory preserves exclusions and enables newly stocked ingredients', async ({ page }) => {
   await page.goto('meal-builder/');
   await startMeal(page, ['whole-pork-tenderloin']);
+  await page.locator('[data-meal-ingredient-fold] > summary').click();
   await page.locator('[data-ingredient-id="whole-pork-tenderloin"]').click();
   await page.locator('#meal-back-inventory').click();
   await (await inventoryItem(page, 'chicken-breast')).locator('[data-inventory-toggle]').click();
   await page.locator('#meal-start-current').click();
+  await page.locator('[data-meal-ingredient-fold] > summary').click();
   await expect(page.locator('[data-ingredient-id]:visible')).toHaveCount(2);
   await expect(page.locator('[data-ingredient-id="whole-pork-tenderloin"]')).toHaveAttribute('aria-pressed', 'false');
   await expect(page.locator('[data-ingredient-id="chicken-breast"]')).toHaveAttribute('aria-pressed', 'true');
