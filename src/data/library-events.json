@@ -1,27 +1,5 @@
 [
   {
-    "day": "周一",
-    "dayOrder": 1,
-    "time": "时间见报名页",
-    "timeOrder": 9999,
-    "name": "Battle The Second",
-    "library": "Maurice M. Pine Library",
-    "location": "Fair Lawn, NJ（具体地点见报名页）",
-    "drive": "Fair Lawn 内；具体地点见报名页",
-    "age": "儿童部当前活动，公开文字未标年龄；按 2024 Q3 家庭基准继续显示",
-    "ageGroup": "年龄未标",
-    "description": "Maurice M. Pine Library 儿童部当前列出的 August Special Summer Program，日期为 8/24。现有公开文字没有展开年龄、时间和具体地点；这些具体字段以报名页为准。",
-    "registration": "需报名；August special programs 提前 1 周开放",
-    "badges": [
-      "年龄未标",
-      "仅 Fair Lawn 居民"
-    ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Fair+Lawn+NJ",
-    "officialUrl": "https://bccls.libcal.com/event/16886249",
-    "verifiedDate": "2026-08-20",
-    "dateRange": "2026-08-24"
-  },
-  {
     "day": "周四",
     "dayOrder": 4,
     "time": "时间见报名页",
@@ -42,5 +20,74 @@
     "officialUrl": "https://bccls.libcal.com/event/17271409",
     "verifiedDate": "2026-08-20",
     "dateRange": "2026-08-27"
+  },
+  {
+    "day": "周三",
+    "dayOrder": 3,
+    "time": "10:30–11:00 AM 或 4:00–4:30 PM",
+    "timeOrder": 1030,
+    "name": "Berdan Park Story Time",
+    "library": "Maurice M. Pine Library",
+    "location": "Berdan Grove Park, Berdan Ave & Sunnyside Dr, Fair Lawn, NJ（天气不佳移至图书馆）",
+    "drive": "Fair Lawn 内",
+    "age": "推荐 2–5 岁",
+    "ageGroup": "适合 2–5 岁",
+    "description": "9/9–9/30 每周三的户外故事与歌曲活动；可自带毯子或椅子。每周有 10:30–11:00 AM 或 4:00–4:30 PM 两档，天气不佳时移至图书馆。",
+    "registration": "无需报名",
+    "badges": [
+      "无需报名",
+      "仅 Fair Lawn 居民",
+      "户外 / 天气影响"
+    ],
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Berdan+Grove+Park+Fair+Lawn+NJ",
+    "officialUrl": "https://www.fairlawnlibrary.org/children",
+    "verifiedDate": "2026-08-27",
+    "dateRange": "2026-09-09 – 2026-09-30"
+  },
+  {
+    "day": "周六",
+    "dayOrder": 6,
+    "time": "10:30 AM–12:00 PM",
+    "timeOrder": 1030,
+    "name": "Sensory Friendly Movie",
+    "library": "Maurice M. Pine Library",
+    "location": "Maurice M. Pine Library, 10-01 Fair Lawn Ave, Fair Lawn, NJ",
+    "drive": "Fair Lawn 内",
+    "age": "全年龄；需成人陪同",
+    "ageGroup": "适合当前年龄",
+    "description": "播放 Trolls Band Together。孩子可以走动、发声，并按自己舒适的方式观影；活动不允许携带食物。",
+    "registration": "需在线报名；9/1 10:00 AM 开放",
+    "badges": [
+      "需报名",
+      "仅 Fair Lawn 居民",
+      "Sensory Friendly"
+    ],
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Maurice+M+Pine+Library+Fair+Lawn+NJ",
+    "officialUrl": "https://www.fairlawnlibrary.org/children",
+    "verifiedDate": "2026-08-27",
+    "dateRange": "2026-09-19"
+  },
+  {
+    "day": "周日",
+    "dayOrder": 7,
+    "time": "1:30–2:00 PM",
+    "timeOrder": 1330,
+    "name": "Singin’ with Miss Sam",
+    "library": "Maurice M. Pine Library",
+    "location": "Maurice M. Pine Library 户外（天气允许）",
+    "drive": "Fair Lawn 内",
+    "age": "2–5 岁；需成人陪同",
+    "ageGroup": "适合 2–5 岁",
+    "description": "Music / movement 活动：跟着 Miss Sam 的吉他唱歌、律动。天气允许时在图书馆外举行。",
+    "registration": "需在线报名；9/1 10:00 AM 开放",
+    "badges": [
+      "需报名",
+      "仅 Fair Lawn 居民",
+      "户外 / 天气影响"
+    ],
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Maurice+M+Pine+Library+Fair+Lawn+NJ",
+    "officialUrl": "https://www.fairlawnlibrary.org/children",
+    "verifiedDate": "2026-08-27",
+    "dateRange": "2026-09-20"
   }
 ]
