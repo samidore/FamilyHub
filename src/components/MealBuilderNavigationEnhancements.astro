@@ -54,7 +54,7 @@
     const track = document.createElement('div');
     track.className = 'meal-inventory-jump-nav__track';
     nav.append(track);
-    inventoryView.insertBefore(nav, inventoryList);
+    inventoryView.append(nav);
 
     let signature = '';
     const syncInventoryJumpNav = () => {
@@ -116,13 +116,20 @@
   .meal-ingredient-overall-fold__summary small { color: var(--muted); font-size: .86rem; font-weight: 600; }
   .meal-ingredient-overall-fold[open] > .meal-ingredient-overall-fold__summary { margin-bottom: 16px; }
 
+  .meal-builder-page #meal-inventory-view {
+    padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px));
+  }
   .meal-inventory-jump-nav {
-    position: sticky;
-    top: env(safe-area-inset-top, 0px);
-    z-index: 30;
-    margin: 10px 0 14px;
-    padding: 8px 0;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+    margin: 0;
+    padding: 8px clamp(10px, 3vw, 24px) calc(8px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid color-mix(in srgb, var(--line) 85%, transparent);
     background: color-mix(in srgb, var(--surface) 96%, transparent);
+    box-shadow: 0 -8px 24px color-mix(in srgb, var(--ink) 8%, transparent);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
@@ -131,7 +138,7 @@
     gap: 8px;
     overflow-x: auto;
     overscroll-behavior-inline: contain;
-    padding: 2px 2px 5px;
+    padding: 2px 2px 3px;
     scrollbar-width: none;
     -webkit-overflow-scrolling: touch;
   }
