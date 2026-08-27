@@ -1,11 +1,16 @@
 import { expect, test } from '@playwright/test';
 
-test('inventory category jump bar is sticky, data-driven, and opens the target section', async ({ page }) => {
+test('inventory category jump bar is bottom-pinned, data-driven, and opens the target section', async ({ page }) => {
   await page.goto('meal-builder/');
 
   const nav = page.locator('[data-inventory-jump-nav]');
   await expect(nav).toBeVisible();
-  expect(await nav.evaluate((element) => getComputedStyle(element).position)).toBe('sticky');
+  expect(await nav.evaluate((element) => getComputedStyle(element).position)).toBe('fixed');
+  expect(await nav.evaluate((element) => getComputedStyle(element).bottom)).toBe('0px');
+  const viewportHeight = await page.evaluate(() => window.innerHeight);
+  const navBox = await nav.boundingBox();
+  expect(navBox).not.toBeNull();
+  expect(Math.abs((navBox?.y ?? 0) + (navBox?.height ?? 0) - viewportHeight)).toBeLessThanOrEqual(1);
   await expect(page.locator('[data-inventory-jump="pork"]')).toHaveText('猪肉');
   await expect(page.locator('[data-inventory-jump="leafy-vegetable"]')).toHaveText('叶菜');
   await expect(page.locator('[data-inventory-jump="staple"]')).toHaveText('主食');
