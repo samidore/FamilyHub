@@ -16,6 +16,11 @@ test('global and section bulk controls filter future candidates without changing
   await setInventory(page, ['ground-pork', 'pork-chops', 'chicken-breast', 'broccoli']);
   await page.locator('#meal-start-current').click();
 
+  const overallFold = page.locator('[data-meal-ingredient-fold]');
+  await expect(overallFold).not.toHaveAttribute('open', '');
+  await overallFold.locator(':scope > summary').click();
+  await expect(overallFold).toHaveAttribute('open', '');
+
   const globalSelect = page.locator('[data-ingredient-bulk-scope="all"][data-ingredient-bulk="select"]');
   const globalClear = page.locator('[data-ingredient-bulk-scope="all"][data-ingredient-bulk="clear"]');
   await expect(globalSelect).toHaveAttribute('aria-label', '全选所有可用食材');
@@ -31,6 +36,7 @@ test('global and section bulk controls filter future candidates without changing
     await expect(page.locator(`[data-inventory-value="${id}"]`)).toHaveText('1');
   }
   await expect(page.locator('#meal-ingredient-count')).toHaveText('已选 0');
+  await expect(page.locator('[data-meal-ingredient-fold-count]')).toHaveText('已选 0');
 
   await globalSelect.click();
   for (const id of ['ground-pork', 'pork-chops', 'chicken-breast', 'broccoli']) {
