@@ -1,7 +1,7 @@
 import { parse as parseYaml } from 'yaml';
 
 const INGREDIENT_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'starter', 'tags', 'child_coverage', 'inventory_tracking', 'inventory_freshness', 'freshness_priority_days']);
-const RECIPE_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'tags', 'fit_score', 'primary_role', 'main_protein_category', 'main_protein_ingredient_ids', 'supporting_protein_ingredient_ids', 'vegetable_ingredient_ids', 'meal_contribution', 'child_coverage', 'integral_staple_ingredient_ids', 'recommended_staple_ingredient_ids', 'active_minutes', 'meal_window_minutes', 'elapsed_minutes', 'advance_start_required', 'equipment', 'burner_plan', 'child_suitable', 'child_texture', 'spicy_in_base', 'deep_fried', 'salt_level', 'oil_level', 'servings', 'detail_level', 'ingredients', 'cook_ingredients', 'steps', 'child_serving', 'adult_finish', 'substitutions', 'checkout_units']);
+const RECIPE_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'tags', 'fit_score', 'primary_role', 'main_protein_category', 'main_protein_ingredient_ids', 'supporting_protein_ingredient_ids', 'optional_supporting_protein_ingredient_ids', 'vegetable_ingredient_ids', 'meal_contribution', 'child_coverage', 'integral_staple_ingredient_ids', 'recommended_staple_ingredient_ids', 'active_minutes', 'meal_window_minutes', 'elapsed_minutes', 'advance_start_required', 'equipment', 'burner_plan', 'child_suitable', 'child_texture', 'spicy_in_base', 'deep_fried', 'salt_level', 'oil_level', 'servings', 'detail_level', 'ingredients', 'cook_ingredients', 'steps', 'child_serving', 'adult_finish', 'substitutions', 'checkout_units']);
 const CONTRIBUTIONS = new Set([0, 0.5, 1, 2]);
 const STARTER_KEYS = new Set(['visible', 'section', 'order']);
 const SECTION_KEYS = new Set(['id', 'label_zh', 'label_en', 'order', 'visible']);
@@ -95,11 +95,16 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
       for (const id of anyOf) assert(ingredientIds.has(id), `${record.id} references missing ingredient ${id}`);
       requirements.push({ anyOf, role: String(entry.role ?? '') });
     }
-    const supportingProteinIngredientIds = stringArray(record.supporting_protein_ingredient_ids);
-    assert(new Set(supportingProteinIngredientIds).size === supportingProteinIngredientIds.length, `${record.id} has duplicate supporting_protein_ingredient_ids`);
-    for (const id of supportingProteinIngredientIds) {
+    const requiredSupportingProteinIngredientIds = stringArray(record.supporting_protein_ingredient_ids);
+    assert(new Set(requiredSupportingProteinIngredientIds).size === requiredSupportingProteinIngredientIds.length, `${record.id} has duplicate supporting_protein_ingredient_ids`);
+    for (const id of requiredSupportingProteinIngredientIds) {
       assert(ingredientIds.has(id), `${record.id} supporting_protein_ingredient_ids references missing ingredient ${id}`);
-      assert(!requirements.some((requirement) => requirement.anyOf.includes(id)), `${record.id} supporting protein ${id} cannot also be a hard requirement`);
+    }
+    const supportingProteinIngredientIds = stringArray(record.optional_supporting_protein_ingredient_ids);
+    assert(new Set(supportingProteinIngredientIds).size === supportingProteinIngredientIds.length, `${record.id} has duplicate optional_supporting_protein_ingredient_ids`);
+    for (const id of supportingProteinIngredientIds) {
+      assert(ingredientIds.has(id), `${record.id} optional_supporting_protein_ingredient_ids references missing ingredient ${id}`);
+      assert(!requirements.some((requirement) => requirement.anyOf.includes(id)), `${record.id} optional supporting protein ${id} cannot also be a hard requirement`);
     }
     if (record.detail_level !== 'discoverable') {
       assert(Array.isArray(record.cook_ingredients) && record.cook_ingredients.length > 0 && record.cook_ingredients.every((entry) => typeof entry === 'string' && entry.trim().length > 0), `${record.id} cookable record requires cook_ingredients`);
@@ -119,7 +124,7 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
       id: record.id, nameZh: String(record.name_zh), nameEn: String(record.name_en), tags: stringArray(record.tags), primaryRole: String(record.primary_role),
       mainProteinCategory: String(record.main_protein_category ?? 'none'), fitScore: Number(record.fit_score), order,
       contribution: { protein: Number(record.meal_contribution.protein), vegetable: Number(record.meal_contribution.vegetable), staple: Number(record.meal_contribution.staple) },
-      childCoverage, requirements, supportingProteinIngredientIds, cookIngredientLines: stringArray(record.cook_ingredients),
+      childCoverage, requirements, requiredSupportingProteinIngredientIds, supportingProteinIngredientIds, cookIngredientLines: stringArray(record.cook_ingredients),
       checkoutUnits,
       ingredientChildCoverage: Object.fromEntries(requirements.flatMap((requirement) => requirement.anyOf).map((id) => [id, ingredients.find((item) => item.id === id)?.childCoverage?.vegetable ?? 'unknown'])),
       activeMinutes: String(record.active_minutes ?? ''), mealWindowMinutes: String(record.meal_window_minutes ?? ''), elapsedMinutes: String(record.elapsed_minutes ?? ''), advanceStartRequired: record.advance_start_required,
