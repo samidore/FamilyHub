@@ -1,0 +1,154 @@
+<script>
+  function enhanceMealBuilderNavigation() {
+    const ingredientSection = document.querySelector<HTMLElement>('.meal-ingredients');
+    if (ingredientSection && !ingredientSection.querySelector(':scope > [data-meal-ingredient-fold]')) {
+      const existingChildren = [...ingredientSection.childNodes];
+      const fold = document.createElement('details');
+      fold.className = 'meal-ingredient-overall-fold';
+      fold.dataset.mealIngredientFold = 'true';
+
+      const summary = document.createElement('summary');
+      summary.id = 'meal-ingredient-overall-summary';
+      summary.className = 'meal-ingredient-overall-fold__summary';
+
+      const label = document.createElement('span');
+      const title = document.createElement('strong');
+      title.textContent = '可用食材';
+      const hint = document.createElement('small');
+      hint.textContent = '展开筛选';
+      label.append(title, hint);
+
+      const count = document.createElement('span');
+      count.className = 'meal-count';
+      count.dataset.mealIngredientFoldCount = 'true';
+      count.textContent = '已选 0';
+      summary.append(label, count);
+
+      fold.append(summary, ...existingChildren);
+      ingredientSection.append(fold);
+      ingredientSection.setAttribute('aria-labelledby', summary.id);
+
+      const sourceCount = fold.querySelector<HTMLElement>('#meal-ingredient-count');
+      const syncCount = () => { count.textContent = sourceCount?.textContent?.trim() || '已选 0'; };
+      syncCount();
+      if (sourceCount) new MutationObserver(syncCount).observe(sourceCount, { childList: true, characterData: true, subtree: true });
+
+      const builder = document.querySelector<HTMLElement>('#meal-builder-view');
+      if (builder) {
+        new MutationObserver(() => { if (!builder.hidden) fold.open = false; }).observe(builder, { attributes: true, attributeFilter: ['hidden'] });
+      }
+      document.querySelectorAll<HTMLElement>('#meal-start-current, [data-step-target="recipes"], #meal-back-to-menu').forEach((control) => {
+        control.addEventListener('click', () => { fold.open = false; });
+      });
+    }
+
+    const inventoryView = document.querySelector<HTMLElement>('#meal-inventory-view');
+    const inventoryList = document.querySelector<HTMLElement>('#meal-inventory-list');
+    if (!inventoryView || !inventoryList || inventoryView.querySelector(':scope > [data-inventory-jump-nav]')) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'meal-inventory-jump-nav';
+    nav.dataset.inventoryJumpNav = 'true';
+    nav.setAttribute('aria-label', '库存类型跳转');
+    nav.hidden = true;
+    const track = document.createElement('div');
+    track.className = 'meal-inventory-jump-nav__track';
+    nav.append(track);
+    inventoryView.insertBefore(nav, inventoryList);
+
+    let signature = '';
+    const syncInventoryJumpNav = () => {
+      const groups = [...inventoryList.querySelectorAll<HTMLDetailsElement>('details[data-inventory-section]')];
+      const entries = groups.flatMap((group) => {
+        const id = group.dataset.inventorySection;
+        if (!id) return [];
+        const label = group.querySelector<HTMLElement>('summary strong')?.textContent?.trim() || id;
+        return [{ id, label }];
+      });
+      nav.hidden = entries.length === 0;
+      const nextSignature = entries.map(({ id, label }) => `${id}:${label}`).join('|');
+      if (nextSignature === signature) return;
+      signature = nextSignature;
+      track.replaceChildren();
+
+      entries.forEach(({ id, label }) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.dataset.inventoryJump = id;
+        button.textContent = label;
+        button.setAttribute('aria-label', `跳至${label}`);
+        button.addEventListener('click', () => {
+          const target = inventoryList.querySelector<HTMLDetailsElement>(`details[data-inventory-section="${CSS.escape(id)}"]`);
+          if (!target) return;
+          target.open = true;
+          button.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          requestAnimationFrame(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+        });
+        track.append(button);
+      });
+    };
+
+    new MutationObserver(syncInventoryJumpNav).observe(inventoryList, { childList: true });
+    syncInventoryJumpNav();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', enhanceMealBuilderNavigation, { once: true });
+  else enhanceMealBuilderNavigation();
+</script>
+
+<style is:global>
+  .meal-ingredient-overall-fold { border: 0; }
+  .meal-ingredient-overall-fold > summary { list-style: none; }
+  .meal-ingredient-overall-fold > summary::-webkit-details-marker { display: none; }
+  .meal-ingredient-overall-fold__summary {
+    display: flex;
+    min-height: 58px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1px solid #dccdd3;
+    border-radius: 16px;
+    background: #fffafc;
+    cursor: pointer;
+  }
+  .meal-ingredient-overall-fold__summary > span:first-child { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
+  .meal-ingredient-overall-fold__summary small { color: #776b70; font-size: .86rem; font-weight: 600; }
+  .meal-ingredient-overall-fold[open] > .meal-ingredient-overall-fold__summary { margin-bottom: 16px; }
+
+  .meal-inventory-jump-nav {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 30;
+    margin: 10px 0 14px;
+    padding: 8px 0;
+    background: rgba(255, 255, 255, .96);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .meal-inventory-jump-nav__track {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    padding: 2px 2px 5px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .meal-inventory-jump-nav__track::-webkit-scrollbar { display: none; }
+  .meal-inventory-jump-nav button {
+    min-height: 40px;
+    flex: 0 0 auto;
+    padding: 8px 13px;
+    border: 1px solid #d8cbd1;
+    border-radius: 999px;
+    background: #fff;
+    color: inherit;
+    font: inherit;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .meal-inventory-jump-nav button:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
+  .meal-inventory-group { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 64px); }
+</style>
