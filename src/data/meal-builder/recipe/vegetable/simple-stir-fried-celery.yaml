@@ -8,7 +8,8 @@ fit_score: 4
 primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
-supporting_protein_ingredient_ids:
+supporting_protein_ingredient_ids: []
+optional_supporting_protein_ingredient_ids:
   - whole-pork-tenderloin
   - pork-chops
   - sliced-beef-brisket
