@@ -3,7 +3,7 @@ import { notebookItemsForSection, orderedNotebookBoards, reorderNotebookBoards, 
 
 export interface NotebookPointerReorderContext {
   getState(): NotebookState;
-  mutate(label: string, fn: (current: NotebookState) => NotebookState): Promise<void>;
+  mutate(label: string, fn: (current: NotebookState) => NotebookState): Promise<boolean>;
 }
 
 type ItemDrag = {
