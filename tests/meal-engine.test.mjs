@@ -110,7 +110,7 @@ test('structured data keeps key Ingredient, Recipe, and unified optional-group r
   assert.equal(kb.optionalGroups.find((group) => group.id === 'add-some-richness')?.ingredients.some((entry) => entry.ingredientId === 'ground-pork' && entry.contribution.protein === .5), true);
   assert.equal(kb.optionalGroups.find((group) => group.id === 'change-it-up')?.ingredients.some((entry) => entry.ingredientId === 'tomato' && entry.contribution.vegetable === 1), true);
   assert.equal(kb.optionalGroups.find((group) => group.id === 'one-pot-mix')?.ingredients.length, 23);
-  assert.equal(kb.recipes.filter((item) => item.optionalGroupIds?.includes('one-pot-mix')).length, 36);
+  assert.equal(kb.recipes.filter((item) => item.optionalGroupIds?.includes('one-pot-mix')).length, 40);
   assert.equal(kb.recipes.filter((item) => item.optionalGroupIds?.includes('add-some-richness')).length, 6);
   assert.equal(kb.recipes.filter((item) => item.optionalGroupIds?.includes('change-it-up')).length, 3);
   assert.equal(kb.ingredients.some((item) => item.tags?.includes('easy-braise-addon')), false);
