@@ -38,19 +38,18 @@ Top controls:
 
 - `Active | Completed | All`, default `Active`.
 - `Collapse all`.
-- Board manager for ordinary Board visibility and drag ordering.
+- Board manager for shared Board ordering (`反复干` plus ordinary Boards) and ordinary Board visibility/editing.
 - Developer page entry.
 
 Then:
 
 1. Fixed smart `Urgent` board, always first when it has rows. It is computed from active items with `priority = urgent` plus the hidden derived `due-soon` state; it is not a normal membership target.
-2. Fixed computed `反复干` board. Every live recurring item appears here and does not render in its ordinary Board memberships while recurrence is present. `反复干` is not a Firebase Board record, has no manual item ordering, and is not managed in Board Manager.
-3. Visible registered ordinary Boards in shared board order. These render only non-recurring live items and one-time completion rows.
-4. Quick Inbox input at the bottom. Submitting any non-empty sentence creates a ticket immediately with no schema gate.
+2. Shared Board layout containing the computed `反复干` board and visible registered ordinary Boards. `反复干` may be moved before, between, or after ordinary Boards in Board Manager. Every live recurring item appears there and does not render in its ordinary Board memberships while recurrence is present. `反复干` is not a Firebase Board record and has no manual item ordering. Ordinary Boards render only non-recurring live items and one-time completion rows.
+3. Quick Inbox input at the bottom. Submitting any non-empty sentence creates a ticket immediately with no schema gate.
 
 `Urgent` remains a smart-view exception to recurring-item exclusivity: a recurring item that is manually urgent or due-soon may appear in both Smart Urgent and `反复干`. It still does not render in ordinary Boards while recurrence is present.
 
-All ordinary Board visibility, Board order, collapse state, and top filter state are household-shared state, not per-user preferences. `反复干` is fixed and computed from item state.
+Ordinary Board visibility/collapse, the combined Board layout order, and the top filter state are household-shared state, not per-user preferences. `反复干` remains computed from item state; only its insertion position among ordinary Boards is persisted in notebook settings.
 
 ### Hidden due-soon state
 
@@ -108,7 +107,7 @@ Each regular Board header keeps the collapse control, Board title, and `＋事�
 
 `kind = media` only changes the fields/editing UI offered by that board. Do not add a separate `mediaType` field to items; `Movies` and `TV` are simply board names.
 
-`反复干` and Smart Urgent are fixed computed views, not `Board` records. Their titles are intentionally system UI labels rather than dynamic registry names.
+`反复干` and Smart Urgent are computed views, not `Board` records. Smart Urgent is fixed first. `反复干` participates in Board Manager ordering through the shared `settings.recurringBoardOrder` insertion position, while its title/content semantics remain system-controlled and it is never a normal membership target.
 
 ## Items
 
@@ -165,6 +164,8 @@ A recurring item also retains its ordinary memberships while recurrence is activ
 - stable Board snapshots for recurring completion history;
 - no duplicate live card in ordinary Boards.
 
+Board-level ordering is separate from item ordering. Ordinary Boards keep dense `Board.order` values. `settings.recurringBoardOrder` stores the insertion index of the computed `反复干` Board among those ordinary Boards. Board Manager drag and arrow controls update the combined shared layout; moving `反复干` does not create a membership, change any item, or enable manual ordering inside `反复干`.
+
 Each ordinary board has fixed priority sections in this order:
 
 1. Urgent
@@ -189,7 +190,7 @@ For the expected household scale, use simple dense integer ordering and rewrite 
 
 ### `反复干` ordering and remaining-day groups
 
-`反复干` has no manual drag order and no top-level priority sections. It always shows every active recurring item, including future items.
+`反复干` has no manual item drag order and no top-level priority sections. Its Board-level position among ordinary Boards is shared and manually reorderable; its contents always remain automatically ordered. It always shows every active recurring item, including future items.
 
 For each recurring item:
 
@@ -370,7 +371,7 @@ A media board uses the same one-time item lifecycle, priority sections, membersh
 - notes
 - watched review
 
-If a media item is recurring, it follows the same fixed `反复干` visibility and recurrence completion behavior as any other recurring item; its media metadata remains on the card.
+If a media item is recurring, it follows the same `反复干` visibility and recurrence completion behavior as any other recurring item; its media metadata remains on the card.
 
 Do not create a second media-specific item hierarchy unless future behavior requires it.
 
@@ -506,7 +507,7 @@ NotebookExport
 - settings
 ```
 
-The export must contain all notebook business state needed to reconstruct the module, including persisted item author/completion-actor snapshots, recurrence rules/current due dates, and any persisted Board `showQueueAge` overrides, but must exclude:
+The export must contain all notebook business state needed to reconstruct the module, including persisted item author/completion-actor snapshots, recurrence rules/current due dates, persisted Board `showQueueAge` overrides, and the shared `recurringBoardOrder` layout position, but must exclude:
 
 - Gmail addresses
 - Firebase UIDs
@@ -563,12 +564,12 @@ Firebase rules should authorize the notebook path only to existing verified hous
 - Add `Sami的小本本` as its own top-level module registry entry immediately after Meal Builder.
 - Add its own authenticated top-level page shell and connection/error states.
 - Add Active/Completed/All, smart Urgent, board registry, board visibility/order/collapse, fixed priority sections, item controls, comments, and quick Inbox.
-- Add touch/keyboard-safe reorder controls. Drag must not be the only accessible way to reorder ordinary Board items.
+- Add touch/keyboard-safe reorder controls. Drag must not be the only accessible way to reorder ordinary Board items or the shared Board layout.
 
 ### Phase 3 — recurrence + media
 
 - Add recurrence completion events and due-date advancement.
-- Add fixed `反复干` with exclusive ordinary-Board visibility, remaining-day groups/colors, automatic group/priority/date ordering, scheduled calendar recurrence, and after-completion recurrence.
+- Add computed `反复干` with exclusive ordinary-Board visibility, a shared reorderable Board-level position, remaining-day groups/colors, automatic group/priority/date item ordering, scheduled calendar recurrence, and after-completion recurrence.
 - Preserve old recurrence records without requiring a migration write.
 - Add media-field UI for `kind = media` boards with no `mediaType` field.
 
@@ -586,7 +587,7 @@ Run focused checks during implementation, then the repository release gate:
 pnpm run verify
 ```
 
-Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, item/comment author names, completion-actor snapshots/icons, comment collapsing, all ordinary ordering transitions, item deletion cleanup, recurrence schedule advancement, after-completion date reset, `反复干` exclusivity/grouping/priority/date sorting/colors, queue-age calendar math and midnight rollover, due-soon/Smart Urgent inclusion, Board `showQueueAge` rules, direct/Inbox patch atomicity and Board-reference resolution, modern recurrence patch validation, legacy recurrence read compatibility, and export exclusion of auth identity data.
+Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, item/comment author names, completion-actor snapshots/icons, comment collapsing, all ordinary ordering transitions, item deletion cleanup, recurrence schedule advancement, after-completion date reset, `反复干` exclusivity/grouping/priority/date sorting/colors and Board-level placement, queue-age calendar math and midnight rollover, due-soon/Smart Urgent inclusion, Board `showQueueAge` rules, direct/Inbox patch atomicity and Board-reference resolution, modern recurrence patch validation, legacy recurrence read compatibility, and export exclusion of auth identity data.
 
 ## Design acceptance criteria
 
@@ -599,10 +600,10 @@ This design is ready for implementation when all of the following are fixed:
 - Ordinary Boards are dynamic and may be reordered/hidden/collapsed as household-shared state.
 - Regular Board headers keep `＋事项` on the title row at the far right on mobile and desktop.
 - Smart Urgent is computed and fixed first, combining stored `priority = urgent` with the hidden derived `due-soon` state.
-- `反复干` is a fixed computed board, not a writable Board record; all active recurring items always appear there.
+- `反复干` is a computed system Board, not a writable Board record; all active recurring items always appear there, and its Board-level position among ordinary Boards is household-shared and reorderable in Board Manager.
 - While `recurrence` exists, a recurring item does not render in ordinary Boards; its ordinary memberships remain stored as fallback/history metadata. Smart Urgent remains the only duplicate smart-view exception.
 - `反复干` groups by `<0`, `0`, `1–3`, `4–7`, `8–14`, `>14` remaining days; within a group it orders `urgent → high → normal → low`, then remaining days ascending, with stable tie-breakers.
-- `反复干` cards show remaining-day text and group-linked color accents and are not manually draggable.
+- `反复干` cards show remaining-day text and group-linked color accents and are not manually draggable inside the Board.
 - Scheduled recurrence stores start date, cadence interval, and weekly weekdays; every-N-week schedules are anchored to the start week. Completing advances exactly one scheduled occurrence and never silently skips overdue occurrences.
 - After-completion recurrence sets the next due date from the actual local completion date plus `intervalDays`; the card remains visible and immediately re-sorts.
 - Legacy `{unit, interval}` recurrence remains readable/valid without a forced migration, while new editor/Developer writes use modern recurrence shapes.
