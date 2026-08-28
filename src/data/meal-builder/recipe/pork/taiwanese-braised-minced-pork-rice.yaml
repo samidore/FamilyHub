@@ -4,7 +4,7 @@ status: candidate
 name_zh: 台式肉燥饭
 name_en: Taiwanese Braised Minced Pork Rice
 tags:
-  - iron-pan-braise
+  - child-all-ingredients-eaten
   - light-seasoning
   - non-spicy-base
   - stovetop-nonstick
@@ -16,6 +16,8 @@ main_protein_category: pork
 main_protein_ingredient_ids:
   - ground-pork
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids:
   - fresh-shiitake
 meal_contribution:
