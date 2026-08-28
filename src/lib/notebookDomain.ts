@@ -89,7 +89,10 @@ export interface NotebookInboxTicket {
   updatedAt: number;
 }
 
-export interface NotebookSettings { viewFilter: NotebookViewFilter; }
+export interface NotebookSettings {
+  viewFilter: NotebookViewFilter;
+  recurringBoardOrder?: number;
+}
 
 export interface NotebookState {
   boards: Record<string, NotebookBoard>;
@@ -322,9 +325,11 @@ export function normalizeNotebookState(value: unknown): NotebookState {
   const comments = normalizeRecord(raw.comments, normalizeComment);
   const completionEvents = normalizeRecord(raw.completionEvents, normalizeCompletionEvent);
   const inbox = normalizeRecord(raw.inbox, normalizeInboxTicket);
-  const viewFilter = isRecord(raw.settings) && typeof raw.settings.viewFilter === 'string' && viewFilters.has(raw.settings.viewFilter as NotebookViewFilter)
-    ? raw.settings.viewFilter as NotebookViewFilter
+  const rawSettings = isRecord(raw.settings) ? raw.settings : {};
+  const viewFilter = typeof rawSettings.viewFilter === 'string' && viewFilters.has(rawSettings.viewFilter as NotebookViewFilter)
+    ? rawSettings.viewFilter as NotebookViewFilter
     : 'active';
+  const recurringBoardOrder = nonNegativeInteger(rawSettings.recurringBoardOrder) ? rawSettings.recurringBoardOrder : undefined;
   return {
     boards,
     items,
@@ -332,7 +337,7 @@ export function normalizeNotebookState(value: unknown): NotebookState {
     comments: Object.fromEntries(Object.entries(comments).filter(([, comment]) => Boolean(items[comment.itemId]))),
     completionEvents,
     inbox,
-    settings: { viewFilter },
+    settings: { viewFilter, ...(recurringBoardOrder !== undefined ? { recurringBoardOrder } : {}) },
   };
 }
 
