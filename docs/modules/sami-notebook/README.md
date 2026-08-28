@@ -38,16 +38,19 @@ Top controls:
 
 - `Active | Completed | All`, default `Active`.
 - `Collapse all`.
-- Board manager for board visibility and drag ordering.
+- Board manager for ordinary Board visibility and drag ordering.
 - Developer page entry.
 
 Then:
 
-1. Fixed smart `Urgent` board, always first. It is computed from active items with `priority = urgent` plus the hidden derived `due-soon` state; it is not a normal membership target.
-2. Visible registered boards in shared board order.
-3. Quick Inbox input at the bottom. Submitting any non-empty sentence creates a ticket immediately with no schema gate.
+1. Fixed smart `Urgent` board, always first when it has rows. It is computed from active items with `priority = urgent` plus the hidden derived `due-soon` state; it is not a normal membership target.
+2. Fixed computed `反复干` board. Every live recurring item appears here and does not render in its ordinary Board memberships while recurrence is present. `反复干` is not a Firebase Board record, has no manual item ordering, and is not managed in Board Manager.
+3. Visible registered ordinary Boards in shared board order. These render only non-recurring live items and one-time completion rows.
+4. Quick Inbox input at the bottom. Submitting any non-empty sentence creates a ticket immediately with no schema gate.
 
-All board visibility, board order, collapse state, and top filter state are household-shared state, not per-user preferences.
+`Urgent` remains a smart-view exception to recurring-item exclusivity: a recurring item that is manually urgent or due-soon may appear in both Smart Urgent and `反复干`. It still does not render in ordinary Boards while recurrence is present.
+
+All ordinary Board visibility, Board order, collapse state, and top filter state are household-shared state, not per-user preferences. `反复干` is fixed and computed from item state.
 
 ### Hidden due-soon state
 
@@ -63,6 +66,8 @@ The hidden state starts at local midnight on the day before the deadline and rem
 
 Only Smart Urgent uses `due-soon` as an inclusion rule. Ordinary Boards keep the item's stored priority section and manual order unchanged. A due-soon card shows a small red hourglass in its upper-right status area; the icon's accessible label distinguishes `明天截止`, `今天截止`, and `已逾期`. When queue age is also shown, the hourglass appears first and the `x天` queue-age text follows it.
 
+Recurring items use their materialized current `dueDate` for the same Smart Urgent rule.
+
 ### Queue age
 
 Queue age is derived display state; it is not stored as `queuedAt` and does not require a daily Firebase write.
@@ -75,9 +80,11 @@ Queue age is derived display state; it is not stored as `queuedAt` and does not 
 - An ordinary Board shows queue age when its effective `showQueueAge` setting is true.
 - The card displays only the compact text `x天` in the upper-right status area. The page's existing local-midnight rerender updates the number automatically.
 
+`反复干` does not use queue age as its primary status. Its card status is the recurrence `remainingDays` value described below.
+
 ## Board registry
 
-Boards are dynamic records. No task/media board names are hard-coded into rendering logic.
+Ordinary Boards are dynamic records. No ordinary task/media board names are hard-coded into rendering logic.
 
 ```text
 Board
@@ -101,9 +108,11 @@ Each regular Board header keeps the collapse control, Board title, and `＋事�
 
 `kind = media` only changes the fields/editing UI offered by that board. Do not add a separate `mediaType` field to items; `Movies` and `TV` are simply board names.
 
+`反复干` and Smart Urgent are fixed computed views, not `Board` records. Their titles are intentionally system UI labels rather than dynamic registry names.
+
 ## Items
 
-Use one item model with common fields plus optional media fields. An item may belong to multiple boards.
+Use one item model with common fields plus optional media fields. A non-recurring item may render in multiple ordinary Boards. A recurring item keeps its ordinary memberships as fallback metadata but renders only in `反复干` plus the Smart Urgent exception while `recurrence` exists.
 
 ```text
 Item
@@ -129,6 +138,8 @@ Optional media fields
 - review?: string
 ```
 
+For recurring items, `dueDate` is the materialized current occurrence / next due date. It is not the canonical schedule rule; it is the current schedule cursor used by the UI, Smart Urgent, remaining-day grouping, and completion advancement.
+
 `authorName` is the private household display-name snapshot of the member who creates the item. The repository adds it only when the item is first created; normal edits, status changes, drag ordering, and Developer metadata patches must not rewrite it. Firebase rules keep a persisted author immutable and require a newly persisted author to match the creating member's current private display name.
 
 Legacy items may have no persisted `authorName`. For current household data, those items are intentionally rendered as `猫猫` without a migration write. The title row starts with an author icon rather than visible author text: `猫猫` uses the supplied fluffy gray/white cat portrait as a compact image icon, `呜哇` uses the supplied watercolor shaggy-dog portrait, and any future unmatched display name uses a neutral fallback icon. The icon retains an accessible author label.
@@ -141,46 +152,94 @@ Do not add an item-level media type.
 
 ## Membership and ordering
 
-Membership is separate from the item because the same item can appear in multiple boards and have a different manual position in each board.
+Membership is separate from the item because a normal item can appear in multiple ordinary Boards and have a different manual position in each board.
 
 ```text
 memberships/{boardId}/{itemId}
 - order: integer
 ```
 
-Each board has fixed priority sections in this order:
+A recurring item also retains its ordinary memberships while recurrence is active. Those memberships are deliberately hidden from ordinary Board rendering and are not part of `反复干` ordering. They provide:
+
+- the ordinary Board destinations to restore if recurrence is removed;
+- stable Board snapshots for recurring completion history;
+- no duplicate live card in ordinary Boards.
+
+Each ordinary board has fixed priority sections in this order:
 
 1. Urgent
 2. High
 3. Normal
 4. Low
 
-### Active ordering
+### Ordinary Active ordering
 
 Within each priority section:
 
 - Default behavior is newest-added first.
-- A newly added item enters at the top and existing items shift down.
+- A newly added non-recurring item enters at the top and existing items shift down.
 - Manual drag ordering overrides the default and persists.
 - Dragging only reorders within the same board + priority section.
-- Changing priority uses the priority control, not drag-and-drop; the item moves to the top of its new priority section in every board it belongs to.
-- Restoring a completed one-time item to Active also places it at the top of its current priority section.
-- Completing one occurrence of a recurring item keeps the live item active but moves it to the bottom of its current priority section in every Board it belongs to, starting a new queue-age cycle.
-- Deleting an active item closes the ordering gap in its affected Board + priority sections.
+- Changing priority uses the priority control, not drag-and-drop; a non-recurring item moves to the top of its new priority section in every ordinary board it belongs to.
+- Restoring a completed one-time item to Active also places it at the top of its priority section.
+- Recurring items are excluded from ordinary section ordering while recurrence is present, so completing a recurrence never rewrites ordinary Board order.
+- Deleting an active non-recurring item closes the ordering gap in its affected Board + priority sections.
 
-For the expected household scale, use simple dense integer ordering and rewrite the affected section after insertion/drag. Do not introduce fractional ranking unless a measured need appears.
+For the expected household scale, use simple dense integer ordering and rewrite the affected ordinary section after insertion/drag. Do not introduce fractional ranking unless a measured need appears.
+
+### `反复干` ordering and remaining-day groups
+
+`反复干` has no manual drag order and no top-level priority sections. It always shows every active recurring item, including future items.
+
+For each recurring item:
+
+```text
+remainingDays = dueDate(local calendar date) - today(local calendar date)
+```
+
+Group in this fixed order:
+
+1. `过期`: `< 0`
+2. `今天`: `= 0`
+3. `马上`: `1–3`
+4. `这周`: `4–7`
+5. `近期`: `8–14`
+6. `以后`: `> 14`
+7. `未定日期`: legacy fallback only when an old recurring item has no usable due date
+
+Within each group sort by:
+
+1. priority: `urgent`, `high`, `normal`, `low`;
+2. `remainingDays ASC`;
+3. stable `createdAt ASC`, then `id`.
+
+Thus more-overdue tasks come first within equal priority, and closer future dates come first within equal priority.
+
+Recurring cards always show a compact status label:
+
+- `< 0`: `已过期 N 天`
+- `0`: `今天`
+- `1`: `明天`
+- `> 1`: `还有 N 天`
+- no usable date: `未定日期`
+
+The remaining-day group drives the card's status color / edge accent. Use progressively stronger urgency from neutral future → green/near → yellow/week → orange/soon → red/today/overdue. Do not fill the entire card with saturated color.
 
 ### Completed ordering
 
-`Completed` keeps the same fixed priority sections. Within each section, sort by `completedAt DESC`. Manual membership order is ignored.
+Ordinary `Completed` keeps the same fixed priority sections. Within each section, sort one-time items by `completedAt DESC`. Manual membership order is ignored.
+
+Recurring completion events do not render in ordinary Boards. `反复干` renders recurring completion history in `Completed` and `All`, newest completion first, using the priority snapshot stored on each event.
 
 ### All ordering
 
-Within each board and priority section, show Active items first using their manual order, then completed entries using `completedAt DESC`.
+Within an ordinary board and priority section, show Active non-recurring items first using their manual order, then completed one-time entries using `completedAt DESC`.
+
+Within `反复干`, `All` shows the current active recurring groups first and recurring completion history after them.
 
 ## Completion and recurrence
 
-One-time item completion:
+### One-time completion
 
 - set `status = completed`;
 - set `completedAt`;
@@ -193,9 +252,66 @@ One-time item completion:
 
 Restoring it clears both `completedAt` and `completedByName`, then returns it to Active at the top of its priority section.
 
-Recurring completion must preserve history while keeping the next occurrence active. Do not overwrite the only completion timestamp. Store a completion event for each occurrence, snapshot the completing member into that event, advance the same item's next due date, leave the item active, and move the live item to the bottom of the current priority section in every Board membership. The new queue-age cycle starts from that completion timestamp. Completed views render recurring completion events as historical rows, grouped by the priority recorded at completion time, with the completer icon next to the completion date.
+### Recurrence rule model
 
-After the next due date advances, the existing hidden `due-soon` rule decides Smart Urgent membership. A recurring item that is no longer due soon drops out unless it is manually `priority = urgent`; when its next deadline reaches the due-soon window it automatically re-enters Smart Urgent. A daily recurrence may therefore remain due-soon immediately after completion because its next due date is tomorrow.
+New recurring items use one of two explicit modes.
+
+#### Scheduled
+
+Calendar-based recurrence is independent of when the user presses complete.
+
+```text
+recurrence:
+  kind: scheduled
+  startDate: YYYY-MM-DD
+  unit: day | week | month | year
+  interval: positive integer
+  weekdays?: mon | tue | wed | thu | fri | sat | sun []
+```
+
+For `unit = week`, `weekdays` is required and may contain one or more unique weekdays. `startDate` anchors the recurrence cycle; the week containing `startDate` is cycle week 0, and every-N-week cadence is measured from that anchor. The first occurrence is the first selected weekday on or after `startDate`; if none remains in the anchor week, use the first selected weekday in the next active cycle week.
+
+For day/month/year schedules, `startDate` is the calendar anchor. Month/year advancement preserves the anchored calendar day where possible and clamps to the last valid day of a shorter month.
+
+Completing a scheduled recurrence advances exactly one scheduled occurrence. Completion timing does not reset the cadence and does not auto-skip missed occurrences. Example: if a Monday occurrence is still pending on Friday and the user completes it, the item advances to the next occurrence in the schedule even if that next occurrence is already overdue. Repeated completion is required to catch up, so missed work never silently disappears.
+
+#### After completion
+
+Rough maintenance cadence is relative to actual completion:
+
+```text
+recurrence:
+  kind: afterCompletion
+  intervalDays: positive integer
+```
+
+The item keeps a current / first `dueDate`. When the user completes it:
+
+```text
+next dueDate = completedOn(local calendar date) + intervalDays
+```
+
+Example: `洗桶` with `intervalDays = 30` completed today remains visible immediately and changes to `还有 30 天`, then moves automatically to the appropriate `反复干` group/order.
+
+### Legacy recurrence compatibility
+
+Existing live data may still use the old shape:
+
+```text
+{ unit: day | week | month | year, interval: N }
+```
+
+The domain and Firebase rules continue to read/accept the supported legacy shape so existing household data is not lost and no migration write is required. New item-editor saves and Developer new-item patches use the explicit `scheduled` / `afterCompletion` schema. Editing a legacy recurrence converts it to the modern scheduled form when enough existing due-date information is available; the UI must not invent an unknown old anchor date.
+
+### Recurring completion history
+
+Recurring completion preserves history while keeping the same live item active. Do not overwrite the only completion timestamp. On each completion:
+
+1. store a completion event;
+2. snapshot the completing member into that event;
+3. advance the item's materialized `dueDate` using its recurrence mode;
+4. leave `status = active`;
+5. leave the card visible in `反复干`, where its group and position are recomputed from the new due date.
 
 A recurrence completion event needs only the minimum snapshot required for stable history:
 
@@ -209,19 +325,13 @@ CompletionEvent
 - boardIds[]
 ```
 
+`boardIds[]` snapshots the item's retained ordinary memberships at completion time. These IDs are history/fallback metadata; they do not cause recurring history rows to render in those ordinary Boards.
+
 New completion events persist `completedByName`. Existing legacy events may omit it and render as `呜哇` without migration.
 
 Comments remain attached to the live recurring item, not duplicated into each event.
 
-Initial recurrence support:
-
-- every N days
-- weekly
-- monthly
-- every N months
-- yearly
-
-Do not implement a general calendar RRULE editor in the first version.
+After `dueDate` advances, the hidden `due-soon` rule decides Smart Urgent membership. A recurring item that is no longer due soon drops out unless it is manually `priority = urgent`; when its next deadline reaches the due-soon window it automatically re-enters Smart Urgent. A daily or overdue scheduled recurrence may remain in Smart Urgent immediately after completion.
 
 ## Comments
 
@@ -252,13 +362,15 @@ Comment presentation is intentionally compact on mobile:
 
 ## Media boards
 
-A media board uses the same item lifecycle, priority sections, memberships, comments, filters, and completion dates as task boards. It additionally exposes editing for:
+A media board uses the same one-time item lifecycle, priority sections, memberships, comments, filters, and completion dates as task boards. It additionally exposes editing for:
 
 - platform
 - IMDb score
 - personal score (`myRating`)
 - notes
 - watched review
+
+If a media item is recurring, it follows the same fixed `反复干` visibility and recurrence completion behavior as any other recurring item; its media metadata remains on the card.
 
 Do not create a second media-specific item hierarchy unless future behavior requires it.
 
@@ -287,13 +399,15 @@ The Developer page uses the same household authentication and contains:
 - Delete a ticket.
 - `Copy all` button.
 
-`Copy all` copies a self-contained prompt that can be pasted directly to ChatGPT. It contains only the current board IDs/titles/kinds and Inbox ticket IDs/text that ChatGPT needs for classification; it does not expose the rest of the private notebook database. The prompt requires live IMDb verification for media items, forbids guessed ratings, requires `myRating` to come only from an explicit user rating, and tells ChatGPT it may use a unique exact Board title instead of copying an opaque Board UUID.
+`Copy all` copies a self-contained prompt that can be pasted directly to ChatGPT. It contains only the current ordinary Board IDs/titles/kinds and Inbox ticket IDs/text that ChatGPT needs for classification; it does not expose the rest of the private notebook database. The prompt requires live IMDb verification for media items, forbids guessed ratings, requires `myRating` to come only from an explicit user rating, and tells ChatGPT it may use a unique exact Board title instead of copying an opaque Board UUID.
+
+`反复干` is not included as a writable Board reference because it is computed from `item.recurrence`.
 
 ### Chat patch input
 
 A textarea accepts a complete JSON patch returned by ChatGPT. Version 1 supports two schema-limited patch modes:
 
-1. create normalized items using existing Board references; each `boardIds[]` entry may be a real Board ID or a unique exact Board title. `ticketId` is optional, so a patch may create brand-new items directly, convert Inbox tickets, or mix both in one `items[]` payload;
+1. create normalized items using existing ordinary Board references; each `boardIds[]` entry may be a real Board ID or a unique exact Board title. `ticketId` is optional, so a patch may create brand-new items directly, convert Inbox tickets, or mix both in one `items[]` payload;
 2. update a safe allowlist of fields on existing items.
 
 New-item / Inbox-conversion shape:
@@ -305,7 +419,7 @@ NotebookPatch
     - ticketId?      # only when converting a real Inbox ticket
     - title
     - details
-    - boardIds[]     # real Board ID or unique exact Board title
+    - boardIds[]     # real ordinary Board ID or unique exact Board title
     - priority
     - dueDate?
     - dueTime?
@@ -317,9 +431,23 @@ NotebookPatch
     - review?
 ```
 
+New recurrence patches use only modern recurrence shapes:
+
+```text
+scheduled:
+{ kind: "scheduled", startDate: "YYYY-MM-DD", unit: "day|week|month|year", interval: N, weekdays?: [...] }
+
+after completion:
+{ kind: "afterCompletion", intervalDays: N }
+```
+
+For `scheduled`, the validator computes the first `dueDate` from the rule. If a patch explicitly supplies `dueDate`, it must equal that computed first occurrence. For `afterCompletion`, the patch must supply a valid first/current `dueDate`.
+
+A recurring patch still needs at least one ordinary `boardIds[]` target. Those memberships are retained as fallback/history metadata but the live recurring card renders in `反复干` instead of those ordinary Boards.
+
 A direct new item omits `ticketId`. A ticket-backed item must reference a currently existing Inbox ticket. Only referenced ticket-backed items delete Inbox tickets; direct items never delete Inbox state.
 
-Board references are resolved during patch validation. An exact Board ID wins first. If no ID matches, the resolver requires exactly one Board whose `title` exactly matches the supplied text. Zero matches are rejected as unknown; multiple title matches are rejected as ambiguous rather than guessed. The validated patch is normalized to canonical Board IDs before preview/apply. Firebase remains the only runtime source of truth for the Board registry; the public Git repo must not maintain a duplicate title-to-UUID mapping.
+Board references are resolved during patch validation. An exact Board ID wins first. If no ID matches, the resolver requires exactly one Board whose `title` exactly matches the supplied text. Zero matches are rejected as unknown; multiple title matches are rejected as ambiguous rather than guessed. The validated patch is normalized to canonical Board IDs before preview/apply. Firebase remains the only runtime source of truth for the ordinary Board registry; the public Git repo must not maintain a duplicate title-to-UUID mapping.
 
 Existing-item update shape:
 
@@ -336,13 +464,13 @@ NotebookItemUpdatePatch
     - review?
 ```
 
-Existing-item updates are intentionally metadata-only. They must not change title, Board membership, priority, status, due date, recurrence, manual order, comments, completion history, Inbox, auth, item author, completion actor, or any arbitrary Firebase path. Media-specific fields are accepted only for items that already belong to at least one `kind = media` Board. Ratings remain constrained to 0–10.
+Existing-item updates are intentionally metadata-only. They must not change title, Board membership, priority, status, due date, recurrence, manual order, comments, completion history, Inbox, auth, item author, completion actor, or any arbitrary Firebase path. Media-specific fields are accepted only for items that already belong to at least one `kind = media` ordinary Board. Ratings remain constrained to 0–10.
 
 Apply flow:
 
 1. Parse JSON.
 2. Detect the supported narrow patch mode and validate the complete payload against its strict schema.
-3. Resolve Board references, then reject unknown/ambiguous Boards, duplicate references to the same resolved Board, unknown item/ticket IDs, duplicate referenced ticket IDs, unsupported fields, malformed ratings, invalid enums/dates/times, or referenced tickets no longer present.
+3. Resolve Board references, then reject unknown/ambiguous Boards, duplicate references to the same resolved Board, unknown item/ticket IDs, duplicate referenced ticket IDs, unsupported fields, malformed ratings, invalid enums/dates/times/recurrence rules, or referenced tickets no longer present.
 4. Show a compact preview of exactly what will be created or updated, including how many referenced Inbox tickets will be removed.
 5. One Apply action performs one Firebase transaction. New-item patches create generated item IDs and memberships; only items carrying a valid `ticketId` delete that referenced Inbox ticket. Existing-item updates change only the allowlisted fields.
 6. The repository snapshots the current member display name onto any newly created item and any new completion actor before the transaction is normalized and written.
@@ -351,7 +479,7 @@ Apply flow:
 
 Patch parse/validation/apply feedback belongs in the Chat patch panel beside the JSON input. Do not surface patch-format errors as a page-level Developer status message.
 
-Do not allow version-1 patches to write arbitrary Firebase paths, create/rename Boards, alter membership/auth records, change item lifecycle/order/author/completion actor, or execute deletes outside the explicitly referenced Inbox tickets.
+Do not allow version-1 patches to write arbitrary Firebase paths, create/rename Boards, alter membership/auth records, change item lifecycle/order/author/completion actor, edit existing recurrence, or execute deletes outside the explicitly referenced Inbox tickets.
 
 ## Portable database export and Git backup
 
@@ -378,7 +506,7 @@ NotebookExport
 - settings
 ```
 
-The export must contain all notebook business state needed to reconstruct the module, including persisted item author/completion-actor snapshots and any persisted Board `showQueueAge` overrides, but must exclude:
+The export must contain all notebook business state needed to reconstruct the module, including persisted item author/completion-actor snapshots, recurrence rules/current due dates, and any persisted Board `showQueueAge` overrides, but must exclude:
 
 - Gmail addresses
 - Firebase UIDs
@@ -405,6 +533,7 @@ Preferred separation:
 
 ```text
 src/lib/notebookDomain.ts
+src/lib/notebookRecurrence.ts
 src/lib/notebookRepository.ts
 src/pages/sami-notebook.astro
 src/pages/sami-notebook/developer.astro
@@ -412,7 +541,7 @@ src/pages/sami-notebook/developer.astro
 
 The notebook repository should reuse the existing Firebase project, Google authentication, and household membership model. If sharing the current authentication/membership code requires a small extraction, keep that extraction behavior-preserving and separately covered so Meal Builder does not regress.
 
-Firebase rules should authorize the notebook path only to existing verified household members and validate the notebook domain shape. Keep notebook rule tests separate from Meal Builder state assertions where practical.
+Firebase rules should authorize the notebook path only to existing verified household members and validate both legacy-read-compatible recurrence data and the modern `scheduled` / `afterCompletion` shapes. Keep notebook rule tests separate from Meal Builder state assertions where practical.
 
 ## Implementation sequence
 
@@ -434,17 +563,19 @@ Firebase rules should authorize the notebook path only to existing verified hous
 - Add `Sami的小本本` as its own top-level module registry entry immediately after Meal Builder.
 - Add its own authenticated top-level page shell and connection/error states.
 - Add Active/Completed/All, smart Urgent, board registry, board visibility/order/collapse, fixed priority sections, item controls, comments, and quick Inbox.
-- Add touch/keyboard-safe reorder controls. Drag must not be the only accessible way to reorder.
+- Add touch/keyboard-safe reorder controls. Drag must not be the only accessible way to reorder ordinary Board items.
 
 ### Phase 3 — recurrence + media
 
 - Add recurrence completion events and due-date advancement.
+- Add fixed `反复干` with exclusive ordinary-Board visibility, remaining-day groups/colors, automatic group/priority/date ordering, scheduled calendar recurrence, and after-completion recurrence.
+- Preserve old recurrence records without requiring a migration write.
 - Add media-field UI for `kind = media` boards with no `mediaType` field.
 
 ### Phase 4 — Developer workflow + export
 
 - Add Inbox edit/delete/copy-all.
-- Add schema-validated atomic Chat patch apply for direct new items, Inbox conversion, unique-title/ID Board resolution, and safe existing-item metadata updates.
+- Add schema-validated atomic Chat patch apply for direct new items, Inbox conversion, unique-title/ID Board resolution, modern recurrence creation, and safe existing-item metadata updates.
 - Add portable database export.
 
 ### Phase 5 — release verification
@@ -455,7 +586,7 @@ Run focused checks during implementation, then the repository release gate:
 pnpm run verify
 ```
 
-Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, item/comment author names, completion-actor snapshots/icons, comment collapsing, all ordering transitions, item deletion cleanup, recurring requeue-to-bottom behavior, queue-age calendar math and midnight rollover, due-soon/Smart Urgent inclusion, Board `showQueueAge` rules, direct/Inbox patch atomicity and Board-reference resolution, and export exclusion of auth identity data.
+Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, item/comment author names, completion-actor snapshots/icons, comment collapsing, all ordinary ordering transitions, item deletion cleanup, recurrence schedule advancement, after-completion date reset, `反复干` exclusivity/grouping/priority/date sorting/colors, queue-age calendar math and midnight rollover, due-soon/Smart Urgent inclusion, Board `showQueueAge` rules, direct/Inbox patch atomicity and Board-reference resolution, modern recurrence patch validation, legacy recurrence read compatibility, and export exclusion of auth identity data.
 
 ## Design acceptance criteria
 
@@ -465,16 +596,24 @@ This design is ready for implementation when all of the following are fixed:
 - Live state is Firebase, with a separate notebook domain/path.
 - Git backup is a private portable snapshot, not runtime storage.
 - Module privacy classification is explicitly authenticated-household before activation.
-- Boards are dynamic and may be reordered/hidden/collapsed as household-shared state.
+- Ordinary Boards are dynamic and may be reordered/hidden/collapsed as household-shared state.
 - Regular Board headers keep `＋事项` on the title row at the far right on mobile and desktop.
 - Smart Urgent is computed and fixed first, combining stored `priority = urgent` with the hidden derived `due-soon` state.
+- `反复干` is a fixed computed board, not a writable Board record; all active recurring items always appear there.
+- While `recurrence` exists, a recurring item does not render in ordinary Boards; its ordinary memberships remain stored as fallback/history metadata. Smart Urgent remains the only duplicate smart-view exception.
+- `反复干` groups by `<0`, `0`, `1–3`, `4–7`, `8–14`, `>14` remaining days; within a group it orders `urgent → high → normal → low`, then remaining days ascending, with stable tie-breakers.
+- `反复干` cards show remaining-day text and group-linked color accents and are not manually draggable.
+- Scheduled recurrence stores start date, cadence interval, and weekly weekdays; every-N-week schedules are anchored to the start week. Completing advances exactly one scheduled occurrence and never silently skips overdue occurrences.
+- After-completion recurrence sets the next due date from the actual local completion date plus `intervalDays`; the card remains visible and immediately re-sorts.
+- Legacy `{unit, interval}` recurrence remains readable/valid without a forced migration, while new editor/Developer writes use modern recurrence shapes.
 - `due-soon` never rewrites stored priority or ordinary Board ordering and rolls over at local midnight.
-- Smart Urgent always shows active queue age; ordinary Boards use `showQueueAge`, with legacy task/media defaults of true/false and no Board-name hard-coding.
+- Smart Urgent always shows active queue age; ordinary Boards use `showQueueAge`, with legacy task/media defaults of true/false and no ordinary Board-name hard-coding.
 - Queue age is local-calendar-day based, uses `createdAt` for one-time items, resets to the latest recurring completion timestamp, and is never stored as a daily counter.
-- The upper-right card status shows red hourglass first when due-soon, then compact `x天` when queue age is enabled.
-- One item may belong to multiple boards with per-board manual ordering, but item cards do not repeat Board names in metadata.
-- Priority sections are fixed Urgent/High/Normal/Low.
-- Active ordering is new-first with persistent manual overrides; completing a recurring occurrence moves the live item to the bottom of its current priority section in every Board; Completed keeps the same priority sections and sorts each by completion date descending.
+- The upper-right ordinary-card status shows red hourglass first when due-soon, then compact `x天` when queue age is enabled.
+- One normal item may belong to multiple ordinary Boards with per-board manual ordering, but item cards do not repeat Board names in metadata.
+- Ordinary priority sections are fixed Urgent/High/Normal/Low.
+- Ordinary Active ordering is new-first with persistent manual overrides; recurring items do not participate in ordinary section ordering while recurrence is present; Completed keeps the same priority sections and sorts one-time items by completion date descending.
+- Recurring completion events are shown from `反复干` Completed/All history rather than duplicated into old ordinary Boards.
 - New items snapshot the creating member's private display name; legacy missing authors render as 猫猫; persisted authors are immutable.
 - Author icons lead the title row: 猫猫 = supplied fluffy cat portrait, 呜哇 = supplied watercolor shaggy-dog portrait, unmatched names = neutral fallback.
 - New one-time and recurring completions snapshot the completing member's display name; completion rows show that member's icon; legacy missing completion actors render as 呜哇 without a migration.
@@ -484,5 +623,5 @@ This design is ready for implementation when all of the following are fixed:
 - Board description is optional; board comments do not exist.
 - Item comments are editable and show private display names, never email.
 - Inbox accepts unrestricted one-line capture.
-- Developer patching is schema-limited and atomic: `items[]` can create direct items without a ticket or convert referenced Inbox tickets; Board references may use canonical IDs or unique exact titles and normalize to IDs before apply; `itemUpdates[]` remains safe existing-item metadata only.
+- Developer patching is schema-limited and atomic: `items[]` can create direct items without a ticket or convert referenced Inbox tickets; ordinary Board references may use canonical IDs or unique exact titles and normalize to IDs before apply; new recurrence creation uses modern shapes; `itemUpdates[]` remains safe existing-item metadata only.
 - Export is complete for notebook business state and excludes authentication identity data.
