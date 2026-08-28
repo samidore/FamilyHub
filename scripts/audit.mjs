@@ -86,6 +86,22 @@ assert(colonoscopy.every((item) => item.eligibility.decision !== 'excluded'), 'A
 assert(colonoscopy.filter((item) => item.tier === 1).every((item) => Object.values(item.evidenceBands).every((band) => band === 'strong' || band === 'adequate')), 'Tier 1 colonoscopy specialist contains a concern or unknown evidence band');
 assert([...colonoscopy].sort((a, b) => a.rank - b.rank).every((item, index) => item.rank === index + 1), 'Colonoscopy specialist ranks are not a complete deterministic order');
 
+const expectedOptionalGroups = [
+  ['add-some-richness', '加点油水'],
+  ['change-it-up', '改头换面'],
+  ['one-pot-mix', '一锅乱炖'],
+];
+assert(JSON.stringify(meals.optionalGroups.map((group) => [group.id, group.labelZh])) === JSON.stringify(expectedOptionalGroups), 'Meal Builder optional groups do not match the canonical registry');
+assert(meals.optionalGroups.every((group) => new Set(group.ingredients.map((entry) => entry.ingredientId)).size === group.ingredients.length), 'A Meal Builder optional group contains duplicate Ingredient IDs');
+assert(meals.optionalGroups.find((group) => group.id === 'one-pot-mix')?.ingredients.length === 23, 'One-pot-mix must keep the migrated 23-Ingredient membership');
+assert(meals.recipes.filter((recipe) => recipe.optionalGroupIds?.includes('one-pot-mix')).length === 36, 'One-pot-mix Recipe scope must keep the migrated 36 Recipes');
+assert(meals.recipes.filter((recipe) => recipe.optionalGroupIds?.includes('add-some-richness')).length === 6, 'Add-some-richness must be referenced by the six vegetable structures');
+assert(meals.recipes.filter((recipe) => recipe.optionalGroupIds?.includes('change-it-up')).length === 3, 'Change-it-up must be referenced by the three current base Recipes');
+assert(!meals.ingredients.some((ingredient) => ingredient.tags?.includes('easy-braise-addon')), 'Legacy easy-braise Ingredient capability returned');
+assert(!meals.recipes.some((recipe) => recipe.tags?.includes('iron-pan-braise')), 'Legacy iron-pan Recipe capability returned');
+assert(meals.ingredients.find((ingredient) => ingredient.id === 'ground-pork')?.tags?.includes('child-eaten'), 'Ground pork must retain child-eaten status');
+assert(!meals.ingredients.find((ingredient) => ingredient.id === 'pork-feet')?.tags?.includes('child-eaten'), 'Pork feet must not be marked child-eaten');
+
 assert(!/(memberId|groupNumber|insuranceId|insuranceCard|cardImage|codex-remote-attachments)/i.test(JSON.stringify(colonoscopy)), 'Private insurance fields or attachment paths were found in colonoscopy data');
 assert(!/(memberId|groupNumber|insuranceId|insuranceCard|cardImage|codex-remote-attachments)/i.test(JSON.stringify(obGyn)), 'Private insurance fields or attachment paths were found in OB/GYN data');
 
