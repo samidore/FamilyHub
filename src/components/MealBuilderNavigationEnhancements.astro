@@ -58,9 +58,16 @@
 
     const inventoryJumpLabels: Record<string, string> = {
       pork: '猪',
+      chicken: '鸡',
       beef: '牛',
       'lamb-goat': '羊',
-      chicken: '鸡',
+      fish: '鱼',
+      shellfish: '海鲜',
+      'egg-tofu': '蛋豆腐',
+      'leafy-vegetable': '叶菜',
+      'other-vegetable': '蔬菜',
+      mushroom: '菌菇',
+      staple: '主食',
     };
 
     let signature = '';
@@ -71,7 +78,7 @@
         if (!id) return [];
         const fullLabel = group.querySelector<HTMLElement>('summary strong')?.textContent?.trim() || id;
         const label = inventoryJumpLabels[id] ?? fullLabel;
-        return [{ id, label }];
+        return [{ id, label, fullLabel }];
       });
       nav.hidden = entries.length === 0;
       const nextSignature = entries.map(({ id, label }) => `${id}:${label}`).join('|');
@@ -79,17 +86,16 @@
       signature = nextSignature;
       track.replaceChildren();
 
-      entries.forEach(({ id, label }) => {
+      entries.forEach(({ id, label, fullLabel }) => {
         const button = document.createElement('button');
         button.type = 'button';
         button.dataset.inventoryJump = id;
         button.textContent = label;
-        button.setAttribute('aria-label', `跳至${label}`);
+        button.setAttribute('aria-label', `跳至${fullLabel}`);
         button.addEventListener('click', () => {
           const target = inventoryList.querySelector<HTMLDetailsElement>(`details[data-inventory-section="${CSS.escape(id)}"]`);
           if (!target) return;
           target.open = true;
-          button.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
           requestAnimationFrame(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }));
         });
         track.append(button);
@@ -125,7 +131,7 @@
   .meal-ingredient-overall-fold[open] > .meal-ingredient-overall-fold__summary { margin-bottom: 16px; }
 
   .meal-builder-page #meal-inventory-view {
-    padding-bottom: calc(74px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(126px + env(safe-area-inset-bottom, 0px));
   }
   .meal-inventory-jump-nav {
     position: fixed;
@@ -142,25 +148,27 @@
     -webkit-backdrop-filter: blur(10px);
   }
   .meal-inventory-jump-nav__track {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
-    padding: 2px 2px 3px;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
+    display: grid;
+    width: min(100%, 680px);
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 6px;
+    margin-inline: auto;
+    padding: 2px;
+    overflow: visible;
   }
-  .meal-inventory-jump-nav__track::-webkit-scrollbar { display: none; }
   .meal-inventory-jump-nav button {
-    min-height: 40px;
-    flex: 0 0 auto;
-    padding: 8px 13px;
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    padding: 6px 2px;
     border: 1px solid var(--line);
     border-radius: 999px;
     background: var(--surface);
     color: var(--ink);
     font: inherit;
+    font-size: 17px;
     font-weight: 700;
+    line-height: 1.1;
     white-space: nowrap;
     cursor: pointer;
   }
