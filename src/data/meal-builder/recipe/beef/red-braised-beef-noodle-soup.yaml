@@ -4,7 +4,7 @@ status: candidate
 name_zh: 红烧牛肉面
 name_en: Red-Braised Beef Noodle Soup
 tags:
-  - iron-pan-braise
+  - child-all-ingredients-eaten
   - light-seasoning
   - non-spicy-base
   - stovetop-nonstick
@@ -17,6 +17,8 @@ main_protein_ingredient_ids:
   - whole-beef-brisket
   - chuck-roast
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids: []
 meal_contribution:
   protein: 1
