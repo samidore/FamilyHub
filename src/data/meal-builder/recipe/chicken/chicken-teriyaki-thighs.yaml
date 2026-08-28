@@ -4,7 +4,7 @@ status: candidate
 name_zh: 照烧鸡腿
 name_en: Chicken Teriyaki Thighs
 tags:
-  - iron-pan-braise
+  - child-all-ingredients-eaten
   - light-seasoning
   - non-spicy-base
   - pan-seared
@@ -17,6 +17,8 @@ main_protein_category: chicken
 main_protein_ingredient_ids:
   - boneless-skinless-chicken-thighs
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids: []
 meal_contribution:
   protein: 1
