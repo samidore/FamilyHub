@@ -368,6 +368,10 @@ const compositionData = JSON.stringify({
     box-shadow: 0 1px 3px color-mix(in srgb, var(--ink) 7%, transparent);
     touch-action: manipulation;
   }
+  .meal-selected .meal-composition-chip, .meal-checkout-recipe .meal-composition-chip {
+    border-width: 1.5px;
+    border-style: solid;
+  }
   .meal-composition-chip[aria-pressed="true"] {
     border-color: var(--berry);
     background: var(--berry-soft);
