@@ -53,22 +53,21 @@ test('restaurant want state is attributed to the matching uid member', async () 
   await assertFails(dog.ref(`${household}/restaurants/wants/bloom-chicken-hackensack/cat`).set({ authorName: '呜哇', updatedAt: 1 }));
 });
 
-test('restaurant repository-style root transactions can change only the signed-in member leaf', async () => {
+test('restaurant repository-style leaf updates preserve other members and cannot write their leaves', async () => {
   await reset();
   const cat = google('cat', 'cat@gmail.com');
   const dog = google('dog', 'dog@gmail.com');
   await assertSucceeds(dog.ref(`${household}/restaurants/ratings/bloom-chicken-hackensack/dog`).set({ score: 5, authorName: '呜哇', updatedAt: 1 }));
   const root = cat.ref(`${household}/restaurants`);
-  await assertSucceeds(root.transaction((current) => {
-    const next = current ?? {};
-    next.ratings ??= {};
-    next.ratings['bloom-chicken-hackensack'] ??= {};
-    next.ratings['bloom-chicken-hackensack'].cat = { score: 4, authorName: '猫猫', updatedAt: 2 };
-    return next;
+  await assertSucceeds(root.update({
+    'ratings/bloom-chicken-hackensack/cat': { score: 4, authorName: '猫猫', updatedAt: 2 },
   }));
   const snapshot = await assertSucceeds(root.get());
   assert.equal(snapshot.child('ratings/bloom-chicken-hackensack/cat/score').val(), 4);
   assert.equal(snapshot.child('ratings/bloom-chicken-hackensack/dog/score').val(), 5);
+  await assertFails(root.update({
+    'ratings/bloom-chicken-hackensack/dog': { score: 1, authorName: '呜哇', updatedAt: 3 },
+  }));
 });
 
 test('restaurant comments and inbox keep household attribution and timestamp shape', async () => {
