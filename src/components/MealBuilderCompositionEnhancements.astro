@@ -117,11 +117,13 @@ const compositionData = JSON.stringify({
     if (!selectedPanel || !meal) return;
     const selected = new Set(meal.selectedRecipeIds);
     selectedPanel.querySelectorAll<HTMLElement>('[data-selected-recipe]').forEach((row) => {
-      row.querySelector('[data-composition-editor]')?.remove();
+      const previousEditor = row.querySelector<HTMLDetailsElement>('[data-composition-editor]');
+      const wasOpen = previousEditor?.open ?? false;
+      previousEditor?.remove();
       const recipeId = row.dataset.selectedRecipe!;
       if (!selected.has(recipeId)) return;
       const recipe = recipeById.get(recipeId); if (!recipe) return;
-      const details = document.createElement('details'); details.className = 'meal-composition-editor'; details.dataset.compositionEditor = recipeId;
+      const details = document.createElement('details'); details.className = 'meal-composition-editor'; details.dataset.compositionEditor = recipeId; details.open = wasOpen;
       const summary = document.createElement('summary'); summary.textContent = '编辑这道菜'; details.append(summary);
       const body = document.createElement('div'); body.className = 'meal-composition-editor__body';
       const binding = meal.recipeIngredientBindings[recipeId] ?? [];
@@ -246,7 +248,7 @@ const compositionData = JSON.stringify({
       const boundIds = new Set(draft.bindings);
       for (const group of optionalGroupsForRecipe(recipe, optionalGroups)) {
         const selectedIds = new Set(draft.optionalAddons.filter((addon) => addon.addonType === group.id && !boundIds.has(addon.ingredientId)).map((addon) => addon.ingredientId));
-        const candidates = group.ingredients.filter((entry) => !boundIds.has(entry.ingredientId) && (inventoryIsOn(household.inventory[entry.ingredientId], trackingForIngredient(entry.ingredientId, ingredients)) || selectedIds.has(entry.ingredientId)));
+        const candidates = group.ingredients.filter((entry) => !boundIds.has(entry.ingredientId) && (inventoryIsOn(household.inventory[entry.ingredientId], trackingForIngredient(entry.ingredientId, ingredients)) || selectedIds.has(entry.ingredientId) || planSelected(recipeId, group.id, entry.ingredientId, meal)));
         if (!candidates.length) continue;
         const h = document.createElement('h4'); h.textContent = group.labelZh; card.append(h); const grid = document.createElement('div'); grid.className = 'meal-chip-grid meal-composition-grid';
         candidates.forEach((entry) => grid.append(makeChip(nameFor(entry.ingredientId), selectedIds.has(entry.ingredientId), { actualOptionalRecipe: recipeId, actualOptionalGroup: group.id, actualOptionalIngredient: entry.ingredientId })));
