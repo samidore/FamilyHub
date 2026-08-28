@@ -1,5 +1,19 @@
-import { NOTEBOOK_PRIORITIES, cloneNotebookState, isSupportedRecurrence, type NotebookItem, type NotebookPriority, type NotebookRecurrenceUnit, type NotebookState } from './notebookDomain.ts';
+import {
+  NOTEBOOK_PRIORITIES,
+  cloneNotebookState,
+  isAfterCompletionNotebookRecurrence,
+  isLegacyNotebookRecurrence,
+  isScheduledNotebookRecurrence,
+  isSupportedRecurrence,
+  type NotebookItem,
+  type NotebookPriority,
+  type NotebookRecurrence,
+  type NotebookScheduledRecurrence,
+  type NotebookState,
+  type NotebookWeekday,
+} from './notebookDomain.ts';
 import { addNotebookItem, completeRecurringNotebookItem, notebookItemsForSection, orderedNotebookBoards, reorderNotebookSection, setNotebookItemBoards, setNotebookItemPriority, setNotebookItemStatus } from './notebookActions.ts';
+import { firstNotebookScheduledDueDate } from './notebookRecurrence.ts';
 import { deleteNotebookItem } from './notebookItemDelete.ts';
 import { renderNotebookBoardChoices } from './notebookView.ts';
 import type { NotebookRepository } from './notebookRepository.ts';
@@ -14,10 +28,18 @@ export interface NotebookItemUiContext {
 const stamp = () => Date.now();
 const makeId = (prefix: string) => `${prefix}-${crypto.randomUUID()}`;
 const selectedBoards = (form: HTMLFormElement) => [...form.querySelectorAll<HTMLInputElement>('input[name="boardIds"]')].filter((input) => input.checked).map((input) => input.value);
+const selectedWeekdays = (form: HTMLFormElement) => [...form.querySelectorAll<HTMLInputElement>('input[name="scheduledWeekdays"]')].filter((input) => input.checked).map((input) => input.value as NotebookWeekday);
 const localDate = () => {
   const now = new Date();
   const pad = (value: number) => String(value).padStart(2, '0');
   return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+};
+const weekdayForDate = (dateKey: string): NotebookWeekday | null => {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateKey);
+  if (!match) return null;
+  const date = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
+  const weekdays: NotebookWeekday[] = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+  return weekdays[date.getUTCDay()] ?? null;
 };
 const optionalRating = (data: FormData, name: string) => {
   const raw = String(data.get(name) ?? '').trim();
@@ -25,6 +47,8 @@ const optionalRating = (data: FormData, name: string) => {
   const rating = Number(raw);
   return Number.isFinite(rating) && rating >= 0 && rating <= 10 ? rating : null;
 };
+const sameWeekdays = (left: NotebookWeekday[] | undefined, right: NotebookWeekday[] | undefined) => [...(left ?? [])].sort().join(',') === [...(right ?? [])].sort().join(',');
+const sameScheduledRecurrence = (left: NotebookScheduledRecurrence, right: NotebookScheduledRecurrence) => left.startDate === right.startDate && left.unit === right.unit && left.interval === right.interval && sameWeekdays(left.weekdays, right.weekdays);
 
 export function setupNotebookItemUi(context: NotebookItemUiContext) {
   const host = document.querySelector<HTMLElement>('#notebook-boards')!;
@@ -33,19 +57,41 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
   const dialogTitle = document.querySelector<HTMLElement>('#notebook-item-dialog-title')!;
   const deleteButton = document.querySelector<HTMLButtonElement>('#notebook-delete-item')!;
   const boardChoices = document.querySelector<HTMLElement>('#notebook-item-board-choices')!;
-  const recurrenceUnit = form.elements.namedItem('recurrenceUnit') as HTMLSelectElement;
-  const recurrenceInterval = form.elements.namedItem('recurrenceInterval') as HTMLInputElement;
-  const recurrenceIntervalLabel = document.querySelector<HTMLElement>('#notebook-recurrence-interval-label')!;
+  const boardLegend = document.querySelector<HTMLElement>('#notebook-item-board-legend')!;
+  const dueDateLabel = document.querySelector<HTMLElement>('#notebook-due-date-label')!;
+  const dueDateLabelText = document.querySelector<HTMLElement>('#notebook-due-date-label-text')!;
+  const recurrenceKind = form.elements.namedItem('recurrenceKind') as HTMLSelectElement;
+  const scheduledFields = document.querySelector<HTMLElement>('#notebook-scheduled-fields')!;
+  const scheduledStartDate = form.elements.namedItem('scheduledStartDate') as HTMLInputElement;
+  const scheduledUnit = form.elements.namedItem('scheduledUnit') as HTMLSelectElement;
+  const scheduledInterval = form.elements.namedItem('scheduledInterval') as HTMLInputElement;
+  const weekdayFields = document.querySelector<HTMLElement>('#notebook-weekday-fields')!;
+  const afterCompletionFields = document.querySelector<HTMLElement>('#notebook-after-completion-fields')!;
+  const afterCompletionDays = form.elements.namedItem('afterCompletionDays') as HTMLInputElement;
+  const dueDateInput = form.elements.namedItem('dueDate') as HTMLInputElement;
   const mediaFields = document.querySelector<HTMLElement>('#notebook-media-fields')!;
   let editingItemId: string | null = null;
   let draggedItem: { itemId: string; boardId: string; priority: NotebookPriority } | null = null;
 
+  const ensureWeeklyDay = () => {
+    if (scheduledUnit.value !== 'week' || selectedWeekdays(form).length > 0) return;
+    const weekday = weekdayForDate(scheduledStartDate.value);
+    const input = weekday ? form.querySelector<HTMLInputElement>(`input[name="scheduledWeekdays"][value="${weekday}"]`) : null;
+    if (input) input.checked = true;
+  };
   const refreshRecurrence = () => {
-    const unit = recurrenceUnit.value;
-    const fixed = unit === 'week' || unit === 'year';
-    recurrenceIntervalLabel.hidden = unit === 'none' || fixed;
-    if (fixed) recurrenceInterval.value = '1';
-    if (!recurrenceInterval.value) recurrenceInterval.value = '1';
+    const kind = recurrenceKind.value;
+    scheduledFields.hidden = kind !== 'scheduled';
+    afterCompletionFields.hidden = kind !== 'afterCompletion';
+    weekdayFields.hidden = kind !== 'scheduled' || scheduledUnit.value !== 'week';
+    dueDateLabel.hidden = kind === 'scheduled';
+    dueDateLabelText.textContent = kind === 'afterCompletion' ? '首次 / 当前日期' : '截止日期';
+    boardLegend.textContent = kind === 'none' ? '属于哪些 Boards' : '普通 Boards（循环期间不显示；取消循环后归回）';
+    if (kind === 'scheduled' && !scheduledStartDate.value) scheduledStartDate.value = localDate();
+    if (kind === 'afterCompletion' && !dueDateInput.value) dueDateInput.value = localDate();
+    if (!scheduledInterval.value) scheduledInterval.value = '1';
+    if (!afterCompletionDays.value) afterCompletionDays.value = '1';
+    ensureWeeklyDay();
   };
   const refreshMedia = () => {
     const state = context.getState();
@@ -54,6 +100,9 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
   const setValue = (name: string, value: string | number | undefined) => {
     const input = form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement | null;
     if (input) input.value = value === undefined ? '' : String(value);
+  };
+  const setWeekdays = (values: NotebookWeekday[]) => {
+    form.querySelectorAll<HTMLInputElement>('input[name="scheduledWeekdays"]').forEach((input) => { input.checked = values.includes(input.value as NotebookWeekday); });
   };
 
   const openItem = (itemId?: string, boardId?: string) => {
@@ -67,10 +116,32 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
     (form.elements.namedItem('priority') as HTMLSelectElement).value = item?.priority ?? 'normal';
     setValue('dueDate', item?.dueDate);
     setValue('dueTime', item?.dueTime);
-    recurrenceUnit.value = item?.recurrence?.unit ?? 'none';
-    recurrenceInterval.value = String(item?.recurrence?.interval ?? 1);
-    recurrenceUnit.disabled = item?.status === 'completed';
-    recurrenceInterval.disabled = item?.status === 'completed';
+    recurrenceKind.value = 'none';
+    scheduledStartDate.value = '';
+    scheduledUnit.value = 'week';
+    scheduledInterval.value = '1';
+    afterCompletionDays.value = '1';
+    setWeekdays([]);
+    if (item?.recurrence) {
+      if (isScheduledNotebookRecurrence(item.recurrence)) {
+        recurrenceKind.value = 'scheduled';
+        scheduledStartDate.value = item.recurrence.startDate;
+        scheduledUnit.value = item.recurrence.unit;
+        scheduledInterval.value = String(item.recurrence.interval);
+        setWeekdays(item.recurrence.weekdays ?? []);
+      } else if (isAfterCompletionNotebookRecurrence(item.recurrence)) {
+        recurrenceKind.value = 'afterCompletion';
+        afterCompletionDays.value = String(item.recurrence.intervalDays);
+      } else if (isLegacyNotebookRecurrence(item.recurrence)) {
+        recurrenceKind.value = 'scheduled';
+        scheduledStartDate.value = item.dueDate ?? '';
+        scheduledUnit.value = item.recurrence.unit;
+        scheduledInterval.value = String(item.recurrence.interval);
+        const weekday = item.recurrence.unit === 'week' && item.dueDate ? weekdayForDate(item.dueDate) : null;
+        setWeekdays(weekday ? [weekday] : []);
+      }
+    }
+    recurrenceKind.disabled = item?.status === 'completed';
     setValue('platform', item?.platform);
     setValue('imdbRating', item?.imdbRating);
     setValue('myRating', item?.myRating);
@@ -128,7 +199,7 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
       const boardId = section?.dataset.boardId;
       const priority = section?.dataset.priority as NotebookPriority | undefined;
       if (!itemId || !boardId || !priority) return;
-      const ids = notebookItemsForSection(context.getState(), boardId, priority, 'active').map((item) => item.id);
+      const ids = notebookItemsForSection(context.getState(), boardId, priority, 'active').map((entry) => entry.id);
       const index = ids.indexOf(itemId);
       const swap = move.dataset.moveItem === 'up' ? index - 1 : index + 1;
       if (index < 0 || swap < 0 || swap >= ids.length) return;
@@ -199,12 +270,14 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
     event.preventDefault();
     const { boardId, priority } = draggedItem;
     const state = context.getState();
-    const ids = [...list.querySelectorAll<HTMLElement>(':scope > [data-item-id]')].filter((card) => state.items[card.dataset.itemId!]?.status === 'active').map((card) => card.dataset.itemId!).filter(Boolean);
+    const ids = [...list.querySelectorAll<HTMLElement>(':scope > [data-item-id]')].filter((card) => state.items[card.dataset.itemId!]?.status === 'active' && !state.items[card.dataset.itemId!]?.recurrence).map((card) => card.dataset.itemId!).filter(Boolean);
     draggedItem = null;
     void context.mutate('调整事项顺序', (current) => reorderNotebookSection(current, boardId, priority, ids));
   });
 
-  recurrenceUnit.addEventListener('change', refreshRecurrence);
+  recurrenceKind.addEventListener('change', refreshRecurrence);
+  scheduledUnit.addEventListener('change', refreshRecurrence);
+  scheduledStartDate.addEventListener('change', ensureWeeklyDay);
   boardChoices.addEventListener('change', refreshMedia);
   deleteButton.addEventListener('click', () => {
     const itemId = editingItemId;
@@ -220,18 +293,43 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
     const title = String(data.get('title') ?? '').trim();
     const details = String(data.get('details') ?? '').trim();
     const priority = String(data.get('priority') ?? 'normal') as NotebookPriority;
-    const dueDate = String(data.get('dueDate') ?? '').trim();
+    const rawDueDate = String(data.get('dueDate') ?? '').trim();
     const dueTime = String(data.get('dueTime') ?? '').trim();
     const boardIds = selectedBoards(form);
-    if (!title || !NOTEBOOK_PRIORITIES.includes(priority) || boardIds.length === 0) { context.status('事项需要标题和至少一个 Board', true); return; }
-    if (dueTime && !dueDate) { context.status('设置时间前请先设置日期', true); return; }
-
-    const recurrenceUnitValue = String(data.get('recurrenceUnit') ?? 'none') as NotebookRecurrenceUnit | 'none';
-    const recurrenceIntervalValue = Number(data.get('recurrenceInterval') ?? 1);
-    const recurrence = recurrenceUnitValue === 'none' ? undefined : { unit: recurrenceUnitValue, interval: (recurrenceUnitValue === 'week' || recurrenceUnitValue === 'year') ? 1 : recurrenceIntervalValue };
-    if (recurrence && !isSupportedRecurrence(recurrence)) { context.status('重复周期无效', true); return; }
+    if (!title || !NOTEBOOK_PRIORITIES.includes(priority) || boardIds.length === 0) { context.status('事项需要标题和至少一个普通 Board', true); return; }
 
     const state = context.getState();
+    const existing = editingItemId ? state.items[editingItemId] : undefined;
+    const kind = String(data.get('recurrenceKind') ?? 'none');
+    let recurrence: NotebookRecurrence | undefined;
+    let dueDate = rawDueDate;
+    if (kind === 'scheduled') {
+      const scheduled: NotebookScheduledRecurrence = {
+        kind: 'scheduled',
+        startDate: String(data.get('scheduledStartDate') ?? '').trim(),
+        unit: String(data.get('scheduledUnit') ?? 'week') as NotebookScheduledRecurrence['unit'],
+        interval: Number(data.get('scheduledInterval') ?? 1),
+        ...(String(data.get('scheduledUnit') ?? 'week') === 'week' ? { weekdays: selectedWeekdays(form) } : {}),
+      };
+      if (!isSupportedRecurrence(scheduled)) { context.status('定时重复规则无效；周重复需要选择至少一个周几', true); return; }
+      recurrence = scheduled;
+      const preserveModern = existing?.recurrence && isScheduledNotebookRecurrence(existing.recurrence) && sameScheduledRecurrence(existing.recurrence, scheduled);
+      const legacyWeekday = existing?.dueDate ? weekdayForDate(existing.dueDate) : null;
+      const preserveLegacy = Boolean(existing?.recurrence && isLegacyNotebookRecurrence(existing.recurrence)
+        && existing.recurrence.unit === scheduled.unit
+        && existing.recurrence.interval === scheduled.interval
+        && existing.dueDate === scheduled.startDate
+        && (scheduled.unit !== 'week' || (legacyWeekday !== null && sameWeekdays(scheduled.weekdays, [legacyWeekday]))));
+      dueDate = (preserveModern || preserveLegacy) && existing?.dueDate ? existing.dueDate : firstNotebookScheduledDueDate(scheduled) ?? '';
+      if (!dueDate) { context.status('无法计算第一次定时日期', true); return; }
+    } else if (kind === 'afterCompletion') {
+      recurrence = { kind: 'afterCompletion', intervalDays: Number(data.get('afterCompletionDays') ?? 1) };
+      if (!isSupportedRecurrence(recurrence)) { context.status('完成后间隔必须是至少 1 天的整数', true); return; }
+      if (!dueDate) { context.status('完成后重复需要一个首次 / 当前日期', true); return; }
+    }
+    if (dueTime && !dueDate) { context.status('设置时间前请先设置日期', true); return; }
+    if (existing?.status === 'completed' && recurrence) { context.status('已完成的一次性事项不能改成循环事项；请先恢复为未完成', true); return; }
+
     const hasMediaBoard = boardIds.some((boardId) => state.boards[boardId]?.kind === 'media');
     const platform = String(data.get('platform') ?? '').trim();
     const imdbRating = optionalRating(data, 'imdbRating');
@@ -264,8 +362,6 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
       return;
     }
     const itemId = editingItemId;
-    const existing = state.items[itemId];
-    if (existing?.status === 'completed' && recurrence) { context.status('已完成的一次性事项不能改成循环事项；请先恢复为未完成', true); return; }
     void context.mutate('保存事项', (current) => {
       const currentItem = current.items[itemId];
       if (!currentItem) return current;
@@ -291,7 +387,6 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
   dialog.addEventListener('close', () => {
     editingItemId = null;
     deleteButton.hidden = true;
-    recurrenceUnit.disabled = false;
-    recurrenceInterval.disabled = false;
+    recurrenceKind.disabled = false;
   });
 }
