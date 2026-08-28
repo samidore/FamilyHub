@@ -21,6 +21,7 @@ import {
   notebookSectionEntries,
   notebookUrgentActiveItems,
   notebookUrgentVisibleItems,
+  orderedNotebookBoardLayout,
   orderedNotebookBoards,
   type NotebookSectionEntry,
 } from './notebookActions.ts';
@@ -213,6 +214,18 @@ function recurringBoardHtml(state: NotebookState, displayName: string | null, no
   return `<section class="notebook-board notebook-board--recurring" data-recurring-board><header class="notebook-board__header"><div class="notebook-board__heading"><p class="eyebrow">Recurring</p><h2>反复干</h2><p>按剩余日数分组；组内按优先级和剩余天数自动排序。</p></div><span class="notebook-board__count notebook-board__count--recurring">${count}</span></header><div class="notebook-board__body">${body}</div></section>`;
 }
 
+function ordinaryBoardHtml(state: NotebookState, board: ReturnType<typeof orderedNotebookBoards>[number], displayName: string | null, filter: string, now: number, today: string) {
+  let count = 0;
+  const showQueueAge = notebookBoardShowsQueueAge(board);
+  const sections = NOTEBOOK_PRIORITIES.map((priority: NotebookPriority) => {
+    const entries = notebookSectionEntries(state, board.id, priority, filter as NotebookState['settings']['viewFilter'], now);
+    if (!entries.length) return '';
+    count += entries.length;
+    return `<section class="notebook-priority" data-priority-section data-board-id="${escapeNotebookHtml(board.id)}" data-priority="${priority}"><h3>${NOTEBOOK_PRIORITY_LABELS[priority]} <span>${entries.length}</span></h3><div class="notebook-item-list" data-item-list data-board-id="${escapeNotebookHtml(board.id)}" data-priority="${priority}">${entries.map((entry) => sectionEntryHtml(state, entry, board.id, displayName, filter, now, today, showQueueAge)).join('')}</div></section>`;
+  }).join('');
+  return `<section class="notebook-board" data-board-id="${escapeNotebookHtml(board.id)}"><header class="notebook-board__header"><button type="button" class="collapse-button" data-toggle-board="${escapeNotebookHtml(board.id)}" aria-expanded="${board.collapsed ? 'false' : 'true'}" aria-label="${board.collapsed ? '展开' : '收起'} ${escapeNotebookHtml(board.title)}">${board.collapsed ? '＋' : '−'}</button><div class="notebook-board__heading"><h2>${escapeNotebookHtml(board.title)}</h2>${board.description ? `<p>${escapeNotebookHtml(board.description)}</p>` : ''}</div><button type="button" class="quiet-button" data-new-item="${escapeNotebookHtml(board.id)}">＋事项</button></header><div class="notebook-board__body" ${board.collapsed ? 'hidden' : ''}>${count ? sections : '<p class="notebook-empty">这个筛选下没有事项。</p>'}</div></section>`;
+}
+
 export function renderNotebookBoards(state: NotebookState, displayName: string | null, now = Date.now()) {
   const filter = state.settings.viewFilter;
   const today = notebookLocalDateKey(now);
@@ -222,25 +235,23 @@ export function renderNotebookBoards(state: NotebookState, displayName: string |
   const urgent = [...manualUrgent, ...dueSoon];
   const smart = urgent.length ? `<section class="notebook-board notebook-board--urgent" data-smart-urgent><header class="notebook-board__header"><div><p class="eyebrow">Smart board</p><h2>紧急</h2></div><span class="notebook-board__count">${urgent.length}</span></header><div class="notebook-item-list">${urgent.map((item) => itemHtml(state, item, null, false, displayName, filter === 'active' && item.status === 'completed', now, today, true)).join('')}</div></section>` : '';
   const recurring = recurringBoardHtml(state, displayName, now, today);
-  const boards = orderedNotebookBoards(state, true).map((board) => {
-    let count = 0;
-    const showQueueAge = notebookBoardShowsQueueAge(board);
-    const sections = NOTEBOOK_PRIORITIES.map((priority: NotebookPriority) => {
-      const entries = notebookSectionEntries(state, board.id, priority, filter, now);
-      if (!entries.length) return '';
-      count += entries.length;
-      return `<section class="notebook-priority" data-priority-section data-board-id="${escapeNotebookHtml(board.id)}" data-priority="${priority}"><h3>${NOTEBOOK_PRIORITY_LABELS[priority]} <span>${entries.length}</span></h3><div class="notebook-item-list" data-item-list data-board-id="${escapeNotebookHtml(board.id)}" data-priority="${priority}">${entries.map((entry) => sectionEntryHtml(state, entry, board.id, displayName, filter, now, today, showQueueAge)).join('')}</div></section>`;
-    }).join('');
-    return `<section class="notebook-board" data-board-id="${escapeNotebookHtml(board.id)}"><header class="notebook-board__header"><button type="button" class="collapse-button" data-toggle-board="${escapeNotebookHtml(board.id)}" aria-expanded="${board.collapsed ? 'false' : 'true'}" aria-label="${board.collapsed ? '展开' : '收起'} ${escapeNotebookHtml(board.title)}">${board.collapsed ? '＋' : '−'}</button><div class="notebook-board__heading"><h2>${escapeNotebookHtml(board.title)}</h2>${board.description ? `<p>${escapeNotebookHtml(board.description)}</p>` : ''}</div><button type="button" class="quiet-button" data-new-item="${escapeNotebookHtml(board.id)}">＋事项</button></header><div class="notebook-board__body" ${board.collapsed ? 'hidden' : ''}>${count ? sections : '<p class="notebook-empty">这个筛选下没有事项。</p>'}</div></section>`;
-  }).join('');
-  return smart + recurring + boards;
+  const layout = orderedNotebookBoardLayout(state, true).map((entry) => entry.kind === 'recurring'
+    ? recurring
+    : ordinaryBoardHtml(state, entry.board, displayName, filter, now, today)).join('');
+  return smart + layout;
 }
 
 export function renderNotebookBoardManager(state: NotebookState) {
   const e = escapeNotebookHtml;
-  const boards = orderedNotebookBoards(state);
-  if (!boards.length) return '<p class="notebook-muted">还没有 Board。</p>';
-  return boards.map((board, index) => `<div class="board-manager-row" data-board-manager-row data-board-id="${e(board.id)}"><button type="button" class="drag-handle" draggable="true" data-board-drag-handle aria-label="拖动 ${e(board.title)} 排序">↕</button><div class="board-manager-row__fields"><label>名称<input data-board-title value="${e(board.title)}" /></label><label>类型<select data-board-kind><option value="task" ${board.kind === 'task' ? 'selected' : ''}>任务</option><option value="media" ${board.kind === 'media' ? 'selected' : ''}>影视</option></select></label><label>说明<input data-board-description value="${e(board.description ?? '')}" placeholder="可留空" /></label><label class="check-label"><input type="checkbox" data-board-visible ${board.visible ? 'checked' : ''} /> 首页显示</label><label class="check-label"><input type="checkbox" data-board-show-queue-age ${notebookBoardShowsQueueAge(board) ? 'checked' : ''} /> 显示排队天数</label></div><div class="board-manager-row__actions"><button type="button" class="icon-button" data-move-board="up" ${index === 0 ? 'disabled' : ''}>↑</button><button type="button" class="icon-button" data-move-board="down" ${index === boards.length - 1 ? 'disabled' : ''}>↓</button><button type="button" class="quiet-button" data-save-board>保存</button></div></div>`).join('');
+  const layout = orderedNotebookBoardLayout(state);
+  return layout.map((entry, index) => {
+    const moveActions = `<div class="board-manager-row__actions"><button type="button" class="icon-button" data-move-board="up" ${index === 0 ? 'disabled' : ''}>↑</button><button type="button" class="icon-button" data-move-board="down" ${index === layout.length - 1 ? 'disabled' : ''}>↓</button>`;
+    if (entry.kind === 'recurring') {
+      return `<div class="board-manager-row" data-board-manager-row data-board-layout-id="${e(entry.id)}" data-recurring-board-manager-row><button type="button" class="drag-handle" draggable="true" data-board-drag-handle aria-label="拖动 反复干 排序">↕</button><div class="board-manager-row__fields"><div><strong>反复干</strong><p class="notebook-muted">系统 Board · 内容自动排序</p></div></div>${moveActions}</div></div>`;
+    }
+    const board = entry.board;
+    return `<div class="board-manager-row" data-board-manager-row data-board-layout-id="${e(entry.id)}" data-board-id="${e(board.id)}"><button type="button" class="drag-handle" draggable="true" data-board-drag-handle aria-label="拖动 ${e(board.title)} 排序">↕</button><div class="board-manager-row__fields"><label>名称<input data-board-title value="${e(board.title)}" /></label><label>类型<select data-board-kind><option value="task" ${board.kind === 'task' ? 'selected' : ''}>任务</option><option value="media" ${board.kind === 'media' ? 'selected' : ''}>影视</option></select></label><label>说明<input data-board-description value="${e(board.description ?? '')}" placeholder="可留空" /></label><label class="check-label"><input type="checkbox" data-board-visible ${board.visible ? 'checked' : ''} /> 首页显示</label><label class="check-label"><input type="checkbox" data-board-show-queue-age ${notebookBoardShowsQueueAge(board) ? 'checked' : ''} /> 显示排队天数</label></div>${moveActions}<button type="button" class="quiet-button" data-save-board>保存</button></div></div>`;
+  }).join('');
 }
 
 export function renderNotebookBoardChoices(state: NotebookState, selected: Set<string>) {
