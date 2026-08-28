@@ -30,14 +30,15 @@ test('Day Trips interaction state rejects malformed reactions and comments', () 
   assert.deepEqual(Object.keys(state.comments), ['c1']);
 });
 
-test('one account has exactly one toggleable up/down reaction', () => {
+test('one account has exactly one toggleable up/down reaction and keeps its attribution snapshot', () => {
   let state = defaultDayTripInteractionState();
   state = setDayTripReaction(state, 'zoo', 'cat-uid', '猫猫', 'up', 1);
   assert.equal(state.reactions.zoo['cat-uid'].value, 'up');
-  state = setDayTripReaction(state, 'zoo', 'cat-uid', '猫猫', 'down', 2);
+  state = setDayTripReaction(state, 'zoo', 'cat-uid', '新猫猫', 'down', 2);
   assert.deepEqual(Object.keys(state.reactions.zoo), ['cat-uid']);
   assert.equal(state.reactions.zoo['cat-uid'].value, 'down');
-  state = setDayTripReaction(state, 'zoo', 'cat-uid', '猫猫', null, 3);
+  assert.equal(state.reactions.zoo['cat-uid'].authorName, '猫猫');
+  state = setDayTripReaction(state, 'zoo', 'cat-uid', '新猫猫', null, 3);
   assert.equal(state.reactions.zoo, undefined);
 });
 
