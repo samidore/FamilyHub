@@ -10,6 +10,11 @@ import {
   normalizeDayTripInteractionState,
   setDayTripReaction,
 } from '../src/lib/dayTripInteractions.ts';
+import {
+  dayTripCommentsForDestination,
+  dayTripLegacyInteractionIds,
+  dayTripReactionsForDestination,
+} from '../src/lib/dayTripInteractionAliases.ts';
 import { householdAuthorIconKind, householdCommentWindow } from '../src/lib/householdPeople.ts';
 
 test('Day Trips interaction state rejects malformed reactions and comments', () => {
@@ -73,6 +78,30 @@ test('Day Trips comments use the shared household first/middle/last window and a
   assert.deepEqual(windowed.trailing.map((comment) => comment.id), ['c4']);
   assert.equal(householdAuthorIconKind('猫猫'), 'cat');
   assert.equal(householdAuthorIconKind('呜哇'), 'dog');
+});
+
+test('Van Saun merge keeps legacy reactions and comments visible with canonical data winning conflicts', () => {
+  const state = normalizeDayTripInteractionState({
+    reactions: {
+      'van-saun-harmony-playground': {
+        cat: { value: 'up', authorName: '猫猫', updatedAt: 1 },
+        dog: { value: 'up', authorName: '呜哇', updatedAt: 2 },
+      },
+      'bergen-county-zoo': {
+        cat: { value: 'down', authorName: '猫猫', updatedAt: 3 },
+      },
+    },
+    comments: {
+      old: { id: 'old', destinationId: 'van-saun-harmony-playground', body: '旧评论', authorName: '猫猫', createdAt: 1 },
+      current: { id: 'current', destinationId: 'bergen-county-zoo', body: '新评论', authorName: '呜哇', createdAt: 2 },
+    },
+  });
+
+  assert.deepEqual(dayTripLegacyInteractionIds('bergen-county-zoo'), ['van-saun-harmony-playground']);
+  const reactions = dayTripReactionsForDestination(state, 'bergen-county-zoo');
+  assert.equal(reactions.cat.value, 'down');
+  assert.equal(reactions.dog.value, 'up');
+  assert.deepEqual(dayTripCommentsForDestination(state, 'bergen-county-zoo').map((comment) => comment.id), ['old', 'current']);
 });
 
 test('Meal Builder and Notebook Firebase repositories delegate household identity to the shared session', () => {

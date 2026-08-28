@@ -1,6 +1,5 @@
 import {
   createDayTripInteractionRepository,
-  dayTripCommentsFor,
   dayTripReactionSummary,
   type CreateDayTripInteractionRepositoryOptions,
   type DayTripComment,
@@ -8,6 +7,11 @@ import {
   type DayTripInteractionStatus,
   type DayTripReactionValue,
 } from './dayTripInteractions.ts';
+import {
+  dayTripCommentsForDestination,
+  dayTripLegacyInteractionIds,
+  dayTripReactionsForDestination,
+} from './dayTripInteractionAliases.ts';
 import { escapeHouseholdHtml, householdCommentWindow, householdPersonIconHtml } from './householdPeople.ts';
 import type { FirebaseConfig } from './householdSession.ts';
 
@@ -67,20 +71,20 @@ export function mountDayTripInteractionUi(config: Partial<FirebaseConfig>, optio
     const connected = isConnected();
     for (const card of cards) {
       const destinationId = card.dataset.id ?? '';
-      const reactions = state.reactions[destinationId];
+      const reactions = dayTripReactionsForDestination(state, destinationId);
       const summary = dayTripReactionSummary(reactions);
       card.dataset.reactionRank = String(summary.rank);
       card.dataset.reactionUps = String(summary.upCount);
       card.querySelectorAll<HTMLButtonElement>('[data-trip-reaction]').forEach((button) => {
         const value = button.dataset.tripReaction as DayTripReactionValue;
-        const active = Boolean(uid && reactions?.[uid]?.value === value);
+        const active = Boolean(uid && reactions[uid]?.value === value);
         button.setAttribute('aria-pressed', active ? 'true' : 'false');
         button.disabled = !connected || !displayName;
       });
       const people = card.querySelector<HTMLElement>('[data-trip-reaction-people]');
       if (people) people.innerHTML = reactionPeopleHtml(reactions);
       const comments = card.querySelector<HTMLElement>('[data-trip-comments]');
-      if (comments) comments.innerHTML = commentsHtml(dayTripCommentsFor(state, destinationId), destinationId, displayName, connected);
+      if (comments) comments.innerHTML = commentsHtml(dayTripCommentsForDestination(state, destinationId), destinationId, displayName, connected);
     }
     window.dispatchEvent(new Event('daytripinteractionschange'));
   };
@@ -123,9 +127,14 @@ export function mountDayTripInteractionUi(config: Partial<FirebaseConfig>, optio
       const authorName = repository.getCurrentMemberDisplayName();
       const value = reactionButton.dataset.tripReaction as DayTripReactionValue;
       if (!destinationId || !uid || !authorName) return;
-      const current = state.reactions[destinationId]?.[uid]?.value;
+      const reactions = dayTripReactionsForDestination(state, destinationId);
+      const current = reactions[uid]?.value;
       const nextValue = current === value ? null : value;
-      void repository.setReaction(destinationId, nextValue);
+      const legacyIds = dayTripLegacyInteractionIds(destinationId).filter((legacyId) => Boolean(state.reactions[legacyId]?.[uid]));
+      void (async () => {
+        for (const legacyId of legacyIds) await repository.setReaction(legacyId, null);
+        await repository.setReaction(destinationId, nextValue);
+      })();
       return;
     }
 

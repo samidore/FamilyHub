@@ -113,8 +113,8 @@ export function parseDayTrips(value) {
     }
     if (record.notice !== undefined) text(record.notice, `${path}.notice`);
 
-    if (!Array.isArray(record.locations) || record.locations.length < 1 || record.locations.length > 3) {
-      fail(`${path}.locations`, 'expected 1 to 3 coarse locations');
+    if (!Array.isArray(record.locations) || record.locations.length < 1) {
+      fail(`${path}.locations`, 'expected one or more coarse locations');
     }
 
     record.locations.forEach((location, locationIndex) => {
