@@ -4,7 +4,7 @@ status: candidate
 name_zh: 日式菌菇蒸 / 焖
 name_en: Japanese-Style Steamed Mushrooms
 tags:
-  - iron-pan-braise
+  - child-all-ingredients-eaten
   - light-seasoning
   - non-spicy-base
   - stovetop-nonstick
@@ -16,6 +16,8 @@ primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids: [fresh-shiitake, oyster-mushrooms, shimeji-mushrooms, enoki-mushrooms, maitake]
 meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
 child_coverage: { protein: false, vegetable: true }
