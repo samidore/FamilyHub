@@ -4,7 +4,7 @@ status: candidate
 name_zh: 寿喜烧丼
 name_en: Sukiyaki Don
 tags:
-  - iron-pan-braise
+  - child-all-ingredients-eaten
   - light-seasoning
   - non-spicy-base
   - stovetop-nonstick
@@ -16,6 +16,8 @@ main_protein_category: beef
 main_protein_ingredient_ids:
   - hot-pot-beef-slices
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids:
   - onion
 meal_contribution:
