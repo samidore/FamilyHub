@@ -4,7 +4,7 @@ status: candidate
 name_zh: 越南 Thịt Kho 猪肉卤蛋
 name_en: Vietnamese Thịt Kho with Eggs
 tags:
-  - iron-pan-braise
+  - child-all-ingredients-eaten
   - light-seasoning
   - non-spicy-base
   - braised
@@ -18,6 +18,8 @@ main_protein_ingredient_ids:
   - pork-shoulder-chunks
 supporting_protein_ingredient_ids:
   - eggs
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids: []
 meal_contribution:
   protein: 1
