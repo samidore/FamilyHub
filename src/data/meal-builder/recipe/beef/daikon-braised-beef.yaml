@@ -4,7 +4,7 @@ status: candidate
 name_zh: 萝卜炖牛肉
 name_en: Braised Beef with Daikon
 tags:
-  - iron-pan-braise
+  - child-all-ingredients-eaten
   - light-seasoning
   - non-spicy-base
   - braised
@@ -18,6 +18,8 @@ main_protein_ingredient_ids:
   - whole-beef-brisket
   - chuck-roast
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids:
   - daikon
 meal_contribution:
