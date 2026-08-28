@@ -96,6 +96,57 @@
           "settings": { ".validate": "newData.hasChildren(['viewFilter'])", "viewFilter": { ".validate": "newData.isString() && (newData.val() == 'active' || newData.val() == 'completed' || newData.val() == 'all')" }, "recurringBoardOrder": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() % 1 == 0" }, "$other": { ".validate": false } },
           "$other": { ".validate": false }
         },
+        "restaurants": {
+          ".read": "auth != null && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email",
+          "ratings": {
+            "$restaurantId": {
+              "$uid": {
+                ".write": "auth != null && auth.uid == $uid && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email",
+                ".validate": "newData.hasChildren(['score', 'authorName', 'updatedAt']) && ((!data.exists() && newData.child('authorName').val() == root.child('households').child($householdId).child('members').child(auth.uid).child('displayName').val()) || (data.exists() && newData.child('authorName').val() == data.child('authorName').val()))",
+                "score": { ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 5 && newData.val() % 1 == 0" },
+                "authorName": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 80 && newData.val().matches(/^[^@]+$/)" },
+                "updatedAt": { ".validate": "newData.isNumber() && newData.val() > 0" },
+                "$other": { ".validate": false }
+              }
+            }
+          },
+          "wants": {
+            "$restaurantId": {
+              "$uid": {
+                ".write": "auth != null && auth.uid == $uid && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email",
+                ".validate": "newData.hasChildren(['authorName', 'updatedAt']) && ((!data.exists() && newData.child('authorName').val() == root.child('households').child($householdId).child('members').child(auth.uid).child('displayName').val()) || (data.exists() && newData.child('authorName').val() == data.child('authorName').val()))",
+                "authorName": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 80 && newData.val().matches(/^[^@]+$/)" },
+                "updatedAt": { ".validate": "newData.isNumber() && newData.val() > 0" },
+                "$other": { ".validate": false }
+              }
+            }
+          },
+          "comments": {
+            "$commentId": {
+              ".write": "auth != null && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email",
+              ".validate": "newData.hasChildren(['id', 'restaurantId', 'body', 'authorName', 'createdAt']) && newData.child('id').val() == $commentId && ((!data.exists() && newData.child('authorName').val() == root.child('households').child($householdId).child('members').child(auth.uid).child('displayName').val()) || (data.exists() && newData.child('authorName').val() == data.child('authorName').val()))",
+              "id": { ".validate": "newData.isString() && newData.val() == $commentId" },
+              "restaurantId": { ".validate": "newData.isString() && newData.val().length > 0" },
+              "body": { ".validate": "newData.isString() && newData.val().length > 0" },
+              "authorName": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 80 && newData.val().matches(/^[^@]+$/)" },
+              "createdAt": { ".validate": "newData.isNumber() && newData.val() > 0 && (!data.exists() || newData.val() == data.val())" },
+              "updatedAt": { ".validate": "newData.isNumber() && newData.val() > 0" },
+              "$other": { ".validate": false }
+            }
+          },
+          "inbox": {
+            "$ticketId": {
+              ".write": "auth != null && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email",
+              ".validate": "newData.hasChildren(['id', 'text', 'createdAt', 'updatedAt']) && newData.child('id').val() == $ticketId",
+              "id": { ".validate": "newData.isString() && newData.val() == $ticketId" },
+              "text": { ".validate": "newData.isString() && newData.val().length > 0" },
+              "createdAt": { ".validate": "newData.isNumber() && newData.val() > 0 && (!data.exists() || newData.val() == data.val())" },
+              "updatedAt": { ".validate": "newData.isNumber() && newData.val() > 0" },
+              "$other": { ".validate": false }
+            }
+          },
+          "$other": { ".validate": false }
+        },
         "dayTrips": {
           ".read": "auth != null && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email",
           "reactions": {
