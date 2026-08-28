@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { moduleRegistry } from '../src/config/modules.ts';
 import { parseAdultDermatologists, parseColonoscopySpecialists, parseDayTrips, parseLibraryEvents, parsePediatricDentists } from '../src/data/schemas.mjs';
 import { parseObGynProviders } from '../src/data/obGynSchema.mjs';
+import { parseRestaurants } from '../src/data/restaurantSchema.mjs';
 import { obGynExternalProfiles } from '../src/data/obGynExternalProfiles.ts';
 import { loadMealData } from './load-meal-data.mjs';
 
@@ -12,6 +13,7 @@ const dentists = parsePediatricDentists(await readJson('src/data/pediatric-denti
 const dermatologists = parseAdultDermatologists(await readJson('src/data/adult-dermatologists.json'));
 const colonoscopy = parseColonoscopySpecialists(await readJson('src/data/colonoscopy-specialists.json'));
 const obGyn = parseObGynProviders(await readJson('src/data/ob-gyn.json'));
+const restaurants = parseRestaurants(await readJson('src/data/restaurants.json'));
 const obGynPlacements = obGyn.flatMap((provider) => provider.placements);
 const meals = await loadMealData();
 const home = await readFile('dist/index.html', 'utf8');
@@ -25,6 +27,7 @@ const records = {
   'colonoscopy-specialists': colonoscopy,
   'ob-gyn': obGynPlacements,
   'meal-builder': meals.recipes,
+  'restaurants': restaurants,
 };
 const cardAttributes = {
   'day-trips': 'data-destination',
@@ -34,6 +37,7 @@ const cardAttributes = {
   'colonoscopy-specialists': 'data-colonoscopy',
   'ob-gyn': 'data-ob-gyn',
   'meal-builder': 'data-meal-recipe',
+  'restaurants': 'data-restaurant',
 };
 const supportedPrivacyClasses = new Set(['public-reference', 'authenticated-household']);
 const cardCount = (html, attribute) => (html.match(new RegExp(`<article[^>]+${attribute}`, 'g')) ?? []).length;
@@ -116,4 +120,4 @@ for (const html of htmlFiles) {
   assert(externalLinks.every((match) => /target="_blank"/.test(match[0]) && /rel="[^"]*noopener[^"]*noreferrer[^"]*"/.test(match[0])), 'An external link is missing safe new-tab attributes');
 }
 
-console.log(`Registry audit passed: ${moduleRegistry.length} modules, ${trips.length} trips, ${events.length} activities, ${dentists.length} dentists, ${dermatologists.length} dermatologists, ${colonoscopy.length} colonoscopy specialists, ${obGyn.length} OB/GYN providers / ${obGynPlacements.length} placements, ${meals.recipes.length} meal recipes.`);
+console.log(`Registry audit passed: ${moduleRegistry.length} modules, ${trips.length} trips, ${events.length} activities, ${dentists.length} dentists, ${dermatologists.length} dermatologists, ${colonoscopy.length} colonoscopy specialists, ${obGyn.length} OB/GYN providers / ${obGynPlacements.length} placements, ${restaurants.length} restaurants, ${meals.recipes.length} meal recipes.`);
