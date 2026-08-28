@@ -4,7 +4,7 @@ import type { Restaurant } from '../../data/restaurantTypes';
 const { restaurant: r } = Astro.props as { restaurant: Restaurant };
 const address = [r.address.line1, r.address.line2, `${r.address.city}, ${r.address.state} ${r.address.postalCode}`].filter(Boolean).join(', ');
 const hasTakeout = r.orderPlatforms.length > 0;
-const searchable = [r.name, address, ...r.tags, ...r.orderPlatforms.map((platform) => platform.name)].join(' ').toLocaleLowerCase();
+const searchable = [r.name, r.description, address, ...r.tags, ...r.orderPlatforms.map((platform) => platform.name)].join(' ').toLocaleLowerCase();
 const platformNames = r.orderPlatforms.map((platform) => platform.name).join('|');
 const tagNames = r.tags.join('|');
 const modeLabel = (modes: string[]) => modes.map((mode) => mode === 'delivery' ? '配送' : '自取').join(' / ');
@@ -14,10 +14,36 @@ const fixedLinks = [
   { label: 'Yelp', url: r.yelpUrl },
 ];
 ---
-<article class="record-card restaurant-card" data-restaurant data-search={searchable} data-dinein={r.dineIn ? '1' : '0'} data-takeout={hasTakeout ? '1' : '0'} data-tags={tagNames} data-platforms={platformNames}>
+<article
+  class="record-card restaurant-card"
+  data-restaurant
+  data-id={r.id}
+  data-name={r.name}
+  data-search={searchable}
+  data-dinein={r.dineIn ? '1' : '0'}
+  data-takeout={hasTakeout ? '1' : '0'}
+  data-tags={tagNames}
+  data-platforms={platformNames}
+  data-want-count="0"
+  data-want-cat="0"
+  data-want-dog="0"
+>
   <div class="record-card__top">
     <div class="badges" aria-label="饭店标签">{r.tags.map((tag) => <span class="badge">{tag}</span>)}</div>
     <h2>{r.name}</h2>
+    <p class="restaurant-description">{r.description}</p>
+
+    <section class="restaurant-family-summary" aria-label="家庭评分与想吃状态">
+      <div class="restaurant-ratings" data-restaurant-ratings aria-label="家庭评分">
+        <div class="restaurant-rating-row restaurant-rating-row--placeholder"><span>猫猫</span><span>☆☆☆☆☆</span><span>—</span></div>
+        <div class="restaurant-rating-row restaurant-rating-row--placeholder"><span>呜哇</span><span>☆☆☆☆☆</span><span>—</span></div>
+      </div>
+      <div class="restaurant-want-row">
+        <button type="button" class="restaurant-want-button" data-restaurant-want aria-pressed="false" disabled>想吃</button>
+        <div class="restaurant-want-people" data-restaurant-want-people aria-label="想吃的家庭成员"></div>
+      </div>
+    </section>
+
     <p class="location-line">{address}</p>
     <div class="restaurant-services" aria-label="服务方式">
       {r.dineIn && <span class="badge badge--status">堂食</span>}
@@ -39,6 +65,8 @@ const fixedLinks = [
       </div>
     </section>}
 
+    <section class="restaurant-comments" data-restaurant-comments aria-label="家庭评论"></section>
+
     <div class="actions actions--three restaurant-links" aria-label="饭店链接">
       {fixedLinks.map((link) => link.url
         ? <a class="button button--secondary" href={link.url} target="_blank" rel="noopener noreferrer">{link.label}</a>
@@ -49,7 +77,25 @@ const fixedLinks = [
 </article>
 
 <style>
+  .restaurant-description { margin: 7px 0 0; color: #4f4650; font-size: 16px; }
   .restaurant-services { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 16px; }
+  .restaurant-family-summary { display: grid; gap: 10px; margin: 14px 0; padding: 11px 12px; border: 1px solid color-mix(in srgb, var(--accent) 24%, var(--line)); border-radius: 11px; background: rgb(255 255 255 / 72%); }
+  .restaurant-ratings { display: grid; gap: 7px; }
+  :global(.restaurant-rating-row) { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px; min-height: 32px; }
+  .restaurant-rating-row--placeholder { color: var(--muted); font-size: 14px; }
+  :global(.restaurant-rating-stars) { display: inline-flex; align-items: center; min-width: 0; gap: 1px; color: #b56b16; letter-spacing: .02em; }
+  :global(.restaurant-rating-stars button) { width: 30px; min-height: 34px; border: 0; border-radius: 7px; padding: 0; background: transparent; color: #b56b16; font: inherit; font-size: 22px; cursor: pointer; }
+  :global(.restaurant-rating-stars button:focus-visible) { outline: 2px solid var(--accent); outline-offset: 1px; }
+  :global(.restaurant-rating-stars--static) { font-size: 19px; }
+  :global(.restaurant-rating-value) { color: #5e555d; font-size: 13px; font-weight: 700; white-space: nowrap; }
+  .restaurant-want-row { display: flex; align-items: center; gap: 10px; min-height: 48px; }
+  .restaurant-want-button { min-width: 74px; min-height: 44px; border: 1px solid #c1b4bf; border-radius: 10px; background: #fff; color: var(--accent); font-weight: 800; cursor: pointer; }
+  .restaurant-want-button[aria-pressed="true"] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, white); box-shadow: inset 0 0 0 1px var(--accent); }
+  .restaurant-want-button:disabled { cursor: default; opacity: .48; }
+  .restaurant-want-people { display: flex; align-items: center; gap: 6px; min-height: 46px; }
+  :global(.restaurant-want-image) { display: block; width: 46px; height: 46px; object-fit: contain; }
+  :global(.restaurant-want-generic) { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; }
+
   .restaurant-platforms h3 { margin: 0 0 10px; font-size: 17px; }
   .restaurant-platform-list { display: grid; gap: 9px; }
   .restaurant-platform-row { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 11px; border: 1px solid var(--line); border-radius: 9px; background: #fbfcfa; }
@@ -57,6 +103,31 @@ const fixedLinks = [
   .restaurant-platform-row strong { overflow-wrap: anywhere; font-size: 16px; }
   .restaurant-platform-row span { color: var(--muted); font-size: 14px; }
   .restaurant-platform-row .button { min-width: 78px; min-height: 48px; flex: 0 0 auto; }
+
+  .restaurant-comments { display: grid; gap: 9px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+  :global(.household-person-icon) { width: 2rem; height: 2rem; flex: 0 0 2rem; border-radius: 999px; overflow: hidden; display: inline-grid; place-items: center; background: #eee9df; }
+  :global(.household-person-icon--compact) { width: 1.65rem; height: 1.65rem; flex-basis: 1.65rem; }
+  :global(.household-person-icon img) { display: block; width: 100%; height: 100%; object-fit: cover; }
+  :global(.household-person-icon svg) { width: 100%; height: 100%; fill: #d8d0c4; stroke: #776f64; stroke-width: 1.5; }
+  :global(.restaurant-comment-list), :global(.restaurant-comment-expand ul) { list-style: none; padding: 0; margin: 0; display: grid; gap: 9px; }
+  :global(.restaurant-comment) { border-left: 3px solid #c6b9a7; padding-left: 10px; }
+  :global(.restaurant-comment__meta) { display: flex; justify-content: space-between; align-items: center; gap: 8px; color: #665f56; font-size: 13px; }
+  :global(.restaurant-comment__author) { display: inline-flex; align-items: center; gap: 5px; }
+  :global(.restaurant-comment p) { margin: 5px 0; white-space: pre-wrap; }
+  :global(.restaurant-comment__actions) { display: flex; gap: 8px; }
+  :global(.restaurant-comment__actions button) { border: 0; background: none; padding: 5px 0; color: var(--accent); cursor: pointer; font-weight: 700; }
+  :global(.restaurant-comment-expand-row) { list-style: none; }
+  :global(.restaurant-comment-expand), :global(.restaurant-comment-add) { border: 0; margin: 0; padding: 0; }
+  :global(.restaurant-comment-expand > summary), :global(.restaurant-comment-add > summary) { width: fit-content; min-height: 40px; display: flex; align-items: center; cursor: pointer; color: var(--accent); font-weight: 700; list-style: none; }
+  :global(.restaurant-comment-expand > summary::-webkit-details-marker), :global(.restaurant-comment-add > summary::-webkit-details-marker) { display: none; }
+  :global(.restaurant-comment-expand__open) { display: none; }
+  :global(.restaurant-comment-expand[open] .restaurant-comment-expand__closed) { display: none; }
+  :global(.restaurant-comment-expand[open] .restaurant-comment-expand__open) { display: inline; }
+  :global(.restaurant-comment-form) { display: grid; gap: 7px; }
+  :global(.restaurant-comment-form textarea) { width: 100%; resize: vertical; border: 1px solid #b8c5bc; border-radius: 9px; padding: 9px; font: inherit; }
+  :global(.restaurant-comment-form button) { width: fit-content; min-height: 40px; border: 0; border-radius: 9px; padding: 7px 14px; background: var(--accent); color: white; font-weight: 700; }
+  :global(.restaurant-interaction-warning) { margin: 5px 0 0; color: #8e2c21; font-size: 13px; font-weight: 700; }
+
   .restaurant-links { margin-top: 22px; }
   .restaurant-link--disabled { border: 1px solid var(--line); background: #eef0ed; color: #6d756f; cursor: not-allowed; }
   .verification-note { margin: 14px 0 0; }
