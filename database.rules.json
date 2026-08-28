@@ -189,6 +189,7 @@
           "settings": {
             ".validate": "newData.hasChildren(['viewFilter'])",
             "viewFilter": { ".validate": "newData.isString() && (newData.val() == 'active' || newData.val() == 'completed' || newData.val() == 'all')" },
+            "recurringBoardOrder": { ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() % 1 == 0" },
             "$other": { ".validate": false }
           },
           "$other": { ".validate": false }
