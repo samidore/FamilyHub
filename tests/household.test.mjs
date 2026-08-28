@@ -6,26 +6,41 @@ import {
   RECENT_MEAL_LIMIT,
   adjustInventoryItem,
   applyCheckout,
+  applyCheckoutComposition,
+  checkoutDraftForMeal,
+  checkoutRecipeDraftsForMeal,
   createCurrentMealFromInventory,
   defaultCheckoutConsumption,
-  checkoutDraftForMeal,
   normalizeHouseholdState,
   resetRecipeSelection,
   setCurrentMealStatus,
   toggleInventoryItem,
+  toggleRecipeOptionalAddon,
   trackingForIngredient,
   updateCheckoutDraft,
+  updateCheckoutRecipeDrafts,
   usedIngredientIds,
 } from '../src/lib/household.ts';
 import { LocalHouseholdRepository, createHouseholdRepository, googleIdentity, shouldUseRedirectFallback } from '../src/lib/householdRepository.ts';
 
 const ingredients = [
   { id: 'pork', inventoryTracking: 'counted' },
+  { id: 'beef', inventoryTracking: 'counted' },
   { id: 'eggs', inventoryTracking: 'presence-only' },
-  { id: 'potato', inventoryTracking: 'presence-only', tags: ['easy-braise-addon'] },
-  { id: 'tofu', inventoryTracking: 'counted', tags: ['easy-braise-addon'] },
+  { id: 'potato', inventoryTracking: 'presence-only' },
+  { id: 'tofu', inventoryTracking: 'counted', inventoryFreshness: 'fifo', freshnessPriorityDays: 7, tags: ['child-eaten'] },
   { id: 'other', inventoryTracking: 'counted' },
 ];
+const optionalGroups = [{
+  id: 'one-pot-mix', labelZh: '一锅乱炖', ingredients: [
+    { ingredientId: 'tofu', contribution: { protein: 0.5, vegetable: 0, staple: 0 }, checkoutUnits: 1 },
+    { ingredientId: 'potato', contribution: { protein: 0, vegetable: 0, staple: 1 }, checkoutUnits: 1 },
+  ],
+}];
+const compositionRecipe = {
+  id: 'compose', order: 1, fitScore: 4, contribution: { protein: 1, vegetable: 0, staple: 0 }, childCoverage: { protein: true, vegetable: false },
+  requirements: [{ anyOf: ['pork', 'beef'], role: 'main-protein' }], optionalGroupIds: ['one-pot-mix'], checkoutUnits: {}, mealWindowMinutes: '30', elapsedMinutes: '30', advanceStartRequired: false, tags: ['child-all-ingredients-eaten'],
+};
 
 test('authentication errors keep an appropriate recovery action visible', async () => {
   const page = await readFile('src/pages/meal-builder.astro', 'utf8');
@@ -65,10 +80,7 @@ test('presence-only inventory stores only true', () => {
 });
 
 test('inventory tracking comes from Ingredient records rather than ID whitelists', () => {
-  const custom = [
-    { id: 'eggs', inventoryTracking: 'counted' },
-    { id: 'custom-presence', inventoryTracking: 'presence-only' },
-  ];
+  const custom = [{ id: 'eggs', inventoryTracking: 'counted' }, { id: 'custom-presence', inventoryTracking: 'presence-only' }];
   assert.equal(trackingForIngredient('eggs', custom), 'counted');
   assert.equal(trackingForIngredient('custom-presence', custom), 'presence-only');
   assert.deepEqual(normalizeHouseholdState({ inventory: { eggs: true, 'custom-presence': 1 } }, custom).inventory, { 'custom-presence': true });
@@ -77,34 +89,33 @@ test('inventory tracking comes from Ingredient records rather than ID whitelists
 test('current meal copies inventory once and recipe reset keeps availability', () => {
   const meal = createCurrentMealFromInventory({ pork: 1, eggs: true }, { mealId: 'meal-1' }, ingredients);
   assert.deepEqual(meal.availableIngredientIds, ['eggs', 'pork']);
-  const changed = resetRecipeSelection({ ...meal, selectedRecipeIds: ['r1'], recipeIngredientBindings: { r1: ['pork'] }, selectedAddons: [{ mainRecipeId: 'r1', addonType: 'a', ingredientId: 'eggs' }], status: 'ready' });
+  const changed = resetRecipeSelection({ ...meal, selectedRecipeIds: ['r1'], recipeIngredientBindings: { r1: ['pork'] }, selectedAddons: [{ mainRecipeId: 'r1', addonType: 'a', ingredientId: 'eggs' }], checkoutRecipeDrafts: { r1: { bindings: ['pork'], optionalAddons: [], consumption: { pork: 1 } } }, status: 'ready' });
   assert.deepEqual(changed.availableIngredientIds, meal.availableIngredientIds);
   assert.deepEqual(changed.selectedRecipeIds, []);
+  assert.deepEqual(changed.checkoutRecipeDrafts, {});
   assert.equal(changed.status, 'selecting');
 });
 
 test('Realtime Database round-trip restores omitted empty collections and safe scalar defaults', () => {
-  const normalized = normalizeHouseholdState({
-    inventory: { pork: 1 },
-    currentMeal: { mealId: 'meal-1', status: 'bad-status', proteinTarget: 1.5, vegetableTarget: 2.5, selectedRecipeIds: undefined },
-  }, ingredients);
+  const normalized = normalizeHouseholdState({ inventory: { pork: 1 }, currentMeal: { mealId: 'meal-1', status: 'bad-status', proteinTarget: 1.5, vegetableTarget: 2.5, selectedRecipeIds: undefined } }, ingredients);
   assert.deepEqual(normalized.currentMeal?.availableIngredientIds, []);
   assert.deepEqual(normalized.currentMeal?.selectedRecipeIds, []);
   assert.deepEqual(normalized.currentMeal?.recipeIngredientBindings, {});
   assert.deepEqual(normalized.currentMeal?.selectedAddons, []);
+  assert.deepEqual(normalized.currentMeal?.checkoutRecipeDrafts, {});
   assert.equal(normalized.currentMeal?.status, 'selecting');
   assert.equal(normalized.currentMeal?.proteinTarget, 1);
   assert.equal(normalized.currentMeal?.vegetableTarget, 2);
   assert.equal(normalized.activeStep, 'inventory');
 });
 
-test('shared active step and checkout draft normalize legacy-safe values', () => {
+test('shared active step and legacy checkout draft normalize safe values', () => {
   const meal = createCurrentMealFromInventory({ pork: 1, eggs: true }, { mealId: 'meal-draft' }, ingredients);
   const normalized = normalizeHouseholdState({ inventory: { pork: 1, eggs: true }, activeStep: 'checkout', currentMeal: { ...meal, excludedIngredientIds: ['pork', 'unknown'], checkoutDraft: { pork: 0, eggs: false, unknown: 1 } } }, ingredients);
   assert.equal(normalized.activeStep, 'checkout');
   assert.deepEqual(normalized.currentMeal?.excludedIngredientIds, ['pork']);
   assert.deepEqual(normalized.currentMeal?.checkoutDraft, { pork: 0, eggs: false });
-  const draft = updateCheckoutDraft({ ...meal, recipeIngredientBindings: { r1: ['pork'] }, selectedRecipeIds: ['r1'], selectedAddons: [{ mainRecipeId: 'r1', addonType: 'a', ingredientId: 'eggs' }] }, { pork: COUNTED_INVENTORY_STEP, eggs: true }, { pork: 1, eggs: true }, ingredients);
+  const draft = updateCheckoutDraft({ ...meal, recipeIngredientBindings: { r1: ['pork'] }, selectedRecipeIds: ['r1'] }, { pork: COUNTED_INVENTORY_STEP, eggs: true }, { pork: 1, eggs: true }, ingredients);
   assert.deepEqual(checkoutDraftForMeal(draft, { pork: 1, eggs: true }, ingredients), { pork: COUNTED_INVENTORY_STEP });
 });
 
@@ -120,10 +131,7 @@ test('checkout defaults use declared units, fallback bindings, and cross-recipe 
 
 test('checkout ignores bindings retained for unknown or archived Recipes', () => {
   const recipes = [{ id: 'known', requirements: [], contribution: { protein: 0, vegetable: 0, staple: 0 }, childCoverage: { protein: false, vegetable: false } }];
-  const meal = {
-    ...createCurrentMealFromInventory({ pork: 2, other: 1 }, { mealId: 'reconciled-checkout' }, ingredients),
-    status: 'cooking', selectedRecipeIds: ['known', 'archived-recipe'], recipeIngredientBindings: { known: ['pork'], 'archived-recipe': ['other'] },
-  };
+  const meal = { ...createCurrentMealFromInventory({ pork: 2, other: 1 }, { mealId: 'reconciled-checkout' }, ingredients), status: 'cooking', selectedRecipeIds: ['known', 'archived-recipe'], recipeIngredientBindings: { known: ['pork'], 'archived-recipe': ['other'] } };
   const state = { inventory: { pork: 2, other: 1 }, currentMeal: meal, activeStep: 'checkout', recentMeals: [] };
   assert.deepEqual(usedIngredientIds(meal, recipes), ['pork']);
   assert.deepEqual(defaultCheckoutConsumption(meal, state.inventory, ingredients, recipes), { pork: 1 });
@@ -131,34 +139,78 @@ test('checkout ignores bindings retained for unknown or archived Recipes', () =>
   assert.equal(applyCheckout(state, meal.mealId, { other: 1 }, ingredients, { recipes }).committed, false);
 });
 
-test('easy-braise checkout uses live inventory, defaults add-ons to zero, and rechecks atomically', () => {
-  const recipes = [{ id: 'braise', tags: ['iron-pan-braise'], requirements: [], contribution: { protein: 1, vegetable: 0, staple: 0 }, childCoverage: { protein: true, vegetable: false } }];
-  const meal = {
-    ...createCurrentMealFromInventory({ pork: 2 }, { mealId: 'easy-braise' }, ingredients),
-    status: 'cooking', selectedRecipeIds: ['braise'], recipeIngredientBindings: { braise: ['pork'] },
-  };
-  assert.deepEqual(meal.availableIngredientIds, ['pork']);
-  const liveInventory = { pork: 2, tofu: 2, potato: true, other: 1 };
-  assert.deepEqual(defaultCheckoutConsumption(meal, liveInventory, ingredients, recipes), { pork: 1, potato: false, tofu: 0 });
+test('planned optional composition is snapshot-limited and remains separate from Actual checkout edits', () => {
+  let meal = { ...createCurrentMealFromInventory({ pork: 2, tofu: 2 }, { mealId: 'compose' }, ingredients), selectedRecipeIds: ['compose'], recipeIngredientBindings: { compose: ['pork'] } };
+  meal = toggleRecipeOptionalAddon(meal, 'compose', 'one-pot-mix', 'tofu', true, [compositionRecipe], optionalGroups);
+  assert.deepEqual(meal.selectedAddons, [{ mainRecipeId: 'compose', addonType: 'one-pot-mix', ingredientId: 'tofu' }]);
+  assert.equal(toggleRecipeOptionalAddon(meal, 'compose', 'one-pot-mix', 'potato', true, [compositionRecipe], optionalGroups), meal, 'Plan cannot select an Ingredient outside its frozen meal snapshot');
 
-  const state = { inventory: liveInventory, currentMeal: meal, activeStep: 'checkout', recentMeals: [] };
-  const rejected = applyCheckout(state, meal.mealId, { pork: 1, other: 1 }, ingredients, { recipes });
-  assert.equal(rejected.committed, false);
-  assert.deepEqual(rejected.state.inventory, state.inventory);
+  const liveInventory = { pork: 2, beef: 2, tofu: 2, potato: true };
+  const defaults = checkoutRecipeDraftsForMeal(meal, liveInventory, ingredients, [compositionRecipe], optionalGroups);
+  assert.deepEqual(defaults.compose.bindings, ['pork']);
+  assert.deepEqual(defaults.compose.optionalAddons, [{ addonType: 'one-pot-mix', ingredientId: 'tofu' }]);
+  assert.deepEqual(defaults.compose.consumption, { pork: 1, tofu: 1 });
 
-  const removedBeforeCommit = { ...state, inventory: { pork: 2, potato: true, other: 1 } };
-  const staleOptional = applyCheckout(removedBeforeCommit, meal.mealId, { pork: 1, tofu: 0.5 }, ingredients, { recipes });
-  assert.equal(staleOptional.committed, false);
-
-  const accepted = applyCheckout(state, meal.mealId, { pork: 1, tofu: 1.5, potato: true }, ingredients, { recipes, nextMealId: 'next', completedAt: 2 });
-  assert.equal(accepted.committed, true);
-  assert.deepEqual(accepted.state.inventory, { pork: 1, tofu: 0.5, other: 1 });
+  const actual = structuredClone(defaults);
+  actual.compose.bindings[0] = 'beef';
+  actual.compose.optionalAddons = [{ addonType: 'one-pot-mix', ingredientId: 'potato' }];
+  actual.compose.consumption = { beef: 1, potato: true };
+  const saved = updateCheckoutRecipeDrafts(meal, actual, ingredients);
+  assert.deepEqual(saved.recipeIngredientBindings, { compose: ['pork'] });
+  assert.deepEqual(saved.selectedAddons, [{ mainRecipeId: 'compose', addonType: 'one-pot-mix', ingredientId: 'tofu' }]);
+  assert.deepEqual(saved.checkoutRecipeDrafts, actual);
 });
 
-test('Checkout renders easy-braise options from live inventory rather than the meal availability snapshot', async () => {
-  const page = await readFile('src/pages/meal-builder.astro', 'utf8');
-  assert.match(page, /easyBraiseAddonIngredientIds\(recipes, mealStateFromCurrentMeal\(meal\), stockedIds\(\), ingredients\)/);
-  assert.doesNotMatch(page, /easyBraiseAddonIngredientIds\(recipes, mealStateFromCurrentMeal\(meal\), meal\.availableIngredientIds, ingredients\)/);
+test('Actual checkout may change one-of and add an unplanned live optional without rewriting Plan', () => {
+  const meal = {
+    ...createCurrentMealFromInventory({ pork: 2, tofu: 2 }, { mealId: 'actual' }, ingredients), status: 'cooking',
+    selectedRecipeIds: ['compose'], recipeIngredientBindings: { compose: ['pork'] }, selectedAddons: [{ mainRecipeId: 'compose', addonType: 'one-pot-mix', ingredientId: 'tofu' }],
+  };
+  const state = { inventory: { pork: 2, beef: 2, tofu: 2, potato: true }, inventoryBatches: { tofu: { '2026-08-20': 2 } }, currentMeal: meal, activeStep: 'checkout', recentMeals: [] };
+  const actual = { compose: { bindings: ['beef'], optionalAddons: [{ addonType: 'one-pot-mix', ingredientId: 'potato' }], consumption: { beef: 1, potato: true } } };
+  const result = applyCheckoutComposition(state, meal.mealId, actual, ingredients, { recipes: [compositionRecipe], optionalGroups, nextMealId: 'next', completedAt: 2 });
+  assert.equal(result.committed, true);
+  assert.deepEqual(result.state.inventory, { pork: 2, beef: 1, tofu: 2 });
+  assert.deepEqual(meal.recipeIngredientBindings, { compose: ['pork'] });
+  assert.deepEqual(meal.selectedAddons, [{ mainRecipeId: 'compose', addonType: 'one-pot-mix', ingredientId: 'tofu' }]);
+});
+
+test('Actual checkout aggregates the same Ingredient across Recipes and consumes FIFO atomically', () => {
+  const second = { ...compositionRecipe, id: 'compose-2', order: 2 };
+  const meal = {
+    ...createCurrentMealFromInventory({ pork: 2, beef: 2, tofu: 2.5 }, { mealId: 'aggregate' }, ingredients, { tofu: { '2026-08-18': 1.5, '2026-08-20': 1 } }), status: 'cooking',
+    selectedRecipeIds: ['compose', 'compose-2'], recipeIngredientBindings: { compose: ['pork'], 'compose-2': ['beef'] },
+  };
+  const state = { inventory: { pork: 2, beef: 2, tofu: 2.5 }, inventoryBatches: { tofu: { '2026-08-18': 1.5, '2026-08-20': 1 } }, currentMeal: meal, activeStep: 'checkout', recentMeals: [] };
+  const drafts = {
+    compose: { bindings: ['pork'], optionalAddons: [{ addonType: 'one-pot-mix', ingredientId: 'tofu' }], consumption: { pork: 0.5, tofu: 1 } },
+    'compose-2': { bindings: ['beef'], optionalAddons: [{ addonType: 'one-pot-mix', ingredientId: 'tofu' }], consumption: { beef: 0.5, tofu: 1 } },
+  };
+  const result = applyCheckoutComposition(state, meal.mealId, drafts, ingredients, { recipes: [compositionRecipe, second], optionalGroups, nextMealId: 'next', completedAt: 3 });
+  assert.equal(result.committed, true);
+  assert.deepEqual(result.state.inventory, { pork: 1.5, beef: 1.5, tofu: 0.5 });
+  assert.deepEqual(result.state.inventoryBatches.tofu, { '2026-08-20': 0.5 });
+});
+
+test('Actual checkout rejects invalid group members and over-consumption atomically', () => {
+  const meal = { ...createCurrentMealFromInventory({ pork: 1, tofu: 1 }, { mealId: 'reject' }, ingredients), status: 'cooking', selectedRecipeIds: ['compose'], recipeIngredientBindings: { compose: ['pork'] } };
+  const state = { inventory: { pork: 1, tofu: 1, other: 1 }, inventoryBatches: { tofu: { '2026-08-20': 1 } }, currentMeal: meal, activeStep: 'checkout', recentMeals: [] };
+  const invalidOptional = { compose: { bindings: ['pork'], optionalAddons: [{ addonType: 'one-pot-mix', ingredientId: 'other' }], consumption: { pork: 1, other: 1 } } };
+  const invalid = applyCheckoutComposition(state, meal.mealId, invalidOptional, ingredients, { recipes: [compositionRecipe], optionalGroups });
+  assert.equal(invalid.committed, false);
+  assert.deepEqual(invalid.state.inventory, state.inventory);
+  const tooMuch = { compose: { bindings: ['pork'], optionalAddons: [{ addonType: 'one-pot-mix', ingredientId: 'tofu' }], consumption: { pork: 1, tofu: 1.5 } } };
+  const excessive = applyCheckoutComposition(state, meal.mealId, tooMuch, ingredients, { recipes: [compositionRecipe], optionalGroups });
+  assert.equal(excessive.committed, false);
+  assert.deepEqual(excessive.state.inventory, state.inventory);
+});
+
+test('composition enhancement uses live inventory at Checkout and has no mutation-observer render loop', async () => {
+  const component = await readFile('src/components/MealBuilderCompositionEnhancements.astro', 'utf8');
+  assert.match(component, /inventoryIsOn\(household\.inventory\[entry\.ingredientId\]/);
+  assert.match(component, /removeLegacyCompositionControls/);
+  assert.doesNotMatch(component, /new MutationObserver/);
+  assert.match(component, /applyCheckoutComposition/);
 });
 
 test('current-meal status transitions are transaction-safe and reject stale jumps', () => {
@@ -211,9 +263,9 @@ test('starting a current meal is conditional and never overwrites an existing me
   first.dispose(); second.dispose();
 });
 
-test('checkout is stale-safe and consumes counted/presence-only values once', () => {
+test('legacy flat checkout remains stale-safe and consumes counted values once', () => {
   const meal = createCurrentMealFromInventory({ pork: 1, eggs: true }, { mealId: 'meal-1' }, ingredients);
-  const cooking = { ...meal, status: 'cooking', recipeIngredientBindings: { r1: ['pork'] }, selectedRecipeIds: ['r1'], selectedAddons: [{ mainRecipeId: 'r1', addonType: 'a', ingredientId: 'eggs' }] };
+  const cooking = { ...meal, status: 'cooking', recipeIngredientBindings: { r1: ['pork'] }, selectedRecipeIds: ['r1'] };
   const state = { inventory: { pork: 1, eggs: true }, currentMeal: cooking, activeStep: 'checkout', recentMeals: [{ mealId: 'older', completedAt: 1, recipeIds: ['r0'] }] };
   assert.deepEqual(defaultCheckoutConsumption(cooking, state.inventory, ingredients), { pork: 1 });
   const first = applyCheckout(state, 'meal-1', { pork: COUNTED_INVENTORY_STEP }, ingredients, { nextMealId: 'meal-2', completedAt: 2 });
@@ -223,7 +275,6 @@ test('checkout is stale-safe and consumes counted/presence-only values once', ()
   assert.equal(first.state.currentMeal?.mealId, 'meal-2');
   assert.deepEqual(first.state.currentMeal?.availableIngredientIds, ['eggs', 'pork']);
   assert.deepEqual(first.state.currentMeal?.selectedRecipeIds, []);
-  assert.deepEqual(first.state.recentMeals, [{ mealId: 'meal-1', completedAt: 2, recipeIds: ['r1'] }, { mealId: 'older', completedAt: 1, recipeIds: ['r0'] }]);
   const second = applyCheckout(first.state, 'meal-1', { pork: COUNTED_INVENTORY_STEP }, ingredients);
   assert.equal(second.committed, false);
   assert.equal(second.reason, 'stale-meal');
