@@ -89,7 +89,7 @@ const compositionData = JSON.stringify({
   function scheduleRender() {
     if (renderQueued) return;
     renderQueued = true;
-    requestAnimationFrame(() => { renderQueued = false; renderAll(); });
+    requestAnimationFrame(() => requestAnimationFrame(() => { renderQueued = false; renderAll(); }));
   }
 
   function engineState(meal: CurrentMeal): MealState {
