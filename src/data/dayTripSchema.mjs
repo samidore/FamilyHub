@@ -10,7 +10,7 @@ const destinationRequired = [
 ];
 const destinationOptional = ['aliases', 'notice'];
 const locationKeys = ['name', 'environment', 'tags', 'notFor', 'stroller', 'hours'];
-const activityTags = ['woody-walk', 'playground', 'indoor-visit', 'animals', 'water-play', 'pick-your-own'];
+const activityTags = ['woody-walk', 'playground', 'indoor-visit', 'animals', 'water-play', 'aquarium', 'pick-your-own'];
 const weatherExclusions = ['rain', 'heat', 'post-rain'];
 const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
@@ -42,6 +42,22 @@ function https(value, path) {
   let url;
   try { url = new URL(value); } catch { fail(path, 'expected a valid URL'); }
   if (url.protocol !== 'https:') fail(path, 'URL must use HTTPS');
+  return url;
+}
+
+function googleMaps(value, path) {
+  const url = https(value, path);
+  if (!['google.com', 'www.google.com'].includes(url.hostname)) fail(path, 'expected a Google Maps URL');
+  const isSearch = url.pathname.startsWith('/maps/search');
+  const isPlace = url.pathname.startsWith('/maps/place/');
+  if (!isSearch && !isPlace) fail(path, 'expected a Google Maps place/search URL');
+  if (!isSearch) return;
+
+  const query = url.searchParams.get('query')?.trim();
+  if (!query) fail(path, 'Google Maps search URL needs a query');
+  if (/^-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?$/.test(query)) {
+    fail(path, 'coordinate-only Google Maps links are not allowed');
+  }
 }
 
 function verifiedDate(value, path) {
@@ -135,7 +151,7 @@ export function parseDayTrips(value) {
       hours(location.hours, `${locationPath}.hours`);
     });
 
-    https(record.googleMapsUrl, `${path}.googleMapsUrl`);
+    googleMaps(record.googleMapsUrl, `${path}.googleMapsUrl`);
     https(record.officialUrl, `${path}.officialUrl`);
     verifiedDate(record.verifiedDate, `${path}.verifiedDate`);
   });
