@@ -4,7 +4,7 @@ status: candidate
 name_zh: 酱牛肉
 name_en: Chinese Braised Beef Shank
 tags:
-  - iron-pan-braise
+  - child-all-ingredients-eaten
   - light-seasoning
   - non-spicy-base
   - braised
@@ -17,6 +17,8 @@ main_protein_category: beef
 main_protein_ingredient_ids:
   - beef-shank
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids: []
 meal_contribution:
   protein: 1
