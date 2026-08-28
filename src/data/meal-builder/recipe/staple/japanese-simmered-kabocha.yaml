@@ -4,7 +4,7 @@ status: candidate
 name_zh: 日式煮南瓜
 name_en: Japanese Simmered Kabocha
 tags:
-  - iron-pan-braise
+  - child-all-ingredients-eaten
   - light-seasoning
   - non-spicy-base
   - braised
@@ -16,6 +16,8 @@ primary_role: staple
 main_protein_category: none
 main_protein_ingredient_ids: []
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids: []
 meal_contribution:
   protein: 0
