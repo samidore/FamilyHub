@@ -1,21 +1,20 @@
-import type { NotebookComment, NotebookCompletionEvent, NotebookItem } from './notebookDomain.ts';
+import type { NotebookComment, NotebookItem } from './notebookDomain.ts';
+import { householdAuthorIconKind, householdCommentWindow, type HouseholdAuthorIconKind } from './householdPeople.ts';
 
 export const NOTEBOOK_LEGACY_AUTHOR_NAME = '猫猫';
 export const NOTEBOOK_LEGACY_COMPLETER_NAME = '呜哇';
-export type NotebookAuthorIconKind = 'cat' | 'dog' | 'generic';
+export type NotebookAuthorIconKind = HouseholdAuthorIconKind;
 
-export function notebookItemAuthorName(item: NotebookItem): string {
-  return item.authorName ?? NOTEBOOK_LEGACY_AUTHOR_NAME;
+export function notebookItemAuthorName(item: Pick<NotebookItem, 'authorName'>): string {
+  return item.authorName?.trim() || NOTEBOOK_LEGACY_AUTHOR_NAME;
 }
 
-export function notebookCompletedByName(record: Pick<NotebookItem, 'completedByName'> | Pick<NotebookCompletionEvent, 'completedByName'>): string {
-  return record.completedByName ?? NOTEBOOK_LEGACY_COMPLETER_NAME;
+export function notebookCompletedByName(record: { completedByName?: string }): string {
+  return record.completedByName?.trim() || NOTEBOOK_LEGACY_COMPLETER_NAME;
 }
 
 export function notebookAuthorIconKind(authorName: string): NotebookAuthorIconKind {
-  if (authorName === '猫猫') return 'cat';
-  if (authorName === '呜哇') return 'dog';
-  return 'generic';
+  return householdAuthorIconKind(authorName);
 }
 
 export interface NotebookCommentWindow {
@@ -25,10 +24,5 @@ export interface NotebookCommentWindow {
 }
 
 export function notebookCommentWindow(comments: NotebookComment[]): NotebookCommentWindow {
-  if (comments.length <= 2) return { leading: comments, middle: [], trailing: [] };
-  return {
-    leading: comments.slice(0, 1),
-    middle: comments.slice(1, -1),
-    trailing: comments.slice(-1),
-  };
+  return householdCommentWindow(comments);
 }
