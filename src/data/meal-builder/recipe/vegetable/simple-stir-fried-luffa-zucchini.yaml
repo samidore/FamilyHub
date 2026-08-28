@@ -9,13 +9,8 @@ primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
 supporting_protein_ingredient_ids: []
-optional_supporting_protein_ingredient_ids:
-  - whole-pork-tenderloin
-  - ground-pork
-  - pork-chops
-  - boneless-skinless-chicken-thighs
-  - chicken-breast
-  - peeled-shrimp
+optional_groups:
+  - add-some-richness
 vegetable_ingredient_ids: [luffa, zucchini]
 meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
 child_coverage: { protein: false, vegetable: true }
@@ -50,4 +45,4 @@ substitutions: []
 cook_ingredients:
   - 丝瓜或西葫芦：300–450 g；任选一种
   - 轻汁：水或低盐高汤 1/3 cup；生抽 2 tsp；蚝油 1 tsp；糖 1/4 tsp
-  - 蒜：2瓣；中性油 2 tsp
+  - 蒜：2瓣；中性油2 tsp
