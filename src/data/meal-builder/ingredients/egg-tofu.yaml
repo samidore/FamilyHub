@@ -12,7 +12,6 @@ ingredients:
     tags:
       - supporting-only
       - addon-only
-      - easy-braise-addon
   - id: eggs
     type: ingredient
     inventory_tracking: presence-only
@@ -38,7 +37,6 @@ ingredients:
       order: 20
     tags:
       - child-eaten
-      - easy-braise-addon
   - id: firm-tofu
     type: ingredient
     inventory_tracking: counted
@@ -52,7 +50,7 @@ ingredients:
       section: egg-tofu
       order: 30
     tags:
-      - easy-braise-addon
+      - child-eaten
   - id: egg-tofu
     type: ingredient
     inventory_tracking: counted
@@ -108,7 +106,6 @@ ingredients:
     tags:
       - supporting-only
       - addon-only
-      - easy-braise-addon
   - id: fried-tofu-puffs
     type: ingredient
     inventory_tracking: counted
@@ -123,4 +120,3 @@ ingredients:
       - supporting-only
       - addon-only
       - processed
-      - easy-braise-addon
