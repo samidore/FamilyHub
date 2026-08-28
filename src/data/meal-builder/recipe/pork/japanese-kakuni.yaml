@@ -4,7 +4,7 @@ status: candidate
 name_zh: 日式角煮
 name_en: Japanese Kakuni
 tags:
-  - iron-pan-braise
+  - child-all-ingredients-eaten
   - light-seasoning
   - non-spicy-base
   - braised
@@ -17,6 +17,8 @@ main_protein_category: pork
 main_protein_ingredient_ids:
   - pork-shoulder-chunks
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids: []
 meal_contribution:
   protein: 1
