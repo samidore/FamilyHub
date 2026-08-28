@@ -30,7 +30,7 @@ test('legacy task boards show queue age by default while legacy media boards do 
   assert.deepEqual(normalizeNotebookState({ boards: { bad: { ...board('bad'), showQueueAge: 'yes' } } }).boards, {});
 });
 
-test('queue age uses local calendar days and recurring completion resets age and moves the live item to section bottom', () => {
+test('queue age still resets on recurring completion while recurring items stay out of ordinary Board ordering', () => {
   const aug20 = atLocalNoon(2026, 8, 20);
   const aug21 = atLocalNoon(2026, 8, 21);
   const aug22 = atLocalNoon(2026, 8, 22);
@@ -42,14 +42,14 @@ test('queue age uses local calendar days and recurring completion resets age and
   state = addNotebookItem(state, item('newer', aug22), ['a', 'b']);
 
   assert.equal(notebookQueueAgeDays(state, state.items.repeat, aug23), 2);
-  assert.deepEqual(notebookItemsForSection(state, 'a', 'normal', 'active').map((entry) => entry.id), ['newer', 'repeat', 'older']);
+  assert.deepEqual(notebookItemsForSection(state, 'a', 'normal', 'active').map((entry) => entry.id), ['newer', 'older']);
 
   state = completeRecurringNotebookItem(state, 'repeat', 'event-1', aug23, '2026-08-23');
   assert.equal(state.items.repeat.status, 'active');
   assert.equal(state.items.repeat.dueDate, '2026-08-30');
   assert.equal(notebookQueueAgeDays(state, state.items.repeat, aug23), 0);
-  assert.deepEqual(notebookItemsForSection(state, 'a', 'normal', 'active').map((entry) => entry.id), ['newer', 'older', 'repeat']);
-  assert.deepEqual(notebookItemsForSection(state, 'b', 'normal', 'active').map((entry) => entry.id), ['newer', 'older', 'repeat']);
+  assert.deepEqual(notebookItemsForSection(state, 'a', 'normal', 'active').map((entry) => entry.id), ['newer', 'older']);
+  assert.deepEqual(notebookItemsForSection(state, 'b', 'normal', 'active').map((entry) => entry.id), ['newer', 'older']);
 });
 
 test('Smart Urgent always shows queue age, with the red hourglass before the day count, while a media board may hide it', () => {
