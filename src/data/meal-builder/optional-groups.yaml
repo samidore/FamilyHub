@@ -1,0 +1,120 @@
+optional_groups:
+  - id: add-some-richness
+    label_zh: 加点油水
+    ingredients:
+      - ingredient_id: whole-pork-tenderloin
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: thin-sliced-pork-belly
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: extra-thin-sliced-pork-belly
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: ground-pork
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: pork-chops
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: sliced-beef-brisket
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: hot-pot-beef-slices
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: ground-beef
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: hot-pot-lamb-slices
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: boneless-skinless-chicken-thighs
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: chicken-breast
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: peeled-shrimp
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+
+  - id: change-it-up
+    label_zh: 改头换面
+    ingredients:
+      - ingredient_id: tomato
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+
+  - id: one-pot-mix
+    label_zh: 一锅乱炖
+    ingredients:
+      - ingredient_id: tofu-skin-knots
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: soft-tofu
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: firm-tofu
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: dried-yuba-sticks
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: fried-tofu-puffs
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: baby-napa-cabbage
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: napa-cabbage
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: chinese-greens
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: lettuce
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: youmai-cai
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: choy-sum
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: fresh-shiitake
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: oyster-mushrooms
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: shimeji-mushrooms
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: enoki-mushrooms
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: maitake
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: winter-melon
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: carrot
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: daikon
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: onion
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: potato
+        meal_contribution: { protein: 0, vegetable: 0, staple: 1 }
+        checkout_units: 1
+      - ingredient_id: taro
+        meal_contribution: { protein: 0, vegetable: 0, staple: 1 }
+        checkout_units: 1
+      - ingredient_id: kabocha-squash
+        meal_contribution: { protein: 0, vegetable: 0, staple: 1 }
+        checkout_units: 1
