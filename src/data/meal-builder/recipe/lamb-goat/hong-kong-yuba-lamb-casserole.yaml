@@ -4,7 +4,7 @@ status: candidate
 name_zh: 港式枝竹羊腩煲
 name_en: Hong Kong Yuba Lamb Casserole
 tags:
-  - iron-pan-braise
+  - child-all-ingredients-eaten
   - light-seasoning
   - non-spicy-base
   - braised
@@ -18,6 +18,8 @@ main_protein_ingredient_ids:
   - lamb-shoulder-chunks
 supporting_protein_ingredient_ids:
   - dried-yuba-sticks
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids: []
 meal_contribution:
   protein: 1
