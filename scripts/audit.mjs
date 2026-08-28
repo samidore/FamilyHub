@@ -97,8 +97,10 @@ assert(meals.optionalGroups.find((group) => group.id === 'one-pot-mix')?.ingredi
 assert(meals.recipes.filter((recipe) => recipe.optionalGroupIds?.includes('one-pot-mix')).length === 36, 'One-pot-mix Recipe scope must keep the migrated 36 Recipes');
 assert(meals.recipes.filter((recipe) => recipe.optionalGroupIds?.includes('add-some-richness')).length === 6, 'Add-some-richness must be referenced by the six vegetable structures');
 assert(meals.recipes.filter((recipe) => recipe.optionalGroupIds?.includes('change-it-up')).length === 3, 'Change-it-up must be referenced by the three current base Recipes');
-assert(!meals.ingredients.some((ingredient) => ingredient.tags?.includes('easy-braise-addon')), 'Legacy easy-braise Ingredient capability returned');
-assert(!meals.recipes.some((recipe) => recipe.tags?.includes('iron-pan-braise')), 'Legacy iron-pan Recipe capability returned');
+const legacyEasyBraiseIds = meals.ingredients.filter((ingredient) => ingredient.tags?.includes('easy-braise-addon')).map((ingredient) => ingredient.id);
+const legacyIronPanIds = meals.recipes.filter((recipe) => recipe.tags?.includes('iron-pan-braise')).map((recipe) => recipe.id);
+assert(legacyEasyBraiseIds.length === 0, `Legacy easy-braise Ingredient capability returned: ${legacyEasyBraiseIds.join(', ')}`);
+assert(legacyIronPanIds.length === 0, `Legacy iron-pan Recipe capability returned: ${legacyIronPanIds.join(', ')}`);
 assert(meals.ingredients.find((ingredient) => ingredient.id === 'ground-pork')?.tags?.includes('child-eaten'), 'Ground pork must retain child-eaten status');
 assert(!meals.ingredients.find((ingredient) => ingredient.id === 'pork-feet')?.tags?.includes('child-eaten'), 'Pork feet must not be marked child-eaten');
 
