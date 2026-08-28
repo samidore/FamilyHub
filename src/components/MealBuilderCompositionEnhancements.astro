@@ -71,7 +71,6 @@ const compositionData = JSON.stringify({
   let household: HouseholdState = repository.getSnapshot();
   let repositoryStatus: RepositoryStatus = repository.getStatus();
   let renderQueued = false;
-  let checkoutRendering = false;
 
   const selectedPanel = document.querySelector<HTMLElement>('#meal-selected-panel');
   const recipeGrid = document.querySelector<HTMLElement>('#meal-recipe-grid');
@@ -107,6 +106,10 @@ const compositionData = JSON.stringify({
     const check = document.createElement('span'); check.setAttribute('aria-hidden', 'true'); check.textContent = '✓';
     const strong = document.createElement('strong'); strong.textContent = label; button.append(check, strong);
     Object.assign(button.dataset, data); return button;
+  }
+
+  function removeLegacyCompositionControls() {
+    document.querySelectorAll<HTMLElement>('[data-supporting-recipe]').forEach((control) => control.closest('.meal-binding-control')?.remove());
   }
 
   function renderPlanEditors() {
@@ -220,7 +223,6 @@ const compositionData = JSON.stringify({
 
   function renderCheckoutComposition() {
     const meal = household.currentMeal; if (!checkout || !checkoutList || !meal || household.activeStep !== 'checkout') return;
-    checkoutRendering = true;
     const drafts = draftForMeal(meal); checkoutList.replaceChildren();
     for (const recipeId of meal.selectedRecipeIds) {
       const recipe = recipeById.get(recipeId); const draft = drafts[recipeId]; if (!recipe || !draft) continue;
@@ -244,10 +246,9 @@ const compositionData = JSON.stringify({
       }
       checkoutList.append(card);
     }
-    checkoutRendering = false;
   }
 
-  function renderAll() { renderPlanEditors(); renderPlanDerivedUi(); renderCookPlan(); renderCheckoutComposition(); }
+  function renderAll() { removeLegacyCompositionControls(); renderPlanEditors(); renderPlanDerivedUi(); renderCookPlan(); renderCheckoutComposition(); }
 
   selectedPanel?.addEventListener('click', (event) => {
     const target = event.target as HTMLElement;
@@ -295,7 +296,6 @@ const compositionData = JSON.stringify({
     void repository.transaction((current) => { if (!current.currentMeal || current.currentMeal.mealId !== meal.mealId) return current; outcome = applyCheckoutComposition(current, meal.mealId, drafts, ingredients, { recipes, optionalGroups, nextMealId: createMealId(), completedAt: Date.now() }); return outcome.state; }).then((next) => { household = next; if (outcome?.committed) { if (checkoutStatus) checkoutStatus.textContent = '结算完成。'; if (checkout) checkout.hidden = true; announce('结算已完成，库存已按实际做法扣减。'); } else if (checkoutStatus) checkoutStatus.textContent = outcome?.reason === 'stale-meal' ? '本顿已被另一台设备修改或结算，请刷新。' : '实际用量无效，请重新核对。'; scheduleRender(); }).catch((error) => { if (checkoutStatus) checkoutStatus.textContent = error instanceof Error ? error.message : '结算失败。'; });
   }, true);
 
-  if (checkoutList) new MutationObserver(() => { if (!checkoutRendering && household.activeStep === 'checkout') scheduleRender(); }).observe(checkoutList, { childList: true, subtree: true });
   repository.subscribe((next, status) => { household = next; repositoryStatus = status; scheduleRender(); });
   window.addEventListener('pagehide', () => repository.dispose(), { once: true });
 </script>
