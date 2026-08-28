@@ -53,10 +53,16 @@ test('notebook schema accepts canonical records and rejects unsupported fields o
   await assertSucceeds(alice.ref(`${household}/notebook/inbox/ticket-1`).set({ id: 'ticket-1', text: 'remember this', createdAt: 3, updatedAt: 3 }));
   await assertSucceeds(alice.ref(`${household}/notebook/settings`).set({ viewFilter: 'completed' }));
   await assertSucceeds(alice.ref(`${household}/notebook/items/media-good`).set({ ...item, id: 'media-good', platform: 'Max', imdbRating: 8.2, myRating: 9.5 }));
+  await assertSucceeds(alice.ref(`${household}/notebook/items/legacy-recurring`).set({ ...item, id: 'legacy-recurring', dueDate: '2026-08-28', recurrence: { unit: 'month', interval: 3 } }));
+  await assertSucceeds(alice.ref(`${household}/notebook/items/scheduled-recurring`).set({ ...item, id: 'scheduled-recurring', dueDate: '2026-09-07', recurrence: { kind: 'scheduled', startDate: '2026-09-07', unit: 'week', interval: 2, weekdays: ['mon', 'thu'] } }));
+  await assertSucceeds(alice.ref(`${household}/notebook/items/after-recurring`).set({ ...item, id: 'after-recurring', dueDate: '2026-08-28', recurrence: { kind: 'afterCompletion', intervalDays: 30 } }));
 
   await assertFails(alice.ref(`${household}/notebook/items/bad-media`).set({ ...item, id: 'bad-media', mediaType: 'movie' }));
   await assertFails(alice.ref(`${household}/notebook/items/bad-complete`).set({ ...item, id: 'bad-complete', status: 'completed' }));
   await assertFails(alice.ref(`${household}/notebook/items/bad-recurring`).set({ ...item, id: 'bad-recurring', status: 'completed', completedAt: 4, completedByName: 'Sami', recurrence: { unit: 'month', interval: 3 } }));
+  await assertFails(alice.ref(`${household}/notebook/items/bad-scheduled-days`).set({ ...item, id: 'bad-scheduled-days', recurrence: { kind: 'scheduled', startDate: '2026-09-07', unit: 'week', interval: 2, weekdays: [] } }));
+  await assertFails(alice.ref(`${household}/notebook/items/bad-scheduled-extra-days`).set({ ...item, id: 'bad-scheduled-extra-days', recurrence: { kind: 'scheduled', startDate: '2026-09-07', unit: 'month', interval: 2, weekdays: ['mon'] } }));
+  await assertFails(alice.ref(`${household}/notebook/items/bad-after`).set({ ...item, id: 'bad-after', recurrence: { kind: 'afterCompletion', intervalDays: 0 } }));
   await assertFails(alice.ref(`${household}/notebook/items/bad-time`).set({ ...item, id: 'bad-time', dueTime: '15:00' }));
   await assertFails(alice.ref(`${household}/notebook/items/bad-rating`).set({ ...item, id: 'bad-rating', imdbRating: 11 }));
   await assertFails(alice.ref(`${household}/notebook/items/bad-my-rating`).set({ ...item, id: 'bad-my-rating', myRating: 11 }));
