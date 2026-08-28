@@ -21,7 +21,7 @@ import type { NotebookRepository } from './notebookRepository.ts';
 export interface NotebookItemUiContext {
   repository: NotebookRepository;
   getState(): NotebookState;
-  mutate(label: string, fn: (current: NotebookState) => NotebookState): Promise<void>;
+  mutate(label: string, fn: (current: NotebookState) => NotebookState): Promise<boolean>;
   status(message: string, error?: boolean): void;
 }
 
@@ -241,7 +241,7 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
     const commentId = makeId('comment');
     const time = stamp();
     const itemId = commentForm.dataset.commentAdd;
-    void context.mutate('添加评论', (current) => ({ ...current, comments: { ...current.comments, [commentId]: { id: commentId, itemId, body, authorName, createdAt: time } } })).then(() => commentForm.reset());
+    void context.mutate('添加评论', (current) => ({ ...current, comments: { ...current.comments, [commentId]: { id: commentId, itemId, body, authorName, createdAt: time } } })).then((saved) => { if (saved) commentForm.reset(); });
   });
 
   host.addEventListener('dragstart', (event) => {
@@ -289,7 +289,7 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
     if (!itemId) return;
     const item = context.getState().items[itemId];
     if (!item || !window.confirm(`删除“${item.title}”？评论和循环完成记录也会一起删除。`)) return;
-    void context.mutate('删除事项', (current) => deleteNotebookItem(current, itemId)).then(() => dialog.close());
+    void context.mutate('删除事项', (current) => deleteNotebookItem(current, itemId)).then((saved) => { if (saved) dialog.close(); });
   });
 
   form.addEventListener('submit', (event) => {
@@ -366,7 +366,7 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
         createdAt: time,
         updatedAt: time,
       };
-      void context.mutate('创建事项', (current) => addNotebookItem(current, item, boardIds)).then(() => dialog.close());
+      void context.mutate('创建事项', (current) => addNotebookItem(current, item, boardIds)).then((saved) => { if (saved) dialog.close(); });
       return;
     }
     const itemId = editingItemId;
@@ -390,7 +390,7 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
       next.items[itemId] = edited;
       if (currentItem.priority !== priority) next = setNotebookItemPriority(next, itemId, priority, time);
       return setNotebookItemBoards(next, itemId, boardIds, time);
-    }).then(() => dialog.close());
+    }).then((saved) => { if (saved) dialog.close(); });
   });
   dialog.addEventListener('close', () => {
     editingItemId = null;
