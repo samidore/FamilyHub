@@ -4,7 +4,7 @@ status: candidate
 name_zh: 冬瓜焖 / 烧
 name_en: Braised Winter Melon
 tags:
-  - iron-pan-braise
+  - child-all-ingredients-eaten
   - light-seasoning
   - non-spicy-base
   - braised
@@ -17,6 +17,8 @@ primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids:
   - winter-melon
 meal_contribution:
