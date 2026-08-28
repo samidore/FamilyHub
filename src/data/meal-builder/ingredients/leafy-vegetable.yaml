@@ -11,8 +11,7 @@ ingredients:
       visible: true
       section: leafy-vegetable
       order: 10
-    tags:
-      - easy-braise-addon
+    tags: []
     child_coverage:
       vegetable: unknown
   - id: napa-cabbage
@@ -27,8 +26,7 @@ ingredients:
       visible: true
       section: leafy-vegetable
       order: 20
-    tags:
-      - easy-braise-addon
+    tags: []
   - id: chinese-greens
     type: ingredient
     inventory_tracking: counted
@@ -41,8 +39,7 @@ ingredients:
       visible: true
       section: leafy-vegetable
       order: 30
-    tags:
-      - easy-braise-addon
+    tags: []
     child_coverage:
       vegetable: unknown
   - id: spinach
@@ -70,8 +67,7 @@ ingredients:
       visible: true
       section: leafy-vegetable
       order: 50
-    tags:
-      - easy-braise-addon
+    tags: []
     child_coverage:
       vegetable: unknown
   - id: youmai-cai
@@ -86,8 +82,7 @@ ingredients:
       visible: true
       section: leafy-vegetable
       order: 60
-    tags:
-      - easy-braise-addon
+    tags: []
     child_coverage:
       vegetable: unknown
   - id: choy-sum
@@ -102,8 +97,7 @@ ingredients:
       visible: true
       section: leafy-vegetable
       order: 70
-    tags:
-      - easy-braise-addon
+    tags: []
     child_coverage:
       vegetable: unknown
   - id: gai-lan
