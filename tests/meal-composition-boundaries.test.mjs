@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import {
   defaultCheckoutRecipeDrafts,
@@ -55,4 +56,25 @@ test('default Checkout quantities never allocate more than live inventory across
   assert.equal(drafts.r1.consumption.pork, 1);
   assert.equal(drafts.r2.consumption.pork, 0.5);
   assert.equal(drafts.r1.consumption.pork + drafts.r2.consumption.pork, 1.5);
+});
+
+test('Meal Builder page has no legacy optional-protein or flat Checkout runtime path', async () => {
+  const page = await readFile('src/pages/meal-builder.astro', 'utf8');
+  for (const legacy of [
+    'easyBraiseAddonIngredientIds',
+    'OPTIONAL_ADDON_INITIAL_UNITS',
+    'selectedSupportingProteinId',
+    'setSupportingProteinAddon',
+    'supportingProteinIngredientIds',
+    'data-supporting-recipe',
+    'data-selected-supporting-recipe',
+    '顺手加蛋白',
+    '可选顺手焖',
+    'CheckoutDraftSync',
+    'checkoutDraftForMeal',
+    'updateCheckoutDraft',
+    'usedIngredientIds',
+    'data-checkout-step',
+    'data-checkout-used-up',
+  ]) assert.equal(page.includes(legacy), false, `${legacy} must not return to the active Meal Builder page runtime`);
 });
