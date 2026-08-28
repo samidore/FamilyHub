@@ -208,7 +208,7 @@ test('Actual checkout rejects invalid group members and over-consumption atomica
 test('composition enhancement uses live inventory at Checkout and has no mutation-observer render loop', async () => {
   const component = await readFile('src/components/MealBuilderCompositionEnhancements.astro', 'utf8');
   assert.match(component, /inventoryIsOn\(household\.inventory\[entry\.ingredientId\]/);
-  assert.match(component, /removeLegacyCompositionControls/);
+  assert.doesNotMatch(component, /removeLegacyCompositionControls/);
   assert.doesNotMatch(component, /new MutationObserver/);
   assert.match(component, /applyCheckoutComposition/);
 });
