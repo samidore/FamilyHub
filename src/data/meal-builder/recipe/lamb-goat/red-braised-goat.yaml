@@ -4,7 +4,7 @@ status: candidate
 name_zh: 红烧山羊肉
 name_en: Red-Braised Goat
 tags:
-  - iron-pan-braise
+  - child-all-ingredients-eaten
   - light-seasoning
   - non-spicy-base
   - braised
@@ -17,6 +17,8 @@ main_protein_category: lamb
 main_protein_ingredient_ids:
   - skin-on-bone-in-goat-pieces
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids: []
 meal_contribution:
   protein: 1
