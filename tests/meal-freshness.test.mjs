@@ -127,11 +127,11 @@ test('freshness priority uses strict per-Ingredient thresholds for meat, vegetab
   assert.deepEqual(rankCandidates([thresholdMeat, fresh], stateAtFourDays, ingredients, {}, [], '2026-08-21').map((item) => item.id), ['threshold-meat', 'fresh']);
 });
 
-test('meal correctness outranks stale inventory, then stale inventory outranks repetition', () => {
+test('stale candidates rank before otherwise stronger fresh candidates and before repetition', () => {
   const staleVegetableOnly = recipe('stale-veg', ['old-veg'], { vegetable: 1 }, { order: 20 });
   const freshMixed = recipe('fresh-mixed', ['fresh-meat'], { protein: 1, vegetable: 1 }, { order: 30 });
   const correctnessState = baseMealState(['old-veg', 'fresh-meat'], { 'old-veg': '2026-08-15', 'fresh-meat': '2026-08-21' });
-  assert.deepEqual(rankCandidates([staleVegetableOnly, freshMixed], correctnessState, ingredients, {}, [], '2026-08-21').map((item) => item.id), ['fresh-mixed', 'stale-veg']);
+  assert.deepEqual(rankCandidates([staleVegetableOnly, freshMixed], correctnessState, ingredients, {}, [], '2026-08-21').map((item) => item.id), ['stale-veg', 'fresh-mixed']);
 
   const staleProtein = recipe('stale-protein', ['old-meat'], { protein: 1 }, { order: 20 });
   const freshProtein = recipe('fresh-protein', ['fresh-meat'], { protein: 1 }, { order: 10 });
