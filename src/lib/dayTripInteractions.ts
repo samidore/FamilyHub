@@ -1,5 +1,5 @@
 import { FirebaseHouseholdSession, hasAnyFirebaseConfig, hasCompleteFirebaseConfig, normalizeHouseholdDisplayName, type FirebaseConfig, type HouseholdSessionStatus } from './householdSession.ts';
-import { get, onValue, ref, runTransaction, type DatabaseReference, type DataSnapshot } from 'firebase/database';
+import { get, onValue, ref, remove, set, update, type DatabaseReference, type DataSnapshot } from 'firebase/database';
 
 export type DayTripReactionValue = 'up' | 'down';
 export interface DayTripReaction {
@@ -41,7 +41,10 @@ export interface DayTripInteractionRepository {
   getCurrentUid(): string | null;
   getCurrentMemberDisplayName(): string | null;
   subscribe(listener: DayTripInteractionListener): () => void;
-  transaction(mutator: (current: DayTripInteractionState) => DayTripInteractionState): Promise<DayTripInteractionState>;
+  setReaction(destinationId: string, value: DayTripReactionValue | null): Promise<void>;
+  addComment(comment: DayTripComment): Promise<void>;
+  editComment(commentId: string, body: string, updatedAt: number): Promise<void>;
+  deleteComment(commentId: string): Promise<void>;
   signInWithGoogle(): Promise<void>;
   refreshAccess(): Promise<void>;
   signOut(): Promise<void>;
@@ -132,10 +135,7 @@ export function compareDayTripReactionPriority(
   leftName = '',
   rightName = '',
 ) {
-  return left.rank - right.rank
-    || right.upCount - left.upCount
-    || leftDrive - rightDrive
-    || leftName.localeCompare(rightName);
+  return left.rank - right.rank || right.upCount - left.upCount || leftDrive - rightDrive || leftName.localeCompare(rightName);
 }
 
 export function setDayTripReaction(
@@ -198,11 +198,14 @@ export class LocalDayTripInteractionRepository implements DayTripInteractionRepo
   getCurrentUid() { return this.uid; }
   getCurrentMemberDisplayName() { return this.displayName; }
   subscribe(listener: DayTripInteractionListener) { this.listeners.add(listener); listener(this.getSnapshot(), this.getStatus()); return () => this.listeners.delete(listener); }
-  async transaction(mutator: (current: DayTripInteractionState) => DayTripInteractionState) {
-    this.state = normalizeDayTripInteractionState(mutator(this.getSnapshot()));
+  async setReaction(destinationId: string, value: DayTripReactionValue | null) {
+    if (!this.displayName) throw new Error('家庭成员显示名字尚未配置');
+    this.state = setDayTripReaction(this.state, destinationId, this.uid, this.displayName, value, Date.now());
     this.emit();
-    return this.getSnapshot();
   }
+  async addComment(comment: DayTripComment) { this.state = addDayTripComment(this.state, comment); this.emit(); }
+  async editComment(commentId: string, body: string, updatedAt: number) { this.state = editDayTripComment(this.state, commentId, body, updatedAt); this.emit(); }
+  async deleteComment(commentId: string) { this.state = deleteDayTripComment(this.state, commentId); this.emit(); }
   async signInWithGoogle() { /* Local development needs no authentication. */ }
   async refreshAccess() { /* Local development is always ready. */ }
   async signOut() { /* Local development has no session. */ }
@@ -235,12 +238,34 @@ export class FirebaseDayTripInteractionRepository implements DayTripInteractionR
   getCurrentUid() { return this.session.getCurrentUid(); }
   getCurrentMemberDisplayName() { return this.session.getCurrentMemberDisplayName(); }
   subscribe(listener: DayTripInteractionListener) { this.listeners.add(listener); listener(this.getSnapshot(), this.getStatus()); return () => this.listeners.delete(listener); }
-  async transaction(mutator: (current: DayTripInteractionState) => DayTripInteractionState) {
+  async setReaction(destinationId: string, value: DayTripReactionValue | null) {
     await this.ready.catch(() => undefined);
     this.assertReady();
-    const transaction = await runTransaction(this.interactionsRef, (value) => normalizeDayTripInteractionState(mutator(normalizeDayTripInteractionState(value))));
-    this.setStateFromSnapshot(transaction.snapshot);
-    return this.getSnapshot();
+    const uid = this.getCurrentUid();
+    const authorName = this.getCurrentMemberDisplayName();
+    if (!uid || !authorName || !destinationId) throw new Error('家庭成员显示名字尚未配置');
+    const target = ref(this.session.database, `households/${this.householdId}/dayTrips/reactions/${destinationId}/${uid}`);
+    if (value === null) await remove(target);
+    else await set(target, { value, authorName, updatedAt: Date.now() });
+  }
+  async addComment(comment: DayTripComment) {
+    await this.ready.catch(() => undefined);
+    this.assertReady();
+    const authorName = this.getCurrentMemberDisplayName();
+    const normalized = normalizeComment(comment.id, comment);
+    if (!authorName || !normalized || normalized.authorName !== authorName) throw new Error('评论显示名字尚未配置');
+    await set(ref(this.session.database, `households/${this.householdId}/dayTrips/comments/${comment.id}`), normalized);
+  }
+  async editComment(commentId: string, body: string, updatedAt: number) {
+    await this.ready.catch(() => undefined);
+    this.assertReady();
+    if (!commentId || !body.trim() || !positiveTimestamp(updatedAt)) return;
+    await update(ref(this.session.database, `households/${this.householdId}/dayTrips/comments/${commentId}`), { body: body.trim(), updatedAt });
+  }
+  async deleteComment(commentId: string) {
+    await this.ready.catch(() => undefined);
+    this.assertReady();
+    if (commentId) await remove(ref(this.session.database, `households/${this.householdId}/dayTrips/comments/${commentId}`));
   }
   signInWithGoogle() { return this.session.signInWithGoogle(); }
   refreshAccess() { return this.session.refreshAccess(); }
@@ -303,8 +328,11 @@ class ConfigurationErrorDayTripInteractionRepository implements DayTripInteracti
   getCurrentUid() { return null; }
   getCurrentMemberDisplayName() { return null; }
   subscribe(listener: DayTripInteractionListener) { listener(this.getSnapshot(), this.getStatus()); return () => undefined; }
-  private reject<T>(): Promise<T> { return Promise.reject(new Error(this.status.error)); }
-  transaction(_mutator: (current: DayTripInteractionState) => DayTripInteractionState): Promise<DayTripInteractionState> { return this.reject(); }
+  private reject(): Promise<void> { return Promise.reject(new Error(this.status.error)); }
+  setReaction(_destinationId: string, _value: DayTripReactionValue | null): Promise<void> { return this.reject(); }
+  addComment(_comment: DayTripComment): Promise<void> { return this.reject(); }
+  editComment(_commentId: string, _body: string, _updatedAt: number): Promise<void> { return this.reject(); }
+  deleteComment(_commentId: string): Promise<void> { return this.reject(); }
   signInWithGoogle(): Promise<void> { return this.reject(); }
   refreshAccess(): Promise<void> { return this.reject(); }
   signOut(): Promise<void> { return Promise.resolve(); }
