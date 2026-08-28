@@ -1,11 +1,7 @@
 import {
-  addDayTripComment,
   createDayTripInteractionRepository,
   dayTripCommentsFor,
   dayTripReactionSummary,
-  deleteDayTripComment,
-  editDayTripComment,
-  setDayTripReaction,
   type CreateDayTripInteractionRepositoryOptions,
   type DayTripComment,
   type DayTripInteractionState,
@@ -129,7 +125,7 @@ export function mountDayTripInteractionUi(config: Partial<FirebaseConfig>, optio
       if (!destinationId || !uid || !authorName) return;
       const current = state.reactions[destinationId]?.[uid]?.value;
       const nextValue = current === value ? null : value;
-      void repository.transaction((snapshot) => setDayTripReaction(snapshot, destinationId, uid, authorName, nextValue, stamp()));
+      void repository.setReaction(destinationId, nextValue);
       return;
     }
 
@@ -138,14 +134,13 @@ export function mountDayTripInteractionUi(config: Partial<FirebaseConfig>, optio
       const comment = state.comments[edit.dataset.tripEditComment];
       if (!comment) return;
       const body = window.prompt('修改评论', comment.body)?.trim();
-      if (body && body !== comment.body) void repository.transaction((snapshot) => editDayTripComment(snapshot, comment.id, body, stamp()));
+      if (body && body !== comment.body) void repository.editComment(comment.id, body, stamp());
       return;
     }
 
     const remove = target.closest<HTMLButtonElement>('[data-trip-delete-comment]');
     if (remove?.dataset.tripDeleteComment && window.confirm('删除这条评论？')) {
-      const commentId = remove.dataset.tripDeleteComment;
-      void repository.transaction((snapshot) => deleteDayTripComment(snapshot, commentId));
+      void repository.deleteComment(remove.dataset.tripDeleteComment);
     }
   });
 
@@ -158,7 +153,7 @@ export function mountDayTripInteractionUi(config: Partial<FirebaseConfig>, optio
     if (!body || !authorName) return;
     const id = makeId('trip-comment');
     const comment: DayTripComment = { id, destinationId: form.dataset.tripCommentAdd, body, authorName, createdAt: stamp() };
-    void repository.transaction((snapshot) => addDayTripComment(snapshot, comment)).then(() => form.reset());
+    void repository.addComment(comment).then(() => form.reset());
   });
 
   window.addEventListener('beforeunload', () => repository.dispose(), { once: true });
