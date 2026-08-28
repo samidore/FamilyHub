@@ -16,6 +16,8 @@ main_protein_category: beef
 main_protein_ingredient_ids:
   - sliced-beef-brisket
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - change-it-up
 vegetable_ingredient_ids: []
 meal_contribution:
   protein: 1
