@@ -10,62 +10,230 @@ const tags = [...new Set(restaurants.flatMap((restaurant) => restaurant.tags))].
 const platforms = [...new Set(restaurants.flatMap((restaurant) => restaurant.orderPlatforms.map((platform) => platform.name)))].sort();
 const restaurantCount = restaurants.length;
 ---
-<BaseLayout title="Restaurants | Family Hub" description={`按堂食、外卖、类型和平台筛选 ${restaurantCount} 家饭店。`} pageClass="module-page theme-berry" themeColor="#F3E8EC">
-  <SiteHeader eyebrow="饮食与家庭 · 饭店" title="Restaurants" description="按堂食、外卖、类型和平台快速找饭店；外卖平台会标明配送、自取或两者都有。" accent="berry" icon="meal">
-    <div class="summary-row"><span>{restaurantCount} 家饭店</span><span>公开资料</span></div>
+<BaseLayout title="Restaurants | Family Hub" description={`按堂食、外卖、类型和家庭口味筛选 ${restaurantCount} 家饭店。`} pageClass="module-page theme-berry" themeColor="#F3E8EC">
+  <SiteHeader eyebrow="饮食与家庭 · 饭店" title="Restaurants" description="找饭店、看我们各自几星，想吃的自动往前排。" accent="berry" icon="meal">
+    <div class="summary-row"><span>{restaurantCount} 家饭店</span><span>公开资料 + 家庭口味</span></div>
   </SiteHeader>
 
   <FilterShell accent="berry" filterId="restaurant-filter-panel" countId="restaurant-count" clearId="restaurant-clear" countText={`显示 ${restaurantCount} / ${restaurantCount} 家饭店`}>
     <div slot="primary" class="filter-primary__grid">
-      <label><span>搜索饭店</span><input id="restaurant-search" type="search" placeholder="饭店、地址、韩式炸鸡、DoorDash…" autocomplete="off" /></label>
+      <label><span>搜索饭店</span><input id="restaurant-search" type="search" placeholder="饭店、地址、炸鸡、DoorDash…" autocomplete="off" /></label>
       <label><span>服务</span><select id="restaurant-service"><option value="">全部</option><option value="dinein">堂食</option><option value="takeout">外卖</option></select></label>
     </div>
     <div slot="filters" class="contents">
-      <label><span>Tag</span><select id="restaurant-tag"><option value="">全部 Tag</option>{tags.map((tag) => <option value={tag}>{tag}</option>)}</select></label>
+      <label><span>想吃</span><select id="restaurant-want"><option value="">全部</option><option value="any">有人想吃</option><option value="cat">猫猫</option><option value="dog">呜哇</option><option value="both">都想吃</option></select></label>
       <label><span>平台</span><select id="restaurant-platform"><option value="">全部平台</option>{platforms.map((platform) => <option value={platform}>{platform}</option>)}</select></label>
+
+      <fieldset class="restaurant-tag-field">
+        <legend>Tag</legend>
+        <div class="restaurant-tag-heading">
+          <span id="restaurant-tag-count">已选 {tags.length} / {tags.length}</span>
+          <div class="restaurant-tag-bulk" aria-label="Tag 批量筛选">
+            <button id="restaurant-tag-all" type="button" aria-label="全选所有 Tag">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"></circle><path d="m7.8 12.4 2.6 2.7 5.8-6.1"></path></svg>
+            </button>
+            <button id="restaurant-tag-none" type="button" aria-label="全不选所有 Tag">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"></circle><path d="m8.7 8.7 6.6 6.6m0-6.6-6.6 6.6"></path></svg>
+            </button>
+          </div>
+        </div>
+        <div class="restaurant-tag-buttons">
+          {tags.map((tag) => <button type="button" data-restaurant-tag={tag} aria-pressed="true">{tag}</button>)}
+        </div>
+        <input id="restaurant-tags" type="hidden" value="all" data-default="all" />
+      </fieldset>
     </div>
   </FilterShell>
+
+  <section id="restaurant-household-auth" class="shell restaurant-household-auth" data-state="connecting" aria-live="polite">
+    <p id="restaurant-household-auth-message">正在恢复家庭口味登录状态…</p>
+    <div class="restaurant-household-auth__actions">
+      <button id="restaurant-household-sign-in" type="button" hidden>使用 Google 登录</button>
+      <button id="restaurant-household-refresh" type="button" hidden>重新检查权限</button>
+      <button id="restaurant-household-sign-out" type="button" hidden>退出登录</button>
+    </div>
+  </section>
+  <p id="restaurant-household-live" class="shell restaurant-household-live" aria-live="polite"></p>
 
   <main id="main-content" class="shell listing-main">
     <div id="restaurant-list" class="record-grid">{sortedRestaurants.map((restaurant) => <RestaurantCard restaurant={restaurant} />)}</div>
     <p id="restaurant-empty" class="empty-state" hidden>没有符合这些条件的饭店。清除部分筛选后再试。</p>
   </main>
 
-  <footer class="module-footer"><div class="shell note-box"><strong>下单前以平台最新信息为准。</strong> 配送范围、自取、营业状态和平台可用性可能变化；这里仅保存最近核实的公开入口。</div></footer>
+  <section id="restaurant-inbox" class="shell restaurant-inbox" hidden aria-labelledby="restaurant-inbox-title">
+    <div class="restaurant-inbox__heading">
+      <div><p class="eyebrow">Inbox</p><h2 id="restaurant-inbox-title">随手记</h2><p id="restaurant-inbox-count">暂无待整理</p></div>
+      <div class="restaurant-inbox__actions"><button id="restaurant-inbox-copy" type="button">一次给 GPT</button><button id="restaurant-inbox-clear" type="button">清空</button></div>
+    </div>
+    <form id="restaurant-inbox-form" class="restaurant-inbox-form">
+      <label for="restaurant-inbox-input">记一条</label>
+      <div><input id="restaurant-inbox-input" name="text" autocomplete="off" placeholder="比如：Fort Lee 那家拉面下次加进来" required /><button type="submit">记下</button></div>
+    </form>
+    <details class="restaurant-inbox-details"><summary>查看草稿</summary><div id="restaurant-inbox-list" class="restaurant-inbox-list"></div></details>
+  </section>
+
+  <footer class="module-footer"><div class="shell note-box"><strong>下单前以平台最新信息为准。</strong> 配送范围、自取、营业状态和平台可用性可能变化；家庭评分、评论、想吃和随手记只从登录后的家庭 Firebase 读取。</div></footer>
 
   <script>
-    import { bindListState, clearListState, restoreListState } from '../lib/listState';
+    import { bindListState, clearListState, restoreListState, writeListState } from '../lib/listState';
+    import { mountRestaurantInteractionUi } from '../lib/restaurantInteractionUi.ts';
 
+    const tagIds = [...document.querySelectorAll<HTMLButtonElement>('[data-restaurant-tag]')].map((button) => button.dataset.restaurantTag ?? '').filter(Boolean);
+    const tagButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-restaurant-tag]')];
+    const allTagButton = document.querySelector<HTMLButtonElement>('#restaurant-tag-all')!;
+    const noTagButton = document.querySelector<HTMLButtonElement>('#restaurant-tag-none')!;
+    const tagCount = document.querySelector<HTMLElement>('#restaurant-tag-count')!;
     const cards = [...document.querySelectorAll<HTMLElement>('[data-restaurant]')];
+    const list = document.querySelector<HTMLElement>('#restaurant-list')!;
     const controls = {
       q: document.querySelector<HTMLInputElement>('#restaurant-search')!,
       service: document.querySelector<HTMLSelectElement>('#restaurant-service')!,
-      tag: document.querySelector<HTMLSelectElement>('#restaurant-tag')!,
+      want: document.querySelector<HTMLSelectElement>('#restaurant-want')!,
       platform: document.querySelector<HTMLSelectElement>('#restaurant-platform')!,
+      tags: document.querySelector<HTMLInputElement>('#restaurant-tags')!,
     };
     const count = document.querySelector<HTMLElement>('#restaurant-count')!;
     const empty = document.querySelector<HTMLElement>('#restaurant-empty')!;
 
+    const selectedTags = () => {
+      if (controls.tags.value === 'all') return new Set(tagIds);
+      if (controls.tags.value === 'none' || !controls.tags.value) return new Set<string>();
+      return new Set(controls.tags.value.split(',').filter((tag) => tagIds.includes(tag)));
+    };
+
+    const normalizeTagValue = (selected: Set<string>) => {
+      if (selected.size === tagIds.length) return 'all';
+      if (selected.size === 0) return 'none';
+      return tagIds.filter((tag) => selected.has(tag)).join(',');
+    };
+
+    const syncTagButtons = () => {
+      const selected = selectedTags();
+      tagButtons.forEach((button) => button.setAttribute('aria-pressed', selected.has(button.dataset.restaurantTag ?? '') ? 'true' : 'false'));
+      tagCount.textContent = `已选 ${selected.size} / ${tagIds.length}`;
+    };
+
+    const setTagState = (selected: Set<string>) => {
+      controls.tags.value = normalizeTagValue(selected);
+      controls.tags.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+
+    const wantMatches = (card: HTMLElement) => {
+      if (!controls.want.value) return true;
+      const count = Number(card.dataset.wantCount ?? 0);
+      const cat = card.dataset.wantCat === '1';
+      const dog = card.dataset.wantDog === '1';
+      if (controls.want.value === 'any') return count > 0;
+      if (controls.want.value === 'cat') return cat;
+      if (controls.want.value === 'dog') return dog;
+      if (controls.want.value === 'both') return cat && dog;
+      return true;
+    };
+
     const render = () => {
       const query = controls.q.value.trim().toLocaleLowerCase();
+      const selected = selectedTags();
       const visible = cards.filter((card) => {
         const serviceMatches = !controls.service.value
           || (controls.service.value === 'dinein' && card.dataset.dinein === '1')
           || (controls.service.value === 'takeout' && card.dataset.takeout === '1');
-        const tagMatches = !controls.tag.value || card.dataset.tags!.split('|').includes(controls.tag.value);
-        const platformMatches = !controls.platform.value || card.dataset.platforms!.split('|').includes(controls.platform.value);
-        return (!query || card.dataset.search!.includes(query)) && serviceMatches && tagMatches && platformMatches;
+        const cardTags = (card.dataset.tags ?? '').split('|').filter(Boolean);
+        const tagMatches = selected.size > 0 && cardTags.some((tag) => selected.has(tag));
+        const platformMatches = !controls.platform.value || (card.dataset.platforms ?? '').split('|').includes(controls.platform.value);
+        return (!query || (card.dataset.search ?? '').includes(query)) && serviceMatches && tagMatches && platformMatches && wantMatches(card);
       });
 
-      cards.forEach((card) => card.hidden = !visible.includes(card));
+      cards.forEach((card) => { card.hidden = !visible.includes(card); });
+      visible
+        .sort((left, right) => Number(right.dataset.wantCount ?? 0) - Number(left.dataset.wantCount ?? 0) || (left.dataset.name ?? '').localeCompare(right.dataset.name ?? ''))
+        .forEach((card) => list.append(card));
       count.textContent = `显示 ${visible.length} / ${cards.length} 家饭店`;
       empty.hidden = visible.length > 0;
+      syncTagButtons();
     };
 
     restoreListState(controls);
-    if (controls.tag.value || controls.platform.value) document.querySelector<HTMLDetailsElement>('.filter-disclosure')!.open = true;
+    controls.tags.value = normalizeTagValue(selectedTags());
+    syncTagButtons();
+    if (controls.want.value || controls.platform.value || controls.tags.value !== 'all') document.querySelector<HTMLDetailsElement>('.filter-disclosure')!.open = true;
     bindListState(controls, render);
-    document.querySelector('#restaurant-clear')!.addEventListener('click', () => clearListState(controls, render));
+
+    tagButtons.forEach((button) => button.addEventListener('click', () => {
+      const selected = selectedTags();
+      const tag = button.dataset.restaurantTag!;
+      if (selected.has(tag)) selected.delete(tag);
+      else selected.add(tag);
+      setTagState(selected);
+    }));
+    allTagButton.addEventListener('click', () => setTagState(new Set(tagIds)));
+    noTagButton.addEventListener('click', () => setTagState(new Set()));
+
+    document.querySelector('#restaurant-clear')!.addEventListener('click', () => {
+      clearListState(controls, render);
+      syncTagButtons();
+    });
+    window.addEventListener('restaurantinteractionschange', render);
+    window.addEventListener('pageshow', () => { writeListState(controls); render(); });
+
+    const firebaseConfig = {
+      apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
+      authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
+      projectId: import.meta.env.PUBLIC_FIREBASE_PROJECT_ID,
+      databaseURL: import.meta.env.PUBLIC_FIREBASE_DATABASE_URL,
+      storageBucket: import.meta.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: import.meta.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+      appId: import.meta.env.PUBLIC_FIREBASE_APP_ID,
+      householdId: import.meta.env.PUBLIC_FAMILY_HOUSEHOLD_ID,
+    };
+    mountRestaurantInteractionUi(firebaseConfig, { allowLocal: import.meta.env.DEV });
     render();
   </script>
+
+  <style>
+    .restaurant-tag-field { display: grid; grid-column: 1 / -1; gap: 9px; min-width: 0; margin: 0; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: rgb(255 255 255 / 60%); }
+    .restaurant-tag-field legend { color: #5e5260; font-size: 14px; font-weight: 800; }
+    .restaurant-tag-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .restaurant-tag-heading > span { color: var(--muted); font-size: 13px; font-weight: 700; }
+    .restaurant-tag-bulk { display: flex; gap: 7px; }
+    .restaurant-tag-bulk button { width: 42px; min-height: 42px; display: grid; place-items: center; border: 1px solid #c4b7c2; border-radius: 999px; background: #fff; color: var(--accent); cursor: pointer; }
+    .restaurant-tag-bulk svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .restaurant-tag-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+    .restaurant-tag-buttons button { min-height: 44px; padding: 7px 14px; border: 1px solid #c4b7c2; border-radius: 999px; background: #fff; color: var(--ink); font-weight: 750; cursor: pointer; }
+    .restaurant-tag-buttons button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: #fff; }
+
+    .restaurant-household-auth { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: rgb(255 255 255 / 72%); }
+    .restaurant-household-auth p { margin: 0; color: #5e5260; font-size: 13px; font-weight: 700; }
+    .restaurant-household-auth[data-state="error"] p { color: #8e2c21; }
+    .restaurant-household-auth__actions { display: flex; gap: 7px; flex-wrap: wrap; }
+    .restaurant-household-auth__actions button { min-height: 38px; border: 1px solid #c4b7c2; border-radius: 9px; background: #fff; color: var(--accent); padding: 6px 10px; font-weight: 700; cursor: pointer; }
+    .restaurant-household-live { min-height: 18px; margin-top: 5px; margin-bottom: 0; color: var(--muted); font-size: 13px; }
+    .restaurant-household-live[data-error="true"] { color: #8e2c21; }
+
+    .restaurant-inbox { display: grid; gap: 14px; margin-top: 28px; padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: rgb(255 255 255 / 78%); }
+    .restaurant-inbox__heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+    .restaurant-inbox__heading h2 { margin: 2px 0 3px; }
+    .restaurant-inbox__heading p { margin: 0; }
+    .restaurant-inbox__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .restaurant-inbox__actions button, .restaurant-inbox-form button { min-height: 44px; border: 1px solid var(--accent); border-radius: 9px; padding: 8px 13px; background: var(--accent); color: #fff; font-weight: 800; cursor: pointer; }
+    .restaurant-inbox__actions button:last-child { background: #fff; color: var(--accent); }
+    .restaurant-inbox__actions button:disabled { opacity: .45; cursor: default; }
+    .restaurant-inbox-form { display: grid; gap: 6px; }
+    .restaurant-inbox-form label { color: #5e5260; font-size: 14px; font-weight: 800; }
+    .restaurant-inbox-form > div { display: flex; gap: 8px; }
+    .restaurant-inbox-form input { min-width: 0; min-height: 44px; flex: 1 1 auto; border: 1px solid #c4b7c2; border-radius: 9px; padding: 8px 10px; font: inherit; }
+    .restaurant-inbox-details summary { min-height: 40px; display: flex; align-items: center; width: fit-content; color: var(--accent); font-weight: 800; cursor: pointer; }
+    .restaurant-inbox-list { display: grid; gap: 8px; margin-top: 6px; }
+    :global(.restaurant-inbox-row) { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); }
+    :global(.restaurant-inbox-row p) { margin: 0; white-space: pre-wrap; }
+    :global(.restaurant-inbox-row > div) { display: flex; gap: 8px; flex: 0 0 auto; }
+    :global(.restaurant-inbox-row button) { border: 0; background: none; color: var(--accent); padding: 5px 0; font-weight: 700; cursor: pointer; }
+    :global(.restaurant-inbox-empty) { margin: 0; color: var(--muted); }
+
+    @media (max-width: 600px) {
+      .restaurant-household-auth { align-items: flex-start; flex-direction: column; }
+      .restaurant-inbox-form > div { flex-direction: column; }
+      .restaurant-inbox-form button { width: 100%; }
+      :global(.restaurant-inbox-row) { flex-direction: column; }
+    }
+  </style>
 </BaseLayout>
