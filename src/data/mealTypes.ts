@@ -1,4 +1,4 @@
-import type { IngredientChildCoverage, InventoryFreshness, InventoryTracking, MealRecipe } from '../lib/mealEngine';
+import type { IngredientChildCoverage, InventoryFreshness, InventoryTracking, MealOptionalGroup, MealRecipe } from '../lib/mealEngine';
 
 export interface MealDataIngredient {
   id: string;
@@ -21,6 +21,7 @@ export interface MealDataRecipe extends MealRecipe {
   primaryRole: string;
   mainProteinCategory: string;
   supportingProteinIngredientIds: string[];
+  optionalGroupIds: string[];
   checkoutUnits: Record<string, number>;
   ingredientChildCoverage: Record<string, IngredientChildCoverage>;
   activeMinutes: string;
@@ -39,5 +40,6 @@ export interface MealData {
   metadata: { version: string; lastUpdated: string };
   starterSections: { id: string; labelZh: string; labelEn: string; order: number; visible: boolean }[];
   ingredients: MealDataIngredient[];
+  optionalGroups: MealOptionalGroup[];
   recipes: MealDataRecipe[];
 }
