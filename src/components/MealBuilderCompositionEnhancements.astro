@@ -89,7 +89,7 @@ const compositionData = JSON.stringify({
   function scheduleRender() {
     if (renderQueued) return;
     renderQueued = true;
-    requestAnimationFrame(() => requestAnimationFrame(() => { renderQueued = false; renderAll(); }));
+    requestAnimationFrame(() => { renderQueued = false; renderAll(); });
   }
 
   function engineState(meal: CurrentMeal): MealState {
@@ -106,10 +106,6 @@ const compositionData = JSON.stringify({
     const check = document.createElement('span'); check.setAttribute('aria-hidden', 'true'); check.textContent = '✓';
     const strong = document.createElement('strong'); strong.textContent = label; button.append(check, strong);
     Object.assign(button.dataset, data); return button;
-  }
-
-  function removeLegacyCompositionControls() {
-    document.querySelectorAll<HTMLElement>('[data-supporting-recipe]').forEach((control) => control.closest('.meal-binding-control')?.remove());
   }
 
   function renderPlanEditors() {
@@ -258,7 +254,7 @@ const compositionData = JSON.stringify({
     }
   }
 
-  function renderAll() { removeLegacyCompositionControls(); renderPlanEditors(); renderPlanDerivedUi(); renderCookPlan(); renderCheckoutComposition(); }
+  function renderAll() { renderPlanEditors(); renderPlanDerivedUi(); renderCookPlan(); renderCheckoutComposition(); }
 
   selectedPanel?.addEventListener('click', (event) => {
     const target = event.target as HTMLElement;
