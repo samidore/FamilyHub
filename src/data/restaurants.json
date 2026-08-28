@@ -2,13 +2,14 @@
   {
     "id": "bloom-chicken-hackensack",
     "name": "Bloom Chicken",
+    "description": "脆皮韩式炸鸡，鸡翅鸡块为主。",
     "address": {
       "line1": "365 Essex St",
       "city": "Hackensack",
       "state": "NJ",
       "postalCode": "07601"
     },
-    "tags": ["韩式炸鸡", "韩餐"],
+    "tags": ["韩餐", "炸鸡"],
     "dineIn": true,
     "orderPlatforms": [
       {
