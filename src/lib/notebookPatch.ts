@@ -1,6 +1,8 @@
 import {
   NOTEBOOK_PRIORITIES,
   cloneNotebookState,
+  isLegacyNotebookRecurrence,
+  isScheduledNotebookRecurrence,
   isSupportedRecurrence,
   normalizeNotebookState,
   type NotebookBoardKind,
@@ -9,6 +11,7 @@ import {
   type NotebookRecurrence,
   type NotebookState,
 } from './notebookDomain.ts';
+import { firstNotebookScheduledDueDate } from './notebookRecurrence.ts';
 
 export const NOTEBOOK_PATCH_VERSION = 1 as const;
 export const NOTEBOOK_INBOX_PROTOCOL_VERSION = 1 as const;
@@ -55,7 +58,6 @@ const ITEM_KEYS = new Set([
   'ticketId', 'title', 'details', 'boardIds', 'priority', 'dueDate', 'dueTime', 'recurrence',
   'platform', 'imdbRating', 'myRating', 'notes', 'review',
 ]);
-const RECURRENCE_KEYS = new Set(['unit', 'interval']);
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_PATTERN = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
 const prioritySet = new Set<string>(NOTEBOOK_PRIORITIES);
@@ -125,7 +127,10 @@ export function createNotebookInboxChatPrompt(state: NotebookState, today?: stri
     '- 根据原文选择 priority：urgent | high | normal | low。',
     '- 不确定的信息不要编造；没有可靠依据的可选字段直接省略。',
     '- dueDate 只有在原文能可靠确定日期时填写，格式 YYYY-MM-DD；dueTime 只有在同时有 dueDate 时填写，格式 HH:MM。',
-    '- recurrence 只允许：每 N 天 {unit:"day",interval:N}、每周 {unit:"week",interval:1}、每 N 月 {unit:"month",interval:N}、每年 {unit:"year",interval:1}。',
+    '- recurrence 只创建新版规则，不要生成旧的 {unit,interval}：',
+    '  - 定时：{kind:"scheduled",startDate:"YYYY-MM-DD",unit:"day|week|month|year",interval:N}；unit="week" 时必须再给 weekdays，例如 ["mon","thu"]。scheduled 的首个 dueDate 由规则自动计算。',
+    '  - 完成后：{kind:"afterCompletion",intervalDays:N}；同时必须提供首次 / 当前 dueDate。',
+    '- 循环事项仍需至少一个普通 Board 作为取消循环后的归回位置；循环期间页面只在“反复干”展示。',
     '',
     'Media 规则：',
     '- 任何归入 kind="media" Board 的事项，都必须先联网查找并核实对应作品的 IMDb 页面。',
@@ -208,19 +213,28 @@ export function validateNotebookPatch(value: unknown, state: NotebookState): Not
       if (typeof raw.dueDate !== 'string' || !isCalendarDate(raw.dueDate)) return { ok: false, error: `${prefix}.dueDate 必须是有效 YYYY-MM-DD` };
       dueDate = raw.dueDate;
     }
+
+    let recurrence: NotebookRecurrence | undefined;
+    if (raw.recurrence !== undefined) {
+      if (!isSupportedRecurrence(raw.recurrence) || isLegacyNotebookRecurrence(raw.recurrence)) {
+        return { ok: false, error: `${prefix}.recurrence 不属于当前可创建的新版重复规则` };
+      }
+      recurrence = structuredClone(raw.recurrence) as NotebookRecurrence;
+      if (isScheduledNotebookRecurrence(recurrence)) {
+        const firstDue = firstNotebookScheduledDueDate(recurrence);
+        if (!firstDue) return { ok: false, error: `${prefix}.recurrence 无法计算首次日期` };
+        if (dueDate && dueDate !== firstDue) return { ok: false, error: `${prefix}.dueDate 与 scheduled 首次日期不一致` };
+        dueDate = firstDue;
+      } else if (!dueDate) {
+        return { ok: false, error: `${prefix}.afterCompletion recurrence 需要首次 / 当前 dueDate` };
+      }
+    }
+
     let dueTime: string | undefined;
     if (raw.dueTime !== undefined) {
       if (typeof raw.dueTime !== 'string' || !TIME_PATTERN.test(raw.dueTime)) return { ok: false, error: `${prefix}.dueTime 必须是有效 HH:MM` };
       if (!dueDate) return { ok: false, error: `${prefix}.dueTime 需要同时提供 dueDate` };
       dueTime = raw.dueTime;
-    }
-
-    let recurrence: NotebookRecurrence | undefined;
-    if (raw.recurrence !== undefined) {
-      if (!isRecord(raw.recurrence) || !hasOnlyKeys(raw.recurrence, RECURRENCE_KEYS) || !isSupportedRecurrence(raw.recurrence)) {
-        return { ok: false, error: `${prefix}.recurrence 不属于当前支持的重复规则` };
-      }
-      recurrence = { ...raw.recurrence } as NotebookRecurrence;
     }
 
     const platform = optionalString(raw.platform, `${prefix}.platform`); if (!platform.ok) return platform;
@@ -284,7 +298,7 @@ export function prepareNotebookPatchItemIds(patch: NotebookPatch, makeId: () => 
 function activeSectionIds(state: NotebookState, boardId: string, priority: NotebookPriority) {
   const memberships = state.memberships[boardId] ?? {};
   return Object.keys(memberships)
-    .filter((itemId) => state.items[itemId]?.status === 'active' && state.items[itemId]?.priority === priority)
+    .filter((itemId) => state.items[itemId]?.status === 'active' && !state.items[itemId]?.recurrence && state.items[itemId]?.priority === priority)
     .sort((leftId, rightId) => {
       const leftOrder = memberships[leftId]?.order ?? Number.MAX_SAFE_INTEGER;
       const rightOrder = memberships[rightId]?.order ?? Number.MAX_SAFE_INTEGER;
@@ -328,11 +342,14 @@ export function applyNotebookPatch(state: NotebookState, patchValue: NotebookPat
     };
     next.items[id] = item;
     for (const boardId of patchItem.boardIds) {
-      next.memberships[boardId] = { ...(next.memberships[boardId] ?? {}), [id]: { order: 0 } };
-      const key = `${boardId}\u0000${patchItem.priority}`;
-      const group = groups.get(key) ?? { boardId, priority: patchItem.priority, itemIds: [] };
-      group.itemIds.push(id);
-      groups.set(key, group);
+      const membership = next.memberships[boardId] ?? {};
+      next.memberships[boardId] = { ...membership, [id]: { order: patchItem.recurrence ? Object.keys(membership).length : 0 } };
+      if (!patchItem.recurrence) {
+        const key = `${boardId}\u0000${patchItem.priority}`;
+        const group = groups.get(key) ?? { boardId, priority: patchItem.priority, itemIds: [] };
+        group.itemIds.push(id);
+        groups.set(key, group);
+      }
     }
   });
 
