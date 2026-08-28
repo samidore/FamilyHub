@@ -4,6 +4,7 @@ import '@fontsource/atkinson-hyperlegible/700.css';
 import '../styles/global.css';
 import MealInventoryImport from '../components/MealInventoryImport.astro';
 import MealBuilderNavigationEnhancements from '../components/MealBuilderNavigationEnhancements.astro';
+import MealBuilderCompositionEnhancements from '../components/MealBuilderCompositionEnhancements.astro';
 interface Props { title: string; description: string; pageClass?: string; themeColor?: string; }
 const { title, description, pageClass = '', themeColor = '#F4F6F1' } = Astro.props;
 const showMealInventoryImport = pageClass.split(/\s+/).includes('meal-builder-page');
@@ -22,5 +23,6 @@ const showMealInventoryImport = pageClass.split(/\s+/).includes('meal-builder-pa
     <slot />
     {showMealInventoryImport && <MealInventoryImport />}
     {showMealInventoryImport && <MealBuilderNavigationEnhancements />}
+    {showMealInventoryImport && <MealBuilderCompositionEnhancements />}
   </body>
 </html>
