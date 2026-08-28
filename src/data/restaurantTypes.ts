@@ -17,6 +17,7 @@ export interface RestaurantOrderPlatform {
 export interface Restaurant {
   id: string;
   name: string;
+  description: string;
   address: RestaurantAddress;
   tags: [string] | [string, string];
   dineIn: boolean;
