@@ -12,6 +12,7 @@ const activityOptions = [
   ['indoor-visit', '室内赶鸡'],
   ['animals', '动物园'],
   ['water-play', '玩水'],
+  ['pick-your-own', '摘棉花'],
 ] as const;
 const tripCount = dayTrips.length;
 ---
@@ -23,7 +24,7 @@ const tripCount = dayTrips.length;
 
   <FilterShell accent="evergreen" filterId="trip-filter-panel" countId="trip-count" clearId="trip-clear" countText={`显示 ${tripCount} / ${tripCount} 个地点`}>
     <div slot="primary" class="filter-primary__grid">
-      <label><span>搜索地点</span><input id="trip-search" type="search" placeholder="Bergen、动物园、麦攀爬…" autocomplete="off" /></label>
+      <label><span>搜索地点</span><input id="trip-search" type="search" placeholder="Bergen、动物园、摘棉花…" autocomplete="off" /></label>
       <label><span>排序</span><select id="trip-sort" data-default="drive"><option value="drive">车程近 → 远</option><option value="reaction">👍 优先</option><option value="name">名称 A–Z</option></select></label>
     </div>
 
@@ -119,7 +120,7 @@ const tripCount = dayTrips.length;
       hours: Hours;
     };
 
-    const activityIds = ['woody-walk', 'playground', 'no-playground', 'indoor-visit', 'animals', 'water-play'] as const;
+    const activityIds = ['woody-walk', 'playground', 'no-playground', 'indoor-visit', 'animals', 'water-play', 'pick-your-own'] as const;
     const cards = [...document.querySelectorAll<HTMLElement>('[data-destination]')];
     const activityButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-trip-activity]')];
     const openNowButton = document.querySelector<HTMLButtonElement>('#trip-open-now-button')!;

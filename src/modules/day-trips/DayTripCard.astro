@@ -9,6 +9,7 @@ const activityLabels = {
   'indoor-visit': '室内赶鸡',
   animals: '动物园',
   'water-play': '玩水',
+  'pick-your-own': '摘棉花',
 } as const;
 
 const originalTags = [...new Set(d.locations.flatMap((location) => location.tags))];

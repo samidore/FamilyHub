@@ -1,6 +1,6 @@
 export type DayTripEnvironment = 'indoor' | 'outdoor';
 export type DayTripWeatherExclusion = 'rain' | 'heat' | 'post-rain';
-export type DayTripActivityTag = 'woody-walk' | 'playground' | 'indoor-visit' | 'animals' | 'water-play';
+export type DayTripActivityTag = 'woody-walk' | 'playground' | 'indoor-visit' | 'animals' | 'water-play' | 'pick-your-own';
 export type DayTripHours = 'always' | 'unknown' | Record<DayTripWeekday, [string, string][]>;
 export type DayTripWeekday = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 

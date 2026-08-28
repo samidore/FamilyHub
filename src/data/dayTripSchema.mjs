@@ -10,7 +10,7 @@ const destinationRequired = [
 ];
 const destinationOptional = ['aliases', 'notice'];
 const locationKeys = ['name', 'environment', 'tags', 'notFor', 'stroller', 'hours'];
-const activityTags = ['woody-walk', 'playground', 'indoor-visit', 'animals', 'water-play'];
+const activityTags = ['woody-walk', 'playground', 'indoor-visit', 'animals', 'water-play', 'pick-your-own'];
 const weatherExclusions = ['rain', 'heat', 'post-rain'];
 const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 

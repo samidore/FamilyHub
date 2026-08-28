@@ -4,7 +4,7 @@ import test from 'node:test';
 
 const trips = JSON.parse(await readFile(new URL('../src/data/day-trips.json', import.meta.url), 'utf8'));
 
-const ALL_ACTIVITIES = ['woody-walk', 'playground', 'no-playground', 'indoor-visit', 'animals', 'water-play'];
+const ALL_ACTIVITIES = ['woody-walk', 'playground', 'no-playground', 'indoor-visit', 'animals', 'water-play', 'pick-your-own'];
 const CORE = {
   sunny: ALL_ACTIVITIES,
   rain: ['indoor-visit', 'animals'],
@@ -18,6 +18,7 @@ const TARGETS = {
   'indoor-visit': [[20, 3], [40, 5]],
   animals: [[20, 3], [40, 5]],
   'water-play': [[20, 3], [40, 5]],
+  'pick-your-own': [[20, 2], [40, 4]],
 };
 
 function matches(trip, driveMinutes, weather, activity) {
@@ -64,6 +65,12 @@ test('Day Trips uses practical parking clusters for the audited large parks', ()
   assert.ok(ids.has('dunkerhook-saddle-river'));
   assert.ok(ids.has('saddle-river-otto-pehle-area'));
   assert.ok(ids.has('saddle-river-rochelle-park-area'));
+  assert.ok(ids.has('teatown-nature-center-lakeside'));
+  assert.ok(ids.has('teatown-cliffdale-farm'));
+  assert.ok(ids.has('rockefeller-main-entrance-swan-lake'));
+  assert.ok(ids.has('rockefeller-rockwood-hall'));
+  assert.equal(ids.has('teatown-lake-reservation'), false, 'Teatown broad record is still unsplit');
+  assert.equal(ids.has('rockefeller-state-park-preserve'), false, 'Rockefeller broad record is still unsplit');
 
   const vanSaun = trips.find((trip) => trip.id === 'bergen-county-zoo');
   assert.ok(vanSaun, 'Van Saun north cluster is missing');
@@ -72,4 +79,11 @@ test('Day Trips uses practical parking clusters for the audited large parks', ()
   for (const tag of ['animals', 'indoor-visit', 'playground', 'water-play']) {
     assert.ok(vanSaunTags.has(tag), `Van Saun north cluster is missing ${tag}`);
   }
+});
+
+test('Day Trips keeps pick-your-own as a real stored activity with nearby coverage', () => {
+  const pyo = trips.filter((trip) => trip.locations.some((location) => location.tags.includes('pick-your-own')));
+  assert.ok(pyo.length >= 8, `pick-your-own needs a useful farm set, has only ${pyo.length}`);
+  assert.ok(pyo.filter((trip) => trip.driveMinutes <= 20).length >= 2, 'pick-your-own needs at least two <=20 minute options');
+  assert.ok(pyo.filter((trip) => trip.driveMinutes <= 40).length >= 4, 'pick-your-own needs at least four <=40 minute options');
 });
