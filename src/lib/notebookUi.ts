@@ -39,9 +39,16 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
     renderTimer = undefined;
   };
   const status = (message: string, error = false) => { live.textContent = message; live.dataset.error = error ? 'true' : 'false'; };
-  const mutate = async (label: string, fn: (current: NotebookState) => NotebookState) => {
-    try { status(`${label}…`); await repository.transaction(fn); status(`${label}完成`); }
-    catch (error) { status(error instanceof Error ? error.message : String(error), true); }
+  const mutate = async (label: string, fn: (current: NotebookState) => NotebookState): Promise<boolean> => {
+    try {
+      status(`${label}…`);
+      await repository.transaction(fn);
+      status(`${label}完成`);
+      return true;
+    } catch (error) {
+      status(error instanceof Error ? error.message : String(error), true);
+      return false;
+    }
   };
   const context = { repository, getState: () => state, mutate, status };
   const manager = setupNotebookBoardManager(context);
@@ -114,7 +121,8 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
     if (!text) return;
     const ticketId = makeId('ticket');
     const time = stamp();
-    void mutate('记下来了', (current) => ({ ...current, inbox: { ...current.inbox, [ticketId]: { id: ticketId, text, createdAt: time, updatedAt: time } } })).then(() => {
+    void mutate('记下来了', (current) => ({ ...current, inbox: { ...current.inbox, [ticketId]: { id: ticketId, text, createdAt: time, updatedAt: time } } })).then((saved) => {
+      if (!saved) return;
       inboxInput.value = '';
       inboxInput.focus();
     });
