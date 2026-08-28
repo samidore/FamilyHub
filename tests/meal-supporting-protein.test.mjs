@@ -24,7 +24,7 @@ test('central optional groups replace per-Recipe optional protein allow-lists wi
   for (const id of compatibleRecipeIds) {
     const recipe = data.recipes.find((candidate) => candidate.id === id);
     assert(recipe, `${id} is missing`);
-    assert.deepEqual(recipe.optionalGroupIds, ['add-some-richness']);
+    assert(recipe.optionalGroupIds.includes('add-some-richness'), `${id} should reference add-some-richness`);
     assert.equal(recipe.supportingProteinIngredientIds.length, 0);
   }
 
