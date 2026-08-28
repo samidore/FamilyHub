@@ -125,6 +125,7 @@ const compositionData = JSON.stringify({
       const summary = document.createElement('summary'); summary.textContent = '编辑这道菜'; details.append(summary);
       const body = document.createElement('div'); body.className = 'meal-composition-editor__body';
       const binding = meal.recipeIngredientBindings[recipeId] ?? [];
+      const boundIds = new Set(binding);
 
       const fixed = recipe.requirements.filter((requirement) => requirement.anyOf.length === 1);
       if (fixed.length) {
@@ -141,7 +142,7 @@ const compositionData = JSON.stringify({
       });
 
       for (const group of optionalGroupsForRecipe(recipe, optionalGroups)) {
-        const choices = group.ingredients.filter((entry) => meal.availableIngredientIds.includes(entry.ingredientId) || planSelected(recipeId, group.id, entry.ingredientId, meal));
+        const choices = group.ingredients.filter((entry) => !boundIds.has(entry.ingredientId) && (meal.availableIngredientIds.includes(entry.ingredientId) || planSelected(recipeId, group.id, entry.ingredientId, meal)));
         if (!choices.length) continue;
         const heading = document.createElement('h4'); heading.textContent = group.labelZh; body.append(heading);
         const grid = document.createElement('div'); grid.className = 'meal-chip-grid meal-composition-grid';
@@ -191,9 +192,15 @@ const compositionData = JSON.stringify({
     });
   }
 
-  function defaultConsumption(id: string, units: number) {
+  function defaultConsumption(id: string, units: number, drafts: CheckoutRecipeDrafts, recipeId: string) {
     if (trackingForIngredient(id, ingredients) === 'presence-only') return false;
-    const current = household.inventory[id]; return Math.min(units, typeof current === 'number' ? current : 0);
+    const available = typeof household.inventory[id] === 'number' ? household.inventory[id] as number : 0;
+    const usedElsewhere = Object.entries(drafts).reduce((sum, [otherRecipeId, draft]) => {
+      if (otherRecipeId === recipeId) return sum;
+      const value = draft.consumption[id];
+      return sum + (typeof value === 'number' ? value : 0);
+    }, 0);
+    return Math.min(units, Math.max(0, roundCountedInventoryValue(available - usedElsewhere)));
   }
 
   function draftForMeal(meal: CurrentMeal) { return checkoutRecipeDraftsForMeal(meal, household.inventory, ingredients, recipes, optionalGroups); }
@@ -236,9 +243,10 @@ const compositionData = JSON.stringify({
         requirement.anyOf.filter((id) => inventoryIsOn(household.inventory[id], trackingForIngredient(id, ingredients)) || draft.bindings[index] === id).forEach((id) => grid.append(makeChip(nameFor(id), draft.bindings[index] === id, { actualBindingRecipe: recipeId, actualBindingIndex: String(index), actualBindingIngredient: id })));
         card.append(grid); if (draft.bindings[index]) card.append(amountRow(recipeId, draft.bindings[index], drafts));
       });
+      const boundIds = new Set(draft.bindings);
       for (const group of optionalGroupsForRecipe(recipe, optionalGroups)) {
-        const selectedIds = new Set(draft.optionalAddons.filter((addon) => addon.addonType === group.id).map((addon) => addon.ingredientId));
-        const candidates = group.ingredients.filter((entry) => inventoryIsOn(household.inventory[entry.ingredientId], trackingForIngredient(entry.ingredientId, ingredients)) || selectedIds.has(entry.ingredientId));
+        const selectedIds = new Set(draft.optionalAddons.filter((addon) => addon.addonType === group.id && !boundIds.has(addon.ingredientId)).map((addon) => addon.ingredientId));
+        const candidates = group.ingredients.filter((entry) => !boundIds.has(entry.ingredientId) && (inventoryIsOn(household.inventory[entry.ingredientId], trackingForIngredient(entry.ingredientId, ingredients)) || selectedIds.has(entry.ingredientId)));
         if (!candidates.length) continue;
         const h = document.createElement('h4'); h.textContent = group.labelZh; card.append(h); const grid = document.createElement('div'); grid.className = 'meal-chip-grid meal-composition-grid';
         candidates.forEach((entry) => grid.append(makeChip(nameFor(entry.ingredientId), selectedIds.has(entry.ingredientId), { actualOptionalRecipe: recipeId, actualOptionalGroup: group.id, actualOptionalIngredient: entry.ingredientId })));
@@ -272,17 +280,22 @@ const compositionData = JSON.stringify({
     const binding = target.closest<HTMLButtonElement>('[data-actual-binding-recipe]');
     if (binding) {
       event.preventDefault(); event.stopImmediatePropagation(); const recipeId = binding.dataset.actualBindingRecipe!; const index = Number(binding.dataset.actualBindingIndex); const ingredientId = binding.dataset.actualBindingIngredient!; const draft = drafts[recipeId]; const recipe = recipeById.get(recipeId); if (!draft || !recipe) return;
-      const old = draft.bindings[index]; draft.bindings[index] = ingredientId; if (old && !draftUsesIngredient(draft, old)) delete draft.consumption[old]; draft.consumption[ingredientId] = defaultConsumption(ingredientId, recipe.checkoutUnits?.[ingredientId] ?? 1); void persistActual(drafts); return;
+      const old = draft.bindings[index];
+      draft.optionalAddons = draft.optionalAddons.filter((addon) => addon.ingredientId !== ingredientId);
+      draft.bindings[index] = ingredientId;
+      if (old && !draftUsesIngredient(draft, old)) delete draft.consumption[old];
+      draft.consumption[ingredientId] = defaultConsumption(ingredientId, recipe.checkoutUnits?.[ingredientId] ?? 1, drafts, recipeId);
+      void persistActual(drafts); return;
     }
     const optional = target.closest<HTMLButtonElement>('[data-actual-optional-recipe]');
     if (optional) {
-      event.preventDefault(); event.stopImmediatePropagation(); const recipeId = optional.dataset.actualOptionalRecipe!; const groupId = optional.dataset.actualOptionalGroup!; const ingredientId = optional.dataset.actualOptionalIngredient!; const draft = drafts[recipeId]; const recipe = recipeById.get(recipeId); const group = groupById.get(groupId); const entry = group?.ingredients.find((candidate) => candidate.ingredientId === ingredientId); if (!draft || !recipe || !entry) return;
+      event.preventDefault(); event.stopImmediatePropagation(); const recipeId = optional.dataset.actualOptionalRecipe!; const groupId = optional.dataset.actualOptionalGroup!; const ingredientId = optional.dataset.actualOptionalIngredient!; const draft = drafts[recipeId]; const recipe = recipeById.get(recipeId); const group = groupById.get(groupId); const entry = group?.ingredients.find((candidate) => candidate.ingredientId === ingredientId); if (!draft || !recipe || !entry || draft.bindings.includes(ingredientId)) return;
       const exists = draft.optionalAddons.some((addon) => addon.addonType === groupId && addon.ingredientId === ingredientId); draft.optionalAddons = draft.optionalAddons.filter((addon) => !(addon.addonType === groupId && addon.ingredientId === ingredientId));
-      if (!exists) { draft.optionalAddons.push({ addonType: groupId, ingredientId }); draft.consumption[ingredientId] = defaultConsumption(ingredientId, entry.checkoutUnits); } else if (!draftUsesIngredient(draft, ingredientId)) delete draft.consumption[ingredientId]; void persistActual(drafts); return;
+      if (!exists) { draft.optionalAddons.push({ addonType: groupId, ingredientId }); draft.consumption[ingredientId] = defaultConsumption(ingredientId, entry.checkoutUnits, drafts, recipeId); } else if (!draftUsesIngredient(draft, ingredientId)) delete draft.consumption[ingredientId]; void persistActual(drafts); return;
     }
     const step = target.closest<HTMLButtonElement>('[data-actual-step-recipe]');
     if (step) {
-      event.preventDefault(); event.stopImmediatePropagation(); const recipeId = step.dataset.actualStepRecipe!; const ingredientId = step.dataset.actualStepIngredient!; const draft = drafts[recipeId]; if (!draft) return; const available = typeof household.inventory[ingredientId] === 'number' ? household.inventory[ingredientId] as number : 0; const current = typeof draft.consumption[ingredientId] === 'number' ? draft.consumption[ingredientId] as number : 0; draft.consumption[ingredientId] = Math.max(0, Math.min(available, roundCountedInventoryValue(current + Number(step.dataset.actualStep)))); void persistActual(drafts);
+      event.preventDefault(); event.stopImmediatePropagation(); const recipeId = step.dataset.actualStepRecipe!; const ingredientId = step.dataset.actualStepIngredient!; const draft = drafts[recipeId]; if (!draft) return; const available = typeof household.inventory[ingredientId] === 'number' ? household.inventory[ingredientId] as number : 0; const current = typeof draft.consumption[ingredientId] === 'number' ? draft.consumption[ingredientId] as number : 0; const usedElsewhere = Object.entries(drafts).reduce((sum, [otherRecipeId, otherDraft]) => otherRecipeId === recipeId ? sum : sum + (typeof otherDraft.consumption[ingredientId] === 'number' ? otherDraft.consumption[ingredientId] as number : 0), 0); const remaining = Math.max(0, roundCountedInventoryValue(available - usedElsewhere)); draft.consumption[ingredientId] = Math.max(0, Math.min(remaining, roundCountedInventoryValue(current + Number(step.dataset.actualStep)))); void persistActual(drafts);
     }
   }, true);
 
