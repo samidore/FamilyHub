@@ -1,8 +1,23 @@
-import { NOTEBOOK_PRIORITIES, type NotebookComment, type NotebookItem, type NotebookPriority, type NotebookState } from './notebookDomain.ts';
+import {
+  NOTEBOOK_PRIORITIES,
+  isAfterCompletionNotebookRecurrence,
+  isLegacyNotebookRecurrence,
+  isScheduledNotebookRecurrence,
+  type NotebookComment,
+  type NotebookItem,
+  type NotebookPriority,
+  type NotebookState,
+  type NotebookWeekday,
+} from './notebookDomain.ts';
 import {
   NOTEBOOK_COMPLETION_GRACE_MS,
   NOTEBOOK_PRIORITY_LABELS,
+  NOTEBOOK_RECURRING_GROUPS,
   isNotebookCompletionInGrace,
+  notebookRecurringActiveItems,
+  notebookRecurringCompletionEntries,
+  notebookRecurringGroupKey,
+  notebookRecurringRemainingDays,
   notebookSectionEntries,
   notebookUrgentActiveItems,
   notebookUrgentVisibleItems,
@@ -27,6 +42,7 @@ import { notebookBoardShowsQueueAge, notebookQueueAgeDays } from './notebookQueu
 
 export const escapeNotebookHtml = (value: unknown) => String(value ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#039;');
 const fmt = (value?: number) => value ? new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'numeric', day: 'numeric' }).format(new Date(value)) : '';
+const weekdayLabels: Record<NotebookWeekday, string> = { mon: '周一', tue: '周二', wed: '周三', thu: '周四', fri: '周五', sat: '周六', sun: '周日' };
 
 function commentsFor(state: NotebookState, itemId: string) {
   return Object.values(state.comments).filter((comment) => comment.itemId === itemId).sort((a, b) => a.createdAt - b.createdAt || a.id.localeCompare(b.id));
@@ -64,10 +80,24 @@ function completionMetaHtml(record: { completedAt: number; completedByName?: str
 function recurrenceText(item: NotebookItem) {
   const recurrence = item.recurrence;
   if (!recurrence) return '';
-  if (recurrence.unit === 'day') return recurrence.interval === 1 ? '每天' : `每 ${recurrence.interval} 天`;
-  if (recurrence.unit === 'week') return '每周';
-  if (recurrence.unit === 'month') return recurrence.interval === 1 ? '每月' : `每 ${recurrence.interval} 月`;
-  return '每年';
+  if (isAfterCompletionNotebookRecurrence(recurrence)) return `完成后 ${recurrence.intervalDays} 天`;
+  if (isScheduledNotebookRecurrence(recurrence)) {
+    if (recurrence.unit === 'day') return recurrence.interval === 1 ? '每天' : `每 ${recurrence.interval} 天`;
+    if (recurrence.unit === 'week') {
+      const cadence = recurrence.interval === 1 ? '每周' : `每 ${recurrence.interval} 周`;
+      const days = (recurrence.weekdays ?? []).map((weekday) => weekdayLabels[weekday]).join('、');
+      return days ? `${cadence} · ${days}` : cadence;
+    }
+    if (recurrence.unit === 'month') return recurrence.interval === 1 ? '每月' : `每 ${recurrence.interval} 月`;
+    return recurrence.interval === 1 ? '每年' : `每 ${recurrence.interval} 年`;
+  }
+  if (isLegacyNotebookRecurrence(recurrence)) {
+    if (recurrence.unit === 'day') return recurrence.interval === 1 ? '每天' : `每 ${recurrence.interval} 天`;
+    if (recurrence.unit === 'week') return '每周';
+    if (recurrence.unit === 'month') return recurrence.interval === 1 ? '每月' : `每 ${recurrence.interval} 月`;
+    return '每年';
+  }
+  return '';
 }
 
 function mediaDetails(item: NotebookItem) {
@@ -91,16 +121,35 @@ function dueSoonIconHtml(item: NotebookItem, today: string) {
   return `<span role="img" aria-label="${escapeNotebookHtml(label)}" title="${escapeNotebookHtml(label)}" style="width:1.7rem;height:1.7rem;border-radius:999px;display:grid;place-items:center;background:#fff0f1;color:#c83f4d;box-shadow:0 1px 4px rgb(160 43 57 / 18%)"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" style="width:1.08rem;height:1.08rem;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transform:rotate(-4deg)"><path d="M7 4h10M7 20h10M8 5c0 3 1.5 4.5 4 7-2.5 2.5-4 4-4 7h8c0-3-1.5-4.5-4-7 2.5-2.5 4-4 4-7H8z"/><path d="M9.6 7.2h4.8L12 10.1 9.6 7.2Zm.25 9.6h4.3L12 14.4l-2.15 2.4Z" style="fill:currentColor;stroke:none;opacity:.35"/></svg></span>`;
 }
 
-function cornerStatus(state: NotebookState, item: NotebookItem, today: string, now: number, showQueueAge: boolean) {
+function remainingDaysLabel(remainingDays: number | null) {
+  if (remainingDays === null) return '未定日期';
+  if (remainingDays < 0) return `已过期 ${Math.abs(remainingDays)} 天`;
+  if (remainingDays === 0) return '今天';
+  if (remainingDays === 1) return '明天';
+  return `还有 ${remainingDays} 天`;
+}
+
+function cornerStatus(state: NotebookState, item: NotebookItem, today: string, now: number, showQueueAge: boolean, recurringRemainingDays?: number | null) {
+  if (recurringRemainingDays !== undefined) {
+    const group = notebookRecurringGroupKey(recurringRemainingDays);
+    const label = remainingDaysLabel(recurringRemainingDays);
+    return {
+      cardStyle: ' style="position:relative"',
+      titleStyle: ' style="padding-right:7.5rem"',
+      html: `<div class="notebook-corner-status"><span class="notebook-remaining-badge notebook-remaining-badge--${group}" aria-label="${escapeNotebookHtml(label)}">${escapeNotebookHtml(label)}</span></div>`,
+      recurringGroup: group,
+    };
+  }
   const dueSoon = dueSoonIconHtml(item, today);
   const ageDays = showQueueAge ? notebookQueueAgeDays(state, item, now) : null;
   const age = ageDays === null ? '' : `<span aria-label="已排队 ${ageDays} 天" title="已排队 ${ageDays} 天" style="white-space:nowrap;border-radius:999px;background:#f3eee6;color:#665f56;padding:.2rem .45rem;font-size:.82rem;font-weight:700;line-height:1.25">${ageDays}天</span>`;
-  if (!dueSoon && !age) return { cardStyle: '', titleStyle: '', html: '' };
+  if (!dueSoon && !age) return { cardStyle: '', titleStyle: '', html: '', recurringGroup: undefined };
   const reserve = dueSoon && age ? '5.5rem' : dueSoon ? '2.25rem' : '3.3rem';
   return {
     cardStyle: ' style="position:relative"',
     titleStyle: ` style="padding-right:${reserve}"`,
     html: `<div style="position:absolute;top:.5rem;right:.5rem;display:flex;align-items:center;gap:.3rem;z-index:1">${dueSoon}${age}</div>`,
+    recurringGroup: undefined,
   };
 }
 
@@ -112,15 +161,15 @@ function commentsHtml(comments: NotebookComment[], itemId: string, displayName: 
   return `<section class="notebook-comments">${list}${add}</section>`;
 }
 
-function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | null, movable: boolean, displayName: string | null, showGrace: boolean, now: number, today: string, showQueueAge: boolean) {
+function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | null, movable: boolean, displayName: string | null, showGrace: boolean, now: number, today: string, showQueueAge: boolean, recurringRemainingDays?: number | null) {
   const e = escapeNotebookHtml;
   const comments = commentsFor(state, item.id);
   const moves = movable && item.status === 'active' && boardId ? `<button type="button" class="icon-button" data-move-item="up" aria-label="上移 ${e(item.title)}">↑</button><button type="button" class="icon-button" data-move-item="down" aria-label="下移 ${e(item.title)}">↓</button><button type="button" class="drag-handle" draggable="true" data-item-drag-handle aria-label="拖动排序">↕</button>` : '';
-  const due = item.dueDate ? `<span>截止 ${e(item.dueDate)}${item.dueTime ? ` ${e(item.dueTime)}` : ''}</span>` : '';
+  const due = item.dueDate ? `<span>${item.recurrence ? '下次' : '截止'} ${e(item.dueDate)}${item.dueTime ? ` ${e(item.dueTime)}` : ''}</span>` : '';
   const completed = item.completedAt ? completionMetaHtml({ completedAt: item.completedAt, completedByName: item.completedByName }) : '';
   const recurrence = item.recurrence ? `<span>循环 ${e(recurrenceText(item))}</span>` : '';
   const media = mediaDetails(item);
-  const corner = cornerStatus(state, item, today, now, showQueueAge);
+  const corner = cornerStatus(state, item, today, now, showQueueAge, recurringRemainingDays);
   const statusControl = item.recurrence
     ? `<div class="notebook-recurring-status"><span>未完成</span><button type="button" class="secondary-button" data-complete-recurring="${e(item.id)}">完成本次</button></div>`
     : item.status === 'active'
@@ -133,7 +182,8 @@ function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | nu
     : null;
   const grace = graceMinutes ? `<span class="notebook-grace-note">已完成 · 还会在这里保留 ${graceMinutes} 分钟</span>` : '';
   const body = `${item.details ? `<p class="notebook-details-text">${e(item.details)}</p>` : ''}${media.text ? `<section class="notebook-media-detail">${media.text}</section>` : ''}${commentsHtml(comments, item.id, displayName)}`;
-  return `<article class="notebook-item${graceMinutes ? ' notebook-item--grace' : ''}"${corner.cardStyle} data-item-id="${e(item.id)}" data-board-id="${e(boardId ?? '')}">${corner.html}<div class="notebook-item__topline"><div class="notebook-item__heading">${authorIconHtml(item)}<strong${corner.titleStyle}>${e(item.title)}</strong></div><div class="notebook-inline-actions">${moves}<button type="button" class="quiet-button" data-edit-item="${e(item.id)}">编辑</button></div></div><div class="notebook-item__controls"><label>优先级<select data-item-priority="${e(item.id)}">${NOTEBOOK_PRIORITIES.map((p) => `<option value="${p}" ${item.priority === p ? 'selected' : ''}>${NOTEBOOK_PRIORITY_LABELS[p]}</option>`).join('')}</select></label>${statusControl}</div>${(due || completed || recurrence || grace || media.summary) ? `<div class="notebook-item__meta">${due}${completed}${recurrence}${grace}${media.summary}</div>` : ''}<div class="notebook-item__body">${body}</div></article>`;
+  const recurringClass = corner.recurringGroup ? ` notebook-item--recurring-${corner.recurringGroup}` : '';
+  return `<article class="notebook-item${graceMinutes ? ' notebook-item--grace' : ''}${recurringClass}"${corner.cardStyle} data-item-id="${e(item.id)}" data-board-id="${e(boardId ?? '')}">${corner.html}<div class="notebook-item__topline"><div class="notebook-item__heading">${authorIconHtml(item)}<strong${corner.titleStyle}>${e(item.title)}</strong></div><div class="notebook-inline-actions">${moves}<button type="button" class="quiet-button" data-edit-item="${e(item.id)}">编辑</button></div></div><div class="notebook-item__controls"><label>优先级<select data-item-priority="${e(item.id)}">${NOTEBOOK_PRIORITIES.map((p) => `<option value="${p}" ${item.priority === p ? 'selected' : ''}>${NOTEBOOK_PRIORITY_LABELS[p]}</option>`).join('')}</select></label>${statusControl}</div>${(due || completed || recurrence || grace || media.summary) ? `<div class="notebook-item__meta">${due}${completed}${recurrence}${grace}${media.summary}</div>` : ''}<div class="notebook-item__body">${body}</div></article>`;
 }
 
 function historyHtml(entry: NotebookSectionEntry) {
@@ -148,6 +198,21 @@ function sectionEntryHtml(state: NotebookState, entry: NotebookSectionEntry, boa
     : itemHtml(state, entry.item, boardId, true, displayName, filter === 'active' && entry.item.status === 'completed', now, today, showQueueAge);
 }
 
+function recurringBoardHtml(state: NotebookState, displayName: string | null, now: number, today: string) {
+  const filter = state.settings.viewFilter;
+  const active = filter === 'completed' ? [] : notebookRecurringActiveItems(state, today);
+  const groups = NOTEBOOK_RECURRING_GROUPS.map((group) => {
+    const items = active.filter((item) => notebookRecurringGroupKey(notebookRecurringRemainingDays(item, today)) === group.key);
+    if (!items.length) return '';
+    return `<section class="notebook-recurring-group notebook-recurring-group--${group.key}" data-recurring-group="${group.key}"><h3>${group.label} <span>${items.length}</span></h3><div class="notebook-item-list">${items.map((item) => itemHtml(state, item, null, false, displayName, false, now, today, false, notebookRecurringRemainingDays(item, today))).join('')}</div></section>`;
+  }).join('');
+  const history = filter === 'active' ? [] : notebookRecurringCompletionEntries(state);
+  const historyHtmlBlock = history.length ? `<section class="notebook-recurring-history"><h3>完成记录 <span>${history.length}</span></h3><div class="notebook-item-list">${history.map(historyHtml).join('')}</div></section>` : '';
+  const count = active.length + history.length;
+  const body = groups || historyHtmlBlock ? `${groups}${historyHtmlBlock}` : '<p class="notebook-empty">这个筛选下没有反复事项。</p>';
+  return `<section class="notebook-board notebook-board--recurring" data-recurring-board><header class="notebook-board__header"><div class="notebook-board__heading"><p class="eyebrow">Recurring</p><h2>反复干</h2><p>按剩余日数分组；组内按优先级和剩余天数自动排序。</p></div><span class="notebook-board__count notebook-board__count--recurring">${count}</span></header><div class="notebook-board__body">${body}</div></section>`;
+}
+
 export function renderNotebookBoards(state: NotebookState, displayName: string | null, now = Date.now()) {
   const filter = state.settings.viewFilter;
   const today = notebookLocalDateKey(now);
@@ -156,6 +221,7 @@ export function renderNotebookBoards(state: NotebookState, displayName: string |
   const dueSoon = filter === 'completed' ? [] : notebookDueSoonItems(state, today).filter((item) => !manualIds.has(item.id));
   const urgent = [...manualUrgent, ...dueSoon];
   const smart = urgent.length ? `<section class="notebook-board notebook-board--urgent" data-smart-urgent><header class="notebook-board__header"><div><p class="eyebrow">Smart board</p><h2>紧急</h2></div><span class="notebook-board__count">${urgent.length}</span></header><div class="notebook-item-list">${urgent.map((item) => itemHtml(state, item, null, false, displayName, filter === 'active' && item.status === 'completed', now, today, true)).join('')}</div></section>` : '';
+  const recurring = recurringBoardHtml(state, displayName, now, today);
   const boards = orderedNotebookBoards(state, true).map((board) => {
     let count = 0;
     const showQueueAge = notebookBoardShowsQueueAge(board);
@@ -167,7 +233,7 @@ export function renderNotebookBoards(state: NotebookState, displayName: string |
     }).join('');
     return `<section class="notebook-board" data-board-id="${escapeNotebookHtml(board.id)}"><header class="notebook-board__header"><button type="button" class="collapse-button" data-toggle-board="${escapeNotebookHtml(board.id)}" aria-expanded="${board.collapsed ? 'false' : 'true'}" aria-label="${board.collapsed ? '展开' : '收起'} ${escapeNotebookHtml(board.title)}">${board.collapsed ? '＋' : '−'}</button><div class="notebook-board__heading"><h2>${escapeNotebookHtml(board.title)}</h2>${board.description ? `<p>${escapeNotebookHtml(board.description)}</p>` : ''}</div><button type="button" class="quiet-button" data-new-item="${escapeNotebookHtml(board.id)}">＋事项</button></header><div class="notebook-board__body" ${board.collapsed ? 'hidden' : ''}>${count ? sections : '<p class="notebook-empty">这个筛选下没有事项。</p>'}</div></section>`;
   }).join('');
-  return smart + boards || '<section class="notebook-empty-panel"><h2>还没有 Board</h2><p>先用“管理 Boards”创建一个。Board 名称和类型来自共享 registry，不在代码里写死。</p></section>';
+  return smart + recurring + boards;
 }
 
 export function renderNotebookBoardManager(state: NotebookState) {
