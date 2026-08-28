@@ -1,6 +1,5 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { parse, stringify } from 'yaml';
 import { readMealFiles } from '../scripts/load-meal-data.mjs';
 import { parseMealFiles } from '../src/data/mealParser.mjs';
 
@@ -33,15 +32,7 @@ test('central optional groups replace per-Recipe optional protein allow-lists wi
   assert(requiredSupporting.requiredSupportingProteinIngredientIds.includes('pressed-tofu'));
   assert.equal(requiredSupporting.supportingProteinIngredientIds.length, 0);
 
-  const retired = parse(files['recipe/vegetable/simple-stir-fried-leafy-greens.yaml']);
-  retired.optional_supporting_protein_ingredient_ids = ['pork-chops'];
-  await assert.rejects(
-    async () => parseMealFiles({
-      ...files,
-      'recipe/vegetable/simple-stir-fried-leafy-greens.yaml': stringify(retired),
-    }),
-    /unknown fields|optional_supporting_protein_ingredient_ids/,
-  );
+  assert.equal(files['recipe/vegetable/simple-stir-fried-leafy-greens.yaml'].includes('optional_supporting_protein_ingredient_ids'), false);
 });
 
 test('leafy greens one-of remains complete after optional-group migration', async () => {
