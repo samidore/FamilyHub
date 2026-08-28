@@ -31,8 +31,7 @@ ingredients:
       visible: true
       section: mushroom
       order: 30
-    tags:
-      - easy-braise-addon
+    tags: []
   - id: oyster-mushrooms
     type: ingredient
     inventory_tracking: counted
@@ -43,8 +42,7 @@ ingredients:
       visible: true
       section: mushroom
       order: 40
-    tags:
-      - easy-braise-addon
+    tags: []
   - id: shimeji-mushrooms
     type: ingredient
     inventory_tracking: counted
@@ -55,8 +53,7 @@ ingredients:
       visible: true
       section: mushroom
       order: 50
-    tags:
-      - easy-braise-addon
+    tags: []
   - id: enoki-mushrooms
     type: ingredient
     inventory_tracking: counted
@@ -67,8 +64,7 @@ ingredients:
       visible: true
       section: mushroom
       order: 60
-    tags:
-      - easy-braise-addon
+    tags: []
   - id: maitake
     type: ingredient
     inventory_tracking: counted
@@ -81,7 +77,6 @@ ingredients:
       order: 70
     tags:
       - low-priority
-      - easy-braise-addon
   - id: fresh-wood-ear-mushrooms
     type: ingredient
     inventory_tracking: counted
