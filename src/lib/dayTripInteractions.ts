@@ -151,7 +151,7 @@ export function setDayTripReaction(
   const next = clone(state);
   const byUid = { ...(next.reactions[destinationId] ?? {}) };
   if (value === null) delete byUid[uid];
-  else byUid[uid] = { value, authorName: name, updatedAt: now };
+  else byUid[uid] = { value, authorName: byUid[uid]?.authorName ?? name, updatedAt: now };
   if (Object.keys(byUid).length) next.reactions[destinationId] = byUid;
   else delete next.reactions[destinationId];
   return normalizeDayTripInteractionState(next);
@@ -242,7 +242,8 @@ export class FirebaseDayTripInteractionRepository implements DayTripInteractionR
     await this.ready.catch(() => undefined);
     this.assertReady();
     const uid = this.getCurrentUid();
-    const authorName = this.getCurrentMemberDisplayName();
+    const currentAuthorName = this.getCurrentMemberDisplayName();
+    const authorName = uid && destinationId ? this.state.reactions[destinationId]?.[uid]?.authorName ?? currentAuthorName : currentAuthorName;
     if (!uid || !authorName || !destinationId) throw new Error('家庭成员显示名字尚未配置');
     const target = ref(this.session.database, `households/${this.householdId}/dayTrips/reactions/${destinationId}/${uid}`);
     if (value === null) await remove(target);
