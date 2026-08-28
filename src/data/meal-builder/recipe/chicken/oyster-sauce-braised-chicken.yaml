@@ -4,7 +4,7 @@ status: candidate
 name_zh: 蚝油焖鸡腿 / 鸡小腿
 name_en: Oyster-Sauce Braised Chicken Thighs or Drumsticks
 tags:
-  - iron-pan-braise
+  - child-all-ingredients-eaten
   - light-seasoning
   - non-spicy-base
   - braised
@@ -18,6 +18,8 @@ main_protein_ingredient_ids:
   - chicken-drumsticks
   - bone-in-chicken-thighs
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids: []
 meal_contribution:
   protein: 1
