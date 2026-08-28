@@ -52,6 +52,8 @@ test('notebook schema accepts canonical records and rejects unsupported fields o
   await assertSucceeds(alice.ref(`${household}/notebook/memberships/todo/task-1`).set({ order: 0 }));
   await assertSucceeds(alice.ref(`${household}/notebook/inbox/ticket-1`).set({ id: 'ticket-1', text: 'remember this', createdAt: 3, updatedAt: 3 }));
   await assertSucceeds(alice.ref(`${household}/notebook/settings`).set({ viewFilter: 'completed' }));
+  await assertSucceeds(alice.ref(`${household}/notebook/settings`).set({ viewFilter: 'completed', recurringBoardOrder: 1 }));
+  await assertFails(alice.ref(`${household}/notebook/settings`).set({ viewFilter: 'completed', recurringBoardOrder: -1 }));
   await assertSucceeds(alice.ref(`${household}/notebook/items/media-good`).set({ ...item, id: 'media-good', platform: 'Max', imdbRating: 8.2, myRating: 9.5 }));
   await assertSucceeds(alice.ref(`${household}/notebook/items/legacy-recurring`).set({ ...item, id: 'legacy-recurring', dueDate: '2026-08-28', recurrence: { unit: 'month', interval: 3 } }));
   await assertSucceeds(alice.ref(`${household}/notebook/items/scheduled-recurring`).set({ ...item, id: 'scheduled-recurring', dueDate: '2026-09-07', recurrence: { kind: 'scheduled', startDate: '2026-09-07', unit: 'week', interval: 2, weekdays: ['mon', 'thu'] } }));
