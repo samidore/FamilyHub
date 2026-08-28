@@ -223,7 +223,7 @@ export function toggleRecipeOptionalAddon(meal: CurrentMeal, recipeId: string, g
 
 /** Legacy supporting-protein helpers remain readable until old persisted meals age out. */
 function supportingProteinIds(recipe: MealRecipe | undefined) { const value = recipe?.supportingProteinIngredientIds; return Array.isArray(value) ? value.filter((id): id is string => typeof id === 'string' && id.length > 0) : []; }
-export function selectedSupportingProteinId(meal: CurrentMeal, recipeId: string) { return meal.selectedAddons.find((addon) => addon.mainRecipeId === recipeId && addon.addonType === SUPPORTING_PROTEIN_ADDON_TYPE)?.ingredientId ?? null; }
+export function selectedSupportingProteinId(meal: CurrentMeal, recipeId: string, _recipes?: MealRecipe[]) { return meal.selectedAddons.find((addon) => addon.mainRecipeId === recipeId && addon.addonType === SUPPORTING_PROTEIN_ADDON_TYPE)?.ingredientId ?? null; }
 export function setSupportingProteinAddon(meal: CurrentMeal, recipeId: string, ingredientId: string | null, recipes: MealRecipe[]): CurrentMeal {
   const recipe = recipes.find((item) => item.id === recipeId); if (!recipe || !meal.selectedRecipeIds.includes(recipeId)) return meal; const allowed = supportingProteinIds(recipe); if (ingredientId && (!allowed.includes(ingredientId) || !meal.availableIngredientIds.includes(ingredientId))) return meal;
   const selectedAddons = meal.selectedAddons.filter((addon) => !(addon.mainRecipeId === recipeId && addon.addonType === SUPPORTING_PROTEIN_ADDON_TYPE)); if (ingredientId) selectedAddons.push({ mainRecipeId: recipeId, addonType: SUPPORTING_PROTEIN_ADDON_TYPE, ingredientId }); return { ...meal, selectedAddons, checkoutDraft: {}, checkoutRecipeDrafts: {} };
