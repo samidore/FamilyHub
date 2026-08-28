@@ -1,5 +1,5 @@
 import { type NotebookPriority, type NotebookState } from './notebookDomain.ts';
-import { notebookItemsForSection, orderedNotebookBoards, reorderNotebookBoards, reorderNotebookSection } from './notebookActions.ts';
+import { notebookItemsForSection, orderedNotebookBoardLayout, reorderNotebookBoardLayout, reorderNotebookSection } from './notebookActions.ts';
 
 export interface NotebookPointerReorderContext {
   getState(): NotebookState;
@@ -104,11 +104,11 @@ export function setupNotebookPointerReorder(context: NotebookPointerReorderConte
     }
 
     const ids = [...drag.container.children]
-      .map((child) => child instanceof HTMLElement ? child.dataset.boardId : undefined)
-      .filter((boardId): boardId is string => Boolean(boardId));
-    const currentIds = orderedNotebookBoards(context.getState()).map((board) => board.id);
+      .map((child) => child instanceof HTMLElement ? child.dataset.boardLayoutId : undefined)
+      .filter((layoutId): layoutId is string => Boolean(layoutId));
+    const currentIds = orderedNotebookBoardLayout(context.getState()).map((entry) => entry.id);
     if (sameOrder(ids, currentIds)) return;
-    void context.mutate('调整 Board 顺序', (current) => reorderNotebookBoards(current, ids, Date.now()));
+    void context.mutate('调整 Board 顺序', (current) => reorderNotebookBoardLayout(current, ids, Date.now()));
   };
 
   itemHost.addEventListener('pointerdown', (event) => {
@@ -133,7 +133,7 @@ export function setupNotebookPointerReorder(context: NotebookPointerReorderConte
     if (active || !event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
     const handle = elementTarget(event)?.closest<HTMLElement>('[data-board-drag-handle]') ?? null;
     const element = handle?.closest<HTMLElement>('[data-board-manager-row]') ?? null;
-    if (!handle || !element || element.parentElement !== boardList) return;
+    if (!handle || !element || element.parentElement !== boardList || !element.dataset.boardLayoutId) return;
 
     event.preventDefault();
     handle.draggable = false;
