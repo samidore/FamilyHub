@@ -3,12 +3,13 @@ type: recipe
 status: candidate
 name_zh: 牛丼
 name_en: Gyudon Beef Rice Bowl
-tags: [iron-pan-braise, light-seasoning, non-spicy-base, stovetop-nonstick, lunch-30, child-support-protein]
+tags: [child-all-ingredients-eaten, light-seasoning, non-spicy-base, stovetop-nonstick, lunch-30, child-support-protein]
 fit_score: 5
 primary_role: mixed
 main_protein_category: beef
 main_protein_ingredient_ids: [hot-pot-beef-slices]
 supporting_protein_ingredient_ids: []
+optional_groups: [one-pot-mix]
 vegetable_ingredient_ids: [onion]
 meal_contribution: { protein: 1, vegetable: 0.5, staple: 1 }
 child_coverage: { protein: true, vegetable: true }
