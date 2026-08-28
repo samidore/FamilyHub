@@ -4,7 +4,7 @@ import { renderNotebookBoardManager } from './notebookView.ts';
 
 export interface NotebookBoardManagerContext {
   getState(): NotebookState;
-  mutate(label: string, fn: (current: NotebookState) => NotebookState): Promise<void>;
+  mutate(label: string, fn: (current: NotebookState) => NotebookState): Promise<boolean>;
   status(message: string, error?: boolean): void;
 }
 
@@ -45,7 +45,7 @@ export function setupNotebookBoardManager(context: NotebookBoardManagerContext) 
         updatedAt: time,
       };
       return next;
-    }).then(() => { createForm.reset(); if (dialog.open) render(); });
+    }).then((saved) => { if (!saved) return; createForm.reset(); if (dialog.open) render(); });
   });
 
   list.addEventListener('change', (event) => {
@@ -79,7 +79,7 @@ export function setupNotebookBoardManager(context: NotebookBoardManagerContext) 
         if (description) next.boards[boardId].description = description;
         else delete next.boards[boardId].description;
         return next;
-      }).then(() => { if (dialog.open) render(); });
+      }).then((saved) => { if (saved && dialog.open) render(); });
       return;
     }
     const move = (target.closest('[data-move-board]') as HTMLButtonElement | null)?.dataset.moveBoard;
@@ -89,7 +89,7 @@ export function setupNotebookBoardManager(context: NotebookBoardManagerContext) 
     const swap = move === 'up' ? index - 1 : index + 1;
     if (index < 0 || swap < 0 || swap >= ids.length) return;
     [ids[index], ids[swap]] = [ids[swap], ids[index]];
-    void context.mutate('调整 Board 顺序', (current) => reorderNotebookBoards(current, ids, stamp())).then(() => { if (dialog.open) render(); });
+    void context.mutate('调整 Board 顺序', (current) => reorderNotebookBoards(current, ids, stamp())).then((saved) => { if (saved && dialog.open) render(); });
   });
 
   list.addEventListener('dragstart', (event) => {
@@ -111,7 +111,7 @@ export function setupNotebookBoardManager(context: NotebookBoardManagerContext) 
     event.preventDefault();
     const ids = [...list.querySelectorAll<HTMLElement>('[data-board-manager-row]')].map((row) => row.dataset.boardId!).filter(Boolean);
     draggedBoardId = null;
-    void context.mutate('调整 Board 顺序', (current) => reorderNotebookBoards(current, ids, stamp())).then(() => { if (dialog.open) render(); });
+    void context.mutate('调整 Board 顺序', (current) => reorderNotebookBoards(current, ids, stamp())).then((saved) => { if (saved && dialog.open) render(); });
   });
 
   return { render, dialog };
