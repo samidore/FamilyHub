@@ -1,0 +1,165 @@
+<script>
+  import {
+    bindRecipeIngredients,
+    calendarDateKey,
+    freshnessAgeDays,
+    type MealIngredient,
+    type MealRecipe,
+  } from '../lib/mealEngine';
+  import type { CurrentMeal, HouseholdState } from '../lib/household';
+  import { createHouseholdRepository } from '../lib/householdRepository';
+
+  type Payload = { ingredients: MealIngredient[]; recipes: MealRecipe[] };
+  type FreshnessSignal = { ingredientId: string; label: string; ageDays: number };
+
+  const source = document.querySelector<HTMLScriptElement>('#meal-composition-data');
+  const firebaseSource = document.querySelector<HTMLScriptElement>('#meal-firebase-config');
+  if (!source || !firebaseSource) throw new Error('Meal freshness bootstrap data is missing.');
+
+  const payload = JSON.parse(source.textContent || '{}') as Payload;
+  const firebaseConfig = JSON.parse(firebaseSource.textContent || '{}') as Record<string, string>;
+  const ingredients = payload.ingredients;
+  const recipes = payload.recipes;
+  const ingredientById = new Map(ingredients.map((ingredient) => [ingredient.id, ingredient]));
+  const repository = createHouseholdRepository(firebaseConfig, { ingredients, recipes, firebase: { ingredients, recipes } });
+  let household: HouseholdState = repository.getSnapshot();
+  let renderQueued = false;
+
+  const nameFor = (id: string) => ingredientById.get(id)?.nameZh ?? id;
+
+  function scheduleRender() {
+    if (renderQueued) return;
+    renderQueued = true;
+    requestAnimationFrame(() => { renderQueued = false; render(); });
+  }
+
+  function freshnessSignals(binding: (string | null | undefined)[], meal: CurrentMeal) {
+    const today = calendarDateKey();
+    const seen = new Set<string>();
+    const signals: FreshnessSignal[] = [];
+    for (const ingredientId of binding) {
+      if (!ingredientId || seen.has(ingredientId)) continue;
+      seen.add(ingredientId);
+      const ingredient = ingredientById.get(ingredientId);
+      const threshold = ingredient?.freshnessPriorityDays;
+      if (ingredient?.inventoryFreshness !== 'fifo' || threshold === undefined || !Number.isInteger(threshold) || threshold <= 0) continue;
+      const ageDays = freshnessAgeDays(meal.ingredientFreshnessDates[ingredientId] ?? '', today);
+      if (ageDays <= threshold) continue;
+      signals.push({ ingredientId, label: nameFor(ingredientId), ageDays });
+    }
+    return signals.sort((left, right) => right.ageDays - left.ageDays || left.label.localeCompare(right.label, 'zh-CN'));
+  }
+
+  function candidateBinding(recipe: MealRecipe, meal: CurrentMeal, card: HTMLElement) {
+    const existing = meal.recipeIngredientBindings[recipe.id] ?? [];
+    const binding = bindRecipeIngredients(recipe, meal.availableIngredientIds, existing, meal.ingredientFreshnessDates);
+    card.querySelectorAll<HTMLSelectElement>('[data-binding-recipe]').forEach((select) => {
+      if (select.dataset.bindingRecipe !== recipe.id) return;
+      const index = Number(select.dataset.bindingIndex);
+      if (Number.isInteger(index) && index >= 0) binding[index] = select.value;
+    });
+    return binding;
+  }
+
+  function hourglass() {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 16 14');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.dataset.freshnessIcon = 'hourglass';
+    const body = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    body.setAttribute('d', 'M5 3h6c0 1.9-.9 3.1-3 4 2.1.9 3 2.1 3 4H5c0-1.9.9-3.1 3-4-2.1-.9-3-2.1-3-4Z');
+    const caps = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    caps.setAttribute('d', 'M4 2h8M4 12h8');
+    svg.append(body, caps);
+    return svg;
+  }
+
+  function renderBadge(host: HTMLElement | null, signals: FreshnessSignal[]) {
+    if (!host) return;
+    host.replaceChildren();
+    for (const signal of signals) {
+      const item = document.createElement('span');
+      item.className = 'meal-freshness-item';
+      item.dataset.freshnessIngredient = signal.ingredientId;
+      item.setAttribute('aria-label', `${signal.label}已在库${signal.ageDays}天`);
+      item.append(hourglass(), document.createTextNode(`${signal.label} ${signal.ageDays}天`));
+      host.append(item);
+    }
+    host.hidden = signals.length === 0;
+  }
+
+  function hideAll() {
+    document.querySelectorAll<HTMLElement>('[data-selected-freshness-badge], [data-candidate-freshness-badge]').forEach((host) => {
+      host.hidden = true;
+    });
+  }
+
+  function render() {
+    const meal = household.currentMeal;
+    if (!meal) { hideAll(); return; }
+
+    const selected = new Set(meal.selectedRecipeIds);
+    for (const recipe of recipes) {
+      const selectedHost = document.querySelector<HTMLElement>(`[data-selected-freshness-badge="${CSS.escape(recipe.id)}"]`);
+      if (selected.has(recipe.id)) {
+        const binding = meal.recipeIngredientBindings[recipe.id] ?? bindRecipeIngredients(recipe, meal.availableIngredientIds, [], meal.ingredientFreshnessDates);
+        renderBadge(selectedHost, freshnessSignals(binding, meal));
+      } else if (selectedHost) selectedHost.hidden = true;
+
+      const card = document.querySelector<HTMLElement>(`[data-meal-recipe="${CSS.escape(recipe.id)}"]`);
+      if (!card) continue;
+      renderBadge(card.querySelector<HTMLElement>('[data-candidate-freshness-badge]'), freshnessSignals(candidateBinding(recipe, meal, card), meal));
+    }
+  }
+
+  document.querySelector('#meal-recipe-grid')?.addEventListener('change', () => requestAnimationFrame(render));
+  repository.subscribe((next) => { household = next; scheduleRender(); });
+  window.addEventListener('pagehide', () => repository.dispose(), { once: true });
+  scheduleRender();
+</script>
+
+<style is:global>
+  .meal-freshness-badge {
+    display: flex;
+    min-height: 0;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    white-space: normal;
+  }
+  .meal-freshness-badge > span:not(.meal-freshness-item) { display: none; }
+  .meal-freshness-item {
+    display: inline-flex;
+    min-height: 24px;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 7px 3px 6px;
+    border: 1px solid #b53a3a;
+    border-radius: 6px;
+    background: #fff6f6;
+    color: #a12f2f;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .meal-freshness-item svg {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transform: rotate(-4deg);
+  }
+</style>
