@@ -1,5 +1,5 @@
 import { cloneNotebookState, type NotebookState } from './notebookDomain.ts';
-import { orderedNotebookBoards, reorderNotebookBoards } from './notebookActions.ts';
+import { orderedNotebookBoardLayout, orderedNotebookBoards, reorderNotebookBoardLayout } from './notebookActions.ts';
 import { renderNotebookBoardManager } from './notebookView.ts';
 
 export interface NotebookBoardManagerContext {
@@ -16,7 +16,7 @@ export function setupNotebookBoardManager(context: NotebookBoardManagerContext) 
   const list = document.querySelector<HTMLElement>('#notebook-board-list')!;
   const createForm = document.querySelector<HTMLFormElement>('#notebook-board-create')!;
   const openButton = document.querySelector<HTMLButtonElement>('#notebook-manage-boards')!;
-  let draggedBoardId: string | null = null;
+  let draggedBoardLayoutId: string | null = null;
 
   const render = () => { list.innerHTML = renderNotebookBoardManager(context.getState()); };
   openButton.addEventListener('click', () => { render(); dialog.showModal(); });
@@ -63,9 +63,11 @@ export function setupNotebookBoardManager(context: NotebookBoardManagerContext) 
   list.addEventListener('click', (event) => {
     const target = event.target as HTMLElement;
     const row = target.closest<HTMLElement>('[data-board-manager-row]');
+    const layoutId = row?.dataset.boardLayoutId;
     const boardId = row?.dataset.boardId;
-    if (!row || !boardId) return;
+    if (!row || !layoutId) return;
     if (target.closest('[data-save-board]')) {
+      if (!boardId) return;
       const title = row.querySelector<HTMLInputElement>('[data-board-title]')!.value.trim();
       if (!title) { context.status('Board 名称不能为空', true); return; }
       const kind = row.querySelector<HTMLSelectElement>('[data-board-kind]')!.value === 'media' ? 'media' : 'task';
@@ -84,34 +86,34 @@ export function setupNotebookBoardManager(context: NotebookBoardManagerContext) 
     }
     const move = (target.closest('[data-move-board]') as HTMLButtonElement | null)?.dataset.moveBoard;
     if (!move) return;
-    const ids = orderedNotebookBoards(context.getState()).map((board) => board.id);
-    const index = ids.indexOf(boardId);
+    const ids = orderedNotebookBoardLayout(context.getState()).map((entry) => entry.id);
+    const index = ids.indexOf(layoutId);
     const swap = move === 'up' ? index - 1 : index + 1;
     if (index < 0 || swap < 0 || swap >= ids.length) return;
     [ids[index], ids[swap]] = [ids[swap], ids[index]];
-    void context.mutate('调整 Board 顺序', (current) => reorderNotebookBoards(current, ids, stamp())).then((saved) => { if (saved && dialog.open) render(); });
+    void context.mutate('调整 Board 顺序', (current) => reorderNotebookBoardLayout(current, ids, stamp())).then((saved) => { if (saved && dialog.open) render(); });
   });
 
   list.addEventListener('dragstart', (event) => {
     const row = (event.target as HTMLElement).closest('[data-board-manager-row]') as HTMLElement | null;
-    draggedBoardId = row?.dataset.boardId ?? null;
-    if (draggedBoardId && event.dataTransfer) event.dataTransfer.effectAllowed = 'move';
+    draggedBoardLayoutId = row?.dataset.boardLayoutId ?? null;
+    if (draggedBoardLayoutId && event.dataTransfer) event.dataTransfer.effectAllowed = 'move';
   });
   list.addEventListener('dragover', (event) => {
-    if (!draggedBoardId) return;
+    if (!draggedBoardLayoutId) return;
     const target = (event.target as HTMLElement).closest('[data-board-manager-row]') as HTMLElement | null;
-    const dragged = [...list.querySelectorAll<HTMLElement>('[data-board-manager-row]')].find((row) => row.dataset.boardId === draggedBoardId);
+    const dragged = [...list.querySelectorAll<HTMLElement>('[data-board-manager-row]')].find((row) => row.dataset.boardLayoutId === draggedBoardLayoutId);
     if (!target || !dragged || target === dragged) return;
     event.preventDefault();
     const rect = target.getBoundingClientRect();
     list.insertBefore(dragged, event.clientY < rect.top + rect.height / 2 ? target : target.nextSibling);
   });
   list.addEventListener('drop', (event) => {
-    if (!draggedBoardId) return;
+    if (!draggedBoardLayoutId) return;
     event.preventDefault();
-    const ids = [...list.querySelectorAll<HTMLElement>('[data-board-manager-row]')].map((row) => row.dataset.boardId!).filter(Boolean);
-    draggedBoardId = null;
-    void context.mutate('调整 Board 顺序', (current) => reorderNotebookBoards(current, ids, stamp())).then((saved) => { if (saved && dialog.open) render(); });
+    const ids = [...list.querySelectorAll<HTMLElement>('[data-board-manager-row]')].map((row) => row.dataset.boardLayoutId!).filter(Boolean);
+    draggedBoardLayoutId = null;
+    void context.mutate('调整 Board 顺序', (current) => reorderNotebookBoardLayout(current, ids, stamp())).then((saved) => { if (saved && dialog.open) render(); });
   });
 
   return { render, dialog };
