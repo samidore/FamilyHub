@@ -288,14 +288,14 @@ test('top navigation allows steps one to three and gates checkout to cook', asyn
 
 test('selected Recipe and Checkout can change one-of independently', async ({ page }) => {
   await page.goto('meal-builder/');
-  await startMeal(page, ['chicken-drumsticks', 'bone-in-chicken-thighs']);
+  await startMeal(page, ['chicken-drumsticks', 'chicken-thighs']);
   const main = page.locator('[data-meal-recipe="oyster-sauce-braised-chicken"]');
   await expect(main).toBeVisible();
   await main.getByRole('button', { name: /选择这道菜/ }).click();
 
   const selected = page.locator('[data-selected-recipe="oyster-sauce-braised-chicken"]');
   await selected.locator('[data-composition-editor] > summary').click();
-  const planThigh = selected.locator('[data-plan-binding-ingredient="bone-in-chicken-thighs"]');
+  const planThigh = selected.locator('[data-plan-binding-ingredient="chicken-thighs"]');
   await planThigh.click();
   await expect(planThigh).toHaveAttribute('aria-pressed', 'true');
 
@@ -345,7 +345,7 @@ test('optional composition is editable in Plan and Actual without duplicating re
 
 test('Recipe without optional groups does not expose optional Checkout controls', async ({ page }) => {
   await page.goto('meal-builder/');
-  await startMeal(page, ['bone-in-chicken-thighs', 'fried-tofu-puffs']);
+  await startMeal(page, ['chicken-thighs', 'fried-tofu-puffs']);
   await page.locator('[data-meal-recipe="instant-pot-soy-chicken-thighs"] [data-select-recipe]').click();
   await page.locator('#meal-force-next').click();
   await page.locator('#meal-open-checkout').click();
