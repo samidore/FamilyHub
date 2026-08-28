@@ -63,7 +63,8 @@ ingredients:
       visible: true
       section: pork
       order: 50
-    tags: []
+    tags:
+      - child-eaten
   - id: soft-pork-ribs
     type: ingredient
     inventory_tracking: counted
@@ -89,8 +90,7 @@ ingredients:
       visible: true
       section: pork
       order: 70
-    tags:
-      - child-eaten
+    tags: []
   - id: pork-chops
     type: ingredient
     inventory_tracking: counted
