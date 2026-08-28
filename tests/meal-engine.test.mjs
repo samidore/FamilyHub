@@ -92,6 +92,18 @@ test('expiring feasible candidates sort before otherwise stronger candidates, ol
   assert.deepEqual(rankCandidates([fresh, staleNewer, staleOld], state, ingredients, {}, [], '2026-08-27').map((item) => item.id), ['r1', 'r2', 'r3']);
 });
 
+test('candidates reusing a selected bound ingredient move behind candidates using a different ingredient', () => {
+  const selectedTofu = recipe('r1', { protein: 1, vegetable: 0, staple: 0 }, { protein: false, vegetable: false }, [{ anyOf: ['tofu'], role: 'main-protein' }]);
+  const moreTofu = { ...recipe('r2', { protein: 1, vegetable: 0, staple: 0 }, { protein: false, vegetable: false }, [{ anyOf: ['tofu'], role: 'main-protein' }]), fitScore: 5 };
+  const chicken = { ...recipe('r3', { protein: 1, vegetable: 0, staple: 0 }, { protein: false, vegetable: false }, [{ anyOf: ['chicken'], role: 'main-protein' }]), fitScore: 1 };
+  const ingredients = [
+    { id: 'tofu', inventoryTracking: 'counted', inventoryFreshness: 'fifo', freshnessPriorityDays: 3 },
+    { id: 'chicken', inventoryTracking: 'counted' },
+  ];
+  const state = { ...defaultMealState(), proteinTarget: 3, stapleRequired: false, childMode: false, availableIngredientIds: ['tofu', 'chicken'], selectedRecipeIds: ['r1'], recipeIngredientBindings: { r1: ['tofu'] }, ingredientFreshnessDates: { tofu: '2026-08-18' } };
+  assert.deepEqual(rankCandidates([selectedTofu, moreTofu, chicken], state, ingredients, {}, [], '2026-08-27').map((item) => item.id), ['r3', 'r2']);
+});
+
 test('structured data keeps key Ingredient, Recipe, and unified optional-group relationships', async () => {
   const kb = await loadMealData();
   assert.equal(kb.ingredients.find((item) => item.id === 'zongzi')?.inventoryTracking, 'presence-only');
