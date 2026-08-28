@@ -24,6 +24,7 @@ export const NOTEBOOK_PRIORITY_LABELS: Record<NotebookPriority, string> = {
 };
 
 export const NOTEBOOK_COMPLETION_GRACE_MS = 60 * 60 * 1000;
+export const NOTEBOOK_RECURRING_BOARD_LAYOUT_ID = '__notebook-recurring-board__';
 
 export interface NotebookCompletedEntry {
   kind: 'item' | 'recurrence';
@@ -38,6 +39,10 @@ export interface NotebookSectionEntry {
   completedAt?: number;
   event?: NotebookCompletionEvent;
 }
+
+export type NotebookBoardLayoutEntry =
+  | { kind: 'recurring'; id: typeof NOTEBOOK_RECURRING_BOARD_LAYOUT_ID }
+  | { kind: 'board'; id: string; board: NotebookBoard };
 
 export const NOTEBOOK_RECURRING_GROUPS = [
   { key: 'overdue', label: '过期' },
@@ -56,6 +61,14 @@ export function orderedNotebookBoards(state: NotebookState, visibleOnly = false)
   return Object.values(state.boards)
     .filter((board) => !visibleOnly || board.visible)
     .sort((left, right) => left.order - right.order || left.createdAt - right.createdAt || left.id.localeCompare(right.id));
+}
+
+export function orderedNotebookBoardLayout(state: NotebookState, visibleOnly = false): NotebookBoardLayoutEntry[] {
+  const boards = orderedNotebookBoards(state);
+  const insertionIndex = Math.min(state.settings.recurringBoardOrder ?? 0, boards.length);
+  const layout: NotebookBoardLayoutEntry[] = boards.map((board) => ({ kind: 'board', id: board.id, board }));
+  layout.splice(insertionIndex, 0, { kind: 'recurring', id: NOTEBOOK_RECURRING_BOARD_LAYOUT_ID });
+  return visibleOnly ? layout.filter((entry) => entry.kind === 'recurring' || entry.board.visible) : layout;
 }
 
 export function notebookBoardIdsForItem(state: NotebookState, itemId: string): string[] {
@@ -321,5 +334,20 @@ export function reorderNotebookBoards(state: NotebookState, orderedBoardIds: str
     const board = next.boards[boardId];
     next.boards[boardId] = { ...board, order: index, updatedAt: board.order === index ? board.updatedAt : now };
   });
+  return normalizeNotebookState(next);
+}
+
+export function reorderNotebookBoardLayout(state: NotebookState, orderedLayoutIds: string[], now: number): NotebookState {
+  const expected = [...Object.keys(state.boards), NOTEBOOK_RECURRING_BOARD_LAYOUT_ID];
+  if (orderedLayoutIds.length !== expected.length || new Set(orderedLayoutIds).size !== expected.length || expected.some((id) => !orderedLayoutIds.includes(id))) return state;
+  const recurringBoardOrder = orderedLayoutIds.indexOf(NOTEBOOK_RECURRING_BOARD_LAYOUT_ID);
+  if (recurringBoardOrder < 0) return state;
+  const orderedBoardIds = orderedLayoutIds.filter((id) => id !== NOTEBOOK_RECURRING_BOARD_LAYOUT_ID);
+  const next = cloneNotebookState(state);
+  orderedBoardIds.forEach((boardId, index) => {
+    const board = next.boards[boardId];
+    next.boards[boardId] = { ...board, order: index, updatedAt: board.order === index ? board.updatedAt : now };
+  });
+  next.settings = { ...next.settings, recurringBoardOrder };
   return normalizeNotebookState(next);
 }
