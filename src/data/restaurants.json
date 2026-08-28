@@ -32,5 +32,29 @@
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Bloom%20Chicken%2C%20365%20Essex%20St%2C%20Hackensack%2C%20NJ%2007601",
     "yelpUrl": "https://www.yelp.com/biz/bloom-chicken-hackensack",
     "verifiedDate": "2026-08-28"
+  },
+  {
+    "id": "tatte-bakery-cafe-paramus",
+    "name": "Tatte Bakery & Cafe",
+    "description": "咖啡烘焙和早午餐，甜咸都有。",
+    "address": {
+      "line1": "93 W Spring Valley Ave",
+      "city": "Maywood",
+      "state": "NJ",
+      "postalCode": "07607"
+    },
+    "tags": ["咖啡馆", "烘焙"],
+    "dineIn": true,
+    "orderPlatforms": [
+      {
+        "name": "DoorDash",
+        "url": "https://www.doordash.com/store/tatte-bakery-%26-cafe-maywood-38242827/",
+        "modes": ["delivery"]
+      }
+    ],
+    "officialUrl": "https://tattebakery.com/locations/nj/maywood/93-w-spring-valley-ave/",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Tatte%20Bakery%20Cafe%2C%2093%20W%20Spring%20Valley%20Ave%2C%20Maywood%2C%20NJ%2007607",
+    "yelpUrl": null,
+    "verifiedDate": "2026-08-28"
   }
 ]
