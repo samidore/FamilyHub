@@ -7,6 +7,7 @@ export type RecipeChildCoverage = boolean | 'ingredient-dependent';
 export type IngredientChildCoverage = boolean | 'unknown';
 export type InventoryTracking = 'counted' | 'presence-only';
 export type InventoryFreshness = 'fifo';
+export type MealContribution = { protein: number; vegetable: number; staple: number };
 
 export interface MealIngredient {
   id: string;
@@ -17,6 +18,24 @@ export interface MealIngredient {
   inventoryFreshness?: InventoryFreshness;
   freshnessPriorityDays?: number;
   childCoverage?: { vegetable: IngredientChildCoverage };
+}
+
+export interface MealOptionalIngredient {
+  ingredientId: string;
+  contribution: MealContribution;
+  checkoutUnits: number;
+}
+
+export interface MealOptionalGroup {
+  id: string;
+  labelZh: string;
+  ingredients: MealOptionalIngredient[];
+}
+
+export interface SelectedAddon {
+  mainRecipeId: string;
+  addonType: string;
+  ingredientId: string;
 }
 
 export interface MealRequirement {
@@ -30,9 +49,10 @@ export interface MealRecipe {
   id: string;
   order: number;
   fitScore: number;
-  contribution: { protein: number; vegetable: number; staple: number };
+  contribution: MealContribution;
   childCoverage: { protein: RecipeChildCoverage; vegetable: RecipeChildCoverage };
   requirements: MealRequirement[];
+  optionalGroupIds?: string[];
   checkoutUnits?: Record<string, number>;
   ingredientChildCoverage?: Record<string, IngredientChildCoverage>;
   mealWindowMinutes: string;
@@ -51,6 +71,7 @@ export interface MealState {
   timePreference: TimePreference;
   selectedRecipeIds: string[];
   recipeIngredientBindings: Record<string, string[]>;
+  selectedAddons: SelectedAddon[];
   /** Oldest stocked-on date per freshness-tracked Ingredient for this meal snapshot. */
   ingredientFreshnessDates: Record<string, string>;
 }
@@ -65,11 +86,13 @@ export interface MealTotals {
 
 export const defaultMealState = (): MealState => ({
   availableIngredientIds: [], proteinTarget: 1, vegetableTarget: 2, stapleRequired: true, childMode: true, timePreference: 'any', selectedRecipeIds: [],
-  recipeIngredientBindings: {}, ingredientFreshnessDates: {},
+  recipeIngredientBindings: {}, selectedAddons: [], ingredientFreshnessDates: {},
 });
 
 const asSet = (value: Set<string> | string[] | undefined) => value instanceof Set ? value : new Set(value ?? []);
 const DATE_KEY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+const zeroContribution = (): MealContribution => ({ protein: 0, vegetable: 0, staple: 0 });
+const addContribution = (left: MealContribution, right: MealContribution): MealContribution => ({ protein: left.protein + right.protein, vegetable: left.vegetable + right.vegetable, staple: left.staple + right.staple });
 
 /** Local calendar date used for household stock entry; persisted dates contain no time zone. */
 export function calendarDateKey(value: Date | number = new Date()) {
@@ -127,13 +150,32 @@ const ingredientMap = (ingredients?: MealIngredient[] | Record<string, MealIngre
   return new Map(Object.entries(ingredients));
 };
 
+const optionalGroupMap = (groups: MealOptionalGroup[] = []) => new Map(groups.map((group) => [group.id, group]));
+
+export function optionalGroupsForRecipe(recipe: MealRecipe | undefined, groups: MealOptionalGroup[] = []) {
+  if (!recipe) return [];
+  const map = optionalGroupMap(groups);
+  return (recipe.optionalGroupIds ?? []).map((id) => map.get(id)).filter((group): group is MealOptionalGroup => Boolean(group));
+}
+
+export function optionalIngredientForRecipe(recipe: MealRecipe | undefined, groupId: string, ingredientId: string, groups: MealOptionalGroup[] = []) {
+  const group = optionalGroupsForRecipe(recipe, groups).find((candidate) => candidate.id === groupId);
+  return group?.ingredients.find((entry) => entry.ingredientId === ingredientId) ?? null;
+}
+
+export function selectedOptionalAddonsForRecipe(state: Pick<MealState, 'selectedAddons'>, recipe: MealRecipe | undefined, groups: MealOptionalGroup[] = []) {
+  if (!recipe) return [];
+  const seen = new Set<string>();
+  return (state.selectedAddons ?? []).filter((addon) => {
+    if (addon.mainRecipeId !== recipe.id || !optionalIngredientForRecipe(recipe, addon.addonType, addon.ingredientId, groups)) return false;
+    const key = `${addon.addonType}\u0000${addon.ingredientId}`;
+    if (seen.has(key)) return false;
+    seen.add(key); return true;
+  });
+}
+
 /** Oldest bound FIFO Ingredient age that has crossed its own priority threshold; zero means no freshness priority. */
-export function freshnessPriorityAgeDays(
-  binding: (string | null | undefined)[],
-  ingredientFreshnessDates: Record<string, string>,
-  ingredients: MealIngredient[] | Record<string, MealIngredient>,
-  today = calendarDateKey(),
-) {
+export function freshnessPriorityAgeDays(binding: (string | null | undefined)[], ingredientFreshnessDates: Record<string, string>, ingredients: MealIngredient[] | Record<string, MealIngredient>, today = calendarDateKey()) {
   const map = ingredientMap(ingredients);
   return binding.reduce((oldest, id) => {
     if (!id) return oldest;
@@ -145,22 +187,31 @@ export function freshnessPriorityAgeDays(
   }, 0);
 }
 
-function resolveCoverage(recipe: MealRecipe, slot: 'protein' | 'vegetable', binding: (string | null | undefined)[] = [], ingredients?: MealIngredient[] | Record<string, MealIngredient>) {
-  const declared = recipe.childCoverage?.[slot];
-  if (declared === true || declared === false) return declared;
-  if (declared !== 'ingredient-dependent') return false;
-  const map = ingredientMap(ingredients);
-  const relevant = recipe.requirements.flatMap((requirement, index) => {
+const ingredientChildEaten = (id: string | null | undefined, ingredients?: MealIngredient[] | Record<string, MealIngredient>) => Boolean(id && ingredientMap(ingredients).get(id)?.tags?.includes('child-eaten'));
+const recipeChildAll = (recipe: MealRecipe) => Boolean(recipe.tags?.includes('child-all-ingredients-eaten'));
+
+function relevantBoundIds(recipe: MealRecipe, slot: 'protein' | 'vegetable', binding: (string | null | undefined)[]) {
+  const ids = recipe.requirements.flatMap((requirement, index) => {
     const role = requirement.role ?? '';
     const matches = slot === 'protein' ? (role === 'protein' || role === 'main-protein' || role === 'supporting-protein') : role === 'vegetable';
     return matches ? [binding[index]] : [];
   });
-  const fallback = relevant.length ? relevant : binding;
-  return fallback.some((id) => {
+  return ids.length ? ids : binding;
+}
+
+function resolveCoverage(recipe: MealRecipe, slot: 'protein' | 'vegetable', binding: (string | null | undefined)[] = [], ingredients?: MealIngredient[] | Record<string, MealIngredient>) {
+  if (recipeChildAll(recipe) && recipe.contribution[slot] > 0) return true;
+  const relevant = relevantBoundIds(recipe, slot, binding);
+  if (relevant.some((id) => ingredientChildEaten(id, ingredients))) return true;
+  const declared = recipe.childCoverage?.[slot];
+  if (declared === true) return true;
+  if (declared === false) return false;
+  if (declared !== 'ingredient-dependent') return false;
+  const map = ingredientMap(ingredients);
+  return relevant.some((id) => {
     if (!id) return false;
     const explicit = recipe.ingredientChildCoverage?.[id];
-    const item = map.get(id);
-    return explicit === true || item?.childCoverage?.vegetable === true;
+    return explicit === true || map.get(id)?.childCoverage?.vegetable === true;
   });
 }
 
@@ -168,37 +219,50 @@ export const resolveRecipeChildCoverage = (recipe: MealRecipe, binding: (string 
   protein: resolveCoverage(recipe, 'protein', binding, ingredients), vegetable: resolveCoverage(recipe, 'vegetable', binding, ingredients),
 });
 
-/** Checkout-only candidates. This deliberately has no planning or Cook View effect. */
-export function easyBraiseAddonIngredientIds(recipes: MealRecipe[], state: Pick<MealState, 'selectedRecipeIds' | 'recipeIngredientBindings'>, mealSnapshotIngredientIds: string[], ingredients: MealIngredient[] | Record<string, MealIngredient>): string[] {
-  const selected = new Set(state.selectedRecipeIds);
-  if (!recipes.some((recipe) => selected.has(recipe.id) && recipe.tags?.includes('iron-pan-braise'))) return [];
-  const bound = new Set(Object.values(state.recipeIngredientBindings).flat());
-  const map = ingredientMap(ingredients);
-  return [...new Set(mealSnapshotIngredientIds)].filter((id) => !bound.has(id) && map.get(id)?.tags?.includes('easy-braise-addon'));
+export function optionalIngredientChildCoverage(recipe: MealRecipe, entry: MealOptionalIngredient, ingredients?: MealIngredient[] | Record<string, MealIngredient>) {
+  const eligible = recipeChildAll(recipe) || ingredientChildEaten(entry.ingredientId, ingredients);
+  return { protein: eligible && entry.contribution.protein > 0, vegetable: eligible && entry.contribution.vegetable > 0 };
+}
+
+function selectedOptionalContribution(recipe: MealRecipe, state: Pick<MealState, 'selectedAddons'>, groups: MealOptionalGroup[], ingredients?: MealIngredient[] | Record<string, MealIngredient>) {
+  let contribution = zeroContribution(); let childProtein = false; let childVegetable = false;
+  for (const addon of selectedOptionalAddonsForRecipe(state, recipe, groups)) {
+    const entry = optionalIngredientForRecipe(recipe, addon.addonType, addon.ingredientId, groups); if (!entry) continue;
+    contribution = addContribution(contribution, entry.contribution);
+    const coverage = optionalIngredientChildCoverage(recipe, entry, ingredients);
+    childProtein ||= coverage.protein; childVegetable ||= coverage.vegetable;
+  }
+  return { contribution, childProtein, childVegetable };
 }
 
 export function aggregateMeal(selected: MealRecipe[], context: {
   bindings?: Record<string, (string | null | undefined)[]>;
   recipeIngredientBindings?: Record<string, (string | null | undefined)[]>;
+  selectedAddons?: SelectedAddon[];
+  optionalGroups?: MealOptionalGroup[];
   availableIngredientIds?: string[];
   ingredients?: MealIngredient[] | Record<string, MealIngredient>;
 } = {}): MealTotals {
   const available = asSet(context.availableIngredientIds);
   const bindings = context.bindings ?? context.recipeIngredientBindings ?? {};
+  const optionState = { selectedAddons: context.selectedAddons ?? [] };
   return selected.reduce<MealTotals>((total, recipe) => {
     const binding = bindings[recipe.id] ?? (available.size ? bindRecipeIngredients(recipe, available) : []);
     const coverage = resolveRecipeChildCoverage(recipe, binding, context.ingredients);
-    total.protein += recipe.contribution.protein; total.vegetable += recipe.contribution.vegetable; total.staple += recipe.contribution.staple;
-    total.childProtein ||= coverage.protein; total.childVegetable ||= coverage.vegetable;
+    const optional = selectedOptionalContribution(recipe, optionState, context.optionalGroups ?? [], context.ingredients);
+    total.protein += recipe.contribution.protein + optional.contribution.protein;
+    total.vegetable += recipe.contribution.vegetable + optional.contribution.vegetable;
+    total.staple += recipe.contribution.staple + optional.contribution.staple;
+    total.childProtein ||= coverage.protein || optional.childProtein;
+    total.childVegetable ||= coverage.vegetable || optional.childVegetable;
     return total;
   }, { protein: 0, vegetable: 0, staple: 0, childProtein: false, childVegetable: false });
 }
 
-export const aggregateSelection = (recipes: MealRecipe[], state: MealState, ingredients?: MealIngredient[] | Record<string, MealIngredient>) => aggregateMeal(recipes.filter((recipe) => state.selectedRecipeIds.includes(recipe.id)), { recipeIngredientBindings: state.recipeIngredientBindings, availableIngredientIds: state.availableIngredientIds, ingredients });
+export const aggregateSelection = (recipes: MealRecipe[], state: MealState, ingredients?: MealIngredient[] | Record<string, MealIngredient>, optionalGroups: MealOptionalGroup[] = []) => aggregateMeal(recipes.filter((recipe) => state.selectedRecipeIds.includes(recipe.id)), { recipeIngredientBindings: state.recipeIngredientBindings, selectedAddons: state.selectedAddons, optionalGroups, availableIngredientIds: state.availableIngredientIds, ingredients });
 
 export type MealCompletionRequirement = 'Protein' | 'Vegetable' | 'Staple' | '孩子蛋白' | '孩子蔬菜';
 
-/** Return unmet targets in the same order used by the builder progress display. */
 export function unmetCompletionRequirements(state: MealState, totals: MealTotals): MealCompletionRequirement[] {
   const unmet: MealCompletionRequirement[] = [];
   if (totals.protein < state.proteinTarget) unmet.push('Protein');
@@ -227,11 +291,26 @@ export function recentRecipePenalty(recipeId: string, recentRecipeIds: string[][
   return recentRecipeIds.reduce((penalty, ids, index) => ids.includes(recipeId) ? Math.max(penalty, recentRecipeIds.length - index) : penalty, 0);
 }
 
-export function rankCandidates(recipes: MealRecipe[], state: MealState, ingredients: MealIngredient[] | Record<string, MealIngredient> = [], draftBindings: Record<string, (string | null | undefined)[]> = {}, recentRecipeIds: string[][] = [], today = calendarDateKey()) {
+function potentialOptional(recipe: MealRecipe, state: MealState, groups: MealOptionalGroup[], ingredients: MealIngredient[] | Record<string, MealIngredient>) {
+  const available = asSet(state.availableIngredientIds);
+  let contribution = zeroContribution(); let childProtein = false; let childVegetable = false;
+  for (const group of optionalGroupsForRecipe(recipe, groups)) {
+    for (const entry of group.ingredients.filter((candidate) => available.has(candidate.ingredientId))) {
+      contribution.protein = Math.max(contribution.protein, entry.contribution.protein);
+      contribution.vegetable = Math.max(contribution.vegetable, entry.contribution.vegetable);
+      contribution.staple = Math.max(contribution.staple, entry.contribution.staple);
+      const coverage = optionalIngredientChildCoverage(recipe, entry, ingredients);
+      childProtein ||= coverage.protein; childVegetable ||= coverage.vegetable;
+    }
+  }
+  return { contribution, childProtein, childVegetable };
+}
+
+export function rankCandidates(recipes: MealRecipe[], state: MealState, ingredients: MealIngredient[] | Record<string, MealIngredient> = [], draftBindings: Record<string, (string | null | undefined)[]> = {}, recentRecipeIds: string[][] = [], today = calendarDateKey(), optionalGroups: MealOptionalGroup[] = []) {
   const available = asSet(state.availableIngredientIds);
   const selectedIds = new Set(state.selectedRecipeIds);
   const selected = recipes.filter((recipe) => selectedIds.has(recipe.id));
-  const totals = aggregateMeal(selected, { recipeIngredientBindings: state.recipeIngredientBindings, availableIngredientIds: state.availableIngredientIds, ingredients });
+  const totals = aggregateMeal(selected, { recipeIngredientBindings: state.recipeIngredientBindings, selectedAddons: state.selectedAddons, optionalGroups, availableIngredientIds: state.availableIngredientIds, ingredients });
   const proteinLimit = state.proteinTarget + PROTEIN_TARGET_TOLERANCE;
   const freshnessDates = state.ingredientFreshnessDates ?? {};
   const cache = new Map<string, ReturnType<typeof measure>>();
@@ -249,36 +328,36 @@ export function rankCandidates(recipes: MealRecipe[], state: MealState, ingredie
     const next = { protein: totals.protein + recipe.contribution.protein, vegetable: totals.vegetable + recipe.contribution.vegetable, staple: totals.staple + recipe.contribution.staple };
     const childSolved = childValue(coverage);
     const normalGaps = Number(totals.protein < state.proteinTarget && recipe.contribution.protein > 0) + Number(totals.vegetable < state.vegetableTarget && recipe.contribution.vegetable > 0) + Number(state.stapleRequired && totals.staple < 1 && recipe.contribution.staple > 0);
+    const potential = potentialOptional(recipe, state, optionalGroups, ingredients);
+    const potentialGaps = Number(totals.protein < state.proteinTarget && potential.contribution.protein > 0) + Number(totals.vegetable < state.vegetableTarget && potential.contribution.vegetable > 0) + Number(state.stapleRequired && totals.staple < 1 && potential.contribution.staple > 0);
+    const potentialChild = Number(state.childMode && !totals.childProtein && potential.childProtein) + Number(state.childMode && !totals.childVegetable && potential.childVegetable);
     const withinProteinTolerance = next.protein <= proteinLimit;
     const overage = Math.max(0, next.protein - proteinLimit) + Math.max(0, next.vegetable - state.vegetableTarget) + Math.max(0, next.staple - (state.stapleRequired ? 1 : 0));
     const oldestAgeDays = freshnessPriorityAgeDays(binding, freshnessDates, ingredients, today);
     const stalePriority = oldestAgeDays > 0;
-    return { binding, childSolved, normalGaps, withinProteinTolerance, overage, oldestAgeDays, stalePriority, time: timeFit(recipe, state.timePreference) };
+    return { binding, childSolved, normalGaps, potentialGaps, potentialChild, withinProteinTolerance, overage, oldestAgeDays, stalePriority, time: timeFit(recipe, state.timePreference) };
   }
 
-  const measures = (recipe: MealRecipe) => {
-    const cached = cache.get(recipe.id); if (cached) return cached;
-    const value = measure(recipe); cache.set(recipe.id, value); return value;
-  };
+  const measures = (recipe: MealRecipe) => { const cached = cache.get(recipe.id); if (cached) return cached; const value = measure(recipe); cache.set(recipe.id, value); return value; };
 
   return recipes.filter((recipe) => {
     if (selectedIds.has(recipe.id)) return false;
     const value = measures(recipe);
     if (!isFeasible(recipe, available, value.binding)) return false;
-    if (value.childSolved > 0) return true;
-    if (value.normalGaps === 0) return false;
-    if (!value.withinProteinTolerance && value.normalGaps === 1 && recipe.contribution.protein > 0 && totals.protein >= state.proteinTarget) return false;
-    return true;
+    if (value.childSolved > 0 || value.normalGaps > 0 || value.potentialChild > 0 || value.potentialGaps > 0) return true;
+    return false;
   }).sort((a, b) => {
     const x = measures(a); const y = measures(b);
     const staleOrder = Number(y.stalePriority) - Number(x.stalePriority);
     const staleAgeOrder = x.stalePriority && y.stalePriority ? y.oldestAgeDays - x.oldestAgeDays : 0;
-    return y.childSolved - x.childSolved
+    return staleOrder
+      || staleAgeOrder
+      || y.childSolved - x.childSolved
       || Number(y.withinProteinTolerance) - Number(x.withinProteinTolerance)
       || y.normalGaps - x.normalGaps
       || x.overage - y.overage
-      || staleOrder
-      || staleAgeOrder
+      || y.potentialChild - x.potentialChild
+      || y.potentialGaps - x.potentialGaps
       || recentRecipePenalty(a.id, recentRecipeIds) - recentRecipePenalty(b.id, recentRecipeIds)
       || b.fitScore - a.fitScore
       || x.time.rank - y.time.rank
@@ -286,9 +365,9 @@ export function rankCandidates(recipes: MealRecipe[], state: MealState, ingredie
   });
 }
 
-/** Keep selected Recipes and bindings coherent without letting the availability filter rewrite an existing selection. */
-export function reconcileMealState(input: Partial<MealState>, recipes: MealRecipe[], _ingredients: MealIngredient[] | Record<string, MealIngredient> = []): MealState {
-  const state: MealState = { ...defaultMealState(), ...input, recipeIngredientBindings: { ...(input.recipeIngredientBindings ?? {}) }, ingredientFreshnessDates: { ...(input.ingredientFreshnessDates ?? {}) } };
+/** Keep selected Recipes, bindings, and planned optional choices coherent without letting the availability filter rewrite an existing selection. */
+export function reconcileMealState(input: Partial<MealState>, recipes: MealRecipe[], _ingredients: MealIngredient[] | Record<string, MealIngredient> = [], optionalGroups: MealOptionalGroup[] = []): MealState {
+  const state: MealState = { ...defaultMealState(), ...input, recipeIngredientBindings: { ...(input.recipeIngredientBindings ?? {}) }, selectedAddons: [...(input.selectedAddons ?? [])], ingredientFreshnessDates: { ...(input.ingredientFreshnessDates ?? {}) } };
   const available = asSet(state.availableIngredientIds);
   const keptRecipes: string[] = [];
   const bindings: Record<string, string[]> = {};
@@ -304,17 +383,17 @@ export function reconcileMealState(input: Partial<MealState>, recipes: MealRecip
     if (binding.some((value) => value === null)) continue;
     keptRecipes.push(id); bindings[id] = binding.filter((value): value is string => Boolean(value));
   }
-  return { ...state, availableIngredientIds: [...available], selectedRecipeIds: keptRecipes, recipeIngredientBindings: bindings };
+  const kept = new Set(keptRecipes);
+  const recipeMap = new Map(recipes.map((recipe) => [recipe.id, recipe]));
+  const selectedAddons = state.selectedAddons.filter((addon) => kept.has(addon.mainRecipeId) && (optionalGroups.length === 0 || Boolean(optionalIngredientForRecipe(recipeMap.get(addon.mainRecipeId), addon.addonType, addon.ingredientId, optionalGroups))));
+  return { ...state, availableIngredientIds: [...available], selectedRecipeIds: keptRecipes, recipeIngredientBindings: bindings, selectedAddons };
 }
 
-/** Recipe checkout units are strict when present; otherwise each bound/add-on Ingredient counts once per selected Recipe. */
+/** Base Recipe checkout units only; optional units are resolved from the central optional registry. */
 export function checkoutUnitsForSelection(recipes: MealRecipe[], state: MealState): Record<string, number> {
   const totals: Record<string, number> = {};
   for (const recipe of recipes.filter((item) => state.selectedRecipeIds.includes(item.id))) {
-    const usedIds = [...new Set([
-      ...(state.recipeIngredientBindings[recipe.id] ?? []),
-    ])];
-    for (const id of usedIds) totals[id] = (totals[id] ?? 0) + (recipe.checkoutUnits?.[id] ?? 1);
+    for (const id of [...new Set(state.recipeIngredientBindings[recipe.id] ?? [])]) totals[id] = (totals[id] ?? 0) + (recipe.checkoutUnits?.[id] ?? 1);
   }
   return totals;
 }
