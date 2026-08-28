@@ -14,7 +14,7 @@ fit_score: 4
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
-  - boneless-skinless-chicken-thighs
+  - chicken-thighs
 supporting_protein_ingredient_ids:
   - chinese-sausage
 vegetable_ingredient_ids: []
@@ -37,7 +37,7 @@ equipment:
   - covered steamer / heatproof plate
 burner_plan: Medium burner for covered steaming; high-output burner remains available.
 child_suitable: yes
-child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
+child_texture: 鸡腿去骨切小并蒸嫩后适合孩子；当前无已知拒绝。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -45,23 +45,23 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - ingredient_id: boneless-skinless-chicken-thighs
+  - ingredient_id: chicken-thighs
     role: main-protein
   - ingredient_id: chinese-sausage
     role: supporting-protein
 steps:
-  - 准备：主料切成厚度尽量一致的片/小块；加入全部腌料抓匀，静置15–20分钟。；配菜切薄；把肉在浅盘中摊成尽量单层，较厚块不要堆在盘中心。；蒸锅加足水并先烧到持续沸腾，再把盘子上锅。
+  - 准备：鸡腿如带骨先去骨；取约340 g去骨后净肉切成厚度尽量一致的片/小块，加入全部腌料抓匀，静置15–20分钟。香肠切薄片；把鸡肉在浅盘中摊成尽量单层，香肠均匀铺开，较厚鸡块不要堆在盘中心。蒸锅加足水并先烧到持续沸腾，再把盘子上锅。
   - 水已大开后上锅，立刻盖严；保持中大火让蒸汽持续稳定。
-  - 先蒸到主料表面完全变色；打开锅盖只做一次中心熟度检查，避免频繁放掉蒸汽。
-  - 如盘中有配菜，看到配菜变软、肉汁由浑浊转清且中心达到安全温度即可关火。
+  - 先蒸到鸡肉表面完全变色；打开锅盖只做一次中心熟度检查，避免频繁放掉蒸汽。
+  - 鸡肉中心达到165°F/74°C即可关火；香肠应完全热透。
   - 关火后等30秒再开盖，避免蒸汽烫伤；将盘中汁轻轻拌匀，不额外淋大量热油。
-  - 孩子份先盛出并检查骨头、硬筋或大块香菇；剪成易咀嚼大小。
-  - 完成提示：肉中心熟透但仍有汁；盘汁清亮、不见粉红肉汁；配菜软而不烂。
-  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
-child_serving: 取较嫩、较淡的部分，必要时剪成小块。
+  - 孩子份先盛出鸡肉并剪成易咀嚼大小；香肠按家庭现有孩子食用规则处理。
+  - 完成提示：鸡肉中心熟透但仍有汁；盘汁清亮、不见粉红肉汁。
+  - 安全提示：鸡肉最厚处达到165°F/74°C。
+child_serving: 取较嫩、较淡的鸡肉部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
-  - 无骨去皮鸡腿肉：340 g
+  - 鸡腿：去骨后净肉 340 g；买到带骨的先去骨后称量
   - 中式香肠：1根，约80–100 g
   - 蒸鸡腌料：蚝油 2 Tbsp；生抽 2 tsp；糖 1.5 tsp；盐 1/4 tsp；白胡椒 1小撮；绍兴酒 2 tsp；玉米淀粉 2 tsp；芝麻油 1 tsp

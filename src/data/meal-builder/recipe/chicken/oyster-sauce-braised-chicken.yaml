@@ -16,7 +16,7 @@ primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
   - chicken-drumsticks
-  - bone-in-chicken-thighs
+  - chicken-thighs
 supporting_protein_ingredient_ids: []
 optional_groups:
   - one-pot-mix
@@ -40,7 +40,7 @@ equipment:
   - covered pot / braiser
 burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: yes
-child_texture: 成品肉可软嫩，但必须由成人去骨。
+child_texture: 成品肉可软嫩；带骨版本的孩子份必须由成人彻底去骨。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -50,21 +50,21 @@ detail_level: cookable
 ingredients:
   - one_of:
       - chicken-drumsticks
-      - bone-in-chicken-thighs
+      - chicken-thighs
     role: main-protein
 steps:
-  - 准备：鸡肉擦干；若皮很多可剪去明显多余脂肪。；焖汁混匀。
-  - 宽锅中火，鸡皮面朝下煎约3分钟到浅金黄；翻面再煎1–2分钟。
-  - 加入姜蒜和焖汁，煮开后转小火盖盖15分钟。
-  - 翻面，再盖盖15分钟；最厚处测到165°F/74°C。
+  - 准备：鸡小腿或鸡腿擦干；若皮很多可剪去明显多余脂肪。焖汁混匀。
+  - 宽锅中火：有皮的皮面朝下煎约3分钟到浅金黄；无皮鸡腿加1 tsp油煎较平的一面。翻面再煎1–2分钟。
+  - 加入姜蒜和焖汁，煮开后转小火。鸡小腿或带骨鸡腿盖盖15分钟；无骨鸡腿盖盖10分钟。
+  - 翻面后继续盖盖：鸡小腿或带骨鸡腿再15分钟；无骨鸡腿再8–10分钟起检查。最厚处达到165°F/74°C即可开盖收汁。
   - 开盖转中火，把汁减少；每2–3分钟给鸡肉淋汁。
   - 汁从水状变成刚能薄挂勺时关火，不收到浓咸膏状。
-  - 孩子份去骨、去软骨并剪小。
+  - 孩子份：带骨版本彻底去骨、去软骨并剪小；无骨鸡腿直接剪小。
   - 完成提示：鸡肉熟透软嫩；汁能薄挂勺、锅底仍有可舀汁。
-  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
-child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
+  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处并避开骨头。
+child_serving: 带骨版本由成人彻底去骨并检查碎骨/硬软骨后剪小；无骨版本直接剪小。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
-  - 带骨鸡腿/鸡小腿：4个 leg quarters 或约900–1100 g
+  - 鸡腿 / 鸡小腿：约900–1100 g；鸡腿带骨或无骨均可
   - 蚝油焖汁：低盐鸡汤 2 cups；生抽 2 Tbsp；蚝油 3 Tbsp；姜 5片；蒜 3瓣

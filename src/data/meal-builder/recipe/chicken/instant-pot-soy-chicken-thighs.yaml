@@ -14,7 +14,7 @@ fit_score: 5
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
-  - bone-in-chicken-thighs
+  - chicken-thighs
 supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids: []
 meal_contribution:
@@ -35,7 +35,7 @@ equipment:
   - 9-quart Instant Pot
 burner_plan: Instant Pot carries the main cooking load and frees both burners.
 child_suitable: yes
-child_texture: 成品肉可软嫩，但必须由成人去骨。
+child_texture: 成品肉可软嫩；本次若使用带骨鸡腿，孩子份必须由成人彻底去骨。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -43,21 +43,21 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - ingredient_id: bone-in-chicken-thighs
+  - ingredient_id: chicken-thighs
     role: main-protein
 steps:
-  - 准备：鸡腿擦干；酱汁混匀。；如做 pot-in-pot 米饭，确保上层容器不接触鸡肉且不超过锅内安全装载线；米水比仍按家里实际米种。
+  - 准备：鸡腿擦干，带骨或无骨都可；酱汁混匀。如做 pot-in-pot 米饭，确保上层容器不接触鸡肉且不超过锅内安全装载线；米水比仍按家里实际米种。
   - 鸡腿放下层内胆，倒入酱汁并刮净锅底；架好上层饭盆（如使用）。
-  - 锁盖，High Pressure 10分钟；结束后自然泄压5分钟，再手动排余压。
-  - 开盖后测最厚鸡肉达到165°F/74°C；不足则Sauté轻煮或再加压短时间。
+  - 锁盖：带骨鸡腿 High Pressure 10分钟；无骨鸡腿 High Pressure 8分钟。结束后都自然泄压5分钟，再手动排余压。
+  - 开盖后测最厚鸡肉达到165°F/74°C；带骨件测肉最厚处并避开骨头。不足则Sauté轻煮或再加压短时间。
   - 把鸡腿夹出；若汁太稀，Sauté中火煮到从水状变成薄挂勺。
   - 鸡腿回锅翻匀即可；此 Instant Pot 路线不附加 `easy-braise checkout`。
-  - 孩子份去骨、去明显软骨后剪小。
+  - 孩子份：若本次使用带骨鸡腿，彻底去骨并检查碎骨/硬软骨；无骨鸡腿直接剪小。
   - 完成提示：鸡腿完全熟且嫩；酱汁只是薄挂勺，不浓缩成重咸糖浆。
-  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
-child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
+  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处并避开骨头。
+child_serving: 带骨版本由成人彻底去骨并检查碎骨/硬软骨后剪小；无骨版本直接剪小。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
-  - 带骨鸡腿：900 g
+  - 鸡腿：约900 g，带骨或无骨均可；无骨按净肉重量
   - 酱油压力汁：水 1 cup；生抽 2 Tbsp；绍兴酒 1 Tbsp；糖 1 Tbsp；姜 5片；葱白 2段

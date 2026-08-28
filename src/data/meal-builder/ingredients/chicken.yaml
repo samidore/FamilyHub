@@ -1,12 +1,12 @@
 ingredients:
-  - id: boneless-skinless-chicken-thighs
+  - id: chicken-thighs
     type: ingredient
     inventory_tracking: counted
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
-    name_zh: 无骨去皮鸡腿肉
-    name_en: Boneless Skinless Chicken Thighs
+    name_zh: 鸡腿
+    name_en: Chicken Thighs
     starter:
       visible: true
       section: chicken
@@ -63,19 +63,6 @@ ingredients:
       visible: true
       section: chicken
       order: 50
-    tags: []
-  - id: bone-in-chicken-thighs
-    type: ingredient
-    inventory_tracking: counted
-    inventory_freshness: fifo
-    freshness_priority_days: 3
-    status: candidate
-    name_zh: 带骨鸡腿
-    name_en: Bone-In Chicken Thighs
-    starter:
-      visible: true
-      section: chicken
-      order: 60
     tags: []
   - id: frozen-chicken-patties
     type: ingredient

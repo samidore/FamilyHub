@@ -60,6 +60,8 @@ households/{householdId}/state/inventoryBatches/{ingredientId}/{YYYY-MM-DD} = po
 
 The runtime keeps the sum of dated batches equal to the aggregate counted quantity. Same-day additions merge, later dates remain distinct, and decreases consume oldest dates first. Existing aggregate FIFO stock with no batch metadata is deterministically migrated to `2026-08-18`; this is a release migration marker, not a claimed historical purchase date.
 
+Content version 1.24 has one explicit Ingredient-ID migration: legacy `boneless-skinless-chicken-thighs` and `bone-in-chicken-thighs` both canonicalize to `chicken-thighs`. Canonicalization occurs before normal unknown-ID filtering. If more than one of those keys exists, aggregate quantities are added; FIFO quantities are merged by date; the oldest freshness-snapshot date wins; and current-meal availability, bindings, exclusions, legacy flat checkout draft, and Recipe-scoped Checkout Actual Ingredient IDs are rewritten to the canonical ID. On the first connected read that still contains either legacy ID, the Firebase repository commits the canonicalized state with a Realtime Database transaction. Subsequent reads contain only `chicken-thighs`.
+
 Current-meal ranking stores only the oldest-date snapshot it needs:
 
 ```text
@@ -110,7 +112,7 @@ The older flat `checkoutDraft/{ingredientId}` shape is retained only for persist
 - Checkout is transaction-safe: validate every Recipe Actual draft, aggregate all Recipe quantities by Ingredient, validate the aggregate against current inventory, consume FIFO batches from oldest to newest, then commit aggregate inventory, batch metadata, recent meal, and next meal atomically. A stale meal or invalid quantity must not partially decrement either aggregate or batch state.
 - Counted Checkout defaults and +/- controls share the same global available quantity across Recipe cards; one Ingredient cannot be independently over-allocated by each Recipe card.
 - Presence-only `用完` booleans aggregate with logical OR across Recipes.
-- Unknown/archived IDs already present in household state are ignored by reconciliation. Never reuse an archived ID for a new record.
+- Unknown/archived IDs already present in household state are ignored by reconciliation unless an explicit release migration maps them first. The only current aliases are the two retired chicken-thigh IDs mapped to `chicken-thighs`; retired IDs are never reused.
 
 ## Verification
 
@@ -120,9 +122,10 @@ The older flat `checkoutDraft/{ingredientId}` shape is retained only for persist
 4. In Recipes, select a `one_of` choice and optional Ingredient. Open Checkout on the other device; confirm Actual starts from that Plan, then change the `one_of` and optional choices and verify the original Plan fields are unchanged.
 5. Use the same counted Ingredient in two Recipe Actual cards. Confirm default/+ controls do not allocate more than the live global total.
 6. Checkout a quantity that crosses two FIFO batches. Confirm the final aggregated quantity consumes the oldest batch first and aggregate inventory changes by the same total amount.
-7. Set enrollment closed. Confirm existing members reconnect after a browser restart without another login.
-8. Sign in with a different Gmail. Confirm it sees a pending-approval state, cannot access shared state, and creates only its own access request.
-9. Approve the request by creating its member record and confirm the page connects.
-10. Run `pnpm run test:rules` with the Firebase emulator, plus the full project verification gate.
+7. For a controlled legacy-state test, seed both retired chicken-thigh IDs with different FIFO dates, reconnect once, and confirm the database contains only `chicken-thighs`, with summed aggregate quantity, merged dated batches, and the oldest current-meal freshness date preserved.
+8. Set enrollment closed. Confirm existing members reconnect after a browser restart without another login.
+9. Sign in with a different Gmail. Confirm it sees a pending-approval state, cannot access shared state, and creates only its own access request.
+10. Approve the request by creating its member record and confirm the page connects.
+11. Run `pnpm run test:rules` with the Firebase emulator, plus the full project verification gate.
 
 Clearing browser site data, explicitly logging out, or revoking Google access requires login again. Never commit Gmail addresses, UIDs, tokens, household inventory, or meal state. Local emulator runs require Java; GitHub-hosted Ubuntu runners provide it.

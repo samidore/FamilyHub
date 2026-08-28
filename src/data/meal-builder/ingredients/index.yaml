@@ -25,12 +25,11 @@ categories:
     visible: true
     file: chicken.yaml
     ingredient_ids:
-      - boneless-skinless-chicken-thighs
+      - chicken-thighs
       - chicken-breast
       - whole-chicken-wings
       - party-wings
       - chicken-drumsticks
-      - bone-in-chicken-thighs
       - frozen-chicken-patties
       - whole-chicken
       - chicken-gizzards

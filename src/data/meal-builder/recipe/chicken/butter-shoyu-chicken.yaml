@@ -14,7 +14,7 @@ fit_score: 4
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
-  - boneless-skinless-chicken-thighs
+  - chicken-thighs
 supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids: []
 meal_contribution:
@@ -36,7 +36,7 @@ equipment:
   - nonstick pan or iron pan as appropriate
 burner_plan: Medium burner by default; use the iron pan/high-output burner only when a hard sear is the point of the dish.
 child_suitable: yes
-child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
+child_texture: 可通过去骨、切块和焖嫩形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -44,21 +44,21 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - ingredient_id: boneless-skinless-chicken-thighs
+  - ingredient_id: chicken-thighs
     role: main-protein
 steps:
-  - 准备：鸡肉擦干，加盐胡椒。；液体调味混匀；黄油单独留到最后。
+  - 准备：鸡腿如带骨先去骨；鸡皮和明显多余脂肪可按喜好去掉。取约450 g去骨后净肉切大块，加盐胡椒。液体调味混匀；黄油单独留到最后。
   - 不粘锅中火加1 tsp油，鸡肉单层煎到第一面金黄，再翻面。
   - 转中小火盖2–3分钟，直到鸡肉接近熟透。
   - 开盖倒入液体调味，转中大火翻匀。
   - 最厚处达到165°F/74°C后加入黄油，持续晃锅让黄油乳化进汁。
   - 汁变光亮、能薄挂鸡肉时立即关火；不要继续收到油水分离。
   - 完成提示：鸡肉熟透；汁乳化发亮、薄挂表面，没有明显油水分层。
-  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
+  - 安全提示：最厚处达到165°F/74°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
-  - 无骨去皮鸡腿肉：450 g，切大块
+  - 鸡腿：去骨后净肉 450 g，切大块；买到带骨的先去骨后称量
   - 黄油酱油汁：生抽 2.5 Tbsp；清酒 2 Tbsp；味醂 1 Tbsp；糖 1 Tbsp；无盐黄油 1 Tbsp
   - 鸡肉基础调味：盐 1/4 tsp；黑胡椒 1/8 tsp

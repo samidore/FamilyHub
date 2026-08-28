@@ -11,6 +11,7 @@ import {
   type Inventory,
 } from './household.ts';
 import type { MealIngredient, MealRecipe, MealState } from './mealEngine.ts';
+import { hasLegacyChickenThighIngredientIds, migrateLegacyChickenThighIngredientIds } from './mealIngredientIdMigration.ts';
 import {
   FirebaseHouseholdSession,
   googleIdentity,
@@ -79,6 +80,10 @@ function cloneState(state: HouseholdState): HouseholdState {
   return JSON.parse(JSON.stringify(state)) as HouseholdState;
 }
 
+function normalizePersistedState(value: unknown, ingredients?: MealIngredient[] | Record<string, MealIngredient>) {
+  return normalizeHouseholdState(migrateLegacyChickenThighIngredientIds(value), ingredients);
+}
+
 export class LocalHouseholdRepository implements HouseholdRepository {
   readonly kind = 'local' as const;
   readonly householdId: string;
@@ -99,8 +104,11 @@ export class LocalHouseholdRepository implements HouseholdRepository {
     this.browserWindow = options.window ?? (typeof window === 'undefined' ? undefined : window);
     this.ingredients = options.ingredients;
     this.recipes = options.recipes;
-    try { this.state = normalizeHouseholdState(JSON.parse(this.storage.getItem(this.key) ?? 'null'), this.ingredients); }
-    catch { this.state = normalizeHouseholdState(undefined, this.ingredients); }
+    try {
+      const stored = JSON.parse(this.storage.getItem(this.key) ?? 'null');
+      this.state = normalizePersistedState(stored, this.ingredients);
+      if (hasLegacyChickenThighIngredientIds(stored)) this.storage.setItem(this.key, JSON.stringify(this.state));
+    } catch { this.state = normalizePersistedState(undefined, this.ingredients); }
     if (options.broadcast !== false && this.browserWindow && typeof BroadcastChannel !== 'undefined') {
       this.channel = new BroadcastChannel(this.key);
       this.channel.addEventListener('message', (event) => this.receive(event.data));
@@ -113,7 +121,7 @@ export class LocalHouseholdRepository implements HouseholdRepository {
   subscribe(listener: StateListener) { this.listeners.add(listener); listener(this.getSnapshot(), this.getStatus()); return () => this.listeners.delete(listener); }
 
   async update(mutator: (current: HouseholdState) => HouseholdState) {
-    const current = normalizeHouseholdState(JSON.parse(this.storage.getItem(this.key) ?? 'null'), this.ingredients);
+    const current = normalizePersistedState(JSON.parse(this.storage.getItem(this.key) ?? 'null'), this.ingredients);
     const proposed = mutator(cloneState(current));
     const next = normalizeHouseholdState(reconcileInventoryBatchState(current, proposed, this.ingredients), this.ingredients);
     this.persist(next);
@@ -144,11 +152,11 @@ export class LocalHouseholdRepository implements HouseholdRepository {
   private readonly handleStorage = (event: StorageEvent) => { if (event.key === this.key && event.newValue) this.receive(JSON.parse(event.newValue)); };
   private receive(value: unknown) {
     const incoming = value && typeof value === 'object' && 'state' in value ? (value as { state: unknown }).state : value;
-    this.state = normalizeHouseholdState(incoming as Partial<HouseholdState>, this.ingredients);
+    this.state = normalizePersistedState(incoming as Partial<HouseholdState>, this.ingredients);
     this.emit();
   }
   private persist(next: HouseholdState) {
-    this.state = normalizeHouseholdState(next, this.ingredients);
+    this.state = normalizePersistedState(next, this.ingredients);
     this.storage.setItem(this.key, JSON.stringify(this.state));
     this.channel?.postMessage(this.state);
     this.emit();
@@ -237,7 +245,13 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
       const snapshot = await import('firebase/database').then(({ get }) => get(this.stateRef));
       if (this.disposed || this.session.getStatus().connection !== 'connected') return;
       this.connectedUid = sessionStatus.uid;
-      this.setStateFromSnapshot(snapshot);
+      if (hasLegacyChickenThighIngredientIds(snapshot.val())) {
+        const migration = await runTransaction(this.stateRef, (value) => normalizePersistedState(value, this.ingredients));
+        if (this.disposed || this.session.getStatus().connection !== 'connected') return;
+        this.setState(normalizePersistedState(migration.snapshot.val(), this.ingredients));
+      } else {
+        this.setStateFromSnapshot(snapshot);
+      }
       this.setStatus(this.fromSessionStatus(sessionStatus));
       this.unsubscribeState = onValue(this.stateRef, (next) => this.setStateFromSnapshot(next), (error) => { if (!this.disposed) this.fail('Firebase 实时连接中断', error); });
       return;
@@ -254,15 +268,15 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
 
   private async remoteTransaction(mutator: (state: HouseholdState) => HouseholdState) {
     const transaction = await runTransaction(this.stateRef, (value) => {
-      const current = normalizeHouseholdState(value, this.ingredients);
+      const current = normalizePersistedState(value, this.ingredients);
       const proposed = mutator(cloneState(current));
       return normalizeHouseholdState(reconcileInventoryBatchState(current, proposed, this.ingredients), this.ingredients);
     });
-    return normalizeHouseholdState(transaction.snapshot.val(), this.ingredients);
+    return normalizePersistedState(transaction.snapshot.val(), this.ingredients);
   }
   private assertReady() { if (this.status.connection !== 'connected') throw new Error(this.status.error ?? 'Firebase repository is not ready'); }
-  private setStateFromSnapshot(snapshot: DataSnapshot) { this.setState(normalizeHouseholdState(snapshot.val(), this.ingredients)); }
-  private setState(next: HouseholdState) { this.state = normalizeHouseholdState(next, this.ingredients); this.emit(); }
+  private setStateFromSnapshot(snapshot: DataSnapshot) { this.setState(normalizePersistedState(snapshot.val(), this.ingredients)); }
+  private setState(next: HouseholdState) { this.state = normalizePersistedState(next, this.ingredients); this.emit(); }
   private stopStateSubscription() { this.unsubscribeState?.(); this.unsubscribeState = undefined; }
   private setStatus(status: RepositoryStatus) { this.status = status; this.emit(); }
   private fail(label: string, error: unknown) {

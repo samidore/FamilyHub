@@ -15,7 +15,7 @@ fit_score: 4
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
-  - bone-in-chicken-thighs
+  - chicken-thighs
 supporting_protein_ingredient_ids: []
 optional_groups:
   - one-pot-mix
@@ -39,7 +39,7 @@ equipment:
   - covered pot / braiser
 burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
 child_suitable: yes
-child_texture: 成品肉可软嫩，但必须由成人去骨。
+child_texture: 成品肉可软嫩；本次若使用带骨鸡腿，孩子份必须由成人彻底去骨。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -47,21 +47,21 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - ingredient_id: bone-in-chicken-thighs
+  - ingredient_id: chicken-thighs
     role: main-protein
 steps:
-  - 准备：鸡肉擦干；卤汁全部量好。
-  - 厚锅中火把鸡皮面向下干煎或加1 tsp油煎至浅褐，再翻面1–2分钟。
+  - 准备：鸡腿擦干，带骨或无骨都可；卤汁全部量好。
+  - 厚锅中火：有皮鸡腿皮面向下干煎到浅褐；无皮鸡腿加1 tsp油，较平的一面煎到浅褐。翻面再煎1–2分钟。
   - 加入醋、生抽、水、蒜、黑胡椒和月桂叶；煮开后转小火。
-  - 盖盖留缝轻煨约25–35分钟，中途翻一次；最厚肉处避骨测到165°F/74°C。
+  - 盖盖留缝轻煨；带骨鸡腿约25–35分钟，无骨鸡腿20分钟起检查。中途翻一次；最厚肉处达到165°F/74°C即可进入收汁。
   - 鸡肉熟后先盛出；酱汁中火煮几分钟，让醋味变柔、液体略收浓。
   - 鸡肉回锅翻裹1–2分钟；酱汁仍应可流动，不要收到糖浆状或死咸。
-  - 孩子份彻底去骨去软骨、少带浓汁；成人可另加黑胡椒。
+  - 孩子份：带骨版本彻底去骨去软骨；无骨版本直接剪小。都少带浓汁；成人可另加黑胡椒。
   - 完成提示：鸡肉熟透且软嫩；卤汁酸香、薄挂表面但仍能流动。
-  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
-child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
+  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处并避开骨头。
+child_serving: 带骨版本由成人彻底去骨并检查碎骨/硬软骨后剪小；无骨版本直接剪小。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
-  - 带骨鸡腿/鸡小腿：900 g
+  - 鸡腿：约900 g，带骨或无骨均可
   - Adobo 卤汁（按约900 g鸡肉缩放）：米醋/甘蔗醋 1/3 cup；生抽 3 Tbsp；水 3 Tbsp；蒜 5瓣，拍裂；黑胡椒粒 2 tsp；月桂叶 2片；糖 1/2 tsp，可省

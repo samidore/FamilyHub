@@ -15,7 +15,7 @@ fit_score: 5
 primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
-  - boneless-skinless-chicken-thighs
+  - chicken-thighs
 supporting_protein_ingredient_ids: []
 optional_groups:
   - one-pot-mix
@@ -39,7 +39,7 @@ equipment:
   - nonstick pan or iron pan as appropriate
 burner_plan: Medium burner by default; use the iron pan/high-output burner only when a hard sear is the point of the dish.
 child_suitable: yes
-child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
+child_texture: 可通过去骨、切条和焖嫩形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -47,10 +47,10 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - ingredient_id: boneless-skinless-chicken-thighs
+  - ingredient_id: chicken-thighs
     role: main-protein
 steps:
-  - 准备：鸡腿擦干；厚处轻划一刀或拍平，使厚度接近。；照烧汁完全混匀。
+  - 准备：鸡腿如带骨先去骨；鸡皮可按喜好留或去。取约680 g去骨后净肉擦干，厚处轻划一刀或拍平，使厚度接近；照烧汁完全混匀。
   - 不粘锅中火加2 tsp油，鸡腿较平的一面朝下单层放入；煎到能轻松翻面且呈金黄。
   - 翻面后转中小火，盖盖2–4分钟，让最厚处接近熟透。
   - 打开盖，倒掉锅中明显多余油脂；倒入照烧汁，转中大火。
@@ -58,10 +58,10 @@ steps:
   - 最厚处达到165°F/74°C，且汁只剩薄薄能挂肉的一层时立即关火。
   - 静置2分钟切条；孩子份先盛出，成人可加七味粉。
   - 完成提示：鸡肉熟透仍多汁；照烧汁呈薄亮膜，不在锅底积一滩也不焦黑。
-  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
+  - 安全提示：最厚处达到165°F/74°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
-  - 无骨去皮鸡腿肉：680 g，较大块可切半
+  - 鸡腿：去骨后净肉 680 g，较大块可切半；买到带骨的先去骨后称量
   - 照烧汁 2:2:2:1：生抽 2 Tbsp；味醂 2 Tbsp；清酒 2 Tbsp；糖 1 Tbsp

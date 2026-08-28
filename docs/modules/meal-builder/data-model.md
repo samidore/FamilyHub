@@ -37,27 +37,24 @@ Treat each Recipe or Ingredient change as one transaction:
 ## Ingredient record
 
 ```yaml
-id: boneless-skinless-chicken-thighs
+id: chicken-thighs
 type: ingredient
 inventory_tracking: counted # counted | presence-only
 inventory_freshness: fifo   # optional; fifo only
 freshness_priority_days: 3  # required with fifo; strict age > threshold
 status: candidate
-name_zh: 无骨去皮鸡腿肉
-name_en: Boneless Skinless Chicken Thighs
+name_zh: 鸡腿
+name_en: Chicken Thighs
 starter:
   visible: true
   section: chicken
   order: 10
-tags:
-  - child-eaten
-child_coverage:
-  vegetable: unknown
+tags: []
 ```
 
 `starter.visible: false` retains a long-term ID without showing a button. Every visible Ingredient has one controlled section and a unique positive order. `inventory_tracking` is the source of truth: `counted` uses half-unit quantities and `presence-only` stores boolean presence. Runtime code must not infer tracking mode from Ingredient IDs.
 
-`inventory_freshness` is optional. `fifo` means the household runtime keeps dated half-unit batches for that counted Ingredient and consumes the oldest batch first. Every FIFO Ingredient also declares `freshness_priority_days`, a positive integer used by candidate ranking and the Recipes `临期` badge. The threshold is strict: an Ingredient becomes freshness-priority only when its oldest snapshot age is greater than the declared value; equality does not qualify. `freshness_priority_days` is static Ingredient data and is not stored in Firebase household state. The aggregate inventory quantity remains the user-facing total; batch quantities must sum to that total. Runtime age is derived from batch dates and is never stored as a separate age counter.
+`inventory_freshness` is optional. `fifo` means the household runtime keeps dated half-unit batches for that counted Ingredient and consumes the oldest batch first. Every FIFO Ingredient also declares `freshness_priority_days`, a positive integer used by candidate ranking and the Recipes freshness badge. The threshold is strict: an Ingredient becomes freshness-priority only when its oldest snapshot age is greater than the declared value; equality does not qualify. `freshness_priority_days` is static Ingredient data and is not stored in Firebase household state. The aggregate inventory quantity remains the user-facing total; batch quantities must sum to that total. Runtime age is derived from batch dates and is never stored as a separate age counter.
 
 The current explicit FIFO scope is fresh pork, chicken, beef, lamb/goat; non-frozen leafy and other vegetables; and soft tofu, firm tofu, egg tofu, and pressed tofu. Their current `freshness_priority_days` values are 3 for fresh meat, 5 for non-frozen vegetables, and 7 for the four fresh tofu Ingredients. Fish/shellfish, mushrooms, eggs, dry tofu products, frozen/processed meats, frozen vegetables, staples, and pantry items currently omit both freshness fields. Changing the scope or threshold later means changing the canonical Ingredient record, not adding ID- or section-based runtime rules.
 
@@ -121,9 +118,11 @@ A current meal stores only the oldest date needed for its ranking snapshot:
 currentMeal/ingredientFreshnessDates/{ingredientId} = YYYY-MM-DD
 ```
 
-This is deliberately not a copy of full batch quantities or static threshold data. Entering/resnapshotting Recipes refreshes the availability and oldest-date snapshot; later inventory edits do not rewrite a meal already being planned. Candidate ranking and the `临期` badge combine that frozen date with the current canonical Ingredient's `freshness_priority_days`. Checkout still validates against live aggregate inventory and live FIFO batches atomically.
+This is deliberately not a copy of full batch quantities or static threshold data. Entering/resnapshotting Recipes refreshes the availability and oldest-date snapshot; later inventory edits do not rewrite a meal already being planned. Candidate ranking and the freshness badge combine that frozen date with the current canonical Ingredient's `freshness_priority_days`. Checkout still validates against live aggregate inventory and live FIFO batches atomically.
 
 Pre-existing aggregate FIFO stock that has no batch metadata is migrated once to `2026-08-18`. The migration date is intentionally coarse: it provides deterministic ordering for stock known to predate the feature without claiming a historical purchase date that was never recorded.
+
+Content version 1.24 merges the former `boneless-skinless-chicken-thighs` and `bone-in-chicken-thighs` identities into the canonical `chicken-thighs` Ingredient. Persisted-state migration runs **before** normal unknown-ID filtering. Aggregate quantities are added, FIFO batches on the same date are added while distinct dates remain distinct, the oldest legacy freshness-snapshot date becomes the canonical date, and current-meal availability, bindings, exclusions, and Checkout Plan/Actual Ingredient IDs are rewritten to `chicken-thighs`. Local storage rewrites the canonical state when legacy IDs are read; a connected Firebase repository detects legacy raw state and commits the same conversion with a Realtime Database transaction. The two retired IDs are migration aliases only and must not return as active Ingredient records or Recipe requirements.
 
 ## Recipe record
 
@@ -141,7 +140,7 @@ primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
   - chicken-drumsticks
-  - bone-in-chicken-thighs
+  - chicken-thighs
 supporting_protein_ingredient_ids: []
 optional_groups:
   - one-pot-mix
@@ -165,10 +164,10 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - one_of: [chicken-drumsticks, bone-in-chicken-thighs]
+  - one_of: [chicken-drumsticks, chicken-thighs]
     role: main-protein
 cook_ingredients:
-  - 带骨鸡腿/鸡小腿：约900–1100 g
+  - 鸡腿 / 鸡小腿：约900–1100 g；鸡腿带骨或无骨均可
 steps:
   - 按完整 Cook View 步骤执行。
 child_serving: ''
@@ -221,4 +220,4 @@ Checkout starts from Plan but may change a `one_of` binding, remove a planned op
 - Recipe Ingredient IDs, `one_of` options, required supporting-protein metadata IDs, optional-group IDs/members, starter sections, and active index entries must resolve. No duplicate IDs, unknown fields, invalid values, unsafe paths, filename/ID mismatch, or unindexed active file is allowed.
 - Active data must not reintroduce the retired `optional_supporting_protein_ingredient_ids`, `easy-braise-addon`, or `iron-pan-braise` systems.
 - Deprecated fields `vegetable_count`, `staple_pairings`, and `child_support_protein_needed` must not return in active records.
-- Archive records are validated for schema and privacy but never emitted as active candidates. Unknown archived IDs already present in Firebase household state are ignored by reconciliation; new IDs are never silently reused.
+- Archive records are validated for schema and privacy but never emitted as active candidates. Unknown archived IDs already present in Firebase household state are ignored by reconciliation. Explicit release migrations may canonicalize named legacy IDs before that filtering; currently `boneless-skinless-chicken-thighs` and `bone-in-chicken-thighs` map only to `chicken-thighs`. Retired IDs are never reused.

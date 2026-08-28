@@ -14,7 +14,7 @@ fit_score: 5
 primary_role: mixed
 main_protein_category: chicken
 main_protein_ingredient_ids:
-  - boneless-skinless-chicken-thighs
+  - chicken-thighs
 supporting_protein_ingredient_ids:
   - eggs
 optional_groups:
@@ -41,7 +41,7 @@ equipment:
   - separately cooked rice
 burner_plan: Medium burner for topping; rice is treated as an already-cooked or separately cooked staple.
 child_suitable: yes
-child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
+child_texture: 鸡腿去骨切小并煮嫩后适合孩子；当前无已知拒绝。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -49,7 +49,7 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - ingredient_id: boneless-skinless-chicken-thighs
+  - ingredient_id: chicken-thighs
     role: main-protein
   - ingredient_id: eggs
     role: supporting-protein
@@ -58,7 +58,7 @@ ingredients:
   - ingredient_id: rice
     role: integral-staple
 steps:
-  - 准备：鸡腿切均匀块；洋葱切薄片。；鸡蛋只轻轻划散，保留少量蛋白蛋黄纹理。
+  - 准备：鸡腿如带骨先去骨；鸡皮和明显多余脂肪可去掉。取约340 g去骨后净肉切2.5 cm块；洋葱切薄片。鸡蛋只轻轻划散，保留少量蛋白蛋黄纹理。
   - 宽锅放丼汁和洋葱，中火煮开后转中小火，煮到洋葱软而仍有形。
   - 加入鸡肉单层铺开，盖盖中小火煮到鸡肉接近熟透；中途翻一次。
   - 确认鸡肉最厚处达到165°F/74°C；先把约2/3蛋液绕圈倒入，盖20–30秒。
@@ -66,12 +66,12 @@ steps:
   - 连汁一起分到3碗热饭上；汁应湿润米饭但不是汤泡饭。
   - 孩子份先确认鸡肉块大小并剪小。
   - 完成提示：鸡肉熟透、洋葱软甜；蛋完全凝固但仍嫩；锅内留足够丼汁湿润米饭。
-  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
+  - 安全提示：鸡肉最厚处达到165°F/74°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
-  - 无骨去皮鸡腿肉：340 g，切2.5 cm块
+  - 鸡腿：去骨后净肉 340 g，切2.5 cm块；买到带骨的先去骨后称量
   - 鸡蛋：4个，轻轻打散
   - 洋葱：1个，约200 g，薄切
   - 米饭：3碗熟饭
