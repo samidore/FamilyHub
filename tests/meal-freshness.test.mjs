@@ -156,16 +156,26 @@ test('one_of prefers older stock only when that does not lose required child cov
   assert.deepEqual(draftBindings['choose-veg'], ['child-veg']);
 });
 
-test('Recipes shows only compact hourglass 临期 freshness badges', async () => {
+test('Recipes freshness badges show ingredient names and frozen stock ages in red outlined hourglass controls', async () => {
   const page = await readFile('src/pages/meal-builder.astro', 'utf8');
+  const enhancement = await readFile('src/components/MealBuilderFreshnessEnhancements.astro', 'utf8');
+  const layout = await readFile('src/layouts/BaseLayout.astro', 'utf8');
   assert.match(page, /data-selected-freshness-badge/);
   assert.match(page, /data-candidate-freshness-badge/);
-  assert.equal(page.match(/data-freshness-icon="hourglass"/g)?.length, 2);
-  assert.equal(page.match(/<span>临期<\/span>/g)?.length, 2);
+  assert.match(layout, /MealBuilderFreshnessEnhancements/);
+  assert.match(enhancement, /freshnessAgeDays\(meal\.ingredientFreshnessDates\[ingredientId\]/);
+  assert.match(enhancement, /document\.createTextNode\(`\$\{signal\.label\} \$\{signal\.ageDays\}天`\)/);
+  assert.match(enhancement, /for \(const signal of signals\)/);
+  assert.match(enhancement, /svg\.dataset\.freshnessIcon = 'hourglass'/);
+  assert.match(enhancement, /\.meal-freshness-item \{/);
+  assert.match(enhancement, /border: 1px solid #b53a3a;/);
+  assert.match(enhancement, /border-radius: 6px;/);
+  assert.match(enhancement, /color: #a12f2f;/);
+  assert.match(enhancement, /> span:not\(\.meal-freshness-item\) \{ display: none; \}/);
+  assert.doesNotMatch(enhancement, /textContent\s*=\s*['"]临期/);
   assert.match(page, /freshnessPriorityDays: ingredient\.freshnessPriorityDays/);
   assert.match(page, /freshnessPriorityAgeDays\(binding, state\.ingredientFreshnessDates, ingredients\)/);
   assert.doesNotMatch(page, /STALE_INGREDIENT_PRIORITY_DAYS/);
   assert.doesNotMatch(page, /优先消耗/);
   assert.doesNotMatch(page, /超过 3 天的鲜肉、蔬菜和豆腐/);
-  assert.doesNotMatch(page, /最老\s*\d+\s*天/);
 });
