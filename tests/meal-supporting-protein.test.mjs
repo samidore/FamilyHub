@@ -38,7 +38,7 @@ test('central optional groups replace per-Recipe optional protein allow-lists wi
 test('leafy greens one-of remains complete after optional-group migration', async () => {
   const data = parseMealFiles(await readMealFiles());
   const choySum = data.ingredients.find((ingredient) => ingredient.id === 'choy-sum');
-  assert.equal(choySum?.nameZh, '油菜心 / 菜心');
+  assert.equal(choySum?.nameZh, '油菜苗');
   assert.equal(choySum?.tags.includes('easy-braise-addon'), false);
 
   const leafy = data.recipes.find((recipe) => recipe.id === 'simple-stir-fried-leafy-greens');
