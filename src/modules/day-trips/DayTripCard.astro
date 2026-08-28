@@ -99,7 +99,7 @@ const searchable = [
   .trip-household-interactions { display: grid; gap: 12px; margin: 16px 0; padding-top: 14px; border-top: 1px solid var(--line); }
   .trip-reactions { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
   .trip-reaction-buttons { display: flex; gap: 8px; }
-  .trip-reaction-buttons button { width: 48px; min-height: 44px; border: 1px solid #b8c5bc; border-radius: 12px; background: #fff; font-size: 20px; cursor: pointer; }
+  .trip-reaction-buttons button { width: 48px; min-height: 48px; border: 1px solid #b8c5bc; border-radius: 12px; background: #fff; font-size: 20px; cursor: pointer; }
   .trip-reaction-buttons button[aria-pressed="true"] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 13%, white); box-shadow: inset 0 0 0 1px var(--accent); }
   .trip-reaction-buttons button:disabled { cursor: default; opacity: .42; }
   .trip-reaction-people { display: flex; align-items: center; gap: 9px; min-height: 32px; }
@@ -113,16 +113,16 @@ const searchable = [
   :global(.trip-comment__meta) { display: flex; justify-content: space-between; align-items: center; gap: 8px; color: #665f56; font-size: 13px; }
   :global(.trip-comment p) { margin: 5px 0; white-space: pre-wrap; }
   :global(.trip-comment__actions) { display: flex; gap: 8px; }
-  :global(.trip-comment__actions button) { border: 0; background: none; padding: 5px 0; color: var(--accent); cursor: pointer; font-weight: 700; }
+  :global(.trip-comment__actions button) { min-height: 48px; border: 0; background: none; padding: 5px 0; color: var(--accent); cursor: pointer; font-weight: 700; }
   :global(.trip-comment-expand-row) { list-style: none; }
   :global(.trip-comment-expand), :global(.trip-comment-add) { border: 0; margin: 0; padding: 0; }
-  :global(.trip-comment-expand > summary), :global(.trip-comment-add > summary) { width: fit-content; min-height: 40px; display: flex; align-items: center; cursor: pointer; color: var(--accent); font-weight: 700; list-style: none; }
+  :global(.trip-comment-expand > summary), :global(.trip-comment-add > summary) { width: fit-content; min-height: 48px; display: flex; align-items: center; cursor: pointer; color: var(--accent); font-weight: 700; list-style: none; }
   :global(.trip-comment-expand > summary::-webkit-details-marker), :global(.trip-comment-add > summary::-webkit-details-marker) { display: none; }
   :global(.trip-comment-expand__open) { display: none; }
   :global(.trip-comment-expand[open] .trip-comment-expand__closed) { display: none; }
   :global(.trip-comment-expand[open] .trip-comment-expand__open) { display: inline; }
   :global(.trip-comment-form) { display: grid; gap: 7px; }
   :global(.trip-comment-form textarea) { width: 100%; resize: vertical; border: 1px solid #b8c5bc; border-radius: 9px; padding: 9px; font: inherit; }
-  :global(.trip-comment-form button) { width: fit-content; min-height: 40px; border: 0; border-radius: 9px; padding: 7px 14px; background: var(--accent); color: white; font-weight: 700; }
+  :global(.trip-comment-form button) { width: fit-content; min-height: 48px; border: 0; border-radius: 9px; padding: 7px 14px; background: var(--accent); color: white; font-weight: 700; }
   :global(.trip-interaction-warning) { margin: 5px 0 0; color: #8e2c21; font-size: 13px; font-weight: 700; }
 </style>
