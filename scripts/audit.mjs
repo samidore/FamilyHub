@@ -94,7 +94,7 @@ const expectedOptionalGroups = [
 assert(JSON.stringify(meals.optionalGroups.map((group) => [group.id, group.labelZh])) === JSON.stringify(expectedOptionalGroups), 'Meal Builder optional groups do not match the canonical registry');
 assert(meals.optionalGroups.every((group) => new Set(group.ingredients.map((entry) => entry.ingredientId)).size === group.ingredients.length), 'A Meal Builder optional group contains duplicate Ingredient IDs');
 assert(meals.optionalGroups.find((group) => group.id === 'one-pot-mix')?.ingredients.length === 23, 'One-pot-mix must keep the migrated 23-Ingredient membership');
-assert(meals.recipes.filter((recipe) => recipe.optionalGroupIds?.includes('one-pot-mix')).length === 36, 'One-pot-mix Recipe scope must keep the migrated 36 Recipes');
+assert(meals.recipes.filter((recipe) => recipe.optionalGroupIds?.includes('one-pot-mix')).length === 40, 'One-pot-mix Recipe scope must keep the migrated 40 Recipes');
 assert(meals.recipes.filter((recipe) => recipe.optionalGroupIds?.includes('add-some-richness')).length === 6, 'Add-some-richness must be referenced by the six vegetable structures');
 assert(meals.recipes.filter((recipe) => recipe.optionalGroupIds?.includes('change-it-up')).length === 3, 'Change-it-up must be referenced by the three current base Recipes');
 const legacyEasyBraiseIds = meals.ingredients.filter((ingredient) => ingredient.tags?.includes('easy-braise-addon')).map((ingredient) => ingredient.id);
