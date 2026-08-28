@@ -2,13 +2,16 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   NOTEBOOK_COMPLETION_GRACE_MS,
+  NOTEBOOK_RECURRING_BOARD_LAYOUT_ID,
   addNotebookItem,
   notebookItemsForSection,
   notebookNextGraceExpiry,
   notebookSectionEntries,
   notebookUrgentActiveItems,
   notebookUrgentVisibleItems,
+  orderedNotebookBoardLayout,
   orderedNotebookBoards,
+  reorderNotebookBoardLayout,
   reorderNotebookBoards,
   reorderNotebookSection,
   setNotebookItemBoards,
@@ -119,4 +122,15 @@ test('board reorder rewrites dense shared order', () => {
   assert.deepEqual(orderedNotebookBoards(state).map((entry) => entry.id), ['b', 'a']);
   assert.equal(state.boards.b.order, 0);
   assert.equal(state.boards.a.order, 1);
+});
+
+test('recurring board participates in shared board layout order', () => {
+  const initial = baseState();
+  assert.deepEqual(orderedNotebookBoardLayout(initial).map((entry) => entry.id), [NOTEBOOK_RECURRING_BOARD_LAYOUT_ID, 'a', 'b']);
+
+  const state = reorderNotebookBoardLayout(initial, ['a', NOTEBOOK_RECURRING_BOARD_LAYOUT_ID, 'b'], 10);
+  assert.deepEqual(orderedNotebookBoardLayout(state).map((entry) => entry.id), ['a', NOTEBOOK_RECURRING_BOARD_LAYOUT_ID, 'b']);
+  assert.equal(state.settings.recurringBoardOrder, 1);
+  assert.equal(state.boards.a.order, 0);
+  assert.equal(state.boards.b.order, 1);
 });
