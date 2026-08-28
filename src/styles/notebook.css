@@ -17,7 +17,7 @@
   button:disabled { opacity: .45; cursor: not-allowed; }
   .secondary-button, .quiet-button, .icon-button, .drag-handle { background: #fffdf8; color: #2f4f45; border-color: #b6aa99; }
   .danger-button { background: #fff8f7; color: #9a3027; border-color: #c97c73; }
-  .quiet-button { min-height: 40px; padding: .35rem .65rem; }
+  .quiet-button { min-height: 48px; padding: .35rem .65rem; }
   .icon-button, .drag-handle { min-width: 48px; padding: .35rem; }
   .drag-handle { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-user-drag: none; -webkit-touch-callout: none; }
   .is-pointer-dragging { position: relative; z-index: 4; opacity: .72; box-shadow: 0 8px 24px rgb(38 35 31 / 18%); }
@@ -64,9 +64,9 @@
   .notebook-author-icon--generic .generic-head, .notebook-author-icon--generic .generic-body { fill: #81766b; }
   .notebook-item__controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; margin-top: .7rem; }
   .notebook-item__controls label { font-size: .88rem; color: #615a51; }
-  .notebook-item__controls select { min-height: 44px; }
+  .notebook-item__controls select { min-height: 48px; }
   .notebook-recurring-status, .notebook-completion-control { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; align-items: center; color: #615a51; font-size: .88rem; font-weight: 700; }
-  .notebook-recurring-status button, .notebook-completion-control button { min-height: 44px; }
+  .notebook-recurring-status button, .notebook-completion-control button { min-height: 48px; }
   .notebook-grace-note { color: #315d48; font-weight: 700; }
   .notebook-item__meta { display: flex; flex-wrap: wrap; gap: .4rem .75rem; margin-top: .65rem; color: #665f56; font-size: .92rem; }
   .notebook-item__body { display: grid; gap: .75rem; margin-top: .75rem; border-top: 1px solid #eee8df; padding-top: .7rem; }
@@ -79,7 +79,7 @@
   .notebook-comment__meta { display: flex; justify-content: space-between; gap: .5rem; color: #665f56; font-size: .9rem; margin-bottom: .25rem; }
   .notebook-comment-expand-row { list-style: none; }
   .notebook-comment-expand, .notebook-comment-add { border: 0; margin: 0; padding: 0; }
-  .notebook-comment-expand > summary, .notebook-comment-add > summary { width: fit-content; min-height: 40px; display: flex; align-items: center; cursor: pointer; color: #2f4f45; font-weight: 700; list-style: none; }
+  .notebook-comment-expand > summary, .notebook-comment-add > summary { width: fit-content; min-height: 48px; display: flex; align-items: center; cursor: pointer; color: #2f4f45; font-weight: 700; list-style: none; }
   .notebook-comment-expand > summary::-webkit-details-marker, .notebook-comment-add > summary::-webkit-details-marker { display: none; }
   .notebook-comment-expand__open { display: none; }
   .notebook-comment-expand[open] .notebook-comment-expand__closed { display: none; }
