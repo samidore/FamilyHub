@@ -4,7 +4,7 @@ status: candidate
 name_zh: 日式煮白萝卜
 name_en: Japanese-Style Simmered Daikon
 tags:
-  - iron-pan-braise
+  - child-all-ingredients-eaten
   - light-seasoning
   - non-spicy-base
   - simmered
@@ -18,6 +18,8 @@ primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids:
   - daikon
 meal_contribution:
