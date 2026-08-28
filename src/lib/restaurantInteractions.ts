@@ -6,7 +6,7 @@ import {
   type FirebaseConfig,
   type HouseholdSessionStatus,
 } from './householdSession.ts';
-import { get, onValue, ref, runTransaction, type DatabaseReference, type DataSnapshot } from 'firebase/database';
+import { get, onValue, ref, update, type DatabaseReference, type DataSnapshot } from 'firebase/database';
 
 export type RestaurantRatingScore = 1 | 2 | 3 | 4 | 5;
 
@@ -82,6 +82,7 @@ const isRecord = (value: unknown): value is Record<string, unknown> => Boolean(v
 const positiveTimestamp = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value) && value > 0;
 const ratingScore = (value: unknown): value is RestaurantRatingScore => typeof value === 'number' && Number.isInteger(value) && value >= 1 && value <= 5;
 const clone = (state: RestaurantInteractionState) => structuredClone(state);
+const sameValue = (left: unknown, right: unknown) => JSON.stringify(left) === JSON.stringify(right);
 
 export const defaultRestaurantInteractionState = (): RestaurantInteractionState => ({ ratings: {}, wants: {}, comments: {}, inbox: {} });
 
@@ -151,6 +152,33 @@ export function normalizeRestaurantInteractionState(value: unknown): RestaurantI
     }
   }
   return { ratings, wants, comments, inbox };
+}
+
+function diffFlatCollection<T>(prefix: string, current: Record<string, T>, next: Record<string, T>, patch: Record<string, unknown>) {
+  for (const id of new Set([...Object.keys(current), ...Object.keys(next)])) {
+    if (sameValue(current[id], next[id])) continue;
+    patch[`${prefix}/${id}`] = next[id] ?? null;
+  }
+}
+
+function diffNestedCollection<T>(prefix: string, current: Record<string, Record<string, T>>, next: Record<string, Record<string, T>>, patch: Record<string, unknown>) {
+  for (const parentId of new Set([...Object.keys(current), ...Object.keys(next)])) {
+    const currentChildren = current[parentId] ?? {};
+    const nextChildren = next[parentId] ?? {};
+    for (const childId of new Set([...Object.keys(currentChildren), ...Object.keys(nextChildren)])) {
+      if (sameValue(currentChildren[childId], nextChildren[childId])) continue;
+      patch[`${prefix}/${parentId}/${childId}`] = nextChildren[childId] ?? null;
+    }
+  }
+}
+
+export function restaurantInteractionLeafPatch(current: RestaurantInteractionState, next: RestaurantInteractionState): Record<string, unknown> {
+  const patch: Record<string, unknown> = {};
+  diffNestedCollection('ratings', current.ratings, next.ratings, patch);
+  diffNestedCollection('wants', current.wants, next.wants, patch);
+  diffFlatCollection('comments', current.comments, next.comments, patch);
+  diffFlatCollection('inbox', current.inbox, next.inbox, patch);
+  return patch;
 }
 
 export function restaurantCommentsFor(state: RestaurantInteractionState, restaurantId: string): RestaurantComment[] {
@@ -331,8 +359,13 @@ export class FirebaseRestaurantInteractionRepository implements RestaurantIntera
   async transaction(mutator: (current: RestaurantInteractionState) => RestaurantInteractionState) {
     await this.ready.catch(() => undefined);
     this.assertReady();
-    const transaction = await runTransaction(this.interactionsRef, (value) => normalizeRestaurantInteractionState(mutator(normalizeRestaurantInteractionState(value))));
-    this.setStateFromSnapshot(transaction.snapshot);
+    const snapshot = await get(this.interactionsRef);
+    const current = normalizeRestaurantInteractionState(snapshot.val());
+    const next = normalizeRestaurantInteractionState(mutator(clone(current)));
+    const patch = restaurantInteractionLeafPatch(current, next);
+    if (Object.keys(patch).length) await update(this.interactionsRef, patch);
+    const refreshed = await get(this.interactionsRef);
+    this.setStateFromSnapshot(refreshed);
     return this.getSnapshot();
   }
   signInWithGoogle() { return this.session.signInWithGoogle(); }
