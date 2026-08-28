@@ -4,20 +4,14 @@ import { parse, stringify } from 'yaml';
 import { readMealFiles } from '../scripts/load-meal-data.mjs';
 import { parseMealFiles } from '../src/data/mealParser.mjs';
 
-test('optional supporting protein allow-lists are preserved and validated without replacing required supporting metadata', async () => {
+test('central optional groups replace per-Recipe optional protein allow-lists without replacing required supporting metadata', async () => {
   const files = await readMealFiles();
   const data = parseMealFiles(files);
-  const leafy = data.recipes.find((recipe) => recipe.id === 'simple-stir-fried-leafy-greens');
-  assert(leafy);
-  assert(leafy.supportingProteinIngredientIds.includes('pork-chops'));
-  assert(leafy.supportingProteinIngredientIds.includes('thin-sliced-pork-belly'));
-  assert(leafy.supportingProteinIngredientIds.includes('peeled-shrimp'));
-  assert.equal(leafy.supportingProteinIngredientIds.includes('ground-pork'), false);
-
-  const requiredSupporting = data.recipes.find((recipe) => recipe.id === 'pressed-tofu-pork-strips');
-  assert(requiredSupporting);
-  assert(requiredSupporting.requiredSupportingProteinIngredientIds.includes('pressed-tofu'));
-  assert.equal(requiredSupporting.supportingProteinIngredientIds.length, 0);
+  const richness = data.optionalGroups.find((group) => group.id === 'add-some-richness');
+  assert(richness);
+  for (const id of ['pork-chops', 'thin-sliced-pork-belly', 'ground-pork', 'ground-beef', 'peeled-shrimp']) {
+    assert(richness.ingredients.some((entry) => entry.ingredientId === id), `${id} should be centrally available in add-some-richness`);
+  }
 
   const compatibleRecipeIds = [
     'simple-stir-fried-leafy-greens',
@@ -30,33 +24,35 @@ test('optional supporting protein allow-lists are preserved and validated withou
   for (const id of compatibleRecipeIds) {
     const recipe = data.recipes.find((candidate) => candidate.id === id);
     assert(recipe, `${id} is missing`);
-    assert(recipe.supportingProteinIngredientIds.includes('pork-chops'), `${id} should allow pork chops`);
+    assert.deepEqual(recipe.optionalGroupIds, ['add-some-richness']);
+    assert.equal(recipe.supportingProteinIngredientIds.length, 0);
   }
 
-  const cabbage = data.recipes.find((recipe) => recipe.id === 'simple-stir-fried-green-cabbage');
-  const luffa = data.recipes.find((recipe) => recipe.id === 'simple-stir-fried-luffa-zucchini');
-  assert(cabbage?.supportingProteinIngredientIds.includes('ground-pork'));
-  assert(luffa?.supportingProteinIngredientIds.includes('ground-pork'));
+  const requiredSupporting = data.recipes.find((recipe) => recipe.id === 'pressed-tofu-pork-strips');
+  assert(requiredSupporting);
+  assert(requiredSupporting.requiredSupportingProteinIngredientIds.includes('pressed-tofu'));
+  assert.equal(requiredSupporting.supportingProteinIngredientIds.length, 0);
 
-  const bad = parse(files['recipe/vegetable/simple-stir-fried-leafy-greens.yaml']);
-  bad.optional_supporting_protein_ingredient_ids = ['missing-supporting-protein'];
+  const retired = parse(files['recipe/vegetable/simple-stir-fried-leafy-greens.yaml']);
+  retired.optional_supporting_protein_ingredient_ids = ['pork-chops'];
   await assert.rejects(
     async () => parseMealFiles({
       ...files,
-      'recipe/vegetable/simple-stir-fried-leafy-greens.yaml': stringify(bad),
+      'recipe/vegetable/simple-stir-fried-leafy-greens.yaml': stringify(retired),
     }),
-    /optional_supporting_protein_ingredient_ids references missing ingredient/,
+    /unknown fields|optional_supporting_protein_ingredient_ids/,
   );
 });
 
-test('leafy greens one-of includes Yu Choy Sum, spinach, and water spinach', async () => {
+test('leafy greens one-of remains complete after optional-group migration', async () => {
   const data = parseMealFiles(await readMealFiles());
   const choySum = data.ingredients.find((ingredient) => ingredient.id === 'choy-sum');
   assert.equal(choySum?.nameZh, '油菜心 / 菜心');
-  assert.equal(choySum?.tags.includes('easy-braise-addon'), true);
+  assert.equal(choySum?.tags.includes('easy-braise-addon'), false);
 
   const leafy = data.recipes.find((recipe) => recipe.id === 'simple-stir-fried-leafy-greens');
   assert(leafy);
+  assert.deepEqual(leafy.optionalGroupIds, ['add-some-richness']);
   assert.deepEqual(leafy.requirements[0].anyOf, [
     'chinese-greens',
     'spinach',
