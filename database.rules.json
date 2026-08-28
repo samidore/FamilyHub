@@ -59,7 +59,7 @@
             "checkoutDraft": { "$ingredientId": { ".validate": "(newData.isBoolean()) || (newData.isNumber() && newData.val() >= 0 && newData.val() % 0.5 == 0)" } },
             "checkoutRecipeDrafts": {
               "$recipeId": {
-                ".validate": "newData.hasChildren(['bindings', 'consumption'])",
+                ".validate": "newData.hasChildren(['bindings'])",
                 "bindings": {
                   ".validate": "newData.hasChildren(['0'])",
                   "$index": { ".validate": "$index.matches(/^(0|[1-9][0-9]*)$/) && newData.isString() && newData.val().length > 0" }
