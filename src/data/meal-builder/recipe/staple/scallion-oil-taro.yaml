@@ -3,12 +3,14 @@ type: recipe
 status: candidate
 name_zh: 葱油芋头 / 土豆
 name_en: Scallion Oil Taro or Potato
-tags: [iron-pan-braise, light-seasoning, non-spicy-base, braised, stovetop-nonstick, lunch-30]
+tags: [child-all-ingredients-eaten, light-seasoning, non-spicy-base, braised, stovetop-nonstick, lunch-30]
 fit_score: 4
 primary_role: staple
 main_protein_category: none
 main_protein_ingredient_ids: []
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids: []
 meal_contribution: { protein: 0, vegetable: 0, staple: 1 }
 child_coverage: { protein: false, vegetable: false }
