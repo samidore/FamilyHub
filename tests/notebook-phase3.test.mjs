@@ -88,6 +88,18 @@ test('All keeps ordinary rows in ordinary Boards and recurring rows/history in �
   assert.match(html, /data-completion-event-id="event-1"/);
 });
 
+test('反复干 renders at its shared position among ordinary Boards', () => {
+  const state = baseState();
+  state.settings.recurringBoardOrder = 1;
+  const html = renderNotebookBoards(state, 'Sami', new Date(2026, 7, 22, 12).getTime());
+  const firstBoard = html.indexOf('data-board-id="a"');
+  const recurringBoard = html.indexOf('data-recurring-board');
+  const secondBoard = html.indexOf('data-board-id="b"');
+  assert.ok(firstBoard >= 0);
+  assert.ok(recurringBoard > firstBoard);
+  assert.ok(secondBoard > recurringBoard);
+});
+
 test('media ratings are independent 0-10 fields and mediaType remains unsupported', () => {
   const base = { ...item('movie-1'), platform: 'Max', imdbRating: 8.2, myRating: 9.5, mediaType: 'movie' };
   const normalized = normalizeNotebookState({ items: { 'movie-1': base } });
