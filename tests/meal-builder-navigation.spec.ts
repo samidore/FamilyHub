@@ -11,7 +11,10 @@ test('inventory category jump bar is bottom-pinned, data-driven, and opens the t
   const navBox = await nav.boundingBox();
   expect(navBox).not.toBeNull();
   expect(Math.abs((navBox?.y ?? 0) + (navBox?.height ?? 0) - viewportHeight)).toBeLessThanOrEqual(1);
-  await expect(page.locator('[data-inventory-jump="pork"]')).toHaveText('猪肉');
+  await expect(page.locator('[data-inventory-jump="pork"]')).toHaveText('猪');
+  await expect(page.locator('[data-inventory-jump="beef"]')).toHaveText('牛');
+  await expect(page.locator('[data-inventory-jump="lamb-goat"]')).toHaveText('羊');
+  await expect(page.locator('[data-inventory-jump="chicken"]')).toHaveText('鸡');
   await expect(page.locator('[data-inventory-jump="leafy-vegetable"]')).toHaveText('叶菜');
   await expect(page.locator('[data-inventory-jump="staple"]')).toHaveText('主食');
 
