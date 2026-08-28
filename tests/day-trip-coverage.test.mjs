@@ -87,3 +87,36 @@ test('Day Trips keeps pick-your-own as a real stored activity with nearby covera
   assert.ok(pyo.filter((trip) => trip.driveMinutes <= 20).length >= 2, 'pick-your-own needs at least two <=20 minute options');
   assert.ok(pyo.filter((trip) => trip.driveMinutes <= 40).length >= 4, 'pick-your-own needs at least four <=40 minute options');
 });
+
+test('Day Trips nests aquarium under the 玩水 activity and keeps a useful aquarium set', () => {
+  const aquariumTrips = trips.filter((trip) => trip.locations.some((location) => location.tags.includes('aquarium')));
+  assert.ok(aquariumTrips.length >= 9, `aquarium needs the agreed useful set, has only ${aquariumTrips.length}`);
+  assert.ok(aquariumTrips.filter((trip) => trip.driveMinutes <= 20).length >= 3, 'aquarium needs at least three <=20 minute options');
+  assert.ok(aquariumTrips.filter((trip) => trip.driveMinutes <= 40).length >= 5, 'aquarium needs at least five <=40 minute options');
+
+  for (const trip of aquariumTrips) {
+    for (const location of trip.locations.filter((item) => item.tags.includes('aquarium'))) {
+      assert.ok(location.tags.includes('water-play'), `${trip.id}/${location.name} aquarium must also sit under water-play`);
+    }
+  }
+});
+
+test('Day Trips keeps the audited Google Maps identities photo-friendly and unambiguous where known', () => {
+  for (const trip of trips) {
+    const url = new URL(trip.googleMapsUrl);
+    assert.ok(['google.com', 'www.google.com'].includes(url.hostname), `${trip.id} must use Google Maps`);
+    assert.ok(url.pathname.startsWith('/maps/place/') || url.pathname.startsWith('/maps/search'), `${trip.id} must open a place/search page`);
+    const query = url.searchParams.get('query') ?? '';
+    assert.equal(/^-?\d+(?:\.\d+)?,\s*-?\d+(?:\.\d+)?$/.test(query.trim()), false, `${trip.id} must not use coordinate-only maps links`);
+  }
+
+  const oritani = trips.find((trip) => trip.id === 'flat-rock-brook-jones-road');
+  assert.ok(oritani, 'Flat Rock Oritani playground record is missing');
+  assert.equal(oritani.name, 'Flat Rock Brook — Oritani Playground');
+  const oritaniUrl = new URL(oritani.googleMapsUrl);
+  assert.equal(oritaniUrl.searchParams.get('query_place_id'), 'ChIJUwFrJwDxwokRz50o1ocd_VU');
+
+  const concklin = trips.find((trip) => trip.id === 'orchards-of-concklin-pyo');
+  assert.ok(concklin, 'Orchards of Concklin record is missing');
+  assert.match(decodeURIComponent(concklin.googleMapsUrl).replaceAll('+', ' '), /1010 (?:Route|Rt\.) 45/i);
+});
