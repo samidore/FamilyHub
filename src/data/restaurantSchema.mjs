@@ -36,11 +36,13 @@ export function parseRestaurants(value) {
 
   value.forEach((record, index) => {
     const path = `restaurants[${index}]`;
-    exactObject(record, ['id', 'name', 'address', 'tags', 'dineIn', 'orderPlatforms', 'officialUrl', 'googleMapsUrl', 'yelpUrl', 'verifiedDate'], [], path);
+    exactObject(record, ['id', 'name', 'description', 'address', 'tags', 'dineIn', 'orderPlatforms', 'officialUrl', 'googleMapsUrl', 'yelpUrl', 'verifiedDate'], [], path);
     text(record.id, `${path}.id`);
     if (ids.has(record.id)) fail(`${path}.id`, 'must be unique');
     ids.add(record.id);
     text(record.name, `${path}.name`);
+    text(record.description, `${path}.description`);
+    if ([...record.description.trim()].length > 40) fail(`${path}.description`, 'keep restaurant descriptions short (40 characters max)');
 
     exactObject(record.address, ['line1', 'city', 'state', 'postalCode'], ['line2'], `${path}.address`);
     ['line1', 'city', 'state', 'postalCode'].forEach((key) => text(record.address[key], `${path}.address.${key}`));
