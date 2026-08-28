@@ -7,12 +7,12 @@ const mealData = await loadMealData();
 const visibleIngredientCount = mealData.ingredients.filter((ingredient) => ingredient.visible).length;
 const visibleSectionCount = mealData.starterSections.length;
 
-const dayTripData = JSON.parse(await readFile(new URL('../src/data/day-trips.json', import.meta.url), 'utf8')) as Array<{ name: string; location: string; driveMinutes: number; distanceMiles?: number | null }>;
+const dayTripData = JSON.parse(await readFile(new URL('../src/data/day-trips.json', import.meta.url), 'utf8')) as Array<{ name: string; city: string; state: string; driveMinutes: number }>;
 const dayTripCount = dayTripData.length;
 const within20DayTripCount = dayTripData.filter((trip) => trip.driveMinutes <= 20).length;
 const mcfaulData = dayTripData.find((trip) => trip.name === 'J.A. McFaul Environmental Center');
 if (!mcfaulData) throw new Error('J.A. McFaul Environmental Center is missing from Day Trips data');
-const mcfaulDriveText = `${mcfaulData.location} · ${mcfaulData.driveMinutes} 分钟${mcfaulData.distanceMiles != null ? ` · ${mcfaulData.distanceMiles} miles` : ''}`;
+const mcfaulDriveText = `${mcfaulData.city}, ${mcfaulData.state} · 约 ${mcfaulData.driveMinutes} 分钟`;
 
 const libraryEventCount = JSON.parse(await readFile(new URL('../src/data/library-events.json', import.meta.url), 'utf8')).length;
 

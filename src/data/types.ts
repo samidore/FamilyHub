@@ -1,31 +1,31 @@
-export interface RatingSet {
-  indoor: number | null;
-  outdoor: number | null;
-  stroller: number | null;
-  weather: number | null;
-  toddler: number | null;
-  parent: number | null;
+export type DayTripEnvironment = 'indoor' | 'outdoor';
+export type DayTripWeatherExclusion = 'rain' | 'heat' | 'post-rain';
+export type DayTripActivityTag = 'woody-walk' | 'playground' | 'indoor-visit' | 'animals' | 'water-play';
+export type DayTripHours = 'always' | 'unknown' | Record<DayTripWeekday, [string, string][]>;
+export type DayTripWeekday = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
+
+export interface DayTripLocation {
+  name: string;
+  environment: DayTripEnvironment;
+  tags: DayTripActivityTag[];
+  notFor: DayTripWeatherExclusion[];
+  stroller: boolean;
+  hours: DayTripHours;
 }
 
 export interface DayTrip {
+  id: string;
   name: string;
-  shortName: string;
-  location: string;
-  category: string;
+  aliases?: string[];
+  city: string;
+  state: string;
   driveMinutes: number;
-  distanceMiles?: number | null;
-  status: string;
-  ratings: RatingSet;
-  tags: string[];
-  conditions: string[];
-  verifiedFacts: string;
-  familyFit: string;
-  risks: string;
-  beforeYouGo: string;
+  note: string;
+  notice?: string;
+  locations: DayTripLocation[];
   googleMapsUrl: string;
   officialUrl: string;
   verifiedDate: string;
-  recommendationScore: number;
 }
 
 export interface LibraryEvent {

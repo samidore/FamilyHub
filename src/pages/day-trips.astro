@@ -5,28 +5,84 @@ import FilterShell from '../components/FilterShell.astro';
 import DayTripCard from '../modules/day-trips/DayTripCard.astro';
 import { dayTrips } from '../data/catalog';
 
-const categories = [...new Set(dayTrips.map((item) => item.category))].sort();
-const statuses = [...new Set(dayTrips.map((item) => item.status))].sort();
-const conditions = [...new Set(dayTrips.flatMap((item) => item.conditions))].sort();
-const ratingOptions = [3, 3.5, 4, 4.5, 5];
+const activityOptions = [
+  ['woody-walk', '森系遛猫'],
+  ['playground', '麦攀爬'],
+  ['no-playground', '麦不上天'],
+  ['indoor-visit', '室内赶鸡'],
+  ['animals', '动物园'],
+  ['water-play', '玩水'],
+] as const;
 const tripCount = dayTrips.length;
 ---
-<BaseLayout title="Day Trips | Family Hub" description={`按车程、天气、家庭适配与使用场景筛选 ${tripCount} 个家庭目的地。`} pageClass="module-page theme-evergreen" themeColor="#E7EFE8">
-  <SiteHeader eyebrow="出行与玩乐 · 目的地" title="Day Trips" description="按车程、天气和孩子当天的活动需求，筛选附近的公园、playground、自然中心、动物园和其他适合全家出门的地方。" accent="evergreen" icon="compass">
-    <div class="summary-row"><span>{tripCount} 个地点</span><span>无目的地图片</span></div>
+
+<BaseLayout title="Day Trips | Family Hub" description={`按天气、车程和活动筛选 ${tripCount} 个家庭目的地。`} pageClass="module-page theme-evergreen" themeColor="#E7EFE8">
+  <SiteHeader eyebrow="出行与玩乐 · 目的地" title="Day Trips" description="先选今天的天气、车程和想玩的东西，再看真正还能用的地点。" accent="evergreen" icon="compass">
+    <div class="summary-row"><span>{tripCount} 个地点</span><span>营业时间直接显示在卡片上</span></div>
   </SiteHeader>
 
   <FilterShell accent="evergreen" filterId="trip-filter-panel" countId="trip-count" clearId="trip-clear" countText={`显示 ${tripCount} / ${tripCount} 个地点`}>
     <div slot="primary" class="filter-primary__grid">
-      <label><span>搜索地点</span><input id="trip-search" type="search" placeholder="动物、雨天、池塘、science…" autocomplete="off" /></label>
-      <label><span>排序</span><select id="trip-sort" data-default="recommended"><option value="recommended">家庭推荐</option><option value="drive">最短车程</option><option value="toddler">Toddler 评分</option><option value="parent">家长评分</option><option value="name">名称</option></select></label>
+      <label><span>搜索地点</span><input id="trip-search" type="search" placeholder="Bergen、动物园、麦攀爬…" autocomplete="off" /></label>
+      <label><span>排序</span><select id="trip-sort" data-default="drive"><option value="drive">车程近 → 远</option><option value="name">名称 A–Z</option></select></label>
     </div>
+
     <div slot="filters" class="contents">
-      <label><span>类别</span><select id="trip-category"><option value="">全部类别</option>{categories.map((item) => <option value={item}>{item}</option>)}</select></label>
-      <label><span>车程</span><select id="trip-drive"><option value="">不限车程</option><option value="20">20 分钟内</option><option value="40">21–40 分钟</option><option value="60">41–60 分钟</option></select></label>
-      <label><span>天气 / 使用场景</span><select id="trip-condition"><option value="">全部场景</option>{conditions.map((item) => <option value={item}>{item}</option>)}</select></label>
-      <label><span>家庭状态</span><select id="trip-status"><option value="">全部状态</option>{statuses.map((item) => <option value={item}>{item}</option>)}</select></label>
-      {['indoor', 'outdoor', 'stroller', 'weather'].map((key) => <label><span>最低 {key === 'weather' ? '天气容错' : key} 评分</span><select id={`trip-${key}`} data-rating-filter={key}><option value="">不限评分</option>{ratingOptions.map((value) => <option value={value}>{value}+</option>)}</select></label>)}
+      <label>
+        <span>天气</span>
+        <select id="trip-weather" data-default="sunny">
+          <option value="sunny">晴天</option>
+          <option value="rain">雨天</option>
+          <option value="heat">热天</option>
+          <option value="post-rain">雨后</option>
+        </select>
+      </label>
+
+      <label>
+        <span>最长车程</span>
+        <select id="trip-drive">
+          <option value="">不限</option>
+          <option value="20">≤20 分钟</option>
+          <option value="40">≤40 分钟</option>
+          <option value="60">≤60 分钟</option>
+          <option value="120">≤2 小时</option>
+        </select>
+      </label>
+
+      <label>
+        <span>室内 / 室外</span>
+        <select id="trip-environment">
+          <option value="">不限</option>
+          <option value="indoor">室内</option>
+          <option value="outdoor">室外</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Stroller</span>
+        <select id="trip-stroller">
+          <option value="">不限</option>
+          <option value="yes">Stroller 可用</option>
+        </select>
+      </label>
+
+      <div class="trip-toggle-field">
+        <span class="trip-toggle-field__label">营业状态</span>
+        <button id="trip-open-now-button" class="trip-toggle-button" type="button" aria-pressed="false">Open Now</button>
+        <input id="trip-open-now" type="hidden" value="" data-default="" />
+      </div>
+
+      <fieldset class="trip-activity-field">
+        <legend>想玩什么</legend>
+        <div class="trip-activity-actions">
+          <button id="trip-activity-all" class="trip-small-button" type="button">全选</button>
+          <button id="trip-activity-none" class="trip-small-button" type="button">全不选</button>
+        </div>
+        <div class="trip-activity-buttons">
+          {activityOptions.map(([id, label]) => <button type="button" data-trip-activity={id} aria-pressed="true">{label}</button>)}
+        </div>
+        <input id="trip-activities" type="hidden" value="all" data-default="all" />
+      </fieldset>
     </div>
   </FilterShell>
 
@@ -34,41 +90,217 @@ const tripCount = dayTrips.length;
     <div id="trip-list" class="record-grid">{dayTrips.map((destination) => <DayTripCard destination={destination} />)}</div>
     <p id="trip-empty" class="empty-state" hidden>没有符合这些条件的地点。清除部分筛选后再试。</p>
   </main>
-  <footer class="module-footer"><div class="shell note-box"><strong>出发前使用最新官方资料。</strong> 开放时间、费用、registration、施工和季节性设施都可能变化。这里的家庭评分是判断，不是官方评级。</div></footer>
+
+  <footer class="module-footer">
+    <div class="shell note-box"><strong>出发前仍以官方公告为准。</strong> 节假日不进入 Open Now 计算；运营提醒只显示警示，不参与筛选。</div>
+  </footer>
 
   <script>
-    import { bindListState, clearListState, restoreListState } from '../lib/listState';
-    const cards = [...document.querySelectorAll<HTMLElement>('[data-destination]')];
-    const controls = {
-      q: document.querySelector<HTMLInputElement>('#trip-search')!, sort: document.querySelector<HTMLSelectElement>('#trip-sort')!,
-      category: document.querySelector<HTMLSelectElement>('#trip-category')!, drive: document.querySelector<HTMLSelectElement>('#trip-drive')!,
-      condition: document.querySelector<HTMLSelectElement>('#trip-condition')!, status: document.querySelector<HTMLSelectElement>('#trip-status')!,
-      indoor: document.querySelector<HTMLSelectElement>('#trip-indoor')!, outdoor: document.querySelector<HTMLSelectElement>('#trip-outdoor')!,
-      stroller: document.querySelector<HTMLSelectElement>('#trip-stroller')!, weather: document.querySelector<HTMLSelectElement>('#trip-weather')!,
+    import { bindListState, clearListState, restoreListState, writeListState } from '../lib/listState';
+
+    type Hours = 'always' | 'unknown' | Record<string, [string, string][]>;
+    type TripLocation = {
+      name: string;
+      environment: 'indoor' | 'outdoor';
+      tags: string[];
+      notFor: string[];
+      stroller: boolean;
+      hours: Hours;
     };
+
+    const activityIds = ['woody-walk', 'playground', 'no-playground', 'indoor-visit', 'animals', 'water-play'] as const;
+    const cards = [...document.querySelectorAll<HTMLElement>('[data-destination]')];
+    const activityButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-trip-activity]')];
+    const openNowButton = document.querySelector<HTMLButtonElement>('#trip-open-now-button')!;
+    const allButton = document.querySelector<HTMLButtonElement>('#trip-activity-all')!;
+    const noneButton = document.querySelector<HTMLButtonElement>('#trip-activity-none')!;
+
+    const controls = {
+      q: document.querySelector<HTMLInputElement>('#trip-search')!,
+      sort: document.querySelector<HTMLSelectElement>('#trip-sort')!,
+      weather: document.querySelector<HTMLSelectElement>('#trip-weather')!,
+      drive: document.querySelector<HTMLSelectElement>('#trip-drive')!,
+      environment: document.querySelector<HTMLSelectElement>('#trip-environment')!,
+      stroller: document.querySelector<HTMLSelectElement>('#trip-stroller')!,
+      open: document.querySelector<HTMLInputElement>('#trip-open-now')!,
+      activities: document.querySelector<HTMLInputElement>('#trip-activities')!,
+    };
+
     const list = document.querySelector<HTMLElement>('#trip-list')!;
     const count = document.querySelector<HTMLElement>('#trip-count')!;
     const empty = document.querySelector<HTMLElement>('#trip-empty')!;
-    const number = (card: HTMLElement, key: string) => card.dataset[key] === '' ? -1 : Number(card.dataset[key] ?? -1);
+
+    const locationsFor = (card: HTMLElement) => JSON.parse(card.dataset.locations ?? '[]') as TripLocation[];
+    const minutes = (time: string) => {
+      const [hours, mins] = time.split(':').map(Number);
+      return hours * 60 + mins;
+    };
+    const weekday = (date: Date) => date.toLocaleDateString('en-US', { weekday: 'long' }).toLocaleLowerCase();
+
+    const todaysIntervals = (hours: Hours, now: Date) => {
+      if (hours === 'always' || hours === 'unknown') return hours;
+      return hours[weekday(now)] ?? [];
+    };
+
+    const hoursLabel = (hours: Hours, now: Date) => {
+      const today = todaysIntervals(hours, now);
+      if (today === 'always') return '全天';
+      if (today === 'unknown') return 'Hours 未知';
+      if (!today.length) return '今天休息';
+      return today.map(([start, end]) => `${start}–${end}`).join(' / ');
+    };
+
+    const isOpenForThirtyMinutes = (hours: Hours, now: Date) => {
+      const today = todaysIntervals(hours, now);
+      if (today === 'always' || today === 'unknown') return true;
+      const nowMinutes = now.getHours() * 60 + now.getMinutes();
+      return today.some(([start, end]) => nowMinutes >= minutes(start) && nowMinutes + 30 <= minutes(end));
+    };
+
+    const selectedActivities = () => {
+      if (controls.activities.value === 'all') return new Set<string>(activityIds);
+      if (controls.activities.value === 'none' || !controls.activities.value) return new Set<string>();
+      return new Set(controls.activities.value.split(',').filter((value) => activityIds.includes(value as typeof activityIds[number])));
+    };
+
+    const normalizeActivityValue = (selected: Set<string>) => {
+      if (selected.size === activityIds.length) return 'all';
+      if (selected.size === 0) return 'none';
+      return activityIds.filter((id) => selected.has(id)).join(',');
+    };
+
+    const syncActivityButtons = () => {
+      const selected = selectedActivities();
+      activityButtons.forEach((button) => button.setAttribute('aria-pressed', selected.has(button.dataset.tripActivity ?? '') ? 'true' : 'false'));
+    };
+
+    const syncOpenNowButton = () => openNowButton.setAttribute('aria-pressed', controls.open.value === '1' ? 'true' : 'false');
+
+    const updateHours = () => {
+      const now = new Date();
+      cards.forEach((card) => {
+        const locations = locationsFor(card);
+        card.querySelectorAll<HTMLElement>('[data-location-hours]').forEach((row) => {
+          const index = Number(row.dataset.locationIndex);
+          const target = row.querySelector<HTMLElement>('[data-hours-value]');
+          if (target && locations[index]) target.textContent = hoursLabel(locations[index].hours, now);
+        });
+      });
+    };
+
     const render = () => {
       const query = controls.q.value.trim().toLocaleLowerCase();
+      const maxDrive = controls.drive.value ? Number(controls.drive.value) : Number.POSITIVE_INFINITY;
+      const selected = selectedActivities();
+      const now = new Date();
+
       const visible = cards.filter((card) => {
-        const drive = number(card, 'drive');
-        const driveMatches = !controls.drive.value || (controls.drive.value === '20' && drive <= 20) || (controls.drive.value === '40' && drive > 20 && drive <= 40) || (controls.drive.value === '60' && drive > 40 && drive <= 60);
-        return (!query || card.dataset.search!.includes(query)) && (!controls.category.value || card.dataset.category === controls.category.value) && driveMatches && (!controls.condition.value || card.dataset.conditions!.split('|').includes(controls.condition.value)) && (!controls.status.value || card.dataset.status === controls.status.value) && ['indoor', 'outdoor', 'stroller', 'weather'].every((key) => !controls[key as keyof typeof controls].value || number(card, key) >= Number(controls[key as keyof typeof controls].value));
+        if (Number(card.dataset.drive) > maxDrive) return false;
+        if (query && !(card.dataset.search ?? '').includes(query)) return false;
+        if (selected.size === 0) return false;
+
+        const originalLocations = locationsFor(card);
+        let surviving = originalLocations.filter((location) => controls.weather.value === 'sunny' || !location.notFor.includes(controls.weather.value));
+
+        if (controls.environment.value) surviving = surviving.filter((location) => location.environment === controls.environment.value);
+        if (controls.stroller.value === 'yes') surviving = surviving.filter((location) => location.stroller);
+        if (controls.open.value === '1') surviving = surviving.filter((location) => isOpenForThirtyMinutes(location.hours, now));
+        if (!surviving.length) return false;
+
+        const ordinaryTags = new Set(surviving.flatMap((location) => location.tags));
+        const noPlayground = card.dataset.noPlayground === 'true';
+        return [...selected].some((activity) => activity === 'no-playground' ? noPlayground : ordinaryTags.has(activity));
       });
-      const sorters: Record<string, (a: HTMLElement, b: HTMLElement) => number> = {
-        recommended: (a, b) => number(b, 'score') - number(a, 'score'), drive: (a, b) => number(a, 'drive') - number(b, 'drive'), toddler: (a, b) => number(b, 'toddler') - number(a, 'toddler'), parent: (a, b) => number(b, 'parent') - number(a, 'parent'), name: (a, b) => a.dataset.name!.localeCompare(b.dataset.name!),
-      };
-      cards.forEach((card) => card.hidden = !visible.includes(card));
-      visible.sort(sorters[controls.sort.value]).forEach((card) => list.append(card));
+
+      const sorter = controls.sort.value === 'name'
+        ? (a: HTMLElement, b: HTMLElement) => (a.dataset.name ?? '').localeCompare(b.dataset.name ?? '')
+        : (a: HTMLElement, b: HTMLElement) => Number(a.dataset.drive) - Number(b.dataset.drive) || (a.dataset.name ?? '').localeCompare(b.dataset.name ?? '');
+
+      cards.forEach((card) => { card.hidden = !visible.includes(card); });
+      visible.sort(sorter).forEach((card) => list.append(card));
       count.textContent = `显示 ${visible.length} / ${cards.length} 个地点`;
       empty.hidden = visible.length > 0;
+      syncActivityButtons();
+      syncOpenNowButton();
     };
+
+    const setActivityState = (selected: Set<string>) => {
+      controls.activities.value = normalizeActivityValue(selected);
+      controls.activities.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+
     restoreListState(controls);
-    if (Object.values(controls).slice(2).some((control) => control.value)) document.querySelector<HTMLDetailsElement>('.filter-disclosure')!.open = true;
+    syncActivityButtons();
+    syncOpenNowButton();
+    updateHours();
+
+    if ([controls.drive, controls.environment, controls.stroller].some((control) => control.value) ||
+        controls.weather.value !== 'sunny' || controls.open.value || controls.activities.value !== 'all') {
+      document.querySelector<HTMLDetailsElement>('.filter-disclosure')!.open = true;
+    }
+
     bindListState(controls, render);
-    document.querySelector('#trip-clear')!.addEventListener('click', () => clearListState(controls, render));
+
+    activityButtons.forEach((button) => button.addEventListener('click', () => {
+      const selected = selectedActivities();
+      const id = button.dataset.tripActivity!;
+      if (selected.has(id)) selected.delete(id);
+      else selected.add(id);
+      setActivityState(selected);
+    }));
+
+    allButton.addEventListener('click', () => setActivityState(new Set(activityIds)));
+    noneButton.addEventListener('click', () => setActivityState(new Set()));
+    openNowButton.addEventListener('click', () => {
+      controls.open.value = controls.open.value === '1' ? '' : '1';
+      controls.open.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+
+    document.querySelector('#trip-clear')!.addEventListener('click', () => {
+      clearListState(controls, render);
+      syncActivityButtons();
+      syncOpenNowButton();
+    });
+
+    window.addEventListener('pageshow', () => {
+      writeListState(controls);
+      updateHours();
+      render();
+    });
+
     render();
   </script>
+
+  <style>
+    .trip-toggle-field { display: grid; gap: 5px; }
+    .trip-toggle-field__label, .trip-activity-field legend { color: #4f5d55; font-size: 14px; font-weight: 700; }
+    .trip-toggle-button, .trip-small-button, .trip-activity-buttons button {
+      min-height: 48px;
+      border: 1px solid #b8c5bc;
+      border-radius: 10px;
+      background: var(--surface);
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .trip-toggle-button[aria-pressed="true"], .trip-activity-buttons button[aria-pressed="true"] {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+    .trip-activity-field {
+      display: grid;
+      grid-column: 1 / -1;
+      gap: 9px;
+      min-width: 0;
+      margin: 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgb(255 255 255 / 60%);
+    }
+    .trip-activity-actions, .trip-activity-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+    .trip-small-button { padding-inline: 12px; color: var(--accent); }
+    .trip-activity-buttons button { flex: 1 1 135px; padding: 8px 12px; }
+  </style>
 </BaseLayout>

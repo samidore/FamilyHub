@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
-import { parseAdultDermatologists, parseColonoscopySpecialists, parseDayTrips, parseLibraryEvents, parsePediatricDentists } from '../src/data/schemas.mjs';
+import { parseDayTrips } from '../src/data/dayTripSchema.mjs';
+import { parseAdultDermatologists, parseColonoscopySpecialists, parseLibraryEvents, parsePediatricDentists } from '../src/data/schemas.mjs';
 import { parseObGynProviders } from '../src/data/obGynSchema.mjs';
 import { parseRestaurants } from '../src/data/restaurantSchema.mjs';
 import { loadMealData } from './load-meal-data.mjs';

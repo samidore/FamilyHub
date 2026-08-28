@@ -1,34 +1,86 @@
 ---
 import type { DayTrip } from '../../data/types';
+
 const { destination: d } = Astro.props as { destination: DayTrip };
-const rating = (value: number | null) => value === null ? '待确认' : `${value.toFixed(1)} / 5`;
-const searchable = [d.name, d.shortName, d.location, d.category, d.status, ...d.tags, ...d.conditions, d.verifiedFacts, d.familyFit, d.risks].join(' ').toLocaleLowerCase();
-const drive = `${d.driveMinutes} 分钟${d.distanceMiles != null ? ` · ${d.distanceMiles} miles` : ''}`;
+
+const activityLabels = {
+  'woody-walk': '森系遛猫',
+  playground: '麦攀爬',
+  'indoor-visit': '室内赶鸡',
+  animals: '动物园',
+  'water-play': '玩水',
+} as const;
+
+const originalTags = [...new Set(d.locations.flatMap((location) => location.tags))];
+const noPlayground = d.locations.every((location) => !location.tags.includes('playground'));
+const searchable = [
+  d.name,
+  ...(d.aliases ?? []),
+  d.city,
+  d.state,
+  ...d.locations.map((location) => location.name),
+  ...originalTags,
+  ...originalTags.map((tag) => activityLabels[tag]),
+  ...(noPlayground ? ['no-playground', '麦不上天'] : []),
+].join(' ').toLocaleLowerCase();
 ---
-<article class="record-card trip-card" data-destination data-search={searchable} data-category={d.category} data-drive={d.driveMinutes} data-status={d.status} data-conditions={d.conditions.join('|')} data-indoor={d.ratings.indoor ?? ''} data-outdoor={d.ratings.outdoor ?? ''} data-stroller={d.ratings.stroller ?? ''} data-weather={d.ratings.weather ?? ''} data-toddler={d.ratings.toddler ?? ''} data-parent={d.ratings.parent ?? ''} data-score={d.recommendationScore} data-name={d.name}>
+
+<article
+  class="record-card trip-card"
+  data-destination
+  data-id={d.id}
+  data-name={d.name}
+  data-drive={d.driveMinutes}
+  data-search={searchable}
+  data-locations={JSON.stringify(d.locations)}
+  data-no-playground={noPlayground ? 'true' : 'false'}
+>
   <div class="record-card__top">
-    <div class="badges"><span class="badge">{d.category}</span><span class="badge badge--caution">{d.status}</span></div>
     <h2>{d.name}</h2>
-    <p class="location-line">{d.location} <span aria-hidden="true">·</span> {drive}</p>
-    <dl class="metric-grid">
-      <div><dt>Toddler</dt><dd>{rating(d.ratings.toddler)}</dd></div>
-      <div><dt>家长体验</dt><dd>{rating(d.ratings.parent)}</dd></div>
-      <div><dt>Stroller</dt><dd>{rating(d.ratings.stroller)}</dd></div>
-      <div><dt>天气容错</dt><dd>{rating(d.ratings.weather)}</dd></div>
-    </dl>
-  </div>
-  <div class="record-card__body">
-    <div class="tags" aria-label="地点标签">{d.tags.map((tag) => <span>{tag}</span>)}</div>
-    <section class="info-block info-block--assessment"><h3>家庭适配判断</h3><p>{d.familyFit}</p></section>
-    <details class="record-details">
-      <summary>查看事实、限制和出发前检查</summary>
-      <div class="record-details__content">
-        <section class="info-block info-block--fact"><h3>资料事实</h3><p>{d.verifiedFacts}</p></section>
-        <section class="info-block info-block--risk"><h3>风险与限制</h3><p>{d.risks}</p></section>
-        <section class="info-block info-block--before"><h3>出发前确认</h3><p>{d.beforeYouGo}</p></section>
-        <p class="verification-note">{d.verifiedDate ? `资料核实：${d.verifiedDate}` : '资料核实日期未记录'}</p>
+    <p class="location-line">{d.city}, {d.state} <span aria-hidden="true">·</span> 约 {d.driveMinutes} 分钟</p>
+
+    <div class="trip-hours" aria-label="今日营业时间">
+      <strong>今天</strong>
+      <div class="trip-hours__list">
+        {d.locations.map((location, index) => (
+          <span data-location-hours data-location-index={index}>
+            <b>{location.name}</b> · <span data-hours-value>载入中…</span>
+          </span>
+        ))}
       </div>
-    </details>
-    <div class="actions"><a class="button button--primary" href={d.googleMapsUrl} target="_blank" rel="noopener noreferrer">Google Maps / Photos</a><a class="button button--secondary" href={d.officialUrl} target="_blank" rel="noopener noreferrer">Official website</a></div>
+    </div>
+  </div>
+
+  <div class="record-card__body">
+    <div class="tags trip-tags" aria-label="活动标签">
+      {originalTags.map((tag) => <span data-activity-tag={tag}>{activityLabels[tag]}</span>)}
+      {noPlayground && <span data-derived-activity="no-playground">麦不上天</span>}
+    </div>
+
+    <p class="trip-note">{d.note}</p>
+
+    {d.notice && (
+      <section class="info-block info-block--before trip-notice">
+        <h3>运营提醒</h3>
+        <p>{d.notice}</p>
+      </section>
+    )}
+
+    <div class="actions">
+      <a class="button button--primary" href={d.googleMapsUrl} target="_blank" rel="noopener noreferrer">Google Maps</a>
+      <a class="button button--secondary" href={d.officialUrl} target="_blank" rel="noopener noreferrer">Official website</a>
+    </div>
+    <p class="verification-note">资料核实：{d.verifiedDate}</p>
   </div>
 </article>
+
+
+<style>
+  .trip-hours { display: grid; gap: 5px; margin-top: 16px; padding: 11px 12px; border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line)); border-radius: 10px; background: rgb(255 255 255 / 78%); }
+  .trip-hours > strong { color: var(--accent); font-size: 14px; }
+  .trip-hours__list { display: grid; gap: 3px; color: #35433a; font-size: 15px; }
+  .trip-hours__list b { font-weight: 700; }
+  .trip-note { margin: 0 0 18px; color: #35433a; }
+  .trip-notice { margin-top: 4px; }
+  .verification-note { margin: 12px 0 0; color: var(--muted); font-size: 13px; }
+</style>
