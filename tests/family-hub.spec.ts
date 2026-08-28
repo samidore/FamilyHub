@@ -286,56 +286,72 @@ test('top navigation allows steps one to three and gates checkout to cook', asyn
   await expect(page.locator('#meal-checkout')).toBeVisible();
 });
 
-test('meal builder exposes one-of binding without changing checkout-only options', async ({ page }) => {
+test('selected Recipe and Checkout can change one-of independently', async ({ page }) => {
   await page.goto('meal-builder/');
-  await startMeal(page, ['chicken-drumsticks', 'bone-in-chicken-thighs', 'chinese-greens', 'lettuce']);
+  await startMeal(page, ['chicken-drumsticks', 'bone-in-chicken-thighs']);
   const main = page.locator('[data-meal-recipe="oyster-sauce-braised-chicken"]');
   await expect(main).toBeVisible();
-  const binding = main.locator('select[data-binding-recipe="oyster-sauce-braised-chicken"]');
-  await expect(binding).toBeVisible();
-  await binding.selectOption('bone-in-chicken-thighs');
   await main.getByRole('button', { name: /选择这道菜/ }).click();
-  const state = await page.evaluate(() => Object.values(sessionStorage).map((value) => { try { return JSON.parse(value); } catch { return null; } }).find((value) => value?.state)?.state);
-  expect(state.selectedRecipeIds).toContain('oyster-sauce-braised-chicken');
-  expect(state.recipeIngredientBindings['oyster-sauce-braised-chicken']).toContain('bone-in-chicken-thighs');
-});
 
-test('iron-pan braise checkout lists optional snapshot Ingredients with a first +1 step', async ({ page }) => {
-  await page.goto('meal-builder/');
-  await setInventory(page, ['ground-pork', 'soft-tofu', 'fried-tofu-puffs']);
-  const tofuPuffsInventory = await inventoryItem(page, 'fried-tofu-puffs');
-  await tofuPuffsInventory.locator('[data-inventory-step="0.5"]').click();
-  await tofuPuffsInventory.locator('[data-inventory-step="0.5"]').click();
-  await page.locator('#meal-start-current').click();
-  await page.locator('[data-meal-recipe="minced-pork-tofu"] [data-select-recipe]').click();
+  const selected = page.locator('[data-selected-recipe="oyster-sauce-braised-chicken"]');
+  await selected.locator('[data-composition-editor] > summary').click();
+  const planThigh = selected.locator('[data-plan-binding-ingredient="bone-in-chicken-thighs"]');
+  await planThigh.click();
+  await expect(planThigh).toHaveAttribute('aria-pressed', 'true');
+
   await page.locator('#meal-force-next').click();
   await page.locator('#meal-open-checkout').click();
-
-  await expect(page.locator('[data-checkout-optional-heading]')).toHaveText('可选顺手焖');
-  const optional = page.locator('[data-checkout-optional="true"][data-checkout-ingredient="fried-tofu-puffs"]');
-  await expect(optional.locator('[data-checkout-value="fried-tofu-puffs"]')).toHaveText('0 / 2');
-  await optional.locator('[data-checkout-step="0.5"]').click();
-  await expect(optional.locator('[data-checkout-value="fried-tofu-puffs"]')).toHaveText('1 / 2');
-  await optional.locator('[data-checkout-step="0.5"]').click();
-  await expect(optional.locator('[data-checkout-value="fried-tofu-puffs"]')).toHaveText('1.5 / 2');
-  await optional.locator('[data-checkout-step="-0.5"]').click();
-  await optional.locator('[data-checkout-step="-0.5"]').click();
-  await optional.locator('[data-checkout-step="-0.5"]').click();
-  await expect(optional.locator('[data-checkout-value="fried-tofu-puffs"]')).toHaveText('0 / 2');
-  await optional.locator('[data-checkout-step="0.5"]').click();
-  await expect(optional.locator('[data-checkout-value="fried-tofu-puffs"]')).toHaveText('1 / 2');
-  await expect(page.locator('.meal-checkout-row[data-checkout-ingredient="soft-tofu"]')).toHaveCount(1);
-  await expect(page.locator('[data-checkout-optional="true"][data-checkout-ingredient="soft-tofu"]')).toHaveCount(0);
+  const checkoutCard = page.locator('[data-checkout-recipe="oyster-sauce-braised-chicken"]');
+  const actualDrumstick = checkoutCard.locator('[data-actual-binding-ingredient="chicken-drumsticks"]');
+  await actualDrumstick.click();
+  await expect(actualDrumstick).toHaveAttribute('aria-pressed', 'true');
 });
 
-test('pure Instant Pot checkout does not expose easy-braise options', async ({ page }) => {
+test('optional composition is editable in Plan and Actual without duplicating required Ingredients', async ({ page }) => {
+  await page.goto('meal-builder/');
+  await startMeal(page, ['ground-pork', 'soft-tofu', 'fried-tofu-puffs', 'carrot']);
+  await page.locator('[data-meal-recipe="minced-pork-tofu"] [data-select-recipe]').click();
+
+  const selected = page.locator('[data-selected-recipe="minced-pork-tofu"]');
+  await selected.locator('[data-composition-editor] > summary').click();
+  await expect(selected.getByRole('heading', { name: '一锅乱炖' })).toBeVisible();
+  await expect(selected.locator('[data-plan-optional-ingredient="soft-tofu"]')).toHaveCount(0);
+  const plannedPuffs = selected.locator('[data-plan-optional-ingredient="fried-tofu-puffs"]');
+  await plannedPuffs.click();
+  await expect(plannedPuffs).toHaveAttribute('aria-pressed', 'true');
+
+  await page.locator('#meal-force-next').click();
+  await expect(page.locator('[data-cook-recipe="minced-pork-tofu"] [data-cook-planned-optionals]')).toContainText('油豆腐 / 豆泡');
+  await page.locator('#meal-open-checkout').click();
+
+  const checkoutCard = page.locator('[data-checkout-recipe="minced-pork-tofu"]');
+  await expect(checkoutCard.getByRole('heading', { name: '一锅乱炖' })).toBeVisible();
+  await expect(checkoutCard.locator('[data-actual-optional-ingredient="soft-tofu"]')).toHaveCount(0);
+  const actualPuffs = checkoutCard.locator('[data-actual-optional-ingredient="fried-tofu-puffs"]');
+  await expect(actualPuffs).toHaveAttribute('aria-pressed', 'true');
+  await actualPuffs.click();
+  await expect(actualPuffs).toHaveAttribute('aria-pressed', 'false');
+  const actualCarrot = checkoutCard.locator('[data-actual-optional-ingredient="carrot"]');
+  await actualCarrot.click();
+  await expect(actualCarrot).toHaveAttribute('aria-pressed', 'true');
+
+  await page.locator('[data-step-target="cook"]').click();
+  const planned = page.locator('[data-cook-recipe="minced-pork-tofu"] [data-cook-planned-optionals]');
+  await expect(planned).toContainText('油豆腐 / 豆泡');
+  await expect(planned).not.toContainText('胡萝卜');
+  await page.locator('[data-step-target="checkout"]').click();
+  await expect(page.locator('[data-checkout-recipe="minced-pork-tofu"] [data-actual-optional-ingredient="carrot"]')).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('Recipe without optional groups does not expose optional Checkout controls', async ({ page }) => {
   await page.goto('meal-builder/');
   await startMeal(page, ['bone-in-chicken-thighs', 'fried-tofu-puffs']);
   await page.locator('[data-meal-recipe="instant-pot-soy-chicken-thighs"] [data-select-recipe]').click();
   await page.locator('#meal-force-next').click();
   await page.locator('#meal-open-checkout').click();
-  await expect(page.locator('[data-checkout-optional-heading]')).toHaveCount(0);
-  await expect(page.locator('[data-checkout-optional="true"]')).toHaveCount(0);
+  const checkoutCard = page.locator('[data-checkout-recipe="instant-pot-soy-chicken-thighs"]');
+  await expect(checkoutCard).toBeVisible();
+  await expect(checkoutCard.locator('[data-actual-optional-recipe]')).toHaveCount(0);
 });
 
 test('cook back returns every device to the shared recipes step', async ({ page }) => {
@@ -399,7 +415,7 @@ test('returning through inventory preserves exclusions and enables newly stocked
   await expect(page.locator('[data-ingredient-id="chicken-breast"]')).toHaveAttribute('aria-pressed', 'true');
 });
 
-test('checkout consumes counted inventory while presence-only defaults to keep', async ({ page }) => {
+test('Recipe-scoped checkout consumes counted inventory while presence-only defaults to keep', async ({ page }) => {
   await page.goto('meal-builder/');
   await startMeal(page, ['eggs', 'tomato', 'noodles']);
   await page.locator('[data-meal-recipe="tomato-egg-noodles"] [data-select-recipe]').click();
@@ -407,23 +423,25 @@ test('checkout consumes counted inventory while presence-only defaults to keep',
   await page.locator('#meal-next').click();
   await page.locator('#meal-open-checkout').click();
 
-  const eggsCheckout = page.locator('[data-checkout-ingredient="eggs"]');
-  await expect(eggsCheckout).toContainText('用完');
-  await expect(eggsCheckout.locator('[data-checkout-used-up]')).not.toBeChecked();
-  await eggsCheckout.locator('[data-checkout-used-up]').check();
-  await expect(eggsCheckout.locator('[data-checkout-used-up]')).toBeChecked();
-  await eggsCheckout.locator('[data-checkout-used-up]').uncheck();
-  await expect(eggsCheckout.locator('[data-checkout-used-up]')).not.toBeChecked();
-  await expect(page.locator('[data-checkout-value="tomato"]')).toHaveText('1 / 1');
-  const tomato = page.locator('[data-checkout-ingredient="tomato"]');
-  await tomato.locator('[data-checkout-step="-0.5"]').click();
-  await tomato.locator('[data-checkout-step="-0.5"]').click();
-  await tomato.locator('[data-checkout-step="-0.5"]').click();
-  await expect(page.locator('[data-checkout-value="tomato"]')).toHaveText('0 / 1');
-  await tomato.locator('[data-checkout-step="0.5"]').click();
-  await tomato.locator('[data-checkout-step="0.5"]').click();
-  await tomato.locator('[data-checkout-step="0.5"]').click();
-  await expect(page.locator('[data-checkout-value="tomato"]')).toHaveText('1 / 1');
+  const noodlesCard = page.locator('[data-checkout-recipe="tomato-egg-noodles"]');
+  const eggsUsedUp = noodlesCard.locator('[data-actual-used-up-ingredient="eggs"]');
+  await expect(eggsUsedUp).not.toBeChecked();
+  await eggsUsedUp.check();
+  await expect(eggsUsedUp).toBeChecked();
+  await eggsUsedUp.uncheck();
+  await expect(eggsUsedUp).not.toBeChecked();
+
+  const tomatoMinus = noodlesCard.locator('[data-actual-step-ingredient="tomato"][data-actual-step="-0.5"]');
+  const tomatoPlus = noodlesCard.locator('[data-actual-step-ingredient="tomato"][data-actual-step="0.5"]');
+  const tomatoRow = tomatoMinus.locator('xpath=..');
+  await expect(tomatoRow.locator('output')).toHaveText('1 / 1');
+  await tomatoMinus.click();
+  await tomatoMinus.click();
+  await expect(tomatoRow.locator('output')).toHaveText('0 / 1');
+  await tomatoPlus.click();
+  await tomatoPlus.click();
+  await expect(tomatoRow.locator('output')).toHaveText('1 / 1');
+
   await page.locator('#meal-confirm-checkout').click();
   await page.locator('#meal-finalize-checkout').click();
   await expect(page.locator('#meal-builder-view')).toBeVisible();
