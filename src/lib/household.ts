@@ -1,5 +1,5 @@
 import type { InventoryFreshness, InventoryTracking, MealIngredient, MealOptionalGroup, MealRecipe, MealState, SelectedAddon } from './mealEngine.ts';
-import { MEAL_TARGET_OPTIONS, TIME_PREFERENCES, calendarDateKey, checkoutUnitsForSelection, defaultMealState, optionalGroupsForRecipe, optionalIngredientForRecipe, reconcileMealState } from './mealEngine.ts';
+import { MEAL_TARGET_OPTIONS, TIME_PREFERENCES, calendarDateKey, checkoutUnitsForSelection, defaultMealState, optionalIngredientForRecipe, reconcileMealState } from './mealEngine.ts';
 
 export type InventoryValue = true | number;
 export type Inventory = Record<string, InventoryValue>;
@@ -208,13 +208,14 @@ export function validOptionalAddons(meal: CurrentMeal, recipes: MealRecipe[], op
   const selected = new Set(meal.selectedRecipeIds); const recipeMap = new Map(recipes.map((recipe) => [recipe.id, recipe])); const seen = new Set<string>();
   return meal.selectedAddons.filter((addon) => {
     const recipe = recipeMap.get(addon.mainRecipeId); if (!recipe || !selected.has(recipe.id) || !optionalIngredientForRecipe(recipe, addon.addonType, addon.ingredientId, optionalGroups)) return false;
+    if ((meal.recipeIngredientBindings[recipe.id] ?? []).includes(addon.ingredientId)) return false;
     const key = `${addon.mainRecipeId}\u0000${addon.addonType}\u0000${addon.ingredientId}`; if (seen.has(key)) return false; seen.add(key); return true;
   });
 }
 
 export function toggleRecipeOptionalAddon(meal: CurrentMeal, recipeId: string, groupId: string, ingredientId: string, selected: boolean, recipes: MealRecipe[], optionalGroups: MealOptionalGroup[]): CurrentMeal {
   if (!meal.selectedRecipeIds.includes(recipeId)) return meal; const recipe = recipes.find((item) => item.id === recipeId); if (!recipe || !optionalIngredientForRecipe(recipe, groupId, ingredientId, optionalGroups)) return meal;
-  if (selected && !meal.availableIngredientIds.includes(ingredientId)) return meal;
+  if (selected && (!meal.availableIngredientIds.includes(ingredientId) || (meal.recipeIngredientBindings[recipeId] ?? []).includes(ingredientId))) return meal;
   const existing = validOptionalAddons(meal, recipes, optionalGroups).filter((addon) => !(addon.mainRecipeId === recipeId && addon.addonType === groupId && addon.ingredientId === ingredientId));
   if (selected) existing.push({ mainRecipeId: recipeId, addonType: groupId, ingredientId });
   return { ...meal, selectedAddons: existing, checkoutDraft: {}, checkoutRecipeDrafts: {} };
@@ -247,14 +248,18 @@ export function defaultCheckoutConsumption(meal: CurrentMeal, inventory: Invento
 export function checkoutDraftForMeal(meal: CurrentMeal, inventory: Inventory, ingredients?: MealIngredient[] | Record<string, MealIngredient>, recipes?: MealRecipe[]) { const defaults = defaultCheckoutConsumption(meal, inventory, ingredients, recipes); const saved = normalizeCheckoutConsumption(meal.checkoutDraft, ingredients); return Object.fromEntries(Object.entries(defaults).map(([id, fallback]) => [id, saved[id] ?? fallback])); }
 export function updateCheckoutDraft(meal: CurrentMeal, draft: CheckoutConsumption, inventory: Inventory, ingredients?: MealIngredient[] | Record<string, MealIngredient>, recipes?: MealRecipe[]): CurrentMeal { const defaults = defaultCheckoutConsumption(meal, inventory, ingredients, recipes); const normalized = normalizeCheckoutConsumption(draft, ingredients); return { ...meal, checkoutDraft: Object.fromEntries(Object.entries(defaults).map(([id, fallback]) => [id, normalized[id] ?? fallback])) }; }
 
-function defaultConsumptionValue(id: string, units: number, inventory: Inventory, ingredients?: MealIngredient[] | Record<string, MealIngredient>) { return trackingForIngredient(id, ingredients) === 'presence-only' ? false : Math.min(units, typeof inventory[id] === 'number' ? inventory[id] as number : 0); }
-
 export function defaultCheckoutRecipeDrafts(meal: CurrentMeal, inventory: Inventory, ingredients: MealIngredient[] | Record<string, MealIngredient>, recipes: MealRecipe[], optionalGroups: MealOptionalGroup[]): CheckoutRecipeDrafts {
   const recipeMap = new Map(recipes.map((recipe) => [recipe.id, recipe])); const planned = validOptionalAddons(meal, recipes, optionalGroups); const result: CheckoutRecipeDrafts = {};
+  const remaining: Record<string, number> = Object.fromEntries(Object.entries(inventory).filter(([, value]) => typeof value === 'number').map(([id, value]) => [id, value as number]));
+  const allocate = (id: string, units: number) => {
+    if (trackingForIngredient(id, ingredients) === 'presence-only') return false;
+    const available = remaining[id] ?? 0; const value = Math.min(units, available); remaining[id] = roundCountedInventoryValue(Math.max(0, available - value)); return value;
+  };
   for (const recipeId of meal.selectedRecipeIds) {
     const recipe = recipeMap.get(recipeId); if (!recipe) continue; const bindings = [...(meal.recipeIngredientBindings[recipeId] ?? [])]; const optionals = planned.filter((addon) => addon.mainRecipeId === recipeId).map(({ addonType, ingredientId }) => ({ addonType, ingredientId })); const consumption: CheckoutConsumption = {};
-    bindings.forEach((id) => { consumption[id] = defaultConsumptionValue(id, recipe.checkoutUnits?.[id] ?? 1, inventory, ingredients); });
-    optionals.forEach((addon) => { const entry = optionalIngredientForRecipe(recipe, addon.addonType, addon.ingredientId, optionalGroups); if (entry) consumption[addon.ingredientId] = defaultConsumptionValue(addon.ingredientId, entry.checkoutUnits, inventory, ingredients); });
+    const addDefault = (id: string, units: number) => { const value = allocate(id, units); if (typeof value === 'boolean') consumption[id] = Boolean(consumption[id]) || value; else consumption[id] = roundCountedInventoryValue((typeof consumption[id] === 'number' ? consumption[id] as number : 0) + value); };
+    bindings.forEach((id) => addDefault(id, recipe.checkoutUnits?.[id] ?? 1));
+    optionals.forEach((addon) => { const entry = optionalIngredientForRecipe(recipe, addon.addonType, addon.ingredientId, optionalGroups); if (entry) addDefault(addon.ingredientId, entry.checkoutUnits); });
     result[recipeId] = { bindings, optionalAddons: optionals, consumption };
   }
   return result;
@@ -275,7 +280,7 @@ function validateCheckoutRecipeDrafts(meal: CurrentMeal, drafts: CheckoutRecipeD
     for (const [index, requirement] of recipe.requirements.entries()) if (!requirement.anyOf.includes(draft.bindings[index])) return null;
     const allowedIds = new Set(draft.bindings); const seenOptionals = new Set<string>();
     for (const addon of draft.optionalAddons) {
-      if (!optionalIngredientForRecipe(recipe, addon.addonType, addon.ingredientId, optionalGroups)) return null;
+      if (allowedIds.has(addon.ingredientId) || !optionalIngredientForRecipe(recipe, addon.addonType, addon.ingredientId, optionalGroups)) return null;
       const key = `${addon.addonType}\u0000${addon.ingredientId}`; if (seenOptionals.has(key)) return null; seenOptionals.add(key); allowedIds.add(addon.ingredientId);
     }
     for (const [id, requested] of Object.entries(draft.consumption)) {
