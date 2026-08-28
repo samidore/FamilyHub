@@ -29,7 +29,7 @@ test('notebook normalization keeps valid records, strips unknown fields, and rem
   assert.equal(normalized.settings.viewFilter, 'completed');
 });
 
-test('completion and recurrence invariants reject malformed items', () => {
+test('completion and recurrence invariants reject malformed items while legacy recurrence remains readable', () => {
   const recurringCompleted = { ...item, id: 'bad-1', status: 'completed', completedAt: 10, recurrence: { unit: 'month', interval: 3 } };
   const completedWithoutDate = { ...item, id: 'bad-2', status: 'completed' };
   const activeWithCompletionDate = { ...item, id: 'bad-3', completedAt: 10 };
@@ -39,6 +39,10 @@ test('completion and recurrence invariants reject malformed items', () => {
   assert.equal(isSupportedRecurrence({ unit: 'month', interval: 6 }), true);
   assert.equal(isSupportedRecurrence({ unit: 'week', interval: 2 }), false);
   assert.equal(isSupportedRecurrence({ unit: 'year', interval: 1 }), true);
+  assert.equal(isSupportedRecurrence({ kind: 'scheduled', startDate: '2026-09-07', unit: 'week', interval: 2, weekdays: ['mon', 'thu'] }), true);
+  assert.equal(isSupportedRecurrence({ kind: 'scheduled', startDate: '2026-09-07', unit: 'week', interval: 2, weekdays: [] }), false);
+  assert.equal(isSupportedRecurrence({ kind: 'afterCompletion', intervalDays: 30 }), true);
+  assert.equal(isSupportedRecurrence({ kind: 'afterCompletion', intervalDays: 0 }), false);
 });
 
 test('display names are private names, not email addresses', () => {
