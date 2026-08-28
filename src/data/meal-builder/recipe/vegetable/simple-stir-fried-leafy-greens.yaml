@@ -17,17 +17,8 @@ primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
 supporting_protein_ingredient_ids: []
-optional_supporting_protein_ingredient_ids:
-  - whole-pork-tenderloin
-  - thin-sliced-pork-belly
-  - extra-thin-sliced-pork-belly
-  - pork-chops
-  - sliced-beef-brisket
-  - hot-pot-beef-slices
-  - hot-pot-lamb-slices
-  - boneless-skinless-chicken-thighs
-  - chicken-breast
-  - peeled-shrimp
+optional_groups:
+  - add-some-richness
 vegetable_ingredient_ids: [chinese-greens, spinach, lettuce, youmai-cai, choy-sum, water-spinach, pea-shoots, amaranth-greens, tong-hao, mustard-greens]
 meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
 child_coverage: { protein: false, vegetable: true }
