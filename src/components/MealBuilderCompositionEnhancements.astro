@@ -92,6 +92,14 @@ const compositionData = JSON.stringify({
     requestAnimationFrame(() => { renderQueued = false; renderAll(); });
   }
 
+  function afterVisualFeedback(callback: () => void) {
+    requestAnimationFrame(() => requestAnimationFrame(callback));
+  }
+
+  function showSinglePlanChoice(button: HTMLButtonElement) {
+    button.closest('.meal-composition-grid')?.querySelectorAll<HTMLButtonElement>('.meal-composition-chip').forEach((candidate) => candidate.setAttribute('aria-pressed', String(candidate === button)));
+  }
+
   function engineState(meal: CurrentMeal): MealState {
     return reconcileMealState(mealToEngineState(meal), recipes, ingredients, optionalGroups);
   }
@@ -120,7 +128,7 @@ const compositionData = JSON.stringify({
       if (!selected.has(recipeId)) return;
       const recipe = recipeById.get(recipeId); if (!recipe) return;
       const details = document.createElement('details'); details.className = 'meal-composition-editor'; details.dataset.compositionEditor = recipeId; details.open = wasOpen;
-      const summary = document.createElement('summary'); summary.textContent = '编辑这道菜'; details.append(summary);
+      const summary = document.createElement('summary'); summary.textContent = '编辑'; details.append(summary);
       const body = document.createElement('div'); body.className = 'meal-composition-editor__body';
       const binding = meal.recipeIngredientBindings[recipeId] ?? [];
       const boundIds = new Set(binding);
@@ -262,13 +270,19 @@ const compositionData = JSON.stringify({
     if (binding) {
       event.preventDefault(); event.stopImmediatePropagation();
       const recipeId = binding.dataset.planBindingRecipe!; const index = Number(binding.dataset.planBindingIndex); const ingredientId = binding.dataset.planBindingIngredient!;
-      void repository.updateCurrentMeal((meal) => { if (!meal.selectedRecipeIds.includes(recipeId)) return meal; const next = [...(meal.recipeIngredientBindings[recipeId] ?? [])]; next[index] = ingredientId; return reconcileCurrentMeal({ ...meal, recipeIngredientBindings: { ...meal.recipeIngredientBindings, [recipeId]: next }, checkoutRecipeDrafts: {} }, recipes, ingredients, optionalGroups); }).catch((error) => announce(error instanceof Error ? error.message : '食材选择保存失败。'));
+      showSinglePlanChoice(binding);
+      afterVisualFeedback(() => {
+        void repository.updateCurrentMeal((meal) => { if (!meal.selectedRecipeIds.includes(recipeId)) return meal; const next = [...(meal.recipeIngredientBindings[recipeId] ?? [])]; next[index] = ingredientId; return reconcileCurrentMeal({ ...meal, recipeIngredientBindings: { ...meal.recipeIngredientBindings, [recipeId]: next }, checkoutRecipeDrafts: {} }, recipes, ingredients, optionalGroups); }).catch((error) => { scheduleRender(); announce(error instanceof Error ? error.message : '食材选择保存失败。'); });
+      });
       return;
     }
     const optional = target.closest<HTMLButtonElement>('[data-plan-optional-recipe]');
     if (optional) {
       event.preventDefault(); event.stopImmediatePropagation(); const selected = optional.getAttribute('aria-pressed') !== 'true';
-      void repository.updateCurrentMeal((meal) => toggleRecipeOptionalAddon(meal, optional.dataset.planOptionalRecipe!, optional.dataset.planOptionalGroup!, optional.dataset.planOptionalIngredient!, selected, recipes, optionalGroups)).catch((error) => announce(error instanceof Error ? error.message : '可选加料保存失败。'));
+      optional.setAttribute('aria-pressed', String(selected));
+      afterVisualFeedback(() => {
+        void repository.updateCurrentMeal((meal) => toggleRecipeOptionalAddon(meal, optional.dataset.planOptionalRecipe!, optional.dataset.planOptionalGroup!, optional.dataset.planOptionalIngredient!, selected, recipes, optionalGroups)).catch((error) => { scheduleRender(); announce(error instanceof Error ? error.message : '可选加料保存失败。'); });
+      });
     }
   }, true);
 
@@ -313,14 +327,54 @@ const compositionData = JSON.stringify({
 
 <style is:global>
   .meal-selected > ul > li { flex-wrap: wrap; }
-  .meal-composition-editor { flex-basis: 100%; width: 100%; margin-top: 10px; border-top: 1px solid var(--line); padding-top: 8px; }
-  .meal-composition-editor > summary { cursor: pointer; min-height: 44px; display: flex; align-items: center; font-weight: 700; color: var(--berry); }
-  .meal-composition-editor__body { display: grid; gap: 10px; padding: 8px 0 4px; }
-  .meal-composition-editor__body h4, .meal-checkout-recipe h4 { margin: 6px 0 0; font-size: .88rem; }
+  .meal-composition-editor { flex-basis: 100%; width: 100%; margin-top: 10px; border-top: 1px solid var(--line); padding-top: 10px; }
+  .meal-composition-editor > summary {
+    display: inline-flex;
+    width: fit-content;
+    min-height: 48px;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border: 1.5px solid color-mix(in srgb, var(--berry) 78%, var(--line));
+    border-radius: 12px;
+    background: var(--berry-soft);
+    color: var(--berry);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--berry) 10%, transparent);
+    cursor: pointer;
+    font-weight: 800;
+    list-style: none;
+  }
+  .meal-composition-editor > summary::-webkit-details-marker { display: none; }
+  .meal-composition-editor > summary::after { content: '+'; font-size: 1.15em; line-height: 1; }
+  .meal-composition-editor[open] > summary::after { content: '−'; }
+  .meal-composition-editor__body { display: grid; gap: 10px; padding: 12px 0 4px; }
+  .meal-composition-editor__body h4, .meal-checkout-recipe h4 {
+    margin: 10px 0 1px;
+    padding-left: 9px;
+    border-left: 3px solid var(--berry);
+    color: var(--ink);
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.35;
+  }
   .meal-composition-fixed { margin: 0; color: var(--muted); }
   .meal-composition-grid { grid-template-columns: repeat(auto-fit, minmax(112px, 1fr)); }
-  .meal-composition-chip { min-height: 48px; }
-  .meal-composition-chip small { display: block; font-size: .72rem; font-weight: 400; }
+  .meal-composition-chip {
+    min-height: 48px;
+    border: 1.5px solid color-mix(in srgb, var(--berry) 42%, var(--line));
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: 0 1px 3px color-mix(in srgb, var(--ink) 7%, transparent);
+    touch-action: manipulation;
+  }
+  .meal-composition-chip[aria-pressed="true"] {
+    border-color: var(--berry);
+    background: var(--berry-soft);
+    color: var(--berry);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--berry) 32%, transparent);
+  }
+  .meal-composition-chip small { display: block; font-size: .72rem; font-weight: 500; }
   .meal-cook-planned-optionals { margin-bottom: 14px; }
   .meal-checkout-list { display: grid; gap: 16px; }
   .meal-checkout-recipe { border: 1px solid var(--line); border-radius: 16px; padding: 14px; background: var(--paper); display: grid; gap: 10px; }
