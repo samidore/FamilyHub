@@ -4,7 +4,7 @@ status: candidate
 name_zh: 亲子丼
 name_en: Oyakodon Chicken and Egg Rice Bowl
 tags:
-  - iron-pan-braise
+  - child-all-ingredients-eaten
   - light-seasoning
   - non-spicy-base
   - stovetop-nonstick
@@ -17,6 +17,8 @@ main_protein_ingredient_ids:
   - boneless-skinless-chicken-thighs
 supporting_protein_ingredient_ids:
   - eggs
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids:
   - onion
 meal_contribution:
