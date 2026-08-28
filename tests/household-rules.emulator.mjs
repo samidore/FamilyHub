@@ -71,7 +71,7 @@ test('recent meal history accepts four strict entries and rejects overflow or ma
   await assertFails(alice.ref(`${household}/state/recentMeals/0`).set({ mealId: 'bad', completedAt: 1, recipeIds: [], extra: true }));
 });
 
-test('shared step, freshness snapshot, exclusions, and checkout draft accept only supported values', async () => {
+test('shared step, freshness snapshot, exclusions, and checkout drafts accept only supported values', async () => {
   await env.withSecurityRulesDisabled(async (context) => { await context.database().ref().set(null); await context.database().ref(`${household}/members/alice`).set({ email: 'alice@gmail.com' }); });
   const alice = google('alice', 'alice@gmail.com');
   await assertSucceeds(alice.ref(`${household}/state`).set({ activeStep: 'recipes', currentMeal: meal }));
@@ -80,6 +80,12 @@ test('shared step, freshness snapshot, exclusions, and checkout draft accept onl
   await assertFails(alice.ref(`${household}/state/currentMeal/excludedIngredientIds`).set([42]));
   await assertSucceeds(alice.ref(`${household}/state/currentMeal/checkoutDraft`).set({ pork: 0, eggs: false }));
   await assertFails(alice.ref(`${household}/state/currentMeal/checkoutDraft`).set({ pork: 0.25 }));
+  const recipeDraft = { bindings: ['pork'], optionalAddons: [{ addonType: 'one-pot-mix', ingredientId: 'tofu' }], consumption: { pork: 1, tofu: 0.5 } };
+  await assertSucceeds(alice.ref(`${household}/state/currentMeal/checkoutRecipeDrafts/r1`).set(recipeDraft));
+  await assertSucceeds(alice.ref(`${household}/state/currentMeal/checkoutRecipeDrafts/r1`).set({ bindings: ['pork'], consumption: { pork: 1 } }));
+  await assertFails(alice.ref(`${household}/state/currentMeal/checkoutRecipeDrafts/r1`).set({ ...recipeDraft, bindings: [] }));
+  await assertFails(alice.ref(`${household}/state/currentMeal/checkoutRecipeDrafts/r1`).set({ ...recipeDraft, optionalAddons: [{ addonType: 'one-pot-mix', ingredientId: 'tofu', extra: true }] }));
+  await assertFails(alice.ref(`${household}/state/currentMeal/checkoutRecipeDrafts/r1`).set({ ...recipeDraft, consumption: { pork: 0.25 } }));
   await assertSucceeds(alice.ref(`${household}/state/currentMeal/ingredientFreshnessDates`).set({ pork: '2026-08-17' }));
   await assertFails(alice.ref(`${household}/state/currentMeal/ingredientFreshnessDates`).set({ pork: '08/17/2026' }));
 });
