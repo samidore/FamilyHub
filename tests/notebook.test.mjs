@@ -54,6 +54,15 @@ test('item editor Enter does not implicitly submit from an input', async () => {
   assert.match(ui, /event\.preventDefault\(\)/);
 });
 
+test('failed notebook writes keep editor state instead of closing or clearing forms', async () => {
+  const ui = await readFile('src/lib/notebookUi.ts', 'utf8');
+  const itemUi = await readFile('src/lib/notebookItemUi.ts', 'utf8');
+  assert.match(ui, /Promise<boolean>/);
+  assert.match(ui, /return false;/);
+  assert.match(itemUi, /then\(\(saved\) => \{ if \(saved\) dialog\.close\(\); \}\)/);
+  assert.doesNotMatch(itemUi, /then\(\(\) => dialog\.close\(\)\)/);
+});
+
 test('display names are private names, not email addresses', () => {
   assert.equal(normalizeMemberDisplayName(' Sami '), 'Sami');
   assert.equal(normalizeMemberDisplayName('sami@example.com'), null);
