@@ -71,6 +71,7 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
   const dueDateInput = form.elements.namedItem('dueDate') as HTMLInputElement;
   const mediaFields = document.querySelector<HTMLElement>('#notebook-media-fields')!;
   let editingItemId: string | null = null;
+  let preserveLegacyWithoutDueDate = false;
   let draggedItem: { itemId: string; boardId: string; priority: NotebookPriority } | null = null;
 
   const ensureWeeklyDay = () => {
@@ -87,7 +88,7 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
     dueDateLabel.hidden = kind === 'scheduled';
     dueDateLabelText.textContent = kind === 'afterCompletion' ? '首次 / 当前日期' : '截止日期';
     boardLegend.textContent = kind === 'none' ? '属于哪些 Boards' : '普通 Boards（循环期间不显示；取消循环后归回）';
-    if (kind === 'scheduled' && !scheduledStartDate.value) scheduledStartDate.value = localDate();
+    if (kind === 'scheduled' && !scheduledStartDate.value && !preserveLegacyWithoutDueDate) scheduledStartDate.value = localDate();
     if (kind === 'afterCompletion' && !dueDateInput.value) dueDateInput.value = localDate();
     if (!scheduledInterval.value) scheduledInterval.value = '1';
     if (!afterCompletionDays.value) afterCompletionDays.value = '1';
@@ -109,6 +110,7 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
     editingItemId = itemId ?? null;
     const state = context.getState();
     const item = itemId ? state.items[itemId] : undefined;
+    preserveLegacyWithoutDueDate = Boolean(item?.recurrence && isLegacyNotebookRecurrence(item.recurrence) && !item.dueDate);
     dialogTitle.textContent = item ? '编辑事项' : '新事项';
     deleteButton.hidden = !item;
     setValue('title', item?.title);
@@ -275,9 +277,12 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
     void context.mutate('调整事项顺序', (current) => reorderNotebookSection(current, boardId, priority, ids));
   });
 
-  recurrenceKind.addEventListener('change', refreshRecurrence);
-  scheduledUnit.addEventListener('change', refreshRecurrence);
-  scheduledStartDate.addEventListener('change', ensureWeeklyDay);
+  const leaveUndatedLegacyMode = () => { preserveLegacyWithoutDueDate = false; };
+  recurrenceKind.addEventListener('change', () => { leaveUndatedLegacyMode(); refreshRecurrence(); });
+  scheduledUnit.addEventListener('change', () => { leaveUndatedLegacyMode(); refreshRecurrence(); });
+  scheduledStartDate.addEventListener('change', () => { leaveUndatedLegacyMode(); ensureWeeklyDay(); });
+  scheduledInterval.addEventListener('input', leaveUndatedLegacyMode);
+  weekdayFields.addEventListener('change', leaveUndatedLegacyMode);
   boardChoices.addEventListener('change', refreshMedia);
   deleteButton.addEventListener('click', () => {
     const itemId = editingItemId;
@@ -303,7 +308,10 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
     const kind = String(data.get('recurrenceKind') ?? 'none');
     let recurrence: NotebookRecurrence | undefined;
     let dueDate = rawDueDate;
-    if (kind === 'scheduled') {
+    if (kind === 'scheduled' && preserveLegacyWithoutDueDate && existing?.recurrence && isLegacyNotebookRecurrence(existing.recurrence) && !existing.dueDate) {
+      recurrence = existing.recurrence;
+      dueDate = '';
+    } else if (kind === 'scheduled') {
       const scheduled: NotebookScheduledRecurrence = {
         kind: 'scheduled',
         startDate: String(data.get('scheduledStartDate') ?? '').trim(),
@@ -386,6 +394,7 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
   });
   dialog.addEventListener('close', () => {
     editingItemId = null;
+    preserveLegacyWithoutDueDate = false;
     deleteButton.hidden = true;
     recurrenceKind.disabled = false;
   });
