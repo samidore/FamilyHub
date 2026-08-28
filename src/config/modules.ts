@@ -5,7 +5,7 @@ export const categoryDefinitions = [
 ] as const;
 
 export type CategoryId = (typeof categoryDefinitions)[number]['id'];
-export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists' | 'adult-dermatologists' | 'colonoscopy-specialists' | 'ob-gyn' | 'meal-builder' | 'sami-notebook';
+export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists' | 'adult-dermatologists' | 'colonoscopy-specialists' | 'ob-gyn' | 'meal-builder' | 'restaurants' | 'sami-notebook';
 export type ModuleAccent = 'evergreen' | 'lake' | 'ochre' | 'berry';
 export type ModuleIcon = 'compass' | 'calendar' | 'care' | 'meal' | 'notebook';
 export type ModulePrivacyClass = 'public-reference' | 'authenticated-household';
@@ -111,6 +111,19 @@ export const moduleRegistry = [
     summary: '勾选这顿可用的食材，实时补齐 Protein、Vegetable、Staple 和孩子需要的菜。',
     keywords: ['饮食', '组餐', '食材', '菜谱', '做饭', 'meal', 'recipe', 'ingredient', 'cooking'],
     itemLabel: '道候选菜',
+    accent: 'berry',
+    icon: 'meal',
+    privacyClass: 'public-reference',
+    status: 'active',
+  },
+  {
+    id: 'restaurants',
+    route: '/restaurants/',
+    categoryId: 'food-home',
+    title: 'Restaurants',
+    summary: '按堂食、外卖、类型和平台快速查找饭店与下单入口。',
+    keywords: ['饮食', '饭店', '餐厅', '堂食', '外卖', '自取', 'restaurant', 'delivery', 'pickup', 'takeout'],
+    itemLabel: '家饭店',
     accent: 'berry',
     icon: 'meal',
     privacyClass: 'public-reference',

@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { parseAdultDermatologists, parseColonoscopySpecialists, parseDayTrips, parseLibraryEvents, parsePediatricDentists } from '../src/data/schemas.mjs';
 import { parseObGynProviders } from '../src/data/obGynSchema.mjs';
+import { parseRestaurants } from '../src/data/restaurantSchema.mjs';
 import { loadMealData } from './load-meal-data.mjs';
 
 const readJson = async (file) => JSON.parse(await readFile(file, 'utf8'));
@@ -10,6 +11,7 @@ const dentists = parsePediatricDentists(await readJson('src/data/pediatric-denti
 const dermatologists = parseAdultDermatologists(await readJson('src/data/adult-dermatologists.json'));
 const colonoscopy = parseColonoscopySpecialists(await readJson('src/data/colonoscopy-specialists.json'));
 const obGyn = parseObGynProviders(await readJson('src/data/ob-gyn.json'));
+const restaurants = parseRestaurants(await readJson('src/data/restaurants.json'));
 const meals = await loadMealData();
 
 const eventRangePattern = /^\d{4}-\d{2}-\d{2}(?: – \d{4}-\d{2}-\d{2})?$/;
@@ -21,5 +23,5 @@ for (const [index, event] of events.entries()) {
   if (dates.at(-1) < dates[0]) throw new Error(`library-events[${index}].dateRange: end date must not precede start date`);
 }
 
-console.log(`Validated strict public schemas: ${trips.length} trips, ${events.length} events, ${dentists.length} dentists, ${dermatologists.length} dermatologists, ${colonoscopy.length} colonoscopy specialists, ${obGyn.length} OB/GYN providers.`);
+console.log(`Validated strict public schemas: ${trips.length} trips, ${events.length} events, ${dentists.length} dentists, ${dermatologists.length} dermatologists, ${colonoscopy.length} colonoscopy specialists, ${obGyn.length} OB/GYN providers, ${restaurants.length} restaurants.`);
 console.log(`Validated Meal Builder data: ${meals.ingredients.length} ingredients, ${meals.ingredients.filter((item) => item.visible).length} visible Starter choices, ${meals.recipes.length} recipes.`);

@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import FilterShell from '../components/FilterShell.astro';
+import RestaurantCard from '../modules/restaurants/RestaurantCard.astro';
+import { restaurants } from '../data/catalog';
+
+const sortedRestaurants = [...restaurants].sort((a, b) => a.name.localeCompare(b.name));
+const tags = [...new Set(restaurants.flatMap((restaurant) => restaurant.tags))].sort();
+const platforms = [...new Set(restaurants.flatMap((restaurant) => restaurant.orderPlatforms.map((platform) => platform.name)))].sort();
+const restaurantCount = restaurants.length;
+---
+<BaseLayout title="Restaurants | Family Hub" description={`按堂食、外卖、类型和平台筛选 ${restaurantCount} 家饭店。`} pageClass="module-page theme-berry" themeColor="#F3E8EC">
+  <SiteHeader eyebrow="饮食与家庭 · 饭店" title="Restaurants" description="按堂食、外卖、类型和平台快速找饭店；外卖平台会标明配送、自取或两者都有。" accent="berry" icon="meal">
+    <div class="summary-row"><span>{restaurantCount} 家饭店</span><span>公开资料</span></div>
+  </SiteHeader>
+
+  <FilterShell accent="berry" filterId="restaurant-filter-panel" countId="restaurant-count" clearId="restaurant-clear" countText={`显示 ${restaurantCount} / ${restaurantCount} 家饭店`}>
+    <div slot="primary" class="filter-primary__grid">
+      <label><span>搜索饭店</span><input id="restaurant-search" type="search" placeholder="饭店、地址、韩式炸鸡、DoorDash…" autocomplete="off" /></label>
+      <label><span>服务</span><select id="restaurant-service"><option value="">全部</option><option value="dinein">堂食</option><option value="takeout">外卖</option></select></label>
+    </div>
+    <div slot="filters" class="contents">
+      <label><span>Tag</span><select id="restaurant-tag"><option value="">全部 Tag</option>{tags.map((tag) => <option value={tag}>{tag}</option>)}</select></label>
+      <label><span>平台</span><select id="restaurant-platform"><option value="">全部平台</option>{platforms.map((platform) => <option value={platform}>{platform}</option>)}</select></label>
+    </div>
+  </FilterShell>
+
+  <main id="main-content" class="shell listing-main">
+    <div id="restaurant-list" class="record-grid">{sortedRestaurants.map((restaurant) => <RestaurantCard restaurant={restaurant} />)}</div>
+    <p id="restaurant-empty" class="empty-state" hidden>没有符合这些条件的饭店。清除部分筛选后再试。</p>
+  </main>
+
+  <footer class="module-footer"><div class="shell note-box"><strong>下单前以平台最新信息为准。</strong> 配送范围、自取、营业状态和平台可用性可能变化；这里仅保存最近核实的公开入口。</div></footer>
+
+  <script>
+    import { bindListState, clearListState, restoreListState } from '../lib/listState';
+
+    const cards = [...document.querySelectorAll<HTMLElement>('[data-restaurant]')];
+    const controls = {
+      q: document.querySelector<HTMLInputElement>('#restaurant-search')!,
+      service: document.querySelector<HTMLSelectElement>('#restaurant-service')!,
+      tag: document.querySelector<HTMLSelectElement>('#restaurant-tag')!,
+      platform: document.querySelector<HTMLSelectElement>('#restaurant-platform')!,
+    };
+    const count = document.querySelector<HTMLElement>('#restaurant-count')!;
+    const empty = document.querySelector<HTMLElement>('#restaurant-empty')!;
+
+    const render = () => {
+      const query = controls.q.value.trim().toLocaleLowerCase();
+      const visible = cards.filter((card) => {
+        const serviceMatches = !controls.service.value
+          || (controls.service.value === 'dinein' && card.dataset.dinein === '1')
+          || (controls.service.value === 'takeout' && card.dataset.takeout === '1');
+        const tagMatches = !controls.tag.value || card.dataset.tags!.split('|').includes(controls.tag.value);
+        const platformMatches = !controls.platform.value || card.dataset.platforms!.split('|').includes(controls.platform.value);
+        return (!query || card.dataset.search!.includes(query)) && serviceMatches && tagMatches && platformMatches;
+      });
+
+      cards.forEach((card) => card.hidden = !visible.includes(card));
+      count.textContent = `显示 ${visible.length} / ${cards.length} 家饭店`;
+      empty.hidden = visible.length > 0;
+    };
+
+    restoreListState(controls);
+    if (controls.tag.value || controls.platform.value) document.querySelector<HTMLDetailsElement>('.filter-disclosure')!.open = true;
+    bindListState(controls, render);
+    document.querySelector('#restaurant-clear')!.addEventListener('click', () => clearListState(controls, render));
+    render();
+  </script>
+</BaseLayout>

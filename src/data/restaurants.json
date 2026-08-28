@@ -1,0 +1,35 @@
+[
+  {
+    "id": "bloom-chicken-hackensack",
+    "name": "Bloom Chicken",
+    "address": {
+      "line1": "365 Essex St",
+      "city": "Hackensack",
+      "state": "NJ",
+      "postalCode": "07601"
+    },
+    "tags": ["韩式炸鸡", "韩餐"],
+    "dineIn": true,
+    "orderPlatforms": [
+      {
+        "name": "DoorDash",
+        "url": "https://www.doordash.com/en/store/bloom-chicken-llc-hackensack-23112467/",
+        "modes": ["delivery", "pickup"]
+      },
+      {
+        "name": "Uber Eats",
+        "url": "https://www.ubereats.com/store/bloom-chicken-hackensack/FCMt7isiUnaiSPQfKMuyAg",
+        "modes": ["delivery", "pickup"]
+      },
+      {
+        "name": "Grubhub",
+        "url": "https://www.grubhub.com/restaurant/bloom-chicken-365-essex-st-hackensack/3239507",
+        "modes": ["delivery", "pickup"]
+      }
+    ],
+    "officialUrl": "https://www.bloomchicken.com/",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Bloom%20Chicken%2C%20365%20Essex%20St%2C%20Hackensack%2C%20NJ%2007601",
+    "yelpUrl": "https://www.yelp.com/biz/bloom-chicken-hackensack",
+    "verifiedDate": "2026-08-28"
+  }
+]

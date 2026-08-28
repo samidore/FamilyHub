@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ModuleCard from '../components/ModuleCard.astro';
 import { categoryDefinitions, moduleRegistry, type ModuleId } from '../config/modules';
-import { adultDermatologists, colonoscopySpecialists, dayTrips, libraryEvents, obGynProviders, pediatricDentists, latestVerifiedDate, moduleRecords } from '../data/catalog';
+import { adultDermatologists, colonoscopySpecialists, dayTrips, libraryEvents, obGynProviders, pediatricDentists, restaurants, latestVerifiedDate, moduleRecords } from '../data/catalog';
 import { mealData } from '../data/meal';
 
 const base = import.meta.env.BASE_URL;
@@ -15,6 +15,7 @@ const verifiedDates: Partial<Record<ModuleId, string>> = {
   'colonoscopy-specialists': latestVerifiedDate(colonoscopySpecialists),
   'ob-gyn': latestVerifiedDate(obGynProviders),
   'meal-builder': mealData.metadata.lastUpdated,
+  'restaurants': latestVerifiedDate(restaurants),
 };
 const publicCounts: Partial<Record<ModuleId, number>> = Object.fromEntries(
   Object.entries(moduleRecords).map(([id, records]) => [id, records?.length ?? 0]),
