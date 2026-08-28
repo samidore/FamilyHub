@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { defaultNotebookState, isSupportedRecurrence, normalizeMemberDisplayName, normalizeNotebookState } from '../src/lib/notebookDomain.ts';
 import { LocalNotebookRepository, createNotebookRepository } from '../src/lib/notebookRepository.ts';
@@ -43,6 +44,14 @@ test('completion and recurrence invariants reject malformed items while legacy r
   assert.equal(isSupportedRecurrence({ kind: 'scheduled', startDate: '2026-09-07', unit: 'week', interval: 2, weekdays: [] }), false);
   assert.equal(isSupportedRecurrence({ kind: 'afterCompletion', intervalDays: 30 }), true);
   assert.equal(isSupportedRecurrence({ kind: 'afterCompletion', intervalDays: 0 }), false);
+});
+
+test('item editor Enter does not implicitly submit from an input', async () => {
+  const ui = await readFile('src/lib/notebookUi.ts', 'utf8');
+  assert.match(ui, /itemForm\.addEventListener\('keydown'/);
+  assert.match(ui, /event\.key === 'Enter'/);
+  assert.match(ui, /event\.target instanceof HTMLInputElement/);
+  assert.match(ui, /event\.preventDefault\(\)/);
 });
 
 test('display names are private names, not email addresses', () => {
