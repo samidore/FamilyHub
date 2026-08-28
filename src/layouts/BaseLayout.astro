@@ -24,5 +24,15 @@ const showMealInventoryImport = pageClass.split(/\s+/).includes('meal-builder-pa
     {showMealInventoryImport && <MealInventoryImport />}
     {showMealInventoryImport && <MealBuilderNavigationEnhancements />}
     {showMealInventoryImport && <MealBuilderCompositionEnhancements />}
+    <script>
+      const mealNext = document.querySelector<HTMLButtonElement>('#meal-next');
+      const mealForceNext = document.querySelector<HTMLButtonElement>('#meal-force-next');
+      mealNext?.addEventListener('click', (event) => {
+        if (mealNext.disabled || !mealForceNext || mealForceNext.disabled) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        mealForceNext.click();
+      }, true);
+    </script>
   </body>
 </html>
