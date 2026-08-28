@@ -1,21 +1,16 @@
 import { cloneNotebookState, defaultNotebookState, normalizeMemberDisplayName, normalizeNotebookState, type NotebookState } from './notebookDomain.ts';
 import { attributeNewNotebookItems } from './notebookAttribution.ts';
-import type { FirebaseConfig } from './householdRepository.ts';
-import { getApps, initializeApp, type FirebaseApp } from 'firebase/app';
 import {
-  GoogleAuthProvider,
-  browserLocalPersistence,
-  getAuth,
-  getRedirectResult,
-  onAuthStateChanged,
-  setPersistence,
-  signInWithPopup,
-  signInWithRedirect,
-  signOut as firebaseSignOut,
-  type Auth,
-  type User,
-} from 'firebase/auth';
-import { get, getDatabase, onValue, ref, runTransaction, set, type Database, type DatabaseReference, type DataSnapshot } from 'firebase/database';
+  FirebaseHouseholdSession,
+  googleIdentity,
+  hasAnyFirebaseConfig,
+  hasCompleteFirebaseConfig,
+  shouldUseRedirectFallback,
+  type FirebaseConfig,
+  type HouseholdSessionStatus,
+} from './householdSession.ts';
+import { get, onValue, ref, runTransaction, type DatabaseReference, type DataSnapshot } from 'firebase/database';
+import type { User } from 'firebase/auth';
 
 export type NotebookRepositoryConnection = 'local' | 'signed-out' | 'connecting' | 'pending' | 'connected' | 'error';
 export interface NotebookRepositoryStatus {
@@ -48,21 +43,11 @@ export interface NotebookRepository {
 interface LocalNotebookRepositoryOptions { initialState?: unknown; displayName?: string; }
 export interface CreateNotebookRepositoryOptions extends LocalNotebookRepositoryOptions { allowLocal?: boolean; }
 
-const REQUIRED_FIREBASE_CONFIG_KEYS: (keyof FirebaseConfig)[] = ['apiKey', 'authDomain', 'projectId', 'databaseURL', 'appId', 'householdId'];
-const OPTIONAL_FIREBASE_CONFIG_KEYS: (keyof FirebaseConfig)[] = ['storageBucket', 'messagingSenderId'];
-const popupFallbackCodes = new Set(['auth/popup-blocked', 'auth/operation-not-supported-in-this-environment', 'auth/web-storage-unsupported']);
-
-export const hasCompleteNotebookFirebaseConfig = (config: Partial<FirebaseConfig> | null | undefined): config is FirebaseConfig =>
-  Boolean(config && REQUIRED_FIREBASE_CONFIG_KEYS.every((key) => typeof config[key] === 'string' && config[key]!.trim()));
-export const hasAnyNotebookFirebaseConfig = (config: Partial<FirebaseConfig> | null | undefined) =>
-  Boolean(config && [...REQUIRED_FIREBASE_CONFIG_KEYS, ...OPTIONAL_FIREBASE_CONFIG_KEYS].some((key) => typeof config[key] === 'string' && config[key]!.trim()));
-
-export function notebookGoogleIdentity(user: Pick<User, 'uid' | 'email' | 'emailVerified' | 'providerData'> | null) {
-  if (!user?.email || !user.emailVerified || !user.providerData.some((provider) => provider.providerId === 'google.com')) return null;
-  return { uid: user.uid, email: user.email };
-}
-
-export const shouldUseNotebookRedirectFallback = (error: unknown) => popupFallbackCodes.has((error as { code?: string } | null)?.code ?? '');
+// Compatibility aliases: Notebook and Meal Builder now use the same household session helpers.
+export const hasCompleteNotebookFirebaseConfig = hasCompleteFirebaseConfig;
+export const hasAnyNotebookFirebaseConfig = hasAnyFirebaseConfig;
+export const notebookGoogleIdentity = (user: Pick<User, 'uid' | 'email' | 'emailVerified' | 'providerData'> | null) => googleIdentity(user);
+export const shouldUseNotebookRedirectFallback = shouldUseRedirectFallback;
 
 export class LocalNotebookRepository implements NotebookRepository {
   readonly kind = 'local' as const;
@@ -102,33 +87,26 @@ export class FirebaseNotebookRepository implements NotebookRepository {
   readonly kind = 'firebase' as const;
   readonly householdId: string;
   readonly ready: Promise<void>;
-  private readonly app: FirebaseApp;
-  private readonly auth: Auth;
-  private readonly database: Database;
+  private readonly session: FirebaseHouseholdSession;
   private readonly notebookRef: DatabaseReference;
   private readonly listeners = new Set<NotebookStateListener>();
   private state: NotebookState = defaultNotebookState();
   private status: NotebookRepositoryStatus = { connection: 'connecting', label: '正在恢复登录状态…' };
-  private uid = '';
-  private email = '';
-  private displayName = '';
   private unsubscribeNotebook?: () => void;
-  private unsubscribeMember?: () => void;
+  private unsubscribeSession?: () => void;
+  private connectedUid = '';
   private disposed = false;
 
   constructor(config: FirebaseConfig) {
     this.householdId = config.householdId;
-    const appName = `family-hub-${config.projectId}`;
-    this.app = getApps().find((candidate) => candidate.name === appName) ?? initializeApp(config, appName);
-    this.auth = getAuth(this.app);
-    this.database = getDatabase(this.app, config.databaseURL);
-    this.notebookRef = ref(this.database, `households/${config.householdId}/notebook`);
+    this.session = new FirebaseHouseholdSession(config);
+    this.notebookRef = ref(this.session.database, `households/${config.householdId}/notebook`);
     this.ready = this.initialize();
   }
 
   getSnapshot() { return cloneNotebookState(this.state); }
-  getStatus() { return { ...this.status, uid: this.uid || undefined, email: this.email || undefined, displayName: this.displayName || undefined }; }
-  getCurrentMemberDisplayName() { return normalizeMemberDisplayName(this.displayName); }
+  getStatus() { return { ...this.status }; }
+  getCurrentMemberDisplayName() { return this.session.getCurrentMemberDisplayName(); }
   subscribe(listener: NotebookStateListener) { this.listeners.add(listener); listener(this.getSnapshot(), this.getStatus()); return () => this.listeners.delete(listener); }
   async update(mutator: (current: NotebookState) => NotebookState) { return this.transaction(mutator); }
   async transaction(mutator: (current: NotebookState) => NotebookState) {
@@ -142,124 +120,57 @@ export class FirebaseNotebookRepository implements NotebookRepository {
     this.setStateFromSnapshot(transaction.snapshot);
     return this.getSnapshot();
   }
-
-  async signInWithGoogle() {
-    await setPersistence(this.auth, browserLocalPersistence);
-    if (this.auth.currentUser?.isAnonymous) await firebaseSignOut(this.auth);
-    this.setStatus({ connection: 'connecting', label: '正在打开 Google 登录…' });
-    const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: 'select_account' });
-    try {
-      await signInWithPopup(this.auth, provider);
-      await this.resolveCurrentUser();
-    } catch (error) {
-      if (shouldUseNotebookRedirectFallback(error)) { await signInWithRedirect(this.auth, provider); return; }
-      this.fail('Google 登录失败', error);
-      throw error;
-    }
+  signInWithGoogle() { return this.session.signInWithGoogle(); }
+  refreshAccess() { return this.session.refreshAccess(); }
+  signOut() { return this.session.signOut(); }
+  dispose() {
+    this.disposed = true;
+    this.stopNotebookSubscription();
+    this.unsubscribeSession?.();
+    this.unsubscribeSession = undefined;
+    this.session.dispose();
+    this.listeners.clear();
   }
-
-  async refreshAccess() {
-    try { await this.resolveCurrentUser(); }
-    catch (error) { this.fail('权限检查失败', error); throw error; }
-  }
-
-  async signOut() {
-    this.stopSubscriptions();
-    await firebaseSignOut(this.auth);
-    this.uid = '';
-    this.email = '';
-    this.displayName = '';
-    this.state = defaultNotebookState();
-    this.showSignedOut();
-  }
-
-  dispose() { this.disposed = true; this.stopSubscriptions(); this.listeners.clear(); }
 
   private async initialize() {
-    try {
-      await setPersistence(this.auth, browserLocalPersistence);
-      await getRedirectResult(this.auth);
-      const user = await new Promise<User | null>((resolve) => {
-        const unsubscribe = onAuthStateChanged(this.auth, (next) => { unsubscribe(); resolve(next); });
-      });
-      if (!user) { this.showSignedOut(); return; }
-      if (user.isAnonymous) { await firebaseSignOut(this.auth); this.showSignedOut(); return; }
-      await this.resolveAccess(user);
-    } catch (error) {
-      this.fail('Firebase 连接失败', error);
-      throw error;
-    }
+    await this.session.ready.catch(() => undefined);
+    await this.handleSessionStatus(this.session.getStatus());
+    this.unsubscribeSession = this.session.subscribe((status) => { if (!this.disposed) void this.handleSessionStatus(status); });
   }
 
-  private async resolveCurrentUser() {
-    const user = this.auth.currentUser;
-    if (!user) { this.showSignedOut(); return; }
-    await this.resolveAccess(user);
-  }
-
-  private async resolveAccess(user: User) {
-    const identity = notebookGoogleIdentity(user);
-    if (!identity) throw new Error('请使用已验证的 Google Gmail 账号登录。');
-    this.uid = identity.uid;
-    this.email = identity.email;
-    this.displayName = '';
-    this.stopSubscriptions();
-    this.setStatus({ connection: 'connecting', label: '正在检查家庭权限…', uid: this.uid, email: this.email });
-    const memberRef = ref(this.database, `households/${this.householdId}/members/${this.uid}`);
-    const enrollmentRef = ref(this.database, `households/${this.householdId}/settings/enrollmentOpen`);
-    const [member, enrollment] = await Promise.all([get(memberRef), get(enrollmentRef)]);
-    const enrollmentOpen = enrollment.val() === true;
-    if (member.child('email').val() === this.email) { await this.connectNotebook(memberRef, enrollmentOpen); return; }
-    if (enrollmentOpen) {
-      await set(memberRef, { email: this.email });
-      await this.connectNotebook(memberRef, true);
-      return;
-    }
-    await set(ref(this.database, `households/${this.householdId}/accessRequests/${this.uid}`), { email: this.email });
-    this.state = defaultNotebookState();
-    this.setStatus({ connection: 'pending', label: '等待家庭管理员批准', uid: this.uid, email: this.email, enrollmentOpen: false });
-    this.unsubscribeMember = onValue(memberRef, (next) => {
-      if (!this.disposed && next.child('email').val() === this.email) void this.connectNotebook(memberRef, false).catch((error) => this.fail('Firebase 连接失败', error));
-    }, (error) => this.fail('成员权限检查失败', error));
-  }
-
-  private async connectNotebook(memberRef: DatabaseReference, enrollmentOpen: boolean) {
-    this.unsubscribeMember?.();
-    this.unsubscribeMember = undefined;
-    const [notebook, member] = await Promise.all([get(this.notebookRef), get(memberRef)]);
-    if (member.child('email').val() !== this.email) throw new Error('家庭成员权限不存在。');
-    this.displayName = normalizeMemberDisplayName(member.child('displayName').val()) ?? '';
-    this.setStateFromSnapshot(notebook);
-    this.setStatus({ connection: 'connected', label: '已连接 Firebase', uid: this.uid, email: this.email, displayName: this.displayName || undefined, enrollmentOpen });
-    this.unsubscribeNotebook?.();
-    this.unsubscribeNotebook = onValue(this.notebookRef, (next) => this.setStateFromSnapshot(next), (error) => { if (!this.disposed) this.fail('Firebase 实时连接中断', error); });
-    this.unsubscribeMember = onValue(memberRef, (next) => {
-      if (this.disposed) return;
-      if (next.child('email').val() !== this.email) {
-        this.unsubscribeNotebook?.();
-        this.unsubscribeNotebook = undefined;
-        this.displayName = '';
-        this.state = defaultNotebookState();
-        this.setStatus({ connection: 'pending', label: '家庭权限已撤销', uid: this.uid, email: this.email, enrollmentOpen: false });
+  private async handleSessionStatus(sessionStatus: HouseholdSessionStatus) {
+    if (sessionStatus.connection === 'connected' && sessionStatus.uid) {
+      if (this.connectedUid === sessionStatus.uid && this.status.connection === 'connected') {
+        this.setStatus(this.fromSessionStatus(sessionStatus));
         return;
       }
-      const nextDisplayName = normalizeMemberDisplayName(next.child('displayName').val()) ?? '';
-      if (nextDisplayName !== this.displayName) {
-        this.displayName = nextDisplayName;
-        this.setStatus({ ...this.status, displayName: this.displayName || undefined });
-      }
-    }, (error) => this.fail('成员资料同步失败', error));
+      this.stopNotebookSubscription();
+      const snapshot = await get(this.notebookRef);
+      if (this.disposed || this.session.getStatus().connection !== 'connected') return;
+      this.connectedUid = sessionStatus.uid;
+      this.setStateFromSnapshot(snapshot);
+      this.setStatus(this.fromSessionStatus(sessionStatus));
+      this.unsubscribeNotebook = onValue(this.notebookRef, (next) => this.setStateFromSnapshot(next), (error) => { if (!this.disposed) this.fail('Firebase 实时连接中断', error); });
+      return;
+    }
+    this.connectedUid = '';
+    this.stopNotebookSubscription();
+    this.state = defaultNotebookState();
+    this.setStatus(this.fromSessionStatus(sessionStatus));
+  }
+
+  private fromSessionStatus(status: HouseholdSessionStatus): NotebookRepositoryStatus {
+    return { ...status, connection: status.connection };
   }
 
   private assertReady() { if (this.status.connection !== 'connected') throw new Error(this.status.error ?? 'Notebook repository is not ready'); }
   private setStateFromSnapshot(snapshot: DataSnapshot) { this.state = normalizeNotebookState(snapshot.val()); this.emit(); }
-  private stopSubscriptions() { this.unsubscribeNotebook?.(); this.unsubscribeNotebook = undefined; this.unsubscribeMember?.(); this.unsubscribeMember = undefined; }
-  private showSignedOut() { this.state = defaultNotebookState(); this.displayName = ''; this.setStatus({ connection: 'signed-out', label: '需要登录' }); }
+  private stopNotebookSubscription() { this.unsubscribeNotebook?.(); this.unsubscribeNotebook = undefined; }
   private setStatus(status: NotebookRepositoryStatus) { this.status = status; this.emit(); }
   private fail(label: string, error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
-    this.setStatus({ connection: 'error', label, uid: this.uid || undefined, email: this.email || undefined, displayName: this.displayName || undefined, error: message });
+    const session = this.session.getStatus();
+    this.setStatus({ connection: 'error', label, uid: session.uid, email: session.email, displayName: session.displayName, error: message });
   }
   private emit() { const state = this.getSnapshot(); const status = this.getStatus(); for (const listener of this.listeners) listener(state, status); }
 }
