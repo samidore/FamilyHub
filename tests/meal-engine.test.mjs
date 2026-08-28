@@ -151,7 +151,7 @@ test('structured data keeps key Ingredient, Recipe, and unified optional-group r
 test('Meal Builder manifests reject unindexed files and broken references', async () => {
   const files = await readMealFiles();
   assert.throws(() => parseMealFiles({ ...files, 'recipe/chicken/unindexed.yaml': files['recipe/chicken/chicken-teriyaki-thighs.yaml'] }), /unindexed active file/);
-  const broken = { ...files, 'recipe/chicken/chicken-teriyaki-thighs.yaml': files['recipe/chicken/chicken-teriyaki-thighs.yaml'].replace('ingredient_id: boneless-skinless-chicken-thighs', 'ingredient_id: missing-ingredient') };
+  const broken = { ...files, 'recipe/chicken/chicken-teriyaki-thighs.yaml': files['recipe/chicken/chicken-teriyaki-thighs.yaml'].replace('ingredient_id: chicken-thighs', 'ingredient_id: missing-ingredient') };
   assert.throws(() => parseMealFiles(broken), /references missing ingredient/);
 });
 
