@@ -31,8 +31,7 @@ ingredients:
       visible: true
       section: staple
       order: 30
-    tags:
-      - easy-braise-addon
+    tags: []
   - id: sweet-potato
     type: ingredient
     inventory_tracking: counted
@@ -54,8 +53,7 @@ ingredients:
       visible: true
       section: staple
       order: 50
-    tags:
-      - easy-braise-addon
+    tags: []
   - id: lotus-root
     type: ingredient
     inventory_tracking: counted
@@ -77,8 +75,7 @@ ingredients:
       visible: true
       section: staple
       order: 70
-    tags:
-      - easy-braise-addon
+    tags: []
   - id: corn
     type: ingredient
     inventory_tracking: counted
