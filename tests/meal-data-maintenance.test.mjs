@@ -88,36 +88,27 @@ test('active Meal Builder records exclude retired metadata', async () => {
   }
 });
 
-test('active capability tags are data-driven rather than count-gated', async () => {
+test('optional-group membership is centralized and data-driven rather than count-gated', async () => {
   const files = await readMealFiles();
-  const chicken = parse(files['ingredients/chicken.yaml']);
-  const ingredient = chicken.ingredients.find((item) => !item.tags?.includes('easy-braise-addon'));
-  ingredient.tags = [...(ingredient.tags ?? []), 'easy-braise-addon'];
+  const registry = parse(files['optional-groups.yaml']);
+  registry.optional_groups.find((group) => group.id === 'change-it-up').ingredients.push({ ingredient_id: 'eggs', meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }, checkout_units: 1 });
   const recipe = parse(files['recipe/chicken/instant-pot-soy-chicken-thighs.yaml']);
-  recipe.tags = [...(recipe.tags ?? []), 'iron-pan-braise'];
-  assert.doesNotThrow(() => parseMealFiles({
-    ...files,
-    'ingredients/chicken.yaml': stringify(chicken),
-    'recipe/chicken/instant-pot-soy-chicken-thighs.yaml': stringify(recipe),
-  }));
+  recipe.optional_groups = [...(recipe.optional_groups ?? []), 'change-it-up'];
+  const data = parseMealFiles({ ...files, 'optional-groups.yaml': stringify(registry), 'recipe/chicken/instant-pot-soy-chicken-thighs.yaml': stringify(recipe) });
+  assert.equal(data.optionalGroups.find((group) => group.id === 'change-it-up').ingredients.some((entry) => entry.ingredientId === 'eggs'), true);
+  assert.equal(data.recipes.find((item) => item.id === 'instant-pot-soy-chicken-thighs').optionalGroupIds.includes('change-it-up'), true);
 });
 
-test('archived tagged records do not change active easy-braise or iron-pan membership', async () => {
+test('archived optional-group references do not change the active Recipe scope', async () => {
   const files = await readMealFiles();
   const before = parseMealFiles(files);
-  const ingredient = parse(files['ingredients/chicken.yaml']).ingredients[0];
-  ingredient.id = 'archived-easy-braise'; ingredient.status = 'archived'; ingredient.starter.order = 9999; ingredient.tags = ['easy-braise-addon'];
-  const recipe = parse(files[recipePath]);
-  recipe.id = 'archived-iron-pan'; recipe.status = 'archived'; recipe.tags = ['iron-pan-braise'];
-  const data = parseMealFiles({
-    ...files,
-    'archive/ingredients/archived-easy-braise.yaml': stringify(ingredient),
-    'archive/recipe/archived-iron-pan.yaml': stringify(recipe),
-  });
-  const easyBraiseIds = (value) => value.ingredients.filter((item) => item.tags.includes('easy-braise-addon')).map((item) => item.id).sort();
-  const ironPanIds = (value) => value.recipes.filter((item) => item.tags.includes('iron-pan-braise')).map((item) => item.id).sort();
-  assert.deepEqual(easyBraiseIds(data), easyBraiseIds(before));
-  assert.deepEqual(ironPanIds(data), ironPanIds(before));
+  const archived = parse(files[recipePath]);
+  archived.id = 'archived-one-pot-recipe';
+  archived.status = 'archived';
+  archived.optional_groups = ['one-pot-mix'];
+  const data = parseMealFiles({ ...files, 'archive/recipe/archived-one-pot-recipe.yaml': stringify(archived) });
+  const activeOnePot = (value) => value.recipes.filter((item) => item.optionalGroupIds.includes('one-pot-mix')).map((item) => item.id).sort();
+  assert.deepEqual(activeOnePot(data), activeOnePot(before));
 });
 
 test('read-only maintenance helper inspects names, references, ordering, and validation', async () => {
