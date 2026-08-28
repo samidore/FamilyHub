@@ -56,13 +56,21 @@
     nav.append(track);
     inventoryView.append(nav);
 
+    const inventoryJumpLabels: Record<string, string> = {
+      pork: '猪',
+      beef: '牛',
+      'lamb-goat': '羊',
+      chicken: '鸡',
+    };
+
     let signature = '';
     const syncInventoryJumpNav = () => {
       const groups = [...inventoryList.querySelectorAll<HTMLDetailsElement>('details[data-inventory-section]')];
       const entries = groups.flatMap((group) => {
         const id = group.dataset.inventorySection;
         if (!id) return [];
-        const label = group.querySelector<HTMLElement>('summary strong')?.textContent?.trim() || id;
+        const fullLabel = group.querySelector<HTMLElement>('summary strong')?.textContent?.trim() || id;
+        const label = inventoryJumpLabels[id] ?? fullLabel;
         return [{ id, label }];
       });
       nav.hidden = entries.length === 0;
