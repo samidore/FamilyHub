@@ -8,6 +8,7 @@ import {
   defaultRestaurantInteractionState,
   normalizeRestaurantInteractionState,
   restaurantCommentsFor,
+  restaurantInteractionLeafPatch,
   restaurantRatingForAuthor,
   restaurantWantSummary,
   setRestaurantRating,
@@ -36,6 +37,19 @@ test('ratings are one integer 1-5 score per uid and author', () => {
   assert.equal(state.ratings.bloom.cat.score, 5);
   state = setRestaurantRating(state, 'bloom', 'cat', '猫猫', null, 3);
   assert.equal(state.ratings.bloom, undefined);
+});
+
+test('restaurant Firebase patches touch exact leaves and never rewrite sibling member state', () => {
+  let current = defaultRestaurantInteractionState();
+  current = setRestaurantRating(current, 'bloom', 'dog', '呜哇', 5, 1);
+  const withCat = setRestaurantRating(current, 'bloom', 'cat', '猫猫', 4, 2);
+  assert.deepEqual(restaurantInteractionLeafPatch(current, withCat), {
+    'ratings/bloom/cat': { score: 4, authorName: '猫猫', updatedAt: 2 },
+  });
+  const withoutDog = setRestaurantRating(withCat, 'bloom', 'dog', '呜哇', null, 3);
+  assert.deepEqual(restaurantInteractionLeafPatch(withCat, withoutDog), {
+    'ratings/bloom/dog': null,
+  });
 });
 
 test('want priority sorts more household wants first then name', () => {
