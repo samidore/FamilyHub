@@ -3,12 +3,13 @@ type: recipe
 status: candidate
 name_zh: 红烧羊肋排
 name_en: Red-Braised Lamb Riblets
-tags: [iron-pan-braise, light-seasoning, non-spicy-base, braised, stovetop-nonstick, advance-start, family-shared, child-support-protein]
+tags: [light-seasoning, non-spicy-base, braised, stovetop-nonstick, advance-start, family-shared, child-support-protein]
 fit_score: 4
 primary_role: protein
 main_protein_category: lamb
 main_protein_ingredient_ids: [lamb-riblets]
 supporting_protein_ingredient_ids: []
+optional_groups: [one-pot-mix]
 vegetable_ingredient_ids: []
 meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
 child_coverage: { protein: true, vegetable: false }
