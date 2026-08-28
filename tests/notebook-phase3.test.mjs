@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { defaultNotebookState, normalizeNotebookState } from '../src/lib/notebookDomain.ts';
 import {
@@ -28,6 +29,13 @@ test('legacy recurrence remains readable and date advancement preserves calendar
   assert.equal(advanceNotebookDueDate('2024-02-29', { unit: 'year', interval: 1 }), '2025-02-28');
   assert.equal(advanceNotebookDueDate('2026-08-22', { unit: 'week', interval: 1 }), '2026-08-29');
   assert.equal(advanceNotebookDueDate('2026-08-22', { unit: 'day', interval: 3 }), '2026-08-25');
+});
+
+test('undated legacy recurrence editor does not invent a scheduled anchor on an unrelated save', async () => {
+  const source = await readFile('src/lib/notebookItemUi.ts', 'utf8');
+  assert.match(source, /preserveLegacyWithoutDueDate = Boolean\(item\?\.recurrence/);
+  assert.match(source, /!scheduledStartDate\.value && !preserveLegacyWithoutDueDate/);
+  assert.match(source, /kind === 'scheduled' && preserveLegacyWithoutDueDate/);
 });
 
 test('scheduled recurrence supports every N weeks, weekdays, and does not skip overdue occurrences', () => {
