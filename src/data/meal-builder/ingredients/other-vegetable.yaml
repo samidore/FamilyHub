@@ -50,8 +50,7 @@ ingredients:
       visible: true
       section: other-vegetable
       order: 40
-    tags:
-      - easy-braise-addon
+    tags: []
   - id: luffa
     type: ingredient
     inventory_tracking: counted
@@ -156,8 +155,7 @@ ingredients:
       visible: true
       section: other-vegetable
       order: 120
-    tags:
-      - easy-braise-addon
+    tags: []
   - id: daikon
     type: ingredient
     inventory_tracking: counted
@@ -170,8 +168,7 @@ ingredients:
       visible: true
       section: other-vegetable
       order: 130
-    tags:
-      - easy-braise-addon
+    tags: []
   - id: chinese-yam
     type: ingredient
     inventory_tracking: counted
@@ -314,8 +311,7 @@ ingredients:
       visible: true
       section: other-vegetable
       order: 240
-    tags:
-      - easy-braise-addon
+    tags: []
   - id: garlic-scapes
     type: ingredient
     inventory_tracking: counted
