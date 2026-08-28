@@ -10,6 +10,7 @@ const drive = `${event.drive}${event.distanceMiles != null ? ` · ${event.distan
 const scheduleDates = event.dateRange.match(/\d{4}-\d{2}-\d{2}/g) ?? [];
 const startDate = scheduleDates[0] ?? '';
 const endDate = scheduleDates.at(-1) ?? '';
+const dateIsEstimated = event.badges.includes('日期暂估');
 ---
 <article class="record-card event-card" data-event data-search={searchable} data-day={event.day} data-day-order={event.dayOrder} data-time-order={event.timeOrder} data-start-date={startDate} data-end-date={endDate} data-age={event.ageGroup} data-drive={driveMin} data-type={activityType} data-registration={registrationType}>
   <div class="event-time"><span>{event.day}</span><strong>{event.time}</strong></div>
@@ -17,7 +18,7 @@ const endDate = scheduleDates.at(-1) ?? '';
     <h2>{event.name}</h2>
     <p class="event-library">{event.library}</p>
     <dl class="event-details">
-      {event.dateRange && <div><dt>日期</dt><dd>{event.dateRange}</dd></div>}
+      {event.dateRange && <div><dt>日期</dt><dd>{event.dateRange}{dateIsEstimated ? '（暂估）' : ''}</dd></div>}
       <div><dt>地点与车程</dt><dd>{event.location} <span aria-hidden="true">·</span> {drive}</dd></div>
       <div><dt>年龄</dt><dd>{event.age}</dd></div>
       <div><dt>报名</dt><dd>{event.registration}</dd></div>
