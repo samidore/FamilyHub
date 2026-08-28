@@ -79,6 +79,21 @@ test('optional potential keeps a candidate visible without counting it as alread
   assert.deepEqual(aggregateMeal([beef], { availableIngredientIds: state.availableIngredientIds, optionalGroups: groups }).vegetable, 0);
 });
 
+test('available unselected optional freshness participates in ranking but unavailable optional freshness does not', () => {
+  const groups = [{ id: 'tomato-mode', labelZh: '改头换面', ingredients: [{ ingredientId: 'tomato', contribution: { protein: 0, vegetable: 1, staple: 0 }, checkoutUnits: 1 }] }];
+  const optionalStale = { ...recipe('r1', { protein: 1, vegetable: 0, staple: 0 }, { protein: false, vegetable: false }, [{ anyOf: ['beef'], role: 'main-protein' }]), optionalGroupIds: ['tomato-mode'], fitScore: 1 };
+  const strongerFresh = { ...recipe('r2', { protein: 1, vegetable: 0, staple: 0 }, { protein: false, vegetable: false }, [{ anyOf: ['chicken'], role: 'main-protein' }]), fitScore: 5 };
+  const ingredients = [
+    { id: 'beef', inventoryTracking: 'counted' },
+    { id: 'chicken', inventoryTracking: 'counted' },
+    { id: 'tomato', inventoryTracking: 'counted', inventoryFreshness: 'fifo', freshnessPriorityDays: 5 },
+  ];
+  const state = { ...defaultMealState(), proteinTarget: 2, vegetableTarget: 1, stapleRequired: false, childMode: false, availableIngredientIds: ['beef', 'chicken', 'tomato'], ingredientFreshnessDates: { tomato: '2026-08-20' } };
+  assert.deepEqual(rankCandidates([strongerFresh, optionalStale], state, ingredients, {}, [], '2026-08-27', groups).map((item) => item.id), ['r1', 'r2']);
+  const withoutTomato = { ...state, availableIngredientIds: ['beef', 'chicken'] };
+  assert.deepEqual(rankCandidates([strongerFresh, optionalStale], withoutTomato, ingredients, {}, [], '2026-08-27', groups).map((item) => item.id), ['r2', 'r1']);
+});
+
 test('expiring feasible candidates sort before otherwise stronger candidates, oldest first', () => {
   const staleOld = { ...recipe('r1', { protein: 1, vegetable: 0, staple: 0 }, { protein: false, vegetable: false }, [{ anyOf: ['old'], role: 'main-protein' }]), fitScore: 1 };
   const staleNewer = { ...recipe('r2', { protein: 1, vegetable: 0, staple: 0 }, { protein: false, vegetable: false }, [{ anyOf: ['newer'], role: 'main-protein' }]), fitScore: 2 };
@@ -124,7 +139,10 @@ test('structured data keeps key Ingredient, Recipe, and unified optional-group r
   assert.equal(kb.optionalGroups.find((group) => group.id === 'one-pot-mix')?.ingredients.length, 23);
   assert.equal(kb.recipes.filter((item) => item.optionalGroupIds?.includes('one-pot-mix')).length, 40);
   assert.equal(kb.recipes.filter((item) => item.optionalGroupIds?.includes('add-some-richness')).length, 6);
-  assert.equal(kb.recipes.filter((item) => item.optionalGroupIds?.includes('change-it-up')).length, 3);
+  assert.equal(kb.recipes.filter((item) => item.optionalGroupIds?.includes('change-it-up')).length, 4);
+  assert.equal(kb.ingredients.find((item) => item.id === 'choy-sum')?.nameZh, '油菜苗');
+  assert.equal(kb.recipes.find((item) => item.id === 'mushroom-soft-tofu-soup')?.optionalGroupIds?.includes('change-it-up'), true);
+  assert.equal(kb.recipes.find((item) => item.id === 'mushroom-soft-tofu-soup')?.steps.some((step) => step.includes('如果加番茄') && step.includes('2–3分钟')), true);
   assert.equal(kb.ingredients.some((item) => item.tags?.includes('easy-braise-addon')), false);
   assert.equal(kb.recipes.some((item) => item.tags?.includes('iron-pan-braise')), false);
   assert.equal(kb.ingredients.find((item) => item.id === 'ground-pork')?.tags?.includes('child-eaten'), true);

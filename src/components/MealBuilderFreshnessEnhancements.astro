@@ -3,13 +3,15 @@
     bindRecipeIngredients,
     calendarDateKey,
     freshnessAgeDays,
+    freshnessIngredientIdsForRecipe,
     type MealIngredient,
+    type MealOptionalGroup,
     type MealRecipe,
   } from '../lib/mealEngine';
   import type { CurrentMeal, HouseholdState } from '../lib/household';
   import { createHouseholdRepository } from '../lib/householdRepository';
 
-  type Payload = { ingredients: MealIngredient[]; recipes: MealRecipe[] };
+  type Payload = { ingredients: MealIngredient[]; optionalGroups: MealOptionalGroup[]; recipes: MealRecipe[] };
   type FreshnessSignal = { ingredientId: string; label: string; ageDays: number };
 
   const source = document.querySelector<HTMLScriptElement>('#meal-composition-data');
@@ -19,6 +21,7 @@
   const payload = JSON.parse(source.textContent || '{}') as Payload;
   const firebaseConfig = JSON.parse(firebaseSource.textContent || '{}') as Record<string, string>;
   const ingredients = payload.ingredients;
+  const optionalGroups = payload.optionalGroups ?? [];
   const recipes = payload.recipes;
   const ingredientById = new Map(ingredients.map((ingredient) => [ingredient.id, ingredient]));
   const repository = createHouseholdRepository(firebaseConfig, { ingredients, recipes, firebase: { ingredients, recipes } });
@@ -33,11 +36,11 @@
     requestAnimationFrame(() => { renderQueued = false; render(); });
   }
 
-  function freshnessSignals(binding: (string | null | undefined)[], meal: CurrentMeal) {
+  function freshnessSignals(ingredientIds: (string | null | undefined)[], meal: CurrentMeal) {
     const today = calendarDateKey();
     const seen = new Set<string>();
     const signals: FreshnessSignal[] = [];
-    for (const ingredientId of binding) {
+    for (const ingredientId of ingredientIds) {
       if (!ingredientId || seen.has(ingredientId)) continue;
       seen.add(ingredientId);
       const ingredient = ingredientById.get(ingredientId);
@@ -59,6 +62,10 @@
       if (Number.isInteger(index) && index >= 0) binding[index] = select.value;
     });
     return binding;
+  }
+
+  function signalsForRecipe(recipe: MealRecipe, binding: (string | null | undefined)[], meal: CurrentMeal) {
+    return freshnessSignals(freshnessIngredientIdsForRecipe(recipe, binding, meal.availableIngredientIds, optionalGroups), meal);
   }
 
   function hourglass() {
@@ -103,12 +110,12 @@
       const selectedHost = document.querySelector<HTMLElement>(`[data-selected-freshness-badge="${CSS.escape(recipe.id)}"]`);
       if (selected.has(recipe.id)) {
         const binding = meal.recipeIngredientBindings[recipe.id] ?? bindRecipeIngredients(recipe, meal.availableIngredientIds, [], meal.ingredientFreshnessDates);
-        renderBadge(selectedHost, freshnessSignals(binding, meal));
+        renderBadge(selectedHost, signalsForRecipe(recipe, binding, meal));
       } else if (selectedHost) selectedHost.hidden = true;
 
       const card = document.querySelector<HTMLElement>(`[data-meal-recipe="${CSS.escape(recipe.id)}"]`);
       if (!card) continue;
-      renderBadge(card.querySelector<HTMLElement>('[data-candidate-freshness-badge]'), freshnessSignals(candidateBinding(recipe, meal, card), meal));
+      renderBadge(card.querySelector<HTMLElement>('[data-candidate-freshness-badge]'), signalsForRecipe(recipe, candidateBinding(recipe, meal, card), meal));
     }
   }
 

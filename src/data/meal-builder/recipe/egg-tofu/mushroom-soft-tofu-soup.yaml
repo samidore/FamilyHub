@@ -16,6 +16,8 @@ main_protein_category: tofu
 main_protein_ingredient_ids:
   - soft-tofu
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - change-it-up
 vegetable_ingredient_ids:
   - fresh-shiitake
   - oyster-mushrooms
@@ -59,9 +61,10 @@ ingredients:
       - maitake
     role: vegetable
 steps:
-  - 嫩豆腐切约2.5 cm块并尽量少搬动。菌菇去硬根；香菇切薄片，平菇和舞茸撕小朵，蟹味菇掰散；金针菇去根后横切成2–3 cm短段。
+  - 嫩豆腐切约2.5 cm块并尽量少搬动。菌菇去硬根；香菇切薄片，平菇和舞茸撕小朵，蟹味菇掰散；金针菇去根后横切成2–3 cm短段。如果选了番茄，番茄切约2 cm块。
   - 汤锅加入低盐高汤或水4 cups和姜片5 g，中火煮开。
   - 先加入香菇、平菇、蟹味菇或舞茸，中火保持小滚4–6分钟，直到菌菇明显缩水并完全软熟；若用金针菇，最后2–3分钟再加入。
+  - 如果加番茄，菌菇煮软后加入番茄，中火煮2–3分钟到番茄开始出汁、边缘变软。
   - 轻轻滑入嫩豆腐，转中小火再煮3–4分钟，让豆腐中心完全热透；不要大滚以免豆腐碎掉。
   - 加生抽1 tsp，盐从1/2 tsp开始分次调整；需要时加白胡椒一小撮。关火前可淋香油1/2 tsp。
   - 孩子份检查菌菇没有长丝或大韧片，必要时再剪小；先盛出并放凉到适口温度。
@@ -72,5 +75,6 @@ substitutions: []
 cook_ingredients:
   - 嫩豆腐：1盒，约400–450 g，切块
   - 鲜香菇 / 平菇 / 蟹味菇 / 金针菇 / 舞茸：250–350 g；任选一种
+  - 可选改头换面：番茄1个，约150–200 g，切块
   - 汤底：低盐高汤或水 4 cups；姜 5 g；生抽 1 tsp；盐 1/2 tsp起；白胡椒一小撮，可省
   - 可选收尾：香油 1/2 tsp
