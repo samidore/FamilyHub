@@ -28,6 +28,7 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
   const boardsHost = get<HTMLElement>('#notebook-boards');
   const inboxForm = get<HTMLFormElement>('#notebook-inbox-form');
   const inboxInput = get<HTMLInputElement>('#notebook-inbox-input');
+  const itemForm = get<HTMLFormElement>('#notebook-item-form');
   const inboxCount = get<HTMLElement>('#notebook-inbox-count');
   const displayNamePanel = get<HTMLElement>('#notebook-display-name-panel');
   let state = repository.getSnapshot();
@@ -102,6 +103,10 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
     for (const [id, board] of Object.entries(next.boards)) next.boards[id] = { ...board, collapsed: true, updatedAt: time };
     return next;
   }));
+
+  itemForm.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !event.isComposing && event.target instanceof HTMLInputElement) event.preventDefault();
+  });
 
   inboxForm.addEventListener('submit', (event) => {
     event.preventDefault();
