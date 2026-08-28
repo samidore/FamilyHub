@@ -29,7 +29,7 @@ optional_groups:
       - ingredient_id: hot-pot-lamb-slices
         meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
         checkout_units: 1
-      - ingredient_id: boneless-skinless-chicken-thighs
+      - ingredient_id: chicken-thighs
         meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
         checkout_units: 1
       - ingredient_id: chicken-breast
