@@ -24,7 +24,7 @@ const tripCount = dayTrips.length;
   <FilterShell accent="evergreen" filterId="trip-filter-panel" countId="trip-count" clearId="trip-clear" countText={`显示 ${tripCount} / ${tripCount} 个地点`}>
     <div slot="primary" class="filter-primary__grid">
       <label><span>搜索地点</span><input id="trip-search" type="search" placeholder="Bergen、动物园、麦攀爬…" autocomplete="off" /></label>
-      <label><span>排序</span><select id="trip-sort" data-default="drive"><option value="drive">车程近 → 远</option><option value="name">名称 A–Z</option></select></label>
+      <label><span>排序</span><select id="trip-sort" data-default="drive"><option value="drive">车程近 → 远</option><option value="reaction">👍 优先</option><option value="name">名称 A–Z</option></select></label>
     </div>
 
     <div slot="filters" class="contents">
@@ -86,6 +86,15 @@ const tripCount = dayTrips.length;
     </div>
   </FilterShell>
 
+  <section id="trip-household-auth" class="shell trip-household-auth" data-state="connecting" aria-live="polite">
+    <p id="trip-household-auth-message">正在恢复家庭评价登录状态…</p>
+    <div class="trip-household-auth__actions">
+      <button id="trip-household-sign-in" type="button" hidden>使用 Google 登录</button>
+      <button id="trip-household-refresh" type="button" hidden>重新检查权限</button>
+      <button id="trip-household-sign-out" type="button" hidden>退出登录</button>
+    </div>
+  </section>
+
   <main id="main-content" class="shell listing-main">
     <div id="trip-list" class="record-grid">{dayTrips.map((destination) => <DayTripCard destination={destination} />)}</div>
     <p id="trip-empty" class="empty-state" hidden>没有符合这些条件的地点。清除部分筛选后再试。</p>
@@ -97,6 +106,8 @@ const tripCount = dayTrips.length;
 
   <script>
     import { bindListState, clearListState, restoreListState, writeListState } from '../lib/listState';
+    import { mountDayTripInteractionUi } from '../lib/dayTripInteractionUi.ts';
+    import { compareDayTripReactionPriority, type DayTripReactionSummary } from '../lib/dayTripInteractions.ts';
 
     type Hours = 'always' | 'unknown' | Record<string, [string, string][]>;
     type TripLocation = {
@@ -188,6 +199,13 @@ const tripCount = dayTrips.length;
       });
     };
 
+    const reactionSummaryFor = (card: HTMLElement): DayTripReactionSummary => ({
+      rank: Number(card.dataset.reactionRank ?? 2),
+      upCount: Number(card.dataset.reactionUps ?? 0),
+      downCount: 0,
+      catUp: false,
+    });
+
     const render = () => {
       const query = controls.q.value.trim().toLocaleLowerCase();
       const maxDrive = controls.drive.value ? Number(controls.drive.value) : Number.POSITIVE_INFINITY;
@@ -214,7 +232,16 @@ const tripCount = dayTrips.length;
 
       const sorter = controls.sort.value === 'name'
         ? (a: HTMLElement, b: HTMLElement) => (a.dataset.name ?? '').localeCompare(b.dataset.name ?? '')
-        : (a: HTMLElement, b: HTMLElement) => Number(a.dataset.drive) - Number(b.dataset.drive) || (a.dataset.name ?? '').localeCompare(b.dataset.name ?? '');
+        : controls.sort.value === 'reaction'
+          ? (a: HTMLElement, b: HTMLElement) => compareDayTripReactionPriority(
+              reactionSummaryFor(a),
+              reactionSummaryFor(b),
+              Number(a.dataset.drive),
+              Number(b.dataset.drive),
+              a.dataset.name ?? '',
+              b.dataset.name ?? '',
+            )
+          : (a: HTMLElement, b: HTMLElement) => Number(a.dataset.drive) - Number(b.dataset.drive) || (a.dataset.name ?? '').localeCompare(b.dataset.name ?? '');
 
       cards.forEach((card) => { card.hidden = !visible.includes(card); });
       visible.sort(sorter).forEach((card) => list.append(card));
@@ -267,7 +294,19 @@ const tripCount = dayTrips.length;
       updateHours();
       render();
     });
+    window.addEventListener('daytripinteractionschange', render);
 
+    const firebaseConfig = {
+      apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
+      authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
+      projectId: import.meta.env.PUBLIC_FIREBASE_PROJECT_ID,
+      databaseURL: import.meta.env.PUBLIC_FIREBASE_DATABASE_URL,
+      storageBucket: import.meta.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: import.meta.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+      appId: import.meta.env.PUBLIC_FIREBASE_APP_ID,
+      householdId: import.meta.env.PUBLIC_FAMILY_HOUSEHOLD_ID,
+    };
+    mountDayTripInteractionUi(firebaseConfig, { allowLocal: import.meta.env.DEV });
     render();
   </script>
 
@@ -302,5 +341,12 @@ const tripCount = dayTrips.length;
     .trip-activity-actions, .trip-activity-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
     .trip-small-button { padding-inline: 12px; color: var(--accent); }
     .trip-activity-buttons button { flex: 1 1 135px; padding: 8px 12px; }
+
+    .trip-household-auth { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: rgb(255 255 255 / 72%); }
+    .trip-household-auth p { margin: 0; color: #4f5d55; font-size: 13px; font-weight: 700; }
+    .trip-household-auth[data-state="error"] p { color: #8e2c21; }
+    .trip-household-auth__actions { display: flex; gap: 7px; flex-wrap: wrap; }
+    .trip-household-auth__actions button { min-height: 38px; border: 1px solid #b8c5bc; border-radius: 9px; background: #fff; color: var(--accent); padding: 6px 10px; font-weight: 700; cursor: pointer; }
+    @media (max-width: 600px) { .trip-household-auth { align-items: flex-start; flex-direction: column; } }
   </style>
 </BaseLayout>
