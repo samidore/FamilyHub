@@ -45,16 +45,24 @@ async function copyText(text: string) {
   if (!copied) throw new Error('浏览器不允许自动复制');
 }
 
+const RATING_STAR_PATH = 'M12 2.6l2.85 5.78 6.38.93-4.62 4.5 1.09 6.35L12 17.16l-5.7 3 1.09-6.35-4.62-4.5 6.38-.93L12 2.6Z';
+
+function ratingStarSvgHtml(filled: boolean) {
+  return `<svg class="restaurant-rating-star-icon${filled ? ' is-filled' : ''}" viewBox="0 0 24 24" aria-hidden="true"><path d="${RATING_STAR_PATH}"></path></svg>`;
+}
+
 function ratingStarsHtml(score: RestaurantRatingScore | undefined, editable: boolean, authorName: string) {
   const e = escapeHouseholdHtml;
   if (!editable) {
-    const stars = Array.from({ length: 5 }, (_, index) => index < (score ?? 0) ? '★' : '☆').join('');
+    const stars = Array.from({ length: 5 }, (_, index) => `<span class="restaurant-rating-star-slot">${ratingStarSvgHtml(index < (score ?? 0))}</span>`).join('');
     return `<span class="restaurant-rating-stars restaurant-rating-stars--static" aria-label="${e(authorName)} ${score ? `${score} 星` : '未评分'}">${stars}</span>`;
   }
   return `<span class="restaurant-rating-stars" aria-label="${e(authorName)}评分">${Array.from({ length: 5 }, (_, index) => {
     const value = index + 1;
     const filled = value <= (score ?? 0);
-    return `<button type="button" data-restaurant-rating-score="${value}" aria-label="${e(authorName)} ${value} 星" aria-pressed="${score === value ? 'true' : 'false'}">${filled ? '★' : '☆'}</button>`;
+    const selected = score === value;
+    const label = `${e(authorName)} ${value} 星${selected ? '，再点一次清除评分' : ''}`;
+    return `<button type="button" data-restaurant-rating-score="${value}" aria-label="${label}" aria-pressed="${selected ? 'true' : 'false'}">${ratingStarSvgHtml(filled)}</button>`;
   }).join('')}</span>`;
 }
 
@@ -213,7 +221,8 @@ export function mountRestaurantInteractionUi(config: Partial<FirebaseConfig>, op
       const authorName = repository.getCurrentMemberDisplayName();
       const score = Number(ratingButton.dataset.restaurantRatingScore) as RestaurantRatingScore;
       if (!uid || !authorName || !Number.isInteger(score) || score < 1 || score > 5) return;
-      void repository.transaction((snapshot) => setRestaurantRating(snapshot, restaurantId, uid, authorName, score, stamp()));
+      const nextScore = ratingButton.getAttribute('aria-pressed') === 'true' ? null : score;
+      void repository.transaction((snapshot) => setRestaurantRating(snapshot, restaurantId, uid, authorName, nextScore, stamp()));
       return;
     }
 

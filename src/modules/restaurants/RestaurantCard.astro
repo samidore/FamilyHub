@@ -8,6 +8,7 @@ const searchable = [r.name, r.description, address, ...r.tags, ...r.orderPlatfor
 const platformNames = r.orderPlatforms.map((platform) => platform.name).join('|');
 const tagNames = r.tags.join('|');
 const modeLabel = (modes: string[]) => modes.map((mode) => mode === 'delivery' ? '配送' : '自取').join(' / ');
+const emptyRatingStars = Array.from({ length: 5 });
 const fixedLinks = [
   { label: '官网', url: r.officialUrl },
   { label: 'Google Maps', url: r.googleMapsUrl },
@@ -43,8 +44,20 @@ const fixedLinks = [
 
     <section class="restaurant-family-summary" aria-label="家庭评分">
       <div class="restaurant-ratings" data-restaurant-ratings aria-label="家庭评分">
-        <div class="restaurant-rating-row restaurant-rating-row--placeholder"><span>猫猫</span><span>☆☆☆☆☆</span><span>—</span></div>
-        <div class="restaurant-rating-row restaurant-rating-row--placeholder"><span>呜哇</span><span>☆☆☆☆☆</span><span>—</span></div>
+        <div class="restaurant-rating-row restaurant-rating-row--placeholder">
+          <span>猫猫</span>
+          <span class="restaurant-rating-stars restaurant-rating-stars--static" aria-hidden="true">
+            {emptyRatingStars.map(() => <span class="restaurant-rating-star-slot"><svg class="restaurant-rating-star-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.85 5.78 6.38.93-4.62 4.5 1.09 6.35L12 17.16l-5.7 3 1.09-6.35-4.62-4.5 6.38-.93L12 2.6Z"></path></svg></span>)}
+          </span>
+          <span>—</span>
+        </div>
+        <div class="restaurant-rating-row restaurant-rating-row--placeholder">
+          <span>呜哇</span>
+          <span class="restaurant-rating-stars restaurant-rating-stars--static" aria-hidden="true">
+            {emptyRatingStars.map(() => <span class="restaurant-rating-star-slot"><svg class="restaurant-rating-star-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.6l2.85 5.78 6.38.93-4.62 4.5 1.09 6.35L12 17.16l-5.7 3 1.09-6.35-4.62-4.5 6.38-.93L12 2.6Z"></path></svg></span>)}
+          </span>
+          <span>—</span>
+        </div>
       </div>
     </section>
 
@@ -89,12 +102,13 @@ const fixedLinks = [
   .restaurant-ratings { display: grid; gap: 7px; }
   :global(.restaurant-rating-row) { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px; min-height: 48px; }
   .restaurant-rating-row--placeholder { color: var(--muted); font-size: 14px; }
-  .restaurant-rating-row--placeholder > span:nth-child(2) { color: #b56b16; font-size: 24px; }
   :global(.restaurant-rating-row .household-person-icon) { width: 2.6rem; height: 2.6rem; flex-basis: 2.6rem; }
-  :global(.restaurant-rating-stars) { display: inline-flex; align-items: center; min-width: 0; gap: 1px; color: #b56b16; letter-spacing: .02em; }
-  :global(.restaurant-rating-stars button) { width: 44px; min-height: 48px; border: 0; border-radius: 7px; padding: 0; background: transparent; color: #b56b16; font: inherit; font-size: 24px; cursor: pointer; }
+  :global(.restaurant-rating-stars) { display: inline-flex; align-items: center; min-width: 0; gap: 0; color: #b56b16; }
+  :global(.restaurant-rating-star-slot), :global(.restaurant-rating-stars button) { width: 40px; min-width: 40px; height: 48px; min-height: 48px; display: inline-grid; place-items: center; flex: 0 0 40px; }
+  :global(.restaurant-rating-stars button) { border: 0; border-radius: 7px; padding: 0; background: transparent; color: #b56b16; cursor: pointer; }
   :global(.restaurant-rating-stars button:focus-visible) { outline: 2px solid var(--accent); outline-offset: 1px; }
-  :global(.restaurant-rating-stars--static) { font-size: 24px; }
+  :global(.restaurant-rating-star-icon) { width: 24px; height: 24px; display: block; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+  :global(.restaurant-rating-star-icon.is-filled) { fill: currentColor; }
   :global(.restaurant-rating-value) { color: #5e555d; font-size: 13px; font-weight: 700; white-space: nowrap; }
 
   .restaurant-want-row { display: grid; justify-items: end; gap: 4px; min-width: 74px; }

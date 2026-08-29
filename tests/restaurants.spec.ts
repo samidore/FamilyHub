@@ -21,6 +21,23 @@ test('Restaurants renders restaurant metadata and Meal Builder-style tag bulk fi
   await expect(want).toBeDisabled();
   await expect(bloom.locator('[data-restaurant-want-people] img')).toHaveCount(0);
 
+  const ratingRows = bloom.locator('[data-restaurant-ratings] .restaurant-rating-row');
+  await expect(ratingRows).toHaveCount(2);
+  const ratingGeometry = await ratingRows.evaluateAll((rows) => rows.map((row) => ({
+    slots: [...row.querySelectorAll<HTMLElement>('.restaurant-rating-star-slot')].map((slot) => {
+      const rect = slot.getBoundingClientRect();
+      return [rect.width, rect.height];
+    }),
+    icons: [...row.querySelectorAll<SVGElement>('.restaurant-rating-star-icon')].map((icon) => {
+      const rect = icon.getBoundingClientRect();
+      return [rect.width, rect.height];
+    }),
+  })));
+  expect(ratingGeometry).toEqual([
+    { slots: Array(5).fill([40, 48]), icons: Array(5).fill([24, 24]) },
+    { slots: Array(5).fill([40, 48]), icons: Array(5).fill([24, 24]) },
+  ]);
+
   const disclosure = page.locator('.filter-disclosure');
   if (await disclosure.getAttribute('open') === null) await disclosure.locator('summary').click();
 
