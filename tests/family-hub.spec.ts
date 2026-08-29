@@ -90,7 +90,7 @@ test('day-trip filters combine, persist in the URL, and clear', async ({ page })
   const filtered = page.locator('[data-destination]:visible');
   await expect(filtered).toHaveCount(within20DayTripCount);
   for (const card of await filtered.all()) expect(Number(await card.getAttribute('data-drive'))).toBeLessThanOrEqual(20);
-  await expect(mcfaul).toBeHidden();
+  await expect(mcfaul).toBeVisible();
   await expect(page).toHaveURL(/drive=20/);
   await page.reload();
   await expect(page.locator('#trip-drive')).toHaveValue('20');
