@@ -137,6 +137,7 @@ Firebase rules restrict the branch to verified Google household members. Ratings
 - No half stars and no household average.
 - Missing rating displays `—`.
 - The signed-in member can change their own rating from their row.
+- Selecting the currently active star again clears that member's rating back to unrated.
 - Use the shared household/notebook cat and dog avatars for identity.
 
 ## 想吃
