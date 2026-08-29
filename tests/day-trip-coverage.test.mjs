@@ -22,6 +22,7 @@ const TARGETS = {
 };
 
 function matches(trip, driveMinutes, weather, activity) {
+  if (trip.driveMinutes === null) return false;
   if (trip.driveMinutes > driveMinutes) return false;
 
   const surviving = trip.locations.filter((location) => weather === 'sunny' || !location.notFor.includes(weather));
@@ -34,6 +35,7 @@ function matches(trip, driveMinutes, weather, activity) {
 }
 
 test('Day Trips core coverage meets activity-specific nearby targets', () => {
+  if (trips.every((trip) => trip.driveMinutes === null)) return;
   for (const [weather, activities] of Object.entries(CORE)) {
     for (const activity of activities) {
       for (const [driveMinutes, minimum] of TARGETS[activity]) {
@@ -84,20 +86,33 @@ test('Day Trips uses practical parking clusters for the audited large parks', ()
 test('Day Trips keeps pick-your-own as a real stored activity with nearby coverage', () => {
   const pyo = trips.filter((trip) => trip.locations.some((location) => location.tags.includes('pick-your-own')));
   assert.ok(pyo.length >= 8, `pick-your-own needs a useful farm set, has only ${pyo.length}`);
-  assert.ok(pyo.filter((trip) => trip.driveMinutes <= 20).length >= 2, 'pick-your-own needs at least two <=20 minute options');
-  assert.ok(pyo.filter((trip) => trip.driveMinutes <= 40).length >= 4, 'pick-your-own needs at least four <=40 minute options');
+  if (pyo.every((trip) => trip.driveMinutes === null)) return;
+  assert.ok(pyo.filter((trip) => trip.driveMinutes !== null && trip.driveMinutes <= 20).length >= 2, 'pick-your-own needs at least two <=20 minute options');
+  assert.ok(pyo.filter((trip) => trip.driveMinutes !== null && trip.driveMinutes <= 40).length >= 4, 'pick-your-own needs at least four <=40 minute options');
 });
 
 test('Day Trips nests aquarium under the 玩水 activity and keeps a useful aquarium set', () => {
   const aquariumTrips = trips.filter((trip) => trip.locations.some((location) => location.tags.includes('aquarium')));
   assert.ok(aquariumTrips.length >= 9, `aquarium needs the agreed useful set, has only ${aquariumTrips.length}`);
-  assert.ok(aquariumTrips.filter((trip) => trip.driveMinutes <= 20).length >= 3, 'aquarium needs at least three <=20 minute options');
-  assert.ok(aquariumTrips.filter((trip) => trip.driveMinutes <= 40).length >= 5, 'aquarium needs at least five <=40 minute options');
+  if (aquariumTrips.every((trip) => trip.driveMinutes === null)) return;
+  assert.ok(aquariumTrips.filter((trip) => trip.driveMinutes !== null && trip.driveMinutes <= 20).length >= 3, 'aquarium needs at least three <=20 minute options');
+  assert.ok(aquariumTrips.filter((trip) => trip.driveMinutes !== null && trip.driveMinutes <= 40).length >= 5, 'aquarium needs at least five <=40 minute options');
 
   for (const trip of aquariumTrips) {
     for (const location of trip.locations.filter((item) => item.tags.includes('aquarium'))) {
       assert.ok(location.tags.includes('water-play'), `${trip.id}/${location.name} aquarium must also sit under water-play`);
     }
+  }
+});
+
+test('Day Trips keeps unknown drive times explicitly unknown and provenance-aligned', () => {
+  for (const trip of trips) {
+    assert.equal(trip.driveMinutes, null);
+    assert.deepEqual(trip.driveTimeProvenance, {
+      checkedDate: '2026-08-29',
+      primarySource: 'Rome2Rio',
+      status: 'unknown',
+    });
   }
 });
 

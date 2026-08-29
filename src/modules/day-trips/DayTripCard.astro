@@ -32,7 +32,7 @@ const searchable = [
   data-destination
   data-id={d.id}
   data-name={d.name}
-  data-drive={d.driveMinutes}
+  data-drive={d.driveMinutes ?? ''}
   data-search={searchable}
   data-locations={JSON.stringify(d.locations)}
   data-no-playground={noPlayground ? 'true' : 'false'}
@@ -41,7 +41,7 @@ const searchable = [
 >
   <div class="record-card__top">
     <h2>{d.name}</h2>
-    <p class="location-line">{d.city}, {d.state} <span aria-hidden="true">·</span> 约 {d.driveMinutes} 分钟</p>
+    <p class="location-line">{d.city}, {d.state} <span aria-hidden="true">·</span> {d.driveMinutes === null ? '车程待核实' : `约 ${d.driveMinutes} 分钟`}</p>
 
     <div class="trip-hours" aria-label="今日营业时间">
       <strong>今天</strong>

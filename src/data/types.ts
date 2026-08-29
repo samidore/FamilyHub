@@ -19,13 +19,21 @@ export interface DayTrip {
   aliases?: string[];
   city: string;
   state: string;
-  driveMinutes: number;
+  driveMinutes: number | null;
+  driveTimeProvenance: DayTripDriveTimeProvenance;
   note: string;
   notice?: string;
   locations: DayTripLocation[];
   googleMapsUrl: string;
   officialUrl: string;
   verifiedDate: string;
+}
+
+export interface DayTripDriveTimeProvenance {
+  checkedDate: string;
+  primarySource: string;
+  status: 'verified' | 'unknown';
+  crossCheckSource?: string;
 }
 
 export interface LibraryEvent {

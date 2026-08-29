@@ -5,7 +5,7 @@ const privateFieldNames = new Set([
 ]);
 
 const destinationRequired = [
-  'id', 'name', 'city', 'state', 'driveMinutes', 'note', 'locations',
+  'id', 'name', 'city', 'state', 'driveMinutes', 'driveTimeProvenance', 'note', 'locations',
   'googleMapsUrl', 'officialUrl', 'verifiedDate',
 ];
 const destinationOptional = ['aliases', 'notice'];
@@ -65,6 +65,14 @@ function verifiedDate(value, path) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) fail(path, 'expected YYYY-MM-DD');
 }
 
+function driveTimeProvenance(value, path) {
+  exactObject(value, ['checkedDate', 'primarySource', 'status'], ['crossCheckSource'], path);
+  verifiedDate(value.checkedDate, `${path}.checkedDate`);
+  text(value.primarySource, `${path}.primarySource`);
+  enumValue(value.status, ['verified', 'unknown'], `${path}.status`);
+  if (value.crossCheckSource !== undefined) text(value.crossCheckSource, `${path}.crossCheckSource`);
+}
+
 function unique(values, path) {
   if (new Set(values).size !== values.length) fail(path, 'duplicate values are not allowed');
 }
@@ -119,9 +127,11 @@ export function parseDayTrips(value) {
 
     ['name', 'city', 'state', 'note'].forEach((key) => text(record[key], `${path}.${key}`));
     if (!/^[A-Z]{2}$/.test(record.state)) fail(`${path}.state`, 'expected a two-letter state code');
-    if (!Number.isInteger(record.driveMinutes) || record.driveMinutes < 0 || record.driveMinutes > 300) {
-      fail(`${path}.driveMinutes`, 'expected an integer from 0 to 300');
+    if (record.driveMinutes !== null && (!Number.isInteger(record.driveMinutes) || record.driveMinutes < 0 || record.driveMinutes > 300)) {
+      fail(`${path}.driveMinutes`, 'expected null or an integer from 0 to 300');
     }
+    driveTimeProvenance(record.driveTimeProvenance, `${path}.driveTimeProvenance`);
+    if ((record.driveMinutes === null) !== (record.driveTimeProvenance.status === 'unknown')) fail(`${path}.driveTimeProvenance`, 'status must match driveMinutes');
 
     if (record.aliases !== undefined) {
       strings(record.aliases, `${path}.aliases`);
