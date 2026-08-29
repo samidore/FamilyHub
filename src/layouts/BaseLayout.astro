@@ -37,6 +37,32 @@ const showMealInventoryImport = pageClass.split(/\s+/).includes('meal-builder-pa
         event.stopImmediatePropagation();
         mealForceNext.click();
       }, true);
+
+      const mealLive = document.querySelector<HTMLElement>('#meal-live');
+      const announceMealGuard = (text: string) => {
+        if (!mealLive) return;
+        mealLive.textContent = '';
+        requestAnimationFrame(() => { mealLive.textContent = text; });
+      };
+      document.addEventListener('click', (event) => {
+        const alert = document.querySelector<HTMLElement>('#meal-queue-alert');
+        if (!alert || alert.hidden) return;
+        const target = event.target as HTMLElement;
+        const reset = target.closest<HTMLButtonElement>('#meal-inventory-reset');
+        if (reset) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          announceMealGuard('有待结算主料，不能清空库存。请先完成排队结算。');
+          return;
+        }
+        const toggle = target.closest<HTMLButtonElement>('[data-inventory-toggle]');
+        if (!toggle) return;
+        const row = toggle.closest<HTMLElement>('[data-inventory-item]');
+        if (!row?.querySelector('[data-queue-reservation-copy]')) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        announceMealGuard('这份主材料正在等待结算，不能从库存关闭。');
+      }, true);
     </script>
   </body>
 </html>
