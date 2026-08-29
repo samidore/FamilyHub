@@ -1,0 +1,219 @@
+---
+import { mealData } from '../data/meal';
+
+const queueData = JSON.stringify({
+  ingredients: mealData.ingredients,
+  optionalGroups: mealData.optionalGroups,
+  recipes: mealData.recipes.map((recipe) => ({
+    id: recipe.id,
+    nameZh: recipe.nameZh,
+    requirements: recipe.requirements,
+    optionalGroupIds: recipe.optionalGroupIds,
+    checkoutUnits: recipe.checkoutUnits,
+    contribution: recipe.contribution,
+    childCoverage: recipe.childCoverage,
+    ingredientChildCoverage: recipe.ingredientChildCoverage,
+    mealWindowMinutes: recipe.mealWindowMinutes,
+    elapsedMinutes: recipe.elapsedMinutes,
+    advanceStartRequired: recipe.advanceStartRequired,
+    fitScore: recipe.fitScore,
+    order: recipe.order,
+    tags: recipe.tags,
+  })),
+});
+---
+<script id="meal-checkout-queue-data" type="application/json" is:inline set:html={queueData}></script>
+<script>
+  import {
+    optionalGroupsForRecipe,
+    type MealIngredient,
+    type MealOptionalGroup,
+    type MealRecipe,
+  } from '../lib/mealEngine';
+  import {
+    COUNTED_INVENTORY_STEP,
+    applyQueuedCheckoutComposition,
+    availableIngredientIds,
+    checkoutRecipeDraftsForMeal,
+    createCurrentMealFromInventory,
+    createMealId,
+    freshnessDatesForInventory,
+    inventoryAfterQueuedReservations,
+    inventoryBatchesAfterQueuedReservations,
+    inventoryIsOn,
+    queueCurrentMealForCheckout,
+    queuedReservationUnits,
+    reconcileCurrentMeal,
+    roundCountedInventoryValue,
+    trackingForIngredient,
+    updateCheckoutRecipeDrafts,
+    type CheckoutRecipeDrafts,
+    type CurrentMeal,
+    type HouseholdState,
+  } from '../lib/household';
+  import { createHouseholdRepository, type RepositoryStatus } from '../lib/householdRepository';
+
+  type Payload = { ingredients: MealIngredient[]; optionalGroups: MealOptionalGroup[]; recipes: (MealRecipe & { nameZh?: string })[] };
+  const source = document.querySelector<HTMLScriptElement>('#meal-checkout-queue-data');
+  const firebaseSource = document.querySelector<HTMLScriptElement>('#meal-firebase-config');
+  if (!source || !firebaseSource) throw new Error('Meal checkout queue bootstrap data is missing.');
+  const payload = JSON.parse(source.textContent || '{}') as Payload;
+  const firebaseConfig = JSON.parse(firebaseSource.textContent || '{}') as Record<string, string>;
+  const ingredients = payload.ingredients;
+  const recipes = payload.recipes;
+  const optionalGroups = payload.optionalGroups;
+  const ingredientById = new Map(ingredients.map((item) => [item.id, item]));
+  const recipeById = new Map(recipes.map((item) => [item.id, item]));
+  const groupById = new Map(optionalGroups.map((item) => [item.id, item]));
+  const repository = createHouseholdRepository(firebaseConfig, { ingredients, recipes, firebase: { ingredients, recipes } });
+  let household: HouseholdState = repository.getSnapshot();
+  let repositoryStatus: RepositoryStatus = repository.getStatus();
+  let renderQueued = false;
+
+  const canWrite = () => repositoryStatus.connection === 'local' || repositoryStatus.connection === 'connected';
+  const nameFor = (id: string) => ingredientById.get(id)?.nameZh ?? id;
+  const live = document.querySelector<HTMLElement>('#meal-live');
+  const announce = (text: string) => { if (!live) return; live.textContent = ''; requestAnimationFrame(() => { live.textContent = text; }); };
+  const checkoutMeals = () => [...(household.pendingCheckoutMeals ?? []), ...(household.currentMeal ? [household.currentMeal] : [])];
+
+  function ensureQueueUi() {
+    let alert = document.querySelector<HTMLElement>('#meal-queue-alert');
+    if (!alert) {
+      alert = document.createElement('section');
+      alert.id = 'meal-queue-alert'; alert.className = 'shell meal-queue-alert'; alert.hidden = true; alert.setAttribute('role', 'status'); alert.setAttribute('aria-live', 'polite');
+      const copy = document.createElement('div'); const title = document.createElement('strong'); title.id = 'meal-queue-alert-title'; const detail = document.createElement('p'); detail.id = 'meal-queue-alert-copy'; copy.append(title, detail); alert.append(copy);
+      document.querySelector('.meal-household-bar')?.after(alert);
+    }
+    const actions = document.querySelector<HTMLElement>('#meal-cook-view .meal-cook-actions');
+    if (actions && !document.querySelector('#meal-queue-checkout')) {
+      const button = document.createElement('button'); button.id = 'meal-queue-checkout'; button.className = 'button button--secondary'; button.type = 'button'; button.textContent = '排队结算，开下一顿'; const checkout = document.querySelector('#meal-open-checkout'); actions.insertBefore(button, checkout);
+    }
+  }
+
+  function renderQueueWarning() {
+    ensureQueueUi(); const alert = document.querySelector<HTMLElement>('#meal-queue-alert'); if (!alert) return; const pending = household.pendingCheckoutMeals ?? []; alert.hidden = pending.length === 0; if (!pending.length) return;
+    const reservations = queuedReservationUnits(household, ingredients); const units = Object.values(reservations).reduce((sum, value) => sum + value, 0);
+    const title = document.querySelector<HTMLElement>('#meal-queue-alert-title'); const copy = document.querySelector<HTMLElement>('#meal-queue-alert-copy'); if (title) title.textContent = `⚠ 有 ${pending.length} 顿待结算`; if (copy) copy.textContent = `已冻结 ${units} 份主材料；真实库存尚未扣除。`;
+  }
+
+  function renderInventoryReservations() {
+    const reservations = queuedReservationUnits(household, ingredients); const planning = inventoryAfterQueuedReservations(household, ingredients);
+    document.querySelectorAll<HTMLElement>('[data-inventory-item]').forEach((row) => {
+      row.querySelector('[data-queue-reservation-copy]')?.remove(); const id = row.dataset.inventoryItem!; const reserved = reservations[id] ?? 0; if (reserved > 0) {
+        const copy = document.createElement('small'); copy.dataset.queueReservationCopy = 'true'; copy.className = 'meal-queue-reservation-copy'; const real = typeof household.inventory[id] === 'number' ? household.inventory[id] as number : 0; copy.textContent = `待结算预留 ${reserved} · 下一顿可用 ${Math.max(0, roundCountedInventoryValue(real - reserved))}`; row.querySelector('.meal-inventory-name')?.append(copy);
+      }
+      const minus = row.querySelector<HTMLButtonElement>('[data-inventory-step^="-"]'); const real = typeof household.inventory[id] === 'number' ? household.inventory[id] as number : 0; if (minus && reserved > 0 && real <= reserved) minus.disabled = true;
+    });
+    document.querySelectorAll<HTMLButtonElement>('[data-ingredient-id]').forEach((button) => { const id = button.dataset.ingredientId!; const item = ingredientById.get(id); const available = planning[id]; const on = item?.inventoryTracking === 'presence-only' ? available === true : typeof available === 'number' && available > 0; if (!on && !household.currentMeal?.availableIngredientIds.includes(id)) button.hidden = true; });
+  }
+
+  function renderCookPlan() {
+    const meal = household.currentMeal; if (!meal) return;
+    document.querySelectorAll<HTMLDetailsElement>('[data-cook-recipe]').forEach((card) => {
+      card.querySelector('[data-queue-cook-plan]')?.remove(); const recipeId = card.dataset.cookRecipe!; if (!meal.selectedRecipeIds.includes(recipeId)) return; const recipe = recipeById.get(recipeId); const summary = card.querySelector('summary'); if (!recipe || !summary) return;
+      const box = document.createElement('div'); box.className = 'meal-queue-cook-plan'; box.dataset.queueCookPlan = recipeId; const heading = document.createElement('strong'); heading.textContent = '本次这样做'; box.append(heading); const binding = meal.recipeIngredientBindings[recipeId] ?? [];
+      recipe.requirements.forEach((requirement, index) => { const line = document.createElement('div'); const label = document.createElement('span'); label.textContent = requirement.anyOf.length > 1 ? (requirement.role === 'vegetable' ? '蔬菜选择' : '主料选择') : (requirement.role === 'vegetable' ? '蔬菜' : '主料'); const value = document.createElement('b'); value.textContent = binding[index] ? nameFor(binding[index]) : '未选'; if (requirement.anyOf.length > 1) value.className = 'meal-queue-plan-chip'; line.append(label, value); box.append(line); });
+      for (const group of optionalGroupsForRecipe(recipe, optionalGroups)) { const selected = meal.selectedAddons.filter((addon) => addon.mainRecipeId === recipeId && addon.addonType === group.id).map((addon) => nameFor(addon.ingredientId)); const line = document.createElement('div'); const label = document.createElement('span'); label.textContent = group.labelZh; const values = document.createElement('span'); values.className = 'meal-queue-plan-values'; if (selected.length) selected.forEach((name) => { const chip = document.createElement('b'); chip.className = 'meal-queue-plan-chip meal-queue-plan-chip--optional'; chip.textContent = name; values.append(chip); }); else { const none = document.createElement('b'); none.textContent = '不加'; none.className = 'meal-queue-plan-none'; values.append(none); } line.append(label, values); box.append(line); }
+      summary.append(box);
+    });
+  }
+
+  function resnapshotForQueue(state: HouseholdState) {
+    const planning = inventoryAfterQueuedReservations(state, ingredients); const batches = inventoryBatchesAfterQueuedReservations(state, ingredients);
+    if (!state.currentMeal) return { ...state, currentMeal: createCurrentMealFromInventory(planning, {}, ingredients, batches), activeStep: 'recipes' as const };
+    const stocked = new Set(availableIngredientIds(planning, ingredients)); const excluded = state.currentMeal.excludedIngredientIds.filter((id) => stocked.has(id)); const available = [...stocked].filter((id) => !excluded.includes(id));
+    const meal = reconcileCurrentMeal({ ...state.currentMeal, status: 'selecting', availableIngredientIds: available, ingredientFreshnessDates: freshnessDatesForInventory(batches, available, ingredients), excludedIngredientIds: excluded, checkoutDraft: {}, checkoutRecipeDrafts: {} }, recipes, ingredients, optionalGroups);
+    return { ...state, currentMeal: meal, activeStep: 'recipes' as const };
+  }
+
+  function allDrafts() {
+    const result: Record<string, CheckoutRecipeDrafts> = {}; let remaining = { ...household.inventory };
+    for (const meal of checkoutMeals()) {
+      const drafts = checkoutRecipeDraftsForMeal(meal, remaining, ingredients, recipes, optionalGroups); result[meal.mealId] = drafts;
+      for (const draft of Object.values(drafts)) for (const [id, value] of Object.entries(draft.consumption)) if (typeof value === 'number' && typeof remaining[id] === 'number') { const left = roundCountedInventoryValue(Math.max(0, (remaining[id] as number) - value)); if (left > 0) remaining[id] = left; else delete remaining[id]; }
+    }
+    return result;
+  }
+  const cloneDrafts = (drafts: CheckoutRecipeDrafts) => JSON.parse(JSON.stringify(drafts)) as CheckoutRecipeDrafts;
+  const draftUses = (draft: CheckoutRecipeDrafts[string], id: string) => draft.bindings.includes(id) || draft.optionalAddons.some((addon) => addon.ingredientId === id);
+  function usedElsewhere(all: Record<string, CheckoutRecipeDrafts>, mealId: string, recipeId: string, id: string) { let total = 0; for (const [m, drafts] of Object.entries(all)) for (const [r, draft] of Object.entries(drafts)) { if (m === mealId && r === recipeId) continue; const value = draft.consumption[id]; if (typeof value === 'number') total += value; } return total; }
+  function defaultConsumption(id: string, units: number, all: Record<string, CheckoutRecipeDrafts>, mealId: string, recipeId: string) { if (trackingForIngredient(id, ingredients) === 'presence-only') return false; const stock = typeof household.inventory[id] === 'number' ? household.inventory[id] as number : 0; return Math.min(units, Math.max(0, roundCountedInventoryValue(stock - usedElsewhere(all, mealId, recipeId, id)))); }
+
+  async function persistActual(mealId: string, drafts: CheckoutRecipeDrafts) {
+    try { const next = await repository.transaction((state) => { if (state.currentMeal?.mealId === mealId) return { ...state, currentMeal: updateCheckoutRecipeDrafts(state.currentMeal, drafts, ingredients) }; const index = state.pendingCheckoutMeals.findIndex((meal) => meal.mealId === mealId); if (index < 0) return state; const pending = [...state.pendingCheckoutMeals]; pending[index] = { ...updateCheckoutRecipeDrafts(pending[index], drafts, ingredients), queuedAt: pending[index].queuedAt }; return { ...state, pendingCheckoutMeals: pending }; }); household = next; scheduleRender(); } catch (error) { announce(error instanceof Error ? error.message : '结算记录保存失败。'); }
+  }
+
+  function amountRow(mealId: string, recipeId: string, id: string, all: Record<string, CheckoutRecipeDrafts>) {
+    const draft = all[mealId]?.[recipeId]; if (!draft) return document.createTextNode(''); const row = document.createElement('div'); row.className = 'meal-checkout-row meal-checkout-row--recipe'; const label = document.createElement('span'); label.className = 'meal-inventory-name'; const strong = document.createElement('strong'); strong.textContent = nameFor(id); label.append(strong); row.append(label);
+    if (trackingForIngredient(id, ingredients) === 'presence-only') { const wrapper = document.createElement('label'); wrapper.className = 'meal-checkout-used-up'; const input = document.createElement('input'); input.type = 'checkbox'; input.checked = draft.consumption[id] === true; Object.assign(input.dataset, { queueUsedUpMeal: mealId, queueUsedUpRecipe: recipeId, queueUsedUpIngredient: id }); wrapper.append(input, document.createTextNode('用完')); row.append(wrapper); }
+    else { const value = typeof draft.consumption[id] === 'number' ? draft.consumption[id] as number : 0; const stock = typeof household.inventory[id] === 'number' ? household.inventory[id] as number : 0; const controls = document.createElement('span'); const minus = document.createElement('button'); minus.type = 'button'; minus.className = 'meal-inventory-step'; Object.assign(minus.dataset, { queueStepMeal: mealId, queueStepRecipe: recipeId, queueStepIngredient: id, queueStep: String(-COUNTED_INVENTORY_STEP) }); minus.textContent = '−'; const output = document.createElement('output'); output.textContent = `${value} / ${stock}`; const plus = document.createElement('button'); plus.type = 'button'; plus.className = 'meal-inventory-step'; Object.assign(plus.dataset, { queueStepMeal: mealId, queueStepRecipe: recipeId, queueStepIngredient: id, queueStep: String(COUNTED_INVENTORY_STEP) }); plus.textContent = '+'; controls.append(minus, output, plus); row.append(controls); }
+    return row;
+  }
+
+  function renderQueuedCheckout() {
+    const pending = household.pendingCheckoutMeals ?? []; if (!pending.length || household.activeStep !== 'checkout' || !household.currentMeal) return; const host = document.querySelector<HTMLElement>('#meal-checkout-list'); if (!host) return; const all = allDrafts(); host.replaceChildren(); const meals = checkoutMeals();
+    meals.forEach((meal, mealIndex) => {
+      const mealBox = document.createElement('section'); mealBox.className = 'meal-queue-checkout-meal'; mealBox.dataset.queueCheckoutMeal = meal.mealId; const mealTitle = document.createElement('h3'); mealTitle.textContent = mealIndex < meals.length - 1 ? `待结算 ${mealIndex + 1}` : '本顿'; mealBox.append(mealTitle);
+      for (const recipeId of meal.selectedRecipeIds) {
+        const recipe = recipeById.get(recipeId); const draft = all[meal.mealId]?.[recipeId]; if (!recipe || !draft) continue; const card = document.createElement('section'); card.className = 'meal-checkout-recipe'; const title = document.createElement('h4'); title.textContent = recipe.nameZh ?? recipeId; card.append(title);
+        const fixed = recipe.requirements.map((requirement, index) => ({ requirement, index })).filter(({ requirement }) => requirement.anyOf.length === 1); if (fixed.length) { const h = document.createElement('h5'); h.textContent = '主食材'; card.append(h); fixed.forEach(({ index }) => card.append(amountRow(meal.mealId, recipeId, draft.bindings[index], all))); }
+        recipe.requirements.forEach((requirement, index) => { if (requirement.anyOf.length <= 1) return; const h = document.createElement('h5'); h.textContent = '本菜选择'; card.append(h); const grid = document.createElement('div'); grid.className = 'meal-chip-grid meal-composition-grid'; requirement.anyOf.filter((id) => inventoryIsOn(household.inventory[id], trackingForIngredient(id, ingredients)) || draft.bindings[index] === id).forEach((id) => { const button = document.createElement('button'); button.type = 'button'; button.className = 'meal-chip meal-composition-chip'; button.setAttribute('aria-pressed', String(draft.bindings[index] === id)); Object.assign(button.dataset, { queueBindingMeal: meal.mealId, queueBindingRecipe: recipeId, queueBindingIndex: String(index), queueBindingIngredient: id }); const check = document.createElement('span'); check.textContent = '✓'; check.setAttribute('aria-hidden', 'true'); const text = document.createElement('strong'); text.textContent = nameFor(id); button.append(check, text); grid.append(button); }); card.append(grid); if (draft.bindings[index]) card.append(amountRow(meal.mealId, recipeId, draft.bindings[index], all)); });
+        const bound = new Set(draft.bindings);
+        for (const group of optionalGroupsForRecipe(recipe, optionalGroups)) { const selected = new Set(draft.optionalAddons.filter((addon) => addon.addonType === group.id && !bound.has(addon.ingredientId)).map((addon) => addon.ingredientId)); const candidates = group.ingredients.filter((entry) => !bound.has(entry.ingredientId) && (inventoryIsOn(household.inventory[entry.ingredientId], trackingForIngredient(entry.ingredientId, ingredients)) || selected.has(entry.ingredientId) || meal.selectedAddons.some((addon) => addon.mainRecipeId === recipeId && addon.addonType === group.id && addon.ingredientId === entry.ingredientId))); if (!candidates.length) continue; const h = document.createElement('h5'); h.textContent = group.labelZh; card.append(h); const grid = document.createElement('div'); grid.className = 'meal-chip-grid meal-composition-grid'; candidates.forEach((entry) => { const button = document.createElement('button'); button.type = 'button'; button.className = 'meal-chip meal-composition-chip'; button.setAttribute('aria-pressed', String(selected.has(entry.ingredientId))); Object.assign(button.dataset, { queueOptionalMeal: meal.mealId, queueOptionalRecipe: recipeId, queueOptionalGroup: group.id, queueOptionalIngredient: entry.ingredientId }); const check = document.createElement('span'); check.textContent = '✓'; check.setAttribute('aria-hidden', 'true'); const text = document.createElement('strong'); text.textContent = nameFor(entry.ingredientId); button.append(check, text); grid.append(button); }); card.append(grid); candidates.filter((entry) => selected.has(entry.ingredientId)).forEach((entry) => card.append(amountRow(meal.mealId, recipeId, entry.ingredientId, all))); }
+        mealBox.append(card);
+      }
+      host.append(mealBox);
+    });
+    const status = document.querySelector<HTMLElement>('#meal-checkout-status'); if (status) status.textContent = `${meals.length} 顿一起结算。optional 没有冻结，最终确认时会按当前真实库存统一校验。`;
+  }
+
+  function scheduleRender() { if (renderQueued) return; renderQueued = true; requestAnimationFrame(() => { renderQueued = false; renderQueueWarning(); renderInventoryReservations(); renderCookPlan(); renderQueuedCheckout(); }); }
+
+  document.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+    const queue = target.closest<HTMLButtonElement>('#meal-queue-checkout');
+    if (queue) { event.preventDefault(); event.stopImmediatePropagation(); if (!canWrite()) return; void repository.transaction((state) => queueCurrentMealForCheckout(state, ingredients)).then((next) => { household = next; announce('本顿已加入待结算，主材料各冻结 1 份。'); scheduleRender(); }).catch((error) => announce(error instanceof Error ? error.message : '排队结算失败。')); return; }
+    const recipesTarget = target.closest<HTMLButtonElement>('#meal-start-current, [data-step-target="recipes"]');
+    if (recipesTarget && household.pendingCheckoutMeals.length && household.activeStep === 'inventory') { event.preventDefault(); event.stopImmediatePropagation(); if (!canWrite()) return; void repository.transaction(resnapshotForQueue).then((next) => { household = next; scheduleRender(); }); return; }
+    const ingredient = target.closest<HTMLButtonElement>('[data-ingredient-id]');
+    if (ingredient && household.pendingCheckoutMeals.length) { const id = ingredient.dataset.ingredientId!; const planning = inventoryAfterQueuedReservations(household, ingredients); const item = ingredientById.get(id); const on = item?.inventoryTracking === 'presence-only' ? planning[id] === true : typeof planning[id] === 'number' && planning[id] > 0; if (!on && !household.currentMeal?.availableIngredientIds.includes(id)) { event.preventDefault(); event.stopImmediatePropagation(); announce('这份主材料正在等待结算，下一顿暂时不可用。'); return; } }
+    if (!household.pendingCheckoutMeals.length || household.activeStep !== 'checkout') return;
+    const all = allDrafts();
+    const binding = target.closest<HTMLButtonElement>('[data-queue-binding-meal]');
+    if (binding) { event.preventDefault(); event.stopImmediatePropagation(); const mealId = binding.dataset.queueBindingMeal!; const recipeId = binding.dataset.queueBindingRecipe!; const index = Number(binding.dataset.queueBindingIndex); const id = binding.dataset.queueBindingIngredient!; const drafts = cloneDrafts(all[mealId] ?? {}); const draft = drafts[recipeId]; const recipe = recipeById.get(recipeId); if (!draft || !recipe) return; const old = draft.bindings[index]; draft.optionalAddons = draft.optionalAddons.filter((addon) => addon.ingredientId !== id); draft.bindings[index] = id; if (old && !draftUses(draft, old)) delete draft.consumption[old]; all[mealId] = drafts; draft.consumption[id] = defaultConsumption(id, recipe.checkoutUnits?.[id] ?? 1, all, mealId, recipeId); void persistActual(mealId, drafts); return; }
+    const optional = target.closest<HTMLButtonElement>('[data-queue-optional-meal]');
+    if (optional) { event.preventDefault(); event.stopImmediatePropagation(); const mealId = optional.dataset.queueOptionalMeal!; const recipeId = optional.dataset.queueOptionalRecipe!; const groupId = optional.dataset.queueOptionalGroup!; const id = optional.dataset.queueOptionalIngredient!; const drafts = cloneDrafts(all[mealId] ?? {}); const draft = drafts[recipeId]; const entry = groupById.get(groupId)?.ingredients.find((candidate) => candidate.ingredientId === id); if (!draft || !entry || draft.bindings.includes(id)) return; const exists = draft.optionalAddons.some((addon) => addon.addonType === groupId && addon.ingredientId === id); draft.optionalAddons = draft.optionalAddons.filter((addon) => !(addon.addonType === groupId && addon.ingredientId === id)); if (!exists) { draft.optionalAddons.push({ addonType: groupId, ingredientId: id }); all[mealId] = drafts; draft.consumption[id] = defaultConsumption(id, entry.checkoutUnits, all, mealId, recipeId); } else if (!draftUses(draft, id)) delete draft.consumption[id]; void persistActual(mealId, drafts); return; }
+    const step = target.closest<HTMLButtonElement>('[data-queue-step-meal]');
+    if (step) { event.preventDefault(); event.stopImmediatePropagation(); const mealId = step.dataset.queueStepMeal!; const recipeId = step.dataset.queueStepRecipe!; const id = step.dataset.queueStepIngredient!; const drafts = cloneDrafts(all[mealId] ?? {}); const draft = drafts[recipeId]; if (!draft) return; const stock = typeof household.inventory[id] === 'number' ? household.inventory[id] as number : 0; const current = typeof draft.consumption[id] === 'number' ? draft.consumption[id] as number : 0; const remaining = Math.max(0, roundCountedInventoryValue(stock - usedElsewhere(all, mealId, recipeId, id))); draft.consumption[id] = Math.max(0, Math.min(remaining, roundCountedInventoryValue(current + Number(step.dataset.queueStep)))); void persistActual(mealId, drafts); return; }
+    const confirm = target.closest<HTMLButtonElement>('#meal-confirm-checkout');
+    if (confirm) { event.preventDefault(); event.stopImmediatePropagation(); const final = document.querySelector<HTMLButtonElement>('#meal-finalize-checkout'); const status = document.querySelector<HTMLElement>('#meal-checkout-status'); if (status) status.textContent = `请核对 ${checkoutMeals().length} 顿的实际食材和数量，再一次性确认。`; if (final) { final.hidden = false; final.focus(); } return; }
+    const finalize = target.closest<HTMLButtonElement>('#meal-finalize-checkout');
+    if (finalize) { event.preventDefault(); event.stopImmediatePropagation(); const meal = household.currentMeal; if (!meal || !canWrite()) return; const drafts = allDrafts(); let outcome: ReturnType<typeof applyQueuedCheckoutComposition> | null = null; void repository.transaction((state) => { outcome = applyQueuedCheckoutComposition(state, meal.mealId, drafts, ingredients, { recipes, optionalGroups, nextMealId: createMealId(), completedAt: Date.now() }); return outcome.state; }).then((next) => { household = next; if (outcome?.committed) announce('排队餐和本顿已一起结算。'); else announce(outcome?.reason === 'invalid-consumption' ? '库存或实际用量已经变化，请重新核对。' : '本顿状态已经变化，请重新进入结算。'); scheduleRender(); }).catch((error) => announce(error instanceof Error ? error.message : '结算失败。')); }
+  }, true);
+
+  document.addEventListener('change', (event) => { if (!household.pendingCheckoutMeals.length || household.activeStep !== 'checkout') return; const input = (event.target as HTMLElement).closest<HTMLInputElement>('[data-queue-used-up-meal]'); if (!input) return; event.stopImmediatePropagation(); const all = allDrafts(); const mealId = input.dataset.queueUsedUpMeal!; const drafts = cloneDrafts(all[mealId] ?? {}); const draft = drafts[input.dataset.queueUsedUpRecipe!]; if (!draft) return; draft.consumption[input.dataset.queueUsedUpIngredient!] = input.checked; void persistActual(mealId, drafts); }, true);
+
+  repository.subscribe((next, status) => { household = next; repositoryStatus = status; scheduleRender(); });
+  window.addEventListener('pagehide', () => repository.dispose(), { once: true });
+  ensureQueueUi(); scheduleRender();
+</script>
+
+<style is:global>
+  .meal-queue-alert { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; padding: 13px 15px; border: 2px solid #c66b28; border-radius: 16px; background: #fff4df; }
+  .meal-queue-alert strong { color: #7b4318; font-size: 1.02rem; }
+  .meal-queue-alert p { margin: 3px 0 0; color: #6d4b31; }
+  .meal-queue-reservation-copy { display: block; margin-top: 3px; color: #a14e18; font-weight: 800; }
+  .meal-queue-cook-plan { display: grid; width: 100%; gap: 7px; margin-top: 10px; padding: 12px; border: 2px solid var(--berry); border-radius: 13px; background: var(--berry-soft); }
+  .meal-queue-cook-plan > strong { color: var(--berry); }
+  .meal-queue-cook-plan > div { display: grid; grid-template-columns: minmax(84px, .55fr) minmax(0, 1fr); gap: 8px; align-items: center; }
+  .meal-queue-cook-plan > div > span:first-child { color: var(--muted); font-weight: 800; }
+  .meal-queue-plan-values { display: flex; flex-wrap: wrap; gap: 5px; }
+  .meal-queue-plan-chip { display: inline-flex; width: fit-content; padding: 4px 8px; border-radius: 999px; background: var(--berry); color: white; }
+  .meal-queue-plan-chip--optional { background: color-mix(in srgb, var(--berry) 78%, white); }
+  .meal-queue-plan-none { color: var(--muted); }
+  .meal-queue-checkout-meal { display: grid; gap: 12px; padding: 13px; border: 1.5px solid color-mix(in srgb, var(--berry) 40%, var(--line)); border-radius: 17px; background: color-mix(in srgb, var(--berry-soft) 35%, var(--paper)); }
+  .meal-queue-checkout-meal > h3 { margin: 0; color: var(--berry); }
+  .meal-queue-checkout-meal .meal-checkout-recipe > h4 { margin: 0; }
+  .meal-queue-checkout-meal .meal-checkout-recipe h5 { margin: 8px 0 0; padding-left: 8px; border-left: 3px solid var(--berry); font-size: 1rem; }
+  @media (max-width: 560px) { .meal-queue-cook-plan > div { grid-template-columns: 1fr; gap: 3px; } }
+</style>
