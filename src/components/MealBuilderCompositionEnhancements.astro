@@ -30,7 +30,6 @@ const compositionData = JSON.stringify({
     optionalGroupsForRecipe,
     rankCandidates,
     reconcileMealState,
-    selectedOptionalAddonsForRecipe,
     unmetCompletionRequirements,
     type MealIngredient,
     type MealOptionalGroup,
@@ -39,7 +38,7 @@ const compositionData = JSON.stringify({
   } from '../lib/mealEngine';
   import {
     COUNTED_INVENTORY_STEP,
-    applyCheckoutComposition,
+    applyQueuedCheckoutComposition,
     checkoutRecipeDraftsForMeal,
     createMealId,
     inventoryIsOn,
@@ -85,240 +84,129 @@ const compositionData = JSON.stringify({
   const announce = (text: string) => { if (!live) return; live.textContent = ''; requestAnimationFrame(() => { live.textContent = text; }); };
   const nameFor = (id: string) => ingredientById.get(id)?.nameZh ?? id;
   const contributionText = (protein: number, vegetable: number, staple: number) => [protein ? `Protein ${protein}` : '', vegetable ? `Vegetable ${vegetable}` : '', staple ? `Staple ${staple}` : ''].filter(Boolean).join(' · ') || '不增加组餐格';
+  const checkoutMeals = () => [...(household.pendingCheckoutMeals ?? []), ...(household.currentMeal ? [household.currentMeal] : [])];
 
   function scheduleRender() {
     if (renderQueued) return;
     renderQueued = true;
     requestAnimationFrame(() => { renderQueued = false; renderAll(); });
   }
-
-  function afterVisualFeedback(callback: () => void) {
-    requestAnimationFrame(() => requestAnimationFrame(callback));
-  }
-
-  function showSinglePlanChoice(button: HTMLButtonElement) {
-    button.closest('.meal-composition-grid')?.querySelectorAll<HTMLButtonElement>('.meal-composition-chip').forEach((candidate) => candidate.setAttribute('aria-pressed', String(candidate === button)));
-  }
-
-  function engineState(meal: CurrentMeal): MealState {
-    return reconcileMealState(mealToEngineState(meal), recipes, ingredients, optionalGroups);
-  }
-
-  function planSelected(recipeId: string, groupId: string, ingredientId: string, meal: CurrentMeal) {
-    return meal.selectedAddons.some((addon) => addon.mainRecipeId === recipeId && addon.addonType === groupId && addon.ingredientId === ingredientId);
-  }
-
+  function afterVisualFeedback(callback: () => void) { requestAnimationFrame(() => requestAnimationFrame(callback)); }
+  function showSinglePlanChoice(button: HTMLButtonElement) { button.closest('.meal-composition-grid')?.querySelectorAll<HTMLButtonElement>('.meal-composition-chip').forEach((candidate) => candidate.setAttribute('aria-pressed', String(candidate === button))); }
+  function engineState(meal: CurrentMeal): MealState { return reconcileMealState(mealToEngineState(meal), recipes, ingredients, optionalGroups); }
+  function planSelected(recipeId: string, groupId: string, ingredientId: string, meal: CurrentMeal) { return meal.selectedAddons.some((addon) => addon.mainRecipeId === recipeId && addon.addonType === groupId && addon.ingredientId === ingredientId); }
   function makeChip(label: string, pressed: boolean, data: Record<string, string>) {
-    const button = document.createElement('button');
-    button.type = 'button'; button.className = 'meal-chip meal-composition-chip'; button.setAttribute('aria-pressed', String(pressed)); button.disabled = !canWrite();
-    const check = document.createElement('span'); check.setAttribute('aria-hidden', 'true'); check.textContent = '✓';
-    const strong = document.createElement('strong'); strong.textContent = label; button.append(check, strong);
-    Object.assign(button.dataset, data); return button;
+    const button = document.createElement('button'); button.type = 'button'; button.className = 'meal-chip meal-composition-chip'; button.setAttribute('aria-pressed', String(pressed)); button.disabled = !canWrite();
+    const check = document.createElement('span'); check.setAttribute('aria-hidden', 'true'); check.textContent = '✓'; const strong = document.createElement('strong'); strong.textContent = label; button.append(check, strong); Object.assign(button.dataset, data); return button;
   }
 
   function renderPlanEditors() {
-    const meal = household.currentMeal;
-    if (!selectedPanel || !meal) return;
+    const meal = household.currentMeal; if (!selectedPanel || !meal) return;
     const selected = new Set(meal.selectedRecipeIds);
     selectedPanel.querySelectorAll<HTMLElement>('[data-selected-recipe]').forEach((row) => {
-      const previousEditor = row.querySelector<HTMLDetailsElement>('[data-composition-editor]');
-      const wasOpen = previousEditor?.open ?? false;
-      previousEditor?.remove();
-      const recipeId = row.dataset.selectedRecipe!;
-      if (!selected.has(recipeId)) return;
-      const recipe = recipeById.get(recipeId); if (!recipe) return;
+      const previousEditor = row.querySelector<HTMLDetailsElement>('[data-composition-editor]'); const wasOpen = previousEditor?.open ?? false; previousEditor?.remove();
+      const recipeId = row.dataset.selectedRecipe!; if (!selected.has(recipeId)) return; const recipe = recipeById.get(recipeId); if (!recipe) return;
       const details = document.createElement('details'); details.className = 'meal-composition-editor'; details.dataset.compositionEditor = recipeId; details.open = wasOpen;
-      const summary = document.createElement('summary'); summary.textContent = '编辑'; details.append(summary);
-      const body = document.createElement('div'); body.className = 'meal-composition-editor__body';
-      const binding = meal.recipeIngredientBindings[recipeId] ?? [];
-      const boundIds = new Set(binding);
-
+      const summary = document.createElement('summary'); summary.textContent = '编辑'; details.append(summary); const body = document.createElement('div'); body.className = 'meal-composition-editor__body'; const binding = meal.recipeIngredientBindings[recipeId] ?? []; const boundIds = new Set(binding);
       const fixed = recipe.requirements.filter((requirement) => requirement.anyOf.length === 1);
-      if (fixed.length) {
-        const heading = document.createElement('h4'); heading.textContent = '主食材'; body.append(heading);
-        const line = document.createElement('p'); line.className = 'meal-composition-fixed'; line.textContent = fixed.map((requirement) => nameFor(requirement.anyOf[0])).join(' · '); body.append(line);
-      }
-
+      if (fixed.length) { const heading = document.createElement('h4'); heading.textContent = '主食材'; body.append(heading); const line = document.createElement('p'); line.className = 'meal-composition-fixed'; line.textContent = fixed.map((requirement) => nameFor(requirement.anyOf[0])).join(' · '); body.append(line); }
       recipe.requirements.forEach((requirement, index) => {
-        if (requirement.anyOf.length <= 1) return;
-        const heading = document.createElement('h4'); heading.textContent = '本菜选择'; body.append(heading);
-        const grid = document.createElement('div'); grid.className = 'meal-chip-grid meal-composition-grid';
-        requirement.anyOf.filter((id) => meal.availableIngredientIds.includes(id) || binding[index] === id).forEach((id) => grid.append(makeChip(nameFor(id), binding[index] === id, { planBindingRecipe: recipeId, planBindingIndex: String(index), planBindingIngredient: id })));
-        body.append(grid);
+        if (requirement.anyOf.length <= 1) return; const heading = document.createElement('h4'); heading.textContent = '本菜选择'; body.append(heading); const grid = document.createElement('div'); grid.className = 'meal-chip-grid meal-composition-grid';
+        requirement.anyOf.filter((id) => meal.availableIngredientIds.includes(id) || binding[index] === id).forEach((id) => grid.append(makeChip(nameFor(id), binding[index] === id, { planBindingRecipe: recipeId, planBindingIndex: String(index), planBindingIngredient: id }))); body.append(grid);
       });
-
       for (const group of optionalGroupsForRecipe(recipe, optionalGroups)) {
-        const choices = group.ingredients.filter((entry) => !boundIds.has(entry.ingredientId) && (meal.availableIngredientIds.includes(entry.ingredientId) || planSelected(recipeId, group.id, entry.ingredientId, meal)));
-        if (!choices.length) continue;
-        const heading = document.createElement('h4'); heading.textContent = group.labelZh; body.append(heading);
-        const grid = document.createElement('div'); grid.className = 'meal-chip-grid meal-composition-grid';
-        choices.forEach((entry) => {
-          const button = makeChip(nameFor(entry.ingredientId), planSelected(recipeId, group.id, entry.ingredientId, meal), { planOptionalRecipe: recipeId, planOptionalGroup: group.id, planOptionalIngredient: entry.ingredientId });
-          const small = document.createElement('small'); small.textContent = contributionText(entry.contribution.protein, entry.contribution.vegetable, entry.contribution.staple); button.append(small); grid.append(button);
-        });
-        body.append(grid);
+        const choices = group.ingredients.filter((entry) => !boundIds.has(entry.ingredientId) && (meal.availableIngredientIds.includes(entry.ingredientId) || planSelected(recipeId, group.id, entry.ingredientId, meal))); if (!choices.length) continue;
+        const heading = document.createElement('h4'); heading.textContent = group.labelZh; body.append(heading); const grid = document.createElement('div'); grid.className = 'meal-chip-grid meal-composition-grid';
+        choices.forEach((entry) => { const button = makeChip(nameFor(entry.ingredientId), planSelected(recipeId, group.id, entry.ingredientId, meal), { planOptionalRecipe: recipeId, planOptionalGroup: group.id, planOptionalIngredient: entry.ingredientId }); const small = document.createElement('small'); small.textContent = contributionText(entry.contribution.protein, entry.contribution.vegetable, entry.contribution.staple); button.append(small); grid.append(button); }); body.append(grid);
       }
       details.append(body); row.append(details);
     });
   }
 
   function renderPlanDerivedUi() {
-    const meal = household.currentMeal; if (!meal) return;
-    const state = engineState(meal); const totals = aggregateSelection(recipes, state, ingredients, optionalGroups);
+    const meal = household.currentMeal; if (!meal) return; const state = engineState(meal); const totals = aggregateSelection(recipes, state, ingredients, optionalGroups);
     const protein = document.querySelector('#progress-protein'); const vegetable = document.querySelector('#progress-vegetable'); const staple = document.querySelector('#progress-staple'); const childProtein = document.querySelector('#progress-child-protein'); const childVegetable = document.querySelector('#progress-child-vegetable');
-    if (protein) protein.textContent = `${totals.protein} / ${state.proteinTarget}`;
-    if (vegetable) vegetable.textContent = `${totals.vegetable} / ${state.vegetableTarget}`;
-    if (staple) staple.textContent = state.stapleRequired ? (totals.staple >= 1 ? '✓' : '●') : '不需要';
-    if (childProtein) childProtein.textContent = totals.childProtein ? '✓' : '●';
-    if (childVegetable) childVegetable.textContent = totals.childVegetable ? '✓' : '●';
-    const unmet = unmetCompletionRequirements(state, totals); const status = document.querySelector<HTMLElement>('#meal-completion-status'); if (status) status.textContent = unmet.length ? `还缺：${unmet.join('、')}` : '目标已满足，可以进入下一步。';
-    const next = document.querySelector<HTMLButtonElement>('#meal-next'); if (next) next.disabled = unmet.length > 0 || !canWrite();
+    if (protein) protein.textContent = `${totals.protein} / ${state.proteinTarget}`; if (vegetable) vegetable.textContent = `${totals.vegetable} / ${state.vegetableTarget}`; if (staple) staple.textContent = state.stapleRequired ? (totals.staple >= 1 ? '✓' : '●') : '不需要'; if (childProtein) childProtein.textContent = totals.childProtein ? '✓' : '●'; if (childVegetable) childVegetable.textContent = totals.childVegetable ? '✓' : '●';
+    const unmet = unmetCompletionRequirements(state, totals); const status = document.querySelector<HTMLElement>('#meal-completion-status'); if (status) status.textContent = unmet.length ? `还缺：${unmet.join('、')}` : '目标已满足，可以进入下一步。'; const next = document.querySelector<HTMLButtonElement>('#meal-next'); if (next) next.disabled = unmet.length > 0 || !canWrite();
+    if (recipeGrid && household.activeStep === 'recipes') { const ranked = rankCandidates(recipes, state, ingredients, {}, household.recentMeals.map((item) => item.recipeIds), calendarDateKey(), optionalGroups); const visible = new Set(ranked.map((recipe) => recipe.id)); for (const recipe of ranked) { const card = recipeGrid.querySelector<HTMLElement>(`[data-meal-recipe="${CSS.escape(recipe.id)}"]`); if (card) { card.hidden = false; recipeGrid.append(card); } } recipeGrid.querySelectorAll<HTMLElement>('[data-meal-recipe]').forEach((card) => { if (!visible.has(card.dataset.mealRecipe!)) card.hidden = true; }); const count = document.querySelector<HTMLElement>('#meal-result-count'); if (count) count.textContent = `${ranked.length} 道可选`; }
+  }
 
-    if (recipeGrid && household.activeStep === 'recipes') {
-      const recent = household.recentMeals.map((item) => item.recipeIds);
-      const ranked = rankCandidates(recipes, state, ingredients, {}, recent, calendarDateKey(), optionalGroups);
-      const visible = new Set(ranked.map((recipe) => recipe.id));
-      for (const recipe of ranked) {
-        const card = recipeGrid.querySelector<HTMLElement>(`[data-meal-recipe="${CSS.escape(recipe.id)}"]`); if (card) { card.hidden = false; recipeGrid.append(card); }
-      }
-      recipeGrid.querySelectorAll<HTMLElement>('[data-meal-recipe]').forEach((card) => { if (!visible.has(card.dataset.mealRecipe!)) card.hidden = true; });
-      const count = document.querySelector<HTMLElement>('#meal-result-count'); if (count) count.textContent = `${ranked.length} 道可选`;
+  function savedDraftsFor(meal: CurrentMeal, inventory: HouseholdState['inventory']) { return checkoutRecipeDraftsForMeal(meal, inventory, ingredients, recipes, optionalGroups); }
+  function allDrafts() {
+    const result: Record<string, CheckoutRecipeDrafts> = {}; let remaining = { ...household.inventory };
+    for (const meal of checkoutMeals()) {
+      const drafts = savedDraftsFor(meal, remaining); result[meal.mealId] = drafts;
+      for (const draft of Object.values(drafts)) for (const [id, value] of Object.entries(draft.consumption)) if (typeof value === 'number' && typeof remaining[id] === 'number') { const next = roundCountedInventoryValue(Math.max(0, (remaining[id] as number) - value)); if (next > 0) remaining[id] = next; else delete remaining[id]; }
     }
+    return result;
   }
-
-  function renderCookPlan() {
-    const meal = household.currentMeal; if (!meal) return;
-    document.querySelectorAll<HTMLElement>('[data-cook-recipe]').forEach((card) => {
-      card.querySelector('[data-cook-planned-optionals]')?.remove();
-      const recipeId = card.dataset.cookRecipe!; if (!meal.selectedRecipeIds.includes(recipeId)) return;
-      const recipe = recipeById.get(recipeId); if (!recipe) return;
-      const selected = selectedOptionalAddonsForRecipe({ selectedAddons: meal.selectedAddons }, recipe, optionalGroups); if (!selected.length) return;
-      const box = document.createElement('div'); box.className = 'note-box meal-cook-planned-optionals'; box.dataset.cookPlannedOptionals = recipeId;
-      const strong = document.createElement('strong'); strong.textContent = '计划加料：'; box.append(strong, document.createTextNode(selected.map((addon) => nameFor(addon.ingredientId)).join('、'))); card.querySelector('.meal-cook-card__body')?.prepend(box);
-    });
-  }
-
-  function defaultConsumption(id: string, units: number, drafts: CheckoutRecipeDrafts, recipeId: string) {
-    if (trackingForIngredient(id, ingredients) === 'presence-only') return false;
-    const available = typeof household.inventory[id] === 'number' ? household.inventory[id] as number : 0;
-    const usedElsewhere = Object.entries(drafts).reduce((sum, [otherRecipeId, draft]) => {
-      if (otherRecipeId === recipeId) return sum;
-      const value = draft.consumption[id];
-      return sum + (typeof value === 'number' ? value : 0);
-    }, 0);
-    return Math.min(units, Math.max(0, roundCountedInventoryValue(available - usedElsewhere)));
-  }
-
-  function draftForMeal(meal: CurrentMeal) { return checkoutRecipeDraftsForMeal(meal, household.inventory, ingredients, recipes, optionalGroups); }
   function cloneDrafts(drafts: CheckoutRecipeDrafts): CheckoutRecipeDrafts { return JSON.parse(JSON.stringify(drafts)) as CheckoutRecipeDrafts; }
   function draftUsesIngredient(draft: CheckoutRecipeDrafts[string], ingredientId: string) { return draft.bindings.includes(ingredientId) || draft.optionalAddons.some((addon) => addon.ingredientId === ingredientId); }
-
-  async function persistActual(drafts: CheckoutRecipeDrafts) {
-    const mealId = household.currentMeal?.mealId; if (!mealId || !canWrite()) return;
-    try { const next = await repository.updateCurrentMeal((meal) => meal.mealId === mealId ? updateCheckoutRecipeDrafts(meal, drafts, ingredients) : meal); household = next; scheduleRender(); }
-    catch (error) { announce(error instanceof Error ? error.message : '结算记录保存失败。'); }
+  function usedByOtherDrafts(all: Record<string, CheckoutRecipeDrafts>, mealId: string, recipeId: string, ingredientId: string) {
+    let total = 0; for (const [otherMealId, mealDrafts] of Object.entries(all)) for (const [otherRecipeId, draft] of Object.entries(mealDrafts)) { if (otherMealId === mealId && otherRecipeId === recipeId) continue; const value = draft.consumption[ingredientId]; if (typeof value === 'number') total += value; } return total;
+  }
+  function defaultConsumption(id: string, units: number, all: Record<string, CheckoutRecipeDrafts>, mealId: string, recipeId: string) {
+    if (trackingForIngredient(id, ingredients) === 'presence-only') return false; const available = typeof household.inventory[id] === 'number' ? household.inventory[id] as number : 0; return Math.min(units, Math.max(0, roundCountedInventoryValue(available - usedByOtherDrafts(all, mealId, recipeId, id))));
+  }
+  async function persistActual(mealId: string, drafts: CheckoutRecipeDrafts) {
+    if (!canWrite()) return;
+    try {
+      const next = await repository.transaction((state) => {
+        if (state.currentMeal?.mealId === mealId) return { ...state, currentMeal: updateCheckoutRecipeDrafts(state.currentMeal, drafts, ingredients) };
+        const index = state.pendingCheckoutMeals.findIndex((meal) => meal.mealId === mealId); if (index < 0) return state; const pending = [...state.pendingCheckoutMeals]; pending[index] = { ...updateCheckoutRecipeDrafts(pending[index], drafts, ingredients), queuedAt: pending[index].queuedAt }; return { ...state, pendingCheckoutMeals: pending };
+      }); household = next; scheduleRender();
+    } catch (error) { announce(error instanceof Error ? error.message : '结算记录保存失败。'); }
   }
 
-  function amountRow(recipeId: string, ingredientId: string, drafts: CheckoutRecipeDrafts) {
-    const draft = drafts[recipeId]; const item = ingredientById.get(ingredientId); if (!draft || !item) return document.createTextNode('');
-    const row = document.createElement('div'); row.className = 'meal-checkout-row meal-checkout-row--recipe';
+  function amountRow(mealId: string, recipeId: string, ingredientId: string, all: Record<string, CheckoutRecipeDrafts>) {
+    const draft = all[mealId]?.[recipeId]; const item = ingredientById.get(ingredientId); if (!draft || !item) return document.createTextNode(''); const row = document.createElement('div'); row.className = 'meal-checkout-row meal-checkout-row--recipe';
     const name = document.createElement('span'); name.className = 'meal-inventory-name'; const strong = document.createElement('strong'); strong.textContent = nameFor(ingredientId); name.append(strong); row.append(name);
-    if (trackingForIngredient(ingredientId, ingredients) === 'presence-only') {
-      const label = document.createElement('label'); label.className = 'meal-checkout-used-up'; const input = document.createElement('input'); input.type = 'checkbox'; input.checked = draft.consumption[ingredientId] === true; input.dataset.actualUsedUpRecipe = recipeId; input.dataset.actualUsedUpIngredient = ingredientId; const text = document.createElement('span'); text.textContent = '用完'; label.append(input, text); row.append(label);
-    } else {
-      const value = typeof draft.consumption[ingredientId] === 'number' ? draft.consumption[ingredientId] as number : 0; const available = typeof household.inventory[ingredientId] === 'number' ? household.inventory[ingredientId] as number : 0;
-      const minus = document.createElement('button'); minus.type = 'button'; minus.className = 'meal-inventory-step'; minus.dataset.actualStepRecipe = recipeId; minus.dataset.actualStepIngredient = ingredientId; minus.dataset.actualStep = String(-COUNTED_INVENTORY_STEP); minus.textContent = '−';
-      const output = document.createElement('output'); output.textContent = `${value} / ${available}`;
-      const plus = document.createElement('button'); plus.type = 'button'; plus.className = 'meal-inventory-step'; plus.dataset.actualStepRecipe = recipeId; plus.dataset.actualStepIngredient = ingredientId; plus.dataset.actualStep = String(COUNTED_INVENTORY_STEP); plus.textContent = '+'; row.append(minus, output, plus);
-    }
+    if (trackingForIngredient(ingredientId, ingredients) === 'presence-only') { const label = document.createElement('label'); label.className = 'meal-checkout-used-up'; const input = document.createElement('input'); input.type = 'checkbox'; input.checked = draft.consumption[ingredientId] === true; input.dataset.actualUsedUpMeal = mealId; input.dataset.actualUsedUpRecipe = recipeId; input.dataset.actualUsedUpIngredient = ingredientId; const text = document.createElement('span'); text.textContent = '用完'; label.append(input, text); row.append(label); }
+    else { const value = typeof draft.consumption[ingredientId] === 'number' ? draft.consumption[ingredientId] as number : 0; const available = typeof household.inventory[ingredientId] === 'number' ? household.inventory[ingredientId] as number : 0; const minus = document.createElement('button'); minus.type = 'button'; minus.className = 'meal-inventory-step'; Object.assign(minus.dataset, { actualStepMeal: mealId, actualStepRecipe: recipeId, actualStepIngredient: ingredientId, actualStep: String(-COUNTED_INVENTORY_STEP) }); minus.textContent = '−'; const output = document.createElement('output'); output.textContent = `${value} / ${available}`; const plus = document.createElement('button'); plus.type = 'button'; plus.className = 'meal-inventory-step'; Object.assign(plus.dataset, { actualStepMeal: mealId, actualStepRecipe: recipeId, actualStepIngredient: ingredientId, actualStep: String(COUNTED_INVENTORY_STEP) }); plus.textContent = '+'; row.append(minus, output, plus); }
     return row;
   }
 
   function renderCheckoutComposition() {
-    const meal = household.currentMeal; if (!checkout || !checkoutList || !meal || household.activeStep !== 'checkout') return;
-    const drafts = draftForMeal(meal); checkoutList.replaceChildren();
-    for (const recipeId of meal.selectedRecipeIds) {
-      const recipe = recipeById.get(recipeId); const draft = drafts[recipeId]; if (!recipe || !draft) continue;
-      const card = document.createElement('section'); card.className = 'meal-checkout-recipe'; card.dataset.checkoutRecipe = recipeId;
-      const title = document.createElement('h3'); title.textContent = recipe.nameZh ?? recipeId; card.append(title);
-      const fixedIndexes = recipe.requirements.map((requirement, index) => ({ requirement, index })).filter(({ requirement }) => requirement.anyOf.length === 1);
-      if (fixedIndexes.length) { const h = document.createElement('h4'); h.textContent = '主食材'; card.append(h); fixedIndexes.forEach(({ index }) => card.append(amountRow(recipeId, draft.bindings[index], drafts))); }
-      recipe.requirements.forEach((requirement, index) => {
-        if (requirement.anyOf.length <= 1) return;
-        const h = document.createElement('h4'); h.textContent = '本菜选择'; card.append(h); const grid = document.createElement('div'); grid.className = 'meal-chip-grid meal-composition-grid';
-        requirement.anyOf.filter((id) => inventoryIsOn(household.inventory[id], trackingForIngredient(id, ingredients)) || draft.bindings[index] === id).forEach((id) => grid.append(makeChip(nameFor(id), draft.bindings[index] === id, { actualBindingRecipe: recipeId, actualBindingIndex: String(index), actualBindingIngredient: id })));
-        card.append(grid); if (draft.bindings[index]) card.append(amountRow(recipeId, draft.bindings[index], drafts));
-      });
-      const boundIds = new Set(draft.bindings);
-      for (const group of optionalGroupsForRecipe(recipe, optionalGroups)) {
-        const selectedIds = new Set(draft.optionalAddons.filter((addon) => addon.addonType === group.id && !boundIds.has(addon.ingredientId)).map((addon) => addon.ingredientId));
-        const candidates = group.ingredients.filter((entry) => !boundIds.has(entry.ingredientId) && (inventoryIsOn(household.inventory[entry.ingredientId], trackingForIngredient(entry.ingredientId, ingredients)) || selectedIds.has(entry.ingredientId) || planSelected(recipeId, group.id, entry.ingredientId, meal)));
-        if (!candidates.length) continue;
-        const h = document.createElement('h4'); h.textContent = group.labelZh; card.append(h); const grid = document.createElement('div'); grid.className = 'meal-chip-grid meal-composition-grid';
-        candidates.forEach((entry) => grid.append(makeChip(nameFor(entry.ingredientId), selectedIds.has(entry.ingredientId), { actualOptionalRecipe: recipeId, actualOptionalGroup: group.id, actualOptionalIngredient: entry.ingredientId })));
-        card.append(grid); candidates.filter((entry) => selectedIds.has(entry.ingredientId)).forEach((entry) => card.append(amountRow(recipeId, entry.ingredientId, drafts)));
+    if (!checkout || !checkoutList || !household.currentMeal || household.activeStep !== 'checkout') return; const all = allDrafts(); checkoutList.replaceChildren(); const meals = checkoutMeals();
+    meals.forEach((meal, mealIndex) => {
+      const mealSection = document.createElement('section'); mealSection.className = 'meal-checkout-meal'; mealSection.dataset.checkoutMeal = meal.mealId; const mealTitle = document.createElement('h3'); mealTitle.textContent = mealIndex < meals.length - 1 ? `待结算 ${mealIndex + 1}` : '本顿'; mealSection.append(mealTitle);
+      for (const recipeId of meal.selectedRecipeIds) {
+        const recipe = recipeById.get(recipeId); const draft = all[meal.mealId]?.[recipeId]; if (!recipe || !draft) continue; const card = document.createElement('section'); card.className = 'meal-checkout-recipe'; card.dataset.checkoutRecipe = recipeId; const title = document.createElement('h4'); title.textContent = recipe.nameZh ?? recipeId; card.append(title);
+        const fixedIndexes = recipe.requirements.map((requirement, index) => ({ requirement, index })).filter(({ requirement }) => requirement.anyOf.length === 1);
+        if (fixedIndexes.length) { const h = document.createElement('h5'); h.textContent = '主食材'; card.append(h); fixedIndexes.forEach(({ index }) => card.append(amountRow(meal.mealId, recipeId, draft.bindings[index], all))); }
+        recipe.requirements.forEach((requirement, index) => { if (requirement.anyOf.length <= 1) return; const h = document.createElement('h5'); h.textContent = '本菜选择'; card.append(h); const grid = document.createElement('div'); grid.className = 'meal-chip-grid meal-composition-grid'; requirement.anyOf.filter((id) => inventoryIsOn(household.inventory[id], trackingForIngredient(id, ingredients)) || draft.bindings[index] === id).forEach((id) => grid.append(makeChip(nameFor(id), draft.bindings[index] === id, { actualBindingMeal: meal.mealId, actualBindingRecipe: recipeId, actualBindingIndex: String(index), actualBindingIngredient: id }))); card.append(grid); if (draft.bindings[index]) card.append(amountRow(meal.mealId, recipeId, draft.bindings[index], all)); });
+        const boundIds = new Set(draft.bindings);
+        for (const group of optionalGroupsForRecipe(recipe, optionalGroups)) { const selectedIds = new Set(draft.optionalAddons.filter((addon) => addon.addonType === group.id && !boundIds.has(addon.ingredientId)).map((addon) => addon.ingredientId)); const candidates = group.ingredients.filter((entry) => !boundIds.has(entry.ingredientId) && (inventoryIsOn(household.inventory[entry.ingredientId], trackingForIngredient(entry.ingredientId, ingredients)) || selectedIds.has(entry.ingredientId) || planSelected(recipeId, group.id, entry.ingredientId, meal))); if (!candidates.length) continue; const h = document.createElement('h5'); h.textContent = group.labelZh; card.append(h); const grid = document.createElement('div'); grid.className = 'meal-chip-grid meal-composition-grid'; candidates.forEach((entry) => grid.append(makeChip(nameFor(entry.ingredientId), selectedIds.has(entry.ingredientId), { actualOptionalMeal: meal.mealId, actualOptionalRecipe: recipeId, actualOptionalGroup: group.id, actualOptionalIngredient: entry.ingredientId }))); card.append(grid); candidates.filter((entry) => selectedIds.has(entry.ingredientId)).forEach((entry) => card.append(amountRow(meal.mealId, recipeId, entry.ingredientId, all))); }
+        mealSection.append(card);
       }
-      checkoutList.append(card);
-    }
+      checkoutList.append(mealSection);
+    });
   }
 
-  function renderAll() { renderPlanEditors(); renderPlanDerivedUi(); renderCookPlan(); renderCheckoutComposition(); }
+  function renderAll() { renderPlanEditors(); renderPlanDerivedUi(); renderCheckoutComposition(); }
 
   selectedPanel?.addEventListener('click', (event) => {
-    const target = event.target as HTMLElement;
-    const binding = target.closest<HTMLButtonElement>('[data-plan-binding-recipe]');
-    if (binding) {
-      event.preventDefault(); event.stopImmediatePropagation();
-      const recipeId = binding.dataset.planBindingRecipe!; const index = Number(binding.dataset.planBindingIndex); const ingredientId = binding.dataset.planBindingIngredient!;
-      showSinglePlanChoice(binding);
-      afterVisualFeedback(() => {
-        void repository.updateCurrentMeal((meal) => { if (!meal.selectedRecipeIds.includes(recipeId)) return meal; const next = [...(meal.recipeIngredientBindings[recipeId] ?? [])]; next[index] = ingredientId; return reconcileCurrentMeal({ ...meal, recipeIngredientBindings: { ...meal.recipeIngredientBindings, [recipeId]: next }, checkoutRecipeDrafts: {} }, recipes, ingredients, optionalGroups); }).catch((error) => { scheduleRender(); announce(error instanceof Error ? error.message : '食材选择保存失败。'); });
-      });
-      return;
-    }
-    const optional = target.closest<HTMLButtonElement>('[data-plan-optional-recipe]');
-    if (optional) {
-      event.preventDefault(); event.stopImmediatePropagation(); const selected = optional.getAttribute('aria-pressed') !== 'true';
-      optional.setAttribute('aria-pressed', String(selected));
-      afterVisualFeedback(() => {
-        void repository.updateCurrentMeal((meal) => toggleRecipeOptionalAddon(meal, optional.dataset.planOptionalRecipe!, optional.dataset.planOptionalGroup!, optional.dataset.planOptionalIngredient!, selected, recipes, optionalGroups)).catch((error) => { scheduleRender(); announce(error instanceof Error ? error.message : '可选加料保存失败。'); });
-      });
-    }
+    const target = event.target as HTMLElement; const binding = target.closest<HTMLButtonElement>('[data-plan-binding-recipe]');
+    if (binding) { event.preventDefault(); event.stopImmediatePropagation(); const recipeId = binding.dataset.planBindingRecipe!; const index = Number(binding.dataset.planBindingIndex); const ingredientId = binding.dataset.planBindingIngredient!; showSinglePlanChoice(binding); afterVisualFeedback(() => { void repository.updateCurrentMeal((meal) => { if (!meal.selectedRecipeIds.includes(recipeId)) return meal; const next = [...(meal.recipeIngredientBindings[recipeId] ?? [])]; next[index] = ingredientId; return reconcileCurrentMeal({ ...meal, recipeIngredientBindings: { ...meal.recipeIngredientBindings, [recipeId]: next }, checkoutRecipeDrafts: {} }, recipes, ingredients, optionalGroups); }).catch((error) => { scheduleRender(); announce(error instanceof Error ? error.message : '食材选择保存失败。'); }); }); return; }
+    const optional = target.closest<HTMLButtonElement>('[data-plan-optional-recipe]'); if (optional) { event.preventDefault(); event.stopImmediatePropagation(); const selected = optional.getAttribute('aria-pressed') !== 'true'; optional.setAttribute('aria-pressed', String(selected)); afterVisualFeedback(() => { void repository.updateCurrentMeal((meal) => toggleRecipeOptionalAddon(meal, optional.dataset.planOptionalRecipe!, optional.dataset.planOptionalGroup!, optional.dataset.planOptionalIngredient!, selected, recipes, optionalGroups)).catch((error) => { scheduleRender(); announce(error instanceof Error ? error.message : '可选加料保存失败。'); }); }); }
   }, true);
 
   checkoutList?.addEventListener('click', (event) => {
-    const target = event.target as HTMLElement; const meal = household.currentMeal; if (!meal || household.activeStep !== 'checkout') return;
-    const drafts = cloneDrafts(draftForMeal(meal));
-    const binding = target.closest<HTMLButtonElement>('[data-actual-binding-recipe]');
-    if (binding) {
-      event.preventDefault(); event.stopImmediatePropagation(); const recipeId = binding.dataset.actualBindingRecipe!; const index = Number(binding.dataset.actualBindingIndex); const ingredientId = binding.dataset.actualBindingIngredient!; const draft = drafts[recipeId]; const recipe = recipeById.get(recipeId); if (!draft || !recipe) return;
-      const old = draft.bindings[index];
-      draft.optionalAddons = draft.optionalAddons.filter((addon) => addon.ingredientId !== ingredientId);
-      draft.bindings[index] = ingredientId;
-      if (old && !draftUsesIngredient(draft, old)) delete draft.consumption[old];
-      draft.consumption[ingredientId] = defaultConsumption(ingredientId, recipe.checkoutUnits?.[ingredientId] ?? 1, drafts, recipeId);
-      void persistActual(drafts); return;
-    }
-    const optional = target.closest<HTMLButtonElement>('[data-actual-optional-recipe]');
-    if (optional) {
-      event.preventDefault(); event.stopImmediatePropagation(); const recipeId = optional.dataset.actualOptionalRecipe!; const groupId = optional.dataset.actualOptionalGroup!; const ingredientId = optional.dataset.actualOptionalIngredient!; const draft = drafts[recipeId]; const recipe = recipeById.get(recipeId); const group = groupById.get(groupId); const entry = group?.ingredients.find((candidate) => candidate.ingredientId === ingredientId); if (!draft || !recipe || !entry || draft.bindings.includes(ingredientId)) return;
-      const exists = draft.optionalAddons.some((addon) => addon.addonType === groupId && addon.ingredientId === ingredientId); draft.optionalAddons = draft.optionalAddons.filter((addon) => !(addon.addonType === groupId && addon.ingredientId === ingredientId));
-      if (!exists) { draft.optionalAddons.push({ addonType: groupId, ingredientId }); draft.consumption[ingredientId] = defaultConsumption(ingredientId, entry.checkoutUnits, drafts, recipeId); } else if (!draftUsesIngredient(draft, ingredientId)) delete draft.consumption[ingredientId]; void persistActual(drafts); return;
-    }
-    const step = target.closest<HTMLButtonElement>('[data-actual-step-recipe]');
-    if (step) {
-      event.preventDefault(); event.stopImmediatePropagation(); const recipeId = step.dataset.actualStepRecipe!; const ingredientId = step.dataset.actualStepIngredient!; const draft = drafts[recipeId]; if (!draft) return; const available = typeof household.inventory[ingredientId] === 'number' ? household.inventory[ingredientId] as number : 0; const current = typeof draft.consumption[ingredientId] === 'number' ? draft.consumption[ingredientId] as number : 0; const usedElsewhere = Object.entries(drafts).reduce((sum, [otherRecipeId, otherDraft]) => otherRecipeId === recipeId ? sum : sum + (typeof otherDraft.consumption[ingredientId] === 'number' ? otherDraft.consumption[ingredientId] as number : 0), 0); const remaining = Math.max(0, roundCountedInventoryValue(available - usedElsewhere)); draft.consumption[ingredientId] = Math.max(0, Math.min(remaining, roundCountedInventoryValue(current + Number(step.dataset.actualStep)))); void persistActual(drafts);
-    }
+    const target = event.target as HTMLElement; if (household.activeStep !== 'checkout') return; const all = allDrafts();
+    const binding = target.closest<HTMLButtonElement>('[data-actual-binding-meal]');
+    if (binding) { event.preventDefault(); event.stopImmediatePropagation(); const mealId = binding.dataset.actualBindingMeal!; const recipeId = binding.dataset.actualBindingRecipe!; const index = Number(binding.dataset.actualBindingIndex); const ingredientId = binding.dataset.actualBindingIngredient!; const drafts = cloneDrafts(all[mealId] ?? {}); const draft = drafts[recipeId]; const recipe = recipeById.get(recipeId); if (!draft || !recipe) return; const old = draft.bindings[index]; draft.optionalAddons = draft.optionalAddons.filter((addon) => addon.ingredientId !== ingredientId); draft.bindings[index] = ingredientId; if (old && !draftUsesIngredient(draft, old)) delete draft.consumption[old]; all[mealId] = drafts; draft.consumption[ingredientId] = defaultConsumption(ingredientId, recipe.checkoutUnits?.[ingredientId] ?? 1, all, mealId, recipeId); void persistActual(mealId, drafts); return; }
+    const optional = target.closest<HTMLButtonElement>('[data-actual-optional-meal]');
+    if (optional) { event.preventDefault(); event.stopImmediatePropagation(); const mealId = optional.dataset.actualOptionalMeal!; const recipeId = optional.dataset.actualOptionalRecipe!; const groupId = optional.dataset.actualOptionalGroup!; const ingredientId = optional.dataset.actualOptionalIngredient!; const drafts = cloneDrafts(all[mealId] ?? {}); const draft = drafts[recipeId]; const recipe = recipeById.get(recipeId); const group = groupById.get(groupId); const entry = group?.ingredients.find((candidate) => candidate.ingredientId === ingredientId); if (!draft || !recipe || !entry || draft.bindings.includes(ingredientId)) return; const exists = draft.optionalAddons.some((addon) => addon.addonType === groupId && addon.ingredientId === ingredientId); draft.optionalAddons = draft.optionalAddons.filter((addon) => !(addon.addonType === groupId && addon.ingredientId === ingredientId)); if (!exists) { draft.optionalAddons.push({ addonType: groupId, ingredientId }); all[mealId] = drafts; draft.consumption[ingredientId] = defaultConsumption(ingredientId, entry.checkoutUnits, all, mealId, recipeId); } else if (!draftUsesIngredient(draft, ingredientId)) delete draft.consumption[ingredientId]; void persistActual(mealId, drafts); return; }
+    const step = target.closest<HTMLButtonElement>('[data-actual-step-meal]');
+    if (step) { event.preventDefault(); event.stopImmediatePropagation(); const mealId = step.dataset.actualStepMeal!; const recipeId = step.dataset.actualStepRecipe!; const ingredientId = step.dataset.actualStepIngredient!; const drafts = cloneDrafts(all[mealId] ?? {}); const draft = drafts[recipeId]; if (!draft) return; const available = typeof household.inventory[ingredientId] === 'number' ? household.inventory[ingredientId] as number : 0; const current = typeof draft.consumption[ingredientId] === 'number' ? draft.consumption[ingredientId] as number : 0; const remaining = Math.max(0, roundCountedInventoryValue(available - usedByOtherDrafts(all, mealId, recipeId, ingredientId))); draft.consumption[ingredientId] = Math.max(0, Math.min(remaining, roundCountedInventoryValue(current + Number(step.dataset.actualStep)))); void persistActual(mealId, drafts); }
   }, true);
 
-  checkoutList?.addEventListener('change', (event) => {
-    const input = (event.target as HTMLElement).closest<HTMLInputElement>('[data-actual-used-up-recipe]'); const meal = household.currentMeal; if (!input || !meal) return; event.stopImmediatePropagation(); const drafts = cloneDrafts(draftForMeal(meal)); const draft = drafts[input.dataset.actualUsedUpRecipe!]; if (!draft) return; draft.consumption[input.dataset.actualUsedUpIngredient!] = input.checked; void persistActual(drafts);
-  }, true);
+  checkoutList?.addEventListener('change', (event) => { const input = (event.target as HTMLElement).closest<HTMLInputElement>('[data-actual-used-up-meal]'); if (!input || household.activeStep !== 'checkout') return; event.stopImmediatePropagation(); const all = allDrafts(); const mealId = input.dataset.actualUsedUpMeal!; const drafts = cloneDrafts(all[mealId] ?? {}); const draft = drafts[input.dataset.actualUsedUpRecipe!]; if (!draft) return; draft.consumption[input.dataset.actualUsedUpIngredient!] = input.checked; void persistActual(mealId, drafts); }, true);
 
-  confirmCheckout?.addEventListener('click', (event) => { if (household.activeStep !== 'checkout') return; event.preventDefault(); event.stopImmediatePropagation(); if (checkoutStatus) checkoutStatus.textContent = '请按每道菜核对实际食材和数量，再确认结算。'; if (finalizeCheckout) { finalizeCheckout.hidden = false; finalizeCheckout.focus(); } }, true);
+  confirmCheckout?.addEventListener('click', (event) => { if (household.activeStep !== 'checkout') return; event.preventDefault(); event.stopImmediatePropagation(); if (checkoutStatus) checkoutStatus.textContent = `请核对 ${checkoutMeals().length} 顿的实际食材和数量，再一次性确认结算。`; if (finalizeCheckout) { finalizeCheckout.hidden = false; finalizeCheckout.focus(); } }, true);
   finalizeCheckout?.addEventListener('click', (event) => {
-    if (household.activeStep !== 'checkout') return; event.preventDefault(); event.stopImmediatePropagation(); const meal = household.currentMeal; if (!meal || !canWrite()) return; const drafts = draftForMeal(meal); let outcome: ReturnType<typeof applyCheckoutComposition> | null = null;
-    void repository.transaction((current) => { if (!current.currentMeal || current.currentMeal.mealId !== meal.mealId) return current; outcome = applyCheckoutComposition(current, meal.mealId, drafts, ingredients, { recipes, optionalGroups, nextMealId: createMealId(), completedAt: Date.now() }); return outcome.state; }).then((next) => { household = next; if (outcome?.committed) { if (checkoutStatus) checkoutStatus.textContent = '结算完成。'; if (checkout) checkout.hidden = true; announce('结算已完成，库存已按实际做法扣减。'); } else if (checkoutStatus) checkoutStatus.textContent = outcome?.reason === 'stale-meal' ? '本顿已被另一台设备修改或结算，请刷新。' : '实际用量无效，请重新核对。'; scheduleRender(); }).catch((error) => { if (checkoutStatus) checkoutStatus.textContent = error instanceof Error ? error.message : '结算失败。'; });
+    if (household.activeStep !== 'checkout') return; event.preventDefault(); event.stopImmediatePropagation(); const meal = household.currentMeal; if (!meal || !canWrite()) return; const byMeal = allDrafts(); let outcome: ReturnType<typeof applyQueuedCheckoutComposition> | null = null;
+    void repository.transaction((current) => { if (!current.currentMeal || current.currentMeal.mealId !== meal.mealId) return current; outcome = applyQueuedCheckoutComposition(current, meal.mealId, byMeal, ingredients, { recipes, optionalGroups, nextMealId: createMealId(), completedAt: Date.now() }); return outcome.state; }).then((next) => { household = next; if (outcome?.committed) { if (checkoutStatus) checkoutStatus.textContent = '全部结算完成。'; if (checkout) checkout.hidden = true; announce('排队餐和本顿已一次性结算，库存已按实际做法扣减。'); } else if (checkoutStatus) checkoutStatus.textContent = outcome?.reason === 'stale-meal' ? '本顿已被另一台设备修改或结算，请刷新。' : '实际用量或库存无效，请重新核对。'; scheduleRender(); }).catch((error) => { if (checkoutStatus) checkoutStatus.textContent = error instanceof Error ? error.message : '结算失败。'; });
   }, true);
 
   repository.subscribe((next, status) => { household = next; repositoryStatus = status; scheduleRender(); });
@@ -328,61 +216,23 @@ const compositionData = JSON.stringify({
 <style is:global>
   .meal-selected > ul > li { flex-wrap: wrap; }
   .meal-composition-editor { flex-basis: 100%; width: 100%; margin-top: 10px; border-top: 1px solid var(--line); padding-top: 10px; }
-  .meal-composition-editor > summary {
-    display: inline-flex;
-    width: fit-content;
-    min-height: 48px;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    border: 1.5px solid color-mix(in srgb, var(--berry) 78%, var(--line));
-    border-radius: 12px;
-    background: var(--berry-soft);
-    color: var(--berry);
-    box-shadow: 0 2px 8px color-mix(in srgb, var(--berry) 10%, transparent);
-    cursor: pointer;
-    font-weight: 800;
-    list-style: none;
-  }
+  .meal-composition-editor > summary { display: inline-flex; width: fit-content; min-height: 48px; align-items: center; gap: 8px; padding: 8px 14px; border: 1.5px solid color-mix(in srgb, var(--berry) 78%, var(--line)); border-radius: 12px; background: var(--berry-soft); color: var(--berry); box-shadow: 0 2px 8px color-mix(in srgb, var(--berry) 10%, transparent); cursor: pointer; font-weight: 800; list-style: none; }
   .meal-composition-editor > summary::-webkit-details-marker { display: none; }
   .meal-composition-editor > summary::after { content: '+'; font-size: 1.15em; line-height: 1; }
   .meal-composition-editor[open] > summary::after { content: '−'; }
   .meal-composition-editor__body { display: grid; gap: 10px; padding: 12px 0 4px; }
-  .meal-composition-editor__body h4, .meal-checkout-recipe h4 {
-    margin: 10px 0 1px;
-    padding-left: 9px;
-    border-left: 3px solid var(--berry);
-    color: var(--ink);
-    font-size: 1rem;
-    font-weight: 800;
-    line-height: 1.35;
-  }
+  .meal-composition-editor__body h4, .meal-checkout-recipe h5 { margin: 10px 0 1px; padding-left: 9px; border-left: 3px solid var(--berry); color: var(--ink); font-size: 1rem; font-weight: 800; line-height: 1.35; }
   .meal-composition-fixed { margin: 0; color: var(--muted); }
   .meal-composition-grid { grid-template-columns: repeat(auto-fit, minmax(112px, 1fr)); }
-  .meal-composition-chip {
-    min-height: 48px;
-    border: 1.5px solid color-mix(in srgb, var(--berry) 42%, var(--line));
-    border-radius: 12px;
-    background: var(--surface);
-    color: var(--ink);
-    box-shadow: 0 1px 3px color-mix(in srgb, var(--ink) 7%, transparent);
-    touch-action: manipulation;
-  }
-  .meal-selected .meal-composition-chip, .meal-checkout-recipe .meal-composition-chip {
-    border-width: 1.5px;
-    border-style: solid;
-  }
-  .meal-composition-chip[aria-pressed="true"] {
-    border-color: var(--berry);
-    background: var(--berry-soft);
-    color: var(--berry);
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--berry) 32%, transparent);
-  }
+  .meal-composition-chip { min-height: 48px; border: 1.5px solid color-mix(in srgb, var(--berry) 42%, var(--line)); border-radius: 12px; background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px color-mix(in srgb, var(--ink) 7%, transparent); touch-action: manipulation; }
+  .meal-selected .meal-composition-chip, .meal-checkout-recipe .meal-composition-chip { border-width: 1.5px; border-style: solid; }
+  .meal-composition-chip[aria-pressed="true"] { border-color: var(--berry); background: var(--berry-soft); color: var(--berry); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--berry) 32%, transparent); }
   .meal-composition-chip small { display: block; font-size: .72rem; font-weight: 500; }
-  .meal-cook-planned-optionals { margin-bottom: 14px; }
   .meal-checkout-list { display: grid; gap: 16px; }
+  .meal-checkout-meal { border: 1.5px solid color-mix(in srgb, var(--berry) 35%, var(--line)); border-radius: 18px; padding: 14px; background: color-mix(in srgb, var(--berry-soft) 38%, var(--paper)); display: grid; gap: 12px; }
+  .meal-checkout-meal > h3 { margin: 0; color: var(--berry); }
   .meal-checkout-recipe { border: 1px solid var(--line); border-radius: 16px; padding: 14px; background: var(--paper); display: grid; gap: 10px; }
-  .meal-checkout-recipe > h3 { margin: 0; }
+  .meal-checkout-recipe > h4 { margin: 0; }
   .meal-checkout-row--recipe { border-top: 0; padding-block: 5px; }
   @media (max-width: 520px) { .meal-composition-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 </style>
