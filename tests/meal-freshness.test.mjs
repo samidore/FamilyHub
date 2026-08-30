@@ -164,13 +164,17 @@ test('Recipes freshness badges show ingredient names and frozen stock ages in re
   assert.match(page, /data-candidate-freshness-badge/);
   assert.match(layout, /MealBuilderFreshnessEnhancements/);
   assert.match(enhancement, /freshnessAgeDays\(meal\.ingredientFreshnessDates\[ingredientId\]/);
-  assert.match(enhancement, /document\.createTextNode\(`\$\{signal\.label\} \$\{signal\.ageDays\}天`\)/);
+  assert.match(enhancement, /text\.textContent = `\$\{signal\.label\} \$\{signal\.ageDays\}天`;/);
   assert.match(enhancement, /for \(const signal of signals\)/);
   assert.match(enhancement, /svg\.dataset\.freshnessIcon = 'hourglass'/);
   assert.match(enhancement, /\.meal-freshness-item \{/);
   assert.match(enhancement, /border: 1px solid #b53a3a;/);
   assert.match(enhancement, /border-radius: 6px;/);
   assert.match(enhancement, /color: #a12f2f;/);
+  assert.match(enhancement, /\.meal-recipe-card__signals \{[^}]*flex: 1 1 180px;/s);
+  assert.match(enhancement, /\.meal-freshness-item \{[^}]*max-width: 100%;[^}]*white-space: normal;/s);
+  assert.match(enhancement, /\.meal-freshness-item__text \{[^}]*white-space: normal;/s);
+  assert.doesNotMatch(enhancement, /\.meal-freshness-item \{[^}]*white-space: nowrap;/s);
   assert.match(enhancement, /> span:not\(\.meal-freshness-item\) \{ display: none; \}/);
   assert.doesNotMatch(enhancement, /textContent\s*=\s*['"]临期/);
   assert.match(page, /freshnessPriorityDays: ingredient\.freshnessPriorityDays/);
