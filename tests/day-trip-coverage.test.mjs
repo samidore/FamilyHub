@@ -105,8 +105,8 @@ test('Day Trips nests aquarium under the 玩水 activity and keeps a useful aqua
 test('Day Trips keeps unknown drive times explicitly unknown and provenance-aligned', () => {
   for (const trip of trips) {
     assert.equal(trip.driveTimeProvenance.status, trip.driveMinutes === null ? 'unknown' : 'verified');
-    assert.equal(trip.driveTimeProvenance.checkedDate, '2026-08-29');
-    if (trip.driveMinutes === null) assert.equal(trip.driveTimeProvenance.primarySource, 'Rome2Rio');
+    assert.equal(trip.driveTimeProvenance.checkedDate, '2026-08-30');
+    assert.equal(trip.driveTimeProvenance.primarySource, 'Google Maps');
   }
 });
 
