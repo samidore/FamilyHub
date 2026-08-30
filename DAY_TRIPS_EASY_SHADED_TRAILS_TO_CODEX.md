@@ -1,6 +1,6 @@
-# Temporary Task — Day Trips Easy Shaded Trails Batch
+# Day Trips Easy Shaded Trails Batch — Codex Execution Record
 
-> Temporary Codex execution file. Delete this file in the completion commit. Do not keep it as project documentation.
+> Keep this file in the repository after completion as the execution record for this batch. Do not delete it in the completion commit.
 
 ## Goal
 
@@ -157,7 +157,7 @@ Fix all task-caused failures. If an environment dependency blocks part of verifi
 
 Finally:
 
-- delete `DAY_TRIPS_EASY_SHADED_TRAILS_TO_CODEX.md`
+- keep `DAY_TRIPS_EASY_SHADED_TRAILS_TO_CODEX.md` in the repository as the execution record; do not delete it
 - `git diff --check`
 - commit only task-related changes
 - push `main`
