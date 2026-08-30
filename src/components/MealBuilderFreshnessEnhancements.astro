@@ -89,7 +89,10 @@
       item.className = 'meal-freshness-item';
       item.dataset.freshnessIngredient = signal.ingredientId;
       item.setAttribute('aria-label', `${signal.label}已在库${signal.ageDays}天`);
-      item.append(hourglass(), document.createTextNode(`${signal.label} ${signal.ageDays}天`));
+      const text = document.createElement('span');
+      text.className = 'meal-freshness-item__text';
+      text.textContent = `${signal.label} ${signal.ageDays}天`;
+      item.append(hourglass(), text);
       host.append(item);
     }
     host.hidden = signals.length === 0;
@@ -126,8 +129,15 @@
 </script>
 
 <style is:global>
+  .meal-recipe-card__signals {
+    min-width: 0;
+    max-width: 100%;
+    flex: 1 1 180px;
+  }
   .meal-freshness-badge {
     display: flex;
+    min-width: 0;
+    max-width: 100%;
     min-height: 0;
     flex-wrap: wrap;
     align-items: center;
@@ -145,8 +155,10 @@
   .meal-freshness-badge > span:not(.meal-freshness-item) { display: none; }
   .meal-freshness-item {
     display: inline-flex;
+    min-width: 0;
+    max-width: 100%;
     min-height: 24px;
-    align-items: center;
+    align-items: flex-start;
     gap: 4px;
     padding: 3px 7px 3px 6px;
     border: 1px solid #b53a3a;
@@ -155,13 +167,20 @@
     color: #a12f2f;
     font-size: 12px;
     font-weight: 800;
-    line-height: 1;
-    white-space: nowrap;
+    line-height: 1.2;
+    white-space: normal;
+  }
+  .meal-freshness-item__text {
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: break-word;
   }
   .meal-freshness-item svg {
     width: 14px;
     height: 14px;
     flex: 0 0 14px;
+    margin-top: 1px;
     fill: none;
     stroke: currentColor;
     stroke-width: 1.7;
