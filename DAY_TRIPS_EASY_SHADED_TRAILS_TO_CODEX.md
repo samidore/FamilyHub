@@ -162,3 +162,16 @@ Finally:
 - commit only task-related changes
 - push `main`
 - report counts: candidates processed, added <=60, excluded >60, excluded suitability, parking warnings added, and validation PASS/FAIL/BLOCKED.
+
+## Codex completion record — 2026-08-30
+
+`BLOCKED: HOME_ORIGIN_UNAVAILABLE` — Google Maps directions was reachable, but
+the signed-out session exposed only “Your location” and no saved Home origin.
+The hard-stop policy therefore prevented active trail research and data changes.
+
+- Candidates processed: 0
+- Added <=60 minutes: 0
+- Excluded >60 minutes: 0
+- Excluded for suitability: 0
+- Parking warnings added: 0
+- Validation: PASS for available checks; BLOCKED for `pnpm run verify` at Firebase rules because `java -version` could not be spawned
