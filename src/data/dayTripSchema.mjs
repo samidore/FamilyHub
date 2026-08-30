@@ -13,6 +13,9 @@ const locationKeys = ['name', 'environment', 'tags', 'notFor', 'stroller', 'hour
 const activityTags = ['woody-walk', 'playground', 'indoor-visit', 'animals', 'water-play', 'aquarium', 'pick-your-own'];
 const weatherExclusions = ['rain', 'heat', 'post-rain'];
 const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+const parkingRequired = ['fee', 'schedule', 'sourceUrl', 'verifiedDate'];
+const parkingOptional = ['payment', 'note'];
+const parkingPayments = ['cash-only', 'automated-pay-station'];
 
 const fail = (path, message) => { throw new Error(`${path}: ${message}`); };
 const isObject = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -167,5 +170,26 @@ export function parseDayTrips(value) {
   });
 
   scanPrivacy(value, 'day-trips');
+  return value;
+}
+
+export function parseDayTripParking(value, destinationIds = []) {
+  if (!isObject(value)) fail('day-trip-parking', 'expected an object keyed by destination id');
+  const knownDestinationIds = new Set(destinationIds);
+
+  for (const [id, parking] of Object.entries(value)) {
+    const path = `day-trip-parking.${id}`;
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id)) fail(path, 'expected a stable kebab-case destination id');
+    if (knownDestinationIds.size && !knownDestinationIds.has(id)) fail(path, 'destination id does not exist in day-trips');
+    exactObject(parking, parkingRequired, parkingOptional, path);
+    text(parking.fee, `${path}.fee`);
+    text(parking.schedule, `${path}.schedule`);
+    if (parking.payment !== undefined) enumValue(parking.payment, parkingPayments, `${path}.payment`);
+    if (parking.note !== undefined) text(parking.note, `${path}.note`);
+    https(parking.sourceUrl, `${path}.sourceUrl`);
+    verifiedDate(parking.verifiedDate, `${path}.verifiedDate`);
+  }
+
+  scanPrivacy(value, 'day-trip-parking');
   return value;
 }

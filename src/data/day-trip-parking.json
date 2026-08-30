@@ -1,0 +1,23 @@
+{
+  "new-jersey-botanical-garden": {
+    "fee": "NJ 车辆 $5 / 非 NJ 车辆 $7",
+    "schedule": "Memorial Day weekend–Labor Day 的周六、周日及节假日；其他时间免费。",
+    "payment": "cash-only",
+    "note": "Lot C 直通 hiking trails；A/B 更靠花园。",
+    "sourceUrl": "https://njbg.org/parking/",
+    "verifiedDate": "2026-08-30"
+  },
+  "rockefeller-main-entrance-swan-lake": {
+    "fee": "$6 / 车",
+    "schedule": "全年每日 08:00–16:30 收取。",
+    "payment": "automated-pay-station",
+    "sourceUrl": "https://parks.ny.gov/parks/59/fees-rates.aspx",
+    "verifiedDate": "2026-08-30"
+  },
+  "bear-mountain-hessian-lake": {
+    "fee": "$10 / 车",
+    "schedule": "全年收取；周末/节假日 08:00–17:00，工作日 08:00–16:00。",
+    "sourceUrl": "https://parks.ny.gov/visit/state-parks/bear-mountain-state-park",
+    "verifiedDate": "2026-08-30"
+  }
+}

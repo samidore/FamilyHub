@@ -1,7 +1,7 @@
 ---
-import type { DayTrip } from '../../data/types';
+import type { DayTripWithParking } from '../../data/dayTripParking';
 
-const { destination: d } = Astro.props as { destination: DayTrip };
+const { destination: d } = Astro.props as { destination: DayTripWithParking };
 
 const activityLabels = {
   'woody-walk': '森系遛猫',
@@ -11,6 +11,11 @@ const activityLabels = {
   'water-play': '玩水',
   aquarium: 'Aquarium',
   'pick-your-own': '摘棉花',
+} as const;
+
+const parkingPaymentLabels = {
+  'cash-only': 'CASH ONLY · 仅现金',
+  'automated-pay-station': '自动缴费机',
 } as const;
 
 const originalTags = [...new Set(d.locations.flatMap((location) => location.tags))];
@@ -53,6 +58,19 @@ const searchable = [
         ))}
       </div>
     </div>
+
+    {d.parking && (
+      <section class:list={['trip-parking', { 'trip-parking--cash': d.parking.payment === 'cash-only' }]} aria-label="停车信息">
+        <div class="trip-parking__headline">
+          <strong>停车</strong>
+          <span class="trip-parking__fee">{d.parking.fee}</span>
+          {d.parking.payment && <span class="trip-parking__payment">{parkingPaymentLabels[d.parking.payment]}</span>}
+        </div>
+        <p>{d.parking.schedule}</p>
+        {d.parking.note && <p>{d.parking.note}</p>}
+        <a href={d.parking.sourceUrl} target="_blank" rel="noopener noreferrer">停车规则 · 核实 {d.parking.verifiedDate}</a>
+      </section>
+    )}
   </div>
 
   <div class="record-card__body">
@@ -94,6 +112,16 @@ const searchable = [
   .trip-hours > strong { color: var(--accent); font-size: 14px; }
   .trip-hours__list { display: grid; gap: 3px; color: #35433a; font-size: 15px; }
   .trip-hours__list b { font-weight: 700; }
+  .trip-parking { display: grid; gap: 5px; margin-top: 10px; padding: 12px; border: 2px solid color-mix(in srgb, var(--accent) 52%, var(--line)); border-radius: 10px; background: color-mix(in srgb, var(--accent) 7%, white); color: #2f3c33; }
+  .trip-parking--cash { border-color: #a34d27; background: #fff5ec; }
+  .trip-parking__headline { display: flex; align-items: center; gap: 7px 10px; flex-wrap: wrap; }
+  .trip-parking__headline > strong { font-size: 15px; }
+  .trip-parking__fee { font-weight: 800; }
+  .trip-parking__payment { display: inline-flex; align-items: center; min-height: 28px; padding: 3px 8px; border-radius: 999px; background: #7d351d; color: #fff; font-size: 13px; font-weight: 900; letter-spacing: .01em; }
+  .trip-parking:not(.trip-parking--cash) .trip-parking__payment { background: var(--accent); }
+  .trip-parking p { margin: 0; font-size: 14px; line-height: 1.4; }
+  .trip-parking a { width: fit-content; color: var(--accent); font-size: 13px; font-weight: 800; }
+  .trip-parking--cash a { color: #7d351d; }
   .trip-note { margin: 0 0 18px; color: #35433a; }
   .trip-notice { margin-top: 4px; }
   .verification-note { margin: 12px 0 0; color: var(--muted); font-size: 13px; }
