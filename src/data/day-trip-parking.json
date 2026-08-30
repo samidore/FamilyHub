@@ -19,5 +19,25 @@
     "schedule": "全年收取；周末/节假日 08:00–17:00，工作日 08:00–16:00。",
     "sourceUrl": "https://parks.ny.gov/visit/state-parks/bear-mountain-state-park",
     "verifiedDate": "2026-08-30"
+  },
+  "ringwood-shepherd-lake": {
+    "fee": "Memorial Day weekend–Labor Day：NJ 车辆工作日 $5、周末/节假日 $10；非 NJ 车辆工作日 $10、周末/节假日 $20。",
+    "schedule": "仅在上述季节和时段收取；其他时间按公园当前公告。",
+    "note": "Shepherd Lake 使用主停车场；Ringwood State Park 2026 年周末/节假日 Skylands Road 入口关闭时，应改走 Morris Road 入口。",
+    "sourceUrl": "https://dep.nj.gov/parksandforests/state-park/ringwood-state-park/",
+    "verifiedDate": "2026-08-30"
+  },
+  "ringwood-manor-trail": {
+    "fee": "Memorial Day weekend–Labor Day 的周末/节假日：NJ 车辆 $5、非 NJ 车辆 $7。",
+    "schedule": "仅在上述季节和时段收取；其他时间按公园当前公告。",
+    "note": "Ringwood Manor 使用 Manor 独立停车区；2026 年周末/节假日 Skylands Road 入口关闭时，应按公园公告走 Morris Road 入口。",
+    "sourceUrl": "https://dep.nj.gov/parksandforests/state-park/ringwood-state-park/",
+    "verifiedDate": "2026-08-30"
+  },
+  "tallman-mountain-outer-loop": {
+    "fee": "$8 / 车",
+    "schedule": "Memorial Day weekend–Columbus Day 的周末及节假日，08:00–17:00 收取。",
+    "sourceUrl": "https://staffportal.parks.ny.gov/parks/tallman/details.aspx",
+    "verifiedDate": "2026-08-30"
   }
 }

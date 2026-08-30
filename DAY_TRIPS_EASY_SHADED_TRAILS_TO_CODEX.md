@@ -34,7 +34,7 @@ The user specifically wants:
 
 For every candidate, the final `driveMinutes` must be gathered fresh from Google Maps:
 
-- Origin: the same exact saved **Home** used by the completed Day Trips drive audit.
+- Origin: either the same exact saved **Home** used by the completed Day Trips drive audit, or an exact Home address explicitly supplied in the execution prompt.
 - Driving mode.
 - Depart at **Tuesday 2026-09-15 02:00 AM**, local time.
 - Default Google Maps route/settings; do not enable avoid-highways/tolls/ferries.
@@ -42,7 +42,7 @@ For every candidate, the final `driveMinutes` must be gathered fresh from Google
 - If there are alternates, use the route Google selects/recommends by default.
 - Process each concrete parking entrance separately. Never infer one entrance from another.
 - Existing drive times, straight-line distance, Rome2Rio, OSRM, Travelmath, OpenStreetMap routing, etc. are forbidden as evidence.
-- If saved Home cannot be resolved, STOP before adding active trail destinations and report `BLOCKED: HOME_ORIGIN_UNAVAILABLE`.
+- If neither an exact prompt-supplied Home address nor the saved Home can be resolved, STOP before adding active trail destinations and report `BLOCKED: HOME_ORIGIN_UNAVAILABLE`.
 - Only add a candidate if the freshly observed Google Maps baseline is **<=60 minutes**.
 
 Every new non-null drive time must use:
@@ -175,3 +175,17 @@ The hard-stop policy therefore prevented active trail research and data changes.
 - Excluded for suitability: 0
 - Parking warnings added: 0
 - Validation: PASS for available checks; BLOCKED for `pnpm run verify` at Firebase rules because `java -version` could not be spawned
+
+## Codex completion record — 2026-08-30 retry
+
+Completed the full candidate batch with independent Google Maps driving checks for each concrete parking entrance, using the fixed departure policy above and the exact prompt-supplied Home origin. Range results use the lower bound; default recommended routes were used.
+
+- Candidates processed: 36
+- Added <=60 minutes: 27
+- Excluded >60 minutes: 2 (Denbrook, Sandy Hook)
+- Excluded for suitability: 6 (Speedwell: too long for toddler use; Wawayanda and Harriman: weak/rocky route fit; Palisades: no verified route result; Great Swamp and Hacklebarney: insufficient qualifying route evidence)
+- Consolidated as an already-processed parking cluster: 1 (Watchung Deserted Village shares the Lake Surprise start)
+- Parking warnings added: 3 (Ringwood Shepherd Lake, Ringwood Manor, Tallman Mountain)
+- Local validation: PASS (`pnpm run validate`, `pnpm run check`, `pnpm run build`, `pnpm run test:unit`, `git diff --check`)
+- `pnpm run verify`: BLOCKED only at Firebase rules tests because `java -version` could not be spawned; preceding verify stages passed
+- GitHub Actions verification: pending push
