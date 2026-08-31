@@ -189,3 +189,20 @@ Completed the full candidate batch with independent Google Maps driving checks f
 - Local validation: PASS (`pnpm run validate`, `pnpm run check`, `pnpm run build`, `pnpm run test:unit`, `git diff --check`)
 - `pnpm run verify`: BLOCKED only at Firebase rules tests because `java -version` could not be spawned; preceding verify stages passed
 - GitHub Actions verification: pending push
+
+## ChatGPT factual review correction — 2026-08-30
+
+Re-audited every record added by commit `c277106`. Each retained record was
+resolved from its AllTrails route ID to the real park, official access point,
+legal practical parking entrance, and an exact Google Maps destination before
+the fixed-departure drive time was checked. The prompt-supplied Home origin was
+used only in Google Maps and was not recorded here.
+
+- 27 records reviewed
+- Records corrected: 22
+- Records removed: 1 (Emerson Woods Preserve / Oradell Reservoir; current public access and legal route parking could not be established)
+- Records whose drive time changed: 8
+- Parking warnings added: 4 (Mills Reservation, Blauvelt State Park / Tackamack Park, South Mountain Falls Parking Lot, Croton Gorge Park)
+- Final active count: 26 audited records (82 Day Trips total)
+- Local validation: PASS (`pnpm run validate`, `pnpm run check`, `pnpm run build`, `pnpm run test:unit`, `git diff --check`)
+- `pnpm run verify`: preceding stages passed; BLOCKED at Firebase rules tests because `java -version` could not be spawned

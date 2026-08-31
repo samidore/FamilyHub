@@ -3299,7 +3299,7 @@
     "city": "Cedar Grove",
     "state": "NJ",
     "driveMinutes": 18,
-    "note": "West/Glen/Eastview Loop（约 1.5 英里 / 118 英尺）从 Eagle Rock Avenue 停车点进入；林地覆盖好，短环线比整片保护区更适合幼儿节奏。",
+    "note": "West/Glen/Eastview Loop（约 1.5 英里 / 118 英尺）从 Normal Avenue 停车场进入；林地覆盖好，短环线比整片保护区更适合幼儿节奏。",
     "locations": [
       {
         "name": "West/Glen/Eastview Trail Loop",
@@ -3315,7 +3315,7 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Mills+Reservation+parking+197+Eagle+Rock+Ave+Cedar+Grove+NJ",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Mills+Reservation+Parking+Lot+Normal+Ave+Cedar+Grove+NJ",
     "officialUrl": "https://essexcountyparks.org/parks/mills-reservation",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
@@ -3332,8 +3332,8 @@
     ],
     "city": "Woodland Park",
     "state": "NJ",
-    "driveMinutes": 16,
-    "note": "Red Trail / Yellow-Red option（约 1.5 英里 / 150 英尺）从 Rifle Camp Road 停车场进入；树荫连续、距离短，保留少量起伏。",
+    "driveMinutes": 18,
+    "note": "Red Trail / Yellow-Red option（约 1.5 英里 / 150 英尺）从 Carnie Bragg Picnic Area 停车场进入；树荫连续、距离短，保留少量起伏。",
     "locations": [
       {
         "name": "Red Trail and Yellow/Red Trail",
@@ -3349,8 +3349,8 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Rifle+Camp+Park+185+Rifle+Camp+Rd+Woodland+Park+NJ",
-    "officialUrl": "https://essexcountyparks.org/parks/rifle-camp-park",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Carnie+Bragg+Picnic+Area+387+Rifle+Camp+Rd+Woodland+Park+NJ",
+    "officialUrl": "https://www.passaiccountynj.org/Home/Components/FacilityDirectory/FacilityDirectory/54/",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
       "checkedDate": "2026-08-30",
@@ -3368,7 +3368,7 @@
     "city": "Woodland Park",
     "state": "NJ",
     "driveMinutes": 16,
-    "note": "Barbour Pond Loop（约 1 英里 / 29 英尺）从 Mountain Avenue 停车点进入；成熟树木和池塘边路线短平，适合幼儿。",
+    "note": "Barbour Pond Loop（约 1 英里 / 29 英尺）从 Pat Di Ianni Boat House 停车场进入；成熟树木和池塘边路线短平，适合幼儿。",
     "locations": [
       {
         "name": "Barbour Pond Loop",
@@ -3384,8 +3384,8 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Garrett+Mountain+Reservation+8+Mountain+Ave+Woodland+Park+NJ",
-    "officialUrl": "https://essexcountyparks.org/parks/garret-mountain-reservation",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Pat+Di+Ianni+Boat+House+Garret+Mountain+Reservation+Woodland+Park+NJ",
+    "officialUrl": "https://www.passaiccountynj.org/Home/Components/FacilityDirectory/FacilityDirectory/44/33",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
       "checkedDate": "2026-08-30",
@@ -3400,10 +3400,10 @@
       "Donch Preserve",
       "Haledon Reservoir"
     ],
-    "city": "Haledon",
+    "city": "North Haledon",
     "state": "NJ",
     "driveMinutes": 16,
-    "note": "Haledon Reservoir White Trail Loop（约 1.6 英里 / 32 英尺）从 Belmont Avenue 停车点进入；水边林带遮阴，短环线起伏很少。",
+    "note": "Haledon Reservoir White Trail Loop（约 1.6 英里 / 32 英尺）从 High Mountain Road 上的 Russ Schroeder Way 公共停车场进入；水边林带遮阴，短环线起伏很少。",
     "locations": [
       {
         "name": "Haledon Reservoir White Trail Loop",
@@ -3419,42 +3419,8 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=G+Thomas+Donch+Nature+Preserve+920+Belmont+Ave+Haledon+NJ",
-    "officialUrl": "https://www.passaiccountynj.org/government/departments/parks-recreation/parks-trails",
-    "verifiedDate": "2026-08-30",
-    "driveTimeProvenance": {
-      "checkedDate": "2026-08-30",
-      "primarySource": "Google Maps",
-      "status": "verified"
-    }
-  },
-  {
-    "id": "emerson-woods-preserve",
-    "name": "Emerson Woods Preserve — Oradell Reservoir",
-    "aliases": [
-      "Emerson Woods Preserve"
-    ],
-    "city": "Emerson",
-    "state": "NJ",
-    "driveMinutes": 18,
-    "note": "Oradell Reservoir 林地环线（约 2.1 英里 / 32 英尺）从 Old Hook Road 停车点进入；成熟树林和水库边步道平缓，适合分段走。",
-    "locations": [
-      {
-        "name": "Emerson Woods Preserve / Oradell Reservoir Loop",
-        "environment": "outdoor",
-        "tags": [
-          "woody-walk"
-        ],
-        "notFor": [
-          "rain",
-          "post-rain"
-        ],
-        "stroller": false,
-        "hours": "always"
-      }
-    ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Emerson+Woods+Preserve+135+Old+Hook+Rd+Emerson+NJ",
-    "officialUrl": "https://www.bergencountynj.gov/bergen-county-department-of-parks",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=G+Thomas+Donch+Nature+Preserve+1+Russ+Schroeder+Way+Franklin+Lakes+NJ",
+    "officialUrl": "https://www.franklinlakes.org/index.asp?SEC=%7B8C6AC690-3B5C-44B0-97B5-7EF00C2A0997%7D",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
       "checkedDate": "2026-08-30",
@@ -3487,7 +3453,7 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Shepherd+Lake+Recreation+Area+Ringwood+NJ",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Shepherd+Lake+Main+Parking+Lot+Morris+Rd+Ringwood+NJ",
     "officialUrl": "https://dep.nj.gov/parksandforests/state-park/ringwood-state-park/",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
@@ -3504,7 +3470,7 @@
     ],
     "city": "Sparkill",
     "state": "NY",
-    "driveMinutes": 30,
+    "driveMinutes": 28,
     "note": "Outer Loop（约 3.1 英里 / 121 英尺）从 Route 9W 公园停车点进入；Palisades 林坡有稳定树荫，长度较长，适合只走前段。",
     "locations": [
       {
@@ -3537,10 +3503,10 @@
       "Blauvelt State Park",
       "Camp Bluefields"
     ],
-    "city": "Orangeburg",
+    "city": "Blauvelt",
     "state": "NY",
-    "driveMinutes": 24,
-    "note": "Camp Bluefields Trail（约 2 英里 / 265 英尺）从 White Oak Drive 停车点进入；林地遮阴明显，但爬升偏多，按短进短退更适合 toddler。",
+    "driveMinutes": 26,
+    "note": "Camp Bluefields Trail（约 2 英里 / 265 英尺）从官方指定的 Tackamack Park 入口进入；林地遮阴明显，但爬升偏多，按短进短退更适合 toddler。",
     "locations": [
       {
         "name": "Camp Bluefields Trail",
@@ -3556,7 +3522,7 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Blauvelt+State+Park+5+White+Oak+Dr+Orangeburg+NY",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Tackamack+North+Park+68+Clausland+Mountain+Rd+Blauvelt+NY",
     "officialUrl": "https://parks.ny.gov/parks/blauvelt/",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
@@ -3573,8 +3539,8 @@
     ],
     "city": "Orangeburg",
     "state": "NY",
-    "driveMinutes": 24,
-    "note": "Orange Trail（约 1.1 英里 / 206 英尺）从 Orangeburg 停车点进入；短而完全在树林中，爬升集中，适合只走低段。",
+    "driveMinutes": 35,
+    "note": "Orange Trail（约 1.1 英里 / 206 英尺）从 Nike Lane 公园入口停车点进入；短而完全在树林中，爬升集中，适合只走低段。",
     "locations": [
       {
         "name": "Orange Trail",
@@ -3590,7 +3556,7 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Clausland+Mountain+County+Park+Orangeburg+NY",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Clausland+Mountain+County+Park+10+Nike+Lane+Upper+Grandview+NY",
     "officialUrl": "https://www.rocklandcountyny.gov/departments/county-parks-recreation/parks-trails/clausland-mountain-county-park",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
@@ -3609,7 +3575,7 @@
     "city": "West Orange",
     "state": "NJ",
     "driveMinutes": 35,
-    "note": "Hemlock Falls via Lenape（约 0.7 英里 / 59 英尺）从 South Orange Avenue 新停车点进入；pine grove 和溪流林地遮阴，短距离但有桥和自然地面。",
+    "note": "Hemlock Falls via Lenape（约 0.7 英里 / 59 英尺）从 South Orange Avenue 的 Falls Parking Lot 进入；pine grove 和溪流林地遮阴，短距离但有桥和自然地面。",
     "locations": [
       {
         "name": "Hobble Falls + Hemlock Falls via Lenape",
@@ -3625,7 +3591,7 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=South+Mountain+Reservation+South+Orange+Ave+Cherry+Lane+West+Orange+NJ",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Falls+Parking+Lot+South+Mountain+Reservation+40.752610+-74.294778",
     "officialUrl": "https://essexcountyparks.org/parks/south-mountain-reservation/about",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
@@ -3643,8 +3609,8 @@
     ],
     "city": "Millburn",
     "state": "NJ",
-    "driveMinutes": 30,
-    "note": "Rahway and Maple Falls Loop（约 0.9 英里 / 78 英尺）从 Rahway Park 一侧停车点进入；林荫溪流路线很短，适合 toddler 步速。",
+    "driveMinutes": 35,
+    "note": "Rahway and Maple Falls Loop（约 0.9 英里 / 78 英尺）从 Glen Avenue 的 Locust Grove 停车场进入；林荫溪流路线很短，适合 toddler 步速。",
     "locations": [
       {
         "name": "Rahway and Maple Falls Loop",
@@ -3660,7 +3626,7 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Rahway+Park+197+Glen+Ave+Millburn+NJ",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Locust+Grove+Parking+Lot+Glen+Ave+Millburn+NJ",
     "officialUrl": "https://essexcountyparks.org/parks/south-mountain-reservation/about",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
@@ -3676,10 +3642,10 @@
       "Crest Trail",
       "South Mountain Reservation"
     ],
-    "city": "West Orange",
+    "city": "Millburn",
     "state": "NJ",
     "driveMinutes": 35,
-    "note": "Crest Trail to Crest Loop（约 2.2 英里 / 68 英尺）从 Crest Drive 停车点进入；林地和旧林道遮阴，适合走一段后折返。",
+    "note": "Crest Trail to Crest Loop（约 2.2 英里 / 68 英尺）从 South Mountain Dog Park 停车场进入；林地和旧林道遮阴，适合走一段后折返。",
     "locations": [
       {
         "name": "Crest Trail to Crest Loop",
@@ -3695,7 +3661,7 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=South+Mountain+Reservation+Crest+Drive+West+Orange+NJ",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=South+Mountain+Dog+Park+Bear+Lane+Millburn+NJ",
     "officialUrl": "https://essexcountyparks.org/parks/south-mountain-reservation/about",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
@@ -3714,7 +3680,7 @@
     "city": "Mountainside",
     "state": "NJ",
     "driveMinutes": 35,
-    "note": "Lake Surprise via W. R. Tracy Drive（约 1.7 英里 / 19 英尺）从 Lake Surprise 停车点进入；湖边树林平缓，是 Watchung 里最省力的家庭起点。",
+    "note": "Lake Surprise via W. R. Tracy Drive（约 1.7 英里 / 19 英尺）从 W. R. Tracy Drive 的 Lake Surprise 停车点进入；湖边树林平缓，是 Watchung 里最省力的家庭起点。",
     "locations": [
       {
         "name": "Lake Surprise via W. R. Tracy Drive",
@@ -3730,7 +3696,7 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Watchung+Reservation+Lake+Surprise+Mountainside+NJ",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Lake+Surprise+Parking+W+R+Tracy+Drive+Mountainside+NJ",
     "officialUrl": "https://ucnj.org/parks-recreation/trailside/watchung-reservation/",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
@@ -3748,7 +3714,7 @@
     "city": "Morris Plains",
     "state": "NJ",
     "driveMinutes": 35,
-    "note": "White Trail Loop（约 0.9 英里 / 98 英尺）从 Mountain Way 停车点进入；短距离林地环线，适合把爬升拆成小段。",
+    "note": "White Trail Loop（约 0.9 英里 / 98 英尺）从 Mountain Way 上 Simon's Park 与教堂共用的铺装停车场进入；短距离林地环线，适合把爬升拆成小段。",
     "locations": [
       {
         "name": "White Trail Loop",
@@ -3764,7 +3730,7 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Mountain+Way+Park+50+Mountain+Way+Morris+Plains+NJ",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Mountain+Way+Park+Parking+50+Mountain+Way+Morris+Plains+NJ",
     "officialUrl": "https://www.morrisparks.net/parks_trails/mountain-way/",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
@@ -3779,10 +3745,10 @@
     "aliases": [
       "Jonathan's Woods"
     ],
-    "city": "Chatham",
+    "city": "Denville",
     "state": "NJ",
     "driveMinutes": 30,
-    "note": "Purple and White Trail Loop（约 1.8 英里 / 121 英尺）从 Snake Hill Road 停车点进入；成熟林地遮阴稳定，距离可控。",
+    "note": "Purple and White Trail Loop（约 1.8 英里 / 121 英尺）从 Old Beach Glen Road 公共停车场进入；成熟林地遮阴稳定，距离可控。",
     "locations": [
       {
         "name": "Purple and White Trail Loop",
@@ -3798,7 +3764,7 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Jonathan%27s+Woods+160+Snake+Hill+Rd+Chatham+NJ",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Jonathan%27s+Woods+Parking+Old+Beach+Glen+Road+Denville+NJ",
     "officialUrl": "https://www.morrisparks.net/parks_trails/jonathans-woods/",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
@@ -3813,10 +3779,10 @@
     "aliases": [
       "Cranberry Lake Preserve"
     ],
-    "city": "Morristown",
-    "state": "NJ",
+    "city": "West Harrison",
+    "state": "NY",
     "driveMinutes": 40,
-    "note": "Red/Purple/Yellow Loop（约 1.7 英里 / 177 英尺）从 Old Route 24 停车点进入；湖沼和林地遮阴好，保持短环线即可。",
+    "note": "Red/Purple/Yellow Loop（约 1.7 英里 / 177 英尺）从 Old Orchard Street 的保护区停车场进入；湖沼和林地遮阴好，保持短环线即可。",
     "locations": [
       {
         "name": "Red, Purple and Yellow Loop",
@@ -3832,8 +3798,8 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Cranberry+Lake+Preserve+125+Old+Route+24+Morristown+NJ",
-    "officialUrl": "https://www.morrisparks.net/parks_trails/cranberry-lake-preserve/",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Cranberry+Lake+Preserve+1609+Old+Orchard+St+West+Harrison+NY",
+    "officialUrl": "https://parks.westchestergov.com/cranberry-lake-preserve",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
       "checkedDate": "2026-08-30",
@@ -3847,10 +3813,10 @@
     "aliases": [
       "Kennedy Dells Park"
     ],
-    "city": "Ardsley",
+    "city": "New City",
     "state": "NY",
-    "driveMinutes": 35,
-    "note": "Kennedy Dells Park route（约 2.5 英里 / 134 英尺）从 Saw Mill River Road 停车点进入；林地和溪谷遮阴，适合分段探索。",
+    "driveMinutes": 30,
+    "note": "Kennedy Dells Park route（约 2.5 英里 / 134 英尺）从 North Main Street 公园入口停车场进入；林地和溪谷遮阴，适合分段探索。",
     "locations": [
       {
         "name": "Kennedy Dells Park Trail",
@@ -3866,8 +3832,8 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Kennedy+Dells+Park+785+Saw+Mill+River+Rd+Ardsley+NY",
-    "officialUrl": "https://parks.westchestergov.com/parks-and-destinations/kennedy-dells-county-park",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=355+North+Main+Street+New+City+NY",
+    "officialUrl": "https://www.rocklandcountyny.gov/Home/Components/FacilityDirectory/FacilityDirectory/24/169",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
       "checkedDate": "2026-08-30",
@@ -3915,10 +3881,10 @@
     "aliases": [
       "Cascade Lake Park"
     ],
-    "city": "New City",
+    "city": "Warwick",
     "state": "NY",
-    "driveMinutes": 35,
-    "note": "Cascade Lake Loop（约 1.5 英里 / 134 英尺）从 Crosfield Avenue 停车点进入；湖边和林地遮阴，短环线适合家庭散步。",
+    "driveMinutes": 50,
+    "note": "Cascade Lake Loop（约 1.5 英里 / 134 英尺）从 Cascade Lake Road 的公园入口停车场进入；湖边和林地遮阴，短环线适合家庭散步。",
     "locations": [
       {
         "name": "Cascade Lake Loop (Red Trail)",
@@ -3934,8 +3900,8 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Cascade+Lake+Park+131+Crosfield+Ave+New+City+NY",
-    "officialUrl": "https://www.rocklandcountyny.gov/departments/county-parks-recreation/parks-trails/cascade-lake-park",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Cascade+Lake+Park+Cascade+Lake+Road+Warwick+NY",
+    "officialUrl": "https://www.townofwarwick.org/cascade-lake-park/",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
       "checkedDate": "2026-08-30",
@@ -3985,8 +3951,8 @@
     ],
     "city": "Croton-on-Hudson",
     "state": "NY",
-    "driveMinutes": 35,
-    "note": "Old Croton Aqueduct Dam route（约 1.5 英里 / 177 英尺）从 Aqueduct Road 停车点进入；林荫旧水道和坝区相连，适合短段探索。",
+    "driveMinutes": 50,
+    "note": "Old Croton Aqueduct Dam route（约 1.5 英里 / 177 英尺）从 Croton Gorge Park 主停车场进入；为避开 Route 129 的狭窄路肩，带幼儿应在到达公路前原路折返。",
     "locations": [
       {
         "name": "Old Croton Aqueduct Dam Trail",
@@ -4002,8 +3968,8 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Old+Croton+Aqueduct+Dam+15+Aqueduct+Rd+Croton-on-Hudson+NY",
-    "officialUrl": "https://parks.ny.gov/parks/oldcrotonaqueduct/",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Croton+Gorge+Park+35+Yorktown+Rd+Croton-on-Hudson+NY",
+    "officialUrl": "https://parks.westchestergov.com/croton-gorge-park",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
       "checkedDate": "2026-08-30",
@@ -4018,10 +3984,10 @@
       "Buttermilk Falls",
       "India Brook"
     ],
-    "city": "Denville",
+    "city": "Mendham",
     "state": "NJ",
     "driveMinutes": 45,
-    "note": "Buttermilk Falls and Frog Pond Loop（约 2.3 英里 / 200 英尺）从 Brookside Road 停车点进入；溪流林地遮阴好，但有自然地面和爬升。",
+    "note": "Buttermilk Falls and Frog Pond Loop（约 2.3 英里 / 200 英尺）从 Combs Hollow Road 的 India Brook 停车场进入；溪流林地遮阴好，但有自然地面和爬升。",
     "locations": [
       {
         "name": "Buttermilk Falls and Frog Pond Loop",
@@ -4037,7 +4003,7 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=India+Brook+County+Park+1+Brookside+Rd+Denville+NJ",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=49+Combs+Hollow+Road+Mendham+NJ",
     "officialUrl": "https://www.morrisparks.net/parks_trails/india-brook-park/",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
@@ -4055,7 +4021,7 @@
     "city": "Boonton Township",
     "state": "NJ",
     "driveMinutes": 35,
-    "note": "Red and Decamp Trail Loop（约 1.3 英里 / 337 英尺）从 Powerville Road 停车点进入；全程林地但爬升明显，按短段和抱娃备用来安排。",
+    "note": "Red and Decamp Trail Loop（约 1.3 英里 / 337 英尺）从 McCaffrey Lane 主停车场进入；全程林地但爬升明显，按短段和抱娃备用来安排。",
     "locations": [
       {
         "name": "Red and Decamp Trail Loop",
@@ -4071,7 +4037,7 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Tourne+County+Park+1+Powerville+Rd+Boonton+Township+NJ",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Tourne+County+Park+54+McCaffrey+Lane+Boonton+NJ",
     "officialUrl": "https://www.morrisparks.net/parks_trails/tourne-county-park/",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
@@ -4089,7 +4055,7 @@
     "city": "Basking Ridge",
     "state": "NJ",
     "driveMinutes": 40,
-    "note": "Red/Green/Blue route（约 2.8 英里 / 29 英尺）从 South Maple Avenue 停车点进入；平缓林道和湿地边树荫好，适合分段走。",
+    "note": "Red/Green/Blue route（约 2.8 英里 / 29 英尺）从 Environmental Education Center 停车场进入；平缓林道和湿地边树荫好，适合分段走。",
     "locations": [
       {
         "name": "Red, Green and Blue Trail",
@@ -4105,8 +4071,8 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Lord+Stirling+Stable+256+S+Maple+Ave+Basking+Ridge+NJ",
-    "officialUrl": "https://www.somersetcountyparks.org/parks-facilities/lord-stirling-park",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Environmental+Education+Center+190+Lord+Stirling+Road+Basking+Ridge+NJ",
+    "officialUrl": "https://www.somersetcountyparks.org/environmental-education-center",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {
       "checkedDate": "2026-08-30",
@@ -4140,7 +4106,7 @@
         "hours": "always"
       }
     ],
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Ringwood+Manor+parking+1304+Sloatsburg+Rd+Ringwood+NJ",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Ringwood+Manor+Parking+Lot+A+Ringwood+NJ",
     "officialUrl": "https://dep.nj.gov/parksandforests/state-park/ringwood-state-park/",
     "verifiedDate": "2026-08-30",
     "driveTimeProvenance": {

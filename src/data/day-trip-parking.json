@@ -20,17 +20,46 @@
     "sourceUrl": "https://parks.ny.gov/visit/state-parks/bear-mountain-state-park",
     "verifiedDate": "2026-08-30"
   },
+  "mills-reservation-trail": {
+    "fee": "免费",
+    "schedule": "公园开放时段。",
+    "note": "路线使用 Normal Avenue 停车场；官方活动说明车位满时可在街对面的住宅区合法停车。",
+    "sourceUrl": "https://essexcountyparks.org/parks/mills-reservation",
+    "verifiedDate": "2026-08-30"
+  },
+  "blauvelt-state-park-camp-bluefields": {
+    "fee": "非 Orangetown 居民日票：成人 $25、12–18 岁及 11 岁以下儿童各 $15",
+    "schedule": "Tackamack Park 入口适用 Orangetown 公园使用政策；非居民票按个人购买，不能带额外访客。",
+    "note": "NYS Parks 指定从 Tackamack Park 经 Long Path 进入 Blauvelt State Park；不要导航到未确认的住宅路边。",
+    "sourceUrl": "https://www.orangetown.com/document/parks-resident-use-policy-information/",
+    "verifiedDate": "2026-08-30"
+  },
+  "south-mountain-hemlock-falls": {
+    "fee": "免费",
+    "schedule": "公园开放时段。",
+    "note": "路线使用 South Orange Avenue 行人桥旁的 Falls Parking Lot；不要导航到 South Mountain 的公园中心点。",
+    "sourceUrl": "https://essexcountyparks.org/facilities/calendar/hemlock-falls-hike-essex-county-south-mountain-reservation",
+    "verifiedDate": "2026-08-30"
+  },
+  "old-croton-aqueduct-dam": {
+    "fee": "$10 / 车",
+    "schedule": "2026 年收费期至少覆盖 5 月至 9 月底；非收费期以公园现场公告为准。",
+    "payment": "cash-only",
+    "note": "使用 Croton Gorge Park 主停车场（35 Yorktown Road）；现金支付。",
+    "sourceUrl": "https://aqueduct.org/event/?id=472",
+    "verifiedDate": "2026-08-30"
+  },
   "ringwood-shepherd-lake": {
     "fee": "Memorial Day weekend–Labor Day：NJ 车辆工作日 $5、周末/节假日 $10；非 NJ 车辆工作日 $10、周末/节假日 $20。",
     "schedule": "仅在上述季节和时段收取；其他时间按公园当前公告。",
-    "note": "Shepherd Lake 使用主停车场；Ringwood State Park 2026 年周末/节假日 Skylands Road 入口关闭时，应改走 Morris Road 入口。",
+    "note": "Shepherd Lake 使用 Morris Road 进入的主停车场；不要导航到 Ringwood Manor 或 Botanical Garden 停车区。",
     "sourceUrl": "https://dep.nj.gov/parksandforests/state-park/ringwood-state-park/",
     "verifiedDate": "2026-08-30"
   },
   "ringwood-manor-trail": {
     "fee": "Memorial Day weekend–Labor Day 的周末/节假日：NJ 车辆 $5、非 NJ 车辆 $7。",
     "schedule": "仅在上述季节和时段收取；其他时间按公园当前公告。",
-    "note": "Ringwood Manor 使用 Manor 独立停车区；2026 年周末/节假日 Skylands Road 入口关闭时，应按公园公告走 Morris Road 入口。",
+    "note": "Ringwood Manor 使用 Sloatsburg Road 的 Manor 独立停车区；不要导航到 Shepherd Lake 或 Botanical Garden 停车区。",
     "sourceUrl": "https://dep.nj.gov/parksandforests/state-park/ringwood-state-park/",
     "verifiedDate": "2026-08-30"
   },
