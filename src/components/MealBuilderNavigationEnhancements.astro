@@ -25,6 +25,9 @@
       summary.append(label, count);
 
       fold.append(summary, ...existingChildren);
+      fold.querySelectorAll<HTMLDetailsElement>('details[data-ingredient-section]').forEach((section) => {
+        section.open = true;
+      });
       ingredientSection.append(fold);
       ingredientSection.setAttribute('aria-labelledby', summary.id);
 
