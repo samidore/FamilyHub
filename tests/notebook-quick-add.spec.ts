@@ -31,4 +31,7 @@ test('notebook quick add fits in a phone viewport without dialog scrolling', asy
   expect(cancelMetrics.width).toBeGreaterThanOrEqual(240);
   expect(cancelMetrics.centerOffset).toBeLessThanOrEqual(1);
   expect(Math.abs(cancelMetrics.width - saveWidth)).toBeLessThanOrEqual(1);
+
+  await page.mouse.click(2, 2);
+  await expect(dialog).not.toBeVisible();
 });
