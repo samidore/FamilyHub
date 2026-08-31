@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/notebook.css';
 import '../styles/notebookRecurring.css';
+import '../styles/notebookQuickAdd.css';
 const base = import.meta.env.BASE_URL;
 const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
 ---
@@ -78,20 +79,18 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
 
   <dialog id="notebook-item-dialog" class="notebook-dialog notebook-item-dialog">
     <form method="dialog" class="dialog-close-row"><button type="submit" class="secondary-button">取消</button></form>
-    <form id="notebook-item-form">
+    <form id="notebook-item-form" class="notebook-item-form--create">
       <h2 id="notebook-item-dialog-title">新事项</h2>
       <label>标题<input name="title" required /></label>
-      <label>内容<textarea name="details" rows="5"></textarea></label>
-      <div class="form-grid">
+      <label>内容<textarea name="details" rows="2"></textarea></label>
+      <div class="form-grid notebook-quick-grid">
         <label>优先级<select name="priority"><option value="urgent">紧急</option><option value="high">高</option><option value="normal" selected>普通</option><option value="low">低</option></select></label>
+        <label>重复<select name="recurrenceKind"><option value="none">不重复</option><option value="scheduled">定时</option><option value="afterCompletion">完成后</option></select></label>
         <label id="notebook-due-date-label"><span id="notebook-due-date-label-text">截止日期</span><input name="dueDate" type="date" /></label>
         <label>时间（可选）<input name="dueTime" type="time" /></label>
       </div>
-      <div class="form-grid recurrence-grid">
-        <label>重复<select name="recurrenceKind"><option value="none">不重复</option><option value="scheduled">定时</option><option value="afterCompletion">完成后</option></select></label>
-      </div>
       <section id="notebook-scheduled-fields" class="recurrence-panel" hidden>
-        <div class="form-grid">
+        <div class="form-grid notebook-schedule-grid">
           <label>开始日期<input name="scheduledStartDate" type="date" /></label>
           <label>周期<select name="scheduledUnit"><option value="day">天</option><option value="week" selected>周</option><option value="month">月</option><option value="year">年</option></select></label>
           <label>每 N 个周期<input name="scheduledInterval" type="number" min="1" step="1" value="1" inputmode="numeric" /></label>
@@ -112,7 +111,10 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
       <section id="notebook-after-completion-fields" class="recurrence-panel" hidden>
         <label>完成后多少天再来<input name="afterCompletionDays" type="number" min="1" step="1" value="1" inputmode="numeric" /></label>
       </section>
-      <fieldset><legend id="notebook-item-board-legend">属于哪些 Boards</legend><div id="notebook-item-board-choices" class="board-choice-list"></div></fieldset>
+      <details id="notebook-board-picker" class="notebook-board-picker">
+        <summary id="notebook-board-summary">选择 Board</summary>
+        <fieldset><legend id="notebook-item-board-legend">属于哪些 Boards</legend><div id="notebook-item-board-choices" class="board-choice-list"></div></fieldset>
+      </details>
       <fieldset id="notebook-media-fields" hidden>
         <legend>影视信息</legend>
         <div class="form-grid">
@@ -132,6 +134,7 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
 
   <script>
     import { mountNotebookUi } from '../lib/notebookUi.ts';
+    import { setupNotebookQuickAddEnhancements } from '../lib/notebookQuickAddEnhancements.ts';
     const firebaseConfig = {
       apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
       authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -143,5 +146,6 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
       householdId: import.meta.env.PUBLIC_FAMILY_HOUSEHOLD_ID,
     };
     mountNotebookUi(firebaseConfig, { allowLocal: import.meta.env.DEV });
+    setupNotebookQuickAddEnhancements();
   </script>
 </BaseLayout>

@@ -233,7 +233,7 @@ export function renderNotebookBoards(state: NotebookState, displayName: string |
   const manualIds = new Set(manualUrgent.map((item) => item.id));
   const dueSoon = filter === 'completed' ? [] : notebookDueSoonItems(state, today).filter((item) => !manualIds.has(item.id));
   const urgent = [...manualUrgent, ...dueSoon];
-  const smart = urgent.length ? `<section class="notebook-board notebook-board--urgent" data-smart-urgent><header class="notebook-board__header"><div><p class="eyebrow">Smart board</p><h2>紧急</h2></div><span class="notebook-board__count">${urgent.length}</span></header><div class="notebook-item-list">${urgent.map((item) => itemHtml(state, item, null, false, displayName, filter === 'active' && item.status === 'completed', now, today, true)).join('')}</div></section>` : '';
+  const smart = urgent.length ? `<section class="notebook-board notebook-board--urgent" data-smart-urgent><header class="notebook-board__header"><div><p class="eyebrow">Smart board</p><h2>紧急</h2></div><span class="notebook-board__count">${urgent.length}</span></header><div class="notebook-item-list">${urgent.map((item) => itemHtml(state, item, null, false, displayName, filter === 'active' && item.status === 'completed', now, today, !item.recurrence, item.recurrence ? notebookRecurringRemainingDays(item, today) : undefined)).join('')}</div></section>` : '';
   const recurring = recurringBoardHtml(state, displayName, now, today);
   const layout = orderedNotebookBoardLayout(state, true).map((entry) => entry.kind === 'recurring'
     ? recurring
