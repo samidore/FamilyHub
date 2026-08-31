@@ -38,6 +38,7 @@ export function setupNotebookQuickAddEnhancements() {
   });
 
   dialog.addEventListener('click', (event) => {
+    if (!form.classList.contains('notebook-item-form--create')) return;
     const rect = dialog.getBoundingClientRect();
     const clickedBackdrop = event.clientX < rect.left
       || event.clientX > rect.right
