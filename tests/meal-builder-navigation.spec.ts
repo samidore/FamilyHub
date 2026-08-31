@@ -42,7 +42,7 @@ test('inventory category jump bar is bottom-pinned, two-row, non-scrolling, data
   await expect(leafy).toHaveAttribute('open', '');
 });
 
-test('Recipes ingredient filter defaults folded and folds again when re-entering Recipes', async ({ page }) => {
+test('Recipes ingredient filter defaults folded with every inner section expanded and folds again when re-entering Recipes', async ({ page }) => {
   await page.goto('meal-builder/');
   await page.locator('#meal-start-current').click();
 
@@ -51,8 +51,13 @@ test('Recipes ingredient filter defaults folded and folds again when re-entering
   await expect(fold).not.toHaveAttribute('open', '');
   await expect(page.locator('[data-meal-ingredient-fold-count]')).toHaveText(/已选 \d+/);
 
+  const ingredientSections = fold.locator('details[data-ingredient-section]');
+  expect(await ingredientSections.count()).toBeGreaterThan(0);
+  expect(await ingredientSections.evaluateAll((sections) => sections.every((section) => (section as HTMLDetailsElement).open))).toBe(true);
+
   await fold.locator(':scope > summary').click();
   await expect(fold).toHaveAttribute('open', '');
+  expect(await ingredientSections.evaluateAll((sections) => sections.every((section) => (section as HTMLDetailsElement).open))).toBe(true);
 
   await page.locator('#meal-back-inventory').click();
   await expect(page.locator('#meal-inventory-view')).toBeVisible();
