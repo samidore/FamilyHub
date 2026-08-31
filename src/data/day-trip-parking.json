@@ -28,11 +28,11 @@
     "verifiedDate": "2026-08-30"
   },
   "blauvelt-state-park-camp-bluefields": {
-    "fee": "非 Orangetown 居民日票：成人 $25、12–18 岁及 11 岁以下儿童各 $15",
-    "schedule": "Tackamack Park 入口适用 Orangetown 公园使用政策；非居民票按个人购买，不能带额外访客。",
-    "note": "NYS Parks 指定从 Tackamack Park 经 Long Path 进入 Blauvelt State Park；不要导航到未确认的住宅路边。",
+    "fee": "免费",
+    "schedule": "Tackamack Park 明确属于 Orangetown 非居民公园通行费政策的 fully exempt 区域，无需购买 non-resident park pass。",
+    "note": "NYS Parks 指定从 Tackamack Park 经 Long Path 进入 Blauvelt State Park；Blauvelt 本身为未开发州立公园、停车有限，不要导航到未确认的住宅路边。",
     "sourceUrl": "https://www.orangetown.com/document/parks-resident-use-policy-information/",
-    "verifiedDate": "2026-08-30"
+    "verifiedDate": "2026-08-31"
   },
   "south-mountain-hemlock-falls": {
     "fee": "免费",
@@ -43,11 +43,11 @@
   },
   "old-croton-aqueduct-dam": {
     "fee": "$10 / 车",
-    "schedule": "2026 年收费期至少覆盖 5 月至 9 月底；非收费期以公园现场公告为准。",
+    "schedule": "2026 年官方活动明确停车收费持续至 9 月底；其他日期以公园当前公告为准。",
     "payment": "cash-only",
     "note": "使用 Croton Gorge Park 主停车场（35 Yorktown Road）；现金支付。",
-    "sourceUrl": "https://aqueduct.org/event/?id=472",
-    "verifiedDate": "2026-08-30"
+    "sourceUrl": "https://staffportal.parks.ny.gov/events/event.aspx?e=96-49828.0",
+    "verifiedDate": "2026-08-31"
   },
   "ringwood-shepherd-lake": {
     "fee": "Memorial Day weekend–Labor Day：NJ 车辆工作日 $5、周末/节假日 $10；非 NJ 车辆工作日 $10、周末/节假日 $20。",
