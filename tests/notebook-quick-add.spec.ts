@@ -25,6 +25,10 @@ test('notebook quick add fits in a phone viewport without dialog scrolling', asy
       centerOffset: Math.abs((buttonRect.left + buttonRect.width / 2) - (rowRect.left + rowRect.width / 2)),
     };
   });
+  const saveWidth = await page.locator('#notebook-item-form .notebook-item-dialog__actions > button[type="submit"]').evaluate(
+    (button) => button.getBoundingClientRect().width,
+  );
   expect(cancelMetrics.width).toBeGreaterThanOrEqual(240);
   expect(cancelMetrics.centerOffset).toBeLessThanOrEqual(1);
+  expect(Math.abs(cancelMetrics.width - saveWidth)).toBeLessThanOrEqual(1);
 });
