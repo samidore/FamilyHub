@@ -1,7 +1,7 @@
 ---
 import type { DayTripWithParking } from '../../data/dayTripParking';
 
-const { destination: d } = Astro.props as { destination: DayTripWithParking };
+const { destination: d } = Astro.props as { destination: DayTripWithParking & { trailUrl?: string } };
 
 const activityLabels = {
   'woody-walk': '森系遛猫',
@@ -101,7 +101,7 @@ const searchable = [
 
     <div class="actions">
       <a class="button button--primary" href={d.googleMapsUrl} target="_blank" rel="noopener noreferrer">Google Maps</a>
-      <a class="button button--secondary" href={d.officialUrl} target="_blank" rel="noopener noreferrer">Official website</a>
+      <a class="button button--secondary" href={d.trailUrl ?? d.officialUrl} target="_blank" rel="noopener noreferrer">{d.trailUrl ? 'AllTrails' : 'Official website'}</a>
     </div>
     <p class="verification-note">资料核实：{d.verifiedDate}</p>
   </div>
