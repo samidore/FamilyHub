@@ -59,6 +59,8 @@ test('global and section bulk controls filter future candidates without changing
 
   const vegetableSection = page.locator('[data-ingredient-section="other-vegetable"]');
   const vegetableClear = vegetableSection.locator('[data-ingredient-bulk-section="other-vegetable"][data-ingredient-bulk="clear"]');
+  await expect(vegetableSection).toHaveAttribute('open', '');
+  await vegetableSection.locator(':scope > summary').click();
   await expect(vegetableSection).not.toHaveAttribute('open', '');
   await vegetableClear.click();
   await expect(vegetableSection).not.toHaveAttribute('open', '');
