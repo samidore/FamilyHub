@@ -37,6 +37,15 @@ export function setupNotebookQuickAddEnhancements() {
     queueMicrotask(() => setMode(edit ? 'edit' : 'create'));
   });
 
+  dialog.addEventListener('click', (event) => {
+    const rect = dialog.getBoundingClientRect();
+    const clickedBackdrop = event.clientX < rect.left
+      || event.clientX > rect.right
+      || event.clientY < rect.top
+      || event.clientY > rect.bottom;
+    if (clickedBackdrop) dialog.close();
+  });
+
   boardChoices.addEventListener('change', refreshBoardSummary);
   dialog.addEventListener('close', () => setMode('create'));
   setMode('create');
