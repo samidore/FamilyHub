@@ -16,4 +16,15 @@ test('notebook quick add fits in a phone viewport without dialog scrolling', asy
   await expect(page.locator('#notebook-board-picker')).not.toHaveAttribute('open', '');
   await expect(page.locator('textarea[name="details"]')).toHaveAttribute('rows', '2');
   expect(await page.locator('textarea[name="details"]').evaluate((element) => element.getBoundingClientRect().height)).toBeLessThanOrEqual(64);
+
+  const cancelMetrics = await page.locator('#notebook-item-dialog > .dialog-close-row > .secondary-button').evaluate((button) => {
+    const buttonRect = button.getBoundingClientRect();
+    const rowRect = button.parentElement!.getBoundingClientRect();
+    return {
+      width: buttonRect.width,
+      centerOffset: Math.abs((buttonRect.left + buttonRect.width / 2) - (rowRect.left + rowRect.width / 2)),
+    };
+  });
+  expect(cancelMetrics.width).toBeGreaterThanOrEqual(240);
+  expect(cancelMetrics.centerOffset).toBeLessThanOrEqual(1);
 });
