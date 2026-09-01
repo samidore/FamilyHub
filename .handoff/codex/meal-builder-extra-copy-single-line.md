@@ -187,6 +187,6 @@ Validation:
 - `node --test tests/*.test.mjs` passed all 180 unit tests.
 - `pnpm run verify` is blocked at `test:rules`: Java is unavailable (`Could not spawn java -version`).
 
-Final commit SHA: pending
+Final commit SHA: a97da74
 
 Deviation/blocker: Firebase Realtime Database rules tests could not run because Java is not installed or available on PATH; no task-caused test failure remains.
