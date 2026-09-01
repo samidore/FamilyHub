@@ -316,21 +316,34 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       name.append(zh, en); return name;
     }
 
-    function renderFreezer() {
-      inventoryList.replaceChildren();
-      const items = ingredients.filter((item) => item.visible !== false && item.freezerBehavior);
-      for (const item of items) {
-        const row = document.createElement('div'); row.className = 'meal-inventory-item'; row.dataset.inventoryItem = item.id;
-        row.append(ingredientNameNode(item));
-        const controls = document.createElement('span'); controls.className = 'meal-inventory-controls'; const value = household.freezerInventory[item.id];
-        const output = document.createElement('output'); output.dataset.inventoryValue = `freezer-${item.id}`; output.textContent = item.inventoryTracking === 'presence-only' ? (value === true ? '有' : '无') : String(typeof value === 'number' ? value : 0);
-        if (item.inventoryTracking === 'counted') { for (const [delta, label] of [[-COUNTED_INVENTORY_STEP, '−'], [COUNTED_INVENTORY_STEP, '+']] as const) { const button = document.createElement('button'); button.type = 'button'; button.dataset.freezerStep = String(delta); button.dataset.freezerIngredient = item.id; button.textContent = label; controls.append(button); } }
-        else { const button = document.createElement('button'); button.type = 'button'; button.dataset.freezerToggle = item.id; button.textContent = value === true ? '有' : '无'; controls.append(button); }
-        controls.append(output);
-        if (item.freezerBehavior === 'thaw-required') { const thaw = document.createElement('button'); thaw.type = 'button'; thaw.dataset.startThaw = item.id; thaw.className = 'button button--primary'; thaw.textContent = '化冻'; controls.append(thaw); }
-        row.append(controls); inventoryList.append(row);
+    function renderInventoryRow(item: MealIngredient & { visible?: boolean }, source: 'inventory' | 'freezer', parent: HTMLElement) {
+      const tracking = item.inventoryTracking; const direct = source === 'freezer' && item.freezerBehavior === 'direct';
+      const value = direct || source === 'inventory' ? inventoryValue(item.id) : household.freezerInventory[item.id];
+      const row = document.createElement('div'); row.className = 'meal-inventory-item'; row.dataset.inventoryItem = item.id;
+      const name = ingredientNameNode(item); const controls = document.createElement('span'); controls.className = 'meal-inventory-controls';
+      const output = document.createElement('output'); output.dataset.inventoryValue = source === 'freezer' ? `freezer-${item.id}` : item.id; output.textContent = tracking === 'presence-only' ? (value === true ? '有' : '无') : String(typeof value === 'number' ? value : 0); output.setAttribute('aria-live', 'polite');
+      if (tracking === 'presence-only') {
+        const toggle = document.createElement('button'); toggle.type = 'button'; toggle.className = 'meal-inventory-toggle'; toggle.dataset.inventoryTracking = tracking; toggle.setAttribute('aria-pressed', String(value === true)); toggle.textContent = value === true ? '有' : '无';
+        if (direct || source === 'inventory') toggle.dataset.inventoryToggle = item.id; else toggle.dataset.freezerToggle = item.id;
+        controls.append(toggle, output);
+      } else {
+        const minus = document.createElement('button'); minus.type = 'button'; minus.className = 'meal-inventory-step'; minus.textContent = '−'; minus.setAttribute('aria-label', `${item.nameZh} 减少 ${COUNTED_INVENTORY_STEP}`);
+        const plus = document.createElement('button'); plus.type = 'button'; plus.className = 'meal-inventory-step'; plus.textContent = '+'; plus.setAttribute('aria-label', `${item.nameZh} 增加 ${COUNTED_INVENTORY_STEP}`);
+        if (direct || source === 'inventory') { minus.dataset.inventoryStep = String(-COUNTED_INVENTORY_STEP); minus.dataset.inventoryIngredient = item.id; plus.dataset.inventoryStep = String(COUNTED_INVENTORY_STEP); plus.dataset.inventoryIngredient = item.id; } else { minus.dataset.freezerStep = String(-COUNTED_INVENTORY_STEP); minus.dataset.freezerIngredient = item.id; plus.dataset.freezerStep = String(COUNTED_INVENTORY_STEP); plus.dataset.freezerIngredient = item.id; }
+        controls.append(minus, output, plus);
       }
-      if (!items.length) inventoryList.textContent = '暂无配置冷冻行为的食材。';
+      if (source === 'freezer' && item.freezerBehavior === 'thaw-required') { const thaw = document.createElement('button'); thaw.type = 'button'; thaw.dataset.startThaw = item.id; thaw.className = 'button button--primary'; thaw.textContent = '化冻'; controls.append(thaw); }
+      row.append(name, controls); parent.append(row);
+    }
+    function renderFreezer() {
+      inventoryList.replaceChildren(); let rendered = 0;
+      payload.starterSections.forEach((section) => {
+        const groupItems = ingredients.filter((item) => item.visible !== false && item.section === section.id && item.freezerBehavior);
+        if (!groupItems.length) return;
+        const group = document.createElement('details'); group.className = 'meal-inventory-group'; group.dataset.inventorySection = section.id; group.open = !collapsedInventorySections.has(section.id); group.addEventListener('toggle', () => { if (group.open) collapsedInventorySections.delete(section.id); else collapsedInventorySections.add(section.id); });
+        const summary = document.createElement('summary'); const heading = document.createElement('strong'); heading.textContent = section.labelZh; const count = document.createElement('span'); count.textContent = `${groupItems.length} 种`; summary.append(heading, count); group.append(summary); const rows = document.createElement('div'); rows.className = 'meal-inventory-group__items'; group.append(rows); inventoryList.append(group); groupItems.forEach((item) => renderInventoryRow(item, 'freezer', rows)); rendered++;
+      });
+      if (!rendered) inventoryList.textContent = '暂无配置冷冻行为的食材。';
     }
     function renderThawing() {
       inventoryList.replaceChildren(); const jobs = Object.entries(household.thawingItems).sort(([, a], [, b]) => a.readyAt - b.readyAt);
@@ -355,8 +368,8 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
         summary.append(heading, count); group.append(summary);
         const rows = document.createElement('div'); rows.className = 'meal-inventory-group__items'; group.append(rows); inventoryList.append(group);
         for (const item of groupItems) {
-        const tracking = item.inventoryTracking;
         const value = inventoryValue(item.id);
+        const tracking = item.inventoryTracking;
         const row = document.createElement('div'); row.className = 'meal-inventory-item'; row.dataset.inventoryItem = item.id;
         row.hidden = item.freezerBehavior === 'direct';
         const name = ingredientNameNode(item);
@@ -488,7 +501,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
     }));
     inventoryList.addEventListener('click', (event) => { const target = (event.target as HTMLElement); const toggle = target.closest<HTMLButtonElement>('[data-inventory-toggle]'); const step = target.closest<HTMLButtonElement>('[data-inventory-step]'); const ingredientId = toggle?.dataset.inventoryToggle ?? step?.dataset.inventoryIngredient; if (!ingredientId || !canWrite()) return; if (toggle) { const tracking = toggle.dataset.inventoryTracking === 'presence-only' ? 'presence-only' : 'counted'; safeWrite(repository.updateInventory((inventory) => { const current = typeof inventory[ingredientId] === 'number' ? inventory[ingredientId] as number : inventory[ingredientId] === true ? 1 : 0; const next = { ...inventory }; if (tracking === 'presence-only') { if (inventory[ingredientId] === true) delete next[ingredientId]; else next[ingredientId] = true; } else { if (current > 0) delete next[ingredientId]; else next[ingredientId] = 1; } return next; }).then((next) => { household = next; render(); })); } else if (step) { const delta = Number(step.dataset.inventoryStep); safeWrite(repository.updateInventory((inventory) => { const current = typeof inventory[ingredientId] === 'number' ? inventory[ingredientId] as number : 0; const nextValue = Math.max(0, roundCountedInventoryValue(current + delta)); const next = { ...inventory }; if (nextValue > 0) next[ingredientId] = nextValue; else delete next[ingredientId]; return next; }).then((next) => { household = next; render(); })); } });
     document.querySelectorAll<HTMLButtonElement>('[data-inventory-tab]').forEach((button) => button.addEventListener('click', () => { inventoryTab = button.dataset.inventoryTab as typeof inventoryTab; renderInventory(); }));
-    inventoryList.addEventListener('click', (event) => { const target = event.target as HTMLElement; const start = target.closest<HTMLButtonElement>('[data-start-thaw]'); const enter = target.closest<HTMLButtonElement>('[data-complete-thaw]'); const cancel = target.closest<HTMLButtonElement>('[data-cancel-thaw]'); const freezerStep = target.closest<HTMLButtonElement>('[data-freezer-step]'); const freezerToggle = target.closest<HTMLButtonElement>('[data-freezer-toggle]'); if (!canWrite()) return; if (start) safeWrite(repository.transaction((state) => startThaw(state, start.dataset.startThaw!, ingredients, Date.now()))); else if (enter) safeWrite(repository.transaction((state) => completeThaw(state, enter.dataset.completeThaw!, Date.now(), ingredients))); else if (cancel) safeWrite(repository.transaction((state) => cancelThaw(state, cancel.dataset.cancelThaw!))); else if (freezerStep) { const id = freezerStep.dataset.freezerIngredient!; const delta = Number(freezerStep.dataset.freezerStep); safeWrite(repository.transaction((state) => ({ ...state, freezerInventory: { ...state.freezerInventory, [id]: Math.max(0, roundCountedInventoryValue((typeof state.freezerInventory[id] === 'number' ? state.freezerInventory[id] as number : 0) + delta)) } }))); } else if (freezerToggle) { const id = freezerToggle.dataset.freezerToggle!; safeWrite(repository.transaction((state) => ({ ...state, freezerInventory: { ...state.freezerInventory, [id]: state.freezerInventory[id] === true ? undefined as never : true } }))); } });
+    inventoryList.addEventListener('click', (event) => { const target = event.target as HTMLElement; const start = target.closest<HTMLButtonElement>('[data-start-thaw]'); const enter = target.closest<HTMLButtonElement>('[data-complete-thaw]'); const cancel = target.closest<HTMLButtonElement>('[data-cancel-thaw]'); const freezerStep = target.closest<HTMLButtonElement>('[data-freezer-step]'); const freezerToggle = target.closest<HTMLButtonElement>('[data-freezer-toggle]'); if (!canWrite()) return; if (start) safeWrite(repository.transaction((state) => startThaw(state, start.dataset.startThaw!, ingredients, Date.now()))); else if (enter) safeWrite(repository.transaction((state) => completeThaw(state, enter.dataset.completeThaw!, Date.now(), ingredients, 1))); else if (cancel) safeWrite(repository.transaction((state) => cancelThaw(state, cancel.dataset.cancelThaw!))); else if (freezerStep) { const id = freezerStep.dataset.freezerIngredient!; const delta = Number(freezerStep.dataset.freezerStep); safeWrite(repository.transaction((state) => ({ ...state, freezerInventory: { ...state.freezerInventory, [id]: Math.max(0, roundCountedInventoryValue((typeof state.freezerInventory[id] === 'number' ? state.freezerInventory[id] as number : 0) + delta)) } }))); } else if (freezerToggle) { const id = freezerToggle.dataset.freezerToggle!; safeWrite(repository.transaction((state) => ({ ...state, freezerInventory: { ...state.freezerInventory, [id]: state.freezerInventory[id] === true ? undefined as never : true } }))); } });
     recipeGrid.addEventListener('change', (event) => {
       const target = event.target as HTMLElement;
       const select = target.closest<HTMLSelectElement>('[data-binding-recipe]'); if (!select || !household.currentMeal || !canWrite()) return; const recipe = byId.get(select.dataset.bindingRecipe!); if (!recipe) return; const index = Number(select.dataset.bindingIndex); const binding = draftBindingFor(recipe, new Set(state.availableIngredientIds)); binding[index] = select.value; draftBindings[recipe.id] = binding; state = reconcileMealState({ ...state, recipeIngredientBindings: { ...state.recipeIngredientBindings, [recipe.id]: binding.filter((value): value is string => Boolean(value)) } }, recipes, ingredients); void persistMeal((meal) => { const remoteBinding = [...(meal.recipeIngredientBindings[recipe.id] ?? [])]; remoteBinding[index] = select.value; return reconcileCurrentMeal({ ...meal, recipeIngredientBindings: { ...meal.recipeIngredientBindings, [recipe.id]: remoteBinding.filter((value): value is string => Boolean(value)) }, checkoutDraft: {} }, recipes, ingredients); }); render(); announce('已更新这道菜的食材选择。');

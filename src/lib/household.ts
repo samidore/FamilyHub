@@ -115,12 +115,16 @@ export function startThaw(state: HouseholdState, ingredientId: string, ingredien
   return { ...state, freezerInventory: nextFreezer, thawingItems: { ...state.thawingItems, [jobId]: { ingredientId, quantity: amount, startedAt: now, readyAt: now + THAW_DURATION_MS } } };
 }
 function addInventoryQuantity(inventory: Inventory, id: string, quantity: number, ingredients?: MealIngredient[] | Record<string, MealIngredient>) { return adjustInventoryItem(inventory, id, quantity, trackingForIngredient(id, ingredients)); }
-export function completeThaw(state: HouseholdState, jobId: string, completedAt = Date.now(), ingredients?: MealIngredient[] | Record<string, MealIngredient>): HouseholdState {
+export function completeThaw(state: HouseholdState, jobId: string, completedAt = Date.now(), ingredients?: MealIngredient[] | Record<string, MealIngredient>, quantity?: number): HouseholdState {
   const job = state.thawingItems[jobId]; if (!job) return state;
-  const thawingItems = { ...state.thawingItems }; delete thawingItems[jobId];
-  const inventory = addInventoryQuantity(state.inventory, job.ingredientId, job.quantity, Array.isArray(ingredients) ? ingredients : undefined);
+  const amount = quantity === undefined ? job.quantity : Math.min(job.quantity, Math.max(0, roundCountedInventoryValue(quantity)));
+  if (amount <= 0) return state;
+  const remaining = roundCountedInventoryValue(job.quantity - amount);
+  const thawingItems = { ...state.thawingItems };
+  if (remaining > 0) thawingItems[jobId] = { ...job, quantity: remaining }; else delete thawingItems[jobId];
+  const inventory = addInventoryQuantity(state.inventory, job.ingredientId, amount, Array.isArray(ingredients) ? ingredients : undefined);
   let next = { ...state, inventory, thawingItems };
-  if (isFifoIngredient(job.ingredientId, ingredients)) next = { ...next, inventoryBatches: { ...next.inventoryBatches, [job.ingredientId]: addInventoryBatch(next.inventoryBatches[job.ingredientId] ?? {}, calendarDateKey(completedAt), job.quantity) } };
+  if (isFifoIngredient(job.ingredientId, ingredients)) next = { ...next, inventoryBatches: { ...next.inventoryBatches, [job.ingredientId]: addInventoryBatch(next.inventoryBatches[job.ingredientId] ?? {}, calendarDateKey(completedAt), amount) } };
   return next;
 }
 export function cancelThaw(state: HouseholdState, jobId: string): HouseholdState {
