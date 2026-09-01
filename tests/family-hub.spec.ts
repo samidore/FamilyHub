@@ -377,6 +377,7 @@ test('household inventory keeps counted half-steps, presence-only values, and vi
 
   const counted = page.locator('[data-inventory-item="chicken-breast"]');
   await expect(counted.locator('[data-inventory-value="chicken-breast"]')).toHaveText('0');
+  await expect(counted.locator('[data-inventory-toggle]')).toHaveText('开启');
   await counted.locator('[data-inventory-toggle]').click();
   await expect(counted.locator('[data-inventory-value="chicken-breast"]')).toHaveText('1');
   await counted.locator('[data-inventory-step="0.5"]').click();
@@ -388,6 +389,30 @@ test('household inventory keeps counted half-steps, presence-only values, and vi
   await presence.locator('[data-inventory-toggle]').click();
   await expect(presence.locator('[data-inventory-value="eggs"]')).not.toHaveText('0');
   for (const id of ['potato', 'peeled-shrimp']) await expect((await inventoryItem(page, id)).locator('[data-inventory-step]')).toHaveCount(0);
+});
+
+test('freezer counted rows expose the inventory toggle and keep storage targets separate', async ({ page }) => {
+  await page.goto('meal-builder/');
+  await page.locator('[data-inventory-tab="freezer"]').click();
+
+  const thawRequired = page.locator('[data-inventory-item="chicken-breast"]');
+  await expect(thawRequired.locator('[data-freezer-toggle]')).toHaveText('开启');
+  await expect(thawRequired.locator('[data-freezer-step]')).toHaveCount(2);
+  await thawRequired.locator('[data-freezer-toggle]').click();
+  await expect(thawRequired.locator('[data-inventory-value="freezer-chicken-breast"]')).toHaveText('1');
+  await expect(thawRequired.locator('[data-freezer-toggle]')).toHaveText('在库存');
+  await thawRequired.locator('[data-freezer-step="-0.5"]').click();
+  await expect(thawRequired.locator('[data-inventory-value="freezer-chicken-breast"]')).toHaveText('0.5');
+  await thawRequired.locator('[data-freezer-step="0.5"]').click();
+  await thawRequired.locator('[data-freezer-toggle]').click();
+  await expect(thawRequired.locator('[data-inventory-value="freezer-chicken-breast"]')).toHaveText('0');
+
+  const direct = page.locator('[data-inventory-item="frozen-chicken-patties"]');
+  await expect(direct.locator('[data-inventory-toggle]')).toHaveText('开启');
+  await direct.locator('[data-inventory-toggle]').click();
+  await expect(direct.locator('[data-inventory-value="freezer-frozen-chicken-patties"]')).toHaveText('1');
+  await page.locator('[data-inventory-tab="inventory"]').click();
+  await expect(page.locator('[data-inventory-item="frozen-chicken-patties"] [data-inventory-value="frozen-chicken-patties"]')).toHaveText('1');
 });
 
 test('turning a current-meal ingredient off does not change shared inventory', async ({ page }) => {
