@@ -122,6 +122,7 @@ test('candidates reusing a selected bound ingredient move behind candidates usin
 test('structured data keeps key Ingredient, Recipe, and unified optional-group relationships', async () => {
   const kb = await loadMealData();
   assert.equal(kb.ingredients.find((item) => item.id === 'zongzi')?.inventoryTracking, 'presence-only');
+  assert.equal(kb.ingredients.find((item) => item.id === 'zongzi')?.freezerBehavior, 'direct');
   const steamedZongzi = kb.recipes.find((item) => item.id === 'steamed-zongzi');
   assert.equal(steamedZongzi?.requirements[0]?.anyOf[0], 'zongzi');
   assert.equal(steamedZongzi?.tags.includes('instant-pot'), true);
@@ -164,6 +165,17 @@ test('structured data keeps key Ingredient, Recipe, and unified optional-group r
       }
     }
   }
+});
+
+test('meal extras stay feasible after ordinary candidates and do not fill planning slots', () => {
+  const ordinary = { ...recipe('r1', { protein: 1, vegetable: 1, staple: 0 }, { protein: true, vegetable: true }, [{ anyOf: ['main'] }]), tags: [] };
+  const extra = { ...recipe('r2', { protein: 0, vegetable: 0, staple: 0 }, { protein: false, vegetable: false }, [{ anyOf: ['dumplings'] }]), tags: ['meal-extra'] };
+  const ingredients = [{ id: 'main', inventoryTracking: 'counted' }, { id: 'dumplings', inventoryTracking: 'presence-only' }];
+  const complete = { ...defaultMealState(), proteinTarget: 1, vegetableTarget: 1, stapleRequired: false, childMode: false, availableIngredientIds: ['main', 'dumplings'] };
+  assert.deepEqual(rankCandidates([extra, ordinary], complete, ingredients).map((item) => item.id), ['r1', 'r2']);
+  assert.deepEqual(aggregateMeal([extra], { availableIngredientIds: ['dumplings'], ingredients }), { protein: 0, vegetable: 0, staple: 0, childProtein: false, childVegetable: false });
+  assert.deepEqual(rankCandidates([extra], { ...complete, availableIngredientIds: ['main'] }, ingredients), []);
+  assert.deepEqual(rankCandidates([extra], { ...complete, proteinTarget: 2, vegetableTarget: 2 }, ingredients).map((item) => item.id), ['r2']);
 });
 
 test('Meal Builder manifests reject unindexed files and broken references', async () => {

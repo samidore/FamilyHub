@@ -219,6 +219,7 @@ Checkout starts from Plan but may change a `one_of` binding, remove a planned op
 - Main protein categories: `pork`, `beef`, `lamb`, `chicken`, `egg`, `tofu`, `fish`, `shellfish`, `mixed`, `none`; goat maps to `lamb`.
 - `inventory_tracking` is `counted` or `presence-only`; optional `inventory_freshness` is `fifo` and requires `counted`. Every FIFO Ingredient requires a positive-integer `freshness_priority_days`; that field is invalid without `inventory_freshness`.
 - `vegetable-centered` is an explicit Recipe tag. It must never be inferred from category, name, or historical provenance. Runtime `vegetableCentered` is derived from this tag.
+- `meal-extra` is an explicit Recipe capability for a stocked meal extra such as 点心. It is always addable when its hard Ingredient is available, contributes zero to Protein/Vegetable/Staple, and is ranked after ordinary meal candidates; it is not a Staple or child-coverage claim.
 - `child-eaten` is an Ingredient fact; `child-all-ingredients-eaten` is a Recipe preparation fact. Optional Child coverage requires both.
 - `addon-only` exempts an Ingredient from standalone fallback. Optional eligibility itself comes only from central optional-group membership plus a Recipe reference to that group.
 - Every visible Ingredient without `addon-only` must have at least one active Recipe with a single required identity group containing that Ingredient.

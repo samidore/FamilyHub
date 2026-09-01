@@ -3,7 +3,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import { mealData } from '../data/meal';
 import { MEAL_TARGET_OPTIONS, TIME_PREFERENCES, defaultMealState } from '../lib/mealEngine';
-import { COUNTED_INVENTORY_STEP } from '../lib/household';
 
 const visibleIngredients = mealData.ingredients.filter((ingredient) => ingredient.visible);
 const recipes = mealData.recipes;
@@ -36,22 +35,20 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
   recipe.contribution.vegetable ? `Vegetable ${recipe.contribution.vegetable}` : '',
   recipe.contribution.staple ? 'Staple ✓' : '',
 ].filter(Boolean).join(' · ');
-const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；精确用量仍需按来源或首次家庭实做校准。';
 ---
 <BaseLayout title="Meal Builder | Family Hub" description="按本顿可用食材和家庭组餐目标，实时选择合适的菜。" pageClass="module-page theme-berry meal-builder-page" themeColor="#F3E8EC">
   <SiteHeader eyebrow="饮食与家庭 · 动态组餐" title="Meal Builder" description="先勾选这顿可以使用的食材，再逐步补齐 Protein、Vegetable、Staple 和孩子需要的菜。食材可用不代表每样都必须用。" accent="berry" icon="meal">
-    <div class="summary-row"><span>{visibleIngredients.length} 种可选食材</span><span>{recipes.length} 道候选菜</span><span>实时补齐组餐缺口</span><span>KB v{mealData.metadata.version}</span></div>
+    <div class="summary-row"><span>{visibleIngredients.length} 种可选食材</span><span>{recipes.length} 道候选菜</span></div>
   </SiteHeader>
 
   <main id="main-content" class="meal-builder-app" data-enhanced="false">
-    <noscript><div class="shell meal-noscript note-box"><strong>当前是阅读模式。</strong>启用 JavaScript 后可以选择食材、实时组餐和进入 Cook View；下方仍完整列出食材与菜谱。</div></noscript>
+    <noscript><div class="shell meal-noscript note-box"><strong>当前是阅读模式。</strong>启用 JavaScript 后可以选择食材、实时组餐和开始做饭；下方仍完整列出食材与菜谱。</div></noscript>
     <div id="meal-live" class="sr-only" aria-live="polite"></div>
     <nav class="shell meal-step-band" aria-label="组餐步骤"><ol><li data-step="inventory"><button type="button" data-step-target="inventory">1 库存</button></li><li data-step="recipes"><button type="button" data-step-target="recipes">2 选菜</button></li><li data-step="cook"><button type="button" data-step-target="cook">3 做饭</button></li><li data-step="checkout"><button type="button" data-step-target="checkout">4 结算</button></li></ol></nav>
 
     <section class="shell meal-household-bar" aria-label="家庭共享状态">
       <div>
-        <p class="eyebrow">Shared Household</p>
-        <p id="meal-connection" class="meal-connection" role="status">本地开发同步（未连接 Firebase）</p>
+        <p id="meal-connection" class="meal-connection" role="status">家庭同步准备中</p>
         <p id="meal-account" class="meal-uid" hidden></p>
         <p id="meal-auth-detail" class="meal-uid" hidden></p>
         <div class="meal-auth-actions">
@@ -64,7 +61,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
     </section>
 
     <section id="meal-inventory-view" class="shell meal-inventory" aria-labelledby="meal-inventory-heading">
-      <div class="meal-section-heading"><div><p class="eyebrow">Inventory</p><h2 id="meal-inventory-heading">家庭库存</h2><p>库存会在家庭设备之间同步。presence-only 只记录有/无，其余食材按 {COUNTED_INVENTORY_STEP} 粗略单位记录；启用保鲜追踪的鲜肉、蔬菜和豆腐会按入库日期分批，减少或结算时先扣最早一批。</p></div><div class="meal-inventory-actions"><span id="meal-inventory-count" class="meal-count">已开启 0</span><button id="meal-inventory-reset" class="clear-button" type="button">清空库存</button></div></div>
+      <div class="meal-section-heading"><div><h2 id="meal-inventory-heading">家庭库存</h2><p>库存会在家庭设备之间同步；有日期的食材减少或结算时先扣最早一批。</p></div><div class="meal-inventory-actions"><span id="meal-inventory-count" class="meal-count">已开启 0</span><button id="meal-inventory-reset" class="clear-button" type="button">清空库存</button></div></div>
       <div class="meal-inventory-tabs" role="tablist" aria-label="库存视图"><button type="button" data-inventory-tab="inventory" role="tab">库存</button><button type="button" data-inventory-tab="freezer" role="tab">冷冻</button><button type="button" data-inventory-tab="thawing" role="tab">化冻中 <span data-thawing-count>0</span></button></div>
       <div id="meal-inventory-list" class="meal-inventory-list"></div>
     </section>
@@ -72,7 +69,6 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
     <section class="shell meal-current-tools" aria-label="本顿操作">
       <button id="meal-start-current" class="button button--secondary" type="button">下一步：选择食材</button>
       <button id="meal-recipe-reset" class="clear-button" type="button">重置本顿选菜</button>
-      <span id="meal-current-copy" class="note-box">本顿可用食材是库存快照，之后调整库存不会改写本顿。</span>
     </section>
 
     <section id="meal-builder-view" class="shell meal-workspace" aria-label="组餐设置与候选菜">
@@ -159,18 +155,17 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
     </section>
 
     <section id="meal-complete-view" class="shell meal-finish" hidden aria-labelledby="meal-complete-heading">
-      <p class="eyebrow">组餐完成</p><h2 id="meal-complete-heading">今晚的菜</h2><p>目标都补齐了。可以返回调整，也可以进入 Cook View。</p>
+      <p class="eyebrow">组餐完成</p><h2 id="meal-complete-heading">今晚的菜</h2><p>目标都补齐了。可以返回调整，也可以开始做饭。</p>
       <ul class="meal-finish-list">{recipes.map((recipe) => <li data-complete-recipe={recipe.id} hidden><span aria-hidden="true">✓</span><strong>{recipe.nameZh}</strong><small>{recipe.nameEn}</small></li>)}</ul>
       <div class="meal-finish-actions"><button id="meal-modify" class="button button--secondary" type="button">修改选菜</button><button id="meal-start-cooking" class="button button--primary" type="button">开始做饭</button></div>
     </section>
 
-    <section id="meal-cook-view" class="shell meal-cook" hidden aria-labelledby="meal-cook-heading">
-      <div class="meal-section-heading"><div><p class="eyebrow">Cook View</p><h2 id="meal-cook-heading">开始做饭</h2><p>这里只显示本次选中的菜。内容按 KB 当前完成度呈现，不补造精确用量。</p></div><div class="meal-cook-actions"><button id="meal-back-to-menu" class="button button--secondary" type="button">返回选菜</button><button id="meal-open-checkout" class="button button--primary" type="button">下一步：结算</button></div></div>
+      <section id="meal-cook-view" class="shell meal-cook" hidden aria-labelledby="meal-cook-heading">
+      <div class="meal-section-heading"><div><h2 id="meal-cook-heading">开始做饭</h2></div><div class="meal-cook-actions"><button id="meal-back-to-menu" class="button button--secondary" type="button">返回选菜</button><button id="meal-open-checkout" class="button button--primary" type="button">下一步：结算</button></div></div>
       <div class="meal-cook-list">{recipes.map((recipe) => <details class="meal-cook-card" data-cook-recipe={recipe.id} hidden>
         <summary><span><strong>{recipe.nameZh}</strong><small>{recipe.nameEn}</small></span><span>{recipe.mealWindowMinutes || recipe.elapsedMinutes}</span></summary>
         <div class="meal-cook-card__body">
           <div class="badges"><span class="badge">{contributionText(recipe)}</span><span class="badge">{recipe.detailLevel === 'discoverable' ? '基础做法' : '可直接照做'}</span></div>
-          {recipe.detailLevel === 'discoverable' && <p class="note-box">{discoverableNote}</p>}
           {recipe.cookIngredientLines.length > 0 && <><h3>食材</h3><ul>{recipe.cookIngredientLines.map((line) => <li>{line}</li>)}</ul></>}
           <h3>步骤</h3><ol>{recipe.steps.map((step) => <li>{step}</li>)}</ol>
           {recipe.childServing && <><h3>孩子上桌</h3><p>{recipe.childServing}</p></>}
@@ -179,7 +174,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
         </div>
       </details>)}</div>
       <section id="meal-checkout" class="meal-checkout" hidden aria-labelledby="meal-checkout-heading">
-        <div class="meal-section-heading"><div><p class="eyebrow">Checkout</p><h2 id="meal-checkout-heading">本顿消耗</h2><p>这是本设备的结算草稿；确认时会用同一个事务检查本顿仍处于 cooking。</p></div><button id="meal-back-cook" class="button button--secondary" type="button">返回做饭</button></div>
+        <div class="meal-section-heading"><div><h2 id="meal-checkout-heading">本顿消耗</h2></div><button id="meal-back-cook" class="button button--secondary" type="button">返回做饭</button></div>
         <div id="meal-checkout-list" class="meal-checkout-list"></div>
         <p id="meal-checkout-status" class="note-box" role="status"></p>
         <div class="meal-finish-actions"><button id="meal-confirm-checkout" class="button button--primary" type="button">核对消耗</button><button id="meal-finalize-checkout" class="button button--primary" type="button" hidden>确认并清除本顿</button></div>
@@ -191,7 +186,6 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       <div class="meal-readable-grid">{recipes.map((recipe) => <article><h3>{recipe.nameZh}</h3><p>{recipe.nameEn}</p><p>{contributionText(recipe)} · {recipe.mealWindowMinutes || recipe.elapsedMinutes || recipe.activeMinutes}</p></article>)}</div>
     </section>
   </main>
-  <footer class="module-footer"><div class="shell note-box">Meal Builder 是组餐参考，不是营养计算器。时间是工作量信号；第一次做仍应按可靠来源确认火候、安全温度和具体比例。本页不保存姓名、生日、地址、日程或其他私人资料。</div></footer>
 
   <script id="meal-data" type="application/json" is:inline set:html={clientData}></script>
   <script id="meal-firebase-config" type="application/json" is:inline set:html={clientFirebaseConfig}></script>
@@ -402,15 +396,20 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       connection.dataset.connection = repositoryStatus.connection;
       account.hidden = !repositoryStatus.email;
       account.textContent = repositoryStatus.email ? `Google 账号：${repositoryStatus.email}` : '';
-      authDetail.hidden = !repositoryStatus.uid && !repositoryStatus.error;
+      authDetail.hidden = repositoryStatus.connection !== 'pending' && !repositoryStatus.error;
       authDetail.textContent = repositoryStatus.connection === 'pending'
-        ? `申请已提交。UID：${repositoryStatus.uid}。管理员批准后会自动连接。`
-        : repositoryStatus.error ? repositoryStatus.error : repositoryStatus.uid ? `UID：${repositoryStatus.uid}` : '';
+        ? '申请已提交，等待家庭权限确认。'
+        : repositoryStatus.error ? repositoryStatus.error : '';
       googleLogin.hidden = repository.kind !== 'firebase' || (repositoryStatus.connection !== 'signed-out' && !(repositoryStatus.connection === 'error' && !repositoryStatus.email));
       accessRefresh.hidden = repositoryStatus.connection !== 'pending' && !(repositoryStatus.connection === 'error' && Boolean(repositoryStatus.email));
       logout.hidden = repository.kind !== 'firebase' || !repositoryStatus.email;
-      if (repositoryStatus.connection === 'connected' && repositoryStatus.enrollmentOpen) connection.textContent = '已连接 Firebase · 开放加入中';
-      sharedStatus.textContent = household.currentMeal?.status ?? '未开始';
+      if (repositoryStatus.connection === 'connected' && repositoryStatus.enrollmentOpen) connection.textContent = '家庭已连接 · 开放加入中';
+      else if (repositoryStatus.connection === 'connected') connection.textContent = '家庭已连接';
+      else if (repositoryStatus.connection === 'local') connection.textContent = '本地家庭同步';
+      else if (repositoryStatus.connection === 'signed-out') connection.textContent = '请登录以连接家庭';
+      else connection.textContent = repositoryStatus.label;
+      const mealStatusLabels = { selecting: '选菜中', ready: '待结算', cooking: '做饭中' } as const;
+      sharedStatus.textContent = household.currentMeal ? mealStatusLabels[household.currentMeal.status] : '未开始';
       document.querySelectorAll<HTMLElement>('[data-step]').forEach((item) => {
         const active = item.dataset.step === household.activeStep;
         item.classList.toggle('is-active', active); item.querySelector('button')?.toggleAttribute('aria-current', active);
@@ -427,7 +426,6 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       document.querySelectorAll<HTMLButtonElement>('[data-ingredient-id], [data-select-recipe], [data-remove-recipe]').forEach((button) => { button.disabled = !writesEnabled || !hasMeal; });
       document.querySelectorAll<HTMLSelectElement>('#meal-protein, #meal-vegetable, #meal-time, #meal-staple, #meal-child, [data-binding-recipe]').forEach((control) => { control.disabled = !writesEnabled || !hasMeal; });
       document.querySelectorAll<HTMLButtonElement>('#meal-reset, #meal-next, #meal-force-next, #meal-modify, #meal-start-cooking').forEach((button) => { button.disabled = !writesEnabled || !hasMeal; });
-      document.querySelector<HTMLElement>('#meal-current-copy')!.textContent = hasMeal ? '本顿可用食材是库存快照，之后调整库存不会改写本顿。' : '请先从当前库存开始本顿；本顿开始后，两台设备会共享选菜和状态。';
       renderInventory();
       const checkoutWritable = writesEnabled && hasMeal && household.currentMeal?.status === 'cooking' && household.activeStep === 'checkout';
       openCheckout.disabled = !(writesEnabled && hasMeal && household.currentMeal?.status === 'cooking' && household.activeStep === 'cook');
@@ -544,7 +542,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
     .meal-bulk-icon--clear { background: #faeaea; color: #a34242; }
     .meal-bulk-icon:disabled { opacity: .38; cursor: default; }
     .meal-ingredient-section__tools { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 8px; }
-    .meal-ingredient-section__tools .meal-bulk-icon { width: 40px; height: 40px; flex-basis: 40px; }
+    .meal-ingredient-section__tools .meal-bulk-icon { width: 40px; height: 48px; min-height: 48px; flex-basis: 40px; }
     .meal-ingredient-section summary { gap: 10px; }
     .meal-ingredient-section summary > span:first-child { min-width: 0; }
     .meal-selected-title, .meal-recipe-card__signals { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
@@ -555,7 +553,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       .meal-ingredient-toolbar { width: 100%; justify-content: space-between; }
       .meal-ingredient-section__tools { gap: 5px; }
       .meal-ingredient-section__tools .meal-bulk-actions { gap: 4px; }
-      .meal-ingredient-section__tools .meal-bulk-icon { width: 38px; height: 38px; flex-basis: 38px; }
+      .meal-ingredient-section__tools .meal-bulk-icon { width: 38px; height: 48px; min-height: 48px; flex-basis: 38px; }
     }
   </style>
 </BaseLayout>

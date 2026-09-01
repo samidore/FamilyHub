@@ -71,6 +71,7 @@
       'other-vegetable': '蔬菜',
       mushroom: '菌菇',
       staple: '主食',
+      extra: '点心',
     };
 
     let signature = '';
@@ -149,6 +150,7 @@
     box-shadow: 0 -8px 24px color-mix(in srgb, var(--ink) 8%, transparent);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    pointer-events: none;
   }
   .meal-inventory-jump-nav__track {
     display: grid;
@@ -174,6 +176,7 @@
     line-height: 1.1;
     white-space: nowrap;
     cursor: pointer;
+    pointer-events: auto;
   }
   .meal-inventory-jump-nav button:focus-visible { outline: 3px solid color-mix(in srgb, var(--berry) 70%, white); outline-offset: 2px; }
   .meal-inventory-group { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 64px); }

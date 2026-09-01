@@ -1,0 +1,42 @@
+id: heated-fresh-meat-mooncake
+type: recipe
+status: candidate
+name_zh: 鲜肉月饼
+name_en: Fresh Meat Mooncake
+tags: [meal-extra, oven]
+fit_score: 4
+primary_role: extra
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 0, vegetable: 0, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: []
+active_minutes: 5–10
+meal_window_minutes: 20–35
+elapsed_minutes: 20–35
+advance_start_required: false
+equipment: [oven or air fryer]
+burner_plan: ''
+child_suitable: unknown
+child_texture: 按包装和馅料确认熟度与质地。
+spicy_in_base: false
+deep_fried: false
+salt_level: unknown
+oil_level: light
+servings: 未指定
+detail_level: cookable
+ingredients:
+  - ingredient_id: fresh-meat-mooncake
+    role: extra
+cook_ingredients:
+  - 鲜肉月饼：按包装建议数量
+steps:
+  - 按包装说明预热并加热；没有说明时，用中温烤箱或空气炸锅加热。
+  - 加热至外皮热透、馅料中心完全熟热；包装要求生烤的产品须按包装温度和时间执行。
+  - 取出后静置片刻，切开检查中心并确认不烫口。
+child_serving: 先确认馅料完全熟热，切小并放凉。
+adult_finish: 可直接上桌。
+substitutions: []

@@ -1,9 +1,8 @@
 <section id="meal-inventory-import" class="meal-inventory-import" hidden aria-labelledby="meal-inventory-import-heading">
   <div class="meal-inventory-import__heading">
     <div>
-      <p class="eyebrow">Chat Import</p>
       <h3 id="meal-inventory-import-heading">批量入库</h3>
-      <p>粘贴按仓库协议生成的 JSON。解析只生成草稿；确认前可以删掉冷冻项、调整数量和入库日期。</p>
+    <p>粘贴 ChatGPT 生成的入库 JSON。确认前可调整数量和日期。</p>
     </div>
   </div>
 
@@ -35,7 +34,6 @@
 
 <dialog id="meal-inventory-import-dialog" class="meal-inventory-import-dialog" aria-labelledby="meal-inventory-import-dialog-heading">
   <div class="meal-inventory-import-dialog__body">
-    <p class="eyebrow">Confirm</p>
     <h3 id="meal-inventory-import-dialog-heading">确认入库？</h3>
     <p id="meal-inventory-import-dialog-copy"></p>
     <div class="meal-inventory-import-dialog__actions">
@@ -226,7 +224,7 @@
       if (!draft || !isValidInventoryImportDate(stockedOn)) return;
       const changeCount = actualChangeCount();
       if (changeCount === 0) return;
-      dialogCopy.textContent = `将 ${changeCount} 种食材加入共享库存。入库日期：${stockedOn}。已在库的 presence-only 食材不会重复增加。`;
+      dialogCopy.textContent = `将 ${changeCount} 种食材加入共享库存。入库日期：${stockedOn}。已在库的食材不会重复增加。`;
       dialog.showModal();
     });
 

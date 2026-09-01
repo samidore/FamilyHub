@@ -31,7 +31,7 @@ test('queued meal can be checked out from the warning without finishing the next
   await expect(page.locator('#meal-next')).toBeEnabled();
   await page.locator('#meal-next').click();
 
-  await expect(page.locator('#meal-shared-status')).toHaveText('cooking');
+  await expect(page.locator('#meal-shared-status')).toHaveText('做饭中');
   await expect(page.locator('[data-queue-cook-plan] > strong').first()).toHaveText('本次');
   await expect(page.locator('#meal-queue-checkout')).toHaveText('排队结算');
   await page.locator('#meal-queue-checkout').click();
@@ -39,7 +39,7 @@ test('queued meal can be checked out from the warning without finishing the next
   const warning = page.locator('#meal-queue-alert');
   await expect(warning).toBeVisible();
   await expect(warning.locator('#meal-queue-open-checkout')).toHaveText('结算');
-  await expect(page.locator('#meal-shared-status')).toHaveText('selecting');
+  await expect(page.locator('#meal-shared-status')).toHaveText('选菜中');
   await expect(page.locator('#meal-builder-view')).toBeVisible();
 
   await warning.locator('#meal-queue-open-checkout').click();
@@ -47,7 +47,7 @@ test('queued meal can be checked out from the warning without finishing the next
   await expect(page.locator('#meal-checkout-heading')).toHaveText('待结算');
   await expect(page.locator('[data-queue-checkout-meal]')).toHaveCount(1);
   await expect(page.locator('[data-queue-checkout-meal] > h3')).toHaveText('待结算 1');
-  await expect(page.locator('#meal-shared-status')).toHaveText('selecting');
+  await expect(page.locator('#meal-shared-status')).toHaveText('选菜中');
 
   await page.locator('#meal-confirm-checkout').click();
   await expect(page.locator('#meal-finalize-checkout')).toBeVisible();
@@ -55,5 +55,5 @@ test('queued meal can be checked out from the warning without finishing the next
 
   await expect(warning).toBeHidden();
   await expect(page.locator('#meal-builder-view')).toBeVisible();
-  await expect(page.locator('#meal-shared-status')).toHaveText('selecting');
+  await expect(page.locator('#meal-shared-status')).toHaveText('选菜中');
 });

@@ -67,6 +67,6 @@ test('optional contributions have a clear editor, react immediately, complete th
   await expect(page.locator('#meal-next')).toBeEnabled();
 
   await page.locator('#meal-next').click();
-  await expect(page.locator('#meal-shared-status')).toHaveText('cooking');
+  await expect(page.locator('#meal-shared-status')).toHaveText('做饭中');
   await expect(page.locator('#meal-cook-view')).toBeVisible();
 });

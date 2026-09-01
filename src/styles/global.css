@@ -314,16 +314,17 @@ a { color: inherit; }
 .meal-shared-status span { color: var(--muted); font-size: 13px; }
 .meal-inventory-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: end; gap: 8px; }
 .meal-inventory-list { display: grid; gap: 8px; }
-.meal-inventory-item { display: flex; flex-wrap: wrap; min-height: 58px; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 11px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); }
-.meal-inventory-name { flex: 1 1 96px; }
+.meal-inventory-item { display: flex; flex-wrap: nowrap; min-height: 58px; align-items: center; justify-content: space-between; gap: 6px; padding: 8px 9px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); }
+.meal-inventory-name { flex: 1 1 auto; }
 .meal-inventory-name { display: grid; min-width: 0; }
-.meal-inventory-name strong { overflow-wrap: anywhere; }
+.meal-inventory-name strong { min-width: 0; overflow: hidden; font-size: clamp(12px, 4vw, 16px); line-height: 1.2; white-space: nowrap; }
 .meal-inventory-name small, .meal-checkout-row small { color: var(--muted); font-size: 12px; }
-.meal-inventory-controls { display: flex; min-height: 48px; align-items: center; gap: 5px; }
-.meal-inventory-toggle, .meal-inventory-step { min-width: 48px; min-height: 48px; padding: 5px 9px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--berry); font-size: 16px; font-weight: 700; cursor: pointer; }
+.meal-inventory-controls { display: flex; flex: 0 0 auto; min-height: 48px; align-items: center; gap: 2px; white-space: nowrap; }
+.meal-inventory-toggle, .meal-inventory-step { min-width: 32px; min-height: 48px; padding: 4px 5px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--berry); font-size: 14px; font-weight: 700; cursor: pointer; }
 .meal-inventory-toggle[aria-pressed="true"] { border-color: var(--berry); background: var(--berry-soft); }
 .meal-inventory-controls output { min-width: 42px; color: var(--ink); text-align: center; font-variant-numeric: tabular-nums; }
-.meal-current-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.meal-inventory-controls .button { min-height: 48px; padding: 4px 7px; white-space: nowrap; }
+.meal-current-tools { position: relative; z-index: 51; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; scroll-margin-bottom: calc(140px + env(safe-area-inset-bottom, 0px)); }
 .meal-current-tools .note-box { flex: 1 1 250px; margin: 0; }
 .meal-checkout { margin-top: 28px; padding: 17px; border: 1px solid var(--berry); border-radius: 6px 18px 18px 6px; background: var(--berry-soft); }
 .meal-checkout-list { display: grid; gap: 8px; }

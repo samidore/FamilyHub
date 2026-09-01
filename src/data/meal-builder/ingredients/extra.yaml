@@ -1,0 +1,61 @@
+ingredients:
+  - id: dumplings
+    type: ingredient
+    inventory_tracking: presence-only
+    freezer_behavior: direct
+    status: candidate
+    name_zh: 水饺
+    name_en: Dumplings
+    starter:
+      visible: true
+      section: extra
+      order: 10
+    tags: []
+  - id: wontons
+    type: ingredient
+    inventory_tracking: presence-only
+    freezer_behavior: direct
+    status: candidate
+    name_zh: 馄饨
+    name_en: Wontons
+    starter:
+      visible: true
+      section: extra
+      order: 20
+    tags: []
+  - id: fresh-meat-mooncake
+    type: ingredient
+    inventory_tracking: presence-only
+    freezer_behavior: direct
+    status: candidate
+    name_zh: 鲜肉月饼
+    name_en: Fresh Meat Mooncake
+    starter:
+      visible: true
+      section: extra
+      order: 30
+    tags: []
+  - id: sweet-buns
+    type: ingredient
+    inventory_tracking: presence-only
+    freezer_behavior: direct
+    status: candidate
+    name_zh: 甜包子
+    name_en: Sweet Buns
+    starter:
+      visible: true
+      section: extra
+      order: 40
+    tags: []
+  - id: savory-buns
+    type: ingredient
+    inventory_tracking: presence-only
+    freezer_behavior: direct
+    status: candidate
+    name_zh: 咸包子
+    name_en: Savory Buns
+    starter:
+      visible: true
+      section: extra
+      order: 50
+    tags: []

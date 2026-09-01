@@ -225,7 +225,7 @@ test('meal builder filters live, completes a meal, and preserves state', async (
   await expect(page.locator('#meal-completion-status')).toHaveText('目标已满足，可以进入下一步。');
   await expect(page.locator('#meal-next')).toBeEnabled();
   await page.locator('#meal-next').click();
-  await expect(page.locator('#meal-shared-status')).toHaveText('cooking');
+  await expect(page.locator('#meal-shared-status')).toHaveText('做饭中');
   await expect(page.getByRole('heading', { name: '开始做饭' })).toBeVisible();
   await expect(page.locator('[data-cook-recipe]:visible')).toHaveCount(2);
   await expect(page.locator('[data-cook-recipe="chicken-broccoli-stir-fry"]')).toContainText('鸡胸：340 g');
@@ -360,14 +360,14 @@ test('cook back returns every device to the shared recipes step', async ({ page 
   await page.locator('[data-meal-recipe="chicken-broccoli-stir-fry"] [data-select-recipe]').click();
   await page.locator('[data-meal-recipe="yaki-udon"] [data-select-recipe]').click();
   await page.locator('#meal-next').click();
-  await expect(page.locator('#meal-shared-status')).toHaveText('cooking');
+  await expect(page.locator('#meal-shared-status')).toHaveText('做饭中');
   await page.locator('#meal-back-to-menu').click();
   await expect(page.locator('#meal-builder-view')).toBeVisible();
 });
 
 test('household inventory keeps counted half-steps, presence-only values, and visible starter scope', async ({ page }) => {
   await page.goto('meal-builder/');
-  await expect(page.locator('#meal-connection')).toContainText('本地开发同步');
+  await expect(page.locator('#meal-connection')).toContainText('本地家庭同步');
   await expect(page.locator('#meal-google-login')).toBeHidden();
   await expect(page.locator('#meal-logout')).toBeHidden();
   await expect(page.locator('[data-inventory-item]')).toHaveCount(visibleIngredientCount);
@@ -514,7 +514,7 @@ test('two pages in one browser context receive inventory and current-meal update
   await first.locator('[data-meal-recipe="yaki-udon"] [data-select-recipe]').click();
   await expect(second.locator('[data-selected-recipe="yaki-udon"]')).toBeVisible();
   await first.locator('#meal-next').click();
-  await expect(first.locator('#meal-shared-status')).toHaveText('cooking');
+  await expect(first.locator('#meal-shared-status')).toHaveText('做饭中');
   await second.locator('#meal-open-checkout').click();
   await expect(second.locator('#meal-checkout')).toBeVisible();
   await second.locator('#meal-confirm-checkout').click();

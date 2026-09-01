@@ -208,6 +208,18 @@ categories:
       - steamed-buns
       - oats
       - zongzi
+  - id: extra
+    label_zh: 点心
+    label_en: Extra
+    order: 120
+    visible: true
+    file: extra.yaml
+    ingredient_ids:
+      - dumplings
+      - wontons
+      - fresh-meat-mooncake
+      - sweet-buns
+      - savory-buns
   - id: pantry
     label_zh: 常备香料
     label_en: Pantry Aromatics

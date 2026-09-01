@@ -114,7 +114,7 @@ const queueData = JSON.stringify({
     alert.hidden = pending.length === 0; if (!pending.length) return;
     const reservations = queuedReservationUnits(household, ingredients); const units = Object.values(reservations).reduce((sum, value) => sum + value, 0);
     const title = document.querySelector<HTMLElement>('#meal-queue-alert-title'); const copy = document.querySelector<HTMLElement>('#meal-queue-alert-copy'); const settle = document.querySelector<HTMLButtonElement>('#meal-queue-open-checkout');
-    if (title) title.textContent = `⚠ 有 ${pending.length} 顿待结算`; if (copy) copy.textContent = `冻结 ${units} 份主料`; if (settle) settle.disabled = !canWrite();
+    if (title) title.textContent = `⚠ 有 ${pending.length} 顿待结算`; if (copy) copy.textContent = `预留 ${units} 份主料`; if (settle) settle.disabled = !canWrite();
   }
 
   function renderInventoryReservations() {
@@ -155,7 +155,7 @@ const queueData = JSON.stringify({
   function showQueueOnlyCheckout() {
     if (!queueReturnView) queueReturnView = captureQueueReturnView(); queueOnlyCheckout = true;
     const inventory = document.querySelector<HTMLElement>('#meal-inventory-view'); const tools = document.querySelector<HTMLElement>('.meal-current-tools'); const builder = document.querySelector<HTMLElement>('#meal-builder-view'); const complete = document.querySelector<HTMLElement>('#meal-complete-view'); const cook = document.querySelector<HTMLElement>('#meal-cook-view'); const checkout = document.querySelector<HTMLElement>('#meal-checkout'); const cookHeading = document.querySelector<HTMLElement>('#meal-cook-view > .meal-section-heading'); const cookList = document.querySelector<HTMLElement>('#meal-cook-view > .meal-cook-list'); const checkoutHeading = document.querySelector<HTMLElement>('#meal-checkout-heading'); const checkoutDescription = checkoutHeading?.parentElement?.querySelector('p'); const back = document.querySelector<HTMLButtonElement>('#meal-back-cook'); const confirm = document.querySelector<HTMLButtonElement>('#meal-confirm-checkout'); const finalize = document.querySelector<HTMLButtonElement>('#meal-finalize-checkout');
-    if (inventory) inventory.hidden = true; if (tools) tools.hidden = true; if (builder) builder.hidden = true; if (complete) complete.hidden = true; if (cook) cook.hidden = false; if (checkout) checkout.hidden = false; if (cookHeading) cookHeading.hidden = true; if (cookList) cookList.hidden = true; if (checkoutHeading) checkoutHeading.textContent = '待结算'; if (checkoutDescription) checkoutDescription.textContent = '只结算排队中的餐；当前正在选的下一顿保持不变。'; if (back) back.textContent = '返回'; if (confirm) confirm.disabled = !canWrite(); if (finalize) finalize.textContent = '确认结算';
+    if (inventory) inventory.hidden = true; if (tools) tools.hidden = true; if (builder) builder.hidden = true; if (complete) complete.hidden = true; if (cook) cook.hidden = false; if (checkout) checkout.hidden = false; if (cookHeading) cookHeading.hidden = true; if (cookList) cookList.hidden = true; if (checkoutHeading) checkoutHeading.textContent = '待结算'; if (checkoutDescription) checkoutDescription.textContent = '仅结算 Queued；当前选择不变'; if (back) back.textContent = '返回'; if (confirm) confirm.disabled = !canWrite(); if (finalize) finalize.textContent = '确认结算';
   }
 
   function leaveQueueOnlyCheckout() {
@@ -202,7 +202,7 @@ const queueData = JSON.stringify({
       }
       host.append(mealBox);
     });
-    const status = document.querySelector<HTMLElement>('#meal-checkout-status'); if (status) status.textContent = queueOnlyCheckout ? `${meals.length} 顿待结算。当前下一顿不会进入本次结算。` : `${meals.length} 顿一起结算。optional 没有冻结，最终确认时会按当前真实库存统一校验。`;
+    const status = document.querySelector<HTMLElement>('#meal-checkout-status'); if (status) status.textContent = queueOnlyCheckout ? `${meals.length} 顿待结算。当前下一顿不会进入本次结算。` : `${meals.length} 顿一起结算。可选项会在确认时按当前库存统一核对。`;
   }
 
   function applyPendingOnlyCheckout(state: HouseholdState, draftsByMealId: Record<string, CheckoutRecipeDrafts>) {
@@ -218,7 +218,7 @@ const queueData = JSON.stringify({
   document.addEventListener('click', (event) => {
     const target = event.target as HTMLElement;
     const queue = target.closest<HTMLButtonElement>('#meal-queue-checkout');
-    if (queue) { event.preventDefault(); event.stopImmediatePropagation(); if (!canWrite()) return; void repository.transaction((state) => queueCurrentMealForCheckout(state, ingredients)).then((next) => { household = next; announce('本顿已加入待结算，主材料各冻结 1 份。'); scheduleRender(); }).catch((error) => announce(error instanceof Error ? error.message : '排队结算失败。')); return; }
+    if (queue) { event.preventDefault(); event.stopImmediatePropagation(); if (!canWrite()) return; void repository.transaction((state) => queueCurrentMealForCheckout(state, ingredients)).then((next) => { household = next; announce('本顿已加入待结算，主材料各预留 1 份。'); scheduleRender(); }).catch((error) => announce(error instanceof Error ? error.message : '排队结算失败。')); return; }
     const openQueued = target.closest<HTMLButtonElement>('#meal-queue-open-checkout');
     if (openQueued) { event.preventDefault(); event.stopImmediatePropagation(); if (!canWrite() || !household.pendingCheckoutMeals.length) return; if (household.currentMeal?.status === 'cooking') { document.querySelector<HTMLButtonElement>('#meal-open-checkout')?.click(); } else { showQueueOnlyCheckout(); renderQueuedCheckout(); document.querySelector('#meal-checkout')?.scrollIntoView({ block: 'start', behavior: 'smooth' }); } return; }
     const back = target.closest<HTMLButtonElement>('#meal-back-cook');

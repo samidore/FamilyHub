@@ -1,0 +1,42 @@
+id: boiled-wontons
+type: recipe
+status: candidate
+name_zh: 馄饨
+name_en: Wontons
+tags: [meal-extra, boiled]
+fit_score: 5
+primary_role: extra
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 0, vegetable: 0, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: []
+active_minutes: 5–10
+meal_window_minutes: 15–25
+elapsed_minutes: 15–25
+advance_start_required: false
+equipment: [pot]
+burner_plan: ''
+child_suitable: unknown
+child_texture: 按包装和馅料确认熟度与质地。
+spicy_in_base: false
+deep_fried: false
+salt_level: unknown
+oil_level: light
+servings: 未指定
+detail_level: cookable
+ingredients:
+  - ingredient_id: wontons
+    role: extra
+cook_ingredients:
+  - 馄饨：按包装建议数量
+steps:
+  - 按包装建议煮制；没有包装说明时，水沸后下锅并保持温和沸腾。
+  - 煮至皮熟透、馅料中心完全热透；以包装说明为准，不凭漂浮提前出锅。
+  - 捞出后稍微放凉，给孩子的份量切开检查中心温度和馅料质地。
+child_serving: 先确认馅料熟透，切小并放凉。
+adult_finish: 可配清汤或少量调味。
+substitutions: []

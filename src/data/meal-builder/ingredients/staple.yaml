@@ -124,6 +124,7 @@ ingredients:
   - id: zongzi
     type: ingredient
     inventory_tracking: presence-only
+    freezer_behavior: direct
     status: candidate
     name_zh: 粽子
     name_en: Zongzi

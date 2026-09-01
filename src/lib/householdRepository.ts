@@ -70,7 +70,7 @@ const memoryStorage: StorageLike = {
   setItem: (key, value) => void fallbackStores.set(key, value),
   removeItem: (key) => void fallbackStores.delete(key),
 };
-const LOCAL_STATUS: RepositoryStatus = { connection: 'local', label: '本地开发同步（未连接 Firebase）' };
+const LOCAL_STATUS: RepositoryStatus = { connection: 'local', label: '本地家庭同步' };
 
 function browserStorage(): StorageLike {
   try { return typeof localStorage === 'undefined' ? memoryStorage : localStorage; } catch { return memoryStorage; }
@@ -274,7 +274,7 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
     });
     return normalizePersistedState(transaction.snapshot.val(), this.ingredients);
   }
-  private assertReady() { if (this.status.connection !== 'connected') throw new Error(this.status.error ?? 'Firebase repository is not ready'); }
+  private assertReady() { if (this.status.connection !== 'connected') throw new Error(this.status.error ?? '家庭连接尚未准备好'); }
   private setStateFromSnapshot(snapshot: DataSnapshot) { this.setState(normalizePersistedState(snapshot.val(), this.ingredients)); }
   private setState(next: HouseholdState) { this.state = normalizePersistedState(next, this.ingredients); this.emit(); }
   private stopStateSubscription() { this.unsubscribeState?.(); this.unsubscribeState = undefined; }
@@ -293,7 +293,7 @@ class ConfigurationErrorRepository implements HouseholdRepository {
   readonly ready = Promise.resolve();
   private readonly state = normalizeHouseholdState(undefined);
   private readonly status: RepositoryStatus;
-  constructor(householdId: string, error: string) { this.householdId = householdId; this.status = { connection: 'error', label: 'Firebase 配置不完整', error }; }
+  constructor(householdId: string, error: string) { this.householdId = householdId; this.status = { connection: 'error', label: '家庭连接配置不完整', error }; }
   getSnapshot() { return cloneState(this.state); }
   getStatus() { return { ...this.status }; }
   subscribe(listener: StateListener) { listener(this.getSnapshot(), this.getStatus()); return () => undefined; }
@@ -315,7 +315,7 @@ class ConfigurationErrorRepository implements HouseholdRepository {
 
 export function createHouseholdRepository(config: Partial<FirebaseConfig> | null | undefined, options: LocalRepositoryOptions & { firebase?: FirebaseRepositoryOptions } = {}): HouseholdRepository {
   if (hasCompleteFirebaseConfig(config)) return new FirebaseHouseholdRepository(config, options.firebase);
-  if (hasAnyFirebaseConfig(config)) return new ConfigurationErrorRepository(config?.householdId?.trim() || 'family-household', '请完整设置 Firebase apiKey、authDomain、projectId、databaseURL、appId 和 householdId。');
+  if (hasAnyFirebaseConfig(config)) return new ConfigurationErrorRepository(config?.householdId?.trim() || 'family-household', '请完整设置家庭连接信息和家庭编号。');
   return new LocalHouseholdRepository(config?.householdId?.trim() || 'local-household', options);
 }
 

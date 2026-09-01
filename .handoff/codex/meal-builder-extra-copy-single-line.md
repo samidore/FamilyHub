@@ -177,9 +177,16 @@ All must PASS:
 
 ## Result
 
-Append a `## Result` section to this file with:
+Status: BLOCKED
 
-- `Status: PASS / FAIL / BLOCKED`
-- validation summary including `pnpm run verify`
-- final commit SHA
-- only genuine deviations/blockers, if any
+Validation:
+- `pnpm run validate` passed, including Meal Builder schema and privacy validation.
+- `pnpm run check` passed with 0 errors and 0 warnings; 2 pre-existing deprecation hints remain.
+- `pnpm run build` passed.
+- `pnpm exec playwright test` passed all 36 browser tests.
+- `node --test tests/*.test.mjs` passed all 180 unit tests.
+- `pnpm run verify` is blocked at `test:rules`: Java is unavailable (`Could not spawn java -version`).
+
+Final commit SHA: pending
+
+Deviation/blocker: Firebase Realtime Database rules tests could not run because Java is not installed or available on PATH; no task-caused test failure remains.

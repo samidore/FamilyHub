@@ -18,7 +18,7 @@ test('inventory category jump bar is bottom-pinned, two-row, non-scrolling, data
   expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
 
   const buttons = track.locator('button');
-  await expect(buttons).toHaveCount(11);
+  await expect(buttons).toHaveCount(12);
   const rowTops = await buttons.evaluateAll((nodes) => [...new Set(nodes.map((node) => Math.round(node.getBoundingClientRect().top)))]);
   expect(rowTops).toHaveLength(2);
   const heights = await buttons.evaluateAll((nodes) => nodes.map((node) => node.getBoundingClientRect().height));
@@ -32,6 +32,7 @@ test('inventory category jump bar is bottom-pinned, two-row, non-scrolling, data
   await expect(page.locator('[data-inventory-jump="leafy-vegetable"]')).toHaveText('叶菜');
   await expect(page.locator('[data-inventory-jump="other-vegetable"]')).toHaveText('蔬菜');
   await expect(page.locator('[data-inventory-jump="staple"]')).toHaveText('主食');
+  await expect(page.locator('[data-inventory-jump="extra"]')).toHaveText('点心');
 
   const leafy = page.locator('[data-inventory-section="leafy-vegetable"]');
   await expect(leafy).toHaveAttribute('open', '');
@@ -44,7 +45,9 @@ test('inventory category jump bar is bottom-pinned, two-row, non-scrolling, data
 
 test('Recipes ingredient filter defaults folded with every inner section expanded and folds again when re-entering Recipes', async ({ page }) => {
   await page.goto('meal-builder/');
-  await page.locator('#meal-start-current').click();
+  const startCurrent = page.locator('#meal-start-current');
+  await startCurrent.evaluate((element) => element.scrollIntoView({ block: 'center' }));
+  await startCurrent.evaluate((element) => (element as HTMLButtonElement).click());
 
   const fold = page.locator('[data-meal-ingredient-fold]');
   await expect(fold).toBeVisible();
@@ -61,6 +64,7 @@ test('Recipes ingredient filter defaults folded with every inner section expande
 
   await page.locator('#meal-back-inventory').click();
   await expect(page.locator('#meal-inventory-view')).toBeVisible();
-  await page.locator('#meal-start-current').click();
+  await startCurrent.evaluate((element) => element.scrollIntoView({ block: 'center' }));
+  await startCurrent.evaluate((element) => (element as HTMLButtonElement).click());
   await expect(fold).not.toHaveAttribute('open', '');
 });

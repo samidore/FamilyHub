@@ -15,5 +15,7 @@ categories:
     directory: egg-tofu
   - id: staple
     directory: staple
+  - id: extra
+    directory: extra
   - id: vegetable
     directory: vegetable
