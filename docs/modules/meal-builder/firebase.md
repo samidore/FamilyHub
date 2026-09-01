@@ -1,6 +1,6 @@
 # Meal Builder Firebase shared state
 
-Meal Builder uses Firebase Google Authentication with `browserLocalPersistence` and Realtime Database. Ingredient, Recipe, and optional-group facts come from the indexed YAML tree under `src/data/meal-builder/`; Firebase stores only household membership and operating state: aggregate inventory, optional dated FIFO inventory batches, the current meal and its freshness snapshot, active step, Recipe Plan composition, Recipe-scoped Checkout Actual composition, and recent meals. A configured Firebase error is shown and never falls back to local data.
+Meal Builder uses Firebase Google Authentication with `browserLocalPersistence` and Realtime Database. Ingredient, Recipe, and optional-group facts come from the indexed YAML tree under `src/data/meal-builder/`; Firebase stores only household membership and operating state: aggregate inventory, freezer reserve, thawing jobs, optional dated FIFO inventory batches, the current meal and its freshness snapshot, active step, Recipe Plan composition, Recipe-scoped Checkout Actual composition, and recent meals. A configured Firebase error is shown and never falls back to local data.
 
 ## Firebase Console setup
 

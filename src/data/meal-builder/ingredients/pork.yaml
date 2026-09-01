@@ -2,6 +2,7 @@ ingredients:
   - id: whole-pork-tenderloin
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -15,6 +16,7 @@ ingredients:
   - id: pork-shoulder-chunks
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -28,6 +30,7 @@ ingredients:
   - id: thin-sliced-pork-belly
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -41,6 +44,7 @@ ingredients:
   - id: extra-thin-sliced-pork-belly
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -54,6 +58,7 @@ ingredients:
   - id: ground-pork
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -68,6 +73,7 @@ ingredients:
   - id: soft-pork-ribs
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -81,6 +87,7 @@ ingredients:
   - id: pork-feet
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -94,6 +101,7 @@ ingredients:
   - id: pork-chops
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -107,6 +115,7 @@ ingredients:
   - id: pork-liver
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -135,6 +144,7 @@ ingredients:
   - id: chinese-sausage
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     status: candidate
     name_zh: 中式香肠
     name_en: Chinese Sausage
@@ -149,6 +159,7 @@ ingredients:
   - id: pork-meatballs
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     status: candidate
     name_zh: 贡丸
     name_en: Pork Meatballs

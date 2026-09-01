@@ -1,6 +1,6 @@
 schema_version: 2
-content_version: "1.24"
-last_updated: 2026-08-28
+content_version: "1.25"
+last_updated: 2026-08-31
 ingredients: ingredients/index.yaml
 recipes: recipe/index.yaml
 optional_groups: optional-groups.yaml

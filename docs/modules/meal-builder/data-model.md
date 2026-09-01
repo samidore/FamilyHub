@@ -41,6 +41,7 @@ id: chicken-thighs
 type: ingredient
 inventory_tracking: counted # counted | presence-only
 inventory_freshness: fifo   # optional; fifo only
+freezer_behavior: thaw-required # optional; direct | thaw-required
 freshness_priority_days: 3  # required with fifo; strict age > threshold
 status: candidate
 name_zh: 鸡腿
@@ -53,6 +54,8 @@ tags: []
 ```
 
 `starter.visible: false` retains a long-term ID without showing a button. Every visible Ingredient has one controlled section and a unique positive order. `inventory_tracking` is the source of truth: `counted` uses half-unit quantities and `presence-only` stores boolean presence. Runtime code must not infer tracking mode from Ingredient IDs.
+
+`freezer_behavior` is an independent explicit fact. `direct` uses ordinary `inventory` and remains Recipe-available; `thaw-required` uses `freezerInventory` until a thawing job enters ordinary inventory. Missing means the Ingredient is not shown in the freezer view.
 
 `inventory_freshness` is optional. `fifo` means the household runtime keeps dated half-unit batches for that counted Ingredient and consumes the oldest batch first. Every FIFO Ingredient also declares `freshness_priority_days`, a positive integer used by candidate ranking and the Recipes freshness badge. The threshold is strict: an Ingredient becomes freshness-priority only when its oldest snapshot age is greater than the declared value; equality does not qualify. `freshness_priority_days` is static Ingredient data and is not stored in Firebase household state. The aggregate inventory quantity remains the user-facing total; batch quantities must sum to that total. Runtime age is derived from batch dates and is never stored as a separate age counter.
 
@@ -102,6 +105,8 @@ Static Ingredient/Recipe/optional-group facts stay in YAML. Firebase/local house
 
 ```text
 inventory/{ingredientId} = true | positive half-unit number
+freezerInventory/{ingredientId} = true | positive half-unit number
+thawingItems/{jobId} = { ingredientId, quantity, startedAt, readyAt }
 ```
 
 For an Ingredient whose canonical data says `inventory_freshness: fifo`, runtime also stores:

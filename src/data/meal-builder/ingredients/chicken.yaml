@@ -2,6 +2,7 @@ ingredients:
   - id: chicken-thighs
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -15,6 +16,7 @@ ingredients:
   - id: chicken-breast
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -28,6 +30,7 @@ ingredients:
   - id: whole-chicken-wings
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -41,6 +44,7 @@ ingredients:
   - id: party-wings
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -54,6 +58,7 @@ ingredients:
   - id: chicken-drumsticks
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -67,6 +72,7 @@ ingredients:
   - id: frozen-chicken-patties
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: direct
     status: candidate
     name_zh: 冷冻鸡肉饼
     name_en: Frozen Chicken Patties
@@ -80,6 +86,7 @@ ingredients:
   - id: whole-chicken
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -93,6 +100,7 @@ ingredients:
   - id: chicken-gizzards
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -107,6 +115,7 @@ ingredients:
   - id: chicken-hearts
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -121,6 +130,7 @@ ingredients:
   - id: chicken-liver
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate

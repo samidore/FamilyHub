@@ -7,6 +7,7 @@ export type RecipeChildCoverage = boolean | 'ingredient-dependent';
 export type IngredientChildCoverage = boolean | 'unknown';
 export type InventoryTracking = 'counted' | 'presence-only';
 export type InventoryFreshness = 'fifo';
+export type FreezerBehavior = 'direct' | 'thaw-required';
 export type MealContribution = { protein: number; vegetable: number; staple: number };
 
 export interface MealIngredient {
@@ -16,6 +17,7 @@ export interface MealIngredient {
   tags?: string[];
   inventoryTracking: InventoryTracking;
   inventoryFreshness?: InventoryFreshness;
+  freezerBehavior?: FreezerBehavior;
   freshnessPriorityDays?: number;
   childCoverage?: { vegetable: IngredientChildCoverage };
 }

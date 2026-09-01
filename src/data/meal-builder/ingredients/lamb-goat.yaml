@@ -2,6 +2,7 @@ ingredients:
   - id: hot-pot-lamb-slices
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -15,6 +16,7 @@ ingredients:
   - id: lamb-shoulder-chunks
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -28,6 +30,7 @@ ingredients:
   - id: lamb-leg-chunks
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -41,6 +44,7 @@ ingredients:
   - id: ground-lamb
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -54,6 +58,7 @@ ingredients:
   - id: bone-in-lamb-chops
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -67,6 +72,7 @@ ingredients:
   - id: boneless-lamb-chops
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -80,6 +86,7 @@ ingredients:
   - id: lamb-shanks
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -93,6 +100,7 @@ ingredients:
   - id: lamb-riblets
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -106,6 +114,7 @@ ingredients:
   - id: skin-on-bone-in-goat-pieces
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate
@@ -119,6 +128,7 @@ ingredients:
   - id: lamb-spine-sections
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: thaw-required
     inventory_freshness: fifo
     freshness_priority_days: 3
     status: candidate

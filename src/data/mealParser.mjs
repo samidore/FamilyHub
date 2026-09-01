@@ -1,6 +1,6 @@
 import { parse as parseYaml } from 'yaml';
 
-const INGREDIENT_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'starter', 'tags', 'child_coverage', 'inventory_tracking', 'inventory_freshness', 'freshness_priority_days']);
+const INGREDIENT_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'starter', 'tags', 'child_coverage', 'inventory_tracking', 'inventory_freshness', 'freshness_priority_days', 'freezer_behavior']);
 const RECIPE_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'tags', 'fit_score', 'primary_role', 'main_protein_category', 'main_protein_ingredient_ids', 'supporting_protein_ingredient_ids', 'optional_supporting_protein_ingredient_ids', 'optional_groups', 'vegetable_ingredient_ids', 'meal_contribution', 'child_coverage', 'integral_staple_ingredient_ids', 'recommended_staple_ingredient_ids', 'active_minutes', 'meal_window_minutes', 'elapsed_minutes', 'advance_start_required', 'equipment', 'burner_plan', 'child_suitable', 'child_texture', 'spicy_in_base', 'deep_fried', 'salt_level', 'oil_level', 'servings', 'detail_level', 'ingredients', 'cook_ingredients', 'steps', 'child_serving', 'adult_finish', 'substitutions', 'checkout_units']);
 const CONTRIBUTIONS = new Set([0, 0.5, 1, 2]);
 const STARTER_KEYS = new Set(['visible', 'section', 'order']);
@@ -13,6 +13,7 @@ const OPTIONAL_GROUP_KEYS = new Set(['id', 'label_zh', 'ingredients']);
 const OPTIONAL_GROUP_INGREDIENT_KEYS = new Set(['ingredient_id', 'meal_contribution', 'checkout_units']);
 const INVENTORY_TRACKING = new Set(['counted', 'presence-only']);
 const INVENTORY_FRESHNESS = new Set(['fifo']);
+const FREEZER_BEHAVIOR = new Set(['direct', 'thaw-required']);
 const ACTIVE_STATUSES = new Set(['candidate', 'approved']);
 const DETAIL_LEVELS = new Set(['discoverable', 'cookable', 'household-tested']);
 
@@ -56,6 +57,7 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
     } else {
       assert(record.freshness_priority_days === undefined, `${record.id} freshness_priority_days requires inventory_freshness`);
     }
+    if (record.freezer_behavior !== undefined) assert(FREEZER_BEHAVIOR.has(record.freezer_behavior), `${record.id} has invalid freezer_behavior`);
     assert(record.starter && typeof record.starter.visible === 'boolean', `${record.id} has invalid starter visibility`);
     assert(sectionIds.has(record.starter.section), `${record.id} has unknown starter section ${record.starter.section}`);
     assert(Number.isInteger(record.starter.order) && record.starter.order > 0, `${record.id} has invalid starter order`);
@@ -65,7 +67,7 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
   const ingredients = ingredientRaw.map((record) => ({
     id: record.id, nameZh: String(record.name_zh), nameEn: String(record.name_en),
     visible: record.starter.visible, section: String(record.starter.section), order: Number(record.starter.order),
-    tags: stringArray(record.tags), inventoryTracking: record.inventory_tracking, inventoryFreshness: record.inventory_freshness,
+    tags: stringArray(record.tags), inventoryTracking: record.inventory_tracking, inventoryFreshness: record.inventory_freshness, freezerBehavior: record.freezer_behavior,
     freshnessPriorityDays: record.freshness_priority_days === undefined ? undefined : Number(record.freshness_priority_days),
     childCoverage: record.child_coverage ? { vegetable: record.child_coverage.vegetable } : undefined,
   }));

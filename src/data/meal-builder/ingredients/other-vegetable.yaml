@@ -226,6 +226,7 @@ ingredients:
   - id: frozen-shelled-edamame
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: direct
     status: candidate
     name_zh: 冷冻去壳毛豆
     name_en: Frozen Shelled Edamame
@@ -238,6 +239,7 @@ ingredients:
   - id: frozen-green-peas
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: direct
     status: candidate
     name_zh: 冷冻青豆
     name_en: Frozen Green Peas

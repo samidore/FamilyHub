@@ -189,6 +189,7 @@ ingredients:
   - id: frozen-shepherds-purse
     type: ingredient
     inventory_tracking: counted
+    freezer_behavior: direct
     status: candidate
     name_zh: 冷冻荠菜末
     name_en: Frozen Shepherd’s Purse

@@ -101,6 +101,7 @@ ingredients:
   - id: steamed-buns
     type: ingredient
     inventory_tracking: presence-only
+    freezer_behavior: direct
     status: candidate
     name_zh: 馒头
     name_en: Steamed Buns

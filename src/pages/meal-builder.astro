@@ -12,7 +12,7 @@ type StarterSection = { id: string; labelZh: string; labelEn: string; order: num
 const clientData = JSON.stringify({
   version: mealData.metadata.version,
   starterSections: mealData.starterSections,
-  ingredients: mealData.ingredients.map((ingredient) => ({ id: ingredient.id, nameZh: ingredient.nameZh, nameEn: ingredient.nameEn, visible: ingredient.visible, section: ingredient.section, tags: ingredient.tags, inventoryTracking: ingredient.inventoryTracking, inventoryFreshness: ingredient.inventoryFreshness, freshnessPriorityDays: ingredient.freshnessPriorityDays, childCoverage: ingredient.childCoverage })),
+  ingredients: mealData.ingredients.map((ingredient) => ({ id: ingredient.id, nameZh: ingredient.nameZh, nameEn: ingredient.nameEn, visible: ingredient.visible, section: ingredient.section, tags: ingredient.tags, inventoryTracking: ingredient.inventoryTracking, inventoryFreshness: ingredient.inventoryFreshness, freshnessPriorityDays: ingredient.freshnessPriorityDays, freezerBehavior: ingredient.freezerBehavior, childCoverage: ingredient.childCoverage })),
   recipes: recipes.map((recipe) => ({
     id: recipe.id, order: recipe.order, fitScore: recipe.fitScore, contribution: recipe.contribution,
     childCoverage: recipe.childCoverage, requirements: recipe.requirements, tags: recipe.tags,
@@ -65,6 +65,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
 
     <section id="meal-inventory-view" class="shell meal-inventory" aria-labelledby="meal-inventory-heading">
       <div class="meal-section-heading"><div><p class="eyebrow">Inventory</p><h2 id="meal-inventory-heading">家庭库存</h2><p>库存会在家庭设备之间同步。presence-only 只记录有/无，其余食材按 {COUNTED_INVENTORY_STEP} 粗略单位记录；启用保鲜追踪的鲜肉、蔬菜和豆腐会按入库日期分批，减少或结算时先扣最早一批。</p></div><div class="meal-inventory-actions"><span id="meal-inventory-count" class="meal-count">已开启 0</span><button id="meal-inventory-reset" class="clear-button" type="button">清空库存</button></div></div>
+      <div class="meal-inventory-tabs" role="tablist" aria-label="库存视图"><button type="button" data-inventory-tab="inventory" role="tab">库存</button><button type="button" data-inventory-tab="freezer" role="tab">冷冻</button><button type="button" data-inventory-tab="thawing" role="tab">化冻中 <span data-thawing-count>0</span></button></div>
       <div id="meal-inventory-list" class="meal-inventory-list"></div>
     </section>
 
@@ -197,7 +198,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
   <script>
     import { aggregateSelection, bindRecipeIngredients, defaultMealState, freshnessPriorityAgeDays, rankCandidates, reconcileMealState, resolveRecipeChildCoverage, timeFit, unmetCompletionRequirements } from '../lib/mealEngine';
     import type { MealIngredient, MealRecipe, MealState, TimePreference } from '../lib/mealEngine';
-    import { COUNTED_INVENTORY_STEP, advanceMealToCooking, createCurrentMealFromInventory, freshnessDatesForInventory, reconcileCurrentMeal, resetRecipeSelection, roundCountedInventoryValue, setCurrentMealStatus, trackingForIngredient, type CurrentMeal, type HouseholdState } from '../lib/household';
+    import { COUNTED_INVENTORY_STEP, advanceMealToCooking, cancelThaw, completeThaw, createCurrentMealFromInventory, freshnessDatesForInventory, reconcileCurrentMeal, reconcileDueThawing, resetRecipeSelection, roundCountedInventoryValue, setCurrentMealStatus, startThaw, trackingForIngredient, type CurrentMeal, type HouseholdState } from '../lib/household';
     import { createHouseholdRepository, type RepositoryStatus } from '../lib/householdRepository';
     type View = 'build' | 'complete' | 'cook';
     type Payload = { version: string; starterSections: { id: string; labelZh: string }[]; ingredients: (MealIngredient & { visible?: boolean; section?: string })[]; recipes: MealRecipe[] };
@@ -211,7 +212,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
     const repository = createHouseholdRepository(firebaseConfig, { ingredients, recipes, firebase: { ingredients, recipes } });
     let household: HouseholdState = repository.getSnapshot();
     let state: MealState = household.currentMeal ? { ...mealStateFromCurrentMeal(household.currentMeal) } : defaultMealState(); let view: View = household.activeStep === 'cook' || household.activeStep === 'checkout' ? 'cook' : household.activeStep === 'recipes' ? 'build' : 'build';
-    let repositoryStatus: RepositoryStatus = repository.getStatus();
+    let repositoryStatus: RepositoryStatus = repository.getStatus(); let inventoryTab: 'inventory' | 'freezer' | 'thawing' = 'inventory';
     let draftBindings: Record<string, (string | null)[]> = {};
     try {
       const saved = JSON.parse(sessionStorage.getItem(storageKey) ?? 'null');
@@ -315,8 +316,32 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       name.append(zh, en); return name;
     }
 
+    function renderFreezer() {
+      inventoryList.replaceChildren();
+      const items = ingredients.filter((item) => item.visible !== false && item.freezerBehavior);
+      for (const item of items) {
+        const row = document.createElement('div'); row.className = 'meal-inventory-item'; row.dataset.inventoryItem = item.id;
+        row.append(ingredientNameNode(item));
+        const controls = document.createElement('span'); controls.className = 'meal-inventory-controls'; const value = household.freezerInventory[item.id];
+        const output = document.createElement('output'); output.dataset.inventoryValue = `freezer-${item.id}`; output.textContent = item.inventoryTracking === 'presence-only' ? (value === true ? '有' : '无') : String(typeof value === 'number' ? value : 0);
+        if (item.inventoryTracking === 'counted') { for (const [delta, label] of [[-COUNTED_INVENTORY_STEP, '−'], [COUNTED_INVENTORY_STEP, '+']] as const) { const button = document.createElement('button'); button.type = 'button'; button.dataset.freezerStep = String(delta); button.dataset.freezerIngredient = item.id; button.textContent = label; controls.append(button); } }
+        else { const button = document.createElement('button'); button.type = 'button'; button.dataset.freezerToggle = item.id; button.textContent = value === true ? '有' : '无'; controls.append(button); }
+        controls.append(output);
+        if (item.freezerBehavior === 'thaw-required') { const thaw = document.createElement('button'); thaw.type = 'button'; thaw.dataset.startThaw = item.id; thaw.className = 'button button--primary'; thaw.textContent = '化冻'; controls.append(thaw); }
+        row.append(controls); inventoryList.append(row);
+      }
+      if (!items.length) inventoryList.textContent = '暂无配置冷冻行为的食材。';
+    }
+    function renderThawing() {
+      inventoryList.replaceChildren(); const jobs = Object.entries(household.thawingItems).sort(([, a], [, b]) => a.readyAt - b.readyAt);
+      for (const [id, job] of jobs) { const row = document.createElement('article'); row.className = 'meal-inventory-item meal-thawing-item'; row.dataset.thawingItem = id; const item = ingredientById.get(job.ingredientId); const remaining = Math.max(0, job.readyAt - Date.now()); const hours = Math.floor(remaining / 3600000); const mins = Math.floor((remaining % 3600000) / 60000); row.append(ingredientNameNode(item ?? { id: job.ingredientId }), document.createTextNode(` ${job.quantity} · 剩余 ${hours}h ${mins}m · ${new Date(job.readyAt).toLocaleString('zh-CN')} 自动进入库存`)); const enter = document.createElement('button'); enter.type = 'button'; enter.dataset.completeThaw = id; enter.textContent = '进入库存'; const cancel = document.createElement('button'); cancel.type = 'button'; cancel.dataset.cancelThaw = id; cancel.textContent = '取消化冻'; row.append(enter, cancel); inventoryList.append(row); }
+      if (!jobs.length) inventoryList.textContent = '当前没有化冻中的食材。';
+    }
     function renderInventory() {
-      const onCount = Object.entries(household.inventory).filter(([id, value]) => trackingForIngredient(id, ingredients) === 'presence-only' ? value === true : typeof value === 'number' && value > 0).length;
+      document.querySelectorAll<HTMLButtonElement>('[data-inventory-tab]').forEach((button) => { const active = button.dataset.inventoryTab === inventoryTab; button.classList.toggle('is-active', active); button.setAttribute('aria-selected', String(active)); });
+      document.querySelector<HTMLElement>('[data-thawing-count]')!.textContent = String(Object.keys(household.thawingItems).length);
+      if (inventoryTab === 'freezer') { renderFreezer(); return; } if (inventoryTab === 'thawing') { renderThawing(); return; }
+      const onCount = Object.entries(household.inventory).filter(([id, value]) => ingredientById.get(id)?.freezerBehavior !== 'direct' && (trackingForIngredient(id, ingredients) === 'presence-only' ? value === true : typeof value === 'number' && value > 0)).length;
       inventoryCount.textContent = `已开启 ${onCount}`;
       inventoryList.replaceChildren();
       payload.starterSections.forEach((section) => {
@@ -333,6 +358,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
         const tracking = item.inventoryTracking;
         const value = inventoryValue(item.id);
         const row = document.createElement('div'); row.className = 'meal-inventory-item'; row.dataset.inventoryItem = item.id;
+        row.hidden = item.freezerBehavior === 'direct';
         const name = ingredientNameNode(item);
         if (item.inventoryFreshness === 'fifo') {
           const batches = Object.entries(household.inventoryBatches[item.id] ?? {}).sort(([left], [right]) => left.localeCompare(right));
@@ -382,7 +408,7 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       startCurrent.disabled = !writesEnabled || (hasMeal && household.activeStep !== 'inventory');
       document.querySelector<HTMLButtonElement>('#meal-inventory-reset')!.disabled = !writesEnabled;
       document.querySelector<HTMLButtonElement>('#meal-recipe-reset')!.disabled = !writesEnabled || !hasMeal;
-      document.querySelectorAll<HTMLButtonElement>('[data-inventory-toggle], [data-inventory-step]').forEach((button) => { button.disabled = !writesEnabled; });
+      document.querySelectorAll<HTMLButtonElement>('[data-inventory-toggle], [data-inventory-step], [data-start-thaw], [data-complete-thaw], [data-cancel-thaw], [data-freezer-step], [data-freezer-toggle]').forEach((button) => { button.disabled = !writesEnabled; });
       document.querySelectorAll<HTMLButtonElement>('[data-ingredient-id], [data-select-recipe], [data-remove-recipe]').forEach((button) => { button.disabled = !writesEnabled || !hasMeal; });
       document.querySelectorAll<HTMLSelectElement>('#meal-protein, #meal-vegetable, #meal-time, #meal-staple, #meal-child, [data-binding-recipe]').forEach((control) => { control.disabled = !writesEnabled || !hasMeal; });
       document.querySelectorAll<HTMLButtonElement>('#meal-reset, #meal-next, #meal-force-next, #meal-modify, #meal-start-cooking').forEach((button) => { button.disabled = !writesEnabled || !hasMeal; });
@@ -461,6 +487,8 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
       announce(removed > 0 ? `已批量取消食材，并移除 ${removed} 道无法制作的已选菜。` : `已${shouldBeOn ? '全选' : '全不选'} ${ids.length} 种食材。`);
     }));
     inventoryList.addEventListener('click', (event) => { const target = (event.target as HTMLElement); const toggle = target.closest<HTMLButtonElement>('[data-inventory-toggle]'); const step = target.closest<HTMLButtonElement>('[data-inventory-step]'); const ingredientId = toggle?.dataset.inventoryToggle ?? step?.dataset.inventoryIngredient; if (!ingredientId || !canWrite()) return; if (toggle) { const tracking = toggle.dataset.inventoryTracking === 'presence-only' ? 'presence-only' : 'counted'; safeWrite(repository.updateInventory((inventory) => { const current = typeof inventory[ingredientId] === 'number' ? inventory[ingredientId] as number : inventory[ingredientId] === true ? 1 : 0; const next = { ...inventory }; if (tracking === 'presence-only') { if (inventory[ingredientId] === true) delete next[ingredientId]; else next[ingredientId] = true; } else { if (current > 0) delete next[ingredientId]; else next[ingredientId] = 1; } return next; }).then((next) => { household = next; render(); })); } else if (step) { const delta = Number(step.dataset.inventoryStep); safeWrite(repository.updateInventory((inventory) => { const current = typeof inventory[ingredientId] === 'number' ? inventory[ingredientId] as number : 0; const nextValue = Math.max(0, roundCountedInventoryValue(current + delta)); const next = { ...inventory }; if (nextValue > 0) next[ingredientId] = nextValue; else delete next[ingredientId]; return next; }).then((next) => { household = next; render(); })); } });
+    document.querySelectorAll<HTMLButtonElement>('[data-inventory-tab]').forEach((button) => button.addEventListener('click', () => { inventoryTab = button.dataset.inventoryTab as typeof inventoryTab; renderInventory(); }));
+    inventoryList.addEventListener('click', (event) => { const target = event.target as HTMLElement; const start = target.closest<HTMLButtonElement>('[data-start-thaw]'); const enter = target.closest<HTMLButtonElement>('[data-complete-thaw]'); const cancel = target.closest<HTMLButtonElement>('[data-cancel-thaw]'); const freezerStep = target.closest<HTMLButtonElement>('[data-freezer-step]'); const freezerToggle = target.closest<HTMLButtonElement>('[data-freezer-toggle]'); if (!canWrite()) return; if (start) safeWrite(repository.transaction((state) => startThaw(state, start.dataset.startThaw!, ingredients, Date.now()))); else if (enter) safeWrite(repository.transaction((state) => completeThaw(state, enter.dataset.completeThaw!, Date.now(), ingredients))); else if (cancel) safeWrite(repository.transaction((state) => cancelThaw(state, cancel.dataset.cancelThaw!))); else if (freezerStep) { const id = freezerStep.dataset.freezerIngredient!; const delta = Number(freezerStep.dataset.freezerStep); safeWrite(repository.transaction((state) => ({ ...state, freezerInventory: { ...state.freezerInventory, [id]: Math.max(0, roundCountedInventoryValue((typeof state.freezerInventory[id] === 'number' ? state.freezerInventory[id] as number : 0) + delta)) } }))); } else if (freezerToggle) { const id = freezerToggle.dataset.freezerToggle!; safeWrite(repository.transaction((state) => ({ ...state, freezerInventory: { ...state.freezerInventory, [id]: state.freezerInventory[id] === true ? undefined as never : true } }))); } });
     recipeGrid.addEventListener('change', (event) => {
       const target = event.target as HTMLElement;
       const select = target.closest<HTMLSelectElement>('[data-binding-recipe]'); if (!select || !household.currentMeal || !canWrite()) return; const recipe = byId.get(select.dataset.bindingRecipe!); if (!recipe) return; const index = Number(select.dataset.bindingIndex); const binding = draftBindingFor(recipe, new Set(state.availableIngredientIds)); binding[index] = select.value; draftBindings[recipe.id] = binding; state = reconcileMealState({ ...state, recipeIngredientBindings: { ...state.recipeIngredientBindings, [recipe.id]: binding.filter((value): value is string => Boolean(value)) } }, recipes, ingredients); void persistMeal((meal) => { const remoteBinding = [...(meal.recipeIngredientBindings[recipe.id] ?? [])]; remoteBinding[index] = select.value; return reconcileCurrentMeal({ ...meal, recipeIngredientBindings: { ...meal.recipeIngredientBindings, [recipe.id]: remoteBinding.filter((value): value is string => Boolean(value)) }, checkoutDraft: {} }, recipes, ingredients); }); render(); announce('已更新这道菜的食材选择。');
@@ -481,12 +509,18 @@ const discoverableNote = '这道菜目前只有可靠的结构和基础步骤；
     forceNextButton.addEventListener('click', async () => { if (state.selectedRecipeIds.length === 0 || !household.currentMeal || !canWrite()) return; await persistStep('cook', advanceMealToCooking); render(); announce('已按当前菜单进入做饭步骤。'); });
     openCheckout.addEventListener('click', async () => { if (!household.currentMeal || household.currentMeal.status !== 'cooking' || !canWrite()) return; await persistStep('checkout'); render(); });
     document.querySelector('#meal-back-cook')!.addEventListener('click', async () => { await persistStep('cook'); render(); });
-    repository.subscribe((next, status) => { household = next; repositoryStatus = status; if (next.currentMeal) { state = reconcileMealState(mealStateFromCurrentMeal(next.currentMeal), recipes, ingredients); view = next.activeStep === 'cook' || next.activeStep === 'checkout' ? 'cook' : 'build'; } else { state = defaultMealState(); draftBindings = {}; checkout.hidden = true; view = 'build'; } render(); });
+    repository.subscribe((next, status) => { household = next; repositoryStatus = status; if (Object.values(next.thawingItems).some((job) => job.readyAt <= Date.now())) safeWrite(repository.transaction((current) => reconcileDueThawing(current, Date.now(), ingredients))); if (next.currentMeal) { state = reconcileMealState(mealStateFromCurrentMeal(next.currentMeal), recipes, ingredients); view = next.activeStep === 'cook' || next.activeStep === 'checkout' ? 'cook' : 'build'; } else { state = defaultMealState(); draftBindings = {}; checkout.hidden = true; view = 'build'; } render(); });
+    window.setInterval(() => { if (canWrite()) { if (Object.values(household.thawingItems).some((job) => job.readyAt <= Date.now())) safeWrite(repository.transaction((current) => reconcileDueThawing(current, Date.now(), ingredients))); if (inventoryTab === 'thawing') renderInventory(); } }, 60000);
     repository.ready?.catch(() => render());
     render();
   </script>
 
   <style>
+    .meal-inventory-tabs { display: flex; gap: 6px; margin: 14px 0; }
+    .meal-inventory-tabs button { flex: 1; width: 100%; height: 48px; min-height: 48px !important; border: 1px solid var(--line, #d8cbd0); border-radius: 999px; background: transparent; color: inherit; cursor: pointer; }
+    .meal-inventory-tabs button.is-active { background: var(--ink, #332a2e); color: white; }
+    .meal-thawing-item { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .meal-thawing-item .meal-inventory-name { margin-right: auto; }
     .meal-ingredient-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px 12px; }
     .meal-bulk-actions { display: inline-flex; align-items: center; gap: 6px; }
     .meal-bulk-icon { display: inline-grid; width: 44px; height: 44px; flex: 0 0 44px; place-items: center; padding: 0; border: 1px solid currentColor; border-radius: 999px; cursor: pointer; }

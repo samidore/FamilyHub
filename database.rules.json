@@ -32,7 +32,16 @@
           ".read": "auth != null && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email",
           ".write": "auth != null && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email",
           "inventory": { "$ingredientId": { ".validate": "(newData.isBoolean() && newData.val() == true) || (newData.isNumber() && newData.val() > 0 && newData.val() % 0.5 == 0)" } },
+          "freezerInventory": { "$ingredientId": { ".validate": "(newData.isBoolean() && newData.val() == true) || (newData.isNumber() && newData.val() > 0 && newData.val() % 0.5 == 0)" } },
           "inventoryBatches": { "$ingredientId": { "$date": { ".validate": "$date.matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/) && newData.isNumber() && newData.val() > 0 && newData.val() % 0.5 == 0" } } },
+          "thawingItems": { "$jobId": {
+            ".validate": "newData.hasChildren(['ingredientId', 'quantity', 'startedAt', 'readyAt']) && newData.child('ingredientId').isString() && newData.child('ingredientId').val().length > 0 && newData.child('quantity').isNumber() && newData.child('quantity').val() > 0 && newData.child('quantity').val() % 0.5 == 0 && newData.child('startedAt').isNumber() && newData.child('startedAt').val() > 0 && newData.child('readyAt').isNumber() && newData.child('readyAt').val() == newData.child('startedAt').val() + 129600000",
+            "ingredientId": { ".validate": "newData.isString() && newData.val().length > 0" },
+            "quantity": { ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() % 0.5 == 0" },
+            "startedAt": { ".validate": "newData.isNumber() && newData.val() > 0" },
+            "readyAt": { ".validate": "newData.isNumber() && newData.val() == newData.parent().child('startedAt').val() + 129600000" },
+            "$other": { ".validate": false }
+          } },
           "recentMeals": {
             "$index": {
               ".validate": "($index == '0' || $index == '1' || $index == '2' || $index == '3') && newData.hasChildren(['mealId', 'completedAt', 'recipeIds'])",
