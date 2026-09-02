@@ -30,3 +30,27 @@ test('inventory and freezer controls stay on one row at mobile width', async ({ 
   }
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
 });
+
+test('presence-only rows show one state label and counted rows keep their controls', async ({ page }) => {
+  await page.goto('meal-builder/');
+
+  const inventoryPresence = page.locator('[data-inventory-item="eggs"]');
+  await expect(inventoryPresence.locator('[data-inventory-toggle]')).toHaveText('无');
+  await expect(inventoryPresence.locator('button').filter({ hasText: /^无$/ })).toHaveCount(1);
+  await inventoryPresence.locator('[data-inventory-toggle]').click();
+  await expect(inventoryPresence.locator('[data-inventory-toggle]')).toHaveText('有');
+  await expect(inventoryPresence.locator('button').filter({ hasText: /^有$/ })).toHaveCount(1);
+
+  await page.locator('[data-inventory-tab="freezer"]').click();
+  const freezerPresence = page.locator('[data-inventory-item="fresh-meat-mooncake"]');
+  await expect(freezerPresence.locator('[data-inventory-toggle]')).toHaveText('无');
+  await expect(freezerPresence.locator('button').filter({ hasText: /^无$/ })).toHaveCount(1);
+  await freezerPresence.locator('[data-inventory-toggle]').click();
+  await expect(freezerPresence.locator('[data-inventory-toggle]')).toHaveText('有');
+  await expect(freezerPresence.locator('button').filter({ hasText: /^有$/ })).toHaveCount(1);
+
+  const counted = page.locator('[data-inventory-item="chicken-breast"]');
+  await expect(counted.locator('[data-freezer-toggle]')).toHaveText('开启');
+  await expect(counted.locator('[data-freezer-step]')).toHaveCount(2);
+  await expect(counted.locator('[data-inventory-value="freezer-chicken-breast"]')).toHaveText('0');
+});

@@ -315,12 +315,13 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
       const value = direct || source === 'inventory' ? inventoryValue(item.id) : household.freezerInventory[item.id];
       const row = document.createElement('div'); row.className = 'meal-inventory-item'; row.dataset.inventoryItem = item.id;
       const name = ingredientNameNode(item); const controls = document.createElement('span'); controls.className = 'meal-inventory-controls';
-      const output = document.createElement('output'); output.dataset.inventoryValue = source === 'freezer' ? `freezer-${item.id}` : item.id; output.textContent = tracking === 'presence-only' ? (value === true ? '有' : '无') : String(typeof value === 'number' ? value : 0); output.setAttribute('aria-live', 'polite');
       if (tracking === 'presence-only') {
         const toggle = document.createElement('button'); toggle.type = 'button'; toggle.className = 'meal-inventory-toggle'; toggle.dataset.inventoryTracking = tracking; toggle.setAttribute('aria-pressed', String(value === true)); toggle.textContent = value === true ? '有' : '无';
+        toggle.dataset.inventoryValue = source === 'freezer' ? `freezer-${item.id}` : item.id; toggle.setAttribute('aria-live', 'polite');
         if (direct || source === 'inventory') toggle.dataset.inventoryToggle = item.id; else toggle.dataset.freezerToggle = item.id;
-        controls.append(toggle, output);
+        controls.append(toggle);
       } else {
+        const output = document.createElement('output'); output.dataset.inventoryValue = source === 'freezer' ? `freezer-${item.id}` : item.id; output.textContent = String(typeof value === 'number' ? value : 0); output.setAttribute('aria-live', 'polite');
         const toggle = document.createElement('button'); toggle.type = 'button'; toggle.className = 'meal-inventory-toggle'; toggle.dataset.inventoryTracking = tracking; toggle.setAttribute('aria-pressed', String(typeof value === 'number' && value > 0)); toggle.textContent = typeof value === 'number' && value > 0 ? '在库存' : '开启';
         if (direct || source === 'inventory') toggle.dataset.inventoryToggle = item.id; else toggle.dataset.freezerToggle = item.id;
         const minus = document.createElement('button'); minus.type = 'button'; minus.className = 'meal-inventory-step'; minus.textContent = '−'; minus.setAttribute('aria-label', `${item.nameZh} 减少 ${COUNTED_INVENTORY_STEP}`);
@@ -378,14 +379,14 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
           }
         }
         const controls = document.createElement('span'); controls.className = 'meal-inventory-controls';
-        const output = document.createElement('output'); output.dataset.inventoryValue = item.id; output.textContent = tracking === 'presence-only' ? (value === true ? '有' : '无') : String(typeof value === 'number' ? value : 0); output.setAttribute('aria-live', 'polite');
         const toggle = document.createElement('button'); toggle.type = 'button'; toggle.className = 'meal-inventory-toggle'; toggle.dataset.inventoryToggle = item.id; toggle.dataset.inventoryTracking = tracking; toggle.setAttribute('aria-pressed', String(tracking === 'presence-only' ? value === true : typeof value === 'number' && value > 0)); toggle.textContent = tracking === 'presence-only' ? (value === true ? '有' : '无') : ((typeof value === 'number' && value > 0) ? '在库存' : '开启');
         controls.append(toggle);
         if (tracking === 'counted') {
+          const output = document.createElement('output'); output.dataset.inventoryValue = item.id; output.textContent = String(typeof value === 'number' ? value : 0); output.setAttribute('aria-live', 'polite');
           const minus = document.createElement('button'); minus.type = 'button'; minus.className = 'meal-inventory-step'; minus.dataset.inventoryStep = String(-COUNTED_INVENTORY_STEP); minus.dataset.inventoryIngredient = item.id; minus.textContent = '−'; minus.setAttribute('aria-label', `${item.nameZh} 减少 ${COUNTED_INVENTORY_STEP}`);
           const plus = document.createElement('button'); plus.type = 'button'; plus.className = 'meal-inventory-step'; plus.dataset.inventoryStep = String(COUNTED_INVENTORY_STEP); plus.dataset.inventoryIngredient = item.id; plus.textContent = '+'; plus.setAttribute('aria-label', `${item.nameZh} 增加 ${COUNTED_INVENTORY_STEP}`);
           controls.append(minus, output, plus);
-        } else controls.append(output);
+        } else { toggle.dataset.inventoryValue = item.id; toggle.setAttribute('aria-live', 'polite'); }
         row.append(name, controls); rows.append(row);
         }
       });
