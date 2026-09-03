@@ -3,6 +3,8 @@ categories:
     directory: pork
   - id: chicken
     directory: chicken
+  - id: duck
+    directory: duck
   - id: beef
     directory: beef
   - id: lamb-goat

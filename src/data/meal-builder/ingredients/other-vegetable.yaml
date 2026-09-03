@@ -303,9 +303,7 @@ ingredients:
     tags: []
   - id: onion
     type: ingredient
-    inventory_tracking: counted
-    inventory_freshness: fifo
-    freshness_priority_days: 5
+    inventory_tracking: presence-only
     status: candidate
     name_zh: 洋葱
     name_en: Onion

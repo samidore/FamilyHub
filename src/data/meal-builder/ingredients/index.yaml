@@ -35,6 +35,14 @@ categories:
       - chicken-gizzards
       - chicken-hearts
       - chicken-liver
+  - id: duck
+    label_zh: 鸭肉
+    label_en: Duck
+    order: 25
+    visible: true
+    file: duck.yaml
+    ingredient_ids:
+      - duck-wings
   - id: beef
     label_zh: 牛肉
     label_en: Beef

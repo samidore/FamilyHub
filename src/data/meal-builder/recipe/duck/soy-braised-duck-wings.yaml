@@ -1,0 +1,66 @@
+id: soy-braised-duck-wings
+type: recipe
+status: candidate
+name_zh: 酱香焖鸭翅
+name_en: Soy-Braised Duck Wings
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - braised
+  - stovetop-nonstick
+  - family-shared
+fit_score: 3
+primary_role: protein
+main_protein_category: mixed
+main_protein_ingredient_ids:
+  - duck-wings
+supporting_protein_ingredient_ids: []
+optional_groups: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 1
+  vegetable: 0
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 20–30
+meal_window_minutes: 45–60
+elapsed_minutes: 50–70
+advance_start_required: false
+equipment:
+  - medium burner
+  - covered pot / braiser
+burner_plan: Medium burner for blanching and a gentle covered braise.
+child_suitable: yes
+child_texture: 焖至肉能轻松脱骨；孩子份必须由成人彻底去骨并检查碎骨。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: duck-wings
+    role: main-protein
+cook_ingredients:
+  - 鸭翅：约900–1100 g
+  - 姜：4片；葱：2根，切段
+  - 生抽：2 Tbsp；老抽：1 tsp
+  - 绍兴酒：1 Tbsp
+  - 冰糖或白糖：1 tsp
+  - 水：约450–550 ml，以基本没过鸭翅为准
+steps:
+  - 鸭翅冷水下锅，煮开后再煮2–3分钟；捞出冲净浮沫并沥干。
+  - 锅中放鸭翅、姜、葱、生抽、老抽、绍兴酒、糖和水，中火煮开。
+  - 沸腾后转中小火，加盖保持轻微翻滚，焖35–45分钟；中途翻面1–2次。
+  - 夹一只检查关节附近最厚处；肉应能轻松从骨边松开。若仍紧实，继续焖5–10分钟。
+  - 开盖转中火收汁，持续翻动到汤汁能薄薄挂在鸭翅表面，但不要收干发咸。
+  - 孩子份先盛出，成人彻底拆骨、去硬软骨并检查碎骨后再剪小。
+  - 完成提示：鸭翅酱色均匀、肉软而不散，锅底仍留少量可流动的酱汁。
+child_serving: 彻底去骨并检查碎骨和硬软骨，只给软肉；少带浓汁。
+adult_finish: 孩子份盛出后，成人可另加辣椒油或辣椒粉。
+substitutions: []
