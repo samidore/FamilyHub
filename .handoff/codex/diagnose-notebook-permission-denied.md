@@ -113,3 +113,15 @@ Append exactly one `## Result` with:
 Do not modify production notebook data. Do not deploy rules. Do not implement the repair in this task.
 
 Commit and push only the appended Result (and no private diagnostic artifacts) so ChatGPT can inspect it.
+
+## Result
+
+Status: BLOCKED
+
+- Production rules comparison: the authenticated read from `family-hub-a9ade-default-rtdb` returned notebook rules structurally identical to `database.rules.json`, including `skipEvents`. The full rules payload differs in non-notebook content. No deployed commit/version metadata was exposed by the rules endpoint, so the deployed repository version is indeterminate.
+- Production notebook compatibility: the confirmed production household is `family-household`. The raw notebook contains 3 boards, 21 items, 3 membership roots, 3 comments, 18 completion events, 1 skip event, and settings. `normalizeNotebookState(raw)` changes only the missing `/inbox` container; it does not add/remove/trim/compact records or change any persisted item, recurrence, board, membership, comment, completion-event, skip-event, or immutable actor value. The added empty `inbox` is accepted by the current rules.
+- Root cause: not proven. A temporary diagnostic emulator reproduction using canonical production-shaped schema passed both a full notebook-root reorder write and an atomic scheduled skip write. The scheduled skip rule correctly evaluates the pre-write `root` snapshot, so the old occurrence date in the new skip event is not rejected by that rule. No exact failing production `.validate` path was reproduced.
+- Generic transaction risk: it remains an architectural coupling point because every transaction revalidates the normalized notebook tree, but this investigation found no failure for canonical state and no normalization incompatibility. The current evidence does not justify a targeted-write redesign or a data/rules migration.
+- Recommended repair scope: first capture the exact failing production request with the real authenticated Firebase ID token/session (or a reproducible client trace) and compare its auth UID/email/member record and transaction payload. If the incident recurs, retain/add root-transaction regression coverage for reorder and recurrence advancement plus skip-event atomicity. Do not change production data, rules, or repository code based on the current evidence.
+- Validation/reproduction evidence: `pnpm run test:rules` passed all 25 existing rules tests when run with the available JRE at `C:\Program Files (x86)\Steam\steamapps\common\ProjectZomboid\jre64\bin\java.exe`; the temporary root-write diagnostic passed 2/2 tests and was removed. The exact live end-user transaction could not be run because no Firebase Auth end-user ID token/session is available to this CLI environment.
+- Remaining blocker: without the affected user's Firebase Auth ID token/session and exact failing request, the actual production failing layer cannot be identified beyond the ruled-out deployed notebook-rules drift, normalization mismatch, and canonical root-transaction validation failure.
