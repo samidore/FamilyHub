@@ -24,6 +24,12 @@
 .notebook-item--recurring-near { border-left: 4px solid #5d876c; }
 .notebook-item--recurring-later { border-left: 4px solid #a4aca7; }
 .notebook-item--recurring-unknown { border-left: 4px solid #b8afa4; }
+.notebook-recurring-actions { display: flex; flex-wrap: wrap; gap: .45rem; justify-content: flex-end; }
+.notebook-item--skipped { border-left: 4px solid #8b7b68; }
+@media (max-width: 420px) {
+  .notebook-recurring-actions { justify-content: stretch; }
+  .notebook-recurring-actions button { flex: 1 1 8rem; }
+}
 .recurrence-panel { display: grid; gap: .75rem; border: 1px solid #d7cec1; border-radius: 12px; padding: .75rem; background: #fffdfa; }
 .recurrence-panel[hidden], #notebook-weekday-fields[hidden], #notebook-due-date-label[hidden] { display: none; }
 .notebook-weekday-list { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .35rem; }

@@ -23,6 +23,9 @@ export function deleteNotebookItem(state: NotebookState, itemId: string): Notebo
   for (const [eventId, event] of Object.entries(next.completionEvents)) {
     if (event.itemId === itemId) delete next.completionEvents[eventId];
   }
+  for (const [eventId, event] of Object.entries(next.skipEvents)) {
+    if (event.itemId === itemId) delete next.skipEvents[eventId];
+  }
 
   if (existing.status === 'active') {
     for (const boardId of affectedBoards) {

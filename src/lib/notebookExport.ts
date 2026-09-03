@@ -10,6 +10,7 @@ export interface NotebookExport {
   memberships: NotebookState['memberships'];
   comments: NotebookState['comments'];
   completionEvents: NotebookState['completionEvents'];
+  skipEvents: NotebookState['skipEvents'];
   inbox: NotebookState['inbox'];
   settings: NotebookState['settings'];
 }
@@ -25,6 +26,7 @@ export function createNotebookExport(state: NotebookState, exportedAt = Date.now
     memberships: snapshot.memberships,
     comments: snapshot.comments,
     completionEvents: snapshot.completionEvents,
+    skipEvents: snapshot.skipEvents,
     inbox: snapshot.inbox,
     settings: snapshot.settings,
   };

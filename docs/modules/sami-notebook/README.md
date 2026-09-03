@@ -276,6 +276,8 @@ For day/month/year schedules, `startDate` is the calendar anchor. Month/year adv
 
 Completing a scheduled recurrence advances exactly one scheduled occurrence. Completion timing does not reset the cadence and does not auto-skip missed occurrences. Example: if a Monday occurrence is still pending on Friday and the user completes it, the item advances to the next occurrence in the schedule even if that next occurrence is already overdue. Repeated completion is required to catch up, so missed work never silently disappears.
 
+The active scheduled card also offers `跳过本次`. Skipping advances exactly one scheduled occurrence without recording completion; it does not reset or re-anchor the cadence, and it never auto-catches up multiple missed occurrences. A scheduled skip is recorded separately from completion history. After-completion recurrence has no skip action.
+
 #### After completion
 
 Rough maintenance cadence is relative to actual completion:
@@ -329,6 +331,8 @@ CompletionEvent
 `boardIds[]` snapshots the item's retained ordinary memberships at completion time. These IDs are history/fallback metadata; they do not cause recurring history rows to render in those ordinary Boards.
 
 New completion events persist `completedByName`. Existing legacy events may omit it and render as `呜哇` without migration.
+
+Scheduled skip events persist the skipped `dueDate`, `skippedAt`, and `skippedByName` snapshot separately from completion events. They render as distinct `跳过` history rows and do not affect completion counts or status.
 
 Comments remain attached to the live recurring item, not duplicated into each event.
 
@@ -503,6 +507,7 @@ NotebookExport
 - memberships
 - comments
 - completionEvents
+- skipEvents
 - inbox
 - settings
 ```

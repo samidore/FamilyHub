@@ -15,7 +15,7 @@ import {
   NOTEBOOK_RECURRING_GROUPS,
   isNotebookCompletionInGrace,
   notebookRecurringActiveItems,
-  notebookRecurringCompletionEntries,
+  notebookRecurringHistoryEntries,
   notebookRecurringGroupKey,
   notebookRecurringRemainingDays,
   notebookSectionEntries,
@@ -54,7 +54,7 @@ function commentHtml(comment: NotebookComment) {
   return `<li class="notebook-comment" data-comment-id="${e(comment.id)}"><div class="notebook-comment__meta"><strong>${e(comment.authorName)}</strong><span>${e(fmt(comment.createdAt))}${comment.updatedAt ? ' · 已编辑' : ''}</span></div><p>${e(comment.body)}</p><div class="notebook-inline-actions"><button type="button" class="quiet-button" data-edit-comment="${e(comment.id)}">编辑</button><button type="button" class="quiet-button" data-delete-comment="${e(comment.id)}">删除</button></div></li>`;
 }
 
-function personIconHtml(name: string, action: '发起' | '完成', compact = false) {
+function personIconHtml(name: string, action: '发起' | '完成' | '跳过', compact = false) {
   const e = escapeNotebookHtml;
   const kind = notebookAuthorIconKind(name);
   const compactClass = compact ? ' notebook-completer-icon' : '';
@@ -76,6 +76,10 @@ function authorIconHtml(item: NotebookItem) {
 function completionMetaHtml(record: { completedAt: number; completedByName?: string }) {
   const completedByName = notebookCompletedByName(record);
   return `<span style="display:inline-flex;align-items:center;gap:.3rem">${personIconHtml(completedByName, '完成', true)}<span>完成 ${escapeNotebookHtml(fmt(record.completedAt))}</span></span>`;
+}
+
+function skipMetaHtml(record: { skippedAt: number; skippedByName: string; dueDate: string }) {
+  return `<span style="display:inline-flex;align-items:center;gap:.3rem">${personIconHtml(record.skippedByName, '跳过', true)}<span>跳过 ${escapeNotebookHtml(record.dueDate)} · ${escapeNotebookHtml(fmt(record.skippedAt))}</span></span>`;
 }
 
 function recurrenceText(item: NotebookItem) {
@@ -172,7 +176,9 @@ function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | nu
   const media = mediaDetails(item);
   const corner = cornerStatus(state, item, today, now, showQueueAge, recurringRemainingDays);
   const statusControl = item.recurrence
-    ? `<div class="notebook-recurring-status"><span>未完成</span><button type="button" class="secondary-button" data-complete-recurring="${e(item.id)}">完成本次</button></div>`
+    ? isScheduledNotebookRecurrence(item.recurrence)
+      ? `<div class="notebook-recurring-status"><span>未完成</span><div class="notebook-recurring-actions"><button type="button" class="secondary-button" aria-label="完成本次" data-complete-recurring="${e(item.id)}">完成</button><button type="button" class="quiet-button" data-skip-recurring="${e(item.id)}" data-skip-due-date="${e(item.dueDate ?? '')}">跳过本次</button></div></div>`
+      : `<div class="notebook-recurring-status"><span>未完成</span><button type="button" class="secondary-button" data-complete-recurring="${e(item.id)}">完成本次</button></div>`
     : item.status === 'active'
       ? `<div class="notebook-completion-control"><span>未完成</span><button type="button" class="secondary-button" data-complete-item="${e(item.id)}">✓ 完成</button></div>`
       : isNotebookCompletionInGrace(item, now)
@@ -189,8 +195,11 @@ function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | nu
 
 function historyHtml(entry: NotebookSectionEntry) {
   const e = escapeNotebookHtml;
-  if (entry.kind !== 'recurrence' || !entry.event) return '';
-  return `<article class="notebook-item notebook-item--history" data-completion-event-id="${e(entry.event.id)}"><div class="notebook-item__topline"><div class="notebook-item__heading">${authorIconHtml(entry.item)}<strong>${e(entry.item.title)}</strong></div><span class="notebook-history-badge">循环记录</span></div><div class="notebook-item__meta">${completionMetaHtml(entry.event)}</div></article>`;
+  if (entry.kind !== 'recurrence' || (!entry.event && !entry.skipEvent)) return '';
+  if (entry.skipEvent) return `<article class="notebook-item notebook-item--history notebook-item--skipped" data-skip-event-id="${e(entry.skipEvent.id)}"><div class="notebook-item__topline"><div class="notebook-item__heading">${authorIconHtml(entry.item)}<strong>${e(entry.item.title)}</strong></div><span class="notebook-history-badge">跳过</span></div><div class="notebook-item__meta">${skipMetaHtml(entry.skipEvent)}</div></article>`;
+  const event = entry.event;
+  if (!event) return '';
+  return `<article class="notebook-item notebook-item--history" data-completion-event-id="${e(event.id)}"><div class="notebook-item__topline"><div class="notebook-item__heading">${authorIconHtml(entry.item)}<strong>${e(entry.item.title)}</strong></div><span class="notebook-history-badge">完成记录</span></div><div class="notebook-item__meta">${completionMetaHtml(event)}</div></article>`;
 }
 
 function sectionEntryHtml(state: NotebookState, entry: NotebookSectionEntry, boardId: string, displayName: string | null, filter: string, now: number, today: string, showQueueAge: boolean) {
@@ -207,8 +216,8 @@ function recurringBoardHtml(state: NotebookState, displayName: string | null, no
     if (!items.length) return '';
     return `<section class="notebook-recurring-group notebook-recurring-group--${group.key}" data-recurring-group="${group.key}"><h3>${group.label} <span>${items.length}</span></h3><div class="notebook-item-list">${items.map((item) => itemHtml(state, item, null, false, displayName, false, now, today, false, notebookRecurringRemainingDays(item, today))).join('')}</div></section>`;
   }).join('');
-  const history = filter === 'active' ? [] : notebookRecurringCompletionEntries(state);
-  const historyHtmlBlock = history.length ? `<section class="notebook-recurring-history"><h3>完成记录 <span>${history.length}</span></h3><div class="notebook-item-list">${history.map(historyHtml).join('')}</div></section>` : '';
+  const history = filter === 'active' ? [] : notebookRecurringHistoryEntries(state);
+  const historyHtmlBlock = history.length ? `<section class="notebook-recurring-history"><h3>循环记录 <span>${history.length}</span></h3><div class="notebook-item-list">${history.map(historyHtml).join('')}</div></section>` : '';
   const count = active.length + history.length;
   const body = groups || historyHtmlBlock ? `${groups}${historyHtmlBlock}` : '<p class="notebook-empty">这个筛选下没有反复事项。</p>';
   return `<section class="notebook-board notebook-board--recurring" data-recurring-board><header class="notebook-board__header"><div class="notebook-board__heading"><p class="eyebrow">Recurring</p><h2>反复干</h2><p>按剩余日数分组；组内按优先级和剩余天数自动排序。</p></div><span class="notebook-board__count notebook-board__count--recurring">${count}</span></header><div class="notebook-board__body">${body}</div></section>`;

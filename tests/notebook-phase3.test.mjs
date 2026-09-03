@@ -8,7 +8,9 @@ import {
   completeRecurringNotebookItem,
   notebookCompletedEntriesForSection,
   notebookRecurringActiveItems,
+  notebookRecurringHistoryEntries,
   notebookSectionEntries,
+  skipScheduledRecurringNotebookItem,
   setNotebookItemBoards,
   setNotebookItemPriority,
   setNotebookItemStatus,
@@ -48,6 +50,29 @@ test('scheduled recurrence supports every N weeks, weekdays, and does not skip o
   state = addNotebookItem(state, { ...item('repeat', 'urgent', 2), dueDate: '2026-09-07', recurrence }, ['a', 'b']);
   state = completeRecurringNotebookItem(state, 'repeat', 'event-1', 100, '2026-09-25');
   assert.equal(state.items.repeat.dueDate, '2026-09-10');
+});
+
+test('scheduled recurrence can skip exactly one occurrence with distinct history and no completion', () => {
+  const recurrence = { kind: 'scheduled', startDate: '2026-09-07', unit: 'week', interval: 1, weekdays: ['mon', 'thu'] };
+  let state = baseState();
+  state = addNotebookItem(state, { ...item('skip-me'), dueDate: '2026-09-10', recurrence }, ['a']);
+  state = skipScheduledRecurringNotebookItem(state, 'skip-me', 'skip-1', 100, '2026-09-10', 'Sami');
+  assert.equal(state.items['skip-me'].dueDate, '2026-09-14');
+  assert.equal(state.items['skip-me'].status, 'active');
+  assert.equal(state.completionEvents['skip-1'], undefined);
+  assert.deepEqual(state.skipEvents['skip-1'], { id: 'skip-1', itemId: 'skip-me', skippedAt: 100, skippedByName: 'Sami', dueDate: '2026-09-10', priority: 'normal', boardIds: ['a'] });
+  assert.equal(notebookRecurringHistoryEntries(state)[0].skipEvent.id, 'skip-1');
+  assert.match(renderNotebookBoards(state, 'Sami', new Date(2026, 8, 10, 12).getTime()), /跳过本次/);
+  assert.doesNotMatch(renderNotebookBoards({ ...state, settings: { viewFilter: 'completed' } }, 'Sami'), /完成记录/);
+});
+
+test('scheduled skip does not apply to after-completion or legacy recurrence', () => {
+  let state = baseState();
+  state = addNotebookItem(state, { ...item('after'), dueDate: '2026-09-10', recurrence: { kind: 'afterCompletion', intervalDays: 7 } }, ['a']);
+  state = addNotebookItem(state, { ...item('legacy'), dueDate: '2026-09-10', recurrence: { unit: 'week', interval: 1 } }, ['a']);
+  assert.equal(skipScheduledRecurringNotebookItem(state, 'after', 's1', 100, '2026-09-10', 'Sami'), state);
+  assert.equal(skipScheduledRecurringNotebookItem(state, 'legacy', 's2', 100, '2026-09-10', 'Sami'), state);
+  assert.doesNotMatch(renderNotebookBoards(state, 'Sami', new Date(2026, 8, 10, 12).getTime()), /data-skip-recurring="after"/);
 });
 
 test('after-completion recurrence restarts from actual completion date and stays active', () => {

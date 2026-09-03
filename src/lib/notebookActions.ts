@@ -4,11 +4,13 @@ import {
   normalizeNotebookState,
   type NotebookBoard,
   type NotebookCompletionEvent,
+  type NotebookSkipEvent,
   type NotebookItem,
   type NotebookPriority,
   type NotebookRecurrence,
   type NotebookState,
   type NotebookViewFilter,
+  isScheduledNotebookRecurrence,
 } from './notebookDomain.ts';
 import {
   advanceNotebookDueDate as advanceNotebookDueDateForRecurrence,
@@ -38,6 +40,7 @@ export interface NotebookSectionEntry {
   item: NotebookItem;
   completedAt?: number;
   event?: NotebookCompletionEvent;
+  skipEvent?: NotebookSkipEvent;
 }
 
 export type NotebookBoardLayoutEntry =
@@ -231,6 +234,15 @@ export function notebookRecurringCompletionEntries(state: NotebookState): Notebo
     .map((event) => ({ kind: 'recurrence', item: state.items[event.itemId], completedAt: event.completedAt, event }));
 }
 
+export function notebookRecurringHistoryEntries(state: NotebookState): NotebookSectionEntry[] {
+  const completed = notebookRecurringCompletionEntries(state);
+  const skipped = Object.values(state.skipEvents)
+    .filter((event) => Boolean(state.items[event.itemId]))
+    .sort((left, right) => right.skippedAt - left.skippedAt || left.id.localeCompare(right.id))
+    .map((event): NotebookSectionEntry => ({ kind: 'recurrence', item: state.items[event.itemId], completedAt: event.skippedAt, skipEvent: event }));
+  return [...completed, ...skipped].sort((left, right) => (right.completedAt ?? 0) - (left.completedAt ?? 0) || (left.event?.id ?? left.skipEvent?.id ?? '').localeCompare(right.event?.id ?? right.skipEvent?.id ?? ''));
+}
+
 export function addNotebookItem(state: NotebookState, item: NotebookItem, boardIds: string[]): NotebookState {
   const next = cloneNotebookState(state);
   const validBoardIds = [...new Set(boardIds)].filter((boardId) => Boolean(next.boards[boardId]));
@@ -315,6 +327,19 @@ export function completeRecurringNotebookItem(state: NotebookState, itemId: stri
   const next = cloneNotebookState(state);
   next.completionEvents[eventId] = { id: eventId, itemId, completedAt, priority: existing.priority, boardIds };
   next.items[itemId] = { ...existing, dueDate: nextDueDate, updatedAt: completedAt };
+  return normalizeNotebookState(next);
+}
+
+export function skipScheduledRecurringNotebookItem(state: NotebookState, itemId: string, eventId: string, skippedAt: number, dueDate: string, skippedByName: string): NotebookState {
+  const existing = state.items[itemId];
+  if (!existing || existing.status !== 'active' || !isScheduledNotebookRecurrence(existing.recurrence) || state.skipEvents[eventId] || !skippedByName.trim()) return state;
+  const boardIds = notebookBoardIdsForItem(state, itemId);
+  if (boardIds.length === 0 || existing.dueDate !== dueDate) return state;
+  const nextDueDate = nextNotebookRecurringDueDate(dueDate, existing.recurrence, dueDate);
+  if (!nextDueDate) return state;
+  const next = cloneNotebookState(state);
+  next.skipEvents[eventId] = { id: eventId, itemId, skippedAt, skippedByName: skippedByName.trim(), dueDate, priority: existing.priority, boardIds };
+  next.items[itemId] = { ...existing, dueDate: nextDueDate, updatedAt: skippedAt };
   return normalizeNotebookState(next);
 }
 

@@ -134,3 +134,14 @@ test('completion events snapshot the completing member while legacy events remai
   });
   await assertSucceeds(alice.ref(`${household}/notebook/completionEvents/legacy-event`).update({ priority: 'high' }));
 });
+
+test('scheduled skip events require the current occurrence and the member snapshot', async () => {
+  await resetWithMember();
+  const alice = google('alice', 'alice@gmail.com');
+  await alice.ref(`${household}/notebook/items/scheduled-skip`).set({ ...item, id: 'scheduled-skip', dueDate: '2026-09-10', recurrence: { kind: 'scheduled', startDate: '2026-09-07', unit: 'week', interval: 1, weekdays: ['mon', 'thu'] } });
+  const valid = { id: 'skip-1', itemId: 'scheduled-skip', skippedAt: 10, skippedByName: 'Sami', dueDate: '2026-09-10', priority: 'high', boardIds: ['todo'] };
+  await assertSucceeds(alice.ref(`${household}/notebook/skipEvents/skip-1`).set(valid));
+  await assertFails(alice.ref(`${household}/notebook/skipEvents/bad-date`).set({ ...valid, id: 'bad-date', dueDate: 'not-a-date' }));
+  await assertFails(alice.ref(`${household}/notebook/skipEvents/bad-actor`).set({ ...valid, id: 'bad-actor', skippedByName: 'Someone Else' }));
+  await assertFails(alice.ref(`${household}/notebook/skipEvents/bad-item`).set({ ...valid, id: 'bad-item', itemId: 'task-1' }));
+});

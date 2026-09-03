@@ -82,6 +82,16 @@ export interface NotebookCompletionEvent {
   boardIds: string[];
 }
 
+export interface NotebookSkipEvent {
+  id: string;
+  itemId: string;
+  skippedAt: number;
+  skippedByName: string;
+  dueDate: string;
+  priority: NotebookPriority;
+  boardIds: string[];
+}
+
 export interface NotebookInboxTicket {
   id: string;
   text: string;
@@ -100,6 +110,7 @@ export interface NotebookState {
   memberships: NotebookMemberships;
   comments: Record<string, NotebookComment>;
   completionEvents: Record<string, NotebookCompletionEvent>;
+  skipEvents: Record<string, NotebookSkipEvent>;
   inbox: Record<string, NotebookInboxTicket>;
   settings: NotebookSettings;
 }
@@ -276,6 +287,15 @@ function normalizeCompletionEvent(id: string, value: unknown): NotebookCompletio
   };
 }
 
+function normalizeSkipEvent(id: string, value: unknown): NotebookSkipEvent | null {
+  if (!isRecord(value) || value.id !== id || !nonEmptyString(value.itemId) || !finitePositive(value.skippedAt) || !isNotebookCalendarDate(value.dueDate)) return null;
+  const skippedByName = normalizeMemberDisplayName(value.skippedByName);
+  if (!skippedByName || !priorities.has(value.priority as NotebookPriority) || !Array.isArray(value.boardIds)) return null;
+  const boardIds = [...new Set(value.boardIds.filter(nonEmptyString).map((boardId) => boardId.trim()))];
+  if (boardIds.length !== value.boardIds.length || boardIds.length === 0) return null;
+  return { id, itemId: value.itemId.trim(), skippedAt: value.skippedAt, skippedByName, dueDate: value.dueDate, priority: value.priority as NotebookPriority, boardIds };
+}
+
 function normalizeInboxTicket(id: string, value: unknown): NotebookInboxTicket | null {
   if (!isRecord(value) || value.id !== id || !nonEmptyString(value.text) || !finitePositive(value.createdAt) || !finitePositive(value.updatedAt)) return null;
   return { id, text: value.text.trim(), createdAt: value.createdAt, updatedAt: value.updatedAt };
@@ -313,6 +333,7 @@ export function defaultNotebookState(): NotebookState {
     memberships: {},
     comments: {},
     completionEvents: {},
+    skipEvents: {},
     inbox: {},
     settings: { viewFilter: 'active' },
   };
@@ -324,6 +345,7 @@ export function normalizeNotebookState(value: unknown): NotebookState {
   const items = normalizeRecord(raw.items, normalizeItem);
   const comments = normalizeRecord(raw.comments, normalizeComment);
   const completionEvents = normalizeRecord(raw.completionEvents, normalizeCompletionEvent);
+  const skipEvents = normalizeRecord(raw.skipEvents, normalizeSkipEvent);
   const inbox = normalizeRecord(raw.inbox, normalizeInboxTicket);
   const rawSettings = isRecord(raw.settings) ? raw.settings : {};
   const viewFilter = typeof rawSettings.viewFilter === 'string' && viewFilters.has(rawSettings.viewFilter as NotebookViewFilter)
@@ -336,6 +358,7 @@ export function normalizeNotebookState(value: unknown): NotebookState {
     memberships: normalizeMemberships(raw.memberships, boards, items),
     comments: Object.fromEntries(Object.entries(comments).filter(([, comment]) => Boolean(items[comment.itemId]))),
     completionEvents,
+    skipEvents,
     inbox,
     settings: { viewFilter, ...(recurringBoardOrder !== undefined ? { recurringBoardOrder } : {}) },
   };

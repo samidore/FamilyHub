@@ -9,7 +9,7 @@ const item = { id: 'task-1', title: 'Call contractor', details: '', priority: 'h
 
 test('notebook defaults are empty shared state with Active filter', () => {
   assert.deepEqual(defaultNotebookState(), {
-    boards: {}, items: {}, memberships: {}, comments: {}, completionEvents: {}, inbox: {}, settings: { viewFilter: 'active' },
+    boards: {}, items: {}, memberships: {}, comments: {}, completionEvents: {}, skipEvents: {}, inbox: {}, settings: { viewFilter: 'active' },
   });
 });
 

@@ -12,7 +12,7 @@ import {
   type NotebookState,
   type NotebookWeekday,
 } from './notebookDomain.ts';
-import { addNotebookItem, completeRecurringNotebookItem, notebookItemsForSection, orderedNotebookBoards, reorderNotebookSection, setNotebookItemBoards, setNotebookItemPriority, setNotebookItemStatus } from './notebookActions.ts';
+import { addNotebookItem, completeRecurringNotebookItem, notebookItemsForSection, orderedNotebookBoards, reorderNotebookSection, setNotebookItemBoards, setNotebookItemPriority, setNotebookItemStatus, skipScheduledRecurringNotebookItem } from './notebookActions.ts';
 import { firstNotebookScheduledDueDate } from './notebookRecurrence.ts';
 import { deleteNotebookItem } from './notebookItemDelete.ts';
 import { renderNotebookBoardChoices } from './notebookView.ts';
@@ -175,6 +175,16 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
       const eventId = makeId('completion');
       const time = stamp();
       void context.mutate('完成本次', (current) => completeRecurringNotebookItem(current, itemId, eventId, time, localDate()));
+      return;
+    }
+    const skip = target.closest('[data-skip-recurring]') as HTMLButtonElement | null;
+    if (skip?.dataset.skipRecurring) {
+      const itemId = skip.dataset.skipRecurring;
+      const dueDate = skip.dataset.skipDueDate ?? '';
+      const skippedByName = context.repository.getCurrentMemberDisplayName();
+      if (!skippedByName) { context.status('当前成员没有可用的显示名。', true); return; }
+      const eventId = makeId('skip');
+      void context.mutate('跳过本次', (current) => skipScheduledRecurringNotebookItem(current, itemId, eventId, stamp(), dueDate, skippedByName));
       return;
     }
     const complete = target.closest('[data-complete-item]') as HTMLButtonElement | null;
