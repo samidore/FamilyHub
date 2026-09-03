@@ -4,17 +4,16 @@ import test from 'node:test';
 
 const trips = JSON.parse(await readFile(new URL('../src/data/day-trips.json', import.meta.url), 'utf8'));
 
-const ALL_ACTIVITIES = ['woody-walk', 'playground', 'no-playground', 'indoor-visit', 'animals', 'water-play', 'pick-your-own'];
+const ALL_ACTIVITIES = ['woody-walk', 'playground', 'indoor-visit', 'animals', 'water-play', 'pick-your-own'];
 const CORE = {
   sunny: ALL_ACTIVITIES,
   rain: ['indoor-visit', 'animals'],
   heat: ['woody-walk', 'playground', 'indoor-visit', 'animals', 'water-play'],
-  'post-rain': ['woody-walk', 'playground', 'no-playground', 'animals'],
+  'post-rain': ['woody-walk', 'playground', 'animals'],
 };
 const TARGETS = {
   'woody-walk': [[20, 5], [40, 10]],
   playground: [[20, 3]],
-  'no-playground': [[20, 3], [40, 5]],
   'indoor-visit': [[20, 3], [40, 5]],
   animals: [[20, 3], [40, 5]],
   'water-play': [[20, 3], [40, 5]],
@@ -28,9 +27,6 @@ function matches(trip, driveMinutes, weather, activity) {
   const surviving = trip.locations.filter((location) => weather === 'sunny' || !location.notFor.includes(weather));
   if (!surviving.length) return false;
 
-  if (activity === 'no-playground') {
-    return trip.locations.every((location) => !location.tags.includes('playground'));
-  }
   return surviving.some((location) => location.tags.includes(activity));
 }
 
@@ -48,13 +44,24 @@ test('Day Trips core coverage meets activity-specific nearby targets', () => {
   }
 });
 
-test('Day Trips keeps no-playground derived instead of storing it as a location tag', () => {
+test('Day Trips stores explicit bicycle access for every location', () => {
   for (const trip of trips) {
     assert.ok(trip.locations.length >= 1, `${trip.id} must keep at least one coarse location`);
     for (const location of trip.locations) {
+      assert.ok(['prohibited', 'allowed', 'unknown'].includes(location.bicycleAccess), `${trip.id}/${location.name} has invalid bicycle access`);
       assert.equal(location.tags.includes('no-playground'), false, `${trip.id}/${location.name} stores derived no-playground`);
     }
   }
+});
+
+test('Great Swamp WOC is a concrete, pet-cautious bike-free record', () => {
+  const woc = trips.filter((trip) => trip.id === 'great-swamp-wildlife-observation-center');
+  assert.equal(woc.length, 1);
+  assert.equal(woc[0].driveMinutes, null);
+  assert.equal(woc[0].locations[0].bicycleAccess, 'prohibited');
+  assert.equal(woc[0].locations[0].tags.includes('woody-walk'), false);
+  assert.match(woc[0].notice, /宠物/);
+  assert.match(woc[0].googleMapsUrl, /220\+Long\+Hill\+Road/);
 });
 
 test('Day Trips uses practical parking clusters for the audited large parks', () => {
@@ -105,7 +112,7 @@ test('Day Trips nests aquarium under the 玩水 activity and keeps a useful aqua
 test('Day Trips keeps unknown drive times explicitly unknown and provenance-aligned', () => {
   for (const trip of trips) {
     assert.equal(trip.driveTimeProvenance.status, trip.driveMinutes === null ? 'unknown' : 'verified');
-    assert.equal(trip.driveTimeProvenance.checkedDate, '2026-08-30');
+    assert.equal(trip.driveTimeProvenance.checkedDate, trip.id === 'great-swamp-wildlife-observation-center' ? '2026-09-03' : '2026-08-30');
     assert.equal(trip.driveTimeProvenance.primarySource, 'Google Maps');
   }
 });

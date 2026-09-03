@@ -1,6 +1,7 @@
 export type DayTripEnvironment = 'indoor' | 'outdoor';
 export type DayTripWeatherExclusion = 'rain' | 'heat' | 'post-rain';
 export type DayTripActivityTag = 'woody-walk' | 'playground' | 'indoor-visit' | 'animals' | 'water-play' | 'aquarium' | 'pick-your-own';
+export type DayTripBicycleAccess = 'prohibited' | 'allowed' | 'unknown';
 export type DayTripHours = 'always' | 'unknown' | Record<DayTripWeekday, [string, string][]>;
 export type DayTripWeekday = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
@@ -10,6 +11,7 @@ export interface DayTripLocation {
   tags: DayTripActivityTag[];
   notFor: DayTripWeatherExclusion[];
   stroller: boolean;
+  bicycleAccess: DayTripBicycleAccess;
   hours: DayTripHours;
 }
 

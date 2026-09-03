@@ -8,7 +8,6 @@ import { dayTrips } from '../data/catalog';
 const activityOptions = [
   ['woody-walk', '森系遛猫'],
   ['playground', '麦攀爬'],
-  ['no-playground', '麦不上天'],
   ['indoor-visit', '室内赶鸡'],
   ['animals', '动物园'],
   ['water-play', '玩水'],
@@ -59,13 +58,17 @@ const tripCount = dayTrips.length;
         </select>
       </label>
 
-      <label>
-        <span>Stroller</span>
-        <select id="trip-stroller">
-          <option value="">不限</option>
-          <option value="yes">Stroller 可用</option>
-        </select>
-      </label>
+      <fieldset class="trip-constraint-field">
+        <legend>限制</legend>
+        <div class="trip-constraint-buttons">
+          <button type="button" data-trip-constraint="noPlayground" aria-pressed="false">麦不上天</button>
+          <button type="button" data-trip-constraint="bicycleFree" aria-pressed="false">步道无自行车</button>
+          <button type="button" data-trip-constraint="stroller" aria-pressed="false">Stroller 可用</button>
+        </div>
+        <input id="trip-no-playground" type="hidden" value="" data-default="" />
+        <input id="trip-bicycle-free" type="hidden" value="" data-default="" />
+        <input id="trip-stroller" type="hidden" value="" data-default="" />
+      </fieldset>
 
       <div class="trip-toggle-field">
         <span class="trip-toggle-field__label">营业状态</span>
@@ -109,6 +112,7 @@ const tripCount = dayTrips.length;
     import { bindListState, clearListState, restoreListState, writeListState } from '../lib/listState';
     import { mountDayTripInteractionUi } from '../lib/dayTripInteractionUi.ts';
     import { compareDayTripReactionPriority, type DayTripReactionSummary } from '../lib/dayTripInteractions.ts';
+    import { matchesDayTripActivities } from '../lib/dayTripFiltering.mjs';
 
     type Hours = 'always' | 'unknown' | Record<string, [string, string][]>;
     type TripLocation = {
@@ -120,7 +124,7 @@ const tripCount = dayTrips.length;
       hours: Hours;
     };
 
-    const activityIds = ['woody-walk', 'playground', 'no-playground', 'indoor-visit', 'animals', 'water-play', 'pick-your-own'] as const;
+    const activityIds = ['woody-walk', 'playground', 'indoor-visit', 'animals', 'water-play', 'pick-your-own'] as const;
     const cards = [...document.querySelectorAll<HTMLElement>('[data-destination]')];
     const activityButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-trip-activity]')];
     const openNowButton = document.querySelector<HTMLButtonElement>('#trip-open-now-button')!;
@@ -133,7 +137,9 @@ const tripCount = dayTrips.length;
       weather: document.querySelector<HTMLSelectElement>('#trip-weather')!,
       drive: document.querySelector<HTMLSelectElement>('#trip-drive')!,
       environment: document.querySelector<HTMLSelectElement>('#trip-environment')!,
-      stroller: document.querySelector<HTMLSelectElement>('#trip-stroller')!,
+      noPlayground: document.querySelector<HTMLInputElement>('#trip-no-playground')!,
+      bicycleFree: document.querySelector<HTMLInputElement>('#trip-bicycle-free')!,
+      stroller: document.querySelector<HTMLInputElement>('#trip-stroller')!,
       open: document.querySelector<HTMLInputElement>('#trip-open-now')!,
       activities: document.querySelector<HTMLInputElement>('#trip-activities')!,
     };
@@ -188,6 +194,8 @@ const tripCount = dayTrips.length;
     };
 
     const syncOpenNowButton = () => openNowButton.setAttribute('aria-pressed', controls.open.value === '1' ? 'true' : 'false');
+    const constraintButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-trip-constraint]')];
+    const syncConstraintButtons = () => constraintButtons.forEach((button) => button.setAttribute('aria-pressed', controls[button.dataset.tripConstraint as keyof typeof controls].value === '1' ? 'true' : 'false'));
 
     const updateHours = () => {
       const now = new Date();
@@ -220,16 +228,15 @@ const tripCount = dayTrips.length;
         if (selected.size === 0) return false;
 
         const originalLocations = locationsFor(card);
-        let surviving = originalLocations.filter((location) => controls.weather.value === 'sunny' || !location.notFor.includes(controls.weather.value));
-
-        if (controls.environment.value) surviving = surviving.filter((location) => location.environment === controls.environment.value);
-        if (controls.stroller.value === 'yes') surviving = surviving.filter((location) => location.stroller);
-        if (controls.open.value === '1') surviving = surviving.filter((location) => isOpenForThirtyMinutes(location.hours, now));
-        if (!surviving.length) return false;
-
-        const ordinaryTags = new Set(surviving.flatMap((location) => location.tags));
-        const noPlayground = card.dataset.noPlayground === 'true';
-        return [...selected].some((activity) => activity === 'no-playground' ? noPlayground : ordinaryTags.has(activity));
+        return matchesDayTripActivities(originalLocations, selected, {
+          weather: controls.weather.value,
+          environment: controls.environment.value,
+          stroller: controls.stroller.value === '1',
+          openNow: controls.open.value === '1',
+          bicycleFree: controls.bicycleFree.value === '1',
+          noPlayground: controls.noPlayground.value === '1',
+          isOpen: (hours: Hours) => isOpenForThirtyMinutes(hours, now),
+        });
       });
 
       const sorter = controls.sort.value === 'name'
@@ -251,6 +258,7 @@ const tripCount = dayTrips.length;
       empty.hidden = visible.length > 0;
       syncActivityButtons();
       syncOpenNowButton();
+      syncConstraintButtons();
     };
 
     const setActivityState = (selected: Set<string>) => {
@@ -263,7 +271,7 @@ const tripCount = dayTrips.length;
     syncOpenNowButton();
     updateHours();
 
-    if ([controls.drive, controls.environment, controls.stroller].some((control) => control.value) ||
+    if ([controls.drive, controls.environment, controls.noPlayground, controls.bicycleFree, controls.stroller].some((control) => control.value) ||
         controls.weather.value !== 'sunny' || controls.open.value || controls.activities.value !== 'all') {
       document.querySelector<HTMLDetailsElement>('.filter-disclosure')!.open = true;
     }
@@ -284,11 +292,17 @@ const tripCount = dayTrips.length;
       controls.open.value = controls.open.value === '1' ? '' : '1';
       controls.open.dispatchEvent(new Event('input', { bubbles: true }));
     });
+    constraintButtons.forEach((button) => button.addEventListener('click', () => {
+      const control = controls[button.dataset.tripConstraint as keyof typeof controls];
+      control.value = control.value === '1' ? '' : '1';
+      control.dispatchEvent(new Event('input', { bubbles: true }));
+    }));
 
     document.querySelector('#trip-clear')!.addEventListener('click', () => {
       clearListState(controls, render);
       syncActivityButtons();
       syncOpenNowButton();
+      syncConstraintButtons();
     });
 
     window.addEventListener('pageshow', () => {
@@ -315,7 +329,7 @@ const tripCount = dayTrips.length;
   <style>
     .trip-toggle-field { display: grid; gap: 5px; }
     .trip-toggle-field__label, .trip-activity-field legend { color: #4f5d55; font-size: 14px; font-weight: 700; }
-    .trip-toggle-button, .trip-small-button, .trip-activity-buttons button {
+    .trip-toggle-button, .trip-small-button, .trip-activity-buttons button, .trip-constraint-buttons button {
       min-height: 48px;
       border: 1px solid #b8c5bc;
       border-radius: 10px;
@@ -329,6 +343,11 @@ const tripCount = dayTrips.length;
       background: var(--accent);
       color: #fff;
     }
+    .trip-constraint-field { display: grid; gap: 9px; grid-column: 1 / -1; margin: 0; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: rgb(255 255 255 / 60%); }
+    .trip-constraint-field legend { color: #4f5d55; font-size: 14px; font-weight: 700; }
+    .trip-constraint-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+    .trip-constraint-buttons button { flex: 1 1 145px; padding: 8px 12px; }
+    .trip-constraint-buttons button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: #fff; }
     .trip-activity-field {
       display: grid;
       grid-column: 1 / -1;

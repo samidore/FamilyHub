@@ -19,7 +19,6 @@ const parkingPaymentLabels = {
 } as const;
 
 const originalTags = [...new Set(d.locations.flatMap((location) => location.tags))];
-const noPlayground = d.locations.every((location) => !location.tags.includes('playground'));
 const searchable = [
   d.name,
   ...(d.aliases ?? []),
@@ -28,7 +27,6 @@ const searchable = [
   ...d.locations.map((location) => location.name),
   ...originalTags,
   ...originalTags.map((tag) => activityLabels[tag]),
-  ...(noPlayground ? ['no-playground', '麦不上天'] : []),
 ].join(' ').toLocaleLowerCase();
 ---
 
@@ -40,7 +38,6 @@ const searchable = [
   data-drive={d.driveMinutes ?? ''}
   data-search={searchable}
   data-locations={JSON.stringify(d.locations)}
-  data-no-playground={noPlayground ? 'true' : 'false'}
   data-reaction-rank="2"
   data-reaction-ups="0"
 >
@@ -76,7 +73,6 @@ const searchable = [
   <div class="record-card__body">
     <div class="tags trip-tags" aria-label="活动标签">
       {originalTags.map((tag) => <span data-activity-tag={tag}>{activityLabels[tag]}</span>)}
-      {noPlayground && <span data-derived-activity="no-playground">麦不上天</span>}
     </div>
 
     <p class="trip-note">{d.note}</p>
