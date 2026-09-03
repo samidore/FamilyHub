@@ -56,3 +56,9 @@ The task is complete only if the Firebase emulator loads the rules and the full 
 4. Browser suite remains green; do not weaken tests.
 5. Final GitHub Actions run and deploy are green.
 6. Append one `## Result` with Status, validation outcome, and any unresolved blocker/deviation.
+
+## Result
+
+Status: BLOCKED
+Validation: `pnpm run test:unit` passed (186/186). `pnpm run verify` passed validation, check, build, audit, and unit tests, then stopped before browser tests because Firebase emulator startup could not spawn Java.
+Blocker: Java is unavailable locally; run `pnpm run test:rules` and the final `pnpm run verify` in CI or an environment with Java to complete the rules/browser/deploy gate.
