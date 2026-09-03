@@ -1,4 +1,5 @@
 import { readFile } from 'node:fs/promises';
+import assert from 'node:assert/strict';
 import test from 'node:test';
 import { assertFails, assertSucceeds, initializeTestEnvironment } from '@firebase/rules-unit-testing';
 
@@ -144,4 +145,46 @@ test('scheduled skip events require the current occurrence and the member snapsh
   await assertFails(alice.ref(`${household}/notebook/skipEvents/bad-date`).set({ ...valid, id: 'bad-date', dueDate: 'not-a-date' }));
   await assertFails(alice.ref(`${household}/notebook/skipEvents/bad-actor`).set({ ...valid, id: 'bad-actor', skippedByName: 'Someone Else' }));
   await assertFails(alice.ref(`${household}/notebook/skipEvents/bad-item`).set({ ...valid, id: 'bad-item', itemId: 'task-1' }));
+});
+
+test('root notebook writes preserve immutable historical skip events', async () => {
+  await resetWithMember();
+  const alice = google('alice', 'alice@gmail.com');
+  const scheduledItem = {
+    ...item,
+    id: 'scheduled-root',
+    dueDate: '2026-09-10',
+    recurrence: { kind: 'scheduled', startDate: '2026-09-07', unit: 'week', interval: 1, weekdays: ['mon', 'thu'] },
+  };
+  const firstSkip = { id: 'skip-root-1', itemId: 'scheduled-root', skippedAt: 10, skippedByName: 'Sami', dueDate: '2026-09-10', priority: 'high', boardIds: ['todo'] };
+  await assertSucceeds(alice.ref(`${household}/notebook/boards/todo`).set(board));
+  await assertSucceeds(alice.ref(`${household}/notebook/items/scheduled-root`).set(scheduledItem));
+  await assertSucceeds(alice.ref(`${household}/notebook/memberships/todo/scheduled-root`).set({ order: 0 }));
+  await assertSucceeds(alice.ref(`${household}/notebook/settings`).set({ viewFilter: 'active', recurringBoardOrder: 0 }));
+  const notebookRef = alice.ref(`${household}/notebook`);
+  const firstNotebook = { boards: { todo: board }, items: { 'scheduled-root': { ...scheduledItem, dueDate: '2026-09-14', updatedAt: 10 } }, memberships: { todo: { 'scheduled-root': { order: 0 } } }, skipEvents: { 'skip-root-1': firstSkip }, settings: { viewFilter: 'active', recurringBoardOrder: 0 } };
+  await assertSucceeds(notebookRef.set(firstNotebook));
+  assert.deepEqual((await alice.ref(`${household}/notebook/skipEvents/skip-root-1`).get()).val(), firstSkip);
+
+  const secondSkip = { id: 'skip-root-2', itemId: 'scheduled-root', skippedAt: 12, skippedByName: 'Sami', dueDate: '2026-09-10', priority: 'high', boardIds: ['todo'] };
+  const secondNotebook = { ...firstNotebook, boards: { todo: { ...board, order: 1, updatedAt: 11 } }, memberships: { todo: { 'scheduled-root': { order: 1 } } } };
+  await assertSucceeds(notebookRef.set(secondNotebook));
+  const thirdNotebook = { ...secondNotebook, items: { 'scheduled-root': { ...secondNotebook.items['scheduled-root'], dueDate: '2026-09-17', updatedAt: 12 } }, skipEvents: { 'skip-root-1': firstSkip, 'skip-root-2': { ...secondSkip, dueDate: '2026-09-14' } } };
+  await assertSucceeds(notebookRef.set(thirdNotebook));
+  assert.deepEqual((await alice.ref(`${household}/notebook/skipEvents/skip-root-1`).get()).val(), firstSkip);
+
+  const existingRef = alice.ref(`${household}/notebook/skipEvents/skip-root-1`);
+  for (const mutation of [
+    { skippedByName: 'Someone Else' },
+    { dueDate: '2026-09-11' },
+    { itemId: 'other-item' },
+    { skippedAt: 99 },
+    { priority: 'urgent' },
+    { boardIds: ['other-board'] },
+    { boardIds: ['todo', 'other-board'] },
+    { id: 'changed-id' },
+    { extra: true },
+  ]) {
+    await assertFails(existingRef.update(mutation));
+  }
 });
