@@ -324,6 +324,8 @@ a { color: inherit; }
 .meal-inventory-toggle[aria-pressed="true"] { border-color: var(--berry); background: var(--berry-soft); }
 .meal-inventory-controls output { min-width: 42px; color: var(--ink); text-align: center; font-variant-numeric: tabular-nums; }
 .meal-inventory-controls .button { min-height: 48px; padding: 4px 7px; white-space: nowrap; }
+.meal-builder-app button, .meal-builder-app input, .meal-builder-app select, .meal-builder-app summary { min-height: 48px; }
+#meal-inventory-list button, #meal-batch-date { min-height: 48px !important; }
 .meal-current-tools { position: relative; z-index: 51; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; scroll-margin-bottom: calc(140px + env(safe-area-inset-bottom, 0px)); }
 .meal-current-tools .note-box { flex: 1 1 250px; margin: 0; }
 .meal-checkout { margin-top: 28px; padding: 17px; border: 1px solid var(--berry); border-radius: 6px 18px 18px 6px; background: var(--berry-soft); }

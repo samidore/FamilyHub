@@ -49,7 +49,7 @@ async function inventoryItem(page: Page, id: string) {
 }
 
 async function setInventory(page: Page, ids: string[]) {
-  for (const id of ids) await (await inventoryItem(page, id)).locator('[data-inventory-toggle]').click();
+  for (const id of ids) { const action = (await inventoryItem(page, id)).locator('[data-stock-add], [data-stock-toggle]').first(); await action.click(); if (await action.getAttribute('data-stock-add')) await action.click(); }
 }
 
 async function startMeal(page: Page, ids: string[] = []) {
@@ -377,42 +377,31 @@ test('household inventory keeps counted half-steps, presence-only values, and vi
 
   const counted = page.locator('[data-inventory-item="chicken-breast"]');
   await expect(counted.locator('[data-inventory-value="chicken-breast"]')).toHaveText('0');
-  await expect(counted.locator('[data-inventory-toggle]')).toHaveText('开启');
-  await counted.locator('[data-inventory-toggle]').click();
+  await counted.locator('[data-stock-add]').first().click();
+  await counted.locator('[data-stock-add]').first().click();
   await expect(counted.locator('[data-inventory-value="chicken-breast"]')).toHaveText('1');
-  await counted.locator('[data-inventory-step="0.5"]').click();
+  await counted.locator('[data-stock-add]').first().click();
   await expect(counted.locator('[data-inventory-value="chicken-breast"]')).toHaveText('1.5');
   expect(await counted.locator('xpath=ancestor::details').getAttribute('open')).not.toBeNull();
 
   const presence = await inventoryItem(page, 'eggs');
   await expect(presence.locator('[data-inventory-step]')).toHaveCount(0);
-  await presence.locator('[data-inventory-toggle]').click();
-  await expect(presence.locator('[data-inventory-value="eggs"]')).not.toHaveText('0');
+  await presence.locator('[data-stock-toggle]').click();
+  await expect(presence.locator('[data-stock-toggle]')).toHaveText('有');
   for (const id of ['potato', 'peeled-shrimp']) await expect((await inventoryItem(page, id)).locator('[data-inventory-step]')).toHaveCount(0);
 });
 
-test('freezer counted rows expose the inventory toggle and keep storage targets separate', async ({ page }) => {
+test('inventory lifecycle exposes frozen thaw actions and direct frozen stock once', async ({ page }) => {
   await page.goto('meal-builder/');
-  await page.locator('[data-inventory-tab="freezer"]').click();
+  await page.locator('[data-inventory-tab="intake"]').click();
 
   const thawRequired = page.locator('[data-inventory-item="chicken-breast"]');
-  await expect(thawRequired.locator('[data-freezer-toggle]')).toHaveText('开启');
-  await expect(thawRequired.locator('[data-freezer-step]')).toHaveCount(2);
-  await thawRequired.locator('[data-freezer-toggle]').click();
-  await expect(thawRequired.locator('[data-inventory-value="freezer-chicken-breast"]')).toHaveText('1');
-  await expect(thawRequired.locator('[data-freezer-toggle]')).toHaveText('在库存');
-  await thawRequired.locator('[data-freezer-step="-0.5"]').click();
-  await expect(thawRequired.locator('[data-inventory-value="freezer-chicken-breast"]')).toHaveText('0.5');
-  await thawRequired.locator('[data-freezer-step="0.5"]').click();
-  await thawRequired.locator('[data-freezer-toggle]').click();
-  await expect(thawRequired.locator('[data-inventory-value="freezer-chicken-breast"]')).toHaveText('0');
+  await thawRequired.locator('[data-stock-add][data-stock-storage="freezer"]').click();
+  await page.locator('[data-inventory-tab="inventory"]').click();
+  await expect(thawRequired.locator('[data-start-thaw]')).toHaveCount(1);
 
   const direct = page.locator('[data-inventory-item="frozen-chicken-patties"]');
-  await expect(direct.locator('[data-inventory-toggle]')).toHaveText('开启');
-  await direct.locator('[data-inventory-toggle]').click();
-  await expect(direct.locator('[data-inventory-value="freezer-frozen-chicken-patties"]')).toHaveText('1');
-  await page.locator('[data-inventory-tab="inventory"]').click();
-  await expect(page.locator('[data-inventory-item="frozen-chicken-patties"] [data-inventory-value="frozen-chicken-patties"]')).toHaveText('1');
+  await expect(direct).toHaveCount(0);
 });
 
 test('turning a current-meal ingredient off does not change shared inventory', async ({ page }) => {
@@ -432,7 +421,7 @@ test('returning through inventory preserves exclusions and enables newly stocked
   await page.locator('[data-meal-ingredient-fold] > summary').click();
   await page.locator('[data-ingredient-id="whole-pork-tenderloin"]').click();
   await page.locator('#meal-back-inventory').click();
-  await (await inventoryItem(page, 'chicken-breast')).locator('[data-inventory-toggle]').click();
+  await (await inventoryItem(page, 'chicken-breast')).locator('[data-stock-add]').first().click();
   await page.locator('#meal-start-current').click();
   await page.locator('[data-meal-ingredient-fold] > summary').click();
   await expect(page.locator('[data-ingredient-id]:visible')).toHaveCount(2);
@@ -472,8 +461,8 @@ test('Recipe-scoped checkout consumes counted inventory while presence-only defa
   await expect(page.locator('#meal-builder-view')).toBeVisible();
   await page.locator('[data-step-target="inventory"]').click();
   await expect(page.locator('[data-inventory-value="tomato"]')).toHaveText('0');
-  await expect(page.locator('[data-inventory-value="eggs"]')).toHaveText('有');
-  await expect(page.locator('[data-inventory-value="noodles"]')).toHaveText('有');
+  await expect(page.locator('[data-inventory-item="eggs"] [data-stock-toggle]')).toHaveText('有');
+  await expect(page.locator('[data-inventory-item="noodles"] [data-stock-toggle]')).toHaveText('有');
 });
 
 test('inventory reset confirms while recipe reset is immediate and scoped to the meal', async ({ page }) => {

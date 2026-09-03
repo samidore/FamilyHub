@@ -117,7 +117,14 @@ export function normalizeFreezerBatches(value: unknown, freezerInventory: Invent
 }
 export function normalizeDiscardedStock(value: unknown): DiscardedStocks {
   if (!isRecord(value)) return {}; const result: DiscardedStocks = {};
-  for (const [id, raw] of Object.entries(value)) if (isRecord(raw) && typeof raw.ingredientId === 'string' && (raw.storage === 'inventory' || raw.storage === 'freezer') && typeof raw.discardedAt === 'number' && typeof raw.undoUntil === 'number' && raw.undoUntil > raw.discardedAt && ((typeof raw.quantity === 'number' && isPositiveCountedInventoryValue(raw.quantity)) || raw.presence === true)) result[id] = { ingredientId: raw.ingredientId, storage: raw.storage, ...(typeof raw.quantity === 'number' ? { quantity: roundCountedInventoryValue(raw.quantity) } : { presence: true }), ...(typeof raw.batchKey === 'string' ? { batchKey: raw.batchKey } : {}), discardedAt: raw.discardedAt, undoUntil: raw.undoUntil };
+  for (const [id, raw] of Object.entries(value)) {
+    if (!isRecord(raw)) continue;
+    const keys = Object.keys(raw); if (keys.some((key) => !['ingredientId', 'storage', 'quantity', 'presence', 'batchKey', 'discardedAt', 'undoUntil'].includes(key))) continue;
+    const hasQuantity = typeof raw.quantity === 'number' && isPositiveCountedInventoryValue(raw.quantity); const hasPresence = raw.presence === true;
+    const batchKey = raw.batchKey === undefined ? undefined : typeof raw.batchKey === 'string' && (raw.batchKey === UNKNOWN_FREEZER_BATCH_KEY || DATE_KEY_PATTERN.test(raw.batchKey)) ? raw.batchKey : null;
+    if (typeof raw.ingredientId !== 'string' || !raw.ingredientId || (raw.storage !== 'inventory' && raw.storage !== 'freezer') || typeof raw.discardedAt !== 'number' || !Number.isFinite(raw.discardedAt) || typeof raw.undoUntil !== 'number' || raw.undoUntil !== raw.discardedAt + STOCK_UNDO_WINDOW_MS || hasQuantity === hasPresence || batchKey === null) continue;
+    result[id] = { ingredientId: raw.ingredientId, storage: raw.storage, ...(hasQuantity ? { quantity: roundCountedInventoryValue(raw.quantity as number) } : { presence: true }), ...(batchKey === undefined ? {} : { batchKey }), discardedAt: raw.discardedAt, undoUntil: raw.undoUntil };
+  }
   return result;
 }
 export function cleanupDiscardedStock(state: HouseholdState, now = Date.now()): HouseholdState { return { ...state, discardedStock: Object.fromEntries(Object.entries(state.discardedStock).filter(([, record]) => record.undoUntil > now)) }; }
@@ -141,8 +148,8 @@ export function startThaw(state: HouseholdState, ingredientId: string, ingredien
   const available = key ? batches[key] : state.freezerInventory[ingredientId]; const amount = typeof available === 'number' ? Math.min(1, available) : 0;
   if (amount <= 0) return state;
   const nextFreezer = adjustInventoryItem(state.freezerInventory, ingredientId, -amount);
-  const nextBatches = { ...state.freezerBatches, [ingredientId]: consumeInventoryBatches(batches, amount) ?? {} }; if (inventoryBatchTotal(nextBatches[ingredientId]) <= 0) delete nextBatches[ingredientId];
-  return { ...state, freezerInventory: nextFreezer, freezerBatches: nextBatches, thawingItems: { ...state.thawingItems, [jobId]: { ingredientId, quantity: amount, startedAt: now, readyAt: now + THAW_DURATION_MS, ...(key && key !== UNKNOWN_FREEZER_BATCH_KEY ? { sourceBatchKey: key } : {}) } } };
+  const nextBatches = { ...state.freezerBatches, [ingredientId]: { ...batches } }; const batchRemaining = roundCountedInventoryValue((nextBatches[ingredientId][key!] ?? 0) - amount); if (batchRemaining > 0) nextBatches[ingredientId][key!] = batchRemaining; else delete nextBatches[ingredientId][key!]; if (inventoryBatchTotal(nextBatches[ingredientId]) <= 0) delete nextBatches[ingredientId];
+  return { ...state, freezerInventory: nextFreezer, freezerBatches: nextBatches, thawingItems: { ...state.thawingItems, [jobId]: { ingredientId, quantity: amount, startedAt: now, readyAt: now + THAW_DURATION_MS, ...(key ? { sourceBatchKey: key } : {}) } } };
 }
 function addInventoryQuantity(inventory: Inventory, id: string, quantity: number, ingredients?: MealIngredient[] | Record<string, MealIngredient>) { return adjustInventoryItem(inventory, id, quantity, trackingForIngredient(id, ingredients)); }
 export function completeThaw(state: HouseholdState, jobId: string, completedAt = Date.now(), ingredients?: MealIngredient[] | Record<string, MealIngredient>, quantity?: number): HouseholdState {
@@ -295,9 +302,9 @@ export function discardStock(state: HouseholdState, ingredientId: string, storag
   return { ...next, discardedStock: { ...state.discardedStock, [recordId]: record } };
 }
 export function undoDiscard(state: HouseholdState, recordId: string, now = Date.now(), ingredients?: MealIngredient[] | Record<string, MealIngredient>): HouseholdState {
-  const record = state.discardedStock[recordId]; if (!record || record.undoUntil <= now) return cleanupDiscardedStock(state, now); let next = { ...state }; const item = ingredientRecord(record.ingredientId, ingredients); const storage = record.storage === 'freezer' && item?.freezerBehavior === 'thaw-required' ? 'freezerInventory' : 'inventory';
-  if (record.presence) next = { ...next, [storage]: { ...next[storage], [record.ingredientId]: true } } as HouseholdState; else next = { ...next, [storage]: adjustInventoryItem(next[storage], record.ingredientId, record.quantity ?? 0) } as HouseholdState;
-  if (record.batchKey && record.quantity) { const batches = storage === 'freezerInventory' ? next.freezerBatches : next.inventoryBatches; const updated = { ...(batches[record.ingredientId] ?? {}), [record.batchKey]: roundCountedInventoryValue((batches[record.ingredientId]?.[record.batchKey] ?? 0) + record.quantity) }; next = { ...next, ...(storage === 'freezerInventory' ? { freezerBatches: { ...batches, [record.ingredientId]: updated } } : { inventoryBatches: { ...batches, [record.ingredientId]: updated } }) }; }
+  const record = state.discardedStock[recordId]; if (!record || record.undoUntil <= now) return cleanupDiscardedStock(state, now); let next = { ...state }; const item = ingredientRecord(record.ingredientId, ingredients); const aggregateStorage = record.storage === 'freezer' && item?.freezerBehavior === 'thaw-required' ? 'freezerInventory' : 'inventory';
+  if (record.presence) next = { ...next, [aggregateStorage]: { ...next[aggregateStorage], [record.ingredientId]: true } } as HouseholdState; else next = { ...next, [aggregateStorage]: adjustInventoryItem(next[aggregateStorage], record.ingredientId, record.quantity ?? 0) } as HouseholdState;
+  if (record.batchKey && record.quantity) { const physicalFreezer = record.storage === 'freezer'; const batches = physicalFreezer ? next.freezerBatches : next.inventoryBatches; const updated = { ...(batches[record.ingredientId] ?? {}), [record.batchKey]: roundCountedInventoryValue((batches[record.ingredientId]?.[record.batchKey] ?? 0) + record.quantity) }; next = { ...next, ...(physicalFreezer ? { freezerBatches: { ...batches, [record.ingredientId]: updated } } : { inventoryBatches: { ...batches, [record.ingredientId]: updated } }) }; }
   const discardedStock = { ...next.discardedStock }; delete discardedStock[recordId]; return { ...next, discardedStock };
 }
 export const resetInventory = (): Inventory => ({});

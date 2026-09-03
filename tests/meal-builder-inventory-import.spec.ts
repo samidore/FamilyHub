@@ -39,7 +39,7 @@ test('Chat inventory import reviews, edits, confirms twice, and writes FIFO inve
   await page.locator('#meal-inventory-import-date').blur();
 
   await expect(page.locator('[data-inventory-value="whole-pork-tenderloin"]')).toHaveText('0');
-  await expect(page.locator('[data-inventory-value="eggs"]')).toHaveText('无');
+  await expect(page.locator('[data-inventory-item="eggs"] [data-stock-toggle]')).toHaveText('入库');
   await page.locator('#meal-inventory-import-open-confirm').click();
   await expect(page.locator('#meal-inventory-import-dialog')).toBeVisible();
   await expect(page.locator('#meal-inventory-import-dialog-copy')).toContainText('2 种食材');
@@ -50,9 +50,9 @@ test('Chat inventory import reviews, edits, confirms twice, and writes FIFO inve
 
   await expect(page.locator('#meal-inventory-import-dialog')).not.toBeVisible();
   await expect(page.locator('[data-inventory-value="whole-pork-tenderloin"]')).toHaveText('2');
-  await expect(page.locator('[data-inventory-value="eggs"]')).toHaveText('有');
+  await expect(page.locator('[data-inventory-item="eggs"] [data-stock-toggle]')).toHaveText('有');
   await expect(page.locator('[data-inventory-value="broccoli"]')).toHaveText('0');
-  await expect(page.locator('[data-inventory-item="whole-pork-tenderloin"]')).toContainText(`${dates.yesterday.slice(5).replace('-', '/')} · 2`);
+  await expect(page.locator('[data-inventory-item="whole-pork-tenderloin"]')).toContainText('现有 2');
   await expect(page.locator('#meal-inventory-import-review')).toBeHidden();
   await expect(page.locator('#meal-inventory-import-json')).toHaveValue('');
 });

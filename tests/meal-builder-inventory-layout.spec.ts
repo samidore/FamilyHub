@@ -8,11 +8,9 @@ test('inventory and freezer controls stay on one row at mobile width', async ({ 
   await expect(inventoryRow).toBeVisible();
   await expect(inventoryRow.locator('.meal-inventory-controls')).toBeVisible();
 
-  await page.locator('[data-inventory-tab="freezer"]').click();
   const freezerRows = [
-    page.locator('[data-inventory-item="frozen-beef-patties"]'),
     page.locator('[data-inventory-item="whole-beef-brisket"]'),
-    page.locator('[data-inventory-item="fresh-meat-mooncake"]'),
+    page.locator('[data-inventory-item="chicken-breast"]'),
   ];
   for (const row of freezerRows) {
     await expect(row).toBeVisible();
@@ -35,47 +33,36 @@ test('presence-only rows show one state label and counted rows keep their contro
   await page.goto('meal-builder/');
 
   const inventoryPresence = page.locator('[data-inventory-item="eggs"]');
-  await expect(inventoryPresence.locator('[data-inventory-toggle]')).toHaveText('无');
-  await expect(inventoryPresence.locator('button').filter({ hasText: /^无$/ })).toHaveCount(1);
-  await inventoryPresence.locator('[data-inventory-toggle]').click();
-  await expect(inventoryPresence.locator('[data-inventory-toggle]')).toHaveText('有');
-  await expect(inventoryPresence.locator('button').filter({ hasText: /^有$/ })).toHaveCount(1);
+  await page.locator('[data-inventory-tab="intake"]').click();
+  await expect(inventoryPresence.locator('[data-stock-toggle]')).toHaveText('入库');
+  await inventoryPresence.locator('[data-stock-toggle]').click();
+  await expect(inventoryPresence.locator('[data-stock-toggle]')).toHaveText('有');
 
-  await page.locator('[data-inventory-tab="freezer"]').click();
+  await expect(page.locator('[data-inventory-tab="freezer"]')).toHaveCount(0);
+  await expect(page.locator('[data-inventory-tab="thawing"]')).toHaveCount(0);
+  await page.locator('[data-inventory-tab="intake"]').click();
+  await page.locator('[data-inventory-item="fresh-meat-mooncake"] [data-stock-toggle]').click();
+  await page.locator('[data-inventory-tab="inventory"]').click();
   const freezerPresence = page.locator('[data-inventory-item="fresh-meat-mooncake"]');
-  await expect(freezerPresence.locator('[data-inventory-toggle]')).toHaveText('无');
-  await expect(freezerPresence.locator('button').filter({ hasText: /^无$/ })).toHaveCount(1);
-  await freezerPresence.locator('[data-inventory-toggle]').click();
-  await expect(freezerPresence.locator('[data-inventory-toggle]')).toHaveText('有');
-  await expect(freezerPresence.locator('button').filter({ hasText: /^有$/ })).toHaveCount(1);
+  await expect(freezerPresence).toBeVisible();
+  await expect(freezerPresence).toContainText('冷冻');
 
   const counted = page.locator('[data-inventory-item="chicken-breast"]');
-  await expect(counted.locator('[data-freezer-toggle]')).toHaveText('开启');
-  await expect(counted.locator('[data-freezer-step]')).toHaveCount(2);
-  await expect(counted.locator('[data-inventory-value="freezer-chicken-breast"]')).toHaveText('0');
+  await page.locator('[data-inventory-tab="intake"]').click();
+  await counted.locator('[data-stock-add]').first().click();
+  await page.locator('[data-inventory-tab="inventory"]').click();
+  await expect(counted).toBeVisible();
 });
 
 test('thawing workspace starts only stocked thaw-required ingredients', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto('meal-builder/');
-  await page.locator('[data-inventory-tab="freezer"]').click();
-
-  await expect(page.locator('[data-start-thaw]')).toHaveCount(0);
-  const chicken = page.locator('[data-inventory-item="chicken-breast"]');
-  await chicken.locator('[data-freezer-step="0.5"]').click();
-  await page.locator('[data-inventory-tab="thawing"]').click();
-
-  await expect(page.locator('[data-thaw-section="active"]')).toContainText('当前没有化冻中的食材');
-  const eligible = page.locator('[data-thaw-section="eligible"] [data-thaw-eligible="chicken-breast"]');
-  await expect(eligible).toContainText('鸡胸');
-  await expect(eligible.locator('[data-start-thaw]')).toHaveCount(1);
-  await expect(page.locator('[data-thaw-section="eligible"] [data-thaw-eligible="eggs"]')).toHaveCount(0);
-
-  await eligible.locator('[data-start-thaw]').click();
-  await expect(page.locator('[data-thaw-section="active"] [data-thawing-item]')).toHaveCount(1);
-  await expect(page.locator('[data-thaw-section="eligible"] [data-thaw-eligible="chicken-breast"]')).toHaveCount(0);
-  await expect(page.locator('[data-thawing-count]')).toHaveText('1');
-  await expect(page.locator('[data-thaw-section="active"]')).toContainText('进入库存');
-  await expect(page.locator('[data-thaw-section="active"]')).toContainText('取消化冻');
+  await page.locator('[data-inventory-tab="intake"]').click();
+  await page.locator('[data-inventory-item="chicken-breast"] [data-stock-add][data-stock-storage="freezer"]').click();
+  await page.locator('[data-inventory-tab="inventory"]').click();
+  await expect(page.locator('[data-start-thaw]')).toHaveCount(1);
+  await page.locator('[data-start-thaw]').click();
+  await expect(page.locator('[data-complete-thaw]')).toHaveCount(1);
+  await expect(page.locator('[data-cancel-thaw]')).toHaveCount(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
 });

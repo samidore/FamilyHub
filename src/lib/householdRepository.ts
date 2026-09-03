@@ -3,6 +3,7 @@ import {
   createCurrentMealFromInventory,
   createMealId,
   normalizeHouseholdState,
+  cleanupDiscardedStock,
   reconcileInventoryBatchState,
   type CheckoutConsumption,
   type CheckoutResult,
@@ -83,6 +84,7 @@ function cloneState(state: HouseholdState): HouseholdState {
 function normalizePersistedState(value: unknown, ingredients?: MealIngredient[] | Record<string, MealIngredient>) {
   return normalizeHouseholdState(migrateLegacyChickenThighIngredientIds(value), ingredients);
 }
+function hasExpiredDiscardedStock(state: HouseholdState, now = Date.now()) { return Object.values(state.discardedStock).some((record) => record.undoUntil <= now); }
 
 export class LocalHouseholdRepository implements HouseholdRepository {
   readonly kind = 'local' as const;
@@ -107,7 +109,8 @@ export class LocalHouseholdRepository implements HouseholdRepository {
     try {
       const stored = JSON.parse(this.storage.getItem(this.key) ?? 'null');
       this.state = normalizePersistedState(stored, this.ingredients);
-      if (hasLegacyChickenThighIngredientIds(stored)) this.storage.setItem(this.key, JSON.stringify(this.state));
+      const cleaned = cleanupDiscardedStock(this.state);
+      if (hasLegacyChickenThighIngredientIds(stored) || hasExpiredDiscardedStock(this.state)) { this.state = cleaned; this.storage.setItem(this.key, JSON.stringify(this.state)); }
     } catch { this.state = normalizePersistedState(undefined, this.ingredients); }
     if (options.broadcast !== false && this.browserWindow && typeof BroadcastChannel !== 'undefined') {
       this.channel = new BroadcastChannel(this.key);
@@ -121,7 +124,7 @@ export class LocalHouseholdRepository implements HouseholdRepository {
   subscribe(listener: StateListener) { this.listeners.add(listener); listener(this.getSnapshot(), this.getStatus()); return () => this.listeners.delete(listener); }
 
   async update(mutator: (current: HouseholdState) => HouseholdState) {
-    const current = normalizePersistedState(JSON.parse(this.storage.getItem(this.key) ?? 'null'), this.ingredients);
+    const current = cleanupDiscardedStock(normalizePersistedState(JSON.parse(this.storage.getItem(this.key) ?? 'null'), this.ingredients));
     const proposed = mutator(cloneState(current));
     const next = normalizeHouseholdState(reconcileInventoryBatchState(current, proposed, this.ingredients), this.ingredients);
     this.persist(next);
@@ -251,6 +254,11 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
         this.setState(normalizePersistedState(migration.snapshot.val(), this.ingredients));
       } else {
         this.setStateFromSnapshot(snapshot);
+      }
+      const current = this.getSnapshot();
+      if (hasExpiredDiscardedStock(current)) {
+        const cleaned = await runTransaction(this.stateRef, (value) => cleanupDiscardedStock(normalizePersistedState(value, this.ingredients)));
+        this.setState(normalizePersistedState(cleaned.snapshot.val(), this.ingredients));
       }
       this.setStatus(this.fromSessionStatus(sessionStatus));
       this.unsubscribeState = onValue(this.stateRef, (next) => this.setStateFromSnapshot(next), (error) => { if (!this.disposed) this.fail('Firebase 实时连接中断', error); });

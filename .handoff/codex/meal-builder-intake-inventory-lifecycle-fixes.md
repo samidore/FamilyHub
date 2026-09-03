@@ -208,3 +208,9 @@ All must PASS:
 - Fix every task-caused failure; do not stop after the first failing browser test.
 - Commit and push the correction to current `main` without reverting unrelated commits that landed after `9cb7148...`.
 - Append `## Result` to this handoff with only Status, validation outcome, and any unresolved blocker/deviation. Do not delete this handoff before ChatGPT reviews the result.
+
+## Result
+
+Status: BLOCKED
+Validation: `pnpm run test:unit` passed (185/185); `pnpm run check` passed with only pre-existing unrelated deprecation hints; `pnpm run build` and `pnpm run audit` passed; full browser suite passed (38/38). Firebase rules emulator validation could not start because Java is unavailable locally.
+Blocker: Java is unavailable locally; run `pnpm run test:rules` and the final `pnpm run verify` in CI or an environment with Java to complete the rules/deploy gate.
