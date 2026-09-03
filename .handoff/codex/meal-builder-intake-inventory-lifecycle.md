@@ -291,4 +291,10 @@ pnpm run verify
 
 If the local environment still lacks Java, run every other applicable validation and record that exact blocker in `## Result`; GitHub Actions should be used as the final full-gate source where available.
 
+## Result
+
+Status: FAIL
+Validation: `pnpm run check` passed; all 182 unit tests passed; `pnpm run verify` completed through build, audit, and unit tests but stopped at Firebase rules because Java is unavailable. The browser suite was run separately and exposed stale pre-redesign expectations for the removed freezer/thawing tabs and old intake selectors.
+Blocker: Java is unavailable locally, and the existing browser tests need to be updated for the required two-tab lifecycle contract before the full acceptance gate can pass.
+
 Append `## Result` with only status, validation outcome, and any blocker/deviation as required by the task protocol. Keep commits task-scoped. Do not refactor unrelated Notebook or other FamilyHub modules.

@@ -53,6 +53,8 @@ starter:
 tags: []
 ```
 
+The lifecycle runtime additionally stores `freezerBatches/{ingredientId}/{YYYY-MM-DD}` (or `unknown` for legacy quantity), `thawingItems.sourceBatchKey`, and shared `discardedStock/{recordId}` undo records. Step 1 has exactly two views: `入库` for additive entry and `库存` for current lifecycle management. Thaw-required freezer batches reconcile with `freezerInventory`; direct freezer batches reconcile with ordinary `inventory`.
+
 `starter.visible: false` retains a long-term ID without showing a button. Every visible Ingredient has one controlled section and a unique positive order. `inventory_tracking` is the source of truth: `counted` uses half-unit quantities and `presence-only` stores boolean presence. Runtime code must not infer tracking mode from Ingredient IDs.
 
 `freezer_behavior` is an independent explicit fact. `direct` uses ordinary `inventory` and remains Recipe-available; `thaw-required` uses `freezerInventory` until a thawing job enters ordinary inventory. Missing means the Ingredient is not shown in the freezer view.
