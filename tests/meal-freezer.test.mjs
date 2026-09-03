@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { cancelThaw, completeThaw, discardStock, normalizeHouseholdState, reconcileDueThawing, startThaw, undoDiscard, THAW_DURATION_MS } from '../src/lib/household.ts';
+import { cancelThaw, completeThaw, discardStock, normalizeDiscardedStock, normalizeHouseholdState, reconcileDueThawing, startThaw, undoDiscard, STOCK_UNDO_WINDOW_MS, THAW_DURATION_MS } from '../src/lib/household.ts';
 
 const ingredients = [{ id: 'chicken-thighs', inventoryTracking: 'counted', inventoryFreshness: 'fifo', freezerBehavior: 'thaw-required' }, { id: 'frozen-patties', inventoryTracking: 'counted', freezerBehavior: 'direct' }, { id: 'steamed-buns', inventoryTracking: 'presence-only', freezerBehavior: 'direct' }];
 
@@ -74,4 +74,17 @@ test('direct frozen discard undo restores the original freezer batch and ordinar
   const restored = undoDiscard(discarded, recordId, 1001, ingredients);
   assert.equal(restored.inventory['frozen-patties'], 1);
   assert.deepEqual(restored.freezerBatches['frozen-patties'], { '2026-08-20': 1 });
+});
+
+test('discard normalization keeps the canonical mutually-exclusive shape', () => {
+  const now = 1000;
+  const valid = { good: { ingredientId: 'frozen-patties', storage: 'freezer', quantity: 0.5, batchKey: 'unknown', discardedAt: now, undoUntil: now + STOCK_UNDO_WINDOW_MS } };
+  assert.deepEqual(normalizeDiscardedStock(valid), valid);
+  for (const invalid of [
+    { ...valid.good, presence: true },
+    { ...valid.good, batchKey: '2026-8-8' },
+    { ...valid.good, undoUntil: now + 1 },
+    { ...valid.good, extra: true },
+    { ...valid.good, discardedAt: 0 },
+  ]) assert.deepEqual(normalizeDiscardedStock({ invalid }), {});
 });

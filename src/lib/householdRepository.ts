@@ -183,6 +183,7 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
   private unsubscribeSession?: () => void;
   private connectedUid = '';
   private disposed = false;
+  private discardCleanupInFlight = false;
 
   constructor(config: FirebaseConfig, options: FirebaseRepositoryOptions = {}) {
     this.householdId = config.householdId;
@@ -261,7 +262,7 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
         this.setState(normalizePersistedState(cleaned.snapshot.val(), this.ingredients));
       }
       this.setStatus(this.fromSessionStatus(sessionStatus));
-      this.unsubscribeState = onValue(this.stateRef, (next) => this.setStateFromSnapshot(next), (error) => { if (!this.disposed) this.fail('Firebase 实时连接中断', error); });
+      this.unsubscribeState = onValue(this.stateRef, (next) => { this.setStateFromSnapshot(next); this.cleanupExpiredDiscardedStock(); }, (error) => { if (!this.disposed) this.fail('Firebase 实时连接中断', error); });
       return;
     }
     this.connectedUid = '';
@@ -284,6 +285,14 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
   }
   private assertReady() { if (this.status.connection !== 'connected') throw new Error(this.status.error ?? '家庭连接尚未准备好'); }
   private setStateFromSnapshot(snapshot: DataSnapshot) { this.setState(normalizePersistedState(snapshot.val(), this.ingredients)); }
+  private cleanupExpiredDiscardedStock() {
+    if (this.discardCleanupInFlight || !hasExpiredDiscardedStock(this.state)) return;
+    this.discardCleanupInFlight = true;
+    void runTransaction(this.stateRef, (value) => cleanupDiscardedStock(normalizePersistedState(value, this.ingredients)))
+      .then((result) => { if (!this.disposed) this.setState(normalizePersistedState(result.snapshot.val(), this.ingredients)); })
+      .catch(() => undefined)
+      .finally(() => { this.discardCleanupInFlight = false; });
+  }
   private setState(next: HouseholdState) { this.state = normalizePersistedState(next, this.ingredients); this.emit(); }
   private stopStateSubscription() { this.unsubscribeState?.(); this.unsubscribeState = undefined; }
   private setStatus(status: RepositoryStatus) { this.status = status; this.emit(); }

@@ -214,3 +214,9 @@ All must PASS:
 Status: BLOCKED
 Validation: `pnpm run test:unit` passed (185/185); `pnpm run check` passed with only pre-existing unrelated deprecation hints; `pnpm run build` and `pnpm run audit` passed; full browser suite passed (38/38). Firebase rules emulator validation could not start because Java is unavailable locally.
 Blocker: Java is unavailable locally; run `pnpm run test:rules` and the final `pnpm run verify` in CI or an environment with Java to complete the rules/deploy gate.
+
+## Result
+
+Status: BLOCKED
+Validation: `pnpm run validate`, `pnpm run check`, `pnpm run build`, `pnpm run audit`, `pnpm run test:unit` (186/186), and `pnpm run test:browser` (38/38) passed. Firebase rules validation in `pnpm run verify` could not start because Java is unavailable locally.
+Blocker: Run `pnpm run test:rules` and the final `pnpm run verify` in CI or an environment with Java; no other unresolved task-caused failure remains.

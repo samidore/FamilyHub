@@ -64,7 +64,7 @@ export const UNKNOWN_FREEZER_BATCH_KEY = 'unknown';
 
 const DATE_KEY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const isStepAligned = (value: number) => Number.isFinite(value) && Math.abs(value / COUNTED_INVENTORY_STEP - Math.round(value / COUNTED_INVENTORY_STEP)) < 1e-9;
-const isPositiveCountedInventoryValue = (value: number) => value > 0 && isStepAligned(value);
+const isPositiveCountedInventoryValue = (value: number) => Number.isFinite(value) && value > 0 && isStepAligned(value);
 export const roundCountedInventoryValue = (value: number) => Math.round(value / COUNTED_INVENTORY_STEP) * COUNTED_INVENTORY_STEP;
 const quantitiesEqual = (left: number, right: number) => Math.abs(left - right) < 1e-9;
 const isRecord = (value: unknown): value is Record<string, unknown> => Boolean(value && typeof value === 'object' && !Array.isArray(value));
@@ -122,7 +122,7 @@ export function normalizeDiscardedStock(value: unknown): DiscardedStocks {
     const keys = Object.keys(raw); if (keys.some((key) => !['ingredientId', 'storage', 'quantity', 'presence', 'batchKey', 'discardedAt', 'undoUntil'].includes(key))) continue;
     const hasQuantity = typeof raw.quantity === 'number' && isPositiveCountedInventoryValue(raw.quantity); const hasPresence = raw.presence === true;
     const batchKey = raw.batchKey === undefined ? undefined : typeof raw.batchKey === 'string' && (raw.batchKey === UNKNOWN_FREEZER_BATCH_KEY || DATE_KEY_PATTERN.test(raw.batchKey)) ? raw.batchKey : null;
-    if (typeof raw.ingredientId !== 'string' || !raw.ingredientId || (raw.storage !== 'inventory' && raw.storage !== 'freezer') || typeof raw.discardedAt !== 'number' || !Number.isFinite(raw.discardedAt) || typeof raw.undoUntil !== 'number' || raw.undoUntil !== raw.discardedAt + STOCK_UNDO_WINDOW_MS || hasQuantity === hasPresence || batchKey === null) continue;
+    if (typeof raw.ingredientId !== 'string' || !raw.ingredientId || (raw.storage !== 'inventory' && raw.storage !== 'freezer') || typeof raw.discardedAt !== 'number' || !Number.isFinite(raw.discardedAt) || raw.discardedAt <= 0 || typeof raw.undoUntil !== 'number' || !Number.isFinite(raw.undoUntil) || raw.undoUntil !== raw.discardedAt + STOCK_UNDO_WINDOW_MS || hasQuantity === hasPresence || batchKey === null) continue;
     result[id] = { ingredientId: raw.ingredientId, storage: raw.storage, ...(hasQuantity ? { quantity: roundCountedInventoryValue(raw.quantity as number) } : { presence: true }), ...(batchKey === undefined ? {} : { batchKey }), discardedAt: raw.discardedAt, undoUntil: raw.undoUntil };
   }
   return result;
@@ -144,11 +144,11 @@ export function normalizeThawingItems(value: unknown, ingredients?: MealIngredie
 }
 export function startThaw(state: HouseholdState, ingredientId: string, ingredients?: MealIngredient[] | Record<string, MealIngredient>, now = Date.now(), jobId = createMealId(), sourceBatchKey?: string): HouseholdState {
   if (freezerBehaviorForIngredient(ingredientId, ingredients) !== 'thaw-required') return state;
-  const batches = state.freezerBatches[ingredientId] ?? {}; const key = sourceBatchKey && batches[sourceBatchKey] ? sourceBatchKey : Object.keys(batches).sort()[0];
-  const available = key ? batches[key] : state.freezerInventory[ingredientId]; const amount = typeof available === 'number' ? Math.min(1, available) : 0;
+  const batches = state.freezerBatches[ingredientId] ?? {}; const key = sourceBatchKey !== undefined && typeof batches[sourceBatchKey] === 'number' ? sourceBatchKey : Object.keys(batches).sort()[0];
+  const available = key === undefined ? state.freezerInventory[ingredientId] : batches[key]; const amount = typeof available === 'number' ? Math.min(1, available) : 0;
   if (amount <= 0) return state;
   const nextFreezer = adjustInventoryItem(state.freezerInventory, ingredientId, -amount);
-  const nextBatches = { ...state.freezerBatches, [ingredientId]: { ...batches } }; const batchRemaining = roundCountedInventoryValue((nextBatches[ingredientId][key!] ?? 0) - amount); if (batchRemaining > 0) nextBatches[ingredientId][key!] = batchRemaining; else delete nextBatches[ingredientId][key!]; if (inventoryBatchTotal(nextBatches[ingredientId]) <= 0) delete nextBatches[ingredientId];
+  const nextBatches = { ...state.freezerBatches, [ingredientId]: { ...batches } }; if (key !== undefined) { const batchRemaining = roundCountedInventoryValue((nextBatches[ingredientId][key] ?? 0) - amount); if (batchRemaining > 0) nextBatches[ingredientId][key] = batchRemaining; else delete nextBatches[ingredientId][key]; } if (inventoryBatchTotal(nextBatches[ingredientId]) <= 0) delete nextBatches[ingredientId];
   return { ...state, freezerInventory: nextFreezer, freezerBatches: nextBatches, thawingItems: { ...state.thawingItems, [jobId]: { ingredientId, quantity: amount, startedAt: now, readyAt: now + THAW_DURATION_MS, ...(key ? { sourceBatchKey: key } : {}) } } };
 }
 function addInventoryQuantity(inventory: Inventory, id: string, quantity: number, ingredients?: MealIngredient[] | Record<string, MealIngredient>) { return adjustInventoryItem(inventory, id, quantity, trackingForIngredient(id, ingredients)); }
