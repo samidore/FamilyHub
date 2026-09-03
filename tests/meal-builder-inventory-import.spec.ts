@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('Chat inventory import reviews, edits, confirms twice, and writes FIFO inventory additively', async ({ page }) => {
+test('Chat inventory import can route reviewed rows into refrigerated and frozen stock', async ({ page }) => {
   await page.goto('meal-builder/');
 
   const dates = await page.evaluate(() => {
@@ -21,10 +21,11 @@ test('Chat inventory import reviews, edits, confirms twice, and writes FIFO inve
     version: 1,
     stocked_on: dates.today,
     items: [
-      { ingredient_id: 'whole-pork-tenderloin', quantity: 2 },
-      { ingredient_id: 'broccoli', quantity: 1 },
-      { ingredient_id: 'eggs', quantity: 1 },
-      { ingredient_id: 'not-in-library', quantity: 1 },
+      { ingredient_id: 'whole-pork-tenderloin', quantity: 2, storage: 'freezer' },
+      { ingredient_id: 'broccoli', quantity: 1, storage: 'inventory' },
+      { ingredient_id: 'eggs', quantity: 1, storage: 'inventory' },
+      { ingredient_id: 'frozen-beef-patties', quantity: 1, storage: 'freezer' },
+      { ingredient_id: 'not-in-library', quantity: 1, storage: 'freezer' },
     ],
     unmatched: ['上海青苗'],
   }));
@@ -32,7 +33,19 @@ test('Chat inventory import reviews, edits, confirms twice, and writes FIFO inve
 
   await expect(page.locator('#meal-inventory-import-review')).toBeVisible();
   await expect(page.locator('#meal-inventory-import-unmatched-list li')).toHaveCount(2);
-  await expect(page.locator('[data-import-ingredient="whole-pork-tenderloin"]')).toContainText('本次 +2');
+
+  const pork = page.locator('[data-import-ingredient="whole-pork-tenderloin"]');
+  const porkStorage = pork.locator('[data-import-storage]');
+  await expect(pork).toContainText('冷冻 0 · 本次 +2');
+  await expect(porkStorage).toHaveValue('freezer');
+  await porkStorage.selectOption('inventory');
+  await expect(pork).toContainText('冷藏 0 · 本次 +2');
+  await porkStorage.selectOption('freezer');
+  await expect(pork).toContainText('冷冻 0 · 本次 +2');
+
+  const direct = page.locator('[data-import-ingredient="frozen-beef-patties"]');
+  await expect(direct).toContainText('冷冻 0 · 本次 +1');
+  await expect(direct.locator('[data-import-storage]')).toHaveCount(0);
 
   await page.locator('[data-import-ingredient="broccoli"] .meal-inventory-import__remove').click();
   await page.locator('#meal-inventory-import-date').fill(dates.yesterday);
@@ -42,17 +55,28 @@ test('Chat inventory import reviews, edits, confirms twice, and writes FIFO inve
   await expect(page.locator('[data-inventory-item="eggs"] [data-stock-toggle]')).toHaveText('入库');
   await page.locator('#meal-inventory-import-open-confirm').click();
   await expect(page.locator('#meal-inventory-import-dialog')).toBeVisible();
-  await expect(page.locator('#meal-inventory-import-dialog-copy')).toContainText('2 种食材');
+  await expect(page.locator('#meal-inventory-import-dialog-copy')).toContainText('3 项食材');
+  await expect(page.locator('#meal-inventory-import-dialog-copy')).toContainText('其中 2 项进冷冻');
   await expect(page.locator('#meal-inventory-import-dialog-copy')).toContainText(dates.yesterday);
 
-  await expect(page.locator('[data-inventory-value="whole-pork-tenderloin"]')).toHaveText('0');
   await page.locator('#meal-inventory-import-final').click();
 
   await expect(page.locator('#meal-inventory-import-dialog')).not.toBeVisible();
-  await expect(page.locator('[data-inventory-value="whole-pork-tenderloin"]')).toHaveText('2');
+  await expect(page.locator('[data-inventory-value="whole-pork-tenderloin"]')).toHaveText('0');
+  await expect(page.locator('[data-inventory-item="whole-pork-tenderloin"]')).toContainText('冷冻 2');
   await expect(page.locator('[data-inventory-item="eggs"] [data-stock-toggle]')).toHaveText('有');
+  await expect(page.locator('[data-inventory-value="frozen-beef-patties"]')).toHaveText('1');
+  await expect(page.locator('[data-inventory-item="frozen-beef-patties"]')).toContainText('冷冻 1');
   await expect(page.locator('[data-inventory-value="broccoli"]')).toHaveText('0');
-  await expect(page.locator('[data-inventory-item="whole-pork-tenderloin"]')).toContainText('现有 2');
+
+  await page.locator('[data-inventory-tab="inventory"]').click();
+  const porkLifecycle = page.locator('[data-inventory-item="whole-pork-tenderloin"]');
+  await expect(porkLifecycle).toContainText(`冷冻 ${dates.yesterday}`);
+  await expect(porkLifecycle.locator('[data-start-thaw]')).toHaveCount(1);
+  const directLifecycle = page.locator('[data-inventory-item="frozen-beef-patties"]');
+  await expect(directLifecycle).toContainText(`冷冻 ${dates.yesterday}`);
+  await expect(directLifecycle.locator('[data-start-thaw]')).toHaveCount(0);
+
   await expect(page.locator('#meal-inventory-import-review')).toBeHidden();
   await expect(page.locator('#meal-inventory-import-json')).toHaveValue('');
 });

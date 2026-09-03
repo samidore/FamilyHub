@@ -2,9 +2,8 @@ import type { MealIngredient } from './mealEngine.ts';
 import { calendarDateKey } from './mealEngine.ts';
 import {
   COUNTED_INVENTORY_STEP,
-  freshnessForIngredient,
+  addStock,
   roundCountedInventoryValue,
-  trackingForIngredient,
   type HouseholdState,
 } from './household.ts';
 
@@ -12,10 +11,12 @@ export const INVENTORY_IMPORT_SCHEMA = 'meal-builder-inventory-import';
 export const INVENTORY_IMPORT_VERSION = 1;
 
 export type InventoryImportIngredient = MealIngredient & { visible?: boolean };
+export type InventoryImportStorage = 'inventory' | 'freezer';
 
 export interface InventoryImportItem {
   ingredientId: string;
   quantity: number;
+  storage: InventoryImportStorage;
 }
 
 export interface InventoryImportUnmatched {
@@ -53,6 +54,17 @@ function quantityIsValid(value: unknown): value is number {
   return typeof value === 'number' && value > 0 && isStepAligned(value);
 }
 
+function importStorageForIngredient(
+  ingredient: InventoryImportIngredient,
+  rawStorage: unknown,
+): InventoryImportStorage | null {
+  if (rawStorage !== undefined && rawStorage !== 'inventory' && rawStorage !== 'freezer') return null;
+  const storage = (rawStorage ?? (ingredient.freezerBehavior === 'direct' ? 'freezer' : 'inventory')) as InventoryImportStorage;
+  if (ingredient.freezerBehavior === 'direct') return storage === 'freezer' ? storage : null;
+  if (ingredient.freezerBehavior === 'thaw-required') return storage;
+  return storage === 'inventory' ? storage : null;
+}
+
 export function parseInventoryImport(
   input: string,
   ingredients: InventoryImportIngredient[],
@@ -76,26 +88,38 @@ export function parseInventoryImport(
   }
 
   const importableById = new Map(ingredients.filter((ingredient) => ingredient.visible !== false).map((ingredient) => [ingredient.id, ingredient]));
-  const quantities = new Map<string, number>();
+  const mergedItems = new Map<string, InventoryImportItem>();
   const unmatched: InventoryImportUnmatched[] = (payload.unmatched as string[]).map((label) => ({ label: label.trim(), reason: 'producer-unmatched' }));
 
   for (const raw of payload.items) {
     if (!isRecord(raw) || typeof raw.ingredient_id !== 'string' || !raw.ingredient_id.trim() || !quantityIsValid(raw.quantity)) {
       return { ok: false, error: '每个 items 条目都必须包含有效 ingredient_id 和正的 0.5 倍数 quantity。' };
     }
+    if (raw.storage !== undefined && raw.storage !== 'inventory' && raw.storage !== 'freezer') {
+      return { ok: false, error: 'storage 只能是 inventory 或 freezer。' };
+    }
     const id = raw.ingredient_id.trim();
-    if (!importableById.has(id)) {
+    const ingredient = importableById.get(id);
+    if (!ingredient) {
       unmatched.push({ label: id, reason: 'invalid-ingredient-id' });
       continue;
     }
-    quantities.set(id, roundCountedInventoryValue((quantities.get(id) ?? 0) + raw.quantity));
+    const storage = importStorageForIngredient(ingredient, raw.storage);
+    if (!storage) return { ok: false, error: `${ingredient.nameZh ?? id} 不支持这个存放位置。` };
+    const key = `${id}\u0000${storage}`;
+    const existing = mergedItems.get(key);
+    mergedItems.set(key, {
+      ingredientId: id,
+      storage,
+      quantity: roundCountedInventoryValue((existing?.quantity ?? 0) + raw.quantity),
+    });
   }
 
   return {
     ok: true,
     draft: {
       stockedOn: payload.stocked_on,
-      items: [...quantities].map(([ingredientId, quantity]) => ({ ingredientId, quantity })),
+      items: [...mergedItems.values()],
       unmatched,
     },
   };
@@ -109,25 +133,16 @@ export function applyInventoryImport(
 ): HouseholdState {
   if (!isValidInventoryImportDate(draft.stockedOn, today)) throw new Error('入库日期无效。');
   const importableById = new Map(ingredients.filter((ingredient) => ingredient.visible !== false).map((ingredient) => [ingredient.id, ingredient]));
-  const inventory = { ...state.inventory };
-  const inventoryBatches = Object.fromEntries(Object.entries(state.inventoryBatches).map(([id, batches]) => [id, { ...batches }]));
+  let next = state;
 
   for (const item of draft.items) {
-    if (!importableById.has(item.ingredientId) || !quantityIsValid(item.quantity)) throw new Error('入库草稿包含无效食材或数量。');
-    const tracking = trackingForIngredient(item.ingredientId, ingredients);
-    if (tracking === 'presence-only') {
-      inventory[item.ingredientId] = true;
-      continue;
-    }
-
-    const current = typeof inventory[item.ingredientId] === 'number' ? inventory[item.ingredientId] as number : 0;
-    inventory[item.ingredientId] = roundCountedInventoryValue(current + item.quantity);
-    if (freshnessForIngredient(item.ingredientId, ingredients) === 'fifo') {
-      const batches = { ...(inventoryBatches[item.ingredientId] ?? {}) };
-      batches[draft.stockedOn] = roundCountedInventoryValue((batches[draft.stockedOn] ?? 0) + item.quantity);
-      inventoryBatches[item.ingredientId] = Object.fromEntries(Object.entries(batches).sort(([left], [right]) => left.localeCompare(right)));
-    }
+    const ingredient = importableById.get(item.ingredientId);
+    if (!ingredient || !quantityIsValid(item.quantity)) throw new Error('入库草稿包含无效食材或数量。');
+    const storage = importStorageForIngredient(ingredient, item.storage);
+    if (!storage) throw new Error('入库草稿包含无效存放位置。');
+    const internalStorage = ingredient.freezerBehavior === 'direct' ? 'inventory' : storage;
+    next = addStock(next, item.ingredientId, internalStorage, item.quantity, ingredients, draft.stockedOn);
   }
 
-  return { ...state, inventory, inventoryBatches };
+  return next;
 }

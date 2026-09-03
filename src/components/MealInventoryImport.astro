@@ -2,7 +2,7 @@
   <div class="meal-inventory-import__heading">
     <div>
       <h3 id="meal-inventory-import-heading">批量入库</h3>
-    <p>粘贴 ChatGPT 生成的入库 JSON。确认前可调整数量和日期。</p>
+      <p>粘贴 ChatGPT 生成的入库 JSON。确认前可调整数量、日期和存放位置。</p>
     </div>
   </div>
 
@@ -44,8 +44,8 @@
 </dialog>
 
 <script>
-  import { COUNTED_INVENTORY_STEP, roundCountedInventoryValue, trackingForIngredient } from '../lib/household';
-  import { applyInventoryImport, isValidInventoryImportDate, parseInventoryImport, type InventoryImportDraft, type InventoryImportIngredient, type InventoryImportItem } from '../lib/inventoryImport';
+  import { COUNTED_INVENTORY_STEP, roundCountedInventoryValue, trackingForIngredient, type HouseholdState } from '../lib/household';
+  import { applyInventoryImport, isValidInventoryImportDate, parseInventoryImport, type InventoryImportDraft, type InventoryImportIngredient, type InventoryImportItem, type InventoryImportStorage } from '../lib/inventoryImport';
   import { createHouseholdRepository } from '../lib/householdRepository';
 
   type MealPagePayload = { ingredients: InventoryImportIngredient[] };
@@ -98,6 +98,9 @@
     let message = '';
     let messageIsError = false;
 
+    const repository = createHouseholdRepository(firebaseConfig, { ingredients, firebase: { ingredients } });
+    let household: HouseholdState = repository.getSnapshot();
+
     const announce = (text: string) => {
       const live = document.querySelector<HTMLElement>('#meal-live');
       if (!live) return;
@@ -113,21 +116,24 @@
       status.dataset.error = isError ? 'true' : 'false';
     };
 
-    const inventoryRowFor = (id: string) => [...inventoryList.querySelectorAll<HTMLElement>('[data-inventory-item]')].find((row) => row.dataset.inventoryItem === id);
-
-    const currentValue = (id: string) => {
-      const tracking = trackingForIngredient(id, ingredients);
-      const row = inventoryRowFor(id);
-      const output = row?.querySelector<HTMLOutputElement>('[data-inventory-value]');
-      if (tracking === 'presence-only') return output?.textContent?.trim() === '有' ? true : undefined;
-      const value = Number(output?.textContent ?? '0');
-      return Number.isFinite(value) && value > 0 ? value : undefined;
+    const storageLabel = (item: InventoryImportIngredient, storage: InventoryImportStorage) => {
+      if (storage === 'freezer') return '冷冻';
+      return item.freezerBehavior === 'thaw-required' ? '冷藏' : '现有';
     };
 
-    const actualChangeCount = () => reviewItems.filter((item) => {
+    const currentValue = (id: string, storage: InventoryImportStorage) => {
+      const ingredient = ingredientById.get(id);
+      if (!ingredient) return undefined;
+      if (storage === 'freezer' && ingredient.freezerBehavior === 'thaw-required') return household.freezerInventory[id];
+      return household.inventory[id];
+    };
+
+    const itemWillChange = (item: ReviewItem) => {
       const tracking = trackingForIngredient(item.ingredientId, ingredients);
-      return tracking === 'presence-only' ? currentValue(item.ingredientId) !== true : item.quantity > 0;
-    }).length;
+      return tracking === 'presence-only' ? currentValue(item.ingredientId, item.storage) !== true : item.quantity > 0;
+    };
+
+    const actualChangeCount = () => reviewItems.filter(itemWillChange).length;
 
     const createName = (id: string) => {
       const ingredient = ingredientById.get(id);
@@ -157,19 +163,31 @@
         const ingredient = ingredientById.get(item.ingredientId);
         if (!ingredient) continue;
         const tracking = trackingForIngredient(item.ingredientId, ingredients);
-        const row = document.createElement('div'); row.className = 'meal-inventory-import__item'; row.dataset.importIngredient = item.ingredientId;
+        const row = document.createElement('div'); row.className = 'meal-inventory-import__item'; row.dataset.importIngredient = item.ingredientId; row.dataset.importStorageValue = item.storage;
         const description = document.createElement('div'); description.className = 'meal-inventory-import__description'; description.append(createName(item.ingredientId));
         const meta = document.createElement('small'); meta.className = 'meal-inventory-import__meta';
-        const existing = currentValue(item.ingredientId);
+        const existing = currentValue(item.ingredientId, item.storage);
+        const location = storageLabel(ingredient, item.storage);
         if (tracking === 'presence-only') {
-          meta.textContent = existing === true ? '已在库 · 无需修改' : '当前无 · 本次设为有';
+          meta.textContent = existing === true ? `${location}已有 · 无需修改` : `${location}当前无 · 本次设为有`;
         } else {
           const current = typeof existing === 'number' ? existing : 0;
-          meta.textContent = `现有 ${current} · 本次 +${item.quantity} · 入库后 ${roundCountedInventoryValue(current + item.quantity)}`;
+          meta.textContent = `${location} ${current} · 本次 +${item.quantity} · 入库后 ${roundCountedInventoryValue(current + item.quantity)}`;
         }
         description.append(meta);
 
         const controls = document.createElement('div'); controls.className = 'meal-inventory-import__controls';
+        if (ingredient.freezerBehavior === 'thaw-required') {
+          const storage = document.createElement('select');
+          storage.className = 'meal-inventory-import__storage';
+          storage.dataset.importStorage = item.ingredientId;
+          storage.setAttribute('aria-label', `${ingredient.nameZh ?? item.ingredientId} 存放位置`);
+          const refrigerated = document.createElement('option'); refrigerated.value = 'inventory'; refrigerated.textContent = '冷藏'; refrigerated.selected = item.storage === 'inventory';
+          const frozen = document.createElement('option'); frozen.value = 'freezer'; frozen.textContent = '冷冻'; frozen.selected = item.storage === 'freezer';
+          storage.append(refrigerated, frozen);
+          storage.addEventListener('change', () => { item.storage = storage.value as InventoryImportStorage; renderReview(); });
+          controls.append(storage);
+        }
         if (tracking === 'counted') {
           const minus = document.createElement('button'); minus.type = 'button'; minus.className = 'meal-inventory-step'; minus.textContent = '−'; minus.setAttribute('aria-label', `${ingredient.nameZh ?? item.ingredientId} 本次减少 ${COUNTED_INVENTORY_STEP}`); minus.disabled = item.quantity <= COUNTED_INVENTORY_STEP;
           const amount = document.createElement('output'); amount.textContent = String(item.quantity); amount.setAttribute('aria-label', `${ingredient.nameZh ?? item.ingredientId} 本次入库数量`);
@@ -200,6 +218,11 @@
       else if (messageIsError && message.startsWith('入库日期')) setMessage('', false);
     };
 
+    repository.subscribe((next) => {
+      household = next;
+      if (draft) renderReview();
+    });
+
     toggle.addEventListener('click', () => {
       panel.hidden = !panel.hidden;
       toggle.setAttribute('aria-expanded', String(!panel.hidden));
@@ -222,9 +245,10 @@
 
     openConfirm.addEventListener('click', () => {
       if (!draft || !isValidInventoryImportDate(stockedOn)) return;
-      const changeCount = actualChangeCount();
-      if (changeCount === 0) return;
-      dialogCopy.textContent = `将 ${changeCount} 种食材加入共享库存。入库日期：${stockedOn}。已在库的食材不会重复增加。`;
+      const changingItems = reviewItems.filter(itemWillChange);
+      if (changingItems.length === 0) return;
+      const freezerCount = changingItems.filter((item) => item.storage === 'freezer').length;
+      dialogCopy.textContent = `将 ${changingItems.length} 项食材加入共享库存${freezerCount ? `，其中 ${freezerCount} 项进冷冻` : ''}。入库日期：${stockedOn}。`;
       dialog.showModal();
     });
 
@@ -233,7 +257,6 @@
     finalConfirm.addEventListener('click', async () => {
       if (!draft || !isValidInventoryImportDate(stockedOn)) { dialog.close(); renderReview(); return; }
       finalConfirm.disabled = true; cancelConfirm.disabled = true;
-      const repository = createHouseholdRepository(firebaseConfig, { ingredients, firebase: { ingredients } });
       try {
         await repository.ready?.catch(() => undefined);
         const repositoryStatus = repository.getStatus();
@@ -243,7 +266,7 @@
         dialog.close();
         textarea.value = '';
         draft = null; reviewItems = []; stockedOn = '';
-        setMessage(`已完成批量入库。`);
+        setMessage('已完成批量入库。');
         renderReview();
         announce('批量入库完成。');
       } catch (error) {
@@ -251,14 +274,11 @@
         setMessage(error instanceof Error ? error.message : '批量入库失败。', true);
         renderReview();
       } finally {
-        repository.dispose();
         finalConfirm.disabled = false; cancelConfirm.disabled = false;
       }
     });
 
-    const inventoryObserver = new MutationObserver(() => { if (draft) renderReview(); });
-    inventoryObserver.observe(inventoryList, { childList: true, subtree: true, characterData: true });
-    window.addEventListener('pagehide', () => inventoryObserver.disconnect(), { once: true });
+    window.addEventListener('pagehide', () => repository.dispose(), { once: true });
   }
 
   setupMealInventoryImport();
@@ -294,7 +314,7 @@
   .meal-inventory-import-dialog__actions { display: flex; gap: 10px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
   .meal-inventory-import__review { display: grid; gap: 14px; }
   .meal-inventory-import__date-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-weight: 700; }
-  .meal-inventory-import__date-row input { min-height: 44px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--ink); }
+  .meal-inventory-import__date-row input { min-height: 48px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--ink); }
   .meal-inventory-import__items { display: grid; gap: 8px; }
   .meal-inventory-import__item {
     display: grid;
@@ -308,11 +328,20 @@
   .meal-inventory-import__name { display: grid; min-width: 0; }
   .meal-inventory-import__name small,
   .meal-inventory-import__meta { color: var(--muted); }
-  .meal-inventory-import__controls { display: flex; align-items: center; gap: 7px; }
+  .meal-inventory-import__controls { display: flex; align-items: center; justify-content: flex-end; gap: 7px; flex-wrap: wrap; }
   .meal-inventory-import__controls output { min-width: 34px; text-align: center; font-weight: 700; }
+  .meal-inventory-import__storage {
+    min-height: 48px;
+    padding: 7px 30px 7px 10px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+  }
   .meal-inventory-import__remove {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     border: 1px solid var(--line);
     border-radius: 999px;
     background: var(--surface);
