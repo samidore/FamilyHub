@@ -18,7 +18,9 @@ test('inventory category jump bar is bottom-pinned, two-row, non-scrolling, data
   expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.clientWidth);
 
   const buttons = track.locator('button');
-  await expect(buttons).toHaveCount(12);
+  const jumpIds = await buttons.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-inventory-jump')));
+  const sectionIds = await page.locator('[data-inventory-section]').evaluateAll((nodes) => nodes.map((node) => node.getAttribute('data-inventory-section')));
+  expect(jumpIds).toEqual(sectionIds);
   const rowTops = await buttons.evaluateAll((nodes) => [...new Set(nodes.map((node) => Math.round(node.getBoundingClientRect().top)))]);
   expect(rowTops).toHaveLength(2);
   const heights = await buttons.evaluateAll((nodes) => nodes.map((node) => node.getBoundingClientRect().height));
