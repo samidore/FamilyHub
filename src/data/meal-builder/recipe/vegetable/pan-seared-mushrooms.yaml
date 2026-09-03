@@ -18,6 +18,12 @@ supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids:
   - king-oyster-mushrooms
   - button-cremini-mushrooms
+  - fresh-shiitake
+  - oyster-mushrooms
+  - shimeji-mushrooms
+  - enoki-mushrooms
+  - maitake
+  - fresh-wood-ear-mushrooms
 meal_contribution:
   protein: 0
   vegetable: 1
@@ -48,20 +54,26 @@ ingredients:
   - one_of:
       - king-oyster-mushrooms
       - button-cremini-mushrooms
+      - fresh-shiitake
+      - oyster-mushrooms
+      - shimeji-mushrooms
+      - enoki-mushrooms
+      - maitake
+      - fresh-wood-ear-mushrooms
     role: vegetable
 steps:
-  - 准备：菌菇表面清理干净并擦干；杏鲍菇切1 cm厚片，口蘑切半/厚片。；不要把湿菌菇堆进锅里。
+  - 准备：菌菇清理干净并擦干；杏鲍菇切1 cm厚片/长片，口蘑对半或厚切，鲜香菇去硬梗后对半/厚切，平菇撕成宽片，蟹味菇去根拆小簇，金针菇去根拆成小束，舞茸撕成一口大小，新鲜黑木耳去硬处后撕/切小块。不要把湿菌菇堆进锅里。
   - 大平底锅中大火预热，加2 tsp油；菌菇单层铺开。
-  - 先不动1–2分钟，让第一面真正上色；翻面继续煎。
-  - 菌菇开始缩小并释放少量水后，保持中大火把水汽蒸掉。
-  - 加盐和可选生抽，快速翻20秒。
-  - 表面金黄、中心熟透且锅底重新干爽时关火。
-  - 完成提示：菌菇表面金黄、内部多汁熟透；锅底无水，不是焖煮口感。
+  - 先不动1–2分钟，让杏鲍菇等厚片的接触面上色；较薄的金针菇小束、平菇和舞茸只需保持单层并适时翻动。分批下锅，避免拥挤。
+  - 菌菇开始缩小并释放水分后，保持中大火把水汽蒸掉；口蘑、平菇和新鲜黑木耳要炒到锅底重新干爽，黑木耳还要持续加热至完全热透、柔嫩，不只做短暂表面煎。
+  - 加盐和可选生抽，快速翻匀20秒。
+  - 加盐和可选生抽后快速翻匀；蟹味菇须无生硬感，金针菇应软塌熟透且边缘微焦，舞茸边缘可脆而中心熟透，再关火。
+  - 完成提示：各类菌菇均熟透；厚片两面金黄，薄束/撕块边缘上色，锅底无水，不是焖煮口感。
   - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
 child_serving: 优先取较软、较淡、易剪小的部分；若该 record 的 Child coverage 为 ingredient-dependent/false/unknown，不因此自动计入 Meal completion。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions:
-  - 杏鲍菇切厚片/条；口蘑切片或对半。出水速度不同，但共享煎出焦香后轻调味的 structure。
+  - 杏鲍菇切厚片/条；口蘑切片或对半；鲜香菇去硬梗；平菇撕宽片；蟹味菇和金针菇去根拆小簇；舞茸撕小块；新鲜黑木耳切/撕小块并充分炒熟。出水和成熟速度不同，必要时分批下锅，但共享煎出焦香后轻调味的做法。
 cook_ingredients:
-  - 杏鲍菇 / 口蘑 / Cremini：300–450 g；任选一种；实际选中项使用同一批量
+  - 任选一种已选菌菇：300–450 g；实际选中项使用同一批量
   - 基础调味：中性油 2 tsp；盐 1/2 tsp；生抽 1 tsp，可选

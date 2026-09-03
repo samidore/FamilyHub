@@ -54,3 +54,28 @@ test('presence-only rows show one state label and counted rows keep their contro
   await expect(counted.locator('[data-freezer-step]')).toHaveCount(2);
   await expect(counted.locator('[data-inventory-value="freezer-chicken-breast"]')).toHaveText('0');
 });
+
+test('thawing workspace starts only stocked thaw-required ingredients', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 900 });
+  await page.goto('meal-builder/');
+  await page.locator('[data-inventory-tab="freezer"]').click();
+
+  await expect(page.locator('[data-start-thaw]')).toHaveCount(0);
+  const chicken = page.locator('[data-inventory-item="chicken-breast"]');
+  await chicken.locator('[data-freezer-step="0.5"]').click();
+  await page.locator('[data-inventory-tab="thawing"]').click();
+
+  await expect(page.locator('[data-thaw-section="active"]')).toContainText('当前没有化冻中的食材');
+  const eligible = page.locator('[data-thaw-section="eligible"] [data-thaw-eligible="chicken-breast"]');
+  await expect(eligible).toContainText('鸡胸');
+  await expect(eligible.locator('[data-start-thaw]')).toHaveCount(1);
+  await expect(page.locator('[data-thaw-section="eligible"] [data-thaw-eligible="eggs"]')).toHaveCount(0);
+
+  await eligible.locator('[data-start-thaw]').click();
+  await expect(page.locator('[data-thaw-section="active"] [data-thawing-item]')).toHaveCount(1);
+  await expect(page.locator('[data-thaw-section="eligible"] [data-thaw-eligible="chicken-breast"]')).toHaveCount(0);
+  await expect(page.locator('[data-thawing-count]')).toHaveText('1');
+  await expect(page.locator('[data-thaw-section="active"]')).toContainText('进入库存');
+  await expect(page.locator('[data-thaw-section="active"]')).toContainText('取消化冻');
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
+});

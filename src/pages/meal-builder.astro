@@ -329,7 +329,6 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
         if (direct || source === 'inventory') { minus.dataset.inventoryStep = String(-COUNTED_INVENTORY_STEP); minus.dataset.inventoryIngredient = item.id; plus.dataset.inventoryStep = String(COUNTED_INVENTORY_STEP); plus.dataset.inventoryIngredient = item.id; } else { minus.dataset.freezerStep = String(-COUNTED_INVENTORY_STEP); minus.dataset.freezerIngredient = item.id; plus.dataset.freezerStep = String(COUNTED_INVENTORY_STEP); plus.dataset.freezerIngredient = item.id; }
         controls.append(toggle, minus, output, plus);
       }
-      if (source === 'freezer' && item.freezerBehavior === 'thaw-required') { const thaw = document.createElement('button'); thaw.type = 'button'; thaw.dataset.startThaw = item.id; thaw.className = 'button button--primary'; thaw.textContent = '化冻'; controls.append(thaw); }
       row.append(name, controls); parent.append(row);
     }
     function renderFreezer() {
@@ -343,9 +342,34 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
       if (!rendered) inventoryList.textContent = '暂无配置冷冻行为的食材。';
     }
     function renderThawing() {
-      inventoryList.replaceChildren(); const jobs = Object.entries(household.thawingItems).sort(([, a], [, b]) => a.readyAt - b.readyAt);
-      for (const [id, job] of jobs) { const row = document.createElement('article'); row.className = 'meal-inventory-item meal-thawing-item'; row.dataset.thawingItem = id; const item = ingredientById.get(job.ingredientId); const remaining = Math.max(0, job.readyAt - Date.now()); const hours = Math.floor(remaining / 3600000); const mins = Math.floor((remaining % 3600000) / 60000); row.append(ingredientNameNode(item ?? { id: job.ingredientId }), document.createTextNode(` ${job.quantity} · 剩余 ${hours}h ${mins}m · ${new Date(job.readyAt).toLocaleString('zh-CN')} 自动进入库存`)); const enter = document.createElement('button'); enter.type = 'button'; enter.dataset.completeThaw = id; enter.textContent = '进入库存'; const cancel = document.createElement('button'); cancel.type = 'button'; cancel.dataset.cancelThaw = id; cancel.textContent = '取消化冻'; row.append(enter, cancel); inventoryList.append(row); }
-      if (!jobs.length) inventoryList.textContent = '当前没有化冻中的食材。';
+      inventoryList.replaceChildren();
+      const jobs = Object.entries(household.thawingItems).sort(([, a], [, b]) => a.readyAt - b.readyAt);
+      const activeSection = document.createElement('section'); activeSection.className = 'meal-thaw-section'; activeSection.dataset.thawSection = 'active';
+      const activeHeading = document.createElement('h3'); activeHeading.textContent = '正在化冻'; activeSection.append(activeHeading);
+      const activeList = document.createElement('div'); activeList.className = 'meal-thaw-list'; activeSection.append(activeList);
+      for (const [id, job] of jobs) {
+        const row = document.createElement('article'); row.className = 'meal-inventory-item meal-thawing-item'; row.dataset.thawingItem = id;
+        const item = ingredientById.get(job.ingredientId); const remaining = Math.max(0, job.readyAt - Date.now()); const hours = Math.floor(remaining / 3600000); const mins = Math.floor((remaining % 3600000) / 60000);
+        const detail = document.createElement('span'); detail.className = 'meal-thaw-detail'; detail.textContent = `${job.quantity} · 剩余 ${hours}小时${mins}分钟 · ${new Date(job.readyAt).toLocaleString('zh-CN', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' })} 自动进入库存`;
+        row.append(ingredientNameNode(item ?? { id: job.ingredientId }), detail);
+        const actions = document.createElement('span'); actions.className = 'meal-inventory-controls';
+        const enter = document.createElement('button'); enter.type = 'button'; enter.dataset.completeThaw = id; enter.textContent = '进入库存';
+        const cancel = document.createElement('button'); cancel.type = 'button'; cancel.dataset.cancelThaw = id; cancel.textContent = '取消化冻'; actions.append(enter, cancel); row.append(actions); activeList.append(row);
+      }
+      if (!jobs.length) activeList.textContent = '当前没有化冻中的食材。';
+      inventoryList.append(activeSection);
+      const eligibleSection = document.createElement('section'); eligibleSection.className = 'meal-thaw-section'; eligibleSection.dataset.thawSection = 'eligible';
+      const eligibleHeading = document.createElement('h3'); eligibleHeading.textContent = '可以化冻'; eligibleSection.append(eligibleHeading);
+      const eligibleList = document.createElement('div'); eligibleList.className = 'meal-thaw-list'; eligibleSection.append(eligibleList);
+      const eligible = ingredients.filter((item) => { const quantity = household.freezerInventory[item.id]; return item.visible !== false && item.freezerBehavior === 'thaw-required' && typeof quantity === 'number' && quantity > 0; });
+      eligible.forEach((item) => {
+        const row = document.createElement('article'); row.className = 'meal-inventory-item meal-thaw-eligible-item'; row.dataset.thawEligible = item.id;
+        row.append(ingredientNameNode(item)); const detail = document.createElement('span'); detail.className = 'meal-thaw-detail'; detail.textContent = `冷冻数量：${household.freezerInventory[item.id]}`;
+        const thaw = document.createElement('button'); thaw.type = 'button'; thaw.dataset.startThaw = item.id; thaw.className = 'button button--primary'; thaw.textContent = '化冻';
+        const actions = document.createElement('span'); actions.className = 'meal-inventory-controls'; actions.append(detail, thaw); row.append(actions); eligibleList.append(row);
+      });
+      if (!eligible.length) eligibleList.textContent = '暂无可化冻食材。';
+      inventoryList.append(eligibleSection);
     }
     function renderInventory() {
       document.querySelectorAll<HTMLButtonElement>('[data-inventory-tab]').forEach((button) => { const active = button.dataset.inventoryTab === inventoryTab; button.classList.toggle('is-active', active); button.setAttribute('aria-selected', String(active)); });
@@ -535,6 +559,12 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
     .meal-inventory-tabs button.is-active { background: var(--ink, #332a2e); color: white; }
     .meal-thawing-item { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
     .meal-thawing-item .meal-inventory-name { margin-right: auto; }
+    .meal-thaw-section { display: grid; gap: 8px; }
+    .meal-thaw-section + .meal-thaw-section { margin-top: 18px; }
+    .meal-thaw-section h3 { margin: 0; color: var(--ink, #332a2e); font-size: 18px; }
+    .meal-thaw-list { display: grid; gap: 8px; }
+    .meal-thaw-detail { color: var(--muted, #75686d); font-size: 13px; }
+    .meal-thaw-eligible-item .meal-inventory-controls { gap: 8px; }
     .meal-ingredient-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px 12px; }
     .meal-bulk-actions { display: inline-flex; align-items: center; gap: 6px; }
     .meal-bulk-icon { display: inline-grid; width: 44px; height: 44px; flex: 0 0 44px; place-items: center; padding: 0; border: 1px solid currentColor; border-radius: 999px; cursor: pointer; }
