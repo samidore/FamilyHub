@@ -80,11 +80,25 @@ test('presence-only rows show one state label and counted rows keep their contro
   await expect(counted).toBeVisible();
 });
 
+test('frozen counted stock uses one aggregate +/- row with no separate +1 action', async ({ page }) => {
+  await page.goto('meal-builder/');
+  await page.locator('#meal-show-all').check();
+  const row = page.locator('[data-inventory-item="chicken-breast"]');
+  const freezer = row.locator('[data-storage-block="freezer"]');
+  await expect(freezer.locator('[data-stock-add][data-stock-storage="freezer"]')).toHaveCount(0);
+  await expect(freezer.locator('[data-storage-control-row="freezer"]')).toHaveCount(1);
+  await expect(freezer.locator('[data-stock-delta="-0.5"][data-stock-storage="freezer"]')).toHaveCount(1);
+  await expect(freezer.locator('[data-stock-delta="0.5"][data-stock-storage="freezer"]')).toHaveCount(1);
+  await expect(freezer).toContainText('冷冻');
+});
+
 test('thawing workspace starts only stocked thaw-required ingredients', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto('meal-builder/');
   await page.locator('#meal-show-all').check();
-  await page.locator('[data-inventory-item="chicken-breast"] [data-stock-add][data-stock-storage="freezer"]').click();
+  const freezerPlus = page.locator('[data-inventory-item="chicken-breast"] [data-stock-delta="0.5"][data-stock-storage="freezer"]');
+  await freezerPlus.click();
+  await freezerPlus.click();
   await expect(page.locator('[data-start-thaw]')).toHaveCount(2);
   await page.locator('[data-start-thaw][data-thaw-quantity="0.5"]').click();
   await expect(page.locator('[data-complete-thaw]')).toHaveCount(1);

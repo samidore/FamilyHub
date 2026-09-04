@@ -118,7 +118,6 @@
       const block = document.createElement('section');
       block.className = 'meal-storage-block';
       block.dataset.storageBlock = storage;
-      block.append(makeHeader(storage === 'freezer' ? '冷冻' : '冷藏', quantity, intake));
 
       const controlRow = row
         ? cleanAggregateRow(row, storage, valueDomain, ingredientId)
@@ -126,15 +125,19 @@
       const thawButtons = storage === 'freezer'
         ? [...controlRow.querySelectorAll<HTMLButtonElement>('[data-start-thaw]')]
         : [];
-      thawButtons.forEach((button) => button.remove());
-      block.append(controlRow);
 
-      if (thawRequired && quantity > 0 && thawButtons.length) {
-        const actions = document.createElement('div');
-        actions.className = 'meal-thaw-start-actions';
-        actions.append(...thawButtons);
-        block.append(actions);
+      if (storage === 'freezer') {
+        const label = controlRow.querySelector<HTMLElement>(':scope > span:first-child');
+        if (label) {
+          label.className = 'meal-storage-inline-label';
+          label.textContent = '冷冻';
+        }
+        if (!thawRequired || quantity <= 0) thawButtons.forEach((button) => button.remove());
+        block.append(controlRow);
+        return block;
       }
+
+      block.append(makeHeader('冷藏', quantity, intake), controlRow);
       return block;
     };
 
@@ -321,6 +324,10 @@
     align-items: center !important;
     justify-content: flex-start !important;
     gap: 7px !important;
+  }
+  .meal-builder-page .meal-storage-inline-label {
+    min-width: 4rem;
+    font-weight: 700;
   }
   .meal-builder-page .meal-stock-correction-row output {
     min-width: 2.25rem;

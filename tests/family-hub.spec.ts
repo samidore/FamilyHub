@@ -399,12 +399,16 @@ test('inventory lifecycle exposes frozen thaw actions and direct frozen stock on
   await page.locator('#meal-show-all').check();
 
   const thawRequired = page.locator('[data-inventory-item="chicken-breast"]');
-  await thawRequired.locator('[data-stock-add][data-stock-storage="freezer"]').click();
+  const thawRequiredPlus = thawRequired.locator('[data-stock-delta="0.5"][data-stock-storage="freezer"]');
+  await thawRequiredPlus.click();
+  await thawRequiredPlus.click();
   await expect(thawRequired.locator('[data-start-thaw]')).toHaveCount(2);
   await expect(thawRequired.locator('[data-batch-key]')).toHaveCount(0);
 
   const direct = page.locator('[data-inventory-item="frozen-chicken-patties"]');
-  await direct.locator('[data-stock-add][data-stock-storage="freezer"]').click();
+  const directPlus = direct.locator('[data-stock-delta="0.5"][data-stock-storage="freezer"]');
+  await directPlus.click();
+  await directPlus.click();
   await expect(direct.locator('.meal-stock-row')).toHaveCount(1);
   await expect(direct.locator('.meal-stock-row')).toContainText('冷冻');
   await expect(direct.locator('[data-start-thaw]')).toHaveCount(0);
