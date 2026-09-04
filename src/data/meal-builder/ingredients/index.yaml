@@ -19,8 +19,8 @@ categories:
       - chinese-sausage
       - pork-meatballs
   - id: chicken
-    label_zh: 鸡肉
-    label_en: Chicken
+    label_zh: 鸡鸭
+    label_en: Chicken / Duck
     order: 20
     visible: true
     file: chicken.yaml
@@ -35,13 +35,6 @@ categories:
       - chicken-gizzards
       - chicken-hearts
       - chicken-liver
-  - id: duck
-    label_zh: 鸭肉
-    label_en: Duck
-    order: 25
-    visible: true
-    file: duck.yaml
-    ingredient_ids:
       - duck-wings
   - id: beef
     label_zh: 牛肉

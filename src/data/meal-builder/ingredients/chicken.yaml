@@ -142,3 +142,15 @@ ingredients:
       order: 110
     tags:
       - low-priority
+  - id: duck-wings
+    type: ingredient
+    inventory_tracking: counted
+    freezer_behavior: thaw-required
+    status: candidate
+    name_zh: 鸭翅
+    name_en: Duck Wings
+    starter:
+      visible: true
+      section: chicken
+      order: 120
+    tags: []
