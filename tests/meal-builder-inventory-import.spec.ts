@@ -72,7 +72,7 @@ test('Chat inventory import can route reviewed rows into refrigerated and frozen
 
   const porkLifecycle = page.locator('[data-inventory-item="whole-pork-tenderloin"]');
   await expect(porkLifecycle).toContainText('冷冻');
-  await expect(porkLifecycle.locator('[data-start-thaw]')).toHaveCount(1);
+  await expect(porkLifecycle.locator('[data-start-thaw]')).toHaveCount(2);
   const directLifecycle = page.locator('[data-inventory-item="frozen-beef-patties"]');
   await expect(directLifecycle).toContainText('冷冻');
   await expect(directLifecycle.locator('[data-start-thaw]')).toHaveCount(0);

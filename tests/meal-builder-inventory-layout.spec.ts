@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('inventory and freezer controls stay on one row at mobile width', async ({ page }) => {
+test('inventory and freezer controls stack below the name at mobile width', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto('meal-builder/');
   await page.locator('#meal-show-all').check();
@@ -22,7 +22,7 @@ test('inventory and freezer controls stay on one row at mobile width', async ({ 
       return { rowWidth: rowBox.width, rowScrollWidth: element.scrollWidth, controlsTop: controls.top, controlsBottom: controls.bottom, nameTop: name.top, nameBottom: name.bottom, rowTop: rowBox.top, rowBottom: rowBox.bottom };
     });
     expect(layout.rowScrollWidth).toBeLessThanOrEqual(layout.rowWidth + 1);
-    expect(layout.controlsTop).toBeLessThan(layout.nameBottom);
+    expect(layout.controlsTop).toBeGreaterThanOrEqual(layout.nameBottom);
     expect(layout.controlsBottom).toBeLessThanOrEqual(layout.rowBottom + 1);
     expect(layout.controlsTop).toBeLessThan(layout.rowBottom);
     expect(layout.rowTop).toBeLessThan(layout.controlsBottom);
@@ -42,7 +42,6 @@ test('ordinary counted aggregate +/- changes through the inventory event path', 
   await page.goto('meal-builder/');
   await page.locator('#meal-show-all').check();
   const row = page.locator('[data-inventory-item="salmon"]');
-  await row.locator('[data-stock-add][data-stock-storage="inventory"]').click();
   await row.locator('[data-stock-add][data-stock-storage="inventory"]').click();
   await expect(row.locator('[data-inventory-value="salmon"]')).toHaveText('1');
   await row.locator('[data-stock-delta="0.5"][data-stock-storage="inventory"]').click();
@@ -86,8 +85,8 @@ test('thawing workspace starts only stocked thaw-required ingredients', async ({
   await page.goto('meal-builder/');
   await page.locator('#meal-show-all').check();
   await page.locator('[data-inventory-item="chicken-breast"] [data-stock-add][data-stock-storage="freezer"]').click();
-  await expect(page.locator('[data-start-thaw]')).toHaveCount(1);
-  await page.locator('[data-start-thaw]').click();
+  await expect(page.locator('[data-start-thaw]')).toHaveCount(2);
+  await page.locator('[data-start-thaw][data-thaw-quantity="0.5"]').click();
   await expect(page.locator('[data-complete-thaw]')).toHaveCount(1);
   await expect(page.locator('[data-cancel-thaw]')).toHaveCount(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);

@@ -28,7 +28,7 @@ test('frozen +/- is aggregate-only for direct and thaw-required stock', () => {
 
 test('freezer reserve starts a half-unit thaw atomically and completes once', () => {
   const initial = normalizeHouseholdState({ freezerInventory: { 'chicken-thighs': 0.5 }, inventory: {} }, ingredients);
-  const started = startThaw(initial, 'chicken-thighs', ingredients, 1000, 'job-1');
+  const started = startThaw(initial, 'chicken-thighs', ingredients, 1000, 'job-1', 0.5);
   assert.equal(started.freezerInventory['chicken-thighs'], undefined);
   assert.deepEqual(started.thawingItems['job-1'], { ingredientId: 'chicken-thighs', quantity: 0.5, startedAt: 1000, readyAt: 1000 + THAW_DURATION_MS });
   const completed = completeThaw(started, 'job-1', 2000, ingredients);

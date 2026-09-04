@@ -314,7 +314,10 @@ a { color: inherit; }
 .meal-shared-status span { color: var(--muted); font-size: 13px; }
 .meal-inventory-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: end; gap: 8px; }
 .meal-inventory-list { display: grid; gap: 8px; }
-.meal-inventory-item { display: flex; flex-wrap: nowrap; min-height: 58px; align-items: center; justify-content: space-between; gap: 6px; padding: 8px 9px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); }
+.meal-inventory-item { display: flex; flex-direction: column; min-height: 58px; align-items: stretch; gap: 8px; padding: 8px 9px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); }
+.meal-stock-states { display: grid; min-width: 0; gap: 6px; }
+.meal-stock-row { display: flex; min-width: 0; flex-wrap: wrap; align-items: center; gap: 6px; }
+.meal-stock-row > span, .meal-stock-row > output { min-width: 0; }
 .meal-inventory-name { flex: 1 1 auto; }
 .meal-inventory-name { display: grid; min-width: 0; }
 .meal-inventory-name strong { min-width: 0; overflow: hidden; font-size: clamp(12px, 4vw, 16px); line-height: 1.2; white-space: nowrap; }

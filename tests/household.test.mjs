@@ -4,6 +4,8 @@ import test from 'node:test';
 import {
   COUNTED_INVENTORY_STEP,
   RECENT_MEAL_LIMIT,
+  addStock,
+  adjustInventoryBatch,
   adjustInventoryItem,
   applyCheckout,
   applyCheckoutComposition,
@@ -14,6 +16,7 @@ import {
   normalizeHouseholdState,
   resetRecipeSelection,
   setCurrentMealStatus,
+  startThaw,
   toggleInventoryItem,
   toggleRecipeOptionalAddon,
   trackingForIngredient,
@@ -41,6 +44,33 @@ const compositionRecipe = {
   id: 'compose', order: 1, fitScore: 4, contribution: { protein: 1, vegetable: 0, staple: 0 }, childCoverage: { protein: true, vegetable: false },
   requirements: [{ anyOf: ['pork', 'beef'], role: 'main-protein' }], optionalGroupIds: ['one-pot-mix'], checkoutUnits: {}, mealWindowMinutes: '30', elapsedMinutes: '30', advanceStartRequired: false, tags: ['child-all-ingredients-eaten'],
 };
+
+const thawIngredients = [{ id: 'frozen-meat', inventoryTracking: 'counted', freezerBehavior: 'thaw-required' }, { id: 'fifo-meat', inventoryTracking: 'counted', inventoryFreshness: 'fifo', freshnessPriorityDays: 3 }];
+
+test('explicit thaw quantities are validated and remain independent', () => {
+  const base = { inventory: {}, inventoryBatches: {}, freezerInventory: { 'frozen-meat': 2 }, thawingItems: {}, discardedStock: {}, currentMeal: null, pendingCheckoutMeals: [], activeStep: 'inventory', recentMeals: [] };
+  const half = startThaw(base, 'frozen-meat', thawIngredients, 100, 'half', 0.5);
+  assert.equal(half.freezerInventory['frozen-meat'], 1.5);
+  assert.equal(half.thawingItems.half.quantity, 0.5);
+  const one = startThaw(half, 'frozen-meat', thawIngredients, 100, 'one', 1);
+  assert.equal(one.freezerInventory['frozen-meat'], 0.5);
+  assert.equal(one.thawingItems.one.quantity, 1);
+  assert.equal(Object.keys(one.thawingItems).length, 2);
+  const rejected = startThaw(one, 'frozen-meat', thawIngredients, 100, 'too-much', 1);
+  assert.equal(rejected, one);
+});
+
+test('FIFO +1 additions merge by date and exact batch corrections preserve dates', () => {
+  const base = { inventory: {}, inventoryBatches: {}, freezerInventory: {}, thawingItems: {}, discardedStock: {}, currentMeal: null, pendingCheckoutMeals: [], activeStep: 'inventory', recentMeals: [] };
+  const first = addStock(base, 'fifo-meat', 'inventory', 1, thawIngredients, '2026-09-04');
+  const sameDay = addStock(first, 'fifo-meat', 'inventory', 1, thawIngredients, '2026-09-04');
+  assert.deepEqual(sameDay.inventoryBatches['fifo-meat'], { '2026-09-04': 2 });
+  const later = addStock(sameDay, 'fifo-meat', 'inventory', 1, thawIngredients, '2026-08-05');
+  assert.deepEqual(later.inventoryBatches['fifo-meat'], { '2026-09-04': 2, '2026-08-05': 1 });
+  const corrected = adjustInventoryBatch(later, 'fifo-meat', '2026-09-04', -0.5, thawIngredients);
+  assert.deepEqual(corrected.inventoryBatches['fifo-meat'], { '2026-09-04': 1.5, '2026-08-05': 1 });
+  assert.equal(corrected.inventory['fifo-meat'], 2.5);
+});
 
 test('authentication errors keep an appropriate recovery action visible', async () => {
   const page = await readFile('src/pages/meal-builder.astro', 'utf8');

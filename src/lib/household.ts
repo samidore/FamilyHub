@@ -124,9 +124,9 @@ export function normalizeThawingItems(value: unknown, ingredients?: MealIngredie
   }
   return result;
 }
-export function startThaw(state: HouseholdState, ingredientId: string, ingredients?: MealIngredient[] | Record<string, MealIngredient>, now = Date.now(), jobId = createMealId()): HouseholdState {
-  if (freezerBehaviorForIngredient(ingredientId, ingredients) !== 'thaw-required') return state;
-  const available = state.freezerInventory[ingredientId]; const amount = typeof available === 'number' ? Math.min(1, available) : 0;
+export function startThaw(state: HouseholdState, ingredientId: string, ingredients?: MealIngredient[] | Record<string, MealIngredient>, now = Date.now(), jobId = createMealId(), requestedQuantity = 1): HouseholdState {
+  if (freezerBehaviorForIngredient(ingredientId, ingredients) !== 'thaw-required' || !isStepAligned(requestedQuantity) || ![0.5, 1].includes(requestedQuantity)) return state;
+  const available = state.freezerInventory[ingredientId]; const amount = typeof available === 'number' && available >= requestedQuantity ? requestedQuantity : 0;
   if (amount <= 0) return state;
   const nextFreezer = adjustInventoryItem(state.freezerInventory, ingredientId, -amount);
   return { ...state, freezerInventory: nextFreezer, thawingItems: { ...state.thawingItems, [jobId]: { ingredientId, quantity: amount, startedAt: now, readyAt: now + THAW_DURATION_MS } } };

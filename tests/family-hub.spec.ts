@@ -51,7 +51,7 @@ async function inventoryItem(page: Page, id: string) {
 async function setInventory(page: Page, ids: string[]) {
   const showAll = page.locator('#meal-show-all');
   if (!(await showAll.isChecked())) await showAll.check();
-  for (const id of ids) { const action = (await inventoryItem(page, id)).locator('[data-stock-add], [data-stock-toggle]').first(); await action.click(); if (await action.getAttribute('data-stock-add')) await action.click(); }
+  for (const id of ids) { const action = (await inventoryItem(page, id)).locator('[data-stock-add], [data-stock-toggle]').first(); await action.click(); }
 }
 
 async function startMeal(page: Page, ids: string[] = []) {
@@ -382,9 +382,8 @@ test('household inventory keeps counted half-steps, presence-only values, and vi
 
   const counted = page.locator('[data-inventory-item="chicken-breast"]');
   await counted.locator('[data-stock-add]').first().click();
-  await counted.locator('[data-stock-add]').first().click();
   await expect(counted.locator('[data-inventory-value="chicken-breast"]')).toHaveText('1');
-  await counted.locator('[data-stock-add]').first().click();
+  await counted.locator('[data-stock-delta="0.5"][data-stock-storage="inventory"]').click();
   await expect(counted.locator('[data-inventory-value="chicken-breast"]')).toHaveText('1.5');
   expect(await counted.locator('xpath=ancestor::details').getAttribute('open')).not.toBeNull();
 
@@ -401,7 +400,7 @@ test('inventory lifecycle exposes frozen thaw actions and direct frozen stock on
 
   const thawRequired = page.locator('[data-inventory-item="chicken-breast"]');
   await thawRequired.locator('[data-stock-add][data-stock-storage="freezer"]').click();
-  await expect(thawRequired.locator('[data-start-thaw]')).toHaveCount(1);
+  await expect(thawRequired.locator('[data-start-thaw]')).toHaveCount(2);
   await expect(thawRequired.locator('[data-batch-key]')).toHaveCount(0);
 
   const direct = page.locator('[data-inventory-item="frozen-chicken-patties"]');

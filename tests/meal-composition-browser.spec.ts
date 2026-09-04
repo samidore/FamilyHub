@@ -8,7 +8,7 @@ async function inventoryItem(page: Page, id: string) {
 }
 
 async function setInventory(page: Page, ids: string[]) {
-  for (const id of ids) { const action = (await inventoryItem(page, id)).locator('[data-stock-add], [data-stock-toggle]').first(); await action.click(); if (await action.getAttribute('data-stock-add')) await action.click(); }
+  for (const id of ids) { const action = (await inventoryItem(page, id)).locator('[data-stock-add], [data-stock-toggle]').first(); await action.click(); }
 }
 
 test('optional contributions have a clear editor, react immediately, complete the plan, and normal Next enters Cook', async ({ page }) => {
