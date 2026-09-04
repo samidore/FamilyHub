@@ -41,7 +41,7 @@ Storage must follow the canonical Ingredient's `freezer_behavior`:
 
 For backward compatibility, the consumer still accepts an omitted `storage`: `direct` defaults to `freezer`; every other Ingredient defaults to `inventory`.
 
-Anything that cannot be matched confidently to an active visible Ingredient goes in `unmatched`. The final response for this workflow should be the JSON object only, without a Markdown fence or surrounding explanation, so it can be pasted directly into Meal Builder.
+Anything that cannot be matched confidently to an active visible Ingredient goes in `unmatched`. The final response for this workflow should contain the JSON object in a `json` code block, with no surrounding explanation or other copyable content, so the code-block copy action yields paste-ready JSON for Meal Builder.
 
 ## JSON v1 contract
 
