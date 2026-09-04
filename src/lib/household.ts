@@ -275,6 +275,12 @@ export function adjustInventoryBatch(state: HouseholdState, ingredientId: string
   const inventoryBatches = { ...state.inventoryBatches }; if (Object.keys(nextBatches).length) inventoryBatches[ingredientId] = nextBatches; else delete inventoryBatches[ingredientId];
   return { ...state, inventory: adjustInventoryItem(state.inventory, ingredientId, delta), inventoryBatches };
 }
+export function adjustReadyAggregate(state: HouseholdState, ingredientId: string, delta: number, ingredients?: MealIngredient[] | Record<string, MealIngredient>): HouseholdState {
+  const item = ingredientRecord(ingredientId, ingredients);
+  if (!item || item.inventoryTracking === 'presence-only' || item.inventoryFreshness === 'fifo' || item.freezerBehavior || !isStepAligned(delta)) return state;
+  if (delta < 0 && (state.inventory[ingredientId] as number ?? 0) + delta < (queuedReservationUnits(state, ingredients)[ingredientId] ?? 0)) return state;
+  return { ...state, inventory: adjustInventoryItem(state.inventory, ingredientId, delta, 'counted') };
+}
 export function adjustFrozenAggregate(state: HouseholdState, ingredientId: string, delta: number, ingredients?: MealIngredient[] | Record<string, MealIngredient>): HouseholdState {
   const item = ingredientRecord(ingredientId, ingredients); if (!item?.freezerBehavior || item.inventoryTracking === 'presence-only' || !isStepAligned(delta)) return state;
   const target = item.freezerBehavior === 'direct' ? 'inventory' : 'freezerInventory';

@@ -30,6 +30,37 @@ test('inventory and freezer controls stay on one row at mobile width', async ({ 
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
 });
 
+test('unified inventory defaults to live stock and reveals zero-stock ingredients', async ({ page }) => {
+  await page.goto('meal-builder/');
+  await expect(page.locator('[data-inventory-tab]')).toHaveCount(0);
+  await expect(page.locator('[data-inventory-item]')).toHaveCount(0);
+  await page.locator('#meal-show-all').check();
+  await expect(page.locator('[data-inventory-item]')).not.toHaveCount(0);
+});
+
+test('ordinary counted aggregate +/- changes through the inventory event path', async ({ page }) => {
+  await page.goto('meal-builder/');
+  await page.locator('#meal-show-all').check();
+  const row = page.locator('[data-inventory-item="salmon"]');
+  await row.locator('[data-stock-add][data-stock-storage="inventory"]').click();
+  await row.locator('[data-stock-add][data-stock-storage="inventory"]').click();
+  await expect(row.locator('[data-inventory-value="salmon"]')).toHaveText('1');
+  await row.locator('[data-stock-delta="0.5"][data-stock-storage="inventory"]').click();
+  await expect(row.locator('[data-inventory-value="salmon"]')).toHaveText('1.5');
+  await row.locator('[data-stock-delta="-0.5"][data-stock-storage="inventory"]').click();
+  await expect(row.locator('[data-inventory-value="salmon"]')).toHaveText('1');
+});
+
+test('FIFO refrigerated inventory has one new-batch action outside batch rows', async ({ page }) => {
+  await page.goto('meal-builder/');
+  await page.locator('#meal-show-all').check();
+  const row = page.locator('[data-inventory-item="chicken-thighs"]');
+  await row.locator('[data-stock-add][data-stock-storage="inventory"]').click();
+  await expect(row.locator('[data-stock-add][data-stock-storage="inventory"]')).toHaveCount(1);
+  await expect(row.locator('[data-batch-key]')).toHaveCount(1);
+  await expect(row.locator('[data-batch-key] [data-stock-add]')).toHaveCount(0);
+});
+
 test('presence-only rows show one state label and counted rows keep their controls', async ({ page }) => {
   await page.goto('meal-builder/');
 

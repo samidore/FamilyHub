@@ -1,8 +1,15 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { adjustFrozenAggregate, adjustInventoryBatch, cancelThaw, completeThaw, discardStock, normalizeDiscardedStock, normalizeHouseholdState, reconcileDueThawing, startThaw, undoDiscard, STOCK_UNDO_WINDOW_MS, THAW_DURATION_MS } from '../src/lib/household.ts';
+import { adjustFrozenAggregate, adjustInventoryBatch, adjustReadyAggregate, cancelThaw, completeThaw, discardStock, normalizeDiscardedStock, normalizeHouseholdState, reconcileDueThawing, startThaw, undoDiscard, STOCK_UNDO_WINDOW_MS, THAW_DURATION_MS } from '../src/lib/household.ts';
 
 const ingredients = [{ id: 'chicken-thighs', inventoryTracking: 'counted', inventoryFreshness: 'fifo', freezerBehavior: 'thaw-required' }, { id: 'frozen-patties', inventoryTracking: 'counted', freezerBehavior: 'direct' }, { id: 'steamed-buns', inventoryTracking: 'presence-only', freezerBehavior: 'direct' }];
+const readyIngredients = [{ id: 'tomato', inventoryTracking: 'counted' }];
+
+test('ordinary counted ready stock uses aggregate +/- and protects queued reservations', () => {
+  const state = normalizeHouseholdState({ inventory: { tomato: 1 }, pendingCheckoutMeals: [{ mealId: 'queued', selectedRecipeIds: ['recipe'], recipeIngredientBindings: { recipe: ['tomato'] } }] }, readyIngredients);
+  assert.equal(adjustReadyAggregate(state, 'tomato', -0.5, readyIngredients).inventory.tomato, 1);
+  assert.equal(adjustReadyAggregate(state, 'tomato', 0.5, readyIngredients).inventory.tomato, 1.5);
+});
 
 test('refrigerated batch +/- changes only the selected date and aggregate', () => {
   const state = normalizeHouseholdState({ inventory: { 'chicken-thighs': 2 }, inventoryBatches: { 'chicken-thighs': { '2026-08-20': 1, '2026-08-21': 1 } } }, ingredients);
