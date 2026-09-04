@@ -227,6 +227,6 @@ Append `## Result` to this same handoff with only Status, validation outcome, an
 
 Status: BLOCKED
 
-Validation outcome: `pnpm run validate`, `pnpm run check`, `pnpm run build`, `pnpm run audit`, and all 191 unit tests passed. Focused Day Trips tests passed. Browser tests passed 37/38; the single failure is the unrelated existing Meal Builder navigation mobile-layout assertion.
+Validation outcome: Focused Day Trips tests passed (12/12). `pnpm run validate`, `pnpm run check`, `pnpm run build`, and `pnpm run audit` passed. The full unit suite passed all Day Trips tests but had two unrelated Meal Builder failures. Browser tests passed 37/38; the single failure is the unrelated Meal Builder navigation mobile-layout assertion.
 
-Blocker/deviation: `pnpm run verify` reached the Firebase rules stage but could not run because Java is unavailable (`Could not spawn java -version`).
+Blocker/deviation: `pnpm run test:rules` could not run because Java is unavailable (`Could not spawn java -version`); therefore `pnpm run verify` cannot complete.
