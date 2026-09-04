@@ -59,6 +59,7 @@ test('FIFO refrigerated inventory has one whole-unit add action outside batch ro
   await expect(row.locator('[data-stock-add][data-stock-storage="inventory"]')).toHaveText('+1');
   await expect(row.locator('[data-batch-key]')).toHaveCount(1);
   await expect(row.locator('[data-batch-key] [data-stock-add]')).toHaveCount(0);
+  await expect(row.locator('[data-batch-key] [data-discard-stock]')).toHaveText('丢掉');
 });
 
 test('presence-only rows show one state label and counted rows keep their controls', async ({ page }) => {
@@ -81,25 +82,34 @@ test('presence-only rows show one state label and counted rows keep their contro
   await expect(counted).toBeVisible();
 });
 
-test('frozen counted stock keeps half-unit correction plus a whole-unit add action', async ({ page }) => {
+test('thaw-required frozen stock keeps half-unit correction and one visible thaw action', async ({ page }) => {
   await page.goto('meal-builder/');
   await page.locator('#meal-show-all').check();
   const row = page.locator('[data-inventory-item="chicken-breast"]');
   const freezer = row.locator('[data-storage-block="freezer"]');
-  const wholeAdd = freezer.locator('[data-stock-add][data-stock-storage="freezer"]');
-  await expect(wholeAdd).toHaveCount(1);
-  await expect(wholeAdd).toHaveText('+1');
+  const freezerPlus = freezer.locator('[data-stock-delta="0.5"][data-stock-storage="freezer"]');
+  const thawAction = freezer.locator('[data-thaw-action]');
+
+  await expect(freezer.locator('[data-stock-add][data-stock-storage="freezer"]')).toHaveCount(0);
   await expect(freezer.locator('[data-storage-control-row="freezer"]')).toHaveCount(1);
   await expect(freezer.locator('[data-stock-delta="-0.5"][data-stock-storage="freezer"]')).toHaveCount(1);
-  await expect(freezer.locator('[data-stock-delta="0.5"][data-stock-storage="freezer"]')).toHaveCount(1);
-  await expect(freezer).toContainText('冷冻');
+  await expect(freezerPlus).toHaveCount(1);
+  await expect(thawAction).toHaveText('化冻');
+  await expect(thawAction).toBeDisabled();
 
-  await wholeAdd.click();
+  await freezerPlus.click();
+  await expect(freezer.locator('[data-freezer-value="chicken-breast"]')).toHaveText('0.5');
+  await expect(freezer.locator('[data-start-thaw]:visible')).toHaveCount(1);
+  await expect(thawAction).toHaveAttribute('data-thaw-quantity', '0.5');
+
+  await freezerPlus.click();
   await expect(freezer.locator('[data-freezer-value="chicken-breast"]')).toHaveText('1');
-  await freezer.locator('[data-stock-delta="0.5"][data-stock-storage="freezer"]').click();
-  await expect(freezer.locator('[data-freezer-value="chicken-breast"]')).toHaveText('1.5');
-  await freezer.locator('[data-stock-delta="-0.5"][data-stock-storage="freezer"]').click();
-  await expect(freezer.locator('[data-freezer-value="chicken-breast"]')).toHaveText('1');
+  await expect(freezer.locator('[data-start-thaw]:visible')).toHaveCount(1);
+  await expect(thawAction).toHaveAttribute('data-thaw-quantity', '1');
+
+  const direct = page.locator('[data-inventory-item="frozen-chicken-patties"] [data-storage-block="freezer"]');
+  await expect(direct.locator('[data-stock-add][data-stock-storage="freezer"]')).toHaveText('+1');
+  await expect(direct.locator('[data-thaw-action]')).toHaveCount(0);
 });
 
 test('FIFO and freezer quantity controls share columns at mobile width', async ({ page }) => {
@@ -112,7 +122,6 @@ test('FIFO and freezer quantity controls share columns at mobile width', async (
   const batch = cold.locator('[data-batch-key]').first();
   const coldAdd = cold.locator('.meal-storage-header [data-stock-add][data-stock-storage="inventory"]');
 
-  const frozen = page.locator('[data-inventory-item="chicken-breast"] [data-storage-block="freezer"]');
   const positions = await page.evaluate(() => {
     const rect = (selector: string) => document.querySelector<HTMLElement>(selector)!.getBoundingClientRect();
     const coldMinus = rect('[data-inventory-item="whole-pork-tenderloin"] [data-batch-key] [data-stock-delta="-0.5"]');
@@ -121,7 +130,7 @@ test('FIFO and freezer quantity controls share columns at mobile width', async (
     const discard = rect('[data-inventory-item="whole-pork-tenderloin"] [data-batch-key] [data-discard-stock]');
     const frozenMinus = rect('[data-inventory-item="chicken-breast"] [data-storage-block="freezer"] [data-stock-delta="-0.5"]');
     const frozenPlus = rect('[data-inventory-item="chicken-breast"] [data-storage-block="freezer"] [data-stock-delta="0.5"]');
-    const frozenAction = rect('[data-inventory-item="chicken-breast"] [data-storage-block="freezer"] [data-stock-add][data-stock-storage="freezer"]');
+    const frozenAction = rect('[data-inventory-item="chicken-breast"] [data-storage-block="freezer"] [data-thaw-action]');
     return {
       coldMinusX: coldMinus.x,
       frozenMinusX: frozenMinus.x,
@@ -131,6 +140,8 @@ test('FIFO and freezer quantity controls share columns at mobile width', async (
       discardX: discard.x,
       frozenActionX: frozenAction.x,
       coldActionWidth: coldAction.width,
+      discardWidth: discard.width,
+      frozenActionWidth: frozenAction.width,
     };
   });
 
@@ -138,7 +149,9 @@ test('FIFO and freezer quantity controls share columns at mobile width', async (
   expect(Math.abs(positions.coldPlusX - positions.frozenPlusX)).toBeLessThanOrEqual(1);
   expect(Math.abs(positions.coldActionX - positions.discardX)).toBeLessThanOrEqual(1);
   expect(Math.abs(positions.coldActionX - positions.frozenActionX)).toBeLessThanOrEqual(1);
-  expect(positions.coldActionWidth).toBeLessThanOrEqual(56);
+  expect(positions.coldActionWidth).toBeGreaterThanOrEqual(60);
+  expect(Math.abs(positions.coldActionWidth - positions.discardWidth)).toBeLessThanOrEqual(1);
+  expect(Math.abs(positions.coldActionWidth - positions.frozenActionWidth)).toBeLessThanOrEqual(1);
   await expect(batch).toBeVisible();
   await expect(coldAdd).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
@@ -148,9 +161,16 @@ test('thawing workspace starts only stocked thaw-required ingredients', async ({
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto('meal-builder/');
   await page.locator('#meal-show-all').check();
-  await page.locator('[data-inventory-item="chicken-breast"] [data-stock-add][data-stock-storage="freezer"]').click();
-  await expect(page.locator('[data-start-thaw]')).toHaveCount(2);
-  await page.locator('[data-start-thaw][data-thaw-quantity="0.5"]').click();
+  const row = page.locator('[data-inventory-item="chicken-breast"]');
+  const freezerPlus = row.locator('[data-stock-delta="0.5"][data-stock-storage="freezer"]');
+  const thawAction = row.locator('[data-thaw-action]');
+  await expect(thawAction).toBeDisabled();
+  await freezerPlus.click();
+  await freezerPlus.click();
+  await expect(thawAction).toBeEnabled();
+  await expect(thawAction).toHaveAttribute('data-thaw-quantity', '1');
+  await expect(row.locator('[data-start-thaw]:visible')).toHaveCount(1);
+  await thawAction.click();
   await expect(page.locator('[data-complete-thaw]')).toHaveCount(1);
   await expect(page.locator('[data-cancel-thaw]')).toHaveCount(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
