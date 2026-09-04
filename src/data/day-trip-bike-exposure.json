@@ -1,4 +1,79 @@
 {
+  "ja-mcfaul-environmental-center": {
+    "Sanctuary Grounds": "low"
+  },
+  "trailside-nature-science-center": {
+    "Reservation Trails": "low"
+  },
+  "flat-rock-brook-nature-center": {
+    "Nature Center Preserve Trails": "low"
+  },
+  "flat-rock-brook-jones-road": {
+    "Orange Loop": "low"
+  },
+  "essex-county-environmental-center": {
+    "Wetland Trails": "low"
+  },
+  "greenburgh-nature-center": {
+    "Grounds": "low"
+  },
+  "teatown-nature-center-lakeside": {
+    "Lakeside & Main Preserve Trails": "low"
+  },
+  "teatown-cliffdale-farm": {
+    "Cliffdale Trails": "low"
+  },
+  "dunkerhook-saddle-river": {
+    "Multi-use Path & Falls": "high"
+  },
+  "glen-rock-duck-pond": {
+    "Pond & Multi-use Path": "high"
+  },
+  "thielke-arboretum": {
+    "Arboretum Grounds": "low"
+  },
+  "new-jersey-botanical-garden": {
+    "Garden Grounds": "high"
+  },
+  "frelinghuysen-arboretum": {
+    "Arboretum Grounds": "low"
+  },
+  "wave-hill": {
+    "Gardens & Paved Routes": "low"
+  },
+  "rockefeller-main-entrance-swan-lake": {
+    "Swan Lake & Carriage Roads": "low"
+  },
+  "rockefeller-rockwood-hall": {
+    "Rockwood Hall Grounds": "low"
+  },
+  "duke-farms": {
+    "Estate Grounds": "high"
+  },
+  "wild-duck-pond-playground": {
+    "Pond & Multi-use Path": "high"
+  },
+  "saddle-river-otto-pehle-area": {
+    "Pond Loop & Multi-use Path": "high"
+  },
+  "saddle-river-rochelle-park-area": {
+    "River Multi-use Path": "high"
+  },
+  "irene-habernickel-family-park": {
+    "Nature Trails": "low"
+  },
+  "tenafly-nature-center": {
+    "Forest Preserve": "low"
+  },
+  "lorrimer-sanctuary": {
+    "Sanctuary Trails": "low"
+  },
+  "overpeck-henry-hoebel-north": {
+    "Paved Park Loop": "high"
+  },
+  "overpeck-ridgefield-park-area": {
+    "Mixed-use Paths & Nature Overlook": "high"
+  },
   "campgaw-mountain-reservation": {
     "Hemlock Trail": "low"
   },
@@ -79,41 +154,5 @@
   },
   "great-swamp-wildlife-observation-center": {
     "Wildlife Observation Center Boardwalks & Trails": "low"
-  },
-  "dunkerhook-saddle-river": {
-    "Multi-use Path & Falls": "high"
-  },
-  "glen-rock-duck-pond": {
-    "Pond & Multi-use Path": "high"
-  },
-  "wild-duck-pond-playground": {
-    "Pond & Multi-use Path": "high"
-  },
-  "saddle-river-otto-pehle-area": {
-    "Pond Loop & Multi-use Path": "high"
-  },
-  "saddle-river-rochelle-park-area": {
-    "River Multi-use Path": "high"
-  },
-  "overpeck-henry-hoebel-north": {
-    "Paved Park Loop": "high"
-  },
-  "overpeck-ridgefield-park-area": {
-    "Mixed-use Paths & Nature Overlook": "high"
-  },
-  "duke-farms": {
-    "Estate Grounds": "high"
-  },
-  "teatown-nature-center-lakeside": {
-    "Lakeside & Main Preserve Trails": "low"
-  },
-  "teatown-cliffdale-farm": {
-    "Cliffdale Trails": "low"
-  },
-  "rockefeller-main-entrance-swan-lake": {
-    "Swan Lake & Carriage Roads": "low"
-  },
-  "rockefeller-rockwood-hall": {
-    "Rockwood Hall Grounds": "low"
   }
 }
