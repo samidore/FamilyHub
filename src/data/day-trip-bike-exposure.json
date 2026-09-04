@@ -1,0 +1,119 @@
+{
+  "campgaw-mountain-reservation": {
+    "Hemlock Trail": "low"
+  },
+  "ramapo-valley-scarlet-oak-pond": {
+    "Scarlet Oak Pond Orange/Yellow Loop": "low"
+  },
+  "mills-reservation-trail": {
+    "West/Glen/Eastview Trail Loop": "low"
+  },
+  "rifle-camp-park-red-trail": {
+    "Red Trail and Yellow/Red Trail": "high"
+  },
+  "garrett-mountain-barbour-pond": {
+    "Barbour Pond Loop": "low"
+  },
+  "donch-preserve-haledon-reservoir": {
+    "Haledon Reservoir White Trail Loop": "low"
+  },
+  "ringwood-shepherd-lake": {
+    "Shepherd Lake Loop": "low"
+  },
+  "tallman-mountain-outer-loop": {
+    "Tallman Mountain Outer Loop": "low"
+  },
+  "blauvelt-state-park-camp-bluefields": {
+    "Camp Bluefields Trail": "low"
+  },
+  "clausland-mountain-orange-trail": {
+    "Orange Trail": "low"
+  },
+  "south-mountain-hemlock-falls": {
+    "Hobble Falls + Hemlock Falls via Lenape": "low"
+  },
+  "south-mountain-rahway-maple-falls": {
+    "Rahway and Maple Falls Loop": "low"
+  },
+  "south-mountain-crest-trail": {
+    "Crest Trail to Crest Loop": "low"
+  },
+  "watchung-lake-surprise": {
+    "Lake Surprise via W. R. Tracy Drive": "low"
+  },
+  "mountain-way-white-trail": {
+    "White Trail Loop": "low"
+  },
+  "jonathans-woods-purple-white": {
+    "Purple and White Trail Loop": "high"
+  },
+  "cranberry-lake-preserve-loop": {
+    "Red, Purple and Yellow Loop": "low"
+  },
+  "kennedy-dells-park": {
+    "Kennedy Dells Park Trail": "low"
+  },
+  "saxon-woods-yellow-trail": {
+    "Mamaroneck Reservoir via Yellow Trail": "high"
+  },
+  "cascade-lake-red-trail": {
+    "Cascade Lake Loop (Red Trail)": "low"
+  },
+  "macy-park-irvington-reservoir": {
+    "Irvington Reservoir via V. E. Macy Park Trail": "low"
+  },
+  "old-croton-aqueduct-dam": {
+    "Old Croton Aqueduct Dam Trail": "high"
+  },
+  "india-brook-buttermilk-falls": {
+    "Buttermilk Falls and Frog Pond Loop": "low"
+  },
+  "tourne-red-decamp-loop": {
+    "Red and Decamp Trail Loop": "high"
+  },
+  "lord-stirling-red-green-blue": {
+    "Red, Green and Blue Trail": "low"
+  },
+  "ringwood-manor-trail": {
+    "Ringwood Manor Trail": "low"
+  },
+  "great-swamp-wildlife-observation-center": {
+    "Wildlife Observation Center Boardwalks & Trails": "low"
+  },
+  "dunkerhook-saddle-river": {
+    "Multi-use Path & Falls": "high"
+  },
+  "glen-rock-duck-pond": {
+    "Pond & Multi-use Path": "high"
+  },
+  "wild-duck-pond-playground": {
+    "Pond & Multi-use Path": "high"
+  },
+  "saddle-river-otto-pehle-area": {
+    "Pond Loop & Multi-use Path": "high"
+  },
+  "saddle-river-rochelle-park-area": {
+    "River Multi-use Path": "high"
+  },
+  "overpeck-henry-hoebel-north": {
+    "Paved Park Loop": "high"
+  },
+  "overpeck-ridgefield-park-area": {
+    "Mixed-use Paths & Nature Overlook": "high"
+  },
+  "duke-farms": {
+    "Estate Grounds": "high"
+  },
+  "teatown-nature-center-lakeside": {
+    "Lakeside & Main Preserve Trails": "low"
+  },
+  "teatown-cliffdale-farm": {
+    "Cliffdale Trails": "low"
+  },
+  "rockefeller-main-entrance-swan-lake": {
+    "Swan Lake & Carriage Roads": "low"
+  },
+  "rockefeller-rockwood-hall": {
+    "Rockwood Hall Grounds": "low"
+  }
+}
