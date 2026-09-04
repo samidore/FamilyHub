@@ -1,5 +1,6 @@
 import rawDayTrips from './day-trips.json';
 import rawDayTripParking from './day-trip-parking.json';
+import rawDayTripBikeExposure from './day-trip-bike-exposure.json';
 import rawLibraryEvents from './library-events.json';
 import rawPediatricDentists from './pediatric-dentists.json';
 import rawAdultDermatologists from './adult-dermatologists.json';
@@ -8,11 +9,12 @@ import rawObGynProviders from './ob-gyn.json';
 import rawRestaurants from './restaurants.json';
 import { mealRecipes } from './meal';
 import { parseDayTripParking, parseDayTrips } from './dayTripSchema.mjs';
+import { parseDayTripBikeExposure } from './dayTripBikeExposure';
 import { parseAdultDermatologists, parseColonoscopySpecialists, parseLibraryEvents, parsePediatricDentists } from './schemas.mjs';
 import { parseObGynProviders } from './obGynSchema.mjs';
 import { parseRestaurants } from './restaurantSchema.mjs';
 import type { DayTripParking, DayTripWithParking } from './dayTripParking';
-import type { AdultDermatologist, ColonoscopySpecialist, DayTrip, LibraryEvent, PediatricDentist } from './types';
+import type { AdultDermatologist, ColonoscopySpecialist, DayTrip, DayTripLocation, LibraryEvent, PediatricDentist } from './types';
 import type { ObGynProvider } from './obGynTypes';
 import type { Restaurant } from './restaurantTypes';
 import type { ModuleId } from '../config/modules';
@@ -44,9 +46,43 @@ const dayTripTrailUrls: Record<string, string> = {
   'india-brook-buttermilk-falls': 'https://www.alltrails.com/trail/us/new-jersey/buttermilk-falls-and-frog-pond-loop',
   'tourne-red-decamp-loop': 'https://www.alltrails.com/trail/us/new-jersey/the-tourne-via-red-and-yellow-trail-loop',
   'lord-stirling-red-green-blue': 'https://www.alltrails.com/trail/us/new-jersey/the-great-swamp-red-trail',
+  'great-swamp-wildlife-observation-center': 'https://www.alltrails.com/trail/us/new-jersey/wildlife-observation-center-trails',
 };
 
-const parsedDayTrips = parseDayTrips(rawDayTrips) as DayTrip[];
+type LegacyDayTripLocation = Omit<DayTripLocation, 'bikeExposure'> & {
+  bicycleAccess: 'prohibited' | 'allowed' | 'unknown';
+};
+type LegacyDayTrip = Omit<DayTrip, 'locations'> & { locations: LegacyDayTripLocation[] };
+
+const legacyDayTrips = parseDayTrips(rawDayTrips) as LegacyDayTrip[];
+const dayTripBikeExposure = parseDayTripBikeExposure(rawDayTripBikeExposure, legacyDayTrips);
+
+function normalizeDayTripLocation(tripId: string, legacyLocation: LegacyDayTripLocation): DayTripLocation {
+  const { bicycleAccess: _legacyBicycleAccess, ...location } = legacyLocation;
+  const explicitExposure = dayTripBikeExposure[tripId]?.[location.name];
+  const bikeExposure = explicitExposure ?? (
+    location.environment === 'indoor' || !location.tags.includes('woody-walk') ? 'low' : 'unknown'
+  );
+  return { ...location, bikeExposure };
+}
+
+const parsedDayTrips = legacyDayTrips.map((trip): DayTrip => {
+  const locations = trip.locations.map((location) => normalizeDayTripLocation(trip.id, location));
+
+  if (trip.id !== 'great-swamp-wildlife-observation-center') return { ...trip, locations };
+
+  const { notice: _legacyPetNotice, ...tripWithoutNotice } = trip;
+  return {
+    ...tripWithoutNotice,
+    note: 'Wildlife Observation Center 是湿地森林里的木栈道和石粉步道网络；路线平缓，适合短走、看鸟和观察湿地野生动物。',
+    locations: locations.map((location) => ({
+      ...location,
+      tags: location.tags.includes('woody-walk') ? location.tags : ['woody-walk', ...location.tags],
+      stroller: true,
+    })),
+  };
+});
+
 const dayTripParking = parseDayTripParking(rawDayTripParking, parsedDayTrips.map((trip) => trip.id)) as Record<string, DayTripParking>;
 export const dayTrips = parsedDayTrips.map((trip) => {
   const parking = dayTripParking[trip.id];
