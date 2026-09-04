@@ -23,7 +23,29 @@
     const intakeFor = (elements: HTMLElement[], storage: 'inventory' | 'freezer') =>
       elements.find((element) => element.matches(`button[data-stock-add][data-stock-storage="${storage}"]`)) as HTMLButtonElement | undefined;
 
-    const makeCorrectionRow = (ingredientId: string, storage: 'inventory' | 'freezer', quantity: number) => {
+    const setOutputDomain = (output: HTMLOutputElement, domain: 'inventory' | 'freezer', ingredientId: string) => {
+      if (domain === 'inventory') {
+        output.dataset.inventoryValue = ingredientId;
+        delete output.dataset.freezerValue;
+      } else {
+        output.dataset.freezerValue = ingredientId;
+        delete output.dataset.inventoryValue;
+      }
+    };
+
+    const storageLabel = (storage: 'inventory' | 'freezer') => {
+      const label = document.createElement('span');
+      label.className = 'sr-only';
+      label.textContent = storage === 'freezer' ? '冷冻' : '冷藏';
+      return label;
+    };
+
+    const makeCorrectionRow = (
+      ingredientId: string,
+      storage: 'inventory' | 'freezer',
+      quantity: number,
+      valueDomain: 'inventory' | 'freezer',
+    ) => {
       const row = document.createElement('div');
       row.className = 'meal-stock-row meal-stock-correction-row';
       row.dataset.storageControlRow = storage;
@@ -37,7 +59,7 @@
       minus.disabled = quantity <= 0;
 
       const output = document.createElement('output');
-      output.dataset.inventoryValue = ingredientId;
+      setOutputDomain(output, valueDomain, ingredientId);
       output.textContent = String(quantity);
 
       const plus = document.createElement('button');
@@ -47,15 +69,27 @@
       plus.dataset.stockStorage = storage;
       plus.dataset.stockItem = ingredientId;
 
-      row.append(minus, output, plus);
+      row.append(storageLabel(storage), minus, output, plus);
       return row;
     };
 
-    const cleanAggregateRow = (row: HTMLElement, storage: 'inventory' | 'freezer') => {
+    const cleanAggregateRow = (
+      row: HTMLElement,
+      storage: 'inventory' | 'freezer',
+      valueDomain: 'inventory' | 'freezer',
+      ingredientId: string,
+    ) => {
       row.classList.add('meal-stock-correction-row');
       row.dataset.storageControlRow = storage;
       const label = row.querySelector<HTMLElement>(':scope > span:first-child');
-      if (label && /^(冷藏|冷冻)/.test(label.textContent?.trim() ?? '')) label.remove();
+      if (label && /^(冷藏|冷冻)/.test(label.textContent?.trim() ?? '')) {
+        label.className = 'sr-only';
+        label.textContent = storage === 'freezer' ? '冷冻' : '冷藏';
+      } else if (!label?.classList.contains('sr-only')) {
+        row.prepend(storageLabel(storage));
+      }
+      const output = row.querySelector<HTMLOutputElement>('output');
+      if (output) setOutputDomain(output, valueDomain, ingredientId);
       return row;
     };
 
@@ -79,13 +113,16 @@
       row: HTMLElement | undefined,
       intake: HTMLButtonElement | undefined,
       thawRequired: boolean,
+      valueDomain: 'inventory' | 'freezer',
     ) => {
       const block = document.createElement('section');
       block.className = 'meal-storage-block';
       block.dataset.storageBlock = storage;
       block.append(makeHeader(storage === 'freezer' ? '冷冻' : '冷藏', quantity, intake));
 
-      const controlRow = row ? cleanAggregateRow(row, storage) : makeCorrectionRow(ingredientId, storage, quantity);
+      const controlRow = row
+        ? cleanAggregateRow(row, storage, valueDomain, ingredientId)
+        : makeCorrectionRow(ingredientId, storage, quantity, valueDomain);
       const thawButtons = storage === 'freezer'
         ? [...controlRow.querySelectorAll<HTMLButtonElement>('[data-start-thaw]')]
         : [];
@@ -189,7 +226,7 @@
           const toggle = frozenRow?.querySelector<HTMLButtonElement>('[data-stock-toggle]') ?? looseToggle;
           rebuilt.push(makePresenceBlock('freezer', Boolean(frozenRow), toggle));
         } else {
-          rebuilt.push(makeCountedBlock(ingredientId, 'freezer', quantityFromRow(frozenRow), frozenRow, frozenIntake, false));
+          rebuilt.push(makeCountedBlock(ingredientId, 'freezer', quantityFromRow(frozenRow), frozenRow, frozenIntake, false, 'inventory'));
         }
       } else {
         if (tracking === 'presence-only') {
@@ -199,7 +236,7 @@
           const embeddedIntake = fifoHost.querySelector<HTMLButtonElement>(':scope > button[data-stock-add][data-stock-storage="inventory"]') ?? coldIntake;
           rebuilt.push(prepareBatchBlock(fifoHost, embeddedIntake));
         } else {
-          rebuilt.push(makeCountedBlock(ingredientId, 'inventory', quantityFromRow(coldRow), coldRow, coldIntake, false));
+          rebuilt.push(makeCountedBlock(ingredientId, 'inventory', quantityFromRow(coldRow), coldRow, coldIntake, false, 'inventory'));
         }
 
         if (meta.freezerBehavior) {
@@ -207,7 +244,7 @@
             const frozenToggle = frozenRow?.querySelector<HTMLButtonElement>('[data-stock-toggle]') ?? undefined;
             rebuilt.push(makePresenceBlock('freezer', Boolean(frozenRow), frozenToggle));
           } else {
-            rebuilt.push(makeCountedBlock(ingredientId, 'freezer', quantityFromRow(frozenRow), frozenRow, frozenIntake, thawRequired));
+            rebuilt.push(makeCountedBlock(ingredientId, 'freezer', quantityFromRow(frozenRow), frozenRow, frozenIntake, thawRequired, 'freezer'));
           }
         }
       }
