@@ -100,10 +100,44 @@
       title.textContent = quantity === null ? label : `${label} ${quantity}`;
       header.append(title);
       if (action) {
-        action.classList.add('meal-storage-intake');
+        action.classList.add('meal-storage-action', 'meal-storage-intake');
         header.append(action);
       }
       return header;
+    };
+
+    const prepareThawAction = (
+      ingredientId: string,
+      quantity: number,
+      thawButtons: HTMLButtonElement[],
+    ) => {
+      const targetQuantity = quantity >= 1 ? '1' : quantity >= 0.5 ? '0.5' : null;
+      const action = targetQuantity
+        ? thawButtons.find((button) => button.dataset.thawQuantity === targetQuantity)
+        : undefined;
+
+      if (action) {
+        action.textContent = '化冻';
+        action.classList.add('meal-storage-action');
+        action.dataset.thawAction = ingredientId;
+      }
+
+      const hiddenAlternatives = thawButtons.filter((button) => button !== action);
+      hiddenAlternatives.forEach((button) => {
+        button.hidden = true;
+        button.tabIndex = -1;
+        button.setAttribute('aria-hidden', 'true');
+      });
+
+      if (action) return { action, hiddenAlternatives };
+
+      const disabled = document.createElement('button');
+      disabled.type = 'button';
+      disabled.textContent = '化冻';
+      disabled.disabled = true;
+      disabled.className = 'meal-storage-action';
+      disabled.dataset.thawAction = ingredientId;
+      return { action: disabled, hiddenAlternatives };
     };
 
     const makeCountedBlock = (
@@ -133,16 +167,17 @@
           label.className = 'meal-storage-inline-label';
           label.textContent = '冷冻';
         }
-        if (intake) {
-          intake.classList.add('meal-storage-intake');
-          controlRow.append(intake);
-        }
-        block.append(controlRow);
-        if (thawRequired && quantity > 0 && thawButtons.length) {
-          const actions = document.createElement('div');
-          actions.className = 'meal-thaw-start-actions';
-          actions.append(...thawButtons);
-          block.append(actions);
+
+        if (thawRequired) {
+          const { action, hiddenAlternatives } = prepareThawAction(ingredientId, quantity, thawButtons);
+          controlRow.append(action);
+          block.append(controlRow, ...hiddenAlternatives);
+        } else {
+          if (intake) {
+            intake.classList.add('meal-storage-action', 'meal-storage-intake');
+            controlRow.append(intake);
+          }
+          block.append(controlRow);
         }
         return block;
       }
@@ -159,7 +194,7 @@
       const block = document.createElement('section');
       block.className = 'meal-storage-block';
       block.dataset.storageBlock = storage;
-      if (toggle) toggle.classList.add('meal-storage-intake');
+      if (toggle) toggle.classList.add('meal-storage-action', 'meal-storage-intake');
       block.append(makeHeader(`${storage === 'freezer' ? '冷冻' : '冷藏'}${present ? ' · 有' : ''}`, null, toggle));
       return block;
     };
@@ -172,7 +207,14 @@
       const total = batchRows.reduce((sum, row) => sum + quantityFromRow(row), 0);
       const header = makeHeader('冷藏', total, intake);
       heading?.remove();
-      batchRows.forEach((row) => row.classList.add('meal-batch-row'));
+      batchRows.forEach((row) => {
+        row.classList.add('meal-batch-row');
+        const discard = row.querySelector<HTMLButtonElement>('[data-discard-stock]');
+        if (discard) {
+          discard.textContent = '丢掉';
+          discard.classList.add('meal-storage-action');
+        }
+      });
       host.prepend(header);
       return host;
     };
@@ -303,7 +345,7 @@
   .meal-builder-page .meal-stock-states.meal-inventory-controls {
     --meal-stock-control-width: 2.75rem;
     --meal-stock-value-width: 2.25rem;
-    --meal-stock-action-width: 3rem;
+    --meal-stock-action-width: 4rem;
     --meal-stock-gap: 6px;
     display: grid !important;
     min-width: 0;
@@ -339,14 +381,14 @@
     min-width: 0;
     grid-column: 1;
   }
-  .meal-builder-page .meal-storage-intake {
+  .meal-builder-page .meal-storage-action {
     width: var(--meal-stock-action-width);
     min-width: 0;
-    padding-inline: 0.2rem !important;
+    padding-inline: 0.25rem !important;
     justify-self: center;
   }
-  .meal-builder-page .meal-storage-header .meal-storage-intake,
-  .meal-builder-page .meal-stock-correction-row .meal-storage-intake {
+  .meal-builder-page .meal-storage-header .meal-storage-action,
+  .meal-builder-page .meal-stock-correction-row .meal-storage-action {
     grid-column: 5;
   }
   .meal-builder-page .meal-storage-inline-label {
@@ -375,20 +417,14 @@
     grid-column: 1;
   }
   .meal-builder-page .meal-batch-row [data-discard-stock] {
-    width: var(--meal-stock-action-width);
-    min-width: 0;
     grid-column: 5;
-    padding-inline: 0.2rem !important;
-    justify-self: center;
   }
-  .meal-builder-page .meal-thaw-start-actions,
   .meal-builder-page .meal-thaw-job__actions {
     display: flex;
     min-width: 0;
     flex-wrap: wrap;
     gap: 7px;
   }
-  .meal-builder-page .meal-thaw-start-actions { justify-content: flex-end; }
   .meal-builder-page .meal-thaw-job {
     display: grid !important;
     width: 100%;
