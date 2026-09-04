@@ -348,6 +348,6 @@ Status: BLOCKED
 
 Validation: `pnpm run validate`, `pnpm run check`, `pnpm run build`, `pnpm run audit`, `pnpm run test:unit`, and `pnpm run test:browser` pass locally. `pnpm run test:rules` was attempted but is blocked locally because Java is unavailable; CI rules/deploy must confirm before final acceptance.
 
-Implementation commit SHA: pending.
+Implementation commit SHA: a5467e08a643dc5305843ee42c8650e74025fb80 (handoff update will amend this commit).
 
 The implementation removes normal frozen batch metadata, adds unified Inventory visibility and batch/aggregate controls, preserves thaw jobs and refrigerated discard/undo, updates migration/import/rules/docs, and updates focused regressions.
