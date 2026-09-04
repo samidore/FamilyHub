@@ -4,7 +4,7 @@ export function filterDayTripLocations(locations, { weather = 'sunny', environme
     .filter((location) => !environment || location.environment === environment)
     .filter((location) => !stroller || location.stroller === true)
     .filter((location) => !openNow || isOpen(location.hours))
-    .filter((location) => !bicycleFree || location.bicycleAccess === 'prohibited');
+    .filter((location) => !bicycleFree || location.bikeExposure === 'low');
 }
 
 export function matchesDayTripActivities(locations, selectedActivities, constraints = {}) {
