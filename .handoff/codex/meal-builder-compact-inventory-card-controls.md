@@ -164,6 +164,6 @@ Status: PASS
 
 Validation: `pnpm run validate`, `pnpm run check` (0 errors), `pnpm run build`, `pnpm run audit`, `pnpm run test:unit` (193 passed), and `pnpm run test:browser` (41 passed). `pnpm run verify` reached the Firebase rules suite but could not run it because the environment could not spawn `java -version`; no Java runtime was available on PATH. No GitHub CI/deploy status was available or changed.
 
-Implementation commit SHA: `82e3994`.
+Implementation commit SHA: `bbdcba3` (rebased task commit).
 
 The pre-existing untracked `database-debug.log` was left untouched.
