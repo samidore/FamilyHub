@@ -120,10 +120,10 @@ For each retained row:
 
 ### `storage: freezer`
 
-- `freezer_behavior: direct`: keep using ordinary aggregate `inventory` so the Ingredient stays immediately Recipe-available. Counted items also add to `freezerBatches/{ingredientId}/{stocked_on}`; presence-only direct items set ordinary inventory to `true`.
-- `freezer_behavior: thaw-required`: add to `freezerInventory`; counted items also add to `freezerBatches/{ingredientId}/{stocked_on}`. The stock does not become Recipe-available until the normal thaw lifecycle transfers it into ordinary inventory.
+- `freezer_behavior: direct`: add only to ordinary aggregate `inventory` so the Ingredient stays immediately Recipe-available; presence-only direct items set ordinary inventory to `true`.
+- `freezer_behavior: thaw-required`: add only to aggregate `freezerInventory`. The stock does not become Recipe-available until the normal thaw lifecycle transfers it into ordinary inventory.
 
-Same-date additions merge within the same destination batch; other dated batches remain separate. The import transaction must preserve aggregate/batch reconciliation, `currentMeal`, `activeStep`, recent meals, queued meals, current-meal availability, and the frozen current-meal freshness snapshot.
+Same-date additions merge within the refrigerated FIFO batch; frozen additions remain aggregate-only. The import transaction must preserve aggregate/batch reconciliation, `currentMeal`, `activeStep`, recent meals, queued meals, current-meal availability, and the frozen current-meal freshness snapshot.
 
 After a successful transaction, clear the pasted JSON and import draft. The import payload, recognized image, Chat transcript, and import history are not persisted as new household state.
 

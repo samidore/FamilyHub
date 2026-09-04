@@ -13,6 +13,7 @@ async function setInventory(page: Page, ids: string[]) {
 
 test('queued meal can be checked out from the warning without finishing the next meal', async ({ page }) => {
   await page.goto('meal-builder/');
+  await page.locator('#meal-show-all').check();
   await setInventory(page, ['green-cabbage', 'ground-pork', 'ground-beef']);
   await page.locator('#meal-start-current').click();
 

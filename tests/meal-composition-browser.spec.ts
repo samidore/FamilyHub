@@ -13,6 +13,7 @@ async function setInventory(page: Page, ids: string[]) {
 
 test('optional contributions have a clear editor, react immediately, complete the plan, and normal Next enters Cook', async ({ page }) => {
   await page.goto('meal-builder/');
+  await page.locator('#meal-show-all').check();
   await setInventory(page, ['green-cabbage', 'ground-pork', 'ground-beef']);
   await page.locator('#meal-start-current').click();
 

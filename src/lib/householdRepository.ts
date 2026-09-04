@@ -84,6 +84,14 @@ function cloneState(state: HouseholdState): HouseholdState {
 function normalizePersistedState(value: unknown, ingredients?: MealIngredient[] | Record<string, MealIngredient>) {
   return normalizeHouseholdState(migrateLegacyChickenThighIngredientIds(value), ingredients);
 }
+function hasLegacyFrozenMetadata(value: unknown): boolean {
+  if (!value || typeof value !== 'object') return false;
+  if (Array.isArray(value)) return value.some(hasLegacyFrozenMetadata);
+  const record = value as Record<string, unknown>;
+  if ('freezerBatches' in record) return true;
+  if (record.thawingItems && typeof record.thawingItems === 'object' && Object.values(record.thawingItems as Record<string, unknown>).some((job) => Boolean(job && typeof job === 'object' && 'sourceBatchKey' in (job as Record<string, unknown>)))) return true;
+  return false;
+}
 function hasExpiredDiscardedStock(state: HouseholdState, now = Date.now()) { return Object.values(state.discardedStock).some((record) => record.undoUntil <= now); }
 
 export class LocalHouseholdRepository implements HouseholdRepository {
@@ -110,7 +118,7 @@ export class LocalHouseholdRepository implements HouseholdRepository {
       const stored = JSON.parse(this.storage.getItem(this.key) ?? 'null');
       this.state = normalizePersistedState(stored, this.ingredients);
       const cleaned = cleanupDiscardedStock(this.state);
-      if (hasLegacyChickenThighIngredientIds(stored) || hasExpiredDiscardedStock(this.state)) { this.state = cleaned; this.storage.setItem(this.key, JSON.stringify(this.state)); }
+      if (hasLegacyChickenThighIngredientIds(stored) || hasLegacyFrozenMetadata(stored) || hasExpiredDiscardedStock(this.state)) { this.state = cleaned; this.storage.setItem(this.key, JSON.stringify(this.state)); }
     } catch { this.state = normalizePersistedState(undefined, this.ingredients); }
     if (options.broadcast !== false && this.browserWindow && typeof BroadcastChannel !== 'undefined') {
       this.channel = new BroadcastChannel(this.key);
@@ -249,7 +257,7 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
       const snapshot = await import('firebase/database').then(({ get }) => get(this.stateRef));
       if (this.disposed || this.session.getStatus().connection !== 'connected') return;
       this.connectedUid = sessionStatus.uid;
-      if (hasLegacyChickenThighIngredientIds(snapshot.val())) {
+      if (hasLegacyChickenThighIngredientIds(snapshot.val()) || hasLegacyFrozenMetadata(snapshot.val())) {
         const migration = await runTransaction(this.stateRef, (value) => normalizePersistedState(value, this.ingredients));
         if (this.disposed || this.session.getStatus().connection !== 'connected') return;
         this.setState(normalizePersistedState(migration.snapshot.val(), this.ingredients));

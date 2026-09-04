@@ -123,10 +123,7 @@ test('inventory import writes refrigerated, thaw-required freezer, and direct fr
     broccoli: { '2026-08-20': 1, '2026-08-24': 0.5 },
   });
   assert.deepEqual(next.freezerInventory, { 'whole-pork-tenderloin': 2.5 });
-  assert.deepEqual(next.freezerBatches, {
-    'whole-pork-tenderloin': { '2026-08-18': 0.5, '2026-08-24': 2 },
-    'frozen-beef-patties': { '2026-08-24': 1.5 },
-  });
+  assert.equal(next.freezerBatches, undefined);
   assert.deepEqual(next.currentMeal, currentMeal);
   assert.equal(next.activeStep, 'inventory');
 });

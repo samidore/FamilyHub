@@ -212,6 +212,7 @@ test('keyboard focus and 200% zoom remain usable', async ({ page }) => {
 
 test('meal builder filters live, completes a meal, and preserves state', async ({ page }) => {
   await page.goto('meal-builder/');
+  await page.locator('#meal-show-all').check();
   await expect(page.locator('[data-inventory-item]')).toHaveCount(visibleIngredientCount);
   await expect(page.locator('#meal-builder-view')).toBeHidden();
   await startMeal(page, ['chicken-breast', 'broccoli', 'green-cabbage', 'onion', 'noodles']);

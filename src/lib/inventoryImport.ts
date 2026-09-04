@@ -3,6 +3,7 @@ import { calendarDateKey } from './mealEngine.ts';
 import {
   COUNTED_INVENTORY_STEP,
   addStock,
+  normalizeHouseholdState,
   roundCountedInventoryValue,
   type HouseholdState,
 } from './household.ts';
@@ -144,5 +145,5 @@ export function applyInventoryImport(
     next = addStock(next, item.ingredientId, internalStorage, item.quantity, ingredients, draft.stockedOn);
   }
 
-  return next;
+  return normalizeHouseholdState(next, ingredients);
 }

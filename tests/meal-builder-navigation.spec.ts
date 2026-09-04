@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 test('inventory category jump bar is bottom-pinned, two-row, non-scrolling, data-driven, and opens the target section', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto('meal-builder/');
+  await page.locator('#meal-show-all').check();
 
   const nav = page.locator('[data-inventory-jump-nav]');
   await expect(nav).toBeVisible();

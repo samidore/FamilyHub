@@ -53,7 +53,7 @@ starter:
 tags: []
 ```
 
-The lifecycle runtime additionally stores `freezerBatches/{ingredientId}/{YYYY-MM-DD}` (or `unknown` for legacy quantity), `thawingItems.sourceBatchKey`, and shared `discardedStock/{recordId}` undo records. Step 1 has exactly two views: `入库` for additive entry and `库存` for current lifecycle management. Thaw-required freezer batches reconcile with `freezerInventory`; direct freezer batches reconcile with ordinary `inventory`.
+The lifecycle runtime stores frozen quantities only in aggregate `inventory` or `freezerInventory`, plus independent `thawingItems` jobs and shared `discardedStock/{recordId}` undo records. Step 1 is one unified Inventory page with a show-all visibility toggle. Refrigerated FIFO batches remain dated; frozen stock has no batch metadata.
 
 `starter.visible: false` retains a long-term ID without showing a button. Every visible Ingredient has one controlled section and a unique positive order. `inventory_tracking` is the source of truth: `counted` uses half-unit quantities and `presence-only` stores boolean presence. Runtime code must not infer tracking mode from Ingredient IDs.
 
