@@ -144,7 +144,7 @@ test('inventory import protocol documents storage-aware review and Meal Builder 
   assert.match(layout, /meal-builder-page/);
   assert.match(component, /meal-inventory-import-json/);
   assert.match(component, /meal-inventory-import-review/);
-  assert.match(component, /data\.importStorage/);
+  assert.match(component, /dataset\.importStorage/);
   assert.match(component, /meal-inventory-import-dialog/);
   assert.match(component, /applyInventoryImport/);
   assert.match(component, /repository\.transaction/);
