@@ -125,6 +125,7 @@
       const thawButtons = storage === 'freezer'
         ? [...controlRow.querySelectorAll<HTMLButtonElement>('[data-start-thaw]')]
         : [];
+      thawButtons.forEach((button) => button.remove());
 
       if (storage === 'freezer') {
         const label = controlRow.querySelector<HTMLElement>(':scope > span:first-child');
@@ -132,8 +133,17 @@
           label.className = 'meal-storage-inline-label';
           label.textContent = '冷冻';
         }
-        if (!thawRequired || quantity <= 0) thawButtons.forEach((button) => button.remove());
+        if (intake) {
+          intake.classList.add('meal-storage-intake');
+          controlRow.append(intake);
+        }
         block.append(controlRow);
+        if (thawRequired && quantity > 0 && thawButtons.length) {
+          const actions = document.createElement('div');
+          actions.className = 'meal-thaw-start-actions';
+          actions.append(...thawButtons);
+          block.append(actions);
+        }
         return block;
       }
 
@@ -291,6 +301,10 @@
     align-items: flex-start;
   }
   .meal-builder-page .meal-stock-states.meal-inventory-controls {
+    --meal-stock-control-width: 2.75rem;
+    --meal-stock-value-width: 2.25rem;
+    --meal-stock-action-width: 3rem;
+    --meal-stock-gap: 6px;
     display: grid !important;
     min-width: 0;
     grid-template-columns: minmax(0, 1fr) !important;
@@ -307,36 +321,65 @@
     padding-top: 8px;
     border-top: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
   }
-  .meal-builder-page .meal-storage-header {
-    display: flex;
-    min-width: 0;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .meal-builder-page .meal-storage-header strong { min-width: 0; }
-  .meal-builder-page .meal-storage-intake { flex: 0 0 auto; }
+  .meal-builder-page .meal-storage-header,
   .meal-builder-page .meal-stock-row {
-    display: flex !important;
+    display: grid !important;
     width: 100%;
     min-width: 0;
-    flex-wrap: wrap !important;
+    grid-template-columns:
+      minmax(0, 1fr)
+      var(--meal-stock-control-width)
+      var(--meal-stock-value-width)
+      var(--meal-stock-control-width)
+      var(--meal-stock-action-width) !important;
     align-items: center !important;
-    justify-content: flex-start !important;
-    gap: 7px !important;
+    gap: var(--meal-stock-gap) !important;
+  }
+  .meal-builder-page .meal-storage-header strong {
+    min-width: 0;
+    grid-column: 1;
+  }
+  .meal-builder-page .meal-storage-intake {
+    width: var(--meal-stock-action-width);
+    min-width: 0;
+    padding-inline: 0.2rem !important;
+    justify-self: center;
+  }
+  .meal-builder-page .meal-storage-header .meal-storage-intake,
+  .meal-builder-page .meal-stock-correction-row .meal-storage-intake {
+    grid-column: 5;
   }
   .meal-builder-page .meal-storage-inline-label {
-    min-width: 4rem;
+    min-width: 0;
+    grid-column: 1;
     font-weight: 700;
   }
-  .meal-builder-page .meal-stock-correction-row output {
-    min-width: 2.25rem;
+  .meal-builder-page .meal-stock-row [data-stock-delta] {
+    width: var(--meal-stock-control-width);
+    min-width: 0;
+    padding-inline: 0 !important;
+    justify-self: center;
+  }
+  .meal-builder-page .meal-stock-row [data-stock-delta="-0.5"] { grid-column: 2; }
+  .meal-builder-page .meal-stock-row output {
+    width: var(--meal-stock-value-width);
+    min-width: 0;
+    grid-column: 3;
+    justify-self: center;
     text-align: center;
     font-variant-numeric: tabular-nums;
   }
+  .meal-builder-page .meal-stock-row [data-stock-delta="0.5"] { grid-column: 4; }
   .meal-builder-page .meal-batch-row > span:first-child {
-    min-width: min(8.5rem, 40%);
-    flex: 1 1 8.5rem;
+    min-width: 0;
+    grid-column: 1;
+  }
+  .meal-builder-page .meal-batch-row [data-discard-stock] {
+    width: var(--meal-stock-action-width);
+    min-width: 0;
+    grid-column: 5;
+    padding-inline: 0.2rem !important;
+    justify-self: center;
   }
   .meal-builder-page .meal-thaw-start-actions,
   .meal-builder-page .meal-thaw-job__actions {
@@ -345,17 +388,18 @@
     flex-wrap: wrap;
     gap: 7px;
   }
+  .meal-builder-page .meal-thaw-start-actions { justify-content: flex-end; }
   .meal-builder-page .meal-thaw-job {
     display: grid !important;
     width: 100%;
     min-width: 0;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto !important;
     align-items: center;
     gap: 8px 10px !important;
   }
   .meal-builder-page .meal-thaw-job__info { min-width: 0; }
   @media (max-width: 560px) {
-    .meal-builder-page .meal-thaw-job { grid-template-columns: minmax(0, 1fr); }
+    .meal-builder-page .meal-thaw-job { grid-template-columns: minmax(0, 1fr) !important; }
     .meal-builder-page .meal-thaw-job__actions { justify-content: flex-start; }
   }
 </style>
