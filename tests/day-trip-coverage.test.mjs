@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 const trips = JSON.parse(await readFile(new URL('../src/data/day-trips.json', import.meta.url), 'utf8'));
+const bikeExposure = JSON.parse(await readFile(new URL('../src/data/day-trip-bike-exposure.json', import.meta.url), 'utf8'));
 
 const ALL_ACTIVITIES = ['woody-walk', 'playground', 'indoor-visit', 'animals', 'water-play', 'pick-your-own'];
 const CORE = {
@@ -19,6 +20,35 @@ const TARGETS = {
   'water-play': [[20, 3], [40, 5]],
   'pick-your-own': [[20, 2], [40, 4]],
 };
+
+const EASY_SHADED_BATCH = [
+  'campgaw-mountain-reservation',
+  'ramapo-valley-scarlet-oak-pond',
+  'mills-reservation-trail',
+  'rifle-camp-park-red-trail',
+  'garrett-mountain-barbour-pond',
+  'donch-preserve-haledon-reservoir',
+  'ringwood-manor-trail',
+  'ringwood-shepherd-lake',
+  'tallman-mountain-outer-loop',
+  'blauvelt-state-park-camp-bluefields',
+  'clausland-mountain-orange-trail',
+  'south-mountain-hemlock-falls',
+  'south-mountain-rahway-maple-falls',
+  'south-mountain-crest-trail',
+  'watchung-lake-surprise',
+  'mountain-way-white-trail',
+  'jonathans-woods-purple-white',
+  'cranberry-lake-preserve-loop',
+  'kennedy-dells-park',
+  'saxon-woods-yellow-trail',
+  'cascade-lake-red-trail',
+  'macy-park-irvington-reservoir',
+  'old-croton-aqueduct-dam',
+  'india-brook-buttermilk-falls',
+  'tourne-red-decamp-loop',
+  'lord-stirling-red-green-blue',
+];
 
 function matches(trip, driveMinutes, weather, activity) {
   if (trip.driveMinutes === null) return false;
@@ -44,23 +74,45 @@ test('Day Trips core coverage meets activity-specific nearby targets', () => {
   }
 });
 
-test('Day Trips stores explicit bicycle access for every location', () => {
-  for (const trip of trips) {
-    assert.ok(trip.locations.length >= 1, `${trip.id} must keep at least one coarse location`);
-    for (const location of trip.locations) {
-      assert.ok(['prohibited', 'allowed', 'unknown'].includes(location.bicycleAccess), `${trip.id}/${location.name} has invalid bicycle access`);
-      assert.equal(location.tags.includes('no-playground'), false, `${trip.id}/${location.name} stores derived no-playground`);
+test('Day Trips bike-exposure overrides point to real locations and valid practical states', () => {
+  const tripsById = new Map(trips.map((trip) => [trip.id, trip]));
+  for (const [tripId, locations] of Object.entries(bikeExposure)) {
+    const trip = tripsById.get(tripId);
+    assert.ok(trip, `${tripId} bike exposure points to a missing destination`);
+    const locationNames = new Set(trip.locations.map((location) => location.name));
+    for (const [locationName, exposure] of Object.entries(locations)) {
+      assert.ok(locationNames.has(locationName), `${tripId}/${locationName} bike exposure points to a missing location`);
+      assert.ok(['low', 'high', 'unknown'].includes(exposure), `${tripId}/${locationName} has invalid bike exposure`);
     }
   }
 });
 
-test('Great Swamp WOC is a concrete, pet-cautious bike-free record', () => {
+test('the active Easy shaded AllTrails batch is fully re-audited for practical bike exposure', () => {
+  const tripsById = new Map(trips.map((trip) => [trip.id, trip]));
+  const counts = { low: 0, high: 0, unknown: 0 };
+
+  for (const tripId of EASY_SHADED_BATCH) {
+    const trip = tripsById.get(tripId);
+    assert.ok(trip, `${tripId} from the active Easy shaded batch is missing`);
+    const woodyLocations = trip.locations.filter((location) => location.tags.includes('woody-walk'));
+    assert.ok(woodyLocations.length >= 1, `${tripId} must retain a woody-walk location`);
+
+    for (const location of woodyLocations) {
+      const exposure = bikeExposure[tripId]?.[location.name];
+      assert.ok(exposure, `${tripId}/${location.name} was not re-audited for bike exposure`);
+      assert.notEqual(exposure, 'unknown', `${tripId}/${location.name} was mechanically left unknown`);
+      counts[exposure] += 1;
+    }
+  }
+
+  assert.deepEqual(counts, { low: 21, high: 5, unknown: 0 });
+});
+
+test('Great Swamp WOC is a concrete low-bike-exposure forest-walk source record', () => {
   const woc = trips.filter((trip) => trip.id === 'great-swamp-wildlife-observation-center');
   assert.equal(woc.length, 1);
   assert.equal(woc[0].driveMinutes, null);
-  assert.equal(woc[0].locations[0].bicycleAccess, 'prohibited');
-  assert.equal(woc[0].locations[0].tags.includes('woody-walk'), false);
-  assert.match(woc[0].notice, /宠物/);
+  assert.equal(bikeExposure[woc[0].id]?.['Wildlife Observation Center Boardwalks & Trails'], 'low');
   assert.match(woc[0].googleMapsUrl, /220\+Long\+Hill\+Road/);
 });
 
