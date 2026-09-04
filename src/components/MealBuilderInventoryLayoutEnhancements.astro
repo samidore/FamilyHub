@@ -204,7 +204,7 @@
 
         if (meta.freezerBehavior) {
           if (tracking === 'presence-only') {
-            const frozenToggle = frozenRow?.querySelector<HTMLButtonElement>('[data-stock-toggle]');
+            const frozenToggle = frozenRow?.querySelector<HTMLButtonElement>('[data-stock-toggle]') ?? undefined;
             rebuilt.push(makePresenceBlock('freezer', Boolean(frozenRow), frozenToggle));
           } else {
             rebuilt.push(makeCountedBlock(ingredientId, 'freezer', quantityFromRow(frozenRow), frozenRow, frozenIntake, thawRequired));
