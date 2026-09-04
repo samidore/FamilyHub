@@ -1,0 +1,317 @@
+<script>
+  type InventoryLayoutIngredient = {
+    id: string;
+    inventoryTracking?: 'counted' | 'presence-only';
+    inventoryFreshness?: string;
+    freezerBehavior?: 'direct' | 'thaw-required';
+  };
+
+  function enhanceMealInventoryStorageBlocks() {
+    const inventoryList = document.querySelector<HTMLElement>('#meal-inventory-list');
+    const dataNode = document.querySelector<HTMLScriptElement>('#meal-data');
+    if (!inventoryList || !dataNode) return;
+
+    let parsed: { ingredients?: InventoryLayoutIngredient[] } = {};
+    try { parsed = JSON.parse(dataNode.textContent || '{}'); } catch { return; }
+    const ingredientById = new Map((parsed.ingredients ?? []).map((item) => [item.id, item]));
+
+    const quantityFromRow = (row?: HTMLElement | null) => {
+      const value = Number(row?.querySelector<HTMLOutputElement>('output')?.textContent ?? 0);
+      return Number.isFinite(value) ? value : 0;
+    };
+
+    const intakeFor = (elements: HTMLElement[], storage: 'inventory' | 'freezer') =>
+      elements.find((element) => element.matches(`button[data-stock-add][data-stock-storage="${storage}"]`)) as HTMLButtonElement | undefined;
+
+    const makeCorrectionRow = (ingredientId: string, storage: 'inventory' | 'freezer', quantity: number) => {
+      const row = document.createElement('div');
+      row.className = 'meal-stock-row meal-stock-correction-row';
+      row.dataset.storageControlRow = storage;
+
+      const minus = document.createElement('button');
+      minus.type = 'button';
+      minus.textContent = '−';
+      minus.dataset.stockDelta = '-0.5';
+      minus.dataset.stockStorage = storage;
+      minus.dataset.stockItem = ingredientId;
+      minus.disabled = quantity <= 0;
+
+      const output = document.createElement('output');
+      output.dataset.inventoryValue = ingredientId;
+      output.textContent = String(quantity);
+
+      const plus = document.createElement('button');
+      plus.type = 'button';
+      plus.textContent = '+';
+      plus.dataset.stockDelta = '0.5';
+      plus.dataset.stockStorage = storage;
+      plus.dataset.stockItem = ingredientId;
+
+      row.append(minus, output, plus);
+      return row;
+    };
+
+    const cleanAggregateRow = (row: HTMLElement, storage: 'inventory' | 'freezer') => {
+      row.classList.add('meal-stock-correction-row');
+      row.dataset.storageControlRow = storage;
+      const label = row.querySelector<HTMLElement>(':scope > span:first-child');
+      if (label && /^(冷藏|冷冻)/.test(label.textContent?.trim() ?? '')) label.remove();
+      return row;
+    };
+
+    const makeHeader = (label: string, quantity: number | null, action?: HTMLElement) => {
+      const header = document.createElement('div');
+      header.className = 'meal-storage-header';
+      const title = document.createElement('strong');
+      title.textContent = quantity === null ? label : `${label} ${quantity}`;
+      header.append(title);
+      if (action) {
+        action.classList.add('meal-storage-intake');
+        header.append(action);
+      }
+      return header;
+    };
+
+    const makeCountedBlock = (
+      ingredientId: string,
+      storage: 'inventory' | 'freezer',
+      quantity: number,
+      row: HTMLElement | undefined,
+      intake: HTMLButtonElement | undefined,
+      thawRequired: boolean,
+    ) => {
+      const block = document.createElement('section');
+      block.className = 'meal-storage-block';
+      block.dataset.storageBlock = storage;
+      block.append(makeHeader(storage === 'freezer' ? '冷冻' : '冷藏', quantity, intake));
+
+      const controlRow = row ? cleanAggregateRow(row, storage) : makeCorrectionRow(ingredientId, storage, quantity);
+      const thawButtons = storage === 'freezer'
+        ? [...controlRow.querySelectorAll<HTMLButtonElement>('[data-start-thaw]')]
+        : [];
+      thawButtons.forEach((button) => button.remove());
+      block.append(controlRow);
+
+      if (thawRequired && quantity > 0 && thawButtons.length) {
+        const actions = document.createElement('div');
+        actions.className = 'meal-thaw-start-actions';
+        actions.append(...thawButtons);
+        block.append(actions);
+      }
+      return block;
+    };
+
+    const makePresenceBlock = (
+      storage: 'inventory' | 'freezer',
+      present: boolean,
+      toggle: HTMLButtonElement | undefined,
+    ) => {
+      const block = document.createElement('section');
+      block.className = 'meal-storage-block';
+      block.dataset.storageBlock = storage;
+      if (toggle) toggle.classList.add('meal-storage-intake');
+      block.append(makeHeader(`${storage === 'freezer' ? '冷冻' : '冷藏'}${present ? ' · 有' : ''}`, null, toggle));
+      return block;
+    };
+
+    const prepareBatchBlock = (host: HTMLElement, intake?: HTMLButtonElement) => {
+      host.classList.add('meal-storage-block', 'meal-storage-block--batches');
+      host.dataset.storageBlock = 'inventory';
+      const heading = host.querySelector<HTMLElement>(':scope > strong');
+      const batchRows = [...host.querySelectorAll<HTMLElement>(':scope > [data-batch-key]')];
+      const total = batchRows.reduce((sum, row) => sum + quantityFromRow(row), 0);
+      const header = makeHeader('冷藏', total, intake);
+      heading?.remove();
+      batchRows.forEach((row) => row.classList.add('meal-batch-row'));
+      host.prepend(header);
+      return host;
+    };
+
+    const prepareThawJobs = (rows: HTMLElement[]) => {
+      if (!rows.length) return null;
+      const host = document.createElement('section');
+      host.className = 'meal-thaw-jobs';
+      rows.forEach((row) => {
+        row.classList.add('meal-thaw-job');
+        const buttons = [...row.querySelectorAll<HTMLButtonElement>('button')];
+        const text = [...row.childNodes]
+          .filter((node) => node.nodeType === Node.TEXT_NODE)
+          .map((node) => node.textContent ?? '')
+          .join('')
+          .trim();
+        const info = document.createElement('span');
+        info.className = 'meal-thaw-job__info';
+        info.textContent = text;
+        const actions = document.createElement('span');
+        actions.className = 'meal-thaw-job__actions';
+        actions.append(...buttons);
+        row.replaceChildren(info, actions);
+        host.append(row);
+      });
+      return host;
+    };
+
+    const enhanceCard = (card: HTMLElement) => {
+      if (card.dataset.storageBlocksEnhanced === 'true') return;
+      const ingredientId = card.dataset.inventoryItem;
+      const meta = ingredientId ? ingredientById.get(ingredientId) : undefined;
+      const states = card.querySelector<HTMLElement>(':scope > .meal-stock-states');
+      if (!ingredientId || !meta || !states) return;
+
+      const children = [...states.children] as HTMLElement[];
+      const thawRows = children.filter((element) =>
+        element.classList.contains('meal-stock-row') && Boolean(element.querySelector('[data-complete-thaw], [data-cancel-thaw]')),
+      );
+      const aggregateRows = children.filter((element) =>
+        element.classList.contains('meal-stock-row') && !thawRows.includes(element),
+      );
+      const fifoHost = children.find((element) =>
+        !element.classList.contains('meal-stock-row') &&
+        (Boolean(element.querySelector(':scope > [data-batch-key]')) || element.querySelector(':scope > strong')?.textContent?.trim().startsWith('冷藏')),
+      );
+      const looseButtons = children.filter((element) => element.matches('button'));
+      const allLoose = [...looseButtons];
+      if (fifoHost) allLoose.push(...fifoHost.querySelectorAll<HTMLElement>(':scope > button'));
+
+      const coldRow = aggregateRows.find((row) => row.querySelector<HTMLElement>(':scope > span:first-child')?.textContent?.trim().startsWith('冷藏'));
+      const frozenRow = aggregateRows.find((row) => row.querySelector<HTMLElement>(':scope > span:first-child')?.textContent?.trim().startsWith('冷冻'));
+      const coldIntake = intakeFor(allLoose, 'inventory');
+      const frozenIntake = intakeFor(allLoose, 'freezer');
+      const looseToggle = looseButtons.find((element) => element.matches('[data-stock-toggle]')) as HTMLButtonElement | undefined;
+
+      const rebuilt: HTMLElement[] = [];
+      const tracking = meta.inventoryTracking ?? 'counted';
+      const direct = meta.freezerBehavior === 'direct';
+      const thawRequired = meta.freezerBehavior === 'thaw-required';
+
+      if (direct) {
+        if (tracking === 'presence-only') {
+          const toggle = frozenRow?.querySelector<HTMLButtonElement>('[data-stock-toggle]') ?? looseToggle;
+          rebuilt.push(makePresenceBlock('freezer', Boolean(frozenRow), toggle));
+        } else {
+          rebuilt.push(makeCountedBlock(ingredientId, 'freezer', quantityFromRow(frozenRow), frozenRow, frozenIntake, false));
+        }
+      } else {
+        if (tracking === 'presence-only') {
+          const toggle = coldRow?.querySelector<HTMLButtonElement>('[data-stock-toggle]') ?? looseToggle;
+          rebuilt.push(makePresenceBlock('inventory', Boolean(coldRow), toggle));
+        } else if (fifoHost) {
+          const embeddedIntake = fifoHost.querySelector<HTMLButtonElement>(':scope > button[data-stock-add][data-stock-storage="inventory"]') ?? coldIntake;
+          rebuilt.push(prepareBatchBlock(fifoHost, embeddedIntake));
+        } else {
+          rebuilt.push(makeCountedBlock(ingredientId, 'inventory', quantityFromRow(coldRow), coldRow, coldIntake, false));
+        }
+
+        if (meta.freezerBehavior) {
+          if (tracking === 'presence-only') {
+            const frozenToggle = frozenRow?.querySelector<HTMLButtonElement>('[data-stock-toggle]');
+            rebuilt.push(makePresenceBlock('freezer', Boolean(frozenRow), frozenToggle));
+          } else {
+            rebuilt.push(makeCountedBlock(ingredientId, 'freezer', quantityFromRow(frozenRow), frozenRow, frozenIntake, thawRequired));
+          }
+        }
+      }
+
+      const thawJobs = prepareThawJobs(thawRows);
+      if (thawJobs) rebuilt.push(thawJobs);
+      states.replaceChildren(...rebuilt);
+      card.dataset.storageBlocksEnhanced = 'true';
+    };
+
+    let scheduled = false;
+    const sync = () => {
+      scheduled = false;
+      inventoryList.querySelectorAll<HTMLElement>('[data-inventory-item]').forEach(enhanceCard);
+    };
+    const schedule = () => {
+      if (scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(sync);
+    };
+
+    new MutationObserver(schedule).observe(inventoryList, { childList: true, subtree: true });
+    sync();
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', enhanceMealInventoryStorageBlocks, { once: true });
+  else enhanceMealInventoryStorageBlocks();
+</script>
+
+<style is:global>
+  .meal-builder-page .meal-inventory-item {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+  .meal-builder-page .meal-inventory-name {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .meal-builder-page .meal-stock-states.meal-inventory-controls {
+    display: grid !important;
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+  }
+  .meal-builder-page .meal-storage-block,
+  .meal-builder-page .meal-thaw-jobs {
+    display: grid;
+    min-width: 0;
+    gap: 7px;
+  }
+  .meal-builder-page .meal-storage-block + .meal-storage-block,
+  .meal-builder-page .meal-thaw-jobs {
+    padding-top: 8px;
+    border-top: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+  }
+  .meal-builder-page .meal-storage-header {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .meal-builder-page .meal-storage-header strong { min-width: 0; }
+  .meal-builder-page .meal-storage-intake { flex: 0 0 auto; }
+  .meal-builder-page .meal-stock-row {
+    display: flex !important;
+    width: 100%;
+    min-width: 0;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 7px !important;
+  }
+  .meal-builder-page .meal-stock-correction-row output {
+    min-width: 2.25rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .meal-builder-page .meal-batch-row > span:first-child {
+    min-width: min(8.5rem, 40%);
+    flex: 1 1 8.5rem;
+  }
+  .meal-builder-page .meal-thaw-start-actions,
+  .meal-builder-page .meal-thaw-job__actions {
+    display: flex;
+    min-width: 0;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  .meal-builder-page .meal-thaw-job {
+    display: grid !important;
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px 10px !important;
+  }
+  .meal-builder-page .meal-thaw-job__info { min-width: 0; }
+  @media (max-width: 560px) {
+    .meal-builder-page .meal-thaw-job { grid-template-columns: minmax(0, 1fr); }
+    .meal-builder-page .meal-thaw-job__actions { justify-content: flex-start; }
+  }
+</style>
