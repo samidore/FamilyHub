@@ -24,11 +24,12 @@ test('queued meal can be checked out from the warning without finishing the next
   const recipe = page.locator('[data-meal-recipe="simple-stir-fried-green-cabbage"]');
   await expect(recipe).toBeVisible();
   await recipe.locator('[data-select-recipe]').click();
+  const draft = recipe.locator('[data-recipe-plan-draft]');
+  await expect(draft).toBeVisible();
+  await draft.locator('[data-recipe-draft-optional-ingredient="ground-pork"]').click();
+  await draft.locator('[data-recipe-draft-optional-ingredient="ground-beef"]').click();
+  await draft.locator('[data-confirm-recipe-draft]').click();
 
-  const selected = page.locator('[data-selected-recipe="simple-stir-fried-green-cabbage"]');
-  await selected.locator('[data-composition-editor] > summary').click();
-  await selected.locator('[data-plan-optional-ingredient="ground-pork"]').click();
-  await selected.locator('[data-plan-optional-ingredient="ground-beef"]').click();
   await expect(page.locator('#meal-next')).toBeEnabled();
   await page.locator('#meal-next').click();
 
