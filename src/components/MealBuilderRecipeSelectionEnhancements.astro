@@ -37,6 +37,7 @@ const recipeSelectionData = JSON.stringify({
     type MealState,
   } from '../lib/mealEngine';
   import {
+    availableIngredientIds,
     mealToEngineState,
     reconcileCurrentMeal,
     type CurrentMeal,
@@ -88,6 +89,18 @@ const recipeSelectionData = JSON.stringify({
     requestAnimationFrame(() => { live.textContent = text; });
   };
 
+  function selectableIngredientIds(state: HouseholdState, meal: CurrentMeal) {
+    const liveIds = new Set(availableIngredientIds(state.inventory, ingredients));
+    const excluded = new Set(meal.excludedIngredientIds ?? []);
+    return new Set(meal.availableIngredientIds.filter((id) => liveIds.has(id) && !excluded.has(id)));
+  }
+
+  function persistedOptional(meal: CurrentMeal, recipeId: string, groupId: string, ingredientId: string) {
+    return meal.selectedAddons.some((addon) =>
+      addon.mainRecipeId === recipeId && addon.addonType === groupId && addon.ingredientId === ingredientId
+    );
+  }
+
   function engineState(meal: CurrentMeal): MealState {
     return reconcileMealState(mealToEngineState(meal), recipes, ingredients, optionalGroups);
   }
@@ -115,7 +128,7 @@ const recipeSelectionData = JSON.stringify({
     const ranked = candidateBindings[recipe.id];
     return bindRecipeIngredients(
       recipe,
-      meal.availableIngredientIds,
+      [...selectableIngredientIds(household, meal)],
       ranked ?? [],
       meal.ingredientFreshnessDates,
     ).filter((id): id is string => Boolean(id));
@@ -196,6 +209,7 @@ const recipeSelectionData = JSON.stringify({
 
   function renderCandidateSummaries() {
     const meal = household.currentMeal;
+    const selectable = meal ? selectableIngredientIds(household, meal) : new Set<string>();
     recipeGrid?.querySelectorAll<HTMLElement>('[data-meal-recipe]').forEach((card) => {
       card.querySelector('[data-candidate-composition]')?.remove();
       card.querySelector('[data-recipe-plan-draft]')?.remove();
@@ -209,12 +223,7 @@ const recipeSelectionData = JSON.stringify({
         .map((requirement) => nameFor(requirement.anyOf[0]));
       const oneOf = recipe.requirements
         .filter((requirement) => requirement.anyOf.length > 1)
-        .map((requirement) => {
-          const available = meal
-            ? requirement.anyOf.filter((id) => meal.availableIngredientIds.includes(id))
-            : requirement.anyOf;
-          return (available.length ? available : requirement.anyOf).map(nameFor).join(' / ');
-        });
+        .map((requirement) => requirement.anyOf.filter((id) => selectable.has(id)).map(nameFor).join(' / '));
       const optional = optionalGroupsForRecipe(recipe, optionalGroups).map((group) => group.labelZh);
 
       const summary = document.createElement('div');
@@ -286,6 +295,7 @@ const recipeSelectionData = JSON.stringify({
 
   function renderDraftEditor(recipe: MealRecipe, draft: PlanDraft) {
     const meal = household.currentMeal;
+    const selectable = meal ? selectableIngredientIds(household, meal) : new Set<string>();
     const editor = document.createElement('section');
     editor.className = 'meal-recipe-plan-draft';
     editor.dataset.recipePlanDraft = recipe.id;
@@ -315,9 +325,8 @@ const recipeSelectionData = JSON.stringify({
       h.textContent = '选一 One of';
       const grid = document.createElement('div');
       grid.className = 'meal-chip-grid meal-recipe-draft-grid';
-      const choices = requirement.anyOf.filter((id) =>
-        Boolean(meal?.availableIngredientIds.includes(id)) || draft.bindings[index] === id
-      );
+      const persisted = draft.mode === 'edit' ? meal?.recipeIngredientBindings[recipe.id]?.[index] : undefined;
+      const choices = requirement.anyOf.filter((id) => selectable.has(id) || persisted === id);
       choices.forEach((id) => {
         grid.append(makeChoice(
           nameFor(id),
@@ -349,7 +358,9 @@ const recipeSelectionData = JSON.stringify({
         editor.append(groupLabel);
         const choices = group.ingredients.filter((entry) =>
           !boundIds.has(entry.ingredientId) &&
-          (Boolean(meal?.availableIngredientIds.includes(entry.ingredientId)) || draftOptionalSelected(group.id, entry.ingredientId))
+          (selectable.has(entry.ingredientId) || (
+            draft.mode === 'edit' && Boolean(meal && persistedOptional(meal, recipe.id, group.id, entry.ingredientId))
+          ))
         );
         if (!choices.length) {
           const empty = document.createElement('p');
@@ -401,8 +412,11 @@ const recipeSelectionData = JSON.stringify({
     const requirement = recipe?.requirements[index];
     const meal = household.currentMeal;
     if (!recipe || !requirement || !requirement.anyOf.includes(ingredientId) || !meal) return;
-    const prior = meal.recipeIngredientBindings[planDraft.recipeId]?.[index];
-    if (!meal.availableIngredientIds.includes(ingredientId) && prior !== ingredientId) return;
+    const selectable = selectableIngredientIds(household, meal);
+    if (!selectable.has(ingredientId) && planDraft.bindings[index] !== ingredientId) {
+      announce(`库存里现在没有${nameFor(ingredientId)}，不能选。`);
+      return;
+    }
     planDraft.bindings[index] = ingredientId;
     planDraft.optionalAddons = planDraft.optionalAddons.filter((addon) => addon.ingredientId !== ingredientId);
     renderAll();
@@ -417,8 +431,10 @@ const recipeSelectionData = JSON.stringify({
     if (!recipe || !meal || !entry || planDraft.bindings.includes(ingredientId)) return;
 
     const existing = planDraft.optionalAddons.some((addon) => addon.addonType === groupId && addon.ingredientId === ingredientId);
-    const persisted = meal.selectedAddons.some((addon) => addon.mainRecipeId === recipe.id && addon.addonType === groupId && addon.ingredientId === ingredientId);
-    if (!existing && !meal.availableIngredientIds.includes(ingredientId) && !(planDraft.mode === 'edit' && persisted)) return;
+    if (!existing && !selectableIngredientIds(household, meal).has(ingredientId)) {
+      announce(`库存里现在没有${nameFor(ingredientId)}，不能选。`);
+      return;
+    }
 
     planDraft.optionalAddons = planDraft.optionalAddons.filter((addon) => !(addon.addonType === groupId && addon.ingredientId === ingredientId));
     if (!existing) planDraft.optionalAddons.push({ addonType: groupId, ingredientId });
@@ -431,20 +447,27 @@ const recipeSelectionData = JSON.stringify({
     const recipe = recipeById.get(draft.recipeId);
     if (!recipe) return;
 
+    let accepted = false;
+    let rejectedIngredient = '';
     try {
-      const next = await repository.updateCurrentMeal((meal) => {
-        if (meal.mealId !== draft.mealId) return meal;
+      const next = await repository.transaction((state) => {
+        accepted = false;
+        rejectedIngredient = '';
+        const meal = state.currentMeal;
+        if (!meal || meal.mealId !== draft.mealId || state.activeStep !== 'recipes') return state;
         const alreadySelected = meal.selectedRecipeIds.includes(recipe.id);
-        if ((draft.mode === 'new' && alreadySelected) || (draft.mode === 'edit' && !alreadySelected)) return meal;
+        if ((draft.mode === 'new' && alreadySelected) || (draft.mode === 'edit' && !alreadySelected)) return state;
 
+        const selectable = selectableIngredientIds(state, meal);
         const priorBinding = meal.recipeIngredientBindings[recipe.id] ?? [];
         const bindings = recipe.requirements.map((requirement, index) => {
           const id = draft.bindings[index];
           if (!id || !requirement.anyOf.includes(id)) return null;
           const canKeepPrior = draft.mode === 'edit' && priorBinding[index] === id;
-          return meal.availableIngredientIds.includes(id) || canKeepPrior ? id : null;
+          if (!selectable.has(id) && !canKeepPrior) rejectedIngredient ||= id;
+          return selectable.has(id) || canKeepPrior ? id : null;
         });
-        if (bindings.some((id) => id === null)) return meal;
+        if (bindings.some((id) => id === null)) return state;
         const cleanBindings = bindings.filter((id): id is string => Boolean(id));
         const boundIds = new Set(cleanBindings);
         const persistedKeys = new Set(
@@ -453,23 +476,26 @@ const recipeSelectionData = JSON.stringify({
             .map((addon) => `${addon.addonType}\u0000${addon.ingredientId}`)
         );
 
-        const cleanAddons = draft.optionalAddons.filter((addon) => {
-          if (boundIds.has(addon.ingredientId)) return false;
+        const cleanAddons: DraftAddon[] = [];
+        for (const addon of draft.optionalAddons) {
+          if (boundIds.has(addon.ingredientId)) return state;
           const group = optionalGroupsForRecipe(recipe, optionalGroups).find((candidate) => candidate.id === addon.addonType);
-          if (!group?.ingredients.some((entry) => entry.ingredientId === addon.ingredientId)) return false;
+          if (!group?.ingredients.some((entry) => entry.ingredientId === addon.ingredientId)) return state;
           const wasPersisted = persistedKeys.has(`${addon.addonType}\u0000${addon.ingredientId}`);
-          return meal.availableIngredientIds.includes(addon.ingredientId) || (draft.mode === 'edit' && wasPersisted);
-        });
-
-        if (cleanAddons.length !== draft.optionalAddons.length) return meal;
+          const canKeepPrior = draft.mode === 'edit' && wasPersisted;
+          if (!selectable.has(addon.ingredientId) && !canKeepPrior) {
+            rejectedIngredient ||= addon.ingredientId;
+            return state;
+          }
+          cleanAddons.push(addon);
+        }
 
         const selectedAddons = [
           ...meal.selectedAddons.filter((addon) => addon.mainRecipeId !== recipe.id),
           ...cleanAddons.map((addon) => ({ mainRecipeId: recipe.id, ...addon })),
         ];
         const selectedRecipeIds = alreadySelected ? meal.selectedRecipeIds : [...meal.selectedRecipeIds, recipe.id];
-
-        return reconcileCurrentMeal({
+        const currentMeal = reconcileCurrentMeal({
           ...meal,
           selectedRecipeIds,
           recipeIngredientBindings: { ...meal.recipeIngredientBindings, [recipe.id]: cleanBindings },
@@ -477,19 +503,20 @@ const recipeSelectionData = JSON.stringify({
           checkoutDraft: {},
           checkoutRecipeDrafts: {},
         }, recipes, ingredients, optionalGroups);
+
+        accepted = true;
+        return { ...state, currentMeal };
       });
 
       household = next;
-      const savedMeal = next.currentMeal;
-      const saved = Boolean(
-        savedMeal?.selectedRecipeIds.includes(recipe.id) &&
-        savedMeal.recipeIngredientBindings[recipe.id]?.every((id, index) => id === draft.bindings[index])
-      );
-      if (!saved) {
-        announce('本顿状态已经变化，请重新打开这道菜。');
+      if (!accepted) {
+        announce(rejectedIngredient
+          ? `库存里现在没有${nameFor(rejectedIngredient)}，不能选。`
+          : '本顿状态已经变化，请重新打开这道菜。');
         scheduleRender();
         return;
       }
+
       planDraft = null;
       announce(draft.mode === 'new' ? '已加入一道菜。' : '已更新这道菜。');
       scheduleRender();
