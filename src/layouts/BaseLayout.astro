@@ -6,6 +6,7 @@ import MealInventoryImport from '../components/MealInventoryImport.astro';
 import MealBuilderNavigationEnhancements from '../components/MealBuilderNavigationEnhancements.astro';
 import MealBuilderCompositionEnhancements from '../components/MealBuilderCompositionEnhancements.astro';
 import MealBuilderRecipeSelectionEnhancements from '../components/MealBuilderRecipeSelectionEnhancements.astro';
+import MealBuilderPlanInventoryGuard from '../components/MealBuilderPlanInventoryGuard.astro';
 import MealBuilderFreshnessEnhancements from '../components/MealBuilderFreshnessEnhancements.astro';
 import MealBuilderCheckoutQueueEnhancements from '../components/MealBuilderCheckoutQueueEnhancements.astro';
 import MealBuilderInventoryLayoutEnhancements from '../components/MealBuilderInventoryLayoutEnhancements.astro';
@@ -29,6 +30,7 @@ const showMealInventoryImport = pageClass.split(/\s+/).includes('meal-builder-pa
     {showMealInventoryImport && <MealBuilderNavigationEnhancements />}
     {showMealInventoryImport && <MealBuilderCompositionEnhancements />}
     {showMealInventoryImport && <MealBuilderRecipeSelectionEnhancements />}
+    {showMealInventoryImport && <MealBuilderPlanInventoryGuard />}
     {showMealInventoryImport && <MealBuilderFreshnessEnhancements />}
     {showMealInventoryImport && <MealBuilderCheckoutQueueEnhancements />}
     {showMealInventoryImport && <MealBuilderInventoryLayoutEnhancements />}
