@@ -1,5 +1,7 @@
 import { expect, test, type Page } from '@playwright/test';
 
+const LOCAL_HOUSEHOLD_KEY = 'family-hub-household-local-household';
+
 async function inventoryItem(page: Page, id: string) {
   const row = page.locator(`[data-inventory-item="${id}"]`);
   const group = row.locator('xpath=ancestor::details');
@@ -16,77 +18,63 @@ async function setInventory(page: Page, ids: string[]) {
   }
 }
 
-async function removeOneCountedUnit(page: Page, id: string) {
-  let row = await inventoryItem(page, id);
-  let value = row.locator(`[data-inventory-value="${id}"]`);
-  await row.locator('[data-stock-delta="-0.5"][data-stock-storage="inventory"]').first().click();
-  await expect(value).toHaveText('0.5');
-
-  row = await inventoryItem(page, id);
-  value = row.locator(`[data-inventory-value="${id}"]`);
-  await row.locator('[data-stock-delta="-0.5"][data-stock-storage="inventory"]').first().click();
-  await expect(value).toHaveCount(0);
+async function removeLiveInventoryOutsideMealSnapshot(page: Page, id: string) {
+  await page.evaluate(({ key, ingredientId }) => {
+    const stored = localStorage.getItem(key);
+    if (!stored) throw new Error('Local household state is missing.');
+    const state = JSON.parse(stored) as {
+      inventory?: Record<string, unknown>;
+      inventoryBatches?: Record<string, unknown>;
+    };
+    if (!state.inventory || !(ingredientId in state.inventory)) throw new Error(`Live inventory is missing ${ingredientId}.`);
+    delete state.inventory[ingredientId];
+    if (state.inventoryBatches) delete state.inventoryBatches[ingredientId];
+    const serialized = JSON.stringify(state);
+    localStorage.setItem(key, serialized);
+    window.dispatchEvent(new StorageEvent('storage', { key, newValue: serialized }));
+  }, { key: LOCAL_HOUSEHOLD_KEY, ingredientId: id });
 }
 
-async function depleteAfterMealSnapshot(page: Page, id: string) {
-  await page.locator('[data-step-target="inventory"]').click();
-  await expect(page.locator('#meal-inventory-view')).toBeVisible();
-  await removeOneCountedUnit(page, id);
-  await page.locator('[data-step-target="recipes"]').click();
-  await expect(page.locator('#meal-builder-view')).toBeVisible();
-}
-
-test('Optional cannot bypass live inventory after the meal snapshot is frozen', async ({ page }) => {
+test('Optional draft cannot confirm an Ingredient that leaves live inventory after selection', async ({ page }) => {
   await page.goto('meal-builder/');
   await setInventory(page, ['ground-pork', 'soft-tofu', 'fried-tofu-puffs']);
   await page.locator('#meal-start-current').click();
   await expect(page.locator('#meal-builder-view')).toBeVisible();
 
-  await depleteAfterMealSnapshot(page, 'fried-tofu-puffs');
-
   const recipe = page.locator('[data-meal-recipe="minced-pork-tofu"]');
   await expect(recipe).toBeVisible();
   await recipe.locator('[data-select-recipe]').click();
   const puff = recipe.locator('[data-recipe-draft-optional-ingredient="fried-tofu-puffs"]');
+  await expect(puff).toBeVisible();
+  await puff.click();
+  await expect(puff).toHaveAttribute('aria-pressed', 'true');
+
+  await removeLiveInventoryOutsideMealSnapshot(page, 'fried-tofu-puffs');
   await expect(puff).toBeHidden();
 
-  await puff.evaluate((element) => (element as HTMLButtonElement).click());
-  await expect(puff).toHaveAttribute('aria-pressed', 'false');
-  await expect(page.locator('#meal-live')).toContainText('库存里现在没有油豆腐 / 豆泡，不能选。');
-
   await recipe.locator('[data-confirm-recipe-draft]').click();
-  const selected = page.locator('[data-selected-recipe="minced-pork-tofu"]');
-  await expect(selected).toBeVisible();
-  await expect(selected.locator('[data-selected-plan-summary]')).not.toContainText('油豆腐 / 豆泡');
+  await expect(page.locator('[data-selected-recipe="minced-pork-tofu"]')).toHaveCount(0);
+  await expect(page.locator('#meal-live')).toContainText('库存里现在没有油豆腐 / 豆泡，不能选。');
 });
 
-test('One of cannot bypass live inventory after the meal snapshot is frozen', async ({ page }) => {
+test('One of draft cannot confirm a binding that leaves live inventory after selection', async ({ page }) => {
   await page.goto('meal-builder/');
   await setInventory(page, ['chicken-drumsticks', 'chicken-thighs']);
   await page.locator('#meal-start-current').click();
   await expect(page.locator('#meal-builder-view')).toBeVisible();
 
-  await depleteAfterMealSnapshot(page, 'chicken-thighs');
-
   const recipe = page.locator('[data-meal-recipe="oyster-sauce-braised-chicken"]');
   await expect(recipe).toBeVisible();
   await recipe.locator('[data-select-recipe]').click();
-
-  const drumstick = recipe.locator('[data-recipe-draft-binding-ingredient="chicken-drumsticks"]');
   const thigh = recipe.locator('[data-recipe-draft-binding-ingredient="chicken-thighs"]');
-  await expect(drumstick).toBeVisible();
+  await expect(thigh).toBeVisible();
+  await thigh.click();
+  await expect(thigh).toHaveAttribute('aria-pressed', 'true');
+
+  await removeLiveInventoryOutsideMealSnapshot(page, 'chicken-thighs');
   await expect(thigh).toBeHidden();
 
-  await drumstick.click();
-  await expect(drumstick).toHaveAttribute('aria-pressed', 'true');
-  await thigh.evaluate((element) => (element as HTMLButtonElement).click());
-  await expect(drumstick).toHaveAttribute('aria-pressed', 'true');
-  await expect(thigh).toHaveAttribute('aria-pressed', 'false');
-  await expect(page.locator('#meal-live')).toContainText('库存里现在没有鸡腿，不能选。');
-
   await recipe.locator('[data-confirm-recipe-draft]').click();
-  const selected = page.locator('[data-selected-recipe="oyster-sauce-braised-chicken"]');
-  await expect(selected).toBeVisible();
-  await expect(selected.locator('[data-selected-plan-summary]')).toContainText('鸡小腿');
-  await expect(selected.locator('[data-selected-plan-summary]')).not.toContainText('鸡腿');
+  await expect(page.locator('[data-selected-recipe="oyster-sauce-braised-chicken"]')).toHaveCount(0);
+  await expect(page.locator('#meal-live')).toContainText('库存里现在没有鸡腿，不能选。');
 });
