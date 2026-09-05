@@ -53,7 +53,7 @@ test('Optional draft cannot confirm an Ingredient that leaves live inventory aft
   await expect(puff).toBeHidden();
 
   await recipe.locator('[data-confirm-recipe-draft]').click();
-  await expect(page.locator('[data-selected-recipe="minced-pork-tofu"]')).toHaveCount(0);
+  await expect(page.locator('[data-selected-recipe="minced-pork-tofu"]')).toBeHidden();
   await expect(page.locator('#meal-live')).toContainText('库存里现在没有油豆腐 / 豆泡，不能选。');
 });
 
@@ -75,6 +75,6 @@ test('One of draft cannot confirm a binding that leaves live inventory after sel
   await expect(thigh).toBeHidden();
 
   await recipe.locator('[data-confirm-recipe-draft]').click();
-  await expect(page.locator('[data-selected-recipe="oyster-sauce-braised-chicken"]')).toHaveCount(0);
+  await expect(page.locator('[data-selected-recipe="oyster-sauce-braised-chicken"]')).toBeHidden();
   await expect(page.locator('#meal-live')).toContainText('库存里现在没有鸡腿，不能选。');
 });
