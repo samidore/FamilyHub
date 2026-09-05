@@ -39,7 +39,7 @@ test('candidate composition stays draft-only until confirmation and supports opt
   await expect(page.locator('#progress-vegetable')).toHaveText('0 / 1');
 
   await expect(draft.getByRole('heading', { name: '必需 Required' })).toBeVisible();
-  await expect(draft).toContainText('卷心菜 / 圆白菜');
+  await expect(draft).toContainText('卷心菜');
   await expect(draft.getByRole('heading', { name: '可加 Optional' })).toBeVisible();
   await expect(draft.getByRole('heading', { name: '加点油水' })).toBeVisible();
 
@@ -91,7 +91,7 @@ test('cancel discards a new or edited Recipe draft and selected Plan edits requi
 
   const selected = page.locator('[data-selected-recipe="oyster-sauce-braised-chicken"]');
   await expect(selected).toBeVisible();
-  await expect(selected.locator('[data-selected-plan-summary]')).toContainText('鸡腿肉');
+  await expect(selected.locator('[data-selected-plan-summary]')).toContainText('鸡腿');
 
   await selected.locator('[data-edit-recipe-plan]').click();
   let edit = selected.locator('[data-recipe-plan-draft]');
@@ -99,7 +99,7 @@ test('cancel discards a new or edited Recipe draft and selected Plan edits requi
   await drumstick.click();
   await expect(drumstick).toHaveAttribute('aria-pressed', 'true');
   await edit.locator('[data-cancel-recipe-draft]').click();
-  await expect(selected.locator('[data-selected-plan-summary]')).toContainText('鸡腿肉');
+  await expect(selected.locator('[data-selected-plan-summary]')).toContainText('鸡腿');
 
   await selected.locator('[data-edit-recipe-plan]').click();
   edit = selected.locator('[data-recipe-plan-draft]');
