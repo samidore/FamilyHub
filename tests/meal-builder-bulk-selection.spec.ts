@@ -11,6 +11,14 @@ async function setInventory(page: Page, ids: string[]) {
   for (const id of ids) { const action = (await inventoryItem(page, id)).locator('[data-stock-add], [data-stock-toggle]').first(); await action.click(); }
 }
 
+async function selectRecipe(page: Page, id: string) {
+  const card = page.locator(`[data-meal-recipe="${id}"]`);
+  await card.locator('[data-select-recipe]').click();
+  await expect(card.locator('[data-recipe-plan-draft]')).toBeVisible();
+  await card.locator('[data-confirm-recipe-draft]').click();
+  await expect(page.locator(`[data-selected-recipe="${id}"]`)).toBeVisible();
+}
+
 test('global and section bulk controls filter future candidates without changing inventory or selected recipes', async ({ page }) => {
   await page.goto('meal-builder/');
   await page.locator('#meal-show-all').check();
@@ -43,8 +51,7 @@ test('global and section bulk controls filter future candidates without changing
   for (const id of ['ground-pork', 'pork-chops', 'chicken-breast', 'broccoli']) {
     await expect(page.locator(`[data-ingredient-id="${id}"]`)).toHaveAttribute('aria-pressed', 'true');
   }
-  await page.locator('[data-meal-recipe="clear-braised-lions-head-meatballs"] [data-select-recipe]').click();
-  await expect(page.locator('[data-selected-recipe="clear-braised-lions-head-meatballs"]')).toBeVisible();
+  await selectRecipe(page, 'clear-braised-lions-head-meatballs');
 
   const porkSection = page.locator('[data-ingredient-section="pork"]');
   const porkClear = porkSection.locator('[data-ingredient-bulk-section="pork"][data-ingredient-bulk="clear"]');

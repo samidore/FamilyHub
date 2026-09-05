@@ -61,6 +61,15 @@ async function startMeal(page: Page, ids: string[] = []) {
   await expect(page.locator('#meal-builder-view')).toBeVisible();
 }
 
+async function selectRecipe(page: Page, id: string) {
+  const card = page.locator(`[data-meal-recipe="${id}"]`);
+  await card.locator('[data-select-recipe]').click();
+  const draft = card.locator('[data-recipe-plan-draft]');
+  await expect(draft).toBeVisible();
+  await draft.locator('[data-confirm-recipe-draft]').click();
+  await expect(page.locator(`[data-selected-recipe="${id}"]`)).toBeVisible();
+}
+
 test('home groups and searches the active modules', async ({ page }) => {
   await page.goto('./');
   await expect(page.locator('[data-module]')).toHaveCount(moduleRegistry.length);
@@ -221,10 +230,17 @@ test('meal builder filters live, completes a meal, and preserves state', async (
   const chicken = page.locator('[data-meal-recipe="chicken-broccoli-stir-fry"]');
   const udon = page.locator('[data-meal-recipe="yaki-udon"]');
   await expect(chicken).toBeVisible();
+  await expect(chicken.locator('[data-candidate-composition]')).toContainText('必需 Required');
+  await expect(chicken.locator('[data-candidate-composition]')).toContainText('选一 One of');
+  await expect(chicken.locator('[data-candidate-composition]')).toContainText('可加 Optional');
   await chicken.getByRole('button', { name: '选择这道菜' }).click();
+  await expect(chicken.locator('[data-recipe-plan-draft]')).toBeVisible();
+  await expect(page.locator('[data-selected-recipe="chicken-broccoli-stir-fry"]')).toBeHidden();
+  await expect(page.locator('#progress-protein')).toHaveText('0 / 1');
+  await chicken.locator('[data-confirm-recipe-draft]').click();
   await expect(page.locator('#progress-protein')).toHaveText('1 / 1');
   await expect(udon).toBeVisible();
-  await udon.getByRole('button', { name: '选择这道菜' }).click();
+  await selectRecipe(page, 'yaki-udon');
   await expect(page.locator('#meal-completion-status')).toHaveText('目标已满足，可以进入下一步。');
   await expect(page.locator('#meal-next')).toBeEnabled();
   await page.locator('#meal-next').click();
@@ -266,7 +282,7 @@ test('meal builder explains completion blocker and gates next step', async ({ pa
 test('force next bypasses completion only after one Recipe is selected', async ({ page }) => {
   await page.goto('meal-builder/');
   await startMeal(page, ['chicken-breast', 'broccoli']);
-  await page.locator('[data-meal-recipe="chicken-broccoli-stir-fry"] [data-select-recipe]').click();
+  await selectRecipe(page, 'chicken-broccoli-stir-fry');
   await expect(page.locator('#meal-next')).toBeDisabled();
   await expect(page.locator('#meal-force-next')).toBeEnabled();
   await page.locator('#meal-force-next').click();
@@ -276,7 +292,7 @@ test('force next bypasses completion only after one Recipe is selected', async (
 test('top navigation allows steps one to three and gates checkout to cook', async ({ page }) => {
   await page.goto('meal-builder/');
   await startMeal(page, ['chicken-breast', 'broccoli']);
-  await page.locator('[data-meal-recipe="chicken-broccoli-stir-fry"] [data-select-recipe]').click();
+  await selectRecipe(page, 'chicken-broccoli-stir-fry');
   await expect(page.locator('[data-step-target="checkout"]')).toBeDisabled();
   await page.locator('[data-step-target="inventory"]').click();
   await expect(page.locator('#meal-inventory-view')).toBeVisible();
@@ -292,15 +308,15 @@ test('top navigation allows steps one to three and gates checkout to cook', asyn
 test('selected Recipe and Checkout can change one-of independently', async ({ page }) => {
   await page.goto('meal-builder/');
   await startMeal(page, ['chicken-drumsticks', 'chicken-thighs']);
-  const main = page.locator('[data-meal-recipe="oyster-sauce-braised-chicken"]');
-  await expect(main).toBeVisible();
-  await main.getByRole('button', { name: /选择这道菜/ }).click();
+  await selectRecipe(page, 'oyster-sauce-braised-chicken');
 
   const selected = page.locator('[data-selected-recipe="oyster-sauce-braised-chicken"]');
-  await selected.locator('[data-composition-editor] > summary').click();
-  const planThigh = selected.locator('[data-plan-binding-ingredient="chicken-thighs"]');
+  await selected.locator('[data-edit-recipe-plan]').click();
+  const plan = selected.locator('[data-recipe-plan-draft]');
+  const planThigh = plan.locator('[data-recipe-draft-binding-ingredient="chicken-thighs"]');
   await planThigh.click();
   await expect(planThigh).toHaveAttribute('aria-pressed', 'true');
+  await plan.locator('[data-confirm-recipe-draft]').click();
 
   await page.locator('#meal-force-next').click();
   await page.locator('#meal-open-checkout').click();
@@ -313,15 +329,15 @@ test('selected Recipe and Checkout can change one-of independently', async ({ pa
 test('optional composition is editable in Plan and Actual without duplicating required Ingredients', async ({ page }) => {
   await page.goto('meal-builder/');
   await startMeal(page, ['ground-pork', 'soft-tofu', 'fried-tofu-puffs', 'carrot']);
-  await page.locator('[data-meal-recipe="minced-pork-tofu"] [data-select-recipe]').click();
-
-  const selected = page.locator('[data-selected-recipe="minced-pork-tofu"]');
-  await selected.locator('[data-composition-editor] > summary').click();
-  await expect(selected.getByRole('heading', { name: '一锅乱炖' })).toBeVisible();
-  await expect(selected.locator('[data-plan-optional-ingredient="soft-tofu"]')).toHaveCount(0);
-  const plannedPuffs = selected.locator('[data-plan-optional-ingredient="fried-tofu-puffs"]');
+  const recipe = page.locator('[data-meal-recipe="minced-pork-tofu"]');
+  await recipe.locator('[data-select-recipe]').click();
+  const draft = recipe.locator('[data-recipe-plan-draft]');
+  await expect(draft.getByRole('heading', { name: '一锅乱炖' })).toBeVisible();
+  await expect(draft.locator('[data-recipe-draft-optional-ingredient="soft-tofu"]')).toHaveCount(0);
+  const plannedPuffs = draft.locator('[data-recipe-draft-optional-ingredient="fried-tofu-puffs"]');
   await plannedPuffs.click();
   await expect(plannedPuffs).toHaveAttribute('aria-pressed', 'true');
+  await draft.locator('[data-confirm-recipe-draft]').click();
 
   await page.locator('#meal-force-next').click();
   await expect(page.locator('[data-cook-recipe="minced-pork-tofu"] [data-cook-planned-optionals]')).toContainText('油豆腐 / 豆泡');
@@ -349,7 +365,7 @@ test('optional composition is editable in Plan and Actual without duplicating re
 test('Recipe without optional groups does not expose optional Checkout controls', async ({ page }) => {
   await page.goto('meal-builder/');
   await startMeal(page, ['chicken-thighs', 'fried-tofu-puffs']);
-  await page.locator('[data-meal-recipe="instant-pot-soy-chicken-thighs"] [data-select-recipe]').click();
+  await selectRecipe(page, 'instant-pot-soy-chicken-thighs');
   await page.locator('#meal-force-next').click();
   await page.locator('#meal-open-checkout').click();
   const checkoutCard = page.locator('[data-checkout-recipe="instant-pot-soy-chicken-thighs"]');
@@ -360,8 +376,8 @@ test('Recipe without optional groups does not expose optional Checkout controls'
 test('cook back returns every device to the shared recipes step', async ({ page }) => {
   await page.goto('meal-builder/');
   await startMeal(page, ['chicken-breast', 'broccoli', 'green-cabbage', 'onion', 'noodles']);
-  await page.locator('[data-meal-recipe="chicken-broccoli-stir-fry"] [data-select-recipe]').click();
-  await page.locator('[data-meal-recipe="yaki-udon"] [data-select-recipe]').click();
+  await selectRecipe(page, 'chicken-broccoli-stir-fry');
+  await selectRecipe(page, 'yaki-udon');
   await page.locator('#meal-next').click();
   await expect(page.locator('#meal-shared-status')).toHaveText('做饭中');
   await page.locator('#meal-back-to-menu').click();
@@ -443,8 +459,8 @@ test('returning through inventory preserves exclusions and enables newly stocked
 test('Recipe-scoped checkout consumes counted inventory while presence-only defaults to keep', async ({ page }) => {
   await page.goto('meal-builder/');
   await startMeal(page, ['eggs', 'tomato', 'noodles']);
-  await page.locator('[data-meal-recipe="tomato-egg-noodles"] [data-select-recipe]').click();
-  await page.locator('[data-meal-recipe="tomato-scrambled-eggs"] [data-select-recipe]').click();
+  await selectRecipe(page, 'tomato-egg-noodles');
+  await selectRecipe(page, 'tomato-scrambled-eggs');
   await page.locator('#meal-next').click();
   await page.locator('#meal-open-checkout').click();
 
@@ -480,7 +496,7 @@ test('inventory reset confirms while recipe reset is immediate and scoped to the
   await page.goto('meal-builder/');
   await startMeal(page, ['chicken-breast', 'broccoli']);
   const row = page.locator('[data-inventory-item="chicken-breast"]');
-  await page.locator('[data-meal-recipe="chicken-broccoli-stir-fry"] [data-select-recipe]').click();
+  await selectRecipe(page, 'chicken-broccoli-stir-fry');
 
   let dialogType = '';
   page.once('dialog', async (dialog) => { dialogType = dialog.type(); await dialog.dismiss(); });
@@ -509,9 +525,9 @@ test('two pages in one browser context receive inventory and current-meal update
   await expect(second.locator('#meal-start-current')).toBeDisabled();
   await expect(second.locator('#meal-builder-view')).toBeVisible();
 
-  await first.locator('[data-meal-recipe="chicken-broccoli-stir-fry"] [data-select-recipe]').click();
+  await selectRecipe(first, 'chicken-broccoli-stir-fry');
   await expect(second.locator('[data-selected-recipe="chicken-broccoli-stir-fry"]')).toBeVisible();
-  await first.locator('[data-meal-recipe="yaki-udon"] [data-select-recipe]').click();
+  await selectRecipe(first, 'yaki-udon');
   await expect(second.locator('[data-selected-recipe="yaki-udon"]')).toBeVisible();
   await first.locator('#meal-next').click();
   await expect(first.locator('#meal-shared-status')).toHaveText('做饭中');
