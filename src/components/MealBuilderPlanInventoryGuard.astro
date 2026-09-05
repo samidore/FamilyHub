@@ -118,6 +118,13 @@
       });
   }
 
+  function blockedPressedIngredient(editor: HTMLElement) {
+    const blocked = editor.querySelector<HTMLButtonElement>(
+      '[data-live-inventory-blocked][aria-pressed="true"]'
+    );
+    return blocked?.dataset.recipeDraftBindingIngredient ?? blocked?.dataset.recipeDraftOptionalIngredient ?? '';
+  }
+
   async function confirmWithLiveInventory(confirm: HTMLButtonElement) {
     if (!canWrite()) return;
     const editor = confirm.closest<HTMLElement>('[data-recipe-plan-draft]');
@@ -126,6 +133,17 @@
     const expectedMealId = household.currentMeal?.mealId;
     const mode: 'new' | 'edit' = confirm.textContent?.includes('修改') ? 'edit' : 'new';
     if (!editor || !recipe || !expectedMealId) return;
+
+    // A live inventory update can invalidate a choice after the draft was opened.
+    // Reject that visibly stale pressed choice before any write. The transaction below
+    // repeats the inventory check to cover a change that races with this preflight.
+    refreshDraftChoices();
+    const blockedIngredient = blockedPressedIngredient(editor);
+    if (blockedIngredient) {
+      announce(`库存里现在没有${nameFor(blockedIngredient)}，不能选。`);
+      scheduleRefresh();
+      return;
+    }
 
     const proposedBindings = draftBindings(editor, recipe);
     const proposedOptionals = draftOptionals(editor);

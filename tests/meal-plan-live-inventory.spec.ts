@@ -17,9 +17,12 @@ async function setInventory(page: Page, ids: string[]) {
 }
 
 async function removeOneCountedUnit(page: Page, id: string) {
-  const minus = page.locator(`[data-inventory-item="${id}"] [data-stock-delta="-0.5"][data-stock-storage="inventory"]`).first();
-  await minus.evaluate((element) => (element as HTMLButtonElement).click());
-  await minus.evaluate((element) => (element as HTMLButtonElement).click());
+  const value = page.locator(`[data-inventory-item="${id}"] [data-inventory-value="${id}"]`);
+  for (const expected of ['0.5', '0']) {
+    const minus = page.locator(`[data-inventory-item="${id}"] [data-stock-delta="-0.5"][data-stock-storage="inventory"]`).first();
+    await minus.click();
+    await expect.poll(async () => value.textContent()).toBe(expected);
+  }
 }
 
 test('Optional cannot be confirmed after live inventory disappears from a frozen meal snapshot', async ({ browser }) => {
@@ -44,7 +47,6 @@ test('Optional cannot be confirmed after live inventory disappears from a frozen
   await expect(puff).toHaveAttribute('aria-pressed', 'true');
 
   await removeOneCountedUnit(second, 'fried-tofu-puffs');
-  await expect.poll(async () => second.locator('[data-inventory-item="fried-tofu-puffs"] [data-inventory-value="fried-tofu-puffs"]').textContent()).toBe('0');
   await expect(puff).toBeHidden();
 
   await recipe.locator('[data-confirm-recipe-draft]').click();
@@ -74,7 +76,6 @@ test('One of cannot be confirmed after its chosen Ingredient leaves live invento
   await expect(thigh).toHaveAttribute('aria-pressed', 'true');
 
   await removeOneCountedUnit(second, 'chicken-thighs');
-  await expect.poll(async () => second.locator('[data-inventory-item="chicken-thighs"] [data-inventory-value="chicken-thighs"]').textContent()).toBe('0');
   await expect(thigh).toBeHidden();
 
   await recipe.locator('[data-confirm-recipe-draft]').click();
