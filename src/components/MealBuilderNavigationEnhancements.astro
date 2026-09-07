@@ -1,5 +1,72 @@
 <script>
   function enhanceMealBuilderNavigation() {
+    const targetSection = document.querySelector<HTMLElement>('.meal-targets');
+    if (targetSection && !targetSection.querySelector(':scope > [data-meal-target-fold]')) {
+      const heading = targetSection.querySelector<HTMLElement>(':scope > .meal-section-heading');
+      const grid = targetSection.querySelector<HTMLElement>(':scope > .meal-target-grid');
+      const reset = heading?.querySelector<HTMLButtonElement>('#meal-reset');
+      const stepActions = document.querySelector<HTMLElement>('#meal-builder-view > .meal-step-actions');
+      if (grid) {
+        if (reset && stepActions) {
+          reset.classList.add('meal-target-reset');
+          stepActions.append(reset);
+        }
+        heading?.querySelector('#meal-targets-heading')?.removeAttribute('id');
+        heading?.remove();
+
+        const fold = document.createElement('details');
+        fold.className = 'meal-target-fold';
+        fold.dataset.mealTargetFold = 'true';
+
+        const summary = document.createElement('summary');
+        summary.className = 'meal-target-fold__summary';
+        const label = document.createElement('span');
+        label.className = 'meal-target-fold__label';
+        const title = document.createElement('strong');
+        title.id = 'meal-targets-heading';
+        title.textContent = '组餐目标';
+        const primary = document.createElement('small');
+        primary.dataset.mealTargetSummaryPrimary = 'true';
+        const secondary = document.createElement('small');
+        secondary.dataset.mealTargetSummarySecondary = 'true';
+        label.append(title, primary, secondary);
+        const action = document.createElement('span');
+        action.className = 'meal-target-fold__action';
+        action.innerHTML = '<span>修改</span><span aria-hidden="true">⌄</span>';
+        summary.append(label, action);
+
+        fold.append(summary, grid);
+        targetSection.append(fold);
+
+        const protein = document.querySelector<HTMLSelectElement>('#meal-protein');
+        const vegetable = document.querySelector<HTMLSelectElement>('#meal-vegetable');
+        const time = document.querySelector<HTMLSelectElement>('#meal-time');
+        const staple = document.querySelector<HTMLInputElement>('#meal-staple');
+        const child = document.querySelector<HTMLInputElement>('#meal-child');
+        const syncTargetSummary = () => {
+          const timeLabel = time?.selectedOptions[0]?.textContent?.trim() || time?.value || '不限';
+          primary.textContent = `Protein ${protein?.value ?? '—'} · Vegetable ${vegetable?.value ?? '—'} · ${timeLabel}`;
+          secondary.textContent = `Staple ${staple?.checked ? '✓' : '—'} · 孩子一起吃 ${child?.checked ? '✓' : '—'}`;
+        };
+        syncTargetSummary();
+        targetSection.addEventListener('change', syncTargetSummary);
+
+        const progress = document.querySelector<HTMLElement>('.meal-progress');
+        const recipeGrid = document.querySelector<HTMLElement>('#meal-recipe-grid');
+        const summaryObserver = new MutationObserver(syncTargetSummary);
+        if (progress) summaryObserver.observe(progress, { childList: true, characterData: true, subtree: true, attributes: true, attributeFilter: ['hidden'] });
+        if (recipeGrid) summaryObserver.observe(recipeGrid, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden'] });
+
+        const builder = document.querySelector<HTMLElement>('#meal-builder-view');
+        if (builder) {
+          new MutationObserver(() => { if (!builder.hidden) fold.open = false; }).observe(builder, { attributes: true, attributeFilter: ['hidden'] });
+        }
+        document.querySelectorAll<HTMLElement>('#meal-start-current, [data-step-target="recipes"], #meal-back-to-menu').forEach((control) => {
+          control.addEventListener('click', () => { fold.open = false; });
+        });
+      }
+    }
+
     const ingredientSection = document.querySelector<HTMLElement>('.meal-ingredients');
     if (ingredientSection && !ingredientSection.querySelector(':scope > [data-meal-ingredient-fold]')) {
       const existingChildren = [...ingredientSection.childNodes];
@@ -117,6 +184,34 @@
 </script>
 
 <style is:global>
+  .meal-targets { margin-bottom: 22px; }
+  .meal-target-fold { border: 0; }
+  .meal-target-fold > summary { list-style: none; }
+  .meal-target-fold > summary::-webkit-details-marker { display: none; }
+  .meal-target-fold__summary {
+    display: flex;
+    min-height: 74px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 14px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: color-mix(in srgb, var(--surface) 90%, var(--berry-soft));
+    cursor: pointer;
+  }
+  .meal-target-fold__label { display: grid; min-width: 0; gap: 2px; }
+  .meal-target-fold__label strong { color: var(--ink); font-size: 20px; line-height: 1.2; }
+  .meal-target-fold__label small { color: var(--muted); font-size: 13px; font-weight: 700; line-height: 1.25; }
+  .meal-target-fold__action { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 5px; color: var(--berry); font-size: 14px; font-weight: 800; }
+  .meal-target-fold__action > span:last-child { display: inline-block; font-size: 18px; transition: transform .15s ease; }
+  .meal-target-fold[open] .meal-target-fold__action > span:last-child { transform: rotate(180deg); }
+  .meal-target-fold[open] > .meal-target-fold__summary { border-color: color-mix(in srgb, var(--berry) 35%, var(--line)); background: var(--berry-soft); }
+  .meal-target-fold > .meal-target-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 8px; padding: 12px; border-radius: 14px; box-shadow: none; }
+  .meal-target-fold > .meal-target-grid > .meal-toggle { grid-column: 1 / -1; min-height: 58px; }
+  .meal-target-fold > .meal-target-grid select { min-width: 0; padding-inline: 8px; }
+  .meal-step-actions .meal-target-reset { margin-left: auto; }
+
   .meal-ingredient-overall-fold { border: 0; }
   .meal-ingredient-overall-fold > summary { list-style: none; }
   .meal-ingredient-overall-fold > summary::-webkit-details-marker { display: none; }
@@ -182,4 +277,12 @@
   }
   .meal-inventory-jump-nav button:focus-visible { outline: 3px solid color-mix(in srgb, var(--berry) 70%, white); outline-offset: 2px; }
   .meal-inventory-group { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 64px); }
+
+  @media (max-width: 560px) {
+    .meal-target-fold__summary { min-height: 70px; padding: 10px 12px; }
+    .meal-target-fold__label strong { font-size: 19px; }
+    .meal-target-fold__label small { font-size: 12px; }
+    .meal-target-fold > .meal-target-grid { padding: 10px; }
+    .meal-target-fold > .meal-target-grid > label:not(.meal-toggle) { gap: 3px; font-size: 12px; }
+  }
 </style>
