@@ -11,15 +11,12 @@ async function setInventory(page: Page, ids: string[]) {
   for (const id of ids) { const action = (await inventoryItem(page, id)).locator('[data-stock-add], [data-stock-toggle]').first(); await action.click(); }
 }
 
-test('queued meal can be checked out from the warning without finishing the next meal', async ({ page }) => {
-  await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
-  await setInventory(page, ['green-cabbage', 'ground-pork', 'ground-beef']);
-  await page.locator('#meal-start-current').click();
-
+async function selectCabbageMeal(page: Page) {
+  const targets = page.locator('[data-meal-target-fold]');
+  if (await targets.getAttribute('open') === null) await targets.locator(':scope > summary').click();
   await page.locator('#meal-vegetable').selectOption('1');
-  await page.locator('#meal-staple').uncheck();
-  await page.locator('#meal-child').uncheck();
+  if (await page.locator('#meal-staple').isChecked()) await page.locator('#meal-staple').uncheck();
+  if (await page.locator('#meal-child').isChecked()) await page.locator('#meal-child').uncheck();
 
   const recipe = page.locator('[data-meal-recipe="simple-stir-fried-green-cabbage"]');
   await expect(recipe).toBeVisible();
@@ -29,8 +26,15 @@ test('queued meal can be checked out from the warning without finishing the next
   await draft.locator('[data-recipe-draft-optional-ingredient="ground-pork"]').click();
   await draft.locator('[data-recipe-draft-optional-ingredient="ground-beef"]').click();
   await draft.locator('[data-confirm-recipe-draft]').click();
-
   await expect(page.locator('#meal-next')).toBeEnabled();
+}
+
+test('queued meal can be checked out from the warning without finishing the next meal', async ({ page }) => {
+  await page.goto('meal-builder/');
+  await page.locator('#meal-show-all').check();
+  await setInventory(page, ['green-cabbage', 'ground-pork', 'ground-beef']);
+  await page.locator('#meal-start-current').click();
+  await selectCabbageMeal(page);
   await page.locator('#meal-next').click();
 
   await expect(page.locator('#meal-shared-status')).toHaveText('做饭中');
@@ -58,4 +62,44 @@ test('queued meal can be checked out from the warning without finishing the next
   await expect(warning).toBeHidden();
   await expect(page.locator('#meal-builder-view')).toBeVisible();
   await expect(page.locator('#meal-shared-status')).toHaveText('选菜中');
+});
+
+test('queue warning settles only pending meals even while the current meal is cooking; normal Checkout includes both', async ({ page }) => {
+  await page.goto('meal-builder/');
+  await page.locator('#meal-show-all').check();
+  await setInventory(page, [
+    'green-cabbage', 'green-cabbage',
+    'ground-pork', 'ground-pork',
+    'ground-beef', 'ground-beef',
+  ]);
+  await page.locator('#meal-start-current').click();
+
+  await selectCabbageMeal(page);
+  await page.locator('#meal-next').click();
+  await page.locator('#meal-queue-checkout').click();
+
+  const warning = page.locator('#meal-queue-alert');
+  await expect(warning).toBeVisible();
+  await expect(page.locator('#meal-shared-status')).toHaveText('选菜中');
+
+  await selectCabbageMeal(page);
+  await page.locator('#meal-next').click();
+  await expect(page.locator('#meal-shared-status')).toHaveText('做饭中');
+
+  await warning.locator('#meal-queue-open-checkout').click();
+  await expect(page.locator('#meal-checkout-heading')).toHaveText('待结算');
+  await expect(page.locator('[data-queue-checkout-meal]')).toHaveCount(1);
+  await expect(page.locator('[data-queue-checkout-meal] > h3')).toHaveText('待结算 1');
+  await expect(page.locator('#meal-shared-status')).toHaveText('做饭中');
+  await expect(page.locator('#meal-checkout-status')).toContainText('当前下一顿不会进入本次结算');
+
+  await page.locator('#meal-back-cook').click();
+  await expect(page.locator('#meal-cook-view')).toBeVisible();
+  await expect(page.locator('#meal-shared-status')).toHaveText('做饭中');
+
+  await page.locator('#meal-open-checkout').click();
+  await expect(page.locator('#meal-checkout')).toBeVisible();
+  await expect(page.locator('[data-queue-checkout-meal]')).toHaveCount(2);
+  await expect(page.locator('[data-queue-checkout-meal] > h3').nth(0)).toHaveText('待结算 1');
+  await expect(page.locator('[data-queue-checkout-meal] > h3').nth(1)).toHaveText('本顿');
 });
