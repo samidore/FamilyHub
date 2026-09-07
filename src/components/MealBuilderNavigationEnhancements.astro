@@ -1,5 +1,32 @@
 <script>
   function enhanceMealBuilderNavigation() {
+    const heroDescription = document.querySelector<HTMLElement>('.meal-builder-page .module-hero__copy > p:not(.eyebrow)');
+    if (heroDescription) heroDescription.textContent = '按库存选菜，凑齐这一顿。';
+
+    const householdBar = document.querySelector<HTMLElement>('.meal-household-bar');
+    const connection = document.querySelector<HTMLElement>('#meal-connection');
+    const logout = document.querySelector<HTMLButtonElement>('#meal-logout');
+    const main = document.querySelector<HTMLElement>('#main-content');
+    if (householdBar && connection && logout && main && !document.querySelector('[data-meal-auth-footer]')) {
+      const footer = document.createElement('div');
+      footer.className = 'shell meal-auth-footer';
+      footer.dataset.mealAuthFooter = 'true';
+      logout.classList.add('meal-auth-footer__logout');
+      footer.append(logout);
+      main.append(footer);
+
+      const syncAuthChrome = () => {
+        const warning = ['signed-out', 'pending', 'error'].includes(connection.dataset.connection ?? '');
+        householdBar.hidden = !warning;
+        householdBar.dataset.mealAuthWarning = String(warning);
+        footer.hidden = logout.hidden;
+      };
+      const authObserver = new MutationObserver(syncAuthChrome);
+      authObserver.observe(connection, { attributes: true, childList: true, characterData: true, subtree: true });
+      authObserver.observe(logout, { attributes: true, attributeFilter: ['hidden'] });
+      syncAuthChrome();
+    }
+
     const targetSection = document.querySelector<HTMLElement>('.meal-targets');
     if (targetSection && !targetSection.querySelector(':scope > [data-meal-target-fold]')) {
       const heading = targetSection.querySelector<HTMLElement>(':scope > .meal-section-heading');
@@ -184,6 +211,34 @@
 </script>
 
 <style is:global>
+  .meal-builder-page .module-hero { padding-block: 10px 14px; }
+  .meal-builder-page .module-nav, .meal-builder-page .back-link { min-height: 40px; }
+  .meal-builder-page .module-hero__grid { grid-template-columns: minmax(0, 1fr); gap: 0; margin-top: 0; }
+  .meal-builder-page .field-tab,
+  .meal-builder-page .module-hero__copy > .eyebrow,
+  .meal-builder-page .summary-row { display: none; }
+  .meal-builder-page .module-hero__copy { padding-top: 0; }
+  .meal-builder-page .module-hero__copy h1 { margin: 0 0 4px; font-size: clamp(38px, 11vw, 56px); line-height: 1; }
+  .meal-builder-page .module-hero__copy > p:not(.eyebrow) { font-size: 16px; line-height: 1.35; }
+  .meal-builder-page .meal-step-band { margin-top: 12px; }
+
+  .meal-builder-page .meal-household-bar { display: none; }
+  .meal-builder-page .meal-household-bar[data-meal-auth-warning="true"] {
+    display: block;
+    margin-top: 12px;
+    padding: 10px 12px;
+    border: 1px solid #e1ba6c;
+    border-radius: 12px;
+    background: #fff7df;
+  }
+  .meal-builder-page .meal-household-bar #meal-account,
+  .meal-builder-page .meal-household-bar .meal-shared-status { display: none !important; }
+  .meal-builder-page .meal-household-bar .meal-connection { margin: 0; }
+  .meal-builder-page .meal-household-bar .meal-connection::before { content: '⚠ '; }
+  .meal-builder-page .meal-household-bar .meal-auth-actions { margin-top: 6px; }
+  .meal-auth-footer { display: flex; justify-content: flex-end; padding-block: 18px 34px; }
+  .meal-auth-footer .meal-auth-footer__logout { min-height: 48px; color: var(--muted); font-size: 14px; font-weight: 600; }
+
   .meal-targets { margin-bottom: 22px; }
   .meal-target-fold { border: 0; }
   .meal-target-fold > summary { list-style: none; }
@@ -279,6 +334,8 @@
   .meal-inventory-group { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 64px); }
 
   @media (max-width: 560px) {
+    .meal-builder-page .module-hero { padding-block: 8px 12px; }
+    .meal-builder-page .module-hero__copy h1 { font-size: clamp(36px, 11vw, 44px); }
     .meal-target-fold__summary { min-height: 70px; padding: 10px 12px; }
     .meal-target-fold__label strong { font-size: 19px; }
     .meal-target-fold__label small { font-size: 12px; }
