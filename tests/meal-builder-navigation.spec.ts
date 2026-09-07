@@ -1,5 +1,32 @@
 import { expect, test } from '@playwright/test';
 
+test('Meal Builder keeps routine header and account chrome compact', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 900 });
+  await page.goto('meal-builder/');
+
+  await expect(page.locator('.module-hero__copy > p:not(.eyebrow)')).toHaveText('按库存选菜，凑齐这一顿。');
+  await expect(page.locator('.module-hero .field-tab')).toBeHidden();
+  await expect(page.locator('.module-hero__copy > .eyebrow')).toBeHidden();
+  await expect(page.locator('.module-hero .summary-row')).toBeHidden();
+  await expect(page.locator('.meal-shared-status')).toBeHidden();
+  await expect(page.locator('#meal-account')).toBeHidden();
+  await expect(page.locator('[data-meal-auth-footer] #meal-logout')).toHaveCount(1);
+
+  const connection = page.locator('#meal-connection');
+  const householdBar = page.locator('.meal-household-bar');
+  await connection.evaluate((element) => {
+    element.setAttribute('data-connection', 'signed-out');
+    element.textContent = '请登录以连接家庭';
+  });
+  await expect(householdBar).toBeVisible();
+
+  await connection.evaluate((element) => {
+    element.setAttribute('data-connection', 'connected');
+    element.textContent = '家庭已连接';
+  });
+  await expect(householdBar).toBeHidden();
+});
+
 test('inventory category jump bar is bottom-pinned, two-row, non-scrolling, data-driven, and opens the target section', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto('meal-builder/');
