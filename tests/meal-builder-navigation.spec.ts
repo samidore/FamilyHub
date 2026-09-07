@@ -46,6 +46,37 @@ test('inventory category jump bar is bottom-pinned, two-row, non-scrolling, data
   await expect(leafy).toHaveAttribute('open', '');
 });
 
+test('Recipes targets default folded, summarize the live settings, and keep reset outside the fold', async ({ page }) => {
+  await page.goto('meal-builder/');
+  const startCurrent = page.locator('#meal-start-current');
+  await startCurrent.evaluate((element) => element.scrollIntoView({ block: 'center' }));
+  await startCurrent.evaluate((element) => (element as HTMLButtonElement).click());
+
+  const fold = page.locator('[data-meal-target-fold]');
+  await expect(fold).toBeVisible();
+  await expect(fold).not.toHaveAttribute('open', '');
+  await expect(fold.locator('[data-meal-target-summary-primary]')).toHaveText('Protein 1 · Vegetable 2 · 不限');
+  await expect(fold.locator('[data-meal-target-summary-secondary]')).toHaveText('Staple ✓ · 孩子一起吃 ✓');
+  await expect(page.getByText('01 · 这顿需要什么')).toHaveCount(0);
+  await expect(page.locator('#meal-builder-view > .meal-step-actions #meal-reset')).toHaveText('重置本顿选菜');
+  await expect(page.locator('#meal-protein')).not.toBeVisible();
+
+  await fold.locator(':scope > summary').click();
+  await expect(fold).toHaveAttribute('open', '');
+  await expect(page.locator('#meal-protein')).toBeVisible();
+  await page.locator('#meal-vegetable').selectOption('1');
+  await page.locator('#meal-staple').uncheck();
+  await page.locator('#meal-child').uncheck();
+  await expect(fold.locator('[data-meal-target-summary-primary]')).toHaveText('Protein 1 · Vegetable 1 · 不限');
+  await expect(fold.locator('[data-meal-target-summary-secondary]')).toHaveText('Staple — · 孩子一起吃 —');
+
+  await page.locator('#meal-back-inventory').click();
+  await expect(page.locator('#meal-inventory-view')).toBeVisible();
+  await startCurrent.evaluate((element) => element.scrollIntoView({ block: 'center' }));
+  await startCurrent.evaluate((element) => (element as HTMLButtonElement).click());
+  await expect(fold).not.toHaveAttribute('open', '');
+});
+
 test('Recipes ingredient filter defaults folded with every inner section expanded and folds again when re-entering Recipes', async ({ page }) => {
   await page.goto('meal-builder/');
   const startCurrent = page.locator('#meal-start-current');
