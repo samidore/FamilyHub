@@ -17,6 +17,7 @@ test('candidate composition stays draft-only until confirmation and supports opt
   await setInventory(page, ['green-cabbage', 'ground-pork', 'ground-beef']);
   await page.locator('#meal-start-current').click();
 
+  await page.locator('[data-meal-target-fold] > summary').click();
   await page.locator('#meal-vegetable').selectOption('1');
   await page.locator('#meal-staple').uncheck();
   await page.locator('#meal-child').uncheck();
