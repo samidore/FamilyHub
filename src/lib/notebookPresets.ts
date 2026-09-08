@@ -1,4 +1,4 @@
-import { addNotebookItem } from './notebookActions.ts';
+import { addNotebookItem, setNotebookItemStatus } from './notebookActions.ts';
 import { cloneNotebookState, normalizeNotebookState, type NotebookItem, type NotebookPreset, type NotebookState } from './notebookDomain.ts';
 import { deleteNotebookItem } from './notebookItemDelete.ts';
 
@@ -56,4 +56,15 @@ export function cancelNotebookPresetInstance(state: NotebookState, presetId: str
     .map((item) => item.id);
   if (activeIds.length === 0) return state;
   return activeIds.reduce((current, itemId) => deleteNotebookItem(current, itemId), state);
+}
+
+export function restoreNotebookItemWithPresetGuard(state: NotebookState, itemId: string, now: number): NotebookState {
+  const item = state.items[itemId];
+  if (!item) return state;
+  if (item.sourcePresetId) {
+    const anotherActive = Object.values(state.items).some((candidate) =>
+      candidate.id !== itemId && candidate.status === 'active' && candidate.sourcePresetId === item.sourcePresetId);
+    if (anotherActive) return state;
+  }
+  return setNotebookItemStatus(state, itemId, 'active', now);
 }
