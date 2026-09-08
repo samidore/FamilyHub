@@ -203,7 +203,7 @@ Board-level ordering is separate from item ordering. Ordinary Boards keep dense 
 
 Each ordinary board has fixed priority sections in this order:
 
-1. Urent
+1. Urgent
 2. High
 3. Normal
 4. Low
