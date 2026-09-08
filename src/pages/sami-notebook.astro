@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/notebook.css';
 import '../styles/notebookRecurring.css';
 import '../styles/notebookQuickAdd.css';
+import '../styles/notebookPresets.css';
 const base = import.meta.env.BASE_URL;
 const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
 ---
@@ -43,6 +44,7 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
         </div>
       </section>
 
+      <section id="notebook-presets" class="notebook-presets" aria-label="预设"></section>
       <p id="notebook-live-status" class="notebook-live" aria-live="polite"></p>
       <div id="notebook-boards" class="notebook-boards"></div>
 
@@ -74,6 +76,28 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
       <label>类型<select name="kind"><option value="task">任务</option><option value="media">影视</option></select></label>
       <label>说明（可选）<input name="description" /></label>
       <button type="submit">创建 Board</button>
+    </form>
+  </dialog>
+
+  <dialog id="notebook-preset-dialog" class="notebook-dialog notebook-item-dialog">
+    <form method="dialog" class="dialog-close-row"><button type="submit" class="secondary-button">取消</button></form>
+    <form id="notebook-preset-form" class="notebook-item-form--create">
+      <h2 id="notebook-preset-dialog-title">新预设</h2>
+      <label>标题<input name="title" required /></label>
+      <label>内容<textarea name="details" rows="2"></textarea></label>
+      <div class="form-grid notebook-quick-grid">
+        <label>优先级<select name="priority"><option value="urgent">紧急</option><option value="high">高</option><option value="normal" selected>普通</option><option value="low">低</option></select></label>
+        <label>截止日期<input name="dueDate" type="date" /></label>
+        <label>时间（可选）<input name="dueTime" type="time" /></label>
+      </div>
+      <details class="notebook-board-picker" open>
+        <summary>选择 Board</summary>
+        <fieldset><legend>发布到哪些任务 Boards</legend><div id="notebook-preset-board-choices" class="board-choice-list"></div></fieldset>
+      </details>
+      <div class="notebook-item-dialog__actions">
+        <button type="submit">保存预设</button>
+        <button id="notebook-delete-preset" type="button" class="danger-button" hidden>删除预设</button>
+      </div>
     </form>
   </dialog>
 

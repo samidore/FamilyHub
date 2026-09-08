@@ -71,6 +71,30 @@ test('notebook schema accepts canonical records and rejects unsupported fields o
   await assertFails(alice.ref(`${household}/notebook/items/bad-my-rating`).set({ ...item, id: 'bad-my-rating', myRating: 11 }));
 });
 
+test('preset records and sourcePresetId obey their dedicated schema', async () => {
+  await resetWithMember();
+  const alice = google('alice', 'alice@gmail.com');
+  await assertSucceeds(alice.ref(`${household}/notebook/boards/todo`).set(board));
+  const presetRef = alice.ref(`${household}/notebook/presets/preset-1`);
+  const preset = { id: 'preset-1', title: 'Take out trash', details: '', priority: 'normal', boardIds: ['todo'], createdAt: 20, updatedAt: 20 };
+  await assertSucceeds(presetRef.set(preset));
+  await assertFails(alice.ref(`${household}/notebook/presets/bad-empty`).set({ ...preset, id: 'bad-empty', boardIds: [] }));
+  await assertFails(alice.ref(`${household}/notebook/presets/bad-time`).set({ ...preset, id: 'bad-time', dueTime: '09:00' }));
+  await assertFails(alice.ref(`${household}/notebook/presets/bad-extra`).set({ ...preset, id: 'bad-extra', extra: true }));
+
+  const sourcedRef = alice.ref(`${household}/notebook/items/from-preset`);
+  await assertSucceeds(sourcedRef.set({ ...item, id: 'from-preset', sourcePresetId: 'preset-1', createdAt: 21, updatedAt: 21 }));
+  await assertSucceeds(sourcedRef.update({ title: 'Edited snapshot', updatedAt: 22 }));
+  await assertSucceeds(sourcedRef.update({ sourcePresetId: 'preset-1', updatedAt: 23 }));
+  await assertFails(sourcedRef.update({ sourcePresetId: 'other-preset', updatedAt: 24 }));
+
+  const ordinaryRef = alice.ref(`${household}/notebook/items/ordinary`);
+  await assertSucceeds(ordinaryRef.set({ ...item, id: 'ordinary', createdAt: 25, updatedAt: 25 }));
+  await assertFails(ordinaryRef.update({ sourcePresetId: 'preset-1', updatedAt: 26 }));
+  await assertSucceeds(presetRef.remove());
+  await assertSucceeds(sourcedRef.update({ title: 'Still independent', updatedAt: 27 }));
+});
+
 test('new items may snapshot the current member display name and cannot later change or remove authors', async () => {
   await resetWithMember({ displayName: 'Sami' });
   const alice = google('alice', 'alice@gmail.com');
