@@ -50,6 +50,7 @@ export interface NotebookItem {
   dueDate?: string;
   dueTime?: string;
   recurrence?: NotebookRecurrence;
+  sourcePresetId?: string;
   createdAt: number;
   updatedAt: number;
   completedAt?: number;
@@ -99,6 +100,18 @@ export interface NotebookInboxTicket {
   updatedAt: number;
 }
 
+export interface NotebookPreset {
+  id: string;
+  title: string;
+  details: string;
+  priority: NotebookPriority;
+  dueDate?: string;
+  dueTime?: string;
+  boardIds: string[];
+  createdAt: number;
+  updatedAt: number;
+}
+
 export interface NotebookSettings {
   viewFilter: NotebookViewFilter;
   recurringBoardOrder?: number;
@@ -112,6 +125,7 @@ export interface NotebookState {
   completionEvents: Record<string, NotebookCompletionEvent>;
   skipEvents: Record<string, NotebookSkipEvent>;
   inbox: Record<string, NotebookInboxTicket>;
+  presets: Record<string, NotebookPreset>;
   settings: NotebookSettings;
 }
 
@@ -218,6 +232,8 @@ function normalizeItem(id: string, value: unknown): NotebookItem | null {
   if (value.authorName !== undefined && !authorName) return null;
   const completedByName = value.completedByName === undefined ? undefined : normalizeMemberDisplayName(value.completedByName);
   if (value.completedByName !== undefined && !completedByName) return null;
+  const sourcePresetId = value.sourcePresetId === undefined ? undefined : optionalString(value.sourcePresetId);
+  if (value.sourcePresetId !== undefined && !sourcePresetId) return null;
   const dueDate = isNotebookCalendarDate(value.dueDate) ? value.dueDate : undefined;
   const dueTime = typeof value.dueTime === 'string' && TIME_PATTERN.test(value.dueTime) ? value.dueTime : undefined;
   if (value.dueTime !== undefined && (!dueDate || !dueTime)) return null;
@@ -243,6 +259,7 @@ function normalizeItem(id: string, value: unknown): NotebookItem | null {
     ...(dueDate ? { dueDate } : {}),
     ...(dueTime ? { dueTime } : {}),
     ...(recurrence ? { recurrence } : {}),
+    ...(sourcePresetId ? { sourcePresetId } : {}),
     createdAt: value.createdAt,
     updatedAt: value.updatedAt,
     ...(completedAt ? { completedAt } : {}),
@@ -301,6 +318,29 @@ function normalizeInboxTicket(id: string, value: unknown): NotebookInboxTicket |
   return { id, text: value.text.trim(), createdAt: value.createdAt, updatedAt: value.updatedAt };
 }
 
+function normalizePreset(id: string, value: unknown): NotebookPreset | null {
+  if (!isRecord(value) || value.id !== id || !nonEmptyString(value.title) || typeof value.details !== 'string') return null;
+  if (!priorities.has(value.priority as NotebookPriority) || !finitePositive(value.createdAt) || !finitePositive(value.updatedAt)) return null;
+  if (!Array.isArray(value.boardIds) || value.boardIds.length === 0) return null;
+  const boardIds = [...new Set(value.boardIds.filter(nonEmptyString).map((boardId) => boardId.trim()))];
+  if (boardIds.length !== value.boardIds.length) return null;
+  const dueDate = value.dueDate === undefined ? undefined : (isNotebookCalendarDate(value.dueDate) ? value.dueDate : null);
+  if (dueDate === null) return null;
+  const dueTime = value.dueTime === undefined ? undefined : (typeof value.dueTime === 'string' && TIME_PATTERN.test(value.dueTime) ? value.dueTime : null);
+  if (dueTime === null || (dueTime && !dueDate)) return null;
+  return {
+    id,
+    title: value.title.trim(),
+    details: value.details.trim(),
+    priority: value.priority as NotebookPriority,
+    ...(dueDate ? { dueDate } : {}),
+    ...(dueTime ? { dueTime } : {}),
+    boardIds,
+    createdAt: value.createdAt,
+    updatedAt: value.updatedAt,
+  };
+}
+
 function normalizeRecord<T>(value: unknown, parser: (id: string, raw: unknown) => T | null): Record<string, T> {
   if (!isRecord(value)) return {};
   const result: Record<string, T> = {};
@@ -335,6 +375,7 @@ export function defaultNotebookState(): NotebookState {
     completionEvents: {},
     skipEvents: {},
     inbox: {},
+    presets: {},
     settings: { viewFilter: 'active' },
   };
 }
@@ -347,6 +388,7 @@ export function normalizeNotebookState(value: unknown): NotebookState {
   const completionEvents = normalizeRecord(raw.completionEvents, normalizeCompletionEvent);
   const skipEvents = normalizeRecord(raw.skipEvents, normalizeSkipEvent);
   const inbox = normalizeRecord(raw.inbox, normalizeInboxTicket);
+  const presets = normalizeRecord(raw.presets, normalizePreset);
   const rawSettings = isRecord(raw.settings) ? raw.settings : {};
   const viewFilter = typeof rawSettings.viewFilter === 'string' && viewFilters.has(rawSettings.viewFilter as NotebookViewFilter)
     ? rawSettings.viewFilter as NotebookViewFilter
@@ -360,6 +402,7 @@ export function normalizeNotebookState(value: unknown): NotebookState {
     completionEvents,
     skipEvents,
     inbox,
+    presets,
     settings: { viewFilter, ...(recurringBoardOrder !== undefined ? { recurringBoardOrder } : {}) },
   };
 }
