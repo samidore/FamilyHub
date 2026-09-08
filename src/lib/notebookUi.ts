@@ -6,6 +6,7 @@ import { createNotebookRepository, type CreateNotebookRepositoryOptions } from '
 import { setupNotebookBoardManager } from './notebookBoardManager.ts';
 import { setupNotebookItemUi } from './notebookItemUi.ts';
 import { setupNotebookPointerReorder } from './notebookPointerReorder.ts';
+import { setupNotebookPresetUi } from './notebookPresetUi.ts';
 import type { FirebaseConfig } from './householdRepository.ts';
 
 const get = <T extends Element>(selector: string) => {
@@ -54,6 +55,7 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
   const manager = setupNotebookBoardManager(context);
   setupNotebookItemUi(context);
   setupNotebookPointerReorder(context);
+  const presets = setupNotebookPresetUi(context);
 
   const renderApp = () => {
     clearRenderTimer();
@@ -69,6 +71,7 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
     });
     const ticketCount = Object.keys(state.inbox).length;
     inboxCount.textContent = ticketCount ? `${ticketCount} 条待整理` : '暂无待整理';
+    presets.render();
     boardsHost.innerHTML = renderNotebookBoards(state, displayName, now);
     if (manager.dialog.open) manager.render();
 
