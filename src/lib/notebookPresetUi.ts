@@ -1,6 +1,6 @@
 import { NOTEBOOK_PRIORITIES, type NotebookPreset, type NotebookPriority, type NotebookState } from './notebookDomain.ts';
 import { orderedNotebookBoards } from './notebookActions.ts';
-import { cancelNotebookPresetInstance, deleteNotebookPreset, notebookActivePresetItem, publishNotebookPreset, upsertNotebookPreset } from './notebookPresets.ts';
+import { cancelNotebookPresetInstance, deleteNotebookPreset, notebookActivePresetItem, publishNotebookPreset, restoreNotebookItemWithPresetGuard, upsertNotebookPreset } from './notebookPresets.ts';
 import { escapeNotebookHtml } from './notebookView.ts';
 import type { NotebookRepository } from './notebookRepository.ts';
 
@@ -37,6 +37,7 @@ function renderPresetStrip(state: NotebookState) {
 
 export function setupNotebookPresetUi(context: NotebookPresetUiContext) {
   const host = document.querySelector<HTMLElement>('#notebook-presets')!;
+  const boardsHost = document.querySelector<HTMLElement>('#notebook-boards')!;
   const dialog = document.querySelector<HTMLDialogElement>('#notebook-preset-dialog')!;
   const form = document.querySelector<HTMLFormElement>('#notebook-preset-form')!;
   const dialogTitle = document.querySelector<HTMLElement>('#notebook-preset-dialog-title')!;
@@ -66,6 +67,22 @@ export function setupNotebookPresetUi(context: NotebookPresetUiContext) {
     boardChoices.innerHTML = taskBoardChoices(state, new Set(preset?.boardIds ?? []));
     dialog.showModal();
   };
+
+  boardsHost.addEventListener('click', (event) => {
+    const restore = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-restore-item]');
+    const itemId = restore?.dataset.restoreItem;
+    if (!itemId) return;
+    const item = context.getState().items[itemId];
+    if (!item?.sourcePresetId) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    const active = notebookActivePresetItem(context.getState(), item.sourcePresetId);
+    if (active && active.id !== itemId) {
+      context.status('这个预设已经有一项进行中，不能撤销旧任务完成。', true);
+      return;
+    }
+    void context.mutate('撤销完成', (current) => restoreNotebookItemWithPresetGuard(current, itemId, stamp()));
+  }, { capture: true });
 
   host.addEventListener('click', (event) => {
     const target = event.target as HTMLElement;
