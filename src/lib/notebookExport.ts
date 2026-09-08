@@ -1,6 +1,6 @@
 import { cloneNotebookState, type NotebookState } from './notebookDomain.ts';
 
-export const NOTEBOOK_EXPORT_SCHEMA_VERSION = 1 as const;
+export const NOTEBOOK_EXPORT_SCHEMA_VERSION = 2 as const;
 
 export interface NotebookExport {
   schemaVersion: typeof NOTEBOOK_EXPORT_SCHEMA_VERSION;
@@ -12,6 +12,7 @@ export interface NotebookExport {
   completionEvents: NotebookState['completionEvents'];
   skipEvents: NotebookState['skipEvents'];
   inbox: NotebookState['inbox'];
+  presets: NotebookState['presets'];
   settings: NotebookState['settings'];
 }
 
@@ -28,6 +29,7 @@ export function createNotebookExport(state: NotebookState, exportedAt = Date.now
     completionEvents: snapshot.completionEvents,
     skipEvents: snapshot.skipEvents,
     inbox: snapshot.inbox,
+    presets: snapshot.presets,
     settings: snapshot.settings,
   };
 }
