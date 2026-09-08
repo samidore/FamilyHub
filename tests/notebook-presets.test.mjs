@@ -7,6 +7,7 @@ import {
   deleteNotebookPreset,
   notebookActivePresetItem,
   publishNotebookPreset,
+  restoreNotebookItemWithPresetGuard,
   upsertNotebookPreset,
 } from '../src/lib/notebookPresets.ts';
 
@@ -53,21 +54,26 @@ test('published item is a snapshot and later preset edits do not rewrite it', ()
   assert.equal(state.items.i1.title, '倒垃圾');
 });
 
-test('completion unlocks a preset and undo within grace locks it again', () => {
+test('completion unlocks a preset and undo within grace locks it again when no newer instance exists', () => {
   let state = upsertNotebookPreset(baseState(), preset());
   state = publishNotebookPreset(state, 'p1', 'i1', 20);
   state = setNotebookItemStatus(state, 'i1', 'completed', 30);
   assert.equal(notebookActivePresetItem(state, 'p1'), null);
-  state = publishNotebookPreset(state, 'p1', 'i2', 31);
-  assert.equal(state.items.i2.status, 'active');
+  state = restoreNotebookItemWithPresetGuard(state, 'i1', 31);
+  assert.equal(notebookActivePresetItem(state, 'p1')?.id, 'i1');
+  state = publishNotebookPreset(state, 'p1', 'i2', 32);
+  assert.equal(state.items.i2, undefined);
+});
 
-  let undoState = upsertNotebookPreset(baseState(), preset());
-  undoState = publishNotebookPreset(undoState, 'p1', 'i1', 20);
-  undoState = setNotebookItemStatus(undoState, 'i1', 'completed', 30);
-  undoState = setNotebookItemStatus(undoState, 'i1', 'active', 31);
-  assert.equal(notebookActivePresetItem(undoState, 'p1')?.id, 'i1');
-  undoState = publishNotebookPreset(undoState, 'p1', 'i2', 32);
-  assert.equal(undoState.items.i2, undefined);
+test('undo cannot create a second active instance after the preset has been published again', () => {
+  let state = upsertNotebookPreset(baseState(), preset());
+  state = publishNotebookPreset(state, 'p1', 'i1', 20);
+  state = setNotebookItemStatus(state, 'i1', 'completed', 30);
+  state = publishNotebookPreset(state, 'p1', 'i2', 31);
+  assert.equal(notebookActivePresetItem(state, 'p1')?.id, 'i2');
+  state = restoreNotebookItemWithPresetGuard(state, 'i1', 32);
+  assert.equal(state.items.i1.status, 'completed');
+  assert.equal(notebookActivePresetItem(state, 'p1')?.id, 'i2');
 });
 
 test('cancel deletes only the current active instance and preset deletion leaves published items alone', () => {
