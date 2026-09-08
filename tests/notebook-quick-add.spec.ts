@@ -13,9 +13,10 @@ test('notebook quick add fits in a phone viewport without dialog scrolling', asy
   await expect(dialog).toBeVisible();
   const metrics = await dialog.evaluate((element) => ({ clientHeight: element.clientHeight, scrollHeight: element.scrollHeight }));
   expect(metrics.scrollHeight).toBeLessThanOrEqual(metrics.clientHeight + 1);
-  await expect(page.locator('#notebook-board-picker')).not.toHaveAttribute('open', '');
-  await expect(page.locator('textarea[name="details"]')).toHaveAttribute('rows', '2');
-  expect(await page.locator('textarea[name="details"]').evaluate((element) => element.getBoundingClientRect().height)).toBeLessThanOrEqual(64);
+  await expect(dialog.locator('#notebook-board-picker')).not.toHaveAttribute('open', '');
+  const details = dialog.locator('textarea[name="details"]');
+  await expect(details).toHaveAttribute('rows', '2');
+  expect(await details.evaluate((element) => element.getBoundingClientRect().height)).toBeLessThanOrEqual(64);
 
   const cancelMetrics = await page.locator('#notebook-item-dialog > .dialog-close-row > .secondary-button').evaluate((button) => {
     const buttonRect = button.getBoundingClientRect();
