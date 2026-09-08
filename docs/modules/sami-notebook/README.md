@@ -43,13 +43,45 @@ Top controls:
 
 Then:
 
-1. Fixed smart `Urgent` board, always first when it has rows. It is computed from active items with `priority = urgent` plus the hidden derived `due-soon` state; it is not a normal membership target.
-2. Shared Board layout containing the computed `反复干` board and visible registered ordinary Boards. `反复干` may be moved before, between, or after ordinary Boards in Board Manager. Every live recurring item appears there and does not render in its ordinary Board memberships while recurrence is present. `反复干` is not a Firebase Board record and has no manual item ordering. Ordinary Boards render only non-recurring live items and one-time completion rows.
-3. Quick Inbox input at the bottom. Submitting any non-empty sentence creates a ticket immediately with no schema gate.
+1. Compact `预设` strip, above all Boards. Presets are manual reusable task templates, not Boards and not recurrence rules.
+2. Fixed smart `Urgent` board, always first when it has rows. It is computed from active items with `priority = urgent` plus the hidden derived `due-soon` state; it is not a normal membership target.
+3. Shared Board layout containing the computed `反复干` board and visible registered ordinary Boards. `反复干` may be moved before, between, or after ordinary Boards in Board Manager. Every live recurring item appears there and does not render in its ordinary Board memberships while recurrence is present. `反复干` is not a Firebase Board record and has no manual item ordering. Ordinary Boards render only non-recurring live items and one-time completion rows.
+4. Quick Inbox input at the bottom. Submitting any non-empty sentence creates a ticket immediately with no schema gate.
 
 `Urgent` remains a smart-view exception to recurring-item exclusivity: a recurring item that is manually urgent or due-soon may appear in both Smart Urgent and `反复干`. It still does not render in ordinary Boards while recurrence is present.
 
-Ordinary Board visibility/collapse, the combined Board layout order, and the top filter state are household-shared state, not per-user preferences. `反复干` remains computed from item state; only its insertion position among ordinary Boards is persisted in notebook settings.
+Ordinary Board visibility/collapse, the combined Board layout order, the preset registry, and the top filter state are household-shared state, not per-user preferences. `反复干` remains computed from item state; only its insertion position among ordinary Boards is persisted in notebook settings.
+
+## Presets
+
+Presets are reusable manual task templates for work that should be launched on demand rather than scheduled automatically. They are intentionally separate from recurrence.
+
+```text
+Preset
+- id
+- title
+- details
+- priority: urgent | high | normal | low
+- dueDate?: YYYY-MM-DD
+- dueTime?: HH:MM
+- boardIds[]
+- createdAt
+- updatedAt
+```
+
+Preset rules:
+
+- A preset may target one or more ordinary `kind = task` Boards. It does not target media Boards, Smart Urgent, or `反复干`.
+- The preset editor uses the normal task-field UI but does not expose recurrence or media-only fields.
+- `dueDate` / `dueTime` are literal template snapshot values. Presets do not add a separate relative-date language such as “tomorrow” or “N days from launch”.
+- Clicking an inactive preset publishes one normal one-time `Item`, with normal Board memberships, ordering, Smart Urgent behavior, comments, completion, author attribution, and deletion semantics.
+- The published item stores `sourcePresetId` as immutable source metadata. The preset does not store an `activeItemId` pointer.
+- A preset is active when the current notebook state contains an `active` item whose `sourcePresetId` equals that preset ID. This derived rule is the single source of truth for button color/lock state.
+- While such an active item exists, another click does not create a second instance. It cancels the current instance by deleting that active item through the normal item-deletion cleanup path.
+- Normal completion changes the item to `completed`, which automatically unlocks the preset without another preset write. Undoing completion within the existing one-hour grace period makes the item active again and automatically relocks the preset.
+- Deleting the active task directly also unlocks the preset because the source item no longer exists.
+- Published items are snapshots. Editing an item never rewrites its preset; editing or deleting a preset never rewrites or deletes already published items.
+- Concurrent launches use the notebook repository's existing whole-notebook transaction. The publish mutator rechecks for an active source item inside the transaction, so only one active instance can be committed.
 
 ### Hidden due-soon state
 
@@ -124,6 +156,7 @@ Item
 - dueDate?: YYYY-MM-DD
 - dueTime?: HH:MM
 - recurrence?: supported recurrence rule
+- sourcePresetId?: preset id
 - createdAt
 - updatedAt
 - completedAt?: timestamp
@@ -138,6 +171,8 @@ Optional media fields
 ```
 
 For recurring items, `dueDate` is the materialized current occurrence / next due date. It is not the canonical schedule rule; it is the current schedule cursor used by the UI, Smart Urgent, remaining-day grouping, and completion advancement.
+
+`sourcePresetId`, when present, records which manual preset produced the one-time item. It is source metadata only and remains unchanged if the preset is later edited or deleted.
 
 `authorName` is the private household display-name snapshot of the member who creates the item. The repository adds it only when the item is first created; normal edits, status changes, drag ordering, and Developer metadata patches must not rewrite it. Firebase rules keep a persisted author immutable and require a newly persisted author to match the creating member's current private display name.
 
@@ -168,7 +203,7 @@ Board-level ordering is separate from item ordering. Ordinary Boards keep dense 
 
 Each ordinary board has fixed priority sections in this order:
 
-1. Urgent
+1. Urent
 2. High
 3. Normal
 4. Low
@@ -496,11 +531,11 @@ Developer page provides `Export database`, downloading one stable file such as:
 sami-notebook.json
 ```
 
-Export shape is versioned and portable:
+Export shape is versioned and portable. Schema version 2 adds presets to the complete notebook business snapshot:
 
 ```text
 NotebookExport
-- schemaVersion
+- schemaVersion: 2
 - exportedAt
 - boards
 - items
@@ -509,10 +544,11 @@ NotebookExport
 - completionEvents
 - skipEvents
 - inbox
+- presets
 - settings
 ```
 
-The export must contain all notebook business state needed to reconstruct the module, including persisted item author/completion-actor snapshots, recurrence rules/current due dates, persisted Board `showQueueAge` overrides, and the shared `recurringBoardOrder` layout position, but must exclude:
+The export must contain all notebook business state needed to reconstruct the module, including persisted item author/completion-actor snapshots, recurrence rules/current due dates, presets, persisted Board `showQueueAge` overrides, and the shared `recurringBoardOrder` layout position, but must exclude:
 
 - Gmail addresses
 - Firebase UIDs
@@ -592,7 +628,7 @@ Run focused checks during implementation, then the repository release gate:
 pnpm run verify
 ```
 
-Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, item/comment author names, completion-actor snapshots/icons, comment collapsing, all ordinary ordering transitions, item deletion cleanup, recurrence schedule advancement, after-completion date reset, `反复干` exclusivity/grouping/priority/date sorting/colors and Board-level placement, queue-age calendar math and midnight rollover, due-soon/Smart Urgent inclusion, Board `showQueueAge` rules, direct/Inbox patch atomicity and Board-reference resolution, modern recurrence patch validation, legacy recurrence read compatibility, and export exclusion of auth identity data.
+Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, item/comment author names, completion-actor snapshots/icons, comment collapsing, all ordinary ordering transitions, item deletion cleanup, recurrence schedule advancement, after-completion date reset, `反复干` exclusivity/grouping/priority/date sorting/colors and Board-level placement, queue-age calendar math and midnight rollover, due-soon/Smart Urgent inclusion, Board `showQueueAge` rules, preset single-active-instance publish/cancel/complete/undo behavior, direct/Inbox patch atomicity and Board-reference resolution, modern recurrence patch validation, legacy recurrence read compatibility, and export exclusion of auth identity data.
 
 ## Design acceptance criteria
 
@@ -602,6 +638,7 @@ This design is ready for implementation when all of the following are fixed:
 - Live state is Firebase, with a separate notebook domain/path.
 - Git backup is a private portable snapshot, not runtime storage.
 - Module privacy classification is explicitly authenticated-household before activation.
+- Presets are compact household-shared manual task templates above the Boards. Publishing creates a normal one-time Item snapshot; one active source item locks the preset; clicking the active preset cancels that item; completion/deletion unlocks it and grace-period undo relocks it. Presets do not use recurrence or media fields.
 - Ordinary Boards are dynamic and may be reordered/hidden/collapsed as household-shared state.
 - Regular Board headers keep `＋事项` on the title row at the far right on mobile and desktop.
 - Smart Urgent is computed and fixed first, combining stored `priority = urgent` with the hidden derived `due-soon` state.
@@ -630,4 +667,4 @@ This design is ready for implementation when all of the following are fixed:
 - Item comments are editable and show private display names, never email.
 - Inbox accepts unrestricted one-line capture.
 - Developer patching is schema-limited and atomic: `items[]` can create direct items without a ticket or convert referenced Inbox tickets; ordinary Board references may use canonical IDs or unique exact titles and normalize to IDs before apply; new recurrence creation uses modern shapes; `itemUpdates[]` remains safe existing-item metadata only.
-- Export is complete for notebook business state and excludes authentication identity data.
+- Portable export schema version 2 includes presets along with the rest of notebook business state and still excludes authentication identity data.
