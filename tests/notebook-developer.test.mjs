@@ -157,11 +157,14 @@ test('export contains complete notebook business state and no identity/config en
   const state = stateWithInbox();
   state.comments.c1 = { id: 'c1', itemId: 'existing', body: 'note', authorName: 'Sami', createdAt: 12 };
   state.completionEvents.e1 = { id: 'e1', itemId: 'existing', completedAt: 13, priority: 'normal', boardIds: ['todo'] };
+  state.presets.p1 = { id: 'p1', title: '倒垃圾', details: '', priority: 'normal', boardIds: ['todo'], createdAt: 14, updatedAt: 14 };
   const exported = createNotebookExport(state, 999);
-  assert.deepEqual(Object.keys(exported), ['schemaVersion', 'exportedAt', 'boards', 'items', 'memberships', 'comments', 'completionEvents', 'skipEvents', 'inbox', 'settings']);
+  assert.equal(exported.schemaVersion, 2);
+  assert.deepEqual(Object.keys(exported), ['schemaVersion', 'exportedAt', 'boards', 'items', 'memberships', 'comments', 'completionEvents', 'skipEvents', 'inbox', 'presets', 'settings']);
   const text = serializeNotebookExport(state, 999);
   assert.equal(text.includes('email'), false);
   assert.equal(text.includes('uid'), false);
   assert.equal(text.includes('firebase'), false);
   assert.equal(JSON.parse(text).comments.c1.body, 'note');
+  assert.equal(JSON.parse(text).presets.p1.title, '倒垃圾');
 });
