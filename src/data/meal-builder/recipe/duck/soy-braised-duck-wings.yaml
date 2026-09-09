@@ -1,8 +1,8 @@
 id: soy-braised-duck-wings
 type: recipe
 status: candidate
-name_zh: 酱香焖鸭翅
-name_en: Soy-Braised Duck Wings
+name_zh: 红烧鸭翅膀
+name_en: Red-Braised Duck Wings
 tags:
   - light-seasoning
   - non-spicy-base
@@ -15,7 +15,8 @@ main_protein_category: mixed
 main_protein_ingredient_ids:
   - duck-wings
 supporting_protein_ingredient_ids: []
-optional_groups: []
+optional_groups:
+  - one-pot-mix
 vegetable_ingredient_ids: []
 meal_contribution:
   protein: 1
