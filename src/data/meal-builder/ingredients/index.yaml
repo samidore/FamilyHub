@@ -36,6 +36,7 @@ categories:
       - chicken-hearts
       - chicken-liver
       - duck-wings
+      - duck-legs
   - id: beef
     label_zh: 牛肉
     label_en: Beef
