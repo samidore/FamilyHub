@@ -1,29 +1,29 @@
 id: homestyle-tofu-family
 type: recipe
 status: candidate
-name_zh: 家常豆腐家庭版
-name_en: Homestyle Tofu — Family Version
-tags: [child-all-ingredients-eaten, light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-45, child-support-protein, adult-finish-separate]
+name_zh: 家常豆腐
+name_en: Homestyle Tofu
+tags: [child-all-ingredients-eaten, light-seasoning, non-spicy-base, braised, stovetop-nonstick, lunch-45, child-support-protein, adult-finish-separate]
 fit_score: 3
-primary_role: mixed
+primary_role: protein
 main_protein_category: tofu
-main_protein_ingredient_ids: [firm-tofu]
+main_protein_ingredient_ids: [soft-tofu, firm-tofu, egg-tofu]
 supporting_protein_ingredient_ids: []
 optional_groups:
   - one-pot-mix
-vegetable_ingredient_ids: [bell-pepper]
-meal_contribution: { protein: 0.5, vegetable: 0.5, staple: 0 }
-child_coverage: { protein: true, vegetable: true }
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids: [rice]
 active_minutes: 20–35
 meal_window_minutes: 30–45
 elapsed_minutes: 35–60
 advance_start_required: false
-equipment: [high-output burner, wok / iron pan]
-burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
+equipment: [medium burner, covered nonstick pan / shallow braiser]
+burner_plan: Medium burner for a gentle braise; keep the high-output burner free when possible.
 child_suitable: yes
-child_texture: 豆腐用汁焖到内部柔软；孩子份甜椒也继续焖软并切小。
+child_texture: 豆腐用汁焖到内部柔软；孩子份取清淡软嫩部分并切小。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -31,21 +31,18 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - ingredient_id: firm-tofu
+  - one_of: [soft-tofu, firm-tofu, egg-tofu]
     role: main-protein
-  - ingredient_id: bell-pepper
-    role: vegetable
 steps:
-  - 豆腐沥水切1.5 cm厚片；甜椒切一口大小；调味汁混匀。
-  - 锅中火加1 tsp油，下姜丝炒10秒；加入甜椒炒到开始变软。
-  - 加入豆腐，沿锅边倒入轻盐豆腐汁；少翻，用晃锅和锅铲背面轻推。
-  - 煮开后转中小火3–5分钟，让豆腐中心热透、甜椒完全熟软。
-  - 孩子份先盛出软豆腐和软甜椒并切小；成人份再中火收汁30–60秒。
-  - 完成提示：豆腐内部柔软、酱汁薄挂勺，不是厚芡。
-child_serving: 取焖软豆腐切小；本 Recipe 可计入 Child Protein，甜椒足够软时也计 Child Vegetable。
+  - 按选中的豆腐准备：嫩豆腐切约2.5 cm块并少搬动；老豆腐切约1.5 cm厚片；鸡蛋豆腐切厚段。调味汁混匀。
+  - 不粘锅中火加1 tsp油；老豆腐或鸡蛋豆腐可先轻煎到表面定型，嫩豆腐直接轻轻滑入，不必煎。
+  - 沿锅边倒入家庭轻盐豆腐汁，煮开后转中小火；少翻动，用晃锅和锅铲背面轻推。
+  - 轻焖3–5分钟，到豆腐中心热透、汁薄薄挂住豆腐；嫩豆腐和鸡蛋豆腐以不碎为先，不追求收得很干。
+  - 孩子份先盛出软嫩、清淡的豆腐并切小；成人份需要时再中火收汁30–60秒。
+  - 完成提示：豆腐内部柔软热透、仍保持主要形状；酱汁薄挂勺，不是厚芡。
+child_serving: 取焖软豆腐切小；本 Recipe 计入 Child Protein。
 adult_finish: 孩子份盛出后，成人可另加辣椒油、辣椒粉或更重调味。
 substitutions: []
 cook_ingredients:
-  - 老豆腐 / 硬豆腐：1盒，约400–450 g
-  - 甜椒：300–450 g
+  - 嫩豆腐 / 老豆腐 / 鸡蛋豆腐：任选一种；嫩豆腐或老豆腐约1盒（400–450 g），鸡蛋豆腐约2条/管（300–350 g）
   - 家庭轻盐豆腐汁：水或低盐高汤 1/3 cup；生抽 2 tsp；蚝油 1 tsp；糖 1/4 tsp；玉米淀粉 1 tsp

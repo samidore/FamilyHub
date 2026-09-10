@@ -1,12 +1,12 @@
-id: simple-pan-seared-egg-tofu
+id: steamed-egg-tofu
 type: recipe
-status: candidate
-name_zh: 简单煎鸡蛋豆腐
-name_en: Simple Pan-Seared Egg Tofu
+status: archived
+name_zh: 清蒸鸡蛋豆腐
+name_en: Steamed Egg Tofu
 tags:
   - light-seasoning
   - non-spicy-base
-  - pan-seared
+  - steamed
   - stovetop-nonstick
   - lunch-30
   - family-shared
@@ -33,8 +33,8 @@ elapsed_minutes: 10–25
 advance_start_required: false
 equipment:
   - medium burner
-  - nonstick pan or iron pan as appropriate
-burner_plan: Medium burner by default; use the iron pan/high-output burner only when a hard sear is the point of the dish.
+  - covered steamer / heatproof plate
+burner_plan: Medium burner for covered steaming; high-output burner remains available.
 child_suitable: yes-user-confirmed
 child_texture: egg tofu 质地软，且孩子会吃。
 spicy_in_base: false
@@ -48,12 +48,12 @@ ingredients:
     role: main-protein
 steps:
   - 准备：豆腐沥去包装水；嫩豆腐切2.5–3 cm块并尽量少搬动，硬豆腐可切1.5 cm厚片。；把豆腐汁搅匀；姜切丝5 g、葱切段备用。
-  - 不粘锅中火预热，加2 tsp油；硬豆腐/蛋豆腐擦干后单层排入。
-  - 第一面煎到能轻松铲起且呈浅金黄再翻面；不要频繁移动导致破碎。
-  - 豆腐回锅（无额外配料则留在锅中），把豆腐汁再次搅匀后沿锅边加入。
-  - 轻轻晃锅让汁覆盖豆腐，煮30–60秒到汁刚变薄稠。
-  - 汁能薄薄挂住豆腐、锅底只剩少量时关火。
-  - 完成提示：豆腐外层浅金黄、内部柔软热透；汁薄挂而非厚糊。
+  - 豆腐排在耐热盘中；蒸锅水先烧开，再把盘子上锅。
+  - 中火蒸5–8分钟，目标是中心彻底热透而不是把豆腐蒸出大量水。
+  - 取出后小心倒掉盘中多余水分；把生抽2 tsp与热水1 Tbsp混匀淋在豆腐周围。
+  - 撒姜丝和葱；家庭版不做大量热油泼，最多用1 tsp芝麻油点香。
+  - 孩子份取中心软嫩部分，确认温度降到可入口再上桌。
+  - 完成提示：豆腐中心热透、形状完整；盘底只有少量清亮汁，不泡在大量水中。
   - 安全提示：无肉类安全温度要求；按步骤做到指定软硬度，并避免长时间室温放置。
 child_serving: 切成易入口的小块，保留清淡软嫩部分。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
