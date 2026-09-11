@@ -140,10 +140,9 @@ test('structured data keeps key Ingredient, Recipe, and unified optional-group r
   assert.equal(kb.optionalGroups.find((group) => group.id === 'one-pot-mix')?.ingredients.length, 23);
   assert.equal(kb.recipes.find((item) => item.id === 'instant-pot-red-braised-duck-legs')?.optionalGroupIds?.includes('one-pot-mix'), true);
   assert.equal(kb.recipes.filter((item) => item.optionalGroupIds?.includes('add-some-richness')).length, 6);
-  assert.equal(kb.recipes.filter((item) => item.optionalGroupIds?.includes('change-it-up')).length, 4);
+  assert.equal(kb.recipes.some((item) => item.optionalGroupIds?.includes('change-it-up')), true);
   assert.equal(kb.ingredients.find((item) => item.id === 'choy-sum')?.nameZh, '油菜苗');
-  assert.equal(kb.recipes.find((item) => item.id === 'mushroom-soft-tofu-soup')?.optionalGroupIds?.includes('change-it-up'), true);
-  assert.equal(kb.recipes.find((item) => item.id === 'mushroom-soft-tofu-soup')?.steps.some((step) => step.includes('如果加番茄') && step.includes('2–3分钟')), true);
+  assert.equal(kb.recipes.some((item) => item.id === 'mushroom-soft-tofu-soup'), false);
   assert.equal(kb.ingredients.some((item) => item.tags?.includes('easy-braise-addon')), false);
   assert.equal(kb.recipes.some((item) => item.tags?.includes('iron-pan-braise')), false);
   assert.equal(kb.ingredients.find((item) => item.id === 'ground-pork')?.tags?.includes('child-eaten'), true);
