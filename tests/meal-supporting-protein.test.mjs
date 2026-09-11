@@ -58,18 +58,12 @@ test('leafy greens one-of remains complete after optional-group migration', asyn
   ]);
 });
 
-test('mushroom soft tofu soup is indexed and fills half protein plus one vegetable', async () => {
+test('homestyle tofu is indexed and accepts soft, firm, or egg tofu', async () => {
   const data = parseMealFiles(await readMealFiles());
-  const soup = data.recipes.find((recipe) => recipe.id === 'mushroom-soft-tofu-soup');
-  assert(soup);
-  assert.deepEqual(soup.contribution, { protein: 0.5, vegetable: 1, staple: 0 });
-  assert.deepEqual(soup.childCoverage, { protein: true, vegetable: true });
-  assert.deepEqual(soup.requirements[0].anyOf, ['soft-tofu']);
-  assert.deepEqual(soup.requirements[1].anyOf, [
-    'fresh-shiitake',
-    'oyster-mushrooms',
-    'shimeji-mushrooms',
-    'enoki-mushrooms',
-    'maitake',
-  ]);
+  const tofu = data.recipes.find((recipe) => recipe.id === 'homestyle-tofu-family');
+  assert(tofu);
+  assert.deepEqual(tofu.contribution, { protein: 0.5, vegetable: 0, staple: 0 });
+  assert.deepEqual(tofu.childCoverage, { protein: true, vegetable: false });
+  assert.deepEqual(tofu.requirements[0].anyOf, ['soft-tofu', 'firm-tofu', 'egg-tofu']);
+  assert.deepEqual(tofu.optionalGroupIds, ['one-pot-mix']);
 });
