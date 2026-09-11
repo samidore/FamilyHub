@@ -59,7 +59,14 @@ test('FIFO refrigerated inventory has one whole-unit add action outside batch ro
   await expect(row.locator('[data-stock-add][data-stock-storage="inventory"]')).toHaveText('+1');
   await expect(row.locator('[data-batch-key]')).toHaveCount(1);
   await expect(row.locator('[data-batch-key] [data-stock-add]')).toHaveCount(0);
-  await expect(row.locator('[data-batch-key] [data-discard-stock]')).toHaveText('丢掉');
+  const discard = row.locator('[data-batch-key] [data-discard-stock]');
+  await expect(discard).toHaveText('丢掉');
+  await discard.click();
+  await expect(row.locator('[data-batch-key]')).toHaveCount(0);
+  const undo = page.locator('#meal-undo-notices [data-undo-discard]');
+  await expect(undo).toHaveCount(1);
+  await undo.click();
+  await expect(row.locator('[data-batch-key]')).toHaveCount(1);
 });
 
 test('presence-only rows show one state label and counted rows keep their controls', async ({ page }) => {
@@ -70,6 +77,8 @@ test('presence-only rows show one state label and counted rows keep their contro
   await expect(inventoryPresence.locator('[data-stock-toggle]')).toHaveText('入库');
   await inventoryPresence.locator('[data-stock-toggle]').click();
   await expect(inventoryPresence.locator('[data-stock-toggle]').first()).toHaveText('移除');
+  await inventoryPresence.locator('[data-stock-toggle]').click();
+  await expect(inventoryPresence.locator('[data-stock-toggle]').first()).toHaveText('入库');
 
   await expect(page.locator('[data-inventory-tab]')).toHaveCount(0);
   await page.locator('[data-inventory-item="fresh-meat-mooncake"] [data-stock-toggle]').click();
