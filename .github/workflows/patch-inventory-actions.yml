@@ -1,0 +1,131 @@
+name: Apply Meal Builder inventory action fix
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Apply targeted patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          page_path = Path('src/pages/meal-builder.astro')
+          page = page_path.read_text()
+          old_import = "import { addStock, adjustFrozenAggregate, adjustInventoryBatch, adjustReadyAggregate, advanceMealToCooking, cancelThaw, cleanupDiscardedStock, completeThaw, createCurrentMealFromInventory, discardStock, freshnessDatesForInventory, reconcileCurrentMeal, reconcileDueThawing, resetRecipeSelection, setCurrentMealStatus, startThaw, undoDiscard, type CurrentMeal, type HouseholdState } from '../lib/household';"
+          new_import = "import { addStock, adjustFrozenAggregate, adjustInventoryBatch, adjustReadyAggregate, advanceMealToCooking, cancelThaw, cleanupDiscardedStock, completeThaw, createCurrentMealFromInventory, discardStock, freshnessDatesForInventory, reconcileCurrentMeal, reconcileDueThawing, resetRecipeSelection, setCurrentMealStatus, startThaw, toggleInventoryItem, undoDiscard, type CurrentMeal, type HouseholdState } from '../lib/household';"
+          if old_import not in page:
+              raise SystemExit('Meal Builder household import no longer matches expected source')
+          page = page.replace(old_import, new_import, 1)
+
+          old_toggle = "else if (toggle) safeWrite(repository.transaction((state) => addStock(state, toggle.dataset.stockToggle!, 'inventory', 1, ingredients, calendarDateKey(Date.now()))));"
+          new_toggle = "else if (toggle) safeWrite(repository.transaction((state) => { const id = toggle.dataset.stockToggle!; const item = ingredientById.get(id); if (!item) return state; return { ...state, inventory: toggleInventoryItem(state.inventory, id, item.inventoryTracking) }; }));"
+          if old_toggle not in page:
+              raise SystemExit('Meal Builder presence-only handler no longer matches expected source')
+          page = page.replace(old_toggle, new_toggle, 1)
+          page_path.write_text(page)
+
+          rules_path = Path('database.rules.json')
+          rules = rules_path.read_text()
+          discarded_start = rules.index('"discardedStock": { "$recordId": {')
+          quantity_start = rules.index('"quantity": {', discarded_start)
+          child_rules = (
+              '"ingredientId": { ".validate": "newData.isString() && newData.val().length > 0" }, '
+              '"storage": { ".validate": "newData.isString() && (newData.val() == \'inventory\' || newData.val() == \'freezer\')" }, '
+              '"discardedAt": { ".validate": "newData.isNumber() && newData.val() > 0" }, '
+              '"undoUntil": { ".validate": "newData.isNumber() && newData.val() == newData.parent().child(\'discardedAt\').val() + 300000" }, '
+          )
+          if '"ingredientId": { ".validate": "newData.isString() && newData.val().length > 0" }' in rules[discarded_start:quantity_start]:
+              raise SystemExit('discardedStock child validators already present')
+          rules = rules[:quantity_start] + child_rules + rules[quantity_start:]
+          rules_path.write_text(rules)
+
+          unit_test = Path('tests/meal-builder-inventory-actions.test.mjs')
+          unit_test.write_text("""import assert from 'node:assert/strict';
+          import { readFile } from 'node:fs/promises';
+          import test from 'node:test';
+          import { discardStock, reconcileInventoryBatchState, toggleInventoryItem, undoDiscard } from '../src/lib/household.ts';
+
+          const ingredients = [
+            { id: 'zongzi', inventoryTracking: 'presence-only' },
+            { id: 'tofu', inventoryTracking: 'counted', inventoryFreshness: 'fifo' },
+          ];
+
+          test('presence-only inventory action toggles existing stock off', () => {
+            assert.deepEqual(toggleInventoryItem({ zongzi: true }, 'zongzi', 'presence-only'), {});
+            assert.deepEqual(toggleInventoryItem({}, 'zongzi', 'presence-only'), { zongzi: true });
+          });
+
+          test('FIFO discard survives repository batch reconciliation and undo restores the batch', () => {
+            const previous = {
+              inventory: { tofu: 1 },
+              inventoryBatches: { tofu: { '2026-09-11': 1 } },
+              freezerInventory: {}, thawingItems: {}, discardedStock: {}, currentMeal: null,
+              pendingCheckoutMeals: [], activeStep: 'inventory', recentMeals: [],
+            };
+            const discarded = discardStock(previous, 'tofu', 'inventory', 1000, '2026-09-11', ingredients);
+            const reconciled = reconcileInventoryBatchState(previous, discarded, ingredients, '2026-09-11');
+            assert.deepEqual(reconciled.inventory, {});
+            assert.deepEqual(reconciled.inventoryBatches, {});
+            const recordId = Object.keys(reconciled.discardedStock)[0];
+            assert.ok(recordId);
+            assert.deepEqual(reconciled.discardedStock[recordId], {
+              ingredientId: 'tofu', storage: 'inventory', quantity: 1, batchKey: '2026-09-11', discardedAt: 1000, undoUntil: 301000,
+            });
+            const restored = undoDiscard(reconciled, recordId, 1001, ingredients);
+            assert.equal(restored.inventory.tofu, 1);
+            assert.deepEqual(restored.inventoryBatches.tofu, { '2026-09-11': 1 });
+            assert.deepEqual(restored.discardedStock, {});
+          });
+
+          test('Meal Builder presence-only click path uses toggleInventoryItem', async () => {
+            const source = await readFile('src/pages/meal-builder.astro', 'utf8');
+            assert.match(source, /else if \(toggle\).*toggleInventoryItem\(state\.inventory, id, item\.inventoryTracking\)/s);
+          });
+          """)
+
+          emulator_path = Path('tests/household-rules.emulator.mjs')
+          emulator = emulator_path.read_text()
+          marker = "test('discarded stock transaction accepts inventory removal and its undo record'"
+          if marker in emulator:
+              raise SystemExit('discarded stock emulator test already present')
+          emulator += """
+
+          test('discarded stock transaction accepts inventory removal and its undo record', async () => {
+            await env.withSecurityRulesDisabled(async (context) => {
+              await context.database().ref().set(null);
+              await context.database().ref(`${household}/members/alice`).set({ email: 'alice@gmail.com' });
+              await context.database().ref(`${household}/state`).set({
+                inventory: { tofu: 1 },
+                inventoryBatches: { tofu: { '2026-09-11': 1 } },
+              });
+            });
+            const alice = google('alice', 'alice@gmail.com');
+            await assertSucceeds(alice.ref(`${household}/state`).update({
+              'inventory/tofu': null,
+              'inventoryBatches/tofu/2026-09-11': null,
+              'discardedStock/discard-1': {
+                ingredientId: 'tofu', storage: 'inventory', quantity: 1, batchKey: '2026-09-11', discardedAt: 1000, undoUntil: 301000,
+              },
+            }));
+          });
+          """
+          emulator_path.write_text(emulator)
+          PY
+          git diff --check
+      - name: Commit patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/pages/meal-builder.astro database.rules.json tests/meal-builder-inventory-actions.test.mjs tests/household-rules.emulator.mjs
+          git commit -m "fix: repair Meal Builder inventory actions"
+          git push origin HEAD:main
