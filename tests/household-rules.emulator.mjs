@@ -89,3 +89,23 @@ test('shared step, freshness snapshot, exclusions, and checkout drafts accept on
   await assertSucceeds(alice.ref(`${household}/state/currentMeal/ingredientFreshnessDates`).set({ pork: '2026-08-17' }));
   await assertFails(alice.ref(`${household}/state/currentMeal/ingredientFreshnessDates`).set({ pork: '08/17/2026' }));
 });
+
+
+test('discarded stock transaction accepts inventory removal and its undo record', async () => {
+  await env.withSecurityRulesDisabled(async (context) => {
+    await context.database().ref().set(null);
+    await context.database().ref(`${household}/members/alice`).set({ email: 'alice@gmail.com' });
+    await context.database().ref(`${household}/state`).set({
+      inventory: { tofu: 1 },
+      inventoryBatches: { tofu: { '2026-09-11': 1 } },
+    });
+  });
+  const alice = google('alice', 'alice@gmail.com');
+  await assertSucceeds(alice.ref(`${household}/state`).update({
+    'inventory/tofu': null,
+    'inventoryBatches/tofu/2026-09-11': null,
+    'discardedStock/discard-1': {
+      ingredientId: 'tofu', storage: 'inventory', quantity: 1, batchKey: '2026-09-11', discardedAt: 1000, undoUntil: 301000,
+    },
+  }));
+});
