@@ -53,6 +53,9 @@ test('queued meal can be checked out from the warning without finishing the next
   await expect(page.locator('#meal-checkout-heading')).toHaveText('待结算');
   await expect(page.locator('[data-queue-checkout-meal]')).toHaveCount(1);
   await expect(page.locator('[data-queue-checkout-meal] > h3')).toHaveText('待结算 1');
+  const queuedCard = page.locator('[data-queue-checkout-meal]').locator('.meal-checkout-recipe');
+  await expect(queuedCard.locator('[data-queue-optional-ingredient="ground-pork"]')).toHaveAttribute('aria-pressed', 'true');
+  await expect(queuedCard.locator('[data-queue-step-ingredient="ground-pork"]').first()).toBeVisible();
   await expect(page.locator('#meal-shared-status')).toHaveText('选菜中');
 
   await page.locator('#meal-confirm-checkout').click();

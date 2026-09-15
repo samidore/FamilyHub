@@ -109,3 +109,25 @@ test('cancel discards a new or edited Recipe draft and selected Plan edits requi
   await edit.locator('[data-confirm-recipe-draft]').click();
   await expect(selected.locator('[data-selected-plan-summary]')).toContainText('鸡小腿');
 });
+
+test('planned optional ingredient survives Cook into direct Checkout Actual composition', async ({ page }) => {
+  await page.goto('meal-builder/');
+  await page.locator('#meal-show-all').check();
+  await setInventory(page, ['green-cabbage', 'ground-pork', 'ground-beef']);
+  await page.locator('#meal-start-current').click();
+  await page.locator('[data-meal-target-fold] > summary').click();
+  await page.locator('#meal-vegetable').selectOption('1');
+  await page.locator('#meal-staple').uncheck();
+  await page.locator('#meal-child').uncheck();
+  const recipe = page.locator('[data-meal-recipe="simple-stir-fried-leafy-greens"]');
+  await recipe.locator('[data-select-recipe]').click();
+  const draft = recipe.locator('[data-recipe-plan-draft]');
+  await draft.locator('[data-recipe-draft-optional-ingredient="ground-pork"]').click();
+  await draft.locator('[data-recipe-draft-optional-ingredient="ground-beef"]').click();
+  await draft.locator('[data-confirm-recipe-draft]').click();
+  await page.locator('#meal-next').click();
+  await page.locator('#meal-open-checkout').click();
+  const card = page.locator('[data-checkout-recipe="simple-stir-fried-leafy-greens"]');
+  await expect(card.locator('[data-actual-optional-ingredient="ground-pork"]')).toHaveAttribute('aria-pressed', 'true');
+  await expect(card.locator('[data-actual-step-ingredient="ground-pork"]').first()).toBeVisible();
+});

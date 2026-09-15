@@ -111,3 +111,15 @@ Append only:
 - direct Checkout regression result;
 - queued Checkout regression result;
 - validation outcome and any remaining material deviation.
+
+## Result
+
+Status: BLOCKED
+
+Root cause fixed: the legacy Meal Builder page now bootstraps canonical `optionalGroups` and Recipe `optionalGroupIds`, and passes that context through every page reconciliation/resnapshot path. Existing enhancement callers were already correct.
+
+Direct Checkout regression: PASS — planned `ground-pork` remains selected in Checkout Actual and has consumption controls.
+
+Queued Checkout regression: PASS — queued Checkout preserves planned `ground-pork` and its consumption controls.
+
+Validation: PASS for `pnpm run validate`, `pnpm run check` (0 errors), `pnpm run build`, `pnpm run audit`, `pnpm run test:unit` (214 passed), focused browser tests (5 passed), and full browser tests (50 passed). `pnpm run verify` reached Firebase Rules after all prior stages passed, then was blocked because the local environment could not spawn `java -version`.
