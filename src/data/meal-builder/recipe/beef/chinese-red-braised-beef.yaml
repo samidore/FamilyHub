@@ -22,6 +22,27 @@ main_protein_ingredient_ids:
 supporting_protein_ingredient_ids: []
 optional_groups:
   - one-pot-mix
+serving_options: [rice, noodles]
+finish_options:
+  - id: red-braise
+    label_zh: 红烧
+    default: true
+  - id: daikon
+    label_zh: 萝卜
+    default: false
+    display_name_zh: 萝卜炖牛肉
+    cook_ingredients:
+      - 白萝卜 300–450 g，切大块
+    steps:
+      - 牛肉炖至半软时加入萝卜，继续焖到萝卜能被筷子穿透。
+  - id: potato
+    label_zh: 土豆
+    default: false
+    display_name_zh: 土豆炖牛肉
+    cook_ingredients:
+      - 土豆 2个，切大块
+    steps:
+      - 牛肉接近软嫩时加入土豆，保持小火焖熟但不煮散。
 vegetable_ingredient_ids: []
 meal_contribution:
   protein: 1

@@ -16,6 +16,7 @@ primary_role: protein
 main_protein_category: lamb
 main_protein_ingredient_ids:
   - lamb-shoulder-chunks
+  - skin-on-bone-in-goat-pieces
 supporting_protein_ingredient_ids: []
 optional_groups:
   - one-pot-mix
@@ -47,8 +48,22 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - ingredient_id: lamb-shoulder-chunks
+  - one_of:
+      - lamb-shoulder-chunks
+      - skin-on-bone-in-goat-pieces
     role: main-protein
+finish_options:
+  - id: red-braise
+    label_zh: 红烧
+    default: true
+  - id: daikon
+    label_zh: 萝卜
+    default: false
+    display_name_zh: 萝卜炖羊肉
+    cook_ingredients:
+      - 白萝卜 300–450 g，切大块
+    steps:
+      - 肉块炖至半软时加入萝卜，继续焖到萝卜软而不散。
 steps:
   - 准备：羊肩肉块切约4–5 cm大块；带骨件冲洗后沥干。若骨渣/血沫明显，冷水下锅煮开2–3分钟，捞出冲净。；把液体调料量好放在手边；糖单独放，避免炒糖时手忙脚乱。
   - 厚底锅中火加1 tsp油；肉块分批把2–3个面煎到浅褐色，避免一次堆满出水。盛出。

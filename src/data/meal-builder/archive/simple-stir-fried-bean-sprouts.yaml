@@ -1,0 +1,67 @@
+id: simple-stir-fried-bean-sprouts
+type: recipe
+status: archived
+name_zh: 清炒豆芽
+name_en: Simple Stir-Fried Bean Sprouts
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-30
+  - low-prep
+  - vegetable-centered
+fit_score: 4
+primary_role: vegetable
+main_protein_category: none
+main_protein_ingredient_ids: []
+supporting_protein_ingredient_ids: []
+optional_groups:
+  - add-some-richness
+vegetable_ingredient_ids:
+  - bean-sprouts
+meal_contribution:
+  protein: 0
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 10–15
+meal_window_minutes: 10–20
+elapsed_minutes: 10–20
+advance_start_required: false
+equipment:
+  - high-output burner
+  - wok / iron pan
+burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
+child_suitable: yes
+child_texture: 家庭已确认孩子可以吃豆芽；仍需完全加热，熟透后保留轻微脆感和纤维感。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: bean-sprouts
+    role: vegetable
+steps:
+  - 准备：豆芽450 g用流动冷水冲洗，挑掉明显坏芽和松散豆壳；放漏篮充分沥干，表面很湿时用厨房纸轻压吸水。蒜2瓣切末。把生抽1 tsp、盐1/4 tsp、糖1/2 tsp和白胡椒1/8 tsp预先混匀；香油1/2 tsp单独放好。
+  - 炒锅大火预热到锅面明显热、刚有轻烟，加2 tsp中性油；下蒜末快速翻10秒，不要把蒜炒焦。
+  - 一次下入全部豆芽，保持大火，快速翻炒约1分钟，让豆芽均匀接触热锅；不要加水，也不要盖盖。
+  - 沿锅边淋入预混调味，继续大火翻炒2–3分钟。目标不是生脆：整锅应持续明显冒蒸汽，豆芽杆略变半透明、已完全热透，但仍保留弹性。若豆粒明显较大且仍偏硬，再炒约1分钟，以完全热透为准。
+  - 锅底若析出少量水分，继续大火翻炒到只剩薄薄汁光、没有一滩水；淋入1/2 tsp香油，翻10秒立刻关火装盘。
+  - 完成提示：豆芽全部滚热、杆部略透明，咬断时没有生硬感；锅底无明显积水。给5岁以下孩子的部分不要保留生或半生豆芽。
+child_serving: 家庭已确认孩子可以吃；孩子份必须炒到整盘持续冒蒸汽、完全热透，盛出后可剪短，再放凉到适口温度。本菜计入 Child Vegetable coverage。
+adult_finish: 孩子份盛出后，成人可另加辣椒油、辣椒脆或少量香醋；不需要则省略。
+substitutions: []
+cook_ingredients:
+  - 豆芽：450 g
+  - 蒜：2瓣，切末
+  - 中性油：2 tsp
+  - 调味：生抽 1 tsp；盐 1/4 tsp；糖 1/2 tsp；白胡椒 1/8 tsp
+  - 香油：1/2 tsp，出锅前加入

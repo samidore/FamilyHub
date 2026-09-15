@@ -31,6 +31,18 @@ detail_level: cookable
 ingredients:
   - one_of: [live-freshwater-bass, branzino, black-sea-bass, grouper, halibut]
     role: main-protein
+finish_options:
+  - id: ginger-scallion
+    label_zh: 姜葱
+    default: true
+  - id: black-bean
+    label_zh: 豉汁
+    default: false
+    display_name_zh: 豉汁蒸鱼
+    cook_ingredients:
+      - 豆豉 1 Tbsp；蒜末 1 tsp；生抽 1 Tbsp
+    steps:
+      - 鱼上锅前铺少量豆豉蒜末，蒸熟后再淋少量生抽，避免孩子份过咸。
 steps:
   - 鱼擦干；整鱼两面各划2–3刀；耐热盘垫少量姜葱；蒸锅水先完全烧开。
   - 水大开后上锅，盖严，保持稳定蒸汽。

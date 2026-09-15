@@ -1,8 +1,8 @@
 id: winter-melon-pork-rib-soup
 type: recipe
 status: candidate
-name_zh: 冬瓜排骨汤
-name_en: Winter Melon Pork Rib Soup
+name_zh: 排骨汤
+name_en: Flexible Pork Rib Soup
 tags:
   - light-seasoning
   - non-spicy-base
@@ -18,13 +18,22 @@ main_protein_ingredient_ids:
 supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids:
   - winter-melon
+  - lotus-root
+  - daikon
+  - corn
+  - carrot
+  - chinese-yam
+  - baby-napa-cabbage
+optional_groups:
+  - soup-addons
+  - change-it-up
 meal_contribution:
   protein: 1
-  vegetable: 1
+  vegetable: 0
   staple: 0
 child_coverage:
   protein: true
-  vegetable: true
+  vegetable: ingredient-dependent
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice

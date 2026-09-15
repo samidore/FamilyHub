@@ -17,6 +17,7 @@ main_protein_ingredient_ids:
   - eggs
 supporting_protein_ingredient_ids: []
 optional_groups:
+  - soup-addons
   - change-it-up
 vegetable_ingredient_ids: []
 meal_contribution:
@@ -30,6 +31,7 @@ integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice
   - noodles
+serving_options: [rice, noodles]
 active_minutes: 8–15
 meal_window_minutes: 10–20
 elapsed_minutes: 10–25
@@ -49,6 +51,18 @@ detail_level: cookable
 ingredients:
   - ingredient_id: eggs
     role: main-protein
+finish_options:
+  - id: clear
+    label_zh: 清汤
+    default: true
+  - id: tomato
+    label_zh: 番茄
+    default: false
+    display_name_zh: 番茄蛋花汤
+    cook_ingredients:
+      - 番茄 2个，切块
+    steps:
+      - 先把番茄煮到出汁，再加入汤底和蛋液，保持蛋花柔软。
 steps:
   - 准备：鸡蛋打匀但不必打入大量空气。；薄芡提前搅匀；不喜欢勾芡可完全省略。
   - 加入汤底煮开，转中小火；若使用薄芡，边搅边倒入，煮到汤只略有稠度。

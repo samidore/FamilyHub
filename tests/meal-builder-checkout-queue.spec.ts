@@ -18,7 +18,7 @@ async function selectCabbageMeal(page: Page) {
   if (await page.locator('#meal-staple').isChecked()) await page.locator('#meal-staple').uncheck();
   if (await page.locator('#meal-child').isChecked()) await page.locator('#meal-child').uncheck();
 
-  const recipe = page.locator('[data-meal-recipe="simple-stir-fried-green-cabbage"]');
+  const recipe = page.locator('[data-meal-recipe="simple-stir-fried-leafy-greens"]');
   await expect(recipe).toBeVisible();
   await recipe.locator('[data-select-recipe]').click();
   const draft = recipe.locator('[data-recipe-plan-draft]');
@@ -38,7 +38,7 @@ test('queued meal can be checked out from the warning without finishing the next
   await page.locator('#meal-next').click();
 
   await expect(page.locator('#meal-shared-status')).toHaveText('做饭中');
-  await expect(page.locator('[data-queue-cook-plan] > strong').first()).toHaveText('本次');
+  await expect(page.locator('[data-queue-cook-plan] > strong').first()).toContainText('本次');
   await expect(page.locator('#meal-queue-checkout')).toHaveText('排队结算');
   await page.locator('#meal-queue-checkout').click();
 

@@ -16,9 +16,11 @@ primary_role: protein
 main_protein_category: pork
 main_protein_ingredient_ids:
   - pork-shoulder-chunks
+  - thin-sliced-pork-belly
 supporting_protein_ingredient_ids: []
 optional_groups:
   - one-pot-mix
+  - change-it-up
 vegetable_ingredient_ids: []
 meal_contribution:
   protein: 1
@@ -31,6 +33,7 @@ integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice
   - steamed-buns
+serving_options: [rice, noodles]
 active_minutes: 20–35
 meal_window_minutes: 20–35
 elapsed_minutes: 90–180
@@ -48,8 +51,38 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - ingredient_id: pork-shoulder-chunks
+  - one_of:
+      - pork-shoulder-chunks
+      - thin-sliced-pork-belly
     role: main-protein
+finish_options:
+  - id: red-braise
+    label_zh: 红烧
+    default: true
+  - id: kakuni
+    label_zh: 角煮
+    default: false
+    display_name_zh: 日式角煮
+    cook_ingredients:
+      - 清酒 1/4 cup；味醂 1/4 cup；生抽 1/4 cup
+    steps:
+      - 用清酒、味醂和生抽替换部分红烧汁，最后保留薄亮汤汁。
+  - id: thit-kho
+    label_zh: 越式
+    default: false
+    display_name_zh: 越式卤肉
+    cook_ingredients:
+      - 椰糖 2 Tbsp；椰水 2 cups；鱼露 1 Tbsp
+    steps:
+      - 先炒糖上色，再用椰水焖至软嫩；鱼露最后少量调味。
+  - id: adobo
+    label_zh: 醋香
+    default: false
+    display_name_zh: 醋香卤肉
+    cook_ingredients:
+      - 米醋 1/4 cup；月桂叶 2片；黑胡椒粒 1 tsp
+    steps:
+      - 以醋和酱油同煮，开盖收汁前确认酸香柔和、肉已软透。
 steps:
   - 准备：梅花肉块切约4–5 cm大块；带骨件冲洗后沥干。若骨渣/血沫明显，冷水下锅煮开2–3分钟，捞出冲净。；把液体调料量好放在手边；糖单独放，避免炒糖时手忙脚乱。
   - 厚底锅中火加1 tsp油；肉块分批把2–3个面煎到浅褐色，避免一次堆满出水。盛出。

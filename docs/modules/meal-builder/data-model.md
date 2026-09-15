@@ -94,8 +94,11 @@ Recipes reference group IDs only. Do not copy the member list or adult contribut
 The current groups are:
 
 - `add-some-richness` — `加点油水`;
-- `change-it-up` — `改头换面`;
-- `one-pot-mix` — `一锅乱炖`.
+- `change-it-up` — `加番茄`;
+- `one-pot-mix` — `顺手焖`;
+- `soup-addons` — `汤里加`.
+
+Groups may overlap. Overlapping members must use the same contribution and checkout quantity; the parser rejects conflicts. Recipes may reference multiple groups. Runtime option lists follow Recipe group order and show an Ingredient once. Any Ingredient present in a Recipe hard or `one_of` requirement is hidden from that Recipe's optional UI, even when it is also in a central group.
 
 Child coverage is deliberately **not** stored in the optional registry. Optional Child coverage is Recipe-specific: the current runtime counts an optional Ingredient for Child Protein/Vegetable only when the Recipe is tagged `child-all-ingredients-eaten` **and** the Ingredient is tagged `child-eaten`, with the optional member's contribution for that slot greater than zero. This keeps “the child eats this ingredient” separate from “this preparation makes it count for the child.”
 
@@ -188,6 +191,10 @@ substitutions: []
 
 `optional_groups` is the only Recipe-level optional composition field. It is an ordered list of central optional-group IDs. There is no per-Recipe optional member allow-list, adult contribution override, stage DSL, condition matrix, or nested-option model.
 
+`finish_options` is an optional ordered list of Recipe-local cooking finishes. Each entry has a stable local `id`, `label_zh`, exactly one `default: true` entry per Recipe, and optional `display_name_zh`, `cook_ingredients`, and `steps`. The default Finish uses the base Recipe `name_zh`; a non-default `display_name_zh` is the resolved Cook/Checkout name. Finish choices are presentation and cooking guidance only: they never change planning totals, inventory availability, checkout consumption, or queue reservations.
+
+`serving_options` is an optional list containing only `rice` and/or `noodles`. The Recipes Plan UI presents the available choices as one selection (`none`, `rice`, or `noodles`). A selected serving contributes one Staple in Plan and adds one selected serving Ingredient to Checkout Actual. It is not included in queued hard-Ingredient reservations. Checkout may switch or remove it against live stock without rewriting the Plan.
+
 `ingredients[]` is the hard availability contract, not a transcription of the full recipe. Put an inventory Ingredient there only when the dish stops being that dish without it. Recommended but omittable inventory items, pantry aromatics, and the complete version of the recipe stay in `cook_ingredients`/steps. Base `meal_contribution` counts only the hard Recipe composition; selected optionals add their central fixed contribution at runtime.
 
 `cook_ingredients` is display-only and never affects availability or inventory. `cookable` and `household-tested` records require nonempty Cook View lines, executable steps, and equipment.
@@ -202,6 +209,8 @@ Plan:
 currentMeal/selectedRecipeIds
 currentMeal/recipeIngredientBindings/{recipeId}
 currentMeal/selectedAddons[] = { mainRecipeId, addonType: optionalGroupId, ingredientId }
+currentMeal/recipeFinishSelections/{recipeId} = finishId
+currentMeal/recipeServingSelections/{recipeId} = rice | noodles
 ```
 
 `recipeIngredientBindings` stores fixed/`one_of` selections. `selectedAddons` stores planned optional choices. Selecting an optional immediately adds its adult contribution and eligible Recipe-specific Child coverage to meal completion; unselected optionals never count as already filled.
@@ -211,10 +220,13 @@ Checkout Actual is Recipe-scoped:
 ```text
 currentMeal/checkoutRecipeDrafts/{recipeId}/bindings[]
 currentMeal/checkoutRecipeDrafts/{recipeId}/optionalAddons[]
+currentMeal/checkoutRecipeDrafts/{recipeId}/servingIngredientId = rice | noodles
 currentMeal/checkoutRecipeDrafts/{recipeId}/consumption/{ingredientId}
 ```
 
 Checkout starts from Plan but may change a `one_of` binding, remove a planned optional, or add an unplanned optional that is currently in live inventory. These edits do not rewrite Plan. Counted quantities are shown per Recipe, but the transaction aggregates all Recipes by Ingredient before validating and consuming inventory. Defaults and +/- controls respect the remaining global inventory so the initial per-Recipe draft does not over-allocate a shared Ingredient. Presence-only Ingredients use a per-Recipe “used up” boolean; final aggregation is logical OR.
+
+Reconciliation keeps only state for selected, known, currently feasible Recipes; it drops Finish and serving entries for removed or archived Recipes, restores a Recipe's default Finish when its saved Finish is invalid, and removes unavailable serving choices. It also canonicalizes duplicate overlapping optional records to the first referenced group. Finish and serving state remain separate from the Plan's Ingredient bindings and optional records.
 
 ## Controlled values and invariants
 

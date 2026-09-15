@@ -22,7 +22,7 @@ test('candidate composition stays draft-only until confirmation and supports opt
   await page.locator('#meal-staple').uncheck();
   await page.locator('#meal-child').uncheck();
 
-  const recipe = page.locator('[data-meal-recipe="simple-stir-fried-green-cabbage"]');
+  const recipe = page.locator('[data-meal-recipe="simple-stir-fried-leafy-greens"]');
   await expect(recipe).toBeVisible();
   const summary = recipe.locator('[data-candidate-composition]');
   await expect(summary).toContainText('必需 Required');
@@ -35,7 +35,7 @@ test('candidate composition stays draft-only until confirmation and supports opt
 
   const draft = recipe.locator('[data-recipe-plan-draft]');
   await expect(draft).toBeVisible();
-  await expect(page.locator('[data-selected-recipe="simple-stir-fried-green-cabbage"]')).toBeHidden();
+  await expect(page.locator('[data-selected-recipe="simple-stir-fried-leafy-greens"]')).toBeHidden();
   await expect(page.locator('#progress-protein')).toHaveText('0 / 1');
   await expect(page.locator('#progress-vegetable')).toHaveText('0 / 1');
 
@@ -60,7 +60,7 @@ test('candidate composition stays draft-only until confirmation and supports opt
   await expect(page.locator('#progress-protein')).toHaveText('0 / 1');
 
   await draft.locator('[data-confirm-recipe-draft]').click();
-  const selected = page.locator('[data-selected-recipe="simple-stir-fried-green-cabbage"]');
+  const selected = page.locator('[data-selected-recipe="simple-stir-fried-leafy-greens"]');
   await expect(selected).toBeVisible();
   await expect(selected.locator('[data-selected-plan-summary]')).toContainText('猪绞肉');
   await expect(selected.locator('[data-selected-plan-summary]')).toContainText('牛绞肉');

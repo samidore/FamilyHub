@@ -16,6 +16,7 @@ primary_role: protein
 main_protein_category: chicken
 main_protein_ingredient_ids:
   - whole-chicken-wings
+  - party-wings
 supporting_protein_ingredient_ids: []
 optional_groups:
   - one-pot-mix
@@ -47,8 +48,30 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - ingredient_id: whole-chicken-wings
+  - one_of:
+      - whole-chicken-wings
+      - party-wings
     role: main-protein
+finish_options:
+  - id: cola
+    label_zh: 可乐
+    default: true
+  - id: swiss
+    label_zh: 瑞士
+    default: false
+    display_name_zh: 瑞士鸡翼
+    cook_ingredients:
+      - 生抽 1/4 cup；冰糖 2 Tbsp；清水 1 cup
+    steps:
+      - 用生抽、冰糖和水替换可乐汁，小火焖到鸡翅熟透再收薄汁。
+  - id: thirteen-spice
+    label_zh: 十三香
+    default: false
+    display_name_zh: 十三香鸡翅
+    cook_ingredients:
+      - 十三香 1 tsp；生抽 2 Tbsp；鸡汤 1 cup
+    steps:
+      - 加入十三香酱汁焖煮，最后确认最厚处达到165°F/74°C。
 steps:
   - 准备：鸡翅擦干；关节处可不切。；酱汁量好。
   - 宽锅中大火加1 tsp油，鸡翅单层分批煎到两面浅金黄。

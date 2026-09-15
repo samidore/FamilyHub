@@ -14,11 +14,7 @@ test('central optional groups replace per-Recipe optional protein allow-lists wi
 
   const compatibleRecipeIds = [
     'simple-stir-fried-leafy-greens',
-    'simple-stir-fried-green-cabbage',
-    'simple-stir-fried-bean-sprouts',
-    'simple-stir-fried-broccoli',
-    'simple-stir-fried-celery',
-    'simple-stir-fried-luffa-zucchini',
+    'ground-pork-chinese-greens-stir-fry',
   ];
   for (const id of compatibleRecipeIds) {
     const recipe = data.recipes.find((candidate) => candidate.id === id);
@@ -27,9 +23,9 @@ test('central optional groups replace per-Recipe optional protein allow-lists wi
     assert.equal(recipe.supportingProteinIngredientIds.length, 0);
   }
 
-  const requiredSupporting = data.recipes.find((recipe) => recipe.id === 'pressed-tofu-pork-strips');
+  const requiredSupporting = data.recipes.find((recipe) => recipe.id === 'ground-pork-chinese-greens-stir-fry');
   assert(requiredSupporting);
-  assert(requiredSupporting.requiredSupportingProteinIngredientIds.includes('pressed-tofu'));
+  assert.deepEqual(requiredSupporting.requiredSupportingProteinIngredientIds, []);
   assert.equal(requiredSupporting.supportingProteinIngredientIds.length, 0);
 
   assert.equal(files['recipe/vegetable/simple-stir-fried-leafy-greens.yaml'].includes('optional_supporting_protein_ingredient_ids'), false);
@@ -55,15 +51,29 @@ test('leafy greens one-of remains complete after optional-group migration', asyn
     'amaranth-greens',
     'tong-hao',
     'mustard-greens',
+    'green-cabbage',
+    'broccoli',
+    'cauliflower',
+    'celery',
+    'chinese-celery',
+    'garlic-chives',
+    'garlic-scapes',
+    'yellow-chives',
+    'luffa',
+    'zucchini',
+    'sugar-snap-peas',
+    'bean-sprouts',
+    'celtuce',
+    'water-chestnuts',
   ]);
 });
 
-test('homestyle tofu is indexed and accepts soft, firm, or egg tofu', async () => {
+test('homestyle tofu is indexed and accepts the canonical fresh tofu choices', async () => {
   const data = parseMealFiles(await readMealFiles());
   const tofu = data.recipes.find((recipe) => recipe.id === 'homestyle-tofu-family');
   assert(tofu);
   assert.deepEqual(tofu.contribution, { protein: 0.5, vegetable: 0, staple: 0 });
   assert.deepEqual(tofu.childCoverage, { protein: true, vegetable: false });
-  assert.deepEqual(tofu.requirements[0].anyOf, ['soft-tofu', 'firm-tofu', 'egg-tofu']);
+  assert.deepEqual(tofu.requirements[0].anyOf, ['soft-tofu', 'firm-tofu', 'egg-tofu', 'pressed-tofu']);
   assert.deepEqual(tofu.optionalGroupIds, ['one-pot-mix']);
 });

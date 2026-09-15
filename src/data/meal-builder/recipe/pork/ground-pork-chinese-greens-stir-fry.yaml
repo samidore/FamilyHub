@@ -1,8 +1,8 @@
 id: ground-pork-chinese-greens-stir-fry
 type: recipe
 status: candidate
-name_zh: 猪肉末炒青菜
-name_en: Ground Pork with Chinese Greens
+name_zh: 猪肉末炒蔬菜
+name_en: Flexible Ground Pork Stir-fry
 tags:
   - light-seasoning
   - non-spicy-base
@@ -16,18 +16,25 @@ main_protein_category: pork
 main_protein_ingredient_ids:
   - ground-pork
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - add-some-richness
+  - change-it-up
+  - one-pot-mix
 vegetable_ingredient_ids:
   - chinese-greens
+  - frozen-shepherds-purse
+  - eggplant
+  - pressed-tofu
 meal_contribution:
   protein: 1
   vegetable: 1
-  staple: 1
+  staple: 0
 child_coverage:
   protein: true
-  vegetable: true
-integral_staple_ingredient_ids:
-  - rice
+  vegetable: ingredient-dependent
+integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids: []
+serving_options: [rice, noodles]
 active_minutes: 15–25
 meal_window_minutes: 20–35
 elapsed_minutes: 20–40
@@ -48,10 +55,32 @@ detail_level: cookable
 ingredients:
   - ingredient_id: ground-pork
     role: main-protein
-  - ingredient_id: chinese-greens
+  - one_of:
+      - chinese-greens
+      - frozen-shepherds-purse
+      - eggplant
+      - pressed-tofu
     role: vegetable
-  - ingredient_id: rice
-    role: integral-staple
+finish_options:
+  - id: greens
+    label_zh: 清炒
+    default: true
+  - id: tomato
+    label_zh: 番茄
+    default: false
+    display_name_zh: 番茄肉末
+    cook_ingredients:
+      - 番茄 2个，切块
+    steps:
+      - 肉末七成熟时加入番茄，炒至出汁后再放入主菜蔬菜，保持酸甜清爽。
+  - id: jiang-ding
+    label_zh: 酱丁
+    default: false
+    display_name_zh: 酱丁肉末
+    cook_ingredients:
+      - 甜面酱 1 Tbsp；黄豆酱 1 tsp
+    steps:
+      - 肉末炒香后先把酱炒出香味，再加入蔬菜和少量水焖透。
 steps:
   - 准备：肉末提前从冰箱取出，只需解开大块，不需要腌；青菜切细/切小。；把炒汁全部混匀；若使用冷冻荠菜末，可直接从冷冻状态下锅，但先掰散。
   - 炒锅中大火预热，加2 tsp中性油；下姜末5 g炒10秒。

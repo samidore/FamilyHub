@@ -47,6 +47,18 @@ detail_level: cookable
 ingredients:
   - ingredient_id: hot-pot-lamb-slices
     role: main-protein
+finish_options:
+  - id: cumin
+    label_zh: 孜然
+    default: true
+  - id: scallion
+    label_zh: 葱香
+    default: false
+    display_name_zh: 葱爆羊肉
+    cook_ingredients:
+      - 葱白 4根，切段
+    steps:
+      - 羊肉刚变色时加入葱白，快速翻匀后立刻关火。
 steps:
   - 准备：羊肉与腌料拌匀30分钟。；孜然籽干锅小火炒到明显香、不要焦黑；辣椒/花椒不进基础锅。
   - 炒锅烧到很热，加1 Tbsp油；羊肉分两批平铺，大火快速煎炒。

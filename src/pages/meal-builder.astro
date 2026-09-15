@@ -14,7 +14,7 @@ const clientData = JSON.stringify({
   ingredients: mealData.ingredients.map((ingredient) => ({ id: ingredient.id, nameZh: ingredient.nameZh, nameEn: ingredient.nameEn, visible: ingredient.visible, section: ingredient.section, tags: ingredient.tags, inventoryTracking: ingredient.inventoryTracking, inventoryFreshness: ingredient.inventoryFreshness, freshnessPriorityDays: ingredient.freshnessPriorityDays, freezerBehavior: ingredient.freezerBehavior, childCoverage: ingredient.childCoverage })),
   recipes: recipes.map((recipe) => ({
     id: recipe.id, order: recipe.order, fitScore: recipe.fitScore, contribution: recipe.contribution,
-    childCoverage: recipe.childCoverage, requirements: recipe.requirements, tags: recipe.tags,
+    childCoverage: recipe.childCoverage, requirements: recipe.requirements, finishOptions: recipe.finishOptions, servingOptions: recipe.servingOptions, tags: recipe.tags,
     ingredientChildCoverage: recipe.ingredientChildCoverage, mealWindowMinutes: recipe.mealWindowMinutes,
     elapsedMinutes: recipe.elapsedMinutes, advanceStartRequired: recipe.advanceStartRequired,
   })),
@@ -217,7 +217,7 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
     state = reconcileMealState({ ...state, availableIngredientIds: state.availableIngredientIds.filter((id) => ingredientById.has(id)) }, recipes, ingredients);
 
     function mealStateFromCurrentMeal(meal: CurrentMeal): MealState {
-      return { availableIngredientIds: [...meal.availableIngredientIds], ingredientFreshnessDates: { ...meal.ingredientFreshnessDates }, proteinTarget: meal.proteinTarget, vegetableTarget: meal.vegetableTarget, stapleRequired: meal.stapleRequired, childMode: meal.childMode, timePreference: meal.timePreference, selectedRecipeIds: [...meal.selectedRecipeIds], recipeIngredientBindings: { ...meal.recipeIngredientBindings } };
+      return { availableIngredientIds: [...meal.availableIngredientIds], ingredientFreshnessDates: { ...meal.ingredientFreshnessDates }, proteinTarget: meal.proteinTarget, vegetableTarget: meal.vegetableTarget, stapleRequired: meal.stapleRequired, childMode: meal.childMode, timePreference: meal.timePreference, selectedRecipeIds: [...meal.selectedRecipeIds], recipeIngredientBindings: { ...meal.recipeIngredientBindings }, selectedAddons: [...meal.selectedAddons], recipeFinishSelections: { ...meal.recipeFinishSelections }, recipeServingSelections: { ...meal.recipeServingSelections } };
     }
 
     const app = document.querySelector<HTMLElement>('.meal-builder-app')!; app.dataset.enhanced = 'true';

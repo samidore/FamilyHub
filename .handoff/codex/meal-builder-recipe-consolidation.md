@@ -322,3 +322,13 @@ Append only:
 - validation outcome, including `pnpm run verify`;
 - any material deviation/blocker;
 - explicit deployment guard reminder about current/pending meals containing archived Recipe IDs.
+
+## Result
+
+Status: BLOCKED
+
+Implemented the canonical Recipe consolidation: Finish options and rice/noodles Serving choices flow through parsing, Plan, Cook, Checkout, queue state, reconciliation, rules, docs, and tests. Consolidated optional composition into four shared groups, archived retired active Recipe files, removed them from active indexes, and updated the audit/content metadata. Active Recipes: 200 before, 140 after.
+
+Validation: `pnpm run validate`, `pnpm run check`, `pnpm run build`, `pnpm run audit`, and `pnpm run test:unit` passed; unit tests passed 214/214; browser tests passed 49/49. `pnpm run verify` reached Firebase rules tests but was blocked because the environment cannot spawn `java -version` for the Firebase emulator.
+
+Deployment guard: before deploying this archived-ID cutover, ensure any real `currentMeal` or `pendingCheckoutMeals` using archived Recipe IDs is completed or reset.

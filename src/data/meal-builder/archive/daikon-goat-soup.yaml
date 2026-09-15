@@ -1,0 +1,67 @@
+id: daikon-goat-soup
+type: recipe
+status: archived
+name_zh: 白萝卜山羊肉汤
+name_en: Goat and Daikon Soup
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - simmered
+  - stovetop-nonstick
+  - advance-start
+  - family-shared
+fit_score: 3
+primary_role: mixed
+main_protein_category: lamb
+main_protein_ingredient_ids:
+  - skin-on-bone-in-goat-pieces
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+  - daikon
+meal_contribution:
+  protein: 1
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 25–40
+meal_window_minutes: 25–40
+elapsed_minutes: 180–300
+advance_start_required: true
+equipment:
+  - medium burner
+  - soup pot
+burner_plan: Medium burner for simmering; can be started earlier and leave the wok burner free.
+child_suitable: yes
+child_texture: 成品肉可软嫩，但必须由成人去骨。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: skin-on-bone-in-goat-pieces
+    role: main-protein
+  - ingredient_id: daikon
+    role: vegetable
+steps:
+  - 准备：带骨肉/大块肉冷水下锅，加足量清水煮开2–4分钟；捞出后用温水冲去浮沫和碎骨。；白萝卜切成适合汤煮的一口大小；容易煮烂的材料单独放，后下。
+  - 焯洗后的肉放入汤锅，加2.0 L水、姜和葱，大火煮开后再次撇净浮沫。
+  - 转小火保持只有零星小泡，盖盖留一条缝；先以90–120分钟作为检查窗口，直到肉明显软化。
+  - 加入白萝卜；冬瓜/山药通常从10–15分钟起检查，萝卜/土豆从15–25分钟起检查；最终以筷子能穿透且仍保持完整为准。
+  - 肉与配料都达到软嫩后再加盐，先加1 tsp，尝后每次补1/4 tsp；白胡椒可省。
+  - 关火前撇去表面明显浮油；孩子份先取无骨肉和软配料，再加少量清汤。
+  - 完成提示：汤保持清亮；肉软嫩；汤中配料能用筷子穿透但仍保持完整。
+  - 安全提示：整块羊/山羊肉可测处达到145°F/63°C并静置3分钟；炖菜以更高温度达到软烂质地。
+child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+substitutions: []
+cook_ingredients:
+  - 带皮带骨山羊肉块：900 g
+  - 白萝卜：300–450 g
+  - 清汤底：水 2.0 L；姜 5片；葱白 2段；盐 1–1.5 tsp，最后分次加；白胡椒 1小撮，可省

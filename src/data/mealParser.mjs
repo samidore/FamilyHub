@@ -1,7 +1,7 @@
 import { parse as parseYaml } from 'yaml';
 
 const INGREDIENT_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'starter', 'tags', 'child_coverage', 'inventory_tracking', 'inventory_freshness', 'freshness_priority_days', 'freezer_behavior']);
-const RECIPE_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'tags', 'fit_score', 'primary_role', 'main_protein_category', 'main_protein_ingredient_ids', 'supporting_protein_ingredient_ids', 'optional_supporting_protein_ingredient_ids', 'optional_groups', 'vegetable_ingredient_ids', 'meal_contribution', 'child_coverage', 'integral_staple_ingredient_ids', 'recommended_staple_ingredient_ids', 'active_minutes', 'meal_window_minutes', 'elapsed_minutes', 'advance_start_required', 'equipment', 'burner_plan', 'child_suitable', 'child_texture', 'spicy_in_base', 'deep_fried', 'salt_level', 'oil_level', 'servings', 'detail_level', 'ingredients', 'cook_ingredients', 'steps', 'child_serving', 'adult_finish', 'substitutions', 'checkout_units']);
+const RECIPE_KEYS = new Set(['id', 'type', 'status', 'name_zh', 'name_en', 'tags', 'fit_score', 'primary_role', 'main_protein_category', 'main_protein_ingredient_ids', 'supporting_protein_ingredient_ids', 'optional_groups', 'finish_options', 'serving_options', 'vegetable_ingredient_ids', 'meal_contribution', 'child_coverage', 'integral_staple_ingredient_ids', 'recommended_staple_ingredient_ids', 'active_minutes', 'meal_window_minutes', 'elapsed_minutes', 'advance_start_required', 'equipment', 'burner_plan', 'child_suitable', 'child_texture', 'spicy_in_base', 'deep_fried', 'salt_level', 'oil_level', 'servings', 'detail_level', 'ingredients', 'cook_ingredients', 'steps', 'child_serving', 'adult_finish', 'substitutions', 'checkout_units']);
 const CONTRIBUTIONS = new Set([0, 0.5, 1, 2]);
 const STARTER_KEYS = new Set(['visible', 'section', 'order']);
 const SECTION_KEYS = new Set(['id', 'label_zh', 'label_en', 'order', 'visible']);
@@ -11,6 +11,7 @@ const INGREDIENT_CHILD_KEYS = new Set(['vegetable']);
 const REQUIREMENT_KEYS = new Set(['ingredient_id', 'one_of', 'role']);
 const OPTIONAL_GROUP_KEYS = new Set(['id', 'label_zh', 'ingredients']);
 const OPTIONAL_GROUP_INGREDIENT_KEYS = new Set(['ingredient_id', 'meal_contribution', 'checkout_units']);
+const FINISH_KEYS = new Set(['id', 'label_zh', 'default', 'display_name_zh', 'cook_ingredients', 'steps']);
 const INVENTORY_TRACKING = new Set(['counted', 'presence-only']);
 const INVENTORY_FRESHNESS = new Set(['fifo']);
 const FREEZER_BEHAVIOR = new Set(['direct', 'thaw-required']);
@@ -100,6 +101,12 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
     });
     return { id: group.id, labelZh: String(group.label_zh), ingredients: entries };
   });
+  const optionalMembership = new Map();
+  for (const group of optionalGroups) for (const entry of group.ingredients) {
+    const previous = optionalMembership.get(entry.ingredientId);
+    if (previous) assert(previous.checkoutUnits === entry.checkoutUnits && JSON.stringify(previous.contribution) === JSON.stringify(entry.contribution), `optional ingredient ${entry.ingredientId} has conflicting contribution or checkout_units across groups`);
+    else optionalMembership.set(entry.ingredientId, entry);
+  }
 
   const recipeIds = new Set();
   const recipes = recipeRecords.map((record, order) => {
@@ -127,15 +134,28 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
     const requiredSupportingProteinIngredientIds = stringArray(record.supporting_protein_ingredient_ids);
     assert(new Set(requiredSupportingProteinIngredientIds).size === requiredSupportingProteinIngredientIds.length, `${record.id} has duplicate supporting_protein_ingredient_ids`);
     for (const id of requiredSupportingProteinIngredientIds) assert(ingredientIds.has(id), `${record.id} supporting_protein_ingredient_ids references missing ingredient ${id}`);
-    const supportingProteinIngredientIds = stringArray(record.optional_supporting_protein_ingredient_ids);
-    assert(new Set(supportingProteinIngredientIds).size === supportingProteinIngredientIds.length, `${record.id} has duplicate optional_supporting_protein_ingredient_ids`);
-    for (const id of supportingProteinIngredientIds) {
-      assert(ingredientIds.has(id), `${record.id} optional_supporting_protein_ingredient_ids references missing ingredient ${id}`);
-      assert(!requirements.some((requirement) => requirement.anyOf.includes(id)), `${record.id} optional supporting protein ${id} cannot also be a hard requirement`);
-    }
+    const supportingProteinIngredientIds = [];
     const recipeOptionalGroupIds = stringArray(record.optional_groups);
     assert(new Set(recipeOptionalGroupIds).size === recipeOptionalGroupIds.length, `${record.id} has duplicate optional_groups`);
     for (const id of recipeOptionalGroupIds) assert(optionalGroupIds.has(id), `${record.id} references missing optional group ${id}`);
+    const finishOptions = record.finish_options === undefined ? [] : record.finish_options;
+    assert(Array.isArray(finishOptions), `${record.id} finish_options must be an array`);
+    const finishIds = new Set(); let defaultFinishCount = 0;
+    const parsedFinishOptions = finishOptions.map((finish) => {
+      assertKeys(finish, FINISH_KEYS);
+      assert(typeof finish.id === 'string' && /^[a-z0-9-]+$/.test(finish.id), `${record.id} has invalid Finish ID`);
+      assert(!finishIds.has(finish.id), `${record.id} has duplicate Finish ID ${finish.id}`); finishIds.add(finish.id);
+      assert(typeof finish.label_zh === 'string' && finish.label_zh.trim().length > 0, `${record.id}.${finish.id} requires label_zh`);
+      assert(typeof finish.default === 'boolean', `${record.id}.${finish.id} requires boolean default`);
+      if (finish.default) defaultFinishCount += 1;
+      if (finish.display_name_zh !== undefined) assert(typeof finish.display_name_zh === 'string' && finish.display_name_zh.trim().length > 0, `${record.id}.${finish.id} has invalid display_name_zh`);
+      for (const key of ['cook_ingredients', 'steps']) if (finish[key] !== undefined) assert(Array.isArray(finish[key]) && finish[key].every((line) => typeof line === 'string' && line.trim().length > 0), `${record.id}.${finish.id} has invalid ${key}`);
+      return { id: finish.id, labelZh: String(finish.label_zh), default: finish.default, ...(finish.display_name_zh === undefined ? {} : { displayNameZh: String(finish.display_name_zh) }), cookIngredientLines: stringArray(finish.cook_ingredients), steps: stringArray(finish.steps) };
+    });
+    if (finishOptions.length) assert(defaultFinishCount === 1, `${record.id} finish_options requires exactly one default`);
+    const servingOptions = record.serving_options === undefined ? [] : record.serving_options;
+    assert(Array.isArray(servingOptions), `${record.id} serving_options must be an array`);
+    assert(new Set(servingOptions).size === servingOptions.length && servingOptions.every((id) => id === 'rice' || id === 'noodles'), `${record.id} serving_options only accepts unique rice/noodles IDs`);
     if (record.detail_level !== 'discoverable') {
       assert(Array.isArray(record.cook_ingredients) && record.cook_ingredients.length > 0 && record.cook_ingredients.every((entry) => typeof entry === 'string' && entry.trim().length > 0), `${record.id} cookable record requires cook_ingredients`);
       assert(Array.isArray(record.steps) && record.steps.length > 0 && record.steps.every((step) => typeof step === 'string' && step.trim().length > 0), `${record.id} cookable record requires executable steps`);
@@ -154,7 +174,7 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
       id: record.id, nameZh: String(record.name_zh), nameEn: String(record.name_en), tags: stringArray(record.tags), primaryRole: String(record.primary_role),
       mainProteinCategory: String(record.main_protein_category ?? 'none'), fitScore: Number(record.fit_score), order,
       contribution: { protein: Number(record.meal_contribution.protein), vegetable: Number(record.meal_contribution.vegetable), staple: Number(record.meal_contribution.staple) },
-      childCoverage, requirements, requiredSupportingProteinIngredientIds, supportingProteinIngredientIds, optionalGroupIds: recipeOptionalGroupIds, cookIngredientLines: stringArray(record.cook_ingredients),
+      childCoverage, requirements, requiredSupportingProteinIngredientIds, supportingProteinIngredientIds, optionalGroupIds: recipeOptionalGroupIds, finishOptions: parsedFinishOptions, servingOptions: [...servingOptions], cookIngredientLines: stringArray(record.cook_ingredients),
       checkoutUnits,
       ingredientChildCoverage: Object.fromEntries(requirements.flatMap((requirement) => requirement.anyOf).map((id) => [id, ingredients.find((item) => item.id === id)?.childCoverage?.vegetable ?? 'unknown'])),
       activeMinutes: String(record.active_minutes ?? ''), mealWindowMinutes: String(record.meal_window_minutes ?? ''), elapsedMinutes: String(record.elapsed_minutes ?? ''), advanceStartRequired: record.advance_start_required,

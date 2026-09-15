@@ -1,0 +1,71 @@
+id: niku-udon
+type: recipe
+status: archived
+name_zh: 肉乌冬
+name_en: Niku Udon
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stovetop-nonstick
+  - lunch-30
+  - child-support-protein
+fit_score: 5
+primary_role: mixed
+main_protein_category: beef
+main_protein_ingredient_ids:
+  - hot-pot-beef-slices
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+  - onion
+meal_contribution:
+  protein: 1
+  vegetable: 0.5
+  staple: 1
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids:
+  - noodles
+recommended_staple_ingredient_ids: []
+active_minutes: 15–25
+meal_window_minutes: 20–35
+elapsed_minutes: 20–40
+advance_start_required: false
+equipment:
+  - medium burner
+  - pot
+  - wok/nonstick pan if stir-fried
+burner_plan: Pot on medium burner; use high-output wok only if the recipe is a stir-fried noodle.
+child_suitable: conditional
+child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: hot-pot-beef-slices
+    role: main-protein
+  - ingredient_id: onion
+    role: vegetable
+  - ingredient_id: noodles
+    role: integral-staple
+steps:
+  - 准备：乌冬按包装焯散并沥水；牛肉片太长时切成8–10 cm。；洋葱薄切；两组调味分别量好。
+  - 小锅中火加1 tsp油，下洋葱炒到边缘透明；加入牛肉片拨散。
+  - 牛肉大部分变色时加入糖、味醂1 Tbsp和生抽1 Tbsp，煮到汁几乎被吸附，立即离火。
+  - 另一汤锅把5 cups高汤、生抽3 Tbsp、味醂2 Tbsp煮开，尝后只补必要盐。
+  - 乌冬分3碗，浇入滚热汤；把甜咸牛肉洋葱分在面上。
+  - 牛肉需无冷生中心但不要在汤中继续长煮；孩子份剪短牛肉和乌冬。
+  - 完成提示：乌冬热透有弹性；汤清而可直接喝；牛肉洋葱甜咸但不柴。
+  - 安全提示：整块牛肉可测处达到145°F/63°C并静置3分钟；薄片炒菜实际炒至无冷生中心。
+child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+substitutions: []
+cook_ingredients:
+  - 火锅牛肉片：340 g
+  - 洋葱：150 g，薄切
+  - 乌冬面：3人份，约600 g熟面
+  - 乌冬汤：日式高汤 5 cups；生抽 3 Tbsp；味醂 2 Tbsp；盐 1/4 tsp起
+  - 牛肉甜咸汁：糖 1 tsp；味醂 1 Tbsp；生抽 1 Tbsp

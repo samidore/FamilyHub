@@ -11,6 +11,8 @@ const recipeSelectionData = JSON.stringify({
     childCoverage: recipe.childCoverage,
     requirements: recipe.requirements,
     optionalGroupIds: recipe.optionalGroupIds,
+    finishOptions: recipe.finishOptions,
+    servingOptions: recipe.servingOptions,
     checkoutUnits: recipe.checkoutUnits,
     ingredientChildCoverage: recipe.ingredientChildCoverage,
     mealWindowMinutes: recipe.mealWindowMinutes,
@@ -27,14 +29,19 @@ const recipeSelectionData = JSON.stringify({
   import {
     bindRecipeIngredients,
     calendarDateKey,
+    defaultFinishId,
+    finishForRecipe,
+    finishOptionsForRecipe,
     optionalGroupsForRecipe,
     rankCandidates,
     reconcileMealState,
     selectedOptionalAddonsForRecipe,
+    servingOptionsForRecipe,
     type MealIngredient,
     type MealOptionalGroup,
     type MealRecipe,
     type MealState,
+    type ServingIngredientId,
   } from '../lib/mealEngine';
   import {
     availableIngredientIds,
@@ -57,6 +64,8 @@ const recipeSelectionData = JSON.stringify({
     mode: 'new' | 'edit';
     bindings: string[];
     optionalAddons: DraftAddon[];
+    finishId: string | null;
+    servingIngredientId?: ServingIngredientId;
   };
 
   const source = document.querySelector<HTMLScriptElement>('#meal-recipe-selection-data');
@@ -154,7 +163,15 @@ const recipeSelectionData = JSON.stringify({
           .map(({ addonType, ingredientId }) => ({ addonType, ingredientId }))
       : [];
 
-    planDraft = { mealId: meal.mealId, recipeId, mode, bindings, optionalAddons };
+    planDraft = {
+      mealId: meal.mealId,
+      recipeId,
+      mode,
+      bindings,
+      optionalAddons,
+      finishId: finishOptionsForRecipe(recipe).length ? (meal.recipeFinishSelections[recipeId] ?? defaultFinishId(recipe)) : null,
+      ...(meal.recipeServingSelections[recipeId] ? { servingIngredientId: meal.recipeServingSelections[recipeId] } : {}),
+    };
     renderAll();
     requestAnimationFrame(() => {
       const editor = document.querySelector<HTMLElement>(`[data-recipe-plan-draft="${CSS.escape(recipeId)}"]`);
@@ -225,6 +242,8 @@ const recipeSelectionData = JSON.stringify({
         .filter((requirement) => requirement.anyOf.length > 1)
         .map((requirement) => requirement.anyOf.filter((id) => selectable.has(id)).map(nameFor).join(' / '));
       const optional = optionalGroupsForRecipe(recipe, optionalGroups).map((group) => group.labelZh);
+      const finishes = finishOptionsForRecipe(recipe).map((finish) => finish.labelZh);
+      const servings = recipe.servingOptions?.map((id) => id === 'rice' ? '米饭' : '面条') ?? [];
 
       const summary = document.createElement('div');
       summary.className = 'meal-recipe-composition-summary';
@@ -233,6 +252,8 @@ const recipeSelectionData = JSON.stringify({
         summaryRow('必需 Required', fixed.join(' · ')),
         summaryRow('选一 One of', oneOf.join('；')),
         summaryRow('可加 Optional', optional.join(' · ')),
+        summaryRow('完成 Finish', finishes.join(' / ')),
+        summaryRow('主食 Serving', servings.join(' / ')),
       );
 
       const badges = card.querySelector('.badges');
@@ -267,12 +288,16 @@ const recipeSelectionData = JSON.stringify({
 
       const bindings = meal.recipeIngredientBindings[recipeId] ?? [];
       const optionals = selectedOptionalAddonsForRecipe({ selectedAddons: meal.selectedAddons }, recipe, optionalGroups);
+      const finish = finishForRecipe(recipe, meal.recipeFinishSelections[recipeId]);
+      const serving = meal.recipeServingSelections[recipeId];
       const line = document.createElement('small');
       line.className = 'meal-selected-plan-summary';
       line.dataset.selectedPlanSummary = recipeId;
       const boundText = bindings.map(nameFor).join(' · ');
       const optionalText = optionals.map((addon) => `+${nameFor(addon.ingredientId)}`).join(' · ');
-      line.textContent = `本次：${[boundText, optionalText].filter(Boolean).join(' · ') || '—'}`;
+      const finishText = finish ? `完成：${finish.labelZh}` : '';
+      const servingText = serving ? `主食：${serving === 'rice' ? '米饭' : '面条'}` : '';
+      line.textContent = `本次：${[boundText, optionalText, finishText, servingText].filter(Boolean).join(' · ') || '—'}`;
 
       const content = row.querySelector(':scope > span');
       content?.append(line);
@@ -307,9 +332,41 @@ const recipeSelectionData = JSON.stringify({
     const preview = document.createElement('span');
     const boundText = draft.bindings.map(nameFor).join(' · ');
     const optionalText = draft.optionalAddons.map((addon) => `+${nameFor(addon.ingredientId)}`).join(' · ');
-    preview.textContent = [boundText, optionalText].filter(Boolean).join(' · ') || '—';
+    const finishText = finishForRecipe(recipe, draft.finishId)?.labelZh;
+    const servingText = draft.servingIngredientId === 'rice' ? '米饭' : draft.servingIngredientId === 'noodles' ? '面条' : '';
+    preview.textContent = [boundText, optionalText, finishText ? `完成：${finishText}` : '', servingText ? `主食：${servingText}` : ''].filter(Boolean).join(' · ') || '—';
     heading.append(strong, preview);
     editor.append(heading);
+
+    const finishes = finishOptionsForRecipe(recipe);
+    if (finishes.length) {
+      const finishHeading = document.createElement('h4');
+      finishHeading.textContent = '完成 Finish';
+      const finishGrid = document.createElement('div');
+      finishGrid.className = 'meal-chip-grid meal-recipe-draft-grid';
+      finishes.forEach((finish) => finishGrid.append(makeChoice(
+        finish.labelZh,
+        draft.finishId === finish.id,
+        { recipeDraftFinish: recipe.id, recipeDraftFinishId: finish.id },
+        finish.default ? '默认' : '',
+      )));
+      editor.append(finishHeading, finishGrid);
+    }
+
+    const servingHeading = document.createElement('h4');
+    servingHeading.textContent = '主食 Serving';
+    const servingGrid = document.createElement('div');
+    servingGrid.className = 'meal-chip-grid meal-recipe-draft-grid';
+    const servingChoices: Array<{ id: ServingIngredientId | null; label: string }> = [
+      { id: null, label: '不选' },
+      ...servingOptionsForRecipe(recipe, selectable, draft.servingIngredientId).map((id) => ({ id, label: id === 'rice' ? '米饭' : '面条' })),
+    ];
+    servingChoices.forEach((choice) => servingGrid.append(makeChoice(
+      choice.label,
+      (draft.servingIngredientId ?? null) === choice.id,
+      { recipeDraftServing: recipe.id, recipeDraftServingId: choice.id ?? 'none' },
+    )));
+    editor.append(servingHeading, servingGrid);
 
     const fixed = recipe.requirements.filter((requirement) => requirement.anyOf.length === 1);
     const fixedHeading = document.createElement('h4');
@@ -441,6 +498,33 @@ const recipeSelectionData = JSON.stringify({
     renderAll();
   }
 
+  function updateDraftFinish(finishId: string) {
+    if (!planDraft) return;
+    const recipe = recipeById.get(planDraft.recipeId);
+    if (!recipe || !finishOptionsForRecipe(recipe).some((finish) => finish.id === finishId)) return;
+    planDraft.finishId = finishId;
+    renderAll();
+  }
+
+  function updateDraftServing(value: string) {
+    if (!planDraft) return;
+    const recipe = recipeById.get(planDraft.recipeId);
+    const meal = household.currentMeal;
+    if (!recipe || !meal) return;
+    if (value === 'none') {
+      delete planDraft.servingIngredientId;
+      renderAll();
+      return;
+    }
+    const serving = value as ServingIngredientId;
+    if (!servingOptionsForRecipe(recipe, selectableIngredientIds(household, meal), planDraft.servingIngredientId).includes(serving)) {
+      announce('库存里当前没有这份主食。');
+      return;
+    }
+    planDraft.servingIngredientId = serving;
+    renderAll();
+  }
+
   async function confirmPlanDraft() {
     const draft = planDraft;
     if (!draft || !canWrite()) return;
@@ -494,12 +578,32 @@ const recipeSelectionData = JSON.stringify({
           ...meal.selectedAddons.filter((addon) => addon.mainRecipeId !== recipe.id),
           ...cleanAddons.map((addon) => ({ mainRecipeId: recipe.id, ...addon })),
         ];
+        const finishId = draft.finishId && finishOptionsForRecipe(recipe).some((finish) => finish.id === draft.finishId)
+          ? draft.finishId
+          : defaultFinishId(recipe);
+        if (finishOptionsForRecipe(recipe).length && !finishId) return state;
+        const priorServing = meal.recipeServingSelections[recipe.id];
+        const serving = draft.servingIngredientId;
+        const canKeepPriorServing = draft.mode === 'edit' && priorServing === serving;
+        if (serving && !(recipe.servingOptions ?? []).includes(serving)) return state;
+        if (serving && !selectable.has(serving) && !canKeepPriorServing) {
+          rejectedIngredient ||= serving;
+          return state;
+        }
+        const recipeFinishSelections = { ...meal.recipeFinishSelections };
+        if (finishId) recipeFinishSelections[recipe.id] = finishId;
+        else delete recipeFinishSelections[recipe.id];
+        const recipeServingSelections = { ...meal.recipeServingSelections };
+        if (serving) recipeServingSelections[recipe.id] = serving;
+        else delete recipeServingSelections[recipe.id];
         const selectedRecipeIds = alreadySelected ? meal.selectedRecipeIds : [...meal.selectedRecipeIds, recipe.id];
         const currentMeal = reconcileCurrentMeal({
           ...meal,
           selectedRecipeIds,
           recipeIngredientBindings: { ...meal.recipeIngredientBindings, [recipe.id]: cleanBindings },
           selectedAddons,
+          recipeFinishSelections,
+          recipeServingSelections,
           checkoutDraft: {},
           checkoutRecipeDrafts: {},
         }, recipes, ingredients, optionalGroups);
@@ -542,6 +646,22 @@ const recipeSelectionData = JSON.stringify({
       event.preventDefault();
       event.stopImmediatePropagation();
       toggleDraftOptional(optional.dataset.recipeDraftOptionalGroup!, optional.dataset.recipeDraftOptionalIngredient!);
+      return true;
+    }
+
+    const finish = target.closest<HTMLButtonElement>('[data-recipe-draft-finish]');
+    if (finish) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      updateDraftFinish(finish.dataset.recipeDraftFinishId!);
+      return true;
+    }
+
+    const serving = target.closest<HTMLButtonElement>('[data-recipe-draft-serving]');
+    if (serving) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      updateDraftServing(serving.dataset.recipeDraftServingId!);
       return true;
     }
 

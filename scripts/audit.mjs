@@ -93,14 +93,15 @@ assert([...colonoscopy].sort((a, b) => a.rank - b.rank).every((item, index) => i
 
 const expectedOptionalGroups = [
   ['add-some-richness', '加点油水'],
-  ['change-it-up', '改头换面'],
-  ['one-pot-mix', '一锅乱炖'],
+  ['change-it-up', '加番茄'],
+  ['one-pot-mix', '顺手焖'],
+  ['soup-addons', '汤里加'],
 ];
 assert(JSON.stringify(meals.optionalGroups.map((group) => [group.id, group.labelZh])) === JSON.stringify(expectedOptionalGroups), 'Meal Builder optional groups do not match the canonical registry');
 assert(meals.optionalGroups.every((group) => new Set(group.ingredients.map((entry) => entry.ingredientId)).size === group.ingredients.length), 'A Meal Builder optional group contains duplicate Ingredient IDs');
 assert(meals.optionalGroups.find((group) => group.id === 'one-pot-mix')?.ingredients.length === 23, 'One-pot-mix must keep the migrated 23-Ingredient membership');
 assert(meals.recipes.find((recipe) => recipe.id === 'instant-pot-red-braised-duck-legs')?.optionalGroupIds?.includes('one-pot-mix'), 'Instant Pot red-braised duck legs must support one-pot-mix');
-assert(meals.recipes.filter((recipe) => recipe.optionalGroupIds?.includes('add-some-richness')).length === 6, 'Add-some-richness must be referenced by the six vegetable structures');
+assert(meals.recipes.filter((recipe) => recipe.optionalGroupIds?.includes('add-some-richness')).length === 3, 'Add-some-richness must be referenced by the three current richness structures');
 assert(meals.recipes.some((recipe) => recipe.optionalGroupIds?.includes('change-it-up')), 'Change-it-up must be referenced by at least one current Recipe');
 const legacyEasyBraiseIds = meals.ingredients.filter((ingredient) => ingredient.tags?.includes('easy-braise-addon')).map((ingredient) => ingredient.id);
 const legacyIronPanIds = meals.recipes.filter((recipe) => recipe.tags?.includes('iron-pan-braise')).map((recipe) => recipe.id);

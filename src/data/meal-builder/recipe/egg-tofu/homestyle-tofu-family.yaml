@@ -7,7 +7,7 @@ tags: [child-all-ingredients-eaten, light-seasoning, non-spicy-base, braised, st
 fit_score: 3
 primary_role: protein
 main_protein_category: tofu
-main_protein_ingredient_ids: [soft-tofu, firm-tofu, egg-tofu]
+main_protein_ingredient_ids: [soft-tofu, firm-tofu, egg-tofu, pressed-tofu]
 supporting_protein_ingredient_ids: []
 optional_groups:
   - one-pot-mix
@@ -31,7 +31,7 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - one_of: [soft-tofu, firm-tofu, egg-tofu]
+  - one_of: [soft-tofu, firm-tofu, egg-tofu, pressed-tofu]
     role: main-protein
 steps:
   - 按选中的豆腐准备：嫩豆腐切约2.5 cm块并少搬动；老豆腐切约1.5 cm厚片；鸡蛋豆腐切厚段。调味汁混匀。

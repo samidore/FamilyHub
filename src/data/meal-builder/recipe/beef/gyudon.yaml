@@ -7,14 +7,15 @@ tags: [child-all-ingredients-eaten, light-seasoning, non-spicy-base, stovetop-no
 fit_score: 5
 primary_role: mixed
 main_protein_category: beef
-main_protein_ingredient_ids: [hot-pot-beef-slices]
+main_protein_ingredient_ids: [hot-pot-beef-slices, sliced-beef-brisket]
 supporting_protein_ingredient_ids: []
 optional_groups: [one-pot-mix]
 vegetable_ingredient_ids: [onion]
-meal_contribution: { protein: 1, vegetable: 0.5, staple: 1 }
+meal_contribution: { protein: 1, vegetable: 0.5, staple: 0 }
 child_coverage: { protein: true, vegetable: true }
-integral_staple_ingredient_ids: [rice]
+integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids: []
+serving_options: [rice, noodles]
 active_minutes: 15–25
 meal_window_minutes: 20–35
 elapsed_minutes: 20–40
@@ -34,8 +35,26 @@ ingredients:
     role: main-protein
   - ingredient_id: onion
     role: vegetable
-  - ingredient_id: rice
-    role: integral-staple
+finish_options:
+  - id: gyudon
+    label_zh: 牛丼
+    default: true
+  - id: sukiyaki
+    label_zh: 寿喜烧
+    default: false
+    display_name_zh: 寿喜烧牛肉
+    cook_ingredients:
+      - 生鸡蛋仅供成人蘸食；儿童份省略
+    steps:
+      - 汁中加入少量味醂和糖，洋葱煮软后牛肉只煮至刚熟，保持甜咸清亮。
+  - id: niku-udon
+    label_zh: 肉乌冬
+    default: false
+    display_name_zh: 肉乌冬
+    cook_ingredients:
+      - 面汤 3碗；葱花适量
+    steps:
+      - 将完成的牛肉和洋葱连汤分到熟面条上，保留流动汤汁。
 steps:
   - 牛肉片若很长切短；洋葱薄切；牛丼汁全部放宽锅中。
   - 冷锅加入牛丼汁和洋葱，中火煮开后转中小火，煮到洋葱透明柔软。

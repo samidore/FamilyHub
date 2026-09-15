@@ -11,6 +11,8 @@ const compositionData = JSON.stringify({
     childCoverage: recipe.childCoverage,
     requirements: recipe.requirements,
     optionalGroupIds: recipe.optionalGroupIds,
+    finishOptions: recipe.finishOptions,
+    servingOptions: recipe.servingOptions,
     checkoutUnits: recipe.checkoutUnits,
     ingredientChildCoverage: recipe.ingredientChildCoverage,
     mealWindowMinutes: recipe.mealWindowMinutes,
@@ -27,10 +29,13 @@ const compositionData = JSON.stringify({
   import {
     aggregateSelection,
     calendarDateKey,
+    finishForRecipe,
     optionalGroupsForRecipe,
     rankCandidates,
     reconcileMealState,
+    resolvedRecipeName,
     selectedOptionalAddonsForRecipe,
+    servingOptionsForRecipe,
     unmetCompletionRequirements,
     type MealIngredient,
     type MealOptionalGroup,
@@ -189,12 +194,24 @@ const compositionData = JSON.stringify({
   function renderCookPlan() {
     const meal = household.currentMeal; if (!meal) return;
     document.querySelectorAll<HTMLElement>('[data-cook-recipe]').forEach((card) => {
-      card.querySelector('[data-cook-planned-optionals]')?.remove();
+      card.querySelector('[data-cook-selected-options]')?.remove();
       const recipeId = card.dataset.cookRecipe!; if (!meal.selectedRecipeIds.includes(recipeId)) return;
       const recipe = recipeById.get(recipeId); if (!recipe) return;
-      const selected = selectedOptionalAddonsForRecipe({ selectedAddons: meal.selectedAddons }, recipe, optionalGroups); if (!selected.length) return;
-      const box = document.createElement('div'); box.className = 'note-box meal-cook-planned-optionals'; box.dataset.cookPlannedOptionals = recipeId;
-      const strong = document.createElement('strong'); strong.textContent = '计划加料：'; box.append(strong, document.createTextNode(selected.map((addon) => nameFor(addon.ingredientId)).join('、'))); card.querySelector('.meal-cook-card__body')?.prepend(box);
+      const finish = finishForRecipe(recipe, meal.recipeFinishSelections[recipeId]);
+      const serving = meal.recipeServingSelections[recipeId];
+      const selected = selectedOptionalAddonsForRecipe({ selectedAddons: meal.selectedAddons }, recipe, optionalGroups);
+      const title = card.querySelector('summary strong');
+      if (title) title.textContent = resolvedRecipeName(recipe, meal.recipeFinishSelections[recipeId]);
+      const finishIngredients = finish?.cookIngredientLines ?? [];
+      const finishSteps = finish?.steps ?? [];
+      if (!finish && !serving && !selected.length) return;
+      const box = document.createElement('div'); box.className = 'note-box meal-cook-planned-optionals'; box.dataset.cookSelectedOptions = recipeId;
+      if (finish) { const line = document.createElement('div'); line.append(Object.assign(document.createElement('strong'), { textContent: `完成：${finish.labelZh}` })); box.append(line); }
+      if (serving) { const line = document.createElement('div'); line.textContent = `主食：${serving === 'rice' ? '米饭' : '面条'}`; box.append(line); }
+      if (selected.length) { const line = document.createElement('div'); line.textContent = `计划加料：${selected.map((addon) => nameFor(addon.ingredientId)).join('、')}`; box.append(line); }
+      if (finishIngredients.length) { const heading = document.createElement('div'); heading.textContent = `收尾食材：${finishIngredients.join('、')}`; box.append(heading); }
+      if (finishSteps.length) { const heading = document.createElement('div'); heading.textContent = `收尾步骤：${finishSteps.join('；')}`; box.append(heading); }
+      card.querySelector('.meal-cook-card__body')?.prepend(box);
     });
   }
 
@@ -211,7 +228,7 @@ const compositionData = JSON.stringify({
 
   function draftForMeal(meal: CurrentMeal) { return checkoutRecipeDraftsForMeal(meal, household.inventory, ingredients, recipes, optionalGroups); }
   function cloneDrafts(drafts: CheckoutRecipeDrafts): CheckoutRecipeDrafts { return JSON.parse(JSON.stringify(drafts)) as CheckoutRecipeDrafts; }
-  function draftUsesIngredient(draft: CheckoutRecipeDrafts[string], ingredientId: string) { return draft.bindings.includes(ingredientId) || draft.optionalAddons.some((addon) => addon.ingredientId === ingredientId); }
+  function draftUsesIngredient(draft: CheckoutRecipeDrafts[string], ingredientId: string) { return draft.bindings.includes(ingredientId) || draft.optionalAddons.some((addon) => addon.ingredientId === ingredientId) || draft.servingIngredientId === ingredientId; }
 
   async function persistActual(drafts: CheckoutRecipeDrafts) {
     const mealId = household.currentMeal?.mealId; if (!mealId || !canWrite()) return;
@@ -240,7 +257,7 @@ const compositionData = JSON.stringify({
     for (const recipeId of meal.selectedRecipeIds) {
       const recipe = recipeById.get(recipeId); const draft = drafts[recipeId]; if (!recipe || !draft) continue;
       const card = document.createElement('section'); card.className = 'meal-checkout-recipe'; card.dataset.checkoutRecipe = recipeId;
-      const title = document.createElement('h3'); title.textContent = recipe.nameZh ?? recipeId; card.append(title);
+      const title = document.createElement('h3'); title.textContent = resolvedRecipeName(recipe, meal.recipeFinishSelections[recipeId]); card.append(title);
       const fixedIndexes = recipe.requirements.map((requirement, index) => ({ requirement, index })).filter(({ requirement }) => requirement.anyOf.length === 1);
       if (fixedIndexes.length) { const h = document.createElement('h4'); h.textContent = '主食材'; card.append(h); fixedIndexes.forEach(({ index }) => card.append(amountRow(recipeId, draft.bindings[index], drafts))); }
       recipe.requirements.forEach((requirement, index) => {
@@ -249,6 +266,18 @@ const compositionData = JSON.stringify({
         requirement.anyOf.filter((id) => inventoryIsOn(household.inventory[id], trackingForIngredient(id, ingredients)) || draft.bindings[index] === id).forEach((id) => grid.append(makeChip(nameFor(id), draft.bindings[index] === id, { actualBindingRecipe: recipeId, actualBindingIndex: String(index), actualBindingIngredient: id })));
         card.append(grid); if (draft.bindings[index]) card.append(amountRow(recipeId, draft.bindings[index], drafts));
       });
+      if ((recipe.servingOptions ?? []).length) {
+        const h = document.createElement('h4'); h.textContent = '主食 Serving'; card.append(h);
+        const grid = document.createElement('div'); grid.className = 'meal-chip-grid meal-composition-grid';
+        const liveIds = new Set(Object.entries(household.inventory).filter(([id, value]) => inventoryIsOn(value, trackingForIngredient(id, ingredients))).map(([id]) => id));
+        const choices: Array<{ id: 'rice' | 'noodles' | null; label: string }> = [
+          { id: null, label: '不选' },
+          ...servingOptionsForRecipe(recipe, liveIds, draft.servingIngredientId).map((id) => ({ id, label: id === 'rice' ? '米饭' : '面条' })),
+        ];
+        choices.forEach((choice) => grid.append(makeChip(choice.label, (draft.servingIngredientId ?? null) === choice.id, { actualServingRecipe: recipeId, actualServingIngredient: choice.id ?? 'none' })));
+        card.append(grid);
+        if (draft.servingIngredientId) card.append(amountRow(recipeId, draft.servingIngredientId, drafts));
+      }
       const boundIds = new Set(draft.bindings);
       for (const group of optionalGroupsForRecipe(recipe, optionalGroups)) {
         const selectedIds = new Set(draft.optionalAddons.filter((addon) => addon.addonType === group.id && !boundIds.has(addon.ingredientId)).map((addon) => addon.ingredientId));
@@ -289,6 +318,21 @@ const compositionData = JSON.stringify({
   checkoutList?.addEventListener('click', (event) => {
     const target = event.target as HTMLElement; const meal = household.currentMeal; if (!meal || household.activeStep !== 'checkout') return;
     const drafts = cloneDrafts(draftForMeal(meal));
+    const serving = target.closest<HTMLButtonElement>('[data-actual-serving-recipe]');
+    if (serving) {
+      event.preventDefault(); event.stopImmediatePropagation();
+      const recipeId = serving.dataset.actualServingRecipe!; const nextServing = serving.dataset.actualServingIngredient!; const draft = drafts[recipeId]; const recipe = recipeById.get(recipeId); if (!draft || !recipe) return;
+      const oldServing = draft.servingIngredientId;
+      if (nextServing === 'none') delete draft.servingIngredientId;
+      else {
+        const ingredientId = nextServing as 'rice' | 'noodles';
+        if (!(recipe.servingOptions ?? []).includes(ingredientId) || (!inventoryIsOn(household.inventory[ingredientId], trackingForIngredient(ingredientId, ingredients)) && oldServing !== ingredientId)) return;
+        draft.servingIngredientId = ingredientId;
+        draft.consumption[ingredientId] = defaultConsumption(ingredientId, 1, drafts, recipeId);
+      }
+      if (oldServing && !draftUsesIngredient(draft, oldServing)) delete draft.consumption[oldServing];
+      void persistActual(drafts); return;
+    }
     const binding = target.closest<HTMLButtonElement>('[data-actual-binding-recipe]');
     if (binding) {
       event.preventDefault(); event.stopImmediatePropagation(); const recipeId = binding.dataset.actualBindingRecipe!; const index = Number(binding.dataset.actualBindingIndex); const ingredientId = binding.dataset.actualBindingIngredient!; const draft = drafts[recipeId]; const recipe = recipeById.get(recipeId); if (!draft || !recipe) return;

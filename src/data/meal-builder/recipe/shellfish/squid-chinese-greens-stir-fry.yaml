@@ -18,13 +18,17 @@ main_protein_ingredient_ids:
 supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids:
   - chinese-greens
+  - bell-pepper
+  - onion
+optional_groups:
+  - one-pot-mix
 meal_contribution:
   protein: 1
-  vegetable: 1
+  vegetable: 0
   staple: 0
 child_coverage:
   protein: false
-  vegetable: true
+  vegetable: ingredient-dependent
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice
@@ -47,8 +51,18 @@ detail_level: cookable
 ingredients:
   - ingredient_id: squid
     role: main-protein
-  - ingredient_id: chinese-greens
-    role: vegetable
+finish_options:
+  - id: light-sauce
+    label_zh: 清炒
+    default: true
+  - id: ginger-scallion
+    label_zh: 姜葱
+    default: false
+    display_name_zh: 姜葱炒鱿鱼
+    cook_ingredients:
+      - 姜丝 15 g；葱段 3根
+    steps:
+      - 海鲜回锅前先把姜葱炒香，鱿鱼回锅后快速翻匀即关火。
 steps:
   - 准备：海鲜彻底擦干；虾去肠线，鱿鱼切成大小一致的片/圈，扇贝去侧筋。；配菜提前切好并彻底沥干；海鲜快炒时间很短，所有调味必须先准备好。
   - 锅大火预热后加油；海鲜单层下锅，不要堆叠。

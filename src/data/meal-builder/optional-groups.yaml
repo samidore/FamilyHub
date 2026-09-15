@@ -40,14 +40,14 @@ optional_groups:
         checkout_units: 1
 
   - id: change-it-up
-    label_zh: 改头换面
+    label_zh: 加番茄
     ingredients:
       - ingredient_id: tomato
         meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
         checkout_units: 1
 
   - id: one-pot-mix
-    label_zh: 一锅乱炖
+    label_zh: 顺手焖
     ingredients:
       - ingredient_id: tofu-skin-knots
         meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
@@ -117,4 +117,32 @@ optional_groups:
         checkout_units: 1
       - ingredient_id: kabocha-squash
         meal_contribution: { protein: 0, vegetable: 0, staple: 1 }
+        checkout_units: 1
+
+  - id: soup-addons
+    label_zh: 汤里加
+    ingredients:
+      - ingredient_id: tomato
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: winter-melon
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: lotus-root
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: daikon
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: corn
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: carrot
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: chinese-yam
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: baby-napa-cabbage
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
         checkout_units: 1

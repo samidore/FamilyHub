@@ -60,10 +60,13 @@
                 ".validate": "newData.hasChildren(['bindings'])",
                 "bindings": { ".validate": "newData.hasChildren(['0'])", "$index": { ".validate": "$index.matches(/^(0|[1-9][0-9]*)$/) && newData.isString() && newData.val().length > 0" } },
                 "optionalAddons": { "$index": { ".validate": "$index.matches(/^(0|[1-9][0-9]*)$/) && newData.hasChildren(['addonType', 'ingredientId'])", "addonType": { ".validate": "newData.isString() && newData.val().length > 0" }, "ingredientId": { ".validate": "newData.isString() && newData.val().length > 0" }, "$other": { ".validate": false } } },
+                "servingIngredientId": { ".validate": "newData.isString() && (newData.val() == 'rice' || newData.val() == 'noodles')" },
                 "consumption": { "$ingredientId": { ".validate": "(newData.isBoolean()) || (newData.isNumber() && newData.val() >= 0 && newData.val() % 0.5 == 0)" } },
                 "$other": { ".validate": false }
               }
             },
+            "recipeFinishSelections": { "$recipeId": { ".validate": "newData.isString() && newData.val().length > 0" } },
+            "recipeServingSelections": { "$recipeId": { ".validate": "newData.isString() && (newData.val() == 'rice' || newData.val() == 'noodles')" } },
             "excludedIngredientIds": { "$index": { ".validate": "newData.isString() && newData.val().length > 0" } },
             "ingredientFreshnessDates": { "$ingredientId": { ".validate": "newData.isString() && newData.val().matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)" } }
           },

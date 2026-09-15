@@ -1,8 +1,8 @@
 id: mushroom-beef-stir-fry
 type: recipe
 status: candidate
-name_zh: 口蘑炒牛肉
-name_en: Mushroom Beef Stir-fry
+name_zh: 蘑菇炒牛肉
+name_en: Flexible Beef and Vegetable Stir-fry
 tags:
   - light-seasoning
   - non-spicy-base
@@ -15,16 +15,23 @@ primary_role: mixed
 main_protein_category: beef
 main_protein_ingredient_ids:
   - sliced-beef-brisket
+  - hot-pot-beef-slices
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - change-it-up
+  - one-pot-mix
 vegetable_ingredient_ids:
   - button-cremini-mushrooms
+  - tomato
+  - broccoli
+  - gai-lan
 meal_contribution:
   protein: 1
   vegetable: 1
   staple: 0
 child_coverage:
   protein: false
-  vegetable: false
+  vegetable: ingredient-dependent
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice
@@ -45,10 +52,44 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - ingredient_id: sliced-beef-brisket
+  - one_of:
+      - sliced-beef-brisket
+      - hot-pot-beef-slices
     role: main-protein
-  - ingredient_id: button-cremini-mushrooms
+  - one_of:
+      - button-cremini-mushrooms
+      - tomato
+      - broccoli
+      - gai-lan
     role: vegetable
+finish_options:
+  - id: mushroom
+    label_zh: 蘑菇
+    default: true
+  - id: scallion
+    label_zh: 葱香
+    default: false
+    display_name_zh: 葱香牛肉
+    cook_ingredients:
+      - 葱白 4根，切段
+    steps:
+      - 关火前加入葱白快速翻匀，保留葱香和薄汁。
+  - id: oyster
+    label_zh: 蚝油
+    default: false
+    display_name_zh: 蚝油牛肉
+    cook_ingredients:
+      - 蚝油 1 Tbsp；白胡椒少许
+    steps:
+      - 炒汁中加入蚝油，沸腾并薄薄挂住肉菜后关火。
+  - id: cumin
+    label_zh: 孜然
+    default: false
+    display_name_zh: 孜然牛肉
+    cook_ingredients:
+      - 孜然粉 1–2 tsp；孜然粒 1 tsp
+    steps:
+      - 肉菜炒熟后撒入孜然，快速翻匀，避免香料在锅底烧苦。
 steps:
   - 准备：牛肉逆纹切2–3 mm薄片；加入腌料抓匀，静置10–15分钟。；蔬菜切到快炒大小；西兰花/芥兰粗梗若较硬，可先沸水焯30–60秒后彻底沥干。；把炒汁搅到没有淀粉结块；下锅前再次搅匀。
   - 炒锅大火预热，加1 Tbsp中性油；牛肉摊成单层，30秒内不要频繁翻动。

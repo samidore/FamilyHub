@@ -1,0 +1,46 @@
+id: steamed-fish-black-bean
+type: recipe
+status: archived
+name_zh: 豉汁蒸鱼
+name_en: Steamed Fish with Black Bean Sauce
+tags: [light-seasoning, non-spicy-base, steamed, stovetop-nonstick, lunch-45, child-support-protein]
+fit_score: 3
+primary_role: protein
+main_protein_category: fish
+main_protein_ingredient_ids: [live-freshwater-bass, branzino, black-sea-bass, grouper, halibut]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 20–35
+meal_window_minutes: 30–45
+elapsed_minutes: 35–60
+advance_start_required: false
+equipment: [medium burner, covered steamer / heatproof plate]
+burner_plan: Medium burner for covered steaming; high-output burner remains available.
+child_suitable: yes
+child_texture: 蒸熟鱼肉柔软；孩子份从豉汁较少的位置取肉，彻底去刺后压碎或撕小。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - one_of: [live-freshwater-bass, branzino, black-sea-bass, grouper, halibut]
+    role: main-protein
+steps:
+  - 鱼擦干并划刀；蒸锅水先完全烧开。
+  - 水大开后上锅，盖严，保持稳定蒸汽。
+  - 约7分钟起按厚度检查；最厚处达到145°F/63°C且鱼肉能轻易分片即可。
+  - 倒掉大部分蒸水，把豉汁铺在鱼上，再蒸约1分钟让黑豆蒜香热透。
+  - 孩子份从调味较轻的厚肉处取肉，成人逐指检查鱼刺后压碎/撕小。
+  - 完成提示：鱼肉刚熟、湿润易分片；豉汁热透但不过咸。
+child_serving: 取豉汁较少的软鱼肉，成人彻底去刺后压碎/撕小；本 Recipe 计入 Child Protein。
+adult_finish: 成人可另补豉汁、辣椒或葱油。
+substitutions: [branzino, black-sea-bass, grouper, halibut]
+cook_ingredients:
+  - 活淡水鲈鱼 / Branzino / 黑海鲈 / 石斑鱼 / 大比目鱼：1条，约650–800 g；任选一种
+  - 豉汁：发酵黑豆 1 Tbsp，冲洗粗切；蒜 2瓣；姜 10 g；生抽 1 Tbsp；糖 1/2 tsp；水 2 Tbsp；芝麻油 1/2 tsp

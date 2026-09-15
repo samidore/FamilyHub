@@ -1,0 +1,70 @@
+id: tomato-egg-drop-soup
+type: recipe
+status: archived
+name_zh: 番茄蛋花汤
+name_en: Tomato Egg Drop Soup
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - simmered
+  - stovetop-nonstick
+  - lunch-30
+  - family-shared
+fit_score: 5
+primary_role: mixed
+main_protein_category: egg
+main_protein_ingredient_ids:
+  - eggs
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids:
+  - tomato
+meal_contribution:
+  protein: 0.5
+  vegetable: 1
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: true
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+  - noodles
+active_minutes: 15–25
+meal_window_minutes: 20–35
+elapsed_minutes: 20–40
+advance_start_required: false
+equipment:
+  - medium burner
+  - soup pot
+burner_plan: Medium burner for simmering; can be started earlier and leave the wok burner free.
+child_suitable: yes
+child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: eggs
+    role: main-protein
+  - ingredient_id: tomato
+    role: vegetable
+steps:
+  - 准备：鸡蛋打匀但不必打入大量空气。；番茄切块。；薄芡提前搅匀；不喜欢勾芡可完全省略。
+  - 汤锅中火加1 tsp油，下番茄炒约5分钟，直到明显出汁、边缘软。
+  - 加入汤底煮开，转中小火；若使用薄芡，边搅边倒入，煮到汤只略有稠度。
+  - 把火调到只保持小泡，用筷子沿同一方向缓慢搅汤形成旋涡。
+  - 蛋液细线状缓慢倒入；倒完后停止搅动10–15秒，让蛋花定型。
+  - 轻轻推散大块蛋花，再煮到蛋完全凝固；不要持续猛搅成碎屑。
+  - 最后尝味，孩子份先盛出降温；成人可加白胡椒。
+  - 完成提示：蛋花成柔软丝带、完全凝固；汤只微稠或清汤状，不是厚羹。
+  - 安全提示：含蛋菜按家庭安全底线做到蛋液完全凝固；蛋类菜中心达到160°F/71°C。
+child_serving: 取较嫩、较淡的部分，必要时剪成小块。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+substitutions: []
+cook_ingredients:
+  - 鸡蛋：3个
+  - 番茄：450 g，切块
+  - 汤底：低盐鸡汤 4 cups；生抽 2 tsp；芝麻油 1/2 tsp；白胡椒 1小撮
+  - 可选薄芡：玉米淀粉 1 Tbsp；水 2 Tbsp

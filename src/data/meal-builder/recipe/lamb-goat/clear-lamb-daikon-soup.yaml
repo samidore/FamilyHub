@@ -18,13 +18,16 @@ main_protein_ingredient_ids:
 supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids:
   - daikon
+optional_groups:
+  - soup-addons
+  - one-pot-mix
 meal_contribution:
   protein: 1
-  vegetable: 1
+  vegetable: 0
   staple: 0
 child_coverage:
   protein: true
-  vegetable: true
+  vegetable: ingredient-dependent
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice
@@ -45,10 +48,10 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - ingredient_id: lamb-leg-chunks
+  - one_of:
+      - lamb-leg-chunks
+      - skin-on-bone-in-goat-pieces
     role: main-protein
-  - ingredient_id: daikon
-    role: vegetable
 steps:
   - 准备：带骨肉/大块肉冷水下锅，加足量清水煮开2–4分钟；捞出后用温水冲去浮沫和碎骨。；白萝卜切成适合汤煮的一口大小；容易煮烂的材料单独放，后下。
   - 焯洗后的肉放入汤锅，加2.0 L水、姜和葱，大火煮开后再次撇净浮沫。

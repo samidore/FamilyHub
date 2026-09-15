@@ -328,24 +328,24 @@ test('selected Recipe and Checkout can change one-of independently', async ({ pa
 
 test('optional composition is editable in Plan and Actual without duplicating required Ingredients', async ({ page }) => {
   await page.goto('meal-builder/');
-  await startMeal(page, ['ground-pork', 'soft-tofu', 'fried-tofu-puffs', 'carrot']);
-  const recipe = page.locator('[data-meal-recipe="minced-pork-tofu"]');
+  await startMeal(page, ['ground-pork', 'chinese-greens', 'fried-tofu-puffs', 'carrot']);
+  const recipe = page.locator('[data-meal-recipe="ground-pork-chinese-greens-stir-fry"]');
   await recipe.locator('[data-select-recipe]').click();
   const draft = recipe.locator('[data-recipe-plan-draft]');
-  await expect(draft.getByRole('heading', { name: '一锅乱炖' })).toBeVisible();
-  await expect(draft.locator('[data-recipe-draft-optional-ingredient="soft-tofu"]')).toHaveCount(0);
+  await expect(draft.getByRole('heading', { name: '顺手焖' })).toBeVisible();
+  await expect(draft.locator('[data-recipe-draft-optional-ingredient="ground-pork"]')).toHaveCount(0);
   const plannedPuffs = draft.locator('[data-recipe-draft-optional-ingredient="fried-tofu-puffs"]');
   await plannedPuffs.click();
   await expect(plannedPuffs).toHaveAttribute('aria-pressed', 'true');
   await draft.locator('[data-confirm-recipe-draft]').click();
 
   await page.locator('#meal-force-next').click();
-  await expect(page.locator('[data-cook-recipe="minced-pork-tofu"] [data-cook-planned-optionals]')).toContainText('油豆腐 / 豆泡');
+  await expect(page.locator('[data-cook-recipe="ground-pork-chinese-greens-stir-fry"] [data-cook-selected-options]')).toContainText('油豆腐 / 豆泡');
   await page.locator('#meal-open-checkout').click();
 
-  const checkoutCard = page.locator('[data-checkout-recipe="minced-pork-tofu"]');
-  await expect(checkoutCard.getByRole('heading', { name: '一锅乱炖' })).toBeVisible();
-  await expect(checkoutCard.locator('[data-actual-optional-ingredient="soft-tofu"]')).toHaveCount(0);
+  const checkoutCard = page.locator('[data-checkout-recipe="ground-pork-chinese-greens-stir-fry"]');
+  await expect(checkoutCard.getByRole('heading', { name: '顺手焖' })).toBeVisible();
+  await expect(checkoutCard.locator('[data-actual-optional-ingredient="ground-pork"]')).toHaveCount(0);
   const actualPuffs = checkoutCard.locator('[data-actual-optional-ingredient="fried-tofu-puffs"]');
   await expect(actualPuffs).toHaveAttribute('aria-pressed', 'true');
   await actualPuffs.click();
@@ -355,20 +355,20 @@ test('optional composition is editable in Plan and Actual without duplicating re
   await expect(actualCarrot).toHaveAttribute('aria-pressed', 'true');
 
   await page.locator('[data-step-target="cook"]').click();
-  const planned = page.locator('[data-cook-recipe="minced-pork-tofu"] [data-cook-planned-optionals]');
+  const planned = page.locator('[data-cook-recipe="ground-pork-chinese-greens-stir-fry"] [data-cook-selected-options]');
   await expect(planned).toContainText('油豆腐 / 豆泡');
   await expect(planned).not.toContainText('胡萝卜');
   await page.locator('[data-step-target="checkout"]').click();
-  await expect(page.locator('[data-checkout-recipe="minced-pork-tofu"] [data-actual-optional-ingredient="carrot"]')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('[data-checkout-recipe="ground-pork-chinese-greens-stir-fry"] [data-actual-optional-ingredient="carrot"]')).toHaveAttribute('aria-pressed', 'true');
 });
 
 test('Recipe without optional groups does not expose optional Checkout controls', async ({ page }) => {
   await page.goto('meal-builder/');
-  await startMeal(page, ['chicken-thighs', 'fried-tofu-puffs']);
-  await selectRecipe(page, 'instant-pot-soy-chicken-thighs');
+  await startMeal(page, ['chicken-breast', 'fried-tofu-puffs']);
+  await selectRecipe(page, 'simple-pan-seared-chicken-breast');
   await page.locator('#meal-force-next').click();
   await page.locator('#meal-open-checkout').click();
-  const checkoutCard = page.locator('[data-checkout-recipe="instant-pot-soy-chicken-thighs"]');
+  const checkoutCard = page.locator('[data-checkout-recipe="simple-pan-seared-chicken-breast"]');
   await expect(checkoutCard).toBeVisible();
   await expect(checkoutCard.locator('[data-actual-optional-recipe]')).toHaveCount(0);
 });
@@ -459,21 +459,21 @@ test('returning through inventory preserves exclusions and enables newly stocked
 test('Recipe-scoped checkout consumes counted inventory while presence-only defaults to keep', async ({ page }) => {
   await page.goto('meal-builder/');
   await startMeal(page, ['eggs', 'tomato', 'noodles']);
-  await selectRecipe(page, 'tomato-egg-noodles');
+  await selectRecipe(page, 'basic-egg-drop-soup');
   await selectRecipe(page, 'tomato-scrambled-eggs');
-  await page.locator('#meal-next').click();
+  await page.locator('#meal-force-next').click();
   await page.locator('#meal-open-checkout').click();
 
-  const noodlesCard = page.locator('[data-checkout-recipe="tomato-egg-noodles"]');
-  const eggsUsedUp = noodlesCard.locator('[data-actual-used-up-ingredient="eggs"]');
+  const tomatoCard = page.locator('[data-checkout-recipe="tomato-scrambled-eggs"]');
+  const eggsUsedUp = tomatoCard.locator('[data-actual-used-up-ingredient="eggs"]');
   await expect(eggsUsedUp).not.toBeChecked();
   await eggsUsedUp.check();
   await expect(eggsUsedUp).toBeChecked();
   await eggsUsedUp.uncheck();
   await expect(eggsUsedUp).not.toBeChecked();
 
-  const tomatoMinus = noodlesCard.locator('[data-actual-step-ingredient="tomato"][data-actual-step="-0.5"]');
-  const tomatoPlus = noodlesCard.locator('[data-actual-step-ingredient="tomato"][data-actual-step="0.5"]');
+  const tomatoMinus = tomatoCard.locator('[data-actual-step-ingredient="tomato"][data-actual-step="-0.5"]');
+  const tomatoPlus = tomatoCard.locator('[data-actual-step-ingredient="tomato"][data-actual-step="0.5"]');
   const tomatoRow = tomatoMinus.locator('xpath=..');
   await expect(tomatoRow.locator('output')).toHaveText('1 / 1');
   await tomatoMinus.click();

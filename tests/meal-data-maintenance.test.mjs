@@ -5,7 +5,7 @@ import { readMealFiles } from '../scripts/load-meal-data.mjs';
 import { inspect, nextOrder, references, verifyItem } from '../.agents/skills/manage-meal-data/scripts/meal-data.mjs';
 import { parseMealFiles } from '../src/data/mealParser.mjs';
 
-const recipePath = 'recipe/chicken/chicken-teriyaki-thighs.yaml';
+const recipePath = 'recipe/chicken/oyster-sauce-braised-chicken.yaml';
 
 async function withCookableRecipe(change = () => {}) {
   const files = await readMealFiles();
@@ -18,7 +18,7 @@ async function withCookableRecipe(change = () => {}) {
 
 test('cookable Recipe preserves display-only Cook View lines at runtime', async () => {
   const data = parseMealFiles(await withCookableRecipe());
-  assert.deepEqual(data.recipes.find((recipe) => recipe.id === 'chicken-teriyaki-thighs').cookIngredientLines, ['鸡腿肉：500 g', '照烧汁：60 mL']);
+  assert.deepEqual(data.recipes.find((recipe) => recipe.id === 'oyster-sauce-braised-chicken').cookIngredientLines, ['鸡腿肉：500 g', '照烧汁：60 mL']);
 });
 
 test('cookable Recipe rejects missing Cook View lines, steps, or equipment', async () => {
@@ -73,7 +73,7 @@ test('all migrated Recipes keep Cook View text separate from operational require
 test('vegetable-centered is an explicit Recipe tag', async () => {
   const data = parseMealFiles(await readMealFiles());
   const vegetable = data.recipes.find((item) => item.id === 'simple-stir-fried-leafy-greens');
-  const chicken = data.recipes.find((item) => item.id === 'chicken-teriyaki-thighs');
+  const chicken = data.recipes.find((item) => item.id === 'oyster-sauce-braised-chicken');
   assert.equal(vegetable?.tags.includes('vegetable-centered'), true);
   assert.equal(vegetable?.vegetableCentered, true);
   assert.equal(chicken?.vegetableCentered, false);
@@ -92,11 +92,11 @@ test('optional-group membership is centralized and data-driven rather than count
   const files = await readMealFiles();
   const registry = parse(files['optional-groups.yaml']);
   registry.optional_groups.find((group) => group.id === 'change-it-up').ingredients.push({ ingredient_id: 'eggs', meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }, checkout_units: 1 });
-  const recipe = parse(files['recipe/chicken/instant-pot-soy-chicken-thighs.yaml']);
+  const recipe = parse(files['recipe/chicken/oyster-sauce-braised-chicken.yaml']);
   recipe.optional_groups = [...(recipe.optional_groups ?? []), 'change-it-up'];
-  const data = parseMealFiles({ ...files, 'optional-groups.yaml': stringify(registry), 'recipe/chicken/instant-pot-soy-chicken-thighs.yaml': stringify(recipe) });
+  const data = parseMealFiles({ ...files, 'optional-groups.yaml': stringify(registry), 'recipe/chicken/oyster-sauce-braised-chicken.yaml': stringify(recipe) });
   assert.equal(data.optionalGroups.find((group) => group.id === 'change-it-up').ingredients.some((entry) => entry.ingredientId === 'eggs'), true);
-  assert.equal(data.recipes.find((item) => item.id === 'instant-pot-soy-chicken-thighs').optionalGroupIds.includes('change-it-up'), true);
+  assert.equal(data.recipes.find((item) => item.id === 'oyster-sauce-braised-chicken').optionalGroupIds.includes('change-it-up'), true);
 });
 
 test('archived optional-group references do not change the active Recipe scope', async () => {
@@ -115,10 +115,10 @@ test('read-only maintenance helper inspects names, references, ordering, and val
   const files = await readMealFiles();
   const chickenRecipes = parse(files['recipe/chicken/index.yaml']).recipes;
   const recipeOrder = await nextOrder('recipe', 'chicken');
-  assert.equal((await inspect('chicken teriyaki'))[0].id, 'chicken-teriyaki-thighs');
-  assert((await references('chicken-teriyaki-thighs')).some((hit) => hit.path === 'recipe/chicken/index.yaml'));
+  assert.equal((await inspect('oyster-sauce-braised-chicken'))[0].id, 'oyster-sauce-braised-chicken');
+  assert((await references('oyster-sauce-braised-chicken')).some((hit) => hit.path === 'recipe/chicken/index.yaml'));
   assert.equal((await nextOrder('ingredient', 'chicken')).order % 10, 0);
   assert.equal(recipeOrder.after_id, chickenRecipes.at(-1));
   assert.equal(recipeOrder.append_position, chickenRecipes.length + 1);
-  assert.equal((await verifyItem('chicken-teriyaki-thighs')).valid, true);
+  assert.equal((await verifyItem('oyster-sauce-braised-chicken')).valid, true);
 });

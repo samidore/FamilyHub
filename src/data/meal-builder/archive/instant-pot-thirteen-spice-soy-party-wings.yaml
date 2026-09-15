@@ -1,0 +1,65 @@
+id: instant-pot-thirteen-spice-soy-party-wings
+type: recipe
+status: archived
+name_zh: Instant Pot 十三香酱油 Party Wings
+name_en: Instant Pot Thirteen-Spice Soy Party Wings
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - instant-pot
+  - low-active-time
+  - lunch-45
+  - family-shared
+  - pot-in-pot
+  - one-pot
+fit_score: 5
+primary_role: protein
+main_protein_category: chicken
+main_protein_ingredient_ids:
+  - party-wings
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 1
+  vegetable: 0
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 15–25
+meal_window_minutes: 20–35
+elapsed_minutes: 35–60
+advance_start_required: false
+equipment:
+  - 9-quart Instant Pot
+burner_plan: Instant Pot carries the main cooking load and frees both burners.
+child_suitable: yes
+child_texture: 成品肉可软嫩，但必须由成人去骨。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: party-wings
+    role: main-protein
+steps:
+  - 准备：检查内胆底部无残渣；主料擦干/冲净并按上述预处理处理Party Wings。；所有压力段液体一次加入；不要用浓稠含淀粉酱汁直接压力烹调。
+  - 主料与压力锅底/酱汁加入9-qt Instant Pot；确认至少有足够可产生蒸汽的稀液体，刮净锅底。
+  - 锁盖、阀门置密封，选择High Pressure 10分钟。
+  - 压力程序结束后自然泄压5分钟后手动排余压；打开盖子时避开蒸汽。
+  - 从最厚处检查熟度/软嫩度；若肉仍明显韧，可再次加压5–10分钟，而不是靠长时间Sauté硬煮。
+  - 若是酱汁菜，把肉先夹出或推到一侧，切到Sauté；只把液体煮到由水状变成能薄薄挂勺，再把肉翻匀。不要把咸味浓缩到发黏。
+  - 孩子份先盛出、去骨/剪小；成人后味另加。
+  - 完成提示：压力后肉达到目标软嫩度；需要收汁的菜仅收到薄挂勺，不剩稀水也不发黏过咸。
+  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
+child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+substitutions: []
+cook_ingredients:
+  - Party Wings：900 g
+  - 压力锅酱汁：水或低盐高汤 1 cup；生抽 2 Tbsp；绍兴酒 1 Tbsp；糖 1 Tbsp；姜 5片；葱白 2段；十三香 1 tsp

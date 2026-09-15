@@ -1,8 +1,8 @@
 id: chicken-broccoli-stir-fry
 type: recipe
 status: candidate
-name_zh: 西兰花炒鸡片
-name_en: Chicken and Broccoli Stir-fry
+name_zh: 蔬菜炒鸡片
+name_en: Flexible Chicken and Vegetable Stir-fry
 tags:
   - light-seasoning
   - non-spicy-base
@@ -18,13 +18,18 @@ main_protein_ingredient_ids:
 supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids:
   - broccoli
+  - button-cremini-mushrooms
+  - yellow-chives
+optional_groups:
+  - change-it-up
+  - one-pot-mix
 meal_contribution:
   protein: 1
   vegetable: 1
   staple: 0
 child_coverage:
   protein: true
-  vegetable: true
+  vegetable: ingredient-dependent
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice
@@ -47,8 +52,31 @@ detail_level: cookable
 ingredients:
   - ingredient_id: chicken-breast
     role: main-protein
-  - ingredient_id: broccoli
+  - one_of:
+      - broccoli
+      - button-cremini-mushrooms
+      - yellow-chives
     role: vegetable
+finish_options:
+  - id: broccoli
+    label_zh: 西兰花
+    default: true
+  - id: mushroom
+    label_zh: 蘑菇
+    default: false
+    display_name_zh: 蘑菇炒鸡片
+    cook_ingredients:
+      - 口蘑 / Cremini 300–450 g
+    steps:
+      - 鸡片回锅前把蘑菇炒到刚断生，再与鸡片一起裹薄汁。
+  - id: garlic-chives
+    label_zh: 韭黄
+    default: false
+    display_name_zh: 韭黄炒鸡片
+    cook_ingredients:
+      - 韭黄 250–350 g，切段
+    steps:
+      - 最后加入韭黄快速翻匀，刚塌软就关火。
 steps:
   - 准备：鸡肉逆纹切约5 mm薄片；先加水抓到基本吸收，再加淀粉、油、盐抓匀，静置15–20分钟。；蔬菜切成快炒大小；西兰花如茎粗，先焯30–60秒并彻底沥干。；炒汁与薄芡分别混匀；薄芡下锅前再次搅匀。
   - 炒锅大火预热，加1 Tbsp油；下鸡片摊开，快速翻炒到表面全部发白、中心仍略欠熟，约六七成熟时盛出。

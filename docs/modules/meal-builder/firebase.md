@@ -80,6 +80,8 @@ currentMeal/recipeIngredientBindings/{recipeId}/{index} = ingredientId
 currentMeal/selectedAddons/{index}/mainRecipeId = recipeId
 currentMeal/selectedAddons/{index}/addonType = optionalGroupId
 currentMeal/selectedAddons/{index}/ingredientId = ingredientId
+currentMeal/recipeFinishSelections/{recipeId} = finishId
+currentMeal/recipeServingSelections/{recipeId} = rice | noodles
 ```
 
 `recipeIngredientBindings` stores hard/`one_of` choices. `selectedAddons` stores planned optional choices. Static optional-group membership, labels, contributions, and default quantities remain in YAML and are never copied into Firebase.
@@ -92,12 +94,13 @@ Checkout Actual is stored separately from Plan:
 currentMeal/checkoutRecipeDrafts/{recipeId}/bindings/{index} = ingredientId
 currentMeal/checkoutRecipeDrafts/{recipeId}/optionalAddons/{index}/addonType = optionalGroupId
 currentMeal/checkoutRecipeDrafts/{recipeId}/optionalAddons/{index}/ingredientId = ingredientId
+currentMeal/checkoutRecipeDrafts/{recipeId}/servingIngredientId = rice | noodles
 currentMeal/checkoutRecipeDrafts/{recipeId}/consumption/{ingredientId} = false | nonnegative half-unit number
 ```
 
 Realtime Database may omit empty arrays/objects, so normalization restores omitted empty `optionalAddons`/`consumption` collections safely.
 
-Checkout Actual is initialized from Plan but may diverge: the cook can change a valid `one_of` binding, remove a planned optional, or add an unplanned optional that is valid for that Recipe and currently stocked. These writes do **not** rewrite `recipeIngredientBindings` or `selectedAddons`.
+Checkout Actual is initialized from Plan but may diverge: the cook can change a valid `one_of` binding, remove a planned optional, add an unplanned optional that is valid for that Recipe and currently stocked, or switch/remove a planned serving. Finish IDs are not copied into Actual because Finish is display-only. These writes do **not** rewrite `recipeIngredientBindings`, `selectedAddons`, or Plan serving state.
 
 The rules validate only the storage shape and primitive constraints. Application transaction validation additionally enforces Recipe IDs, binding membership, optional-group eligibility, no required+optional duplicate within one Recipe, live inventory, and aggregate quantity limits.
 
