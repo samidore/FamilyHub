@@ -8,13 +8,12 @@ test('central optional groups replace per-Recipe optional protein allow-lists wi
   const data = parseMealFiles(files);
   const richness = data.optionalGroups.find((group) => group.id === 'add-some-richness');
   assert(richness);
-  for (const id of ['pork-chops', 'thin-sliced-pork-belly', 'ground-pork', 'ground-beef', 'peeled-shrimp']) {
+  for (const id of ['whole-pork-tenderloin', 'pork-chops', 'thin-sliced-pork-belly', 'ground-pork', 'ground-beef', 'peeled-shrimp']) {
     assert(richness.ingredients.some((entry) => entry.ingredientId === id), `${id} should be centrally available in add-some-richness`);
   }
 
   const compatibleRecipeIds = [
     'simple-stir-fried-leafy-greens',
-    'ground-pork-chinese-greens-stir-fry',
   ];
   for (const id of compatibleRecipeIds) {
     const recipe = data.recipes.find((candidate) => candidate.id === id);
@@ -74,6 +73,6 @@ test('homestyle tofu is indexed and accepts the canonical fresh tofu choices', a
   assert(tofu);
   assert.deepEqual(tofu.contribution, { protein: 0.5, vegetable: 0, staple: 0 });
   assert.deepEqual(tofu.childCoverage, { protein: true, vegetable: false });
-  assert.deepEqual(tofu.requirements[0].anyOf, ['soft-tofu', 'firm-tofu', 'egg-tofu', 'pressed-tofu']);
+  assert.deepEqual(tofu.requirements[0].anyOf, ['soft-tofu', 'firm-tofu', 'egg-tofu']);
   assert.deepEqual(tofu.optionalGroupIds, ['one-pot-mix']);
 });

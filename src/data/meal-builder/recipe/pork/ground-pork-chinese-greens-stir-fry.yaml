@@ -17,14 +17,11 @@ main_protein_ingredient_ids:
   - ground-pork
 supporting_protein_ingredient_ids: []
 optional_groups:
-  - add-some-richness
   - change-it-up
-  - one-pot-mix
 vegetable_ingredient_ids:
   - chinese-greens
   - frozen-shepherds-purse
   - eggplant
-  - pressed-tofu
 meal_contribution:
   protein: 1
   vegetable: 1
@@ -59,20 +56,15 @@ ingredients:
       - chinese-greens
       - frozen-shepherds-purse
       - eggplant
-      - pressed-tofu
     role: vegetable
 finish_options:
-  - id: greens
+  - id: light-sauce
     label_zh: 清炒
     default: true
-  - id: tomato
-    label_zh: 番茄
-    default: false
-    display_name_zh: 番茄肉末
     cook_ingredients:
-      - 番茄 2个，切块
+      - 蚝油 1 tsp；白胡椒少许
     steps:
-      - 肉末七成熟时加入番茄，炒至出汁后再放入主菜蔬菜，保持酸甜清爽。
+      - 用轻盐肉末炒汁快速裹匀肉末和所选蔬菜，收至锅底只剩薄薄湿润汁。
   - id: jiang-ding
     label_zh: 酱丁
     default: false
@@ -82,10 +74,11 @@ finish_options:
     steps:
       - 肉末炒香后先把酱炒出香味，再加入蔬菜和少量水焖透。
 steps:
-  - 准备：肉末提前从冰箱取出，只需解开大块，不需要腌；青菜切细/切小。；把炒汁全部混匀；若使用冷冻荠菜末，可直接从冷冻状态下锅，但先掰散。
+  - 准备：肉末提前从冰箱取出，只需解开大块，不需要腌；所选蔬菜按质地切细/切小，冷冻荠菜先掰散。把炒汁全部混匀。
   - 炒锅中大火预热，加2 tsp中性油；下姜末5 g炒10秒。
   - 下肉末，用锅铲压散成小粒，保持中大火炒到整体变色并开始出现少量褐色焦点。
-  - 加入青菜；含水多的叶菜/冷冻荠菜先让水汽蒸出，炒到菜明显塌软但不发黄。
+  - 加入所选蔬菜；含水多的叶菜/冷冻荠菜先让水汽蒸出，茄子先炒到失去生硬，炒到蔬菜明显熟软但不发黄。
+  - 若选择了加番茄，肉末变色后先加入番茄块炒出少量汁水，再加入主菜蔬菜。
   - 沿锅边倒入炒汁，翻炒1–2分钟，让肉末和菜均匀吸味；若锅底水多，保持中大火让多余水汽蒸掉。
   - 锅底只留薄薄湿润汁、肉末松散不泡在水里时关火。
   - 完成提示：肉末完全变色并有少量焦香；蔬菜软而不烂；锅底无明显游离汤水。
@@ -95,5 +88,5 @@ adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉
 substitutions: []
 cook_ingredients:
   - 猪绞肉：300 g
-  - 青菜：300–450 g
-  - 家庭轻盐肉末炒汁：生抽 1 Tbsp；绍兴酒 1 Tbsp；蚝油 1 tsp；糖 1/2 tsp；水 2 Tbsp
+  - 所选蔬菜：300–450 g
+  - 家庭轻盐肉末炒汁：生抽 1 Tbsp；绍兴酒 1 Tbsp；糖 1/2 tsp；水 2 Tbsp；具体风味按所选 Finish 调整

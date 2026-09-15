@@ -1,8 +1,8 @@
 id: simple-stir-fried-leafy-greens
 type: recipe
 status: candidate
-name_zh: 清炒叶菜
-name_en: Simple Stir-Fried Leafy Greens
+name_zh: 清炒时蔬
+name_en: Simple Stir-Fried Vegetables
 tags:
   - light-seasoning
   - non-spicy-base
@@ -31,7 +31,7 @@ advance_start_required: false
 equipment: [high-output burner, wok / iron pan]
 burner_plan: High-output burner with wok / iron pan; keep the medium burner free when possible.
 child_suitable: yes
-child_texture: 叶和嫩梗切短；孩子份加少量水盖焖到梗、叶都明显软，再先盛出。
+child_texture: 所选蔬菜切短或切小；孩子份加少量水盖焖到明显软，再先盛出。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -42,16 +42,17 @@ ingredients:
   - one_of: [chinese-greens, spinach, lettuce, youmai-cai, choy-sum, water-spinach, pea-shoots, amaranth-greens, tong-hao, mustard-greens, green-cabbage, broccoli, cauliflower, celery, chinese-celery, garlic-chives, garlic-scapes, yellow-chives, luffa, zucchini, sugar-snap-peas, bean-sprouts, celtuce, water-chestnuts]
     role: vegetable
 steps:
-  - 蔬菜300–450 g洗净并彻底沥干；粗梗和叶分开，长梗切成3–4 cm短段；蒜2瓣切末；轻盐蔬菜汁混匀。
+  - 所选蔬菜300–450 g洗净并彻底沥干；按质地切成适合快炒的大小，粗梗、花菜、豆荚或块茎先处理，叶片和嫩梗分开；蒜2瓣切末；轻盐蔬菜汁混匀。
   - 炒锅大火预热，加2 tsp中性油，下蒜末约10秒。
-  - 先下较粗的梗30–60秒，再下叶片；芥菜苦味较明显时同时加1/4–1/2 tsp糖。
+  - 若选择了加点油水，按所选肉类的大小切片或分段；整块或厚件可另锅先煎熟，再在蔬菜快熟时合锅。
+  - 先下较硬的梗、花菜、豆荚或块状蔬菜30–90秒，再下嫩梗和叶片；芥菜苦味较明显时同时加1/4–1/2 tsp糖。
   - 沿锅边加1 tsp绍兴酒（可省），翻匀；成人份接近断生时倒入轻盐蔬菜汁。
   - 孩子份在这一步分到锅的一侧或小锅，加1–2 Tbsp水盖焖1–3分钟，直到梗能轻松压断、叶片完全柔软，先盛出。
   - 成人份再快速翻20–30秒，保持鲜亮；锅底没有明显积水时关火。
-  - 完成提示：成人份熟而不水；孩子份明显软、无长梗长叶。
+  - 完成提示：成人份熟而不水；孩子份明显软、无大块硬梗或长纤维。
 child_serving: 切短并额外盖焖至明显柔软；本 Recipe 计入 Child Vegetable。
 adult_finish: 孩子份盛出后，成人可另加辣椒油、辣椒粉或更重调味。
 substitutions: [蒜蓉属于同一 cooking structure，不另建 Recipe。]
 cook_ingredients:
-  - 青菜 / 菠菜 / 生菜 / 油麦菜 / 油菜心（菜心）/ 空心菜 / 豆苗 / 苋菜 / 茼蒿 / 芥菜：300–450 g；任选一种
+  - 所选蔬菜：300–450 g；任选一种
   - 家庭轻盐蔬菜汁：水 1 Tbsp；生抽 2 tsp；蚝油 1 tsp；糖 1/4 tsp

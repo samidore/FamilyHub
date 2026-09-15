@@ -8,6 +8,7 @@ tags:
   - light-seasoning
   - non-spicy-base
   - braised
+  - instant-pot
   - stovetop-nonstick
   - advance-start
   - family-shared
@@ -20,7 +21,6 @@ main_protein_ingredient_ids:
 supporting_protein_ingredient_ids: []
 optional_groups:
   - one-pot-mix
-  - change-it-up
 vegetable_ingredient_ids: []
 meal_contribution:
   protein: 1
@@ -34,14 +34,17 @@ recommended_staple_ingredient_ids:
   - rice
   - steamed-buns
 serving_options: [rice, noodles]
-active_minutes: 20–35
-meal_window_minutes: 20–35
-elapsed_minutes: 90–180
+active_minutes: 25–40
+meal_window_minutes: 60–90
+elapsed_minutes: 60–90
 advance_start_required: true
 equipment:
+  - Instant Pot / electric pressure cooker
   - medium burner
+  - high-output burner
+  - wok / wide pan
   - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
+burner_plan: Use the Instant Pot for pork shoulder chunks; the medium/high-output burner is reserved for the thin-belly route and final reduction.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -59,6 +62,10 @@ finish_options:
   - id: red-braise
     label_zh: 红烧
     default: true
+    cook_ingredients:
+      - 绍兴酒 1/4 cup；生抽 3 Tbsp；老抽 1 Tbsp；冰糖或白糖 2 Tbsp
+    steps:
+      - 用绍兴酒、生抽、老抽和糖调成红烧汁，肉软后加入宽锅中收成薄亮汁。
   - id: kakuni
     label_zh: 角煮
     default: false
@@ -84,12 +91,10 @@ finish_options:
     steps:
       - 以醋和酱油同煮，开盖收汁前确认酸香柔和、肉已软透。
 steps:
-  - 准备：梅花肉块切约4–5 cm大块；带骨件冲洗后沥干。若骨渣/血沫明显，冷水下锅煮开2–3分钟，捞出冲净。；把液体调料量好放在手边；糖单独放，避免炒糖时手忙脚乱。
-  - 厚底锅中火加1 tsp油；肉块分批把2–3个面煎到浅褐色，避免一次堆满出水。盛出。
-  - 原锅转中小火，下糖；糖刚融化成浅琥珀色时立刻加入姜葱，再把肉回锅翻匀。不要把糖烧到深褐发苦。
-  - 加入绍兴酒、生抽、老抽和水/高汤；液面应接近但不必完全淹没肉。煮开后撇沫，转小火盖盖。
-  - 保持轻微咕嘟而不是猛烈沸腾，先以60–90分钟作为检查窗口；最终以筷子能较轻松插入、猪蹄则皮筋软糯为准。中途液体低于锅底1/3时补热水。
-  - 肉已软嫩后开盖转中火；每2–3分钟翻一次，防止糖汁粘底。
+  - 准备：猪肩肉块切约4–5 cm大块；薄切五花肉按现有厚度整理。若骨渣/血沫明显，冷水下锅煮开2–3分钟，捞出冲净；把所选 Finish 的调味液量好放在手边。
+  - 猪肩肉块放入 Instant Pot，加基础焖煮液；高压25–30分钟，自然泄压10分钟。薄切五花肉不需高压，宽锅煎出脂香后加基础焖煮液，盖盖小火焖20–30分钟至软嫩。
+  - 将肉和少量汤汁转入宽锅；若选择了顺手焖配料，按硬度加入，焖到软而不散。
+  - 肉已软嫩后加入所选 Finish 的调味液，中大火翻动收汁；每2–3分钟翻一次，防止粘底。
   - 当汁量约剩最初的1/4、从水状变成能在肉表面形成薄亮膜，锅底仍有少量可流动汁时关火；不要收到发黏发咸。
   - 静置5分钟再盛；孩子份选瘦嫩、无骨部分剪小。
   - 完成提示：肉块软嫩但仍成形；汁能薄薄挂肉且锅底仍有少量流动汁。
@@ -98,5 +103,5 @@ child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
-  - 梅花肉块：900 g
-  - 家庭红烧汁：绍兴酒 1/4 cup；生抽 3 Tbsp；老抽 1 Tbsp；冰糖或白糖 2 Tbsp；水或低盐高汤 3 cups；姜 6片；葱白 3段；八角 1个，可省；桂皮 1小段，可省
+  - 猪肩肉块 / 薄切五花肉：900 g；任选一种
+  - 基础焖煮液：水或低盐高汤 2 cups；姜 6片；葱白 3段；八角 1个，可省

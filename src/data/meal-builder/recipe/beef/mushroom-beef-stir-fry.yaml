@@ -1,7 +1,7 @@
 id: mushroom-beef-stir-fry
 type: recipe
 status: candidate
-name_zh: 蘑菇炒牛肉
+name_zh: 牛肉炒时蔬
 name_en: Flexible Beef and Vegetable Stir-fry
 tags:
   - light-seasoning
@@ -17,9 +17,6 @@ main_protein_ingredient_ids:
   - sliced-beef-brisket
   - hot-pot-beef-slices
 supporting_protein_ingredient_ids: []
-optional_groups:
-  - change-it-up
-  - one-pot-mix
 vegetable_ingredient_ids:
   - button-cremini-mushrooms
   - tomato
@@ -63,8 +60,8 @@ ingredients:
       - gai-lan
     role: vegetable
 finish_options:
-  - id: mushroom
-    label_zh: 蘑菇
+  - id: light-sauce
+    label_zh: 清炒
     default: true
   - id: scallion
     label_zh: 葱香
@@ -91,10 +88,10 @@ finish_options:
     steps:
       - 肉菜炒熟后撒入孜然，快速翻匀，避免香料在锅底烧苦。
 steps:
-  - 准备：牛肉逆纹切2–3 mm薄片；加入腌料抓匀，静置10–15分钟。；蔬菜切到快炒大小；西兰花/芥兰粗梗若较硬，可先沸水焯30–60秒后彻底沥干。；把炒汁搅到没有淀粉结块；下锅前再次搅匀。
+  - 准备：牛肉逆纹切2–3 mm薄片；加入腌料抓匀，静置10–15分钟。所选蔬菜切到快炒大小；硬梗或厚片先沸水焯30–60秒后彻底沥干；把炒汁搅到没有淀粉结块。
   - 炒锅大火预热，加1 Tbsp中性油；牛肉摊成单层，30秒内不要频繁翻动。
   - 快速翻炒至表面变色、中心仍略嫩，约七成熟时立即盛出，避免第一轮就炒老。
-  - 原锅下姜5 g、蒜2瓣炒10–15秒；加入口蘑 / Cremini，大火翻炒至刚断生。
+  - 原锅下姜5 g、蒜2瓣炒10–15秒；加入所选蔬菜，按硬度先后大火翻炒至刚断生。
   - 牛肉回锅；炒汁重新搅匀后倒入，持续翻炒30–60秒。
   - 酱汁一沸即开始变稠；当汁呈薄亮层、能挂在牛肉和蔬菜表面而锅底不积水时立即关火。
   - 盛出后让肉静置约3分钟；孩子份选较嫩薄片并剪小。
@@ -104,7 +101,7 @@ child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软�
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
-  - 牛腩片：340 g
-  - 口蘑 / Cremini：300–450 g
-  - 牛肉腌料：水 1 Tbsp；玉米淀粉 1 tsp；中性油 1 tsp；蚝油 2 tsp
-  - 家庭轻盐蚝油汁：低盐高汤或水 1/3 cup；生抽 2 tsp；蚝油 2 tsp；老抽 1/2 tsp；糖 1/2 tsp；白胡椒 1小撮；玉米淀粉 1.5 tsp
+  - 牛腩片 / 火锅牛肉片：340 g；任选一种
+  - 所选蔬菜：300–450 g
+  - 牛肉腌料：水 1 Tbsp；生抽 2 tsp；玉米淀粉 1 tsp；中性油 1 tsp
+  - 家庭轻盐炒汁：低盐高汤或水 1/3 cup；生抽 2 tsp；糖 1/2 tsp；白胡椒 1小撮；玉米淀粉 1.5 tsp

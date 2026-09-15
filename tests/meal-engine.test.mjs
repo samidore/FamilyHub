@@ -147,7 +147,8 @@ test('structured data keeps key Ingredient, Recipe, and unified optional-group r
   assert.equal(kb.recipes.some((item) => item.tags?.includes('iron-pan-braise')), false);
   assert.equal(kb.ingredients.find((item) => item.id === 'ground-pork')?.tags?.includes('child-eaten'), true);
   assert.equal(kb.ingredients.find((item) => item.id === 'pork-feet')?.tags?.includes('child-eaten'), false);
-  assert.equal(kb.recipes.find((item) => item.id === 'ground-pork-chinese-greens-stir-fry')?.optionalGroupIds?.includes('one-pot-mix'), true);
+  assert.equal(kb.recipes.find((item) => item.id === 'ground-pork-chinese-greens-stir-fry')?.optionalGroupIds?.includes('one-pot-mix'), false);
+  assert.equal(kb.recipes.find((item) => item.id === 'homestyle-tofu-family')?.optionalGroupIds?.includes('one-pot-mix'), true);
   assert.equal(kb.recipes.find((item) => item.id === 'oyster-sauce-braised-chicken')?.optionalGroupIds?.includes('one-pot-mix'), true);
 
   const porkGreens = kb.recipes.find((item) => item.id === 'ground-pork-chinese-greens-stir-fry');

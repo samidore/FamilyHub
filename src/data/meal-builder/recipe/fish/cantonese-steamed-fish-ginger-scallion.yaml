@@ -35,6 +35,11 @@ finish_options:
   - id: ginger-scallion
     label_zh: 姜葱
     default: true
+    cook_ingredients:
+      - 生抽 1.5 Tbsp；热水 2 Tbsp；糖 1/8 tsp；盐 1/8 tsp
+      - 姜 15 g，细丝；葱 2根，细丝；中性油 1 Tbsp
+    steps:
+      - 鱼上锅前铺少量姜葱；出锅倒掉大部分蒸水，铺新鲜姜葱丝并淋清蒸豉油汁，最后只淋热油。
   - id: black-bean
     label_zh: 豉汁
     default: false
@@ -44,10 +49,10 @@ finish_options:
     steps:
       - 鱼上锅前铺少量豆豉蒜末，蒸熟后再淋少量生抽，避免孩子份过咸。
 steps:
-  - 鱼擦干；整鱼两面各划2–3刀；耐热盘垫少量姜葱；蒸锅水先完全烧开。
+  - 鱼擦干；整鱼两面各划2–3刀；蒸锅水先完全烧开。
   - 水大开后上锅，盖严，保持稳定蒸汽。
   - 约7分钟起按厚度检查；最厚处达到145°F/63°C且鱼肉能轻易分片即可。
-  - 出锅倒掉大部分蒸水，铺新鲜姜葱丝，淋清蒸豉油汁；热油只淋姜葱。
+  - 出锅倒掉大部分蒸水；按所选 Finish 完成鱼的调味，避免把鱼泡在蒸水里。
   - 孩子份从背部厚肉处取肉，成人逐指检查细刺后压碎/撕小。
   - 完成提示：鱼肉刚熟、湿润易分片；盘底只有少量清亮调味汁。
 child_serving: 成人彻底去刺后压碎/撕小；本 Recipe 计入 Child Protein。
@@ -55,5 +60,4 @@ adult_finish: 孩子份盛出后，成人可另加辣椒油或更重调味。
 substitutions: [branzino, black-sea-bass, grouper, halibut, whole-fish or compatible fillet path]
 cook_ingredients:
   - 活淡水鲈鱼 / Branzino / 黑海鲈 / 石斑鱼 / 大比目鱼：1条，约650–800 g；任选一种
-  - 清蒸豉油汁：生抽 1.5 Tbsp；热水 2 Tbsp；糖 1/8 tsp；盐 1/8 tsp
-  - 香料：姜 15 g，细丝；葱 2根，细丝；中性油 1 Tbsp
+  - 具体蒸鱼调味按所选 Finish 准备

@@ -37,11 +37,11 @@ async function removeLiveInventoryOutsideMealSnapshot(page: Page, id: string) {
 
 test('Optional draft cannot confirm an Ingredient that leaves live inventory after selection', async ({ page }) => {
   await page.goto('meal-builder/');
-  await setInventory(page, ['ground-pork', 'chinese-greens', 'fried-tofu-puffs']);
+  await setInventory(page, ['soft-tofu', 'fried-tofu-puffs']);
   await page.locator('#meal-start-current').click();
   await expect(page.locator('#meal-builder-view')).toBeVisible();
 
-  const recipe = page.locator('[data-meal-recipe="ground-pork-chinese-greens-stir-fry"]');
+  const recipe = page.locator('[data-meal-recipe="homestyle-tofu-family"]');
   await expect(recipe).toBeVisible();
   await recipe.locator('[data-select-recipe]').click();
   const puff = recipe.locator('[data-recipe-draft-optional-ingredient="fried-tofu-puffs"]');
@@ -53,7 +53,7 @@ test('Optional draft cannot confirm an Ingredient that leaves live inventory aft
   await expect(puff).toBeHidden();
 
   await recipe.locator('[data-confirm-recipe-draft]').click();
-  await expect(page.locator('[data-selected-recipe="ground-pork-chinese-greens-stir-fry"]')).toBeHidden();
+  await expect(page.locator('[data-selected-recipe="homestyle-tofu-family"]')).toBeHidden();
   await expect(page.locator('#meal-live')).toContainText('库存里现在没有油豆腐 / 豆泡，不能选。');
 });
 

@@ -122,9 +122,6 @@ optional_groups:
   - id: soup-addons
     label_zh: 汤里加
     ingredients:
-      - ingredient_id: tomato
-        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
-        checkout_units: 1
       - ingredient_id: winter-melon
         meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
         checkout_units: 1
@@ -144,5 +141,32 @@ optional_groups:
         meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
         checkout_units: 1
       - ingredient_id: baby-napa-cabbage
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: soft-tofu
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: firm-tofu
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: egg-tofu
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: fresh-shiitake
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: oyster-mushrooms
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: shimeji-mushrooms
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: chinese-greens
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: spinach
+        meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
+        checkout_units: 1
+      - ingredient_id: napa-cabbage
         meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
         checkout_units: 1

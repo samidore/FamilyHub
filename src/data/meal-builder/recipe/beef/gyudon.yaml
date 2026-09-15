@@ -31,7 +31,7 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - ingredient_id: hot-pot-beef-slices
+  - one_of: [hot-pot-beef-slices, sliced-beef-brisket]
     role: main-protein
   - ingredient_id: onion
     role: vegetable
@@ -39,6 +39,10 @@ finish_options:
   - id: gyudon
     label_zh: 牛丼
     default: true
+    cook_ingredients:
+      - 日式高汤 3/4 cup；清酒 3 Tbsp；味醂 3 Tbsp；生抽 4.5 Tbsp；糖 1.5 Tbsp
+    steps:
+      - 将高汤、清酒、味醂、生抽和糖调成牛丼汁，按基础步骤与洋葱、牛肉同煮并保留流动汤汁。
   - id: sukiyaki
     label_zh: 寿喜烧
     default: false
@@ -56,8 +60,9 @@ finish_options:
     steps:
       - 将完成的牛肉和洋葱连汤分到熟面条上，保留流动汤汁。
 steps:
-  - 牛肉片若很长切短；洋葱薄切；牛丼汁全部放宽锅中。
-  - 冷锅加入牛丼汁和洋葱，中火煮开后转中小火，煮到洋葱透明柔软。
+  - 牛肉片若很长切短；洋葱薄切；按所选 Finish 准备调味汁。
+  - 冷锅加入所选 Finish 的调味汁和洋葱，中火煮开后转中小火，煮到洋葱透明柔软。
+  - 若选择了顺手焖配料，按硬度加入；根茎先下，豆制品和叶菜后下，煮到软而不散。
   - 牛肉片逐片拨散加入，轻轻翻动让肉全部接触汤汁。
   - 盖盖中小火3–4分钟；打开检查无冷生中心，再煮约1分钟。
   - 锅中保留可流动汁，直接分到熟饭上，不收成浓酱。
@@ -67,7 +72,7 @@ child_serving: 牛肉剪短、洋葱煮软；本 Recipe 计入 Child Protein。
 adult_finish: 孩子份盛出后，成人可另加七味粉或更重调味。
 substitutions: []
 cook_ingredients:
-  - 火锅牛肉片：340 g
+  - 火锅牛肉片 / 牛腩薄片：340 g；任选一种
   - 洋葱：约170 g，薄切
   - 米饭：3碗熟饭
-  - 牛丼汁：日式高汤 3/4 cup；清酒 3 Tbsp；味醂 3 Tbsp；生抽 4.5 Tbsp；糖 1.5 Tbsp
+  - 具体调味汁按所选 Finish 准备

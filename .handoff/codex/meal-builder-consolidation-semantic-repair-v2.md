@@ -43,3 +43,15 @@ Append only:
 - explicit confirmation that intentional `add-some-richness` whole-cut members (including `whole-pork-tenderloin` and `pork-chops`) were preserved;
 - validation outcome and any remaining material deviation;
 - existing deployment guard about current/pending meals referencing archived Recipe IDs.
+
+## Result
+
+Status: BLOCKED
+
+Semantic repair completed across 20 consolidation-changed active Recipes. Finish choices are inventory-neutral; genericized one_of bases now have shared names, cook lines, and executable steps; tomato/mushroom/broccoli variants were moved out of Finish; quick stir-fries no longer expose one-pot-mix; soup-addons now include tofu, mushrooms, and leafy vegetables; rib soup no longer hard-requires winter melon; applicable tough-meat routes use Instant Pot-to-finish/reduction; and homestyle tofu excludes pressed-tofu.
+
+Intentional `add-some-richness` whole-cut members, including `whole-pork-tenderloin` and `pork-chops`, were preserved with the existing contribution and checkout contract.
+
+Validation: `pnpm run validate`, `pnpm run check`, `pnpm run build`, `pnpm run audit`, `pnpm run test:unit`, the semantic audit, all 20 per-record `verify-item` checks, and the full browser suite (`49 passed`) passed. `pnpm run verify` reached Firebase Rules but is blocked because Java cannot spawn (`Could not spawn \`java -version\``); this is the only remaining material environment deviation.
+
+Deployment guard: before deploying the archived-ID cutover, complete or reset any real `currentMeal` or `pendingCheckoutMeals` that still reference Recipes archived by the consolidation.

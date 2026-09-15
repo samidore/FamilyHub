@@ -1,8 +1,8 @@
 id: tomato-scrambled-eggs
 type: recipe
 status: candidate
-name_zh: 番茄炒蛋
-name_en: Tomato and Scrambled Eggs
+name_zh: 时蔬炒蛋
+name_en: Flexible Vegetable Scrambled Eggs
 tags:
   - light-seasoning
   - non-spicy-base
@@ -62,30 +62,19 @@ ingredients:
       - yellow-chives
       - oyster-mushrooms
     role: vegetable
-finish_options:
-  - id: tomato
-    label_zh: 番茄
-    default: true
-  - id: light-sauce
-    label_zh: 清炒
-    default: false
-    display_name_zh: 清炒时蔬蛋
-    steps:
-      - 蔬菜炒到刚熟后回锅拌蛋，保持蛋块柔软并避免汤汁过多。
 steps:
-  - 准备：鸡蛋加盐和水打匀；番茄去硬蒂切2–3 cm块。；葱花1根可选。
+  - 准备：鸡蛋加盐和水打匀；所选蔬菜按质地切成2–3 cm或适合快炒的大小，硬梗先焯，葱花可选。
   - 炒锅中大火加2 tsp油，倒蛋液；推成大块，约七成熟仍湿润时盛出。
-  - 原锅加1 tsp油，下番茄和1/4 tsp盐，中大火炒2–3分钟。
-  - 番茄边缘软、锅底出现自然汁水时加糖；若番茄很干才加2 Tbsp水。
-  - 鸡蛋回锅，轻轻翻折，让番茄汁裹住蛋块。
-  - 蛋液最后完全凝固、番茄仍有部分块形时关火；不要煮成番茄汤。
-  - 完成提示：鸡蛋软嫩、完全凝固；番茄出汁但仍有块形；锅底是少量自然番茄汁。
+  - 原锅加1 tsp油，下所选蔬菜和1/4 tsp盐，按质地中大火炒到刚熟；蘑菇、瓜类或叶菜只需炒到失去生硬，硬梗材料可加2 Tbsp水短焖。
+  - 鸡蛋回锅，轻轻翻折，让蔬菜的自然汁水薄薄裹住蛋块。
+  - 蛋液最后完全凝固、所选蔬菜仍有形时关火；不要让锅底积水。
+  - 完成提示：鸡蛋软嫩、完全凝固；所选蔬菜刚熟仍有形；锅底只有少量自然汁水。
   - 安全提示：含蛋菜按家庭安全底线做到蛋液完全凝固；蛋类菜中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
   - 鸡蛋：4个
-  - 番茄：450 g，约3个中等，切块
+  - 所选蔬菜：300–450 g
   - 蛋液：盐 1/4 tsp；水 1 Tbsp
-  - 番茄调味：盐 1/4 tsp；糖 1 tsp；水 2 Tbsp，仅番茄偏干时
+  - 蔬菜调味：盐 1/4 tsp；水 2 Tbsp，仅硬梗或较干蔬菜需要时

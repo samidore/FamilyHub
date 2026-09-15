@@ -17,8 +17,8 @@ main_protein_ingredient_ids:
   - eggs
 supporting_protein_ingredient_ids: []
 optional_groups:
-  - soup-addons
   - change-it-up
+  - soup-addons
 vegetable_ingredient_ids: []
 meal_contribution:
   protein: 0.5
@@ -51,21 +51,10 @@ detail_level: cookable
 ingredients:
   - ingredient_id: eggs
     role: main-protein
-finish_options:
-  - id: clear
-    label_zh: 清汤
-    default: true
-  - id: tomato
-    label_zh: 番茄
-    default: false
-    display_name_zh: 番茄蛋花汤
-    cook_ingredients:
-      - 番茄 2个，切块
-    steps:
-      - 先把番茄煮到出汁，再加入汤底和蛋液，保持蛋花柔软。
 steps:
   - 准备：鸡蛋打匀但不必打入大量空气。；薄芡提前搅匀；不喜欢勾芡可完全省略。
   - 加入汤底煮开，转中小火；若使用薄芡，边搅边倒入，煮到汤只略有稠度。
+  - 若选择了汤里加配料，先按硬度加入根茎、菌菇或豆腐，煮到接近软熟；叶菜和番茄等易熟材料最后加入。
   - 把火调到只保持小泡，用筷子沿同一方向缓慢搅汤形成旋涡。
   - 蛋液细线状缓慢倒入；倒完后停止搅动10–15秒，让蛋花定型。
   - 轻轻推散大块蛋花，再煮到蛋完全凝固；不要持续猛搅成碎屑。
