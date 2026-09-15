@@ -18,6 +18,9 @@ primary_role: vegetable
 main_protein_category: none
 main_protein_ingredient_ids: []
 supporting_protein_ingredient_ids: []
+optional_groups:
+  - add-some-richness
+  - soup-addons
 vegetable_ingredient_ids: [frozen-shepherds-purse]
 meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
 child_coverage: { protein: false, vegetable: true }
@@ -42,7 +45,7 @@ ingredients:
     role: vegetable
 steps:
   - 汤锅加4 cups低盐高汤或水煮开；冷冻荠菜末200–250 g可直接下锅掰散。
-  - 煮到荠菜完全散开并重新沸腾；有嫩豆腐时把1盒豆腐切块轻轻滑入，再中小火3–4分钟。
+  - 煮到荠菜完全散开并重新沸腾；若选择了汤里加配料，按食材硬度和大小安排下锅时间：根茎、菌菇先煮到接近软熟，软豆腐轻轻滑入后中小火煮3–4分钟，叶菜和番茄最后加入；若选择了加点油水中的蛋白，按实际切分或单独熟制后加入并确认全熟。
   - 想做羹时，把1 Tbsp玉米淀粉与2 Tbsp水调匀，细线倒入并轻推到汤略挂勺；普通汤可不勾芡。
   - 最后分次加盐；孩子份保持清淡并确认没有成团的长纤维。
 child_serving: 荠菜末煮散、保持清淡；本 Recipe 计入 Child Vegetable。

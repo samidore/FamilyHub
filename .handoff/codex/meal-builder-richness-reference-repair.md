@@ -75,3 +75,15 @@ Append only:
 - explicit confirmation that `whole-pork-tenderloin` and `pork-chops` remain members;
 - validation outcome and any remaining material deviation;
 - existing archived-ID deployment guard if still applicable.
+
+## Result
+
+Status: BLOCKED
+
+`add-some-richness` now references the representative intended set of `simple-stir-fried-leafy-greens`, `basic-egg-drop-soup`, `homestyle-tofu-family`, and `shepherds-purse-soft-tofu-soup`. The shepherd's-purse Recipe also uses the existing `soup-addons` path for optional tofu and keeps frozen shepherd's purse as its hard vegetable identity. Active Recipe count remains 140.
+
+`whole-pork-tenderloin` and `pork-chops` remain members of the central `add-some-richness` group, with the existing contribution and checkout contract unchanged.
+
+Validation passed for the three updated active records via `verify-item`, `pnpm run validate`, `pnpm run check`, `pnpm run build`, `pnpm run audit`, `pnpm run test:unit` (214 passed), and `pnpm run test:browser` (49 passed). `pnpm run verify` passed through unit tests but is blocked at Firebase Rules because Java cannot spawn (`Could not spawn \`java -version\``). This is the only remaining material environment deviation.
+
+Deployment guard: before deploying the archived-ID cutover, complete or reset any real `currentMeal` or `pendingCheckoutMeals` that still reference Recipes archived by the consolidation.

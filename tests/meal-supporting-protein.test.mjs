@@ -14,6 +14,9 @@ test('central optional groups replace per-Recipe optional protein allow-lists wi
 
   const compatibleRecipeIds = [
     'simple-stir-fried-leafy-greens',
+    'basic-egg-drop-soup',
+    'homestyle-tofu-family',
+    'shepherds-purse-soft-tofu-soup',
   ];
   for (const id of compatibleRecipeIds) {
     const recipe = data.recipes.find((candidate) => candidate.id === id);
@@ -74,5 +77,5 @@ test('homestyle tofu is indexed and accepts the canonical fresh tofu choices', a
   assert.deepEqual(tofu.contribution, { protein: 0.5, vegetable: 0, staple: 0 });
   assert.deepEqual(tofu.childCoverage, { protein: true, vegetable: false });
   assert.deepEqual(tofu.requirements[0].anyOf, ['soft-tofu', 'firm-tofu', 'egg-tofu']);
-  assert.deepEqual(tofu.optionalGroupIds, ['one-pot-mix']);
+  assert.deepEqual(tofu.optionalGroupIds, ['add-some-richness', 'one-pot-mix']);
 });

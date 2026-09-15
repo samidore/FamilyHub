@@ -101,7 +101,13 @@ assert(JSON.stringify(meals.optionalGroups.map((group) => [group.id, group.label
 assert(meals.optionalGroups.every((group) => new Set(group.ingredients.map((entry) => entry.ingredientId)).size === group.ingredients.length), 'A Meal Builder optional group contains duplicate Ingredient IDs');
 assert(meals.optionalGroups.find((group) => group.id === 'one-pot-mix')?.ingredients.length === 23, 'One-pot-mix must keep the migrated 23-Ingredient membership');
 assert(meals.recipes.find((recipe) => recipe.id === 'instant-pot-red-braised-duck-legs')?.optionalGroupIds?.includes('one-pot-mix'), 'Instant Pot red-braised duck legs must support one-pot-mix');
-assert(meals.recipes.filter((recipe) => recipe.optionalGroupIds?.includes('add-some-richness')).map((recipe) => recipe.id).join(',') === 'simple-stir-fried-leafy-greens', 'Add-some-richness must be limited to the current vegetable-centered structure');
+const richnessRepresentatives = [
+  'simple-stir-fried-leafy-greens',
+  'basic-egg-drop-soup',
+  'homestyle-tofu-family',
+  'shepherds-purse-soft-tofu-soup',
+];
+assert(richnessRepresentatives.every((id) => meals.recipes.find((recipe) => recipe.id === id)?.optionalGroupIds?.includes('add-some-richness')), 'Representative protein-light Recipes must support add-some-richness');
 assert(meals.recipes.some((recipe) => recipe.optionalGroupIds?.includes('change-it-up')), 'Change-it-up must be referenced by at least one current Recipe');
 const legacyEasyBraiseIds = meals.ingredients.filter((ingredient) => ingredient.tags?.includes('easy-braise-addon')).map((ingredient) => ingredient.id);
 const legacyIronPanIds = meals.recipes.filter((recipe) => recipe.tags?.includes('iron-pan-braise')).map((recipe) => recipe.id);

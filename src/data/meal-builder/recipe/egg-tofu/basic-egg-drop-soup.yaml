@@ -17,6 +17,7 @@ main_protein_ingredient_ids:
   - eggs
 supporting_protein_ingredient_ids: []
 optional_groups:
+  - add-some-richness
   - change-it-up
   - soup-addons
 vegetable_ingredient_ids: []

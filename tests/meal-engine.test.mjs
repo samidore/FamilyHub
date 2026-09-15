@@ -139,7 +139,9 @@ test('structured data keeps key Ingredient, Recipe, and unified optional-group r
   assert.equal(kb.optionalGroups.find((group) => group.id === 'change-it-up')?.ingredients.some((entry) => entry.ingredientId === 'tomato' && entry.contribution.vegetable === 1), true);
   assert.equal(kb.optionalGroups.find((group) => group.id === 'one-pot-mix')?.ingredients.length, 23);
   assert.equal(kb.recipes.find((item) => item.id === 'instant-pot-red-braised-duck-legs')?.optionalGroupIds?.includes('one-pot-mix'), true);
-  assert.equal(kb.recipes.filter((item) => item.optionalGroupIds?.includes('add-some-richness')).length > 0, true);
+  for (const id of ['simple-stir-fried-leafy-greens', 'basic-egg-drop-soup', 'homestyle-tofu-family', 'shepherds-purse-soft-tofu-soup']) {
+    assert.equal(kb.recipes.find((item) => item.id === id)?.optionalGroupIds?.includes('add-some-richness'), true, `${id} should support add-some-richness`);
+  }
   assert.equal(kb.recipes.some((item) => item.optionalGroupIds?.includes('change-it-up')), true);
   assert.equal(kb.ingredients.find((item) => item.id === 'choy-sum')?.nameZh, '油菜苗');
   assert.equal(kb.recipes.some((item) => item.id === 'mushroom-soft-tofu-soup'), false);
