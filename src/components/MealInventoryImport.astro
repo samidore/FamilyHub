@@ -2,7 +2,7 @@
   <div class="meal-inventory-import__heading">
     <div>
       <h3 id="meal-inventory-import-heading">批量入库</h3>
-      <p>粘贴 ChatGPT 生成的入库 JSON。确认前可调整数量、日期和存放位置。</p>
+      <p>粘贴 ChatGPT 生成的入库 JSON。确认前可调整数量、日期和存放/解冻状态。</p>
     </div>
   </div>
 
@@ -117,6 +117,7 @@
     };
 
     const storageLabel = (item: InventoryImportIngredient, storage: InventoryImportStorage) => {
+      if (storage === 'thawing') return '解冻中';
       if (storage === 'freezer') return '冷冻';
       return item.freezerBehavior === 'thaw-required' ? '冷藏' : '现有';
     };
@@ -124,6 +125,12 @@
     const currentValue = (id: string, storage: InventoryImportStorage) => {
       const ingredient = ingredientById.get(id);
       if (!ingredient) return undefined;
+      if (storage === 'thawing') {
+        const total = Object.values(household.thawingItems)
+          .filter((job) => job.ingredientId === id)
+          .reduce((sum, job) => sum + job.quantity, 0);
+        return total > 0 ? roundCountedInventoryValue(total) : undefined;
+      }
       if (storage === 'freezer' && ingredient.freezerBehavior === 'thaw-required') return household.freezerInventory[id];
       return household.inventory[id];
     };
@@ -184,7 +191,8 @@
           storage.setAttribute('aria-label', `${ingredient.nameZh ?? item.ingredientId} 存放位置`);
           const refrigerated = document.createElement('option'); refrigerated.value = 'inventory'; refrigerated.textContent = '冷藏'; refrigerated.selected = item.storage === 'inventory';
           const frozen = document.createElement('option'); frozen.value = 'freezer'; frozen.textContent = '冷冻'; frozen.selected = item.storage === 'freezer';
-          storage.append(refrigerated, frozen);
+          const thawing = document.createElement('option'); thawing.value = 'thawing'; thawing.textContent = '开始解冻'; thawing.selected = item.storage === 'thawing';
+          storage.append(refrigerated, frozen, thawing);
           storage.addEventListener('change', () => { item.storage = storage.value as InventoryImportStorage; renderReview(); });
           controls.append(storage);
         }
@@ -248,7 +256,12 @@
       const changingItems = reviewItems.filter(itemWillChange);
       if (changingItems.length === 0) return;
       const freezerCount = changingItems.filter((item) => item.storage === 'freezer').length;
-      dialogCopy.textContent = `将 ${changingItems.length} 项食材加入共享库存${freezerCount ? `，其中 ${freezerCount} 项进冷冻` : ''}。入库日期：${stockedOn}。`;
+      const thawingCount = changingItems.filter((item) => item.storage === 'thawing').length;
+      const destinationSummary = [
+        freezerCount ? `${freezerCount} 项进冷冻` : '',
+        thawingCount ? `${thawingCount} 项开始解冻` : '',
+      ].filter(Boolean).join('，');
+      dialogCopy.textContent = `将 ${changingItems.length} 项食材加入共享库存${destinationSummary ? `，其中 ${destinationSummary}` : ''}。入库日期：${stockedOn}。`;
       dialog.showModal();
     });
 
@@ -262,7 +275,8 @@
         const repositoryStatus = repository.getStatus();
         if (repositoryStatus.connection !== 'local' && repositoryStatus.connection !== 'connected') throw new Error(repositoryStatus.error ?? '共享库存暂时不可写。');
         const items = reviewItems.map((item) => ({ ...item }));
-        await repository.transaction((current) => applyInventoryImport(current, { stockedOn, items }, ingredients));
+        const thawStartedAt = Date.now();
+        await repository.transaction((current) => applyInventoryImport(current, { stockedOn, items }, ingredients, undefined, thawStartedAt));
         dialog.close();
         textarea.value = '';
         draft = null; reviewItems = []; stockedOn = '';
