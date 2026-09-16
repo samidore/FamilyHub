@@ -24,7 +24,7 @@ Current quantity exceptions:
 
 | Ingredient ID | Import quantity rule |
 | --- | --- |
-| `whole-pork-tenderloin` | One recognized row counts as **2 inventory units**. |
+| `whole-pork-tenderloin` | One recognized row counts as **3 inventory units**. |
 
 `stocked_on` is the user's local calendar date in `YYYY-MM-DD` form. Use the current local date unless the user explicitly identifies another stock-entry date. A user-specified date must not be replaced with the image timestamp, receipt timestamp, or file modification date.
 
@@ -53,7 +53,7 @@ Anything that cannot be matched confidently to an active visible Ingredient goes
   "items": [
     {
       "ingredient_id": "whole-pork-tenderloin",
-      "quantity": 2,
+      "quantity": 3,
       "storage": "freezer"
     },
     {
