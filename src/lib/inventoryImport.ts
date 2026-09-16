@@ -2,6 +2,7 @@ import type { MealIngredient } from './mealEngine.ts';
 import { calendarDateKey } from './mealEngine.ts';
 import {
   COUNTED_INVENTORY_STEP,
+  THAW_DURATION_MS,
   addStock,
   normalizeHouseholdState,
   roundCountedInventoryValue,
@@ -12,7 +13,7 @@ export const INVENTORY_IMPORT_SCHEMA = 'meal-builder-inventory-import';
 export const INVENTORY_IMPORT_VERSION = 1;
 
 export type InventoryImportIngredient = MealIngredient & { visible?: boolean };
-export type InventoryImportStorage = 'inventory' | 'freezer';
+export type InventoryImportStorage = 'inventory' | 'freezer' | 'thawing';
 
 export interface InventoryImportItem {
   ingredientId: string;
@@ -59,7 +60,7 @@ function importStorageForIngredient(
   ingredient: InventoryImportIngredient,
   rawStorage: unknown,
 ): InventoryImportStorage | null {
-  if (rawStorage !== undefined && rawStorage !== 'inventory' && rawStorage !== 'freezer') return null;
+  if (rawStorage !== undefined && rawStorage !== 'inventory' && rawStorage !== 'freezer' && rawStorage !== 'thawing') return null;
   const storage = (rawStorage ?? (ingredient.freezerBehavior === 'direct' ? 'freezer' : 'inventory')) as InventoryImportStorage;
   if (ingredient.freezerBehavior === 'direct') return storage === 'freezer' ? storage : null;
   if (ingredient.freezerBehavior === 'thaw-required') return storage;
@@ -96,8 +97,8 @@ export function parseInventoryImport(
     if (!isRecord(raw) || typeof raw.ingredient_id !== 'string' || !raw.ingredient_id.trim() || !quantityIsValid(raw.quantity)) {
       return { ok: false, error: '每个 items 条目都必须包含有效 ingredient_id 和正的 0.5 倍数 quantity。' };
     }
-    if (raw.storage !== undefined && raw.storage !== 'inventory' && raw.storage !== 'freezer') {
-      return { ok: false, error: 'storage 只能是 inventory 或 freezer。' };
+    if (raw.storage !== undefined && raw.storage !== 'inventory' && raw.storage !== 'freezer' && raw.storage !== 'thawing') {
+      return { ok: false, error: 'storage 只能是 inventory、freezer 或 thawing。' };
     }
     const id = raw.ingredient_id.trim();
     const ingredient = importableById.get(id);
@@ -126,21 +127,50 @@ export function parseInventoryImport(
   };
 }
 
+function createImportThawJobId(state: HouseholdState, ingredientId: string, startedAt: number, itemIndex: number) {
+  const base = `inventory-import-${startedAt}-${itemIndex}-${ingredientId}`;
+  let jobId = base;
+  let suffix = 1;
+  while (state.thawingItems[jobId]) {
+    jobId = `${base}-${suffix}`;
+    suffix += 1;
+  }
+  return jobId;
+}
+
 export function applyInventoryImport(
   state: HouseholdState,
   draft: Pick<InventoryImportDraft, 'stockedOn' | 'items'>,
   ingredients: InventoryImportIngredient[],
   today = calendarDateKey(),
+  thawStartedAt = Date.now(),
 ): HouseholdState {
   if (!isValidInventoryImportDate(draft.stockedOn, today)) throw new Error('入库日期无效。');
+  if (!Number.isFinite(thawStartedAt) || thawStartedAt <= 0) throw new Error('解冻开始时间无效。');
   const importableById = new Map(ingredients.filter((ingredient) => ingredient.visible !== false).map((ingredient) => [ingredient.id, ingredient]));
   let next = state;
 
-  for (const item of draft.items) {
+  for (const [itemIndex, item] of draft.items.entries()) {
     const ingredient = importableById.get(item.ingredientId);
     if (!ingredient || !quantityIsValid(item.quantity)) throw new Error('入库草稿包含无效食材或数量。');
     const storage = importStorageForIngredient(ingredient, item.storage);
     if (!storage) throw new Error('入库草稿包含无效存放位置。');
+    if (storage === 'thawing') {
+      const jobId = createImportThawJobId(next, item.ingredientId, thawStartedAt, itemIndex);
+      next = {
+        ...next,
+        thawingItems: {
+          ...next.thawingItems,
+          [jobId]: {
+            ingredientId: item.ingredientId,
+            quantity: item.quantity,
+            startedAt: thawStartedAt,
+            readyAt: thawStartedAt + THAW_DURATION_MS,
+          },
+        },
+      };
+      continue;
+    }
     const internalStorage = ingredient.freezerBehavior === 'direct' ? 'inventory' : storage;
     next = addStock(next, item.ingredientId, internalStorage, item.quantity, ingredients, draft.stockedOn);
   }
