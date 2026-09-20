@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/novelRunInspector.css';
+const base = import.meta.env.BASE_URL;
+const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
+---
+<BaseLayout title="Novel Orchestrator · Family Hub" description="Private Novel Orchestrator run inspector." pageClass="novel-ops-page" themeColor="#EDF2EE">
+  <header class="novel-site-header shell">
+    <a class="back-link" href={withBase('/')}>← Family Hub</a>
+    <div class="novel-site-header__copy">
+      <p class="eyebrow">Private operations</p>
+      <h1>Novel Orchestrator</h1>
+      <p>Run Inspector</p>
+    </div>
+  </header>
+
+  <main id="main-content" class="shell novel-shell">
+    <section id="novel-auth-shell" class="novel-auth" data-authenticated-shell>
+      <div>
+        <p class="eyebrow">Authenticated tool</p>
+        <h2>Run Inspector is private</h2>
+        <p id="novel-auth-message">正在检查登录状态…</p>
+      </div>
+      <div class="novel-auth__actions">
+        <button id="novel-sign-in" type="button" hidden>使用 Google 登录</button>
+        <button id="novel-refresh-access" type="button" hidden>重新检查权限</button>
+        <button id="novel-sign-out" type="button" class="novel-secondary-button" hidden>退出登录</button>
+      </div>
+      <p class="novel-private-note">本轮只展示 UI mock data。没有连接 Novel Orchestrator、Firestore、GitHub、runner 或 task files。</p>
+    </section>
+
+    <section id="novel-inspector-app" class="novel-app" hidden>
+      <section class="novel-run-picker" aria-labelledby="novel-run-picker-title">
+        <div>
+          <p class="eyebrow">Run history</p>
+          <h2 id="novel-run-picker-title">Inspect a run</h2>
+        </div>
+        <label for="novel-run-select">
+          <span>Run</span>
+          <select id="novel-run-select" aria-label="Select Novel Orchestrator run"></select>
+        </label>
+      </section>
+
+      <section class="novel-summary" aria-label="Run summary">
+        <div class="novel-summary__identity">
+          <p class="eyebrow">Selected run</p>
+          <h2 data-run-title></h2>
+          <p data-run-workflow class="novel-summary__workflow"></p>
+        </div>
+        <div class="novel-summary__state">
+          <div data-run-status class="novel-run-status"></div>
+          <p data-run-progress></p>
+          <p data-run-elapsed></p>
+          <p data-run-note class="novel-summary__note"></p>
+        </div>
+      </section>
+
+      <div class="novel-inspector-grid">
+        <section class="novel-workflow" aria-labelledby="novel-workflow-title">
+          <div class="novel-section-heading">
+            <div>
+              <p class="eyebrow">Execution history</p>
+              <h2 id="novel-workflow-title">Workflow</h2>
+            </div>
+            <p>Tap any stage for technical details.</p>
+          </div>
+          <div data-run-steps class="novel-step-list"></div>
+        </section>
+
+        <aside class="novel-side-column">
+          <section data-step-detail class="novel-step-detail" aria-live="polite"></section>
+          <section class="novel-activity" aria-labelledby="novel-activity-title">
+            <div class="novel-section-heading novel-section-heading--compact">
+              <div>
+                <p class="eyebrow">Recent</p>
+                <h2 id="novel-activity-title">Activity</h2>
+              </div>
+            </div>
+            <ol data-run-activity></ol>
+          </section>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    import { mountNovelRunInspector } from '../../lib/novelRunInspector.ts';
+    const firebaseConfig = {
+      apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY,
+      authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN,
+      projectId: import.meta.env.PUBLIC_FIREBASE_PROJECT_ID,
+      databaseURL: import.meta.env.PUBLIC_FIREBASE_DATABASE_URL,
+      storageBucket: import.meta.env.PUBLIC_FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: import.meta.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+      appId: import.meta.env.PUBLIC_FIREBASE_APP_ID,
+      householdId: import.meta.env.PUBLIC_FAMILY_HOUSEHOLD_ID,
+    };
+    mountNovelRunInspector(firebaseConfig);
+  </script>
+</BaseLayout>
