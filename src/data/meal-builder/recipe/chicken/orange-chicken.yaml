@@ -1,0 +1,72 @@
+id: orange-chicken
+type: recipe
+status: candidate
+name_zh: 橙汁鸡块
+name_en: Orange Chicken
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - pan-seared
+  - stovetop-nonstick
+  - lunch-30
+  - family-shared
+fit_score: 4
+primary_role: protein
+main_protein_category: chicken
+main_protein_ingredient_ids:
+  - chicken-breast
+  - chicken-thighs
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 1
+  vegetable: 0
+  staple: 0
+child_coverage:
+  protein: true
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 20–30
+meal_window_minutes: 25–35
+elapsed_minutes: 25–40
+advance_start_required: false
+equipment:
+  - medium burner
+  - large nonstick pan
+burner_plan: Medium burner; cook the coated chicken in a single uncrowded layer, using two batches if needed.
+child_suitable: yes
+child_texture: 鸡肉切小块，薄粉壳挂汁后会回软；孩子份不要把外壳煎得过硬。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - one_of:
+      - chicken-breast
+      - chicken-thighs
+    role: main-protein
+steps:
+  - 准备：鸡胸切约2 cm块；鸡腿如带骨先彻底去骨，再切约2 cm块。鸡肉加生抽和水抓匀，静置5分钟。橙汁酱所有材料另碗混匀。
+  - 玉米淀粉和面粉混匀。鸡块分批放入粉中翻匀，薄薄裹满后抖掉浮粉；不要做成厚面糊。
+  - 大不粘锅中火预热，加入约1 Tbsp油。鸡块单层下锅，第一面保持2–3分钟不翻动，让粉壳定型并出现浅金黄色。
+  - 翻面后再煎约3分钟；根据大小继续翻动1–2分钟。若锅太挤则分两批，并按需补少量油。鸡肉最厚处达到165°F/74°C后先盛出。
+  - 锅中如有松散焦粉先擦掉或倒掉，只留薄油膜。倒入橙汁酱，中火边搅边煮约1–2分钟，到酱汁从水状变成能薄挂勺。
+  - 鸡块回锅快速翻匀30–60秒，让每块都裹上亮汁后立即关火；不要久煮到粉壳脱落或酱汁变成浓胶状。
+  - 孩子份稍放凉后剪成更小块；若外层某处偏硬，可去掉那一小块脆壳。
+  - 完成提示：鸡肉熟透仍嫩，表面有薄粉壳但不是炸壳；橙汁酱酸甜、明亮、薄薄挂肉，锅底不应有大量油。
+  - 安全提示：鸡肉最厚处达到165°F/74°C；鸡腿若原本带骨，去骨后检查没有碎骨或硬软骨。
+child_serving: 取不焦不硬的鸡块，稍放凉后剪小；基础酱不放辣椒。
+adult_finish: 孩子份盛出后，成人可加辣椒碎、辣椒油或现磨黑胡椒；想更酸可另挤少量橙汁或柠檬汁。
+substitutions:
+  - 鸡胸与去骨鸡腿可互换；鸡胸更快熟，鸡腿更耐煎。
+cook_ingredients:
+  - 鸡胸或鸡腿：去骨后净肉约450–550 g，切约2 cm块
+  - 鸡肉基础调味：生抽 1 tsp；水 1 Tbsp
+  - 裹粉：玉米淀粉 1/2 cup；普通面粉 1/4 cup
+  - 煎制：中性油约1.5–2 Tbsp，分批使用，不做浸油炸制
+  - 橙汁酱：100%橙汁 1/2 cup；米醋 1.5 Tbsp；生抽 1 Tbsp；糖 1.5 Tbsp；玉米淀粉 1 tsp；清水 2 Tbsp；橙皮屑 1 tsp可省
+  - 香味：姜末 1 tsp；蒜末 1小瓣，可省
