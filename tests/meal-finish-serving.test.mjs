@@ -88,7 +88,7 @@ function selectedState(serving = 'rice', finish = 'scallion') {
 
 test('Meal Builder parser requires exactly one default Finish', async () => {
   const files = await readMealFiles();
-  const path = 'recipe/beef/gyudon.yaml';
+  const path = 'recipe/pork/beijing-sauce-pork-strips.yaml';
   const record = parse(files[path]);
   record.finish_options[1].default = true;
   assert.throws(() => parseMealFiles({ ...files, [path]: stringify(record) }), /finish_options requires exactly one default/);

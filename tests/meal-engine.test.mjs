@@ -214,6 +214,9 @@ test('lost Meal Builder identities remain directly reachable after consolidation
   hasAll('pressed-tofu-pork-strips', ['whole-pork-tenderloin', 'pressed-tofu']);
   hasAll('yellow-chives-pressed-tofu-pork-strips', ['whole-pork-tenderloin', 'pressed-tofu', 'yellow-chives']);
   hasAll('guo-ta-pork-tenderloin', ['whole-pork-tenderloin', 'eggs']);
+  const guoTaEggLines = byId('guo-ta-pork-tenderloin').cookIngredientLines.filter((item) => item.includes('鸡蛋'));
+  assert.deepEqual(guoTaEggLines, ['鸡蛋：2个，用于蛋衣']);
+  assert.equal(guoTaEggLines.some((item) => item.includes('腌肉')), false);
   hasAll('jiang-ding-ground-pork-pressed-tofu', ['ground-pork', 'pressed-tofu']);
   hasAll('vietnamese-thit-kho-eggs', ['pork-shoulder-chunks', 'eggs']);
   hasAll('squid-chinese-greens-stir-fry', ['squid', 'chinese-greens']);
