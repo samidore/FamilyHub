@@ -287,6 +287,16 @@ If `pnpm run verify` again reaches Firebase Rules and fails only because this lo
 
 ## Result
 
+Status: PASS
+
+- Active Recipe count: 141 before restoration, 149 after restoration.
+- Reactivated: `beijing-sauce-pork-strips`, `pressed-tofu-pork-strips`, `yellow-chives-pressed-tofu-pork-strips`, `guo-ta-pork-tenderloin`, `jiang-ding-ground-pork-pressed-tofu`, `vietnamese-thit-kho-eggs`, `ginger-scallion-squid`, and `squid-bell-pepper-onion-stir-fry`.
+- Consolidated paths changed: pure pork-slice Finish path in `beijing-sauce-pork-strips`; `soup-addons` potato; chicken vegetable `one_of` garlic-chives; tomato scrambled eggs noodles Serving/Cook path; squid Chinese-greens identity; ground-pork mixed Recipe jiang-ding Finish removed.
+- Strict baseline audit: 200/200 reachable; 0 `NOT REACHABLE` items. The baseline-derived invariant is committed in `tests/meal-engine.test.mjs`.
+- Validation passed: strict validation/privacy, Astro check (0 errors), build, audit, 216 unit tests, and 50 browser tests.
+- Firebase Rules validation reached the emulator but was blocked by the environment because it could not spawn `java -version`; product/data validation is otherwise passing.
+- Commits: `90f6d65` restoration, `f5a78bb` full reachability invariant, final validation result commit follows.
+
 Append a concise `## Result` containing:
 
 - `Status: PASS / FAIL / BLOCKED`;
