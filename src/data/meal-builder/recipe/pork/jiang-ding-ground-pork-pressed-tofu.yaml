@@ -3,7 +3,13 @@ type: recipe
 status: candidate
 name_zh: 酱丁
 name_en: Jiang Ding Ground Pork with Pressed Tofu
-tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, family-shared]
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-30
+  - family-shared
 fit_score: 5
 primary_role: protein
 main_protein_category: pork
@@ -14,14 +20,16 @@ meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
 child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids: [rice, noodles]
-active_minutes: 15
-meal_window_minutes: 25
-elapsed_minutes: 25
+active_minutes: 15–25
+meal_window_minutes: 20–35
+elapsed_minutes: 20–40
 advance_start_required: false
-equipment: [high-output burner, wok / iron pan]
+equipment:
+  - high-output burner
+  - wok / iron pan
 burner_plan: High-output burner for browning the ground pork.
 child_suitable: yes
-child_texture: Break the pork into fine pieces.
+child_texture: 可通过切小、炖软或剪碎形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -33,8 +41,18 @@ ingredients:
     role: main-protein
   - ingredient_id: pressed-tofu
     role: supporting-protein
-steps: [Brown the ground pork, add diced pressed tofu, and toss with sweet bean sauce until the mixture is dry and evenly coated.]
-child_serving: Break into small pieces.
-adult_finish: Add chili at the table if wanted.
+steps:
+  - 准备：香干切成与肉末颗粒接近的小丁；姜5 g切末；酱丁汁全部混匀，基础锅不加辣。
+  - 炒锅中大火加2 tsp油，下姜末10秒；加入猪绞肉，用锅铲压散，炒到完全变色并出现少量褐色焦点。
+  - 加入香干丁，大火翻炒1–2分钟，让香干表面热透略干；倒入酱丁汁，保持中大火持续翻炒1–2分钟。
+  - 汁从水状变成薄亮层、肉末和香干丁均匀着色且锅底基本干爽时关火。
+  - 孩子份可少带浓酱；成人可用作拌饭/拌面浇头。
+  - 完成提示：肉末松散熟透、香干丁有嚼感但不干硬；酱汁薄裹、不积水。
+  - 安全提示：绞肉或含绞肉馅中心达到160°F/71°C。
+child_serving: 取较嫩、较淡的部分，必要时剪成小块。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
-cook_ingredients: [ground pork 300 g, pressed tofu 225 g, sweet bean sauce]
+cook_ingredients:
+  - 猪绞肉：300 g
+  - 香干：200 g，切约7–8 mm丁
+  - 酱丁汁：甜面酱 1.5 Tbsp；生抽 1 Tbsp；绍兴酒 1 Tbsp；糖 1/2 tsp；水 3 Tbsp

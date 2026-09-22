@@ -3,7 +3,13 @@ type: recipe
 status: candidate
 name_zh: 京酱肉丝
 name_en: Beijing Sweet-Bean-Sauce Pork Strips
-tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-45, family-shared]
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-45
+  - family-shared
 fit_score: 5
 primary_role: protein
 main_protein_category: pork
@@ -13,15 +19,19 @@ vegetable_ingredient_ids: []
 meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
 child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids: [rice]
-active_minutes: 20
-meal_window_minutes: 35
-elapsed_minutes: 35
+recommended_staple_ingredient_ids:
+  - rice
+  - steamed-buns
+active_minutes: 20–35
+meal_window_minutes: 30–45
+elapsed_minutes: 35–60
 advance_start_required: false
-equipment: [high-output burner, wok / iron pan]
-burner_plan: High-output burner for a short pork-slice stir-fry.
+equipment:
+  - high-output burner
+  - wok / iron pan
+burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: yes
-child_texture: Slice thinly and cut the cooked pork short for children.
+child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -35,19 +45,32 @@ finish_options:
   - id: beijing-sauce
     label_zh: 京酱
     default: true
-    cook_ingredients: [sweet bean sauce, soy sauce, water]
-    steps: [Stir the sweet bean sauce smooth, return the pork, and coat briefly until glossy.]
+    cook_ingredients:
+      - 葱白：3–4根，切5 cm细丝，用于垫底/同食
+      - 京酱汁：水 1/4 cup；甜面酱 2.5 Tbsp；老抽 1/2 tsp；黑醋 1/4 tsp；糖 1 tsp；生抽 1 Tbsp
+    steps:
+      - 原锅保持中大火，倒入京酱汁，不断搅拌至开始连续冒泡；肉丝回锅快速翻炒30–60秒，让汁均匀包裹。
+      - 当酱汁从流动液体变成薄亮层、锅底没有一滩汁时立即关火；盛在葱丝上，孩子份先取肉丝并剪短。
   - id: ginger
     label_zh: 姜烧
     default: false
     display_name_zh: 日式姜烧猪肉
-    cook_ingredients: [ginger, soy sauce, mirin, sake]
-    steps: [Sear the pork slices, add ginger sauce, and reduce briefly without vegetables.]
+    cook_ingredients:
+      - 姜：15 g，切细丝；葱白可省略
+      - 姜烧汁：清酒 1 Tbsp；味醂 1 Tbsp；生抽 1 Tbsp；水 2 Tbsp；糖 1/2 tsp
+    steps:
+      - 肉丝炒至约八成熟先盛出；原锅下姜丝炒香，加入姜烧汁煮开，肉丝回锅快速翻匀至薄亮挂汁，立即关火。
 steps:
-  - Slice pork tenderloin thinly across the grain and marinate briefly.
-  - Stir-fry the pork in one layer until nearly cooked, then remove.
-  - Return pork with the selected finish and toss briefly until cooked through and glossy.
-child_serving: Cut the tender pork into short pieces.
-adult_finish: Add heat at the table if wanted.
+  - 准备：猪里脊逆纹切细丝，加入盐 1/4 tsp、绍兴酒 1 tsp、白胡椒少许、玉米淀粉 2 tsp和中性油 1 tsp抓匀，静置15分钟；葱白切细丝，所选 Finish 的酱汁搅匀。
+  - 炒锅大火预热，加2 tsp油；肉丝迅速摊开并翻炒，颜色由粉转白、约八成熟时盛出。
+  - 按所选 Finish 完成酱汁；肉丝回锅快速翻炒至全部熟透、酱汁薄亮挂肉。
+  - 关火后盛出；不要继续把汁收成咸稠浆。孩子份先取嫩肉并剪短。
+  - 完成提示：肉丝根根分明、嫩而不柴；酱汁均匀挂肉且不成厚浆。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；薄肉丝实际做至无生肉色。
+child_serving: 取较嫩、较淡的部分，必要时剪成小块。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
-cook_ingredients: [pork tenderloin 340 g, finish sauce, neutral oil]
+cook_ingredients:
+  - 猪里脊：225 g，切细丝
+  - 肉丝腌料：盐 1/4 tsp；绍兴酒 1 tsp；白胡椒 1小撮；玉米淀粉 2 tsp；中性油 1 tsp
+  - 所选 Finish 的酱汁和葱白丝，按上方 Finish 准备

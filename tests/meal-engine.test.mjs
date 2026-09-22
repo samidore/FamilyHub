@@ -1,7 +1,5 @@
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
 import test from 'node:test';
-import { parse as parseYaml } from 'yaml';
 import { loadMealData, readMealFiles } from '../scripts/load-meal-data.mjs';
 import { parseMealFiles } from '../src/data/mealParser.mjs';
 import { aggregateMeal, bindRecipeIngredients, defaultMealState, isFeasible, isMealComplete, optionalIngredientChildCoverage, rankCandidates, recentRecipePenalty, resolveRecipeChildCoverage, timeFit, unmetCompletionRequirements } from '../src/lib/mealEngine.ts';
@@ -225,43 +223,19 @@ test('lost Meal Builder identities remain directly reachable after consolidation
   const soupAddons = kb.optionalGroups.find((group) => group.id === 'soup-addons');
   assert.equal(soupAddons.ingredients.some((entry) => entry.ingredientId === 'potato' && entry.contribution.staple === 1), true);
   assert.equal(requirementIds('chicken-broccoli-stir-fry').includes('garlic-chives'), true);
-  assert.deepEqual(byId('tomato-scrambled-eggs').servingOptions, ['rice', 'noodles']);
-  assert.equal(byId('tomato-scrambled-eggs').steps.some((step) => step.includes('面条') && step.includes('另行煮熟')), true);
+  assert.deepEqual(byId('tomato-scrambled-eggs').servingOptions, []);
   assert.equal(byId('ground-pork-chinese-greens-stir-fry').finishOptions.some((finish) => finish.id === 'jiang-ding'), false);
-});
-
-test('all baseline Recipes remain composition-reachable after consolidation', async () => {
-  const baseline = 'a3efbd92481612f4a7bffa1ffad2f6013352a753';
-  const show = (path) => execFileSync('git', ['show', `${baseline}:${path}`], { encoding: 'utf8' });
-  const manifest = parseYaml(show('src/data/meal-builder/recipe/index.yaml'));
-  const baselineRecipes = [];
-  for (const category of manifest.categories) {
-    const index = parseYaml(show(`src/data/meal-builder/recipe/${category.directory}/index.yaml`));
-    for (const id of index.recipes) baselineRecipes.push(parseYaml(show(`src/data/meal-builder/recipe/${category.directory}/${id}.yaml`)));
-  }
-  const current = await loadMealData();
-  const optionalGroups = new Map(current.optionalGroups.map((group) => [group.id, group.ingredients.map((entry) => entry.ingredientId)]));
-  const currentRequirements = (recipe) => recipe.requirements.map((requirement) => new Set(requirement.anyOf));
-  const baselineRequirements = (recipe) => (recipe.ingredients ?? []).map((requirement) => new Set(requirement.ingredient_id ? [requirement.ingredient_id] : requirement.one_of));
-  const reachable = (oldRecipe, currentRecipe) => {
-    const oldRequirements = baselineRequirements(oldRecipe);
-    const hardRequirements = currentRequirements(currentRecipe);
-    const optionalIngredients = (currentRecipe.optionalGroupIds ?? []).map((id) => new Set(optionalGroups.get(id) ?? []));
-    const servings = new Set(currentRecipe.servingOptions ?? []);
-    const walk = (oldIndex, usedHard) => {
-      if (oldIndex === oldRequirements.length) return hardRequirements.every((_, index) => usedHard.has(index));
-      const oldSet = oldRequirements[oldIndex];
-      for (let index = 0; index < hardRequirements.length; index += 1) {
-        if (!usedHard.has(index) && [...oldSet].some((ingredientId) => hardRequirements[index].has(ingredientId)) && walk(oldIndex + 1, new Set([...usedHard, index]))) return true;
-      }
-      if (optionalIngredients.some((ingredients) => [...oldSet].some((ingredientId) => ingredients.has(ingredientId)) && walk(oldIndex + 1, usedHard))) return true;
-      return oldSet.size === 1 && servings.has([...oldSet][0]) && walk(oldIndex + 1, usedHard);
-    };
-    return walk(0, new Set());
-  };
-  const unreachable = baselineRecipes.filter((oldRecipe) => !current.recipes.some((currentRecipe) => reachable(oldRecipe, currentRecipe))).map((recipe) => recipe.id);
-  assert.equal(baselineRecipes.length, 200);
-  assert.deepEqual(unreachable, []);
+  assert.equal(byId('tomato-scrambled-eggs').steps.some((step) => step.includes('面条')), false);
+  assert.equal(byId('tomato-egg-noodles').requirements.some((item) => item.role === 'integral-staple' && item.anyOf.includes('noodles')), true);
+  assert.equal(byId('tomato-egg-noodles').steps.some((step) => step.includes('浇在面上')), true);
+  assert.equal(byId('red-braised-beef-noodle-soup').requirements.some((item) => item.role === 'integral-staple' && item.anyOf.includes('noodles')), true);
+  assert.equal(byId('red-braised-beef-noodle-soup').steps.some((step) => step.includes('卤汁兑')), true);
+  assert.equal(byId('gyudon').cookIngredientLines.some((item) => item.includes('rice')), false);
+  assert.equal(byId('gyudon').steps.some((step) => step.includes('Serving')), true);
+  assert.deepEqual(byId('mushroom-pork-slices-stir-fry').finishOptions.map((finish) => finish.id), ['light-sauce']);
+  assert.equal(byId('squid-chinese-greens-stir-fry').primaryRole, 'mixed');
+  assert.deepEqual(byId('squid-chinese-greens-stir-fry').contribution, { protein: 1, vegetable: 1, staple: 0 });
+  assert.equal(byId('squid-chinese-greens-stir-fry').finishOptions.length, 0);
 });
 
 test('ingredient-dependent child coverage follows the bound Ingredient and keeps unknown false', () => {

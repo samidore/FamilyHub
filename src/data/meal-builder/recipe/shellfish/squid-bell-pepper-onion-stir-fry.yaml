@@ -3,8 +3,15 @@ type: recipe
 status: candidate
 name_zh: 甜椒洋葱炒鱿鱼
 name_en: Squid with Bell Pepper and Onion
-tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, family-shared]
-fit_score: 4
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-30
+  - child-support-protein
+  - two-vegetable-ready
+fit_score: 3
 primary_role: mixed
 main_protein_category: shellfish
 main_protein_ingredient_ids: [squid]
@@ -14,14 +21,16 @@ meal_contribution: { protein: 1, vegetable: 1, staple: 0 }
 child_coverage: { protein: false, vegetable: ingredient-dependent }
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids: [rice]
-active_minutes: 15
-meal_window_minutes: 25
-elapsed_minutes: 25
+active_minutes: 15–25
+meal_window_minutes: 20–35
+elapsed_minutes: 20–40
 advance_start_required: false
-equipment: [high-output burner, wok / iron pan]
-burner_plan: High heat for a short mixed stir-fry.
+equipment:
+  - high-output burner
+  - wok / iron pan
+burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: conditional
-child_texture: Cut squid and vegetables into small pieces.
+child_texture: 鱿鱼天然较有嚼劲，不适合作为稳定的孩子软蛋白来源。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -35,8 +44,19 @@ ingredients:
     role: vegetable
   - ingredient_id: onion
     role: vegetable
-steps: [Stir-fry onion and bell pepper until just tender, add briefly seared squid, and toss with light sauce until the squid is opaque.]
-child_serving: Cut the squid and vegetables small.
-adult_finish: Add chili at the table.
+steps:
+  - 准备：鱿鱼彻底擦干并切成大小一致的片/圈；甜椒、洋葱切好并沥干；所有调味先准备好。
+  - 锅大火预热后加油；鱿鱼单层下锅，刚变不透明时立即翻动，第一轮只做到约七八成熟并盛出。
+  - 原锅先把甜椒和洋葱炒到刚断生；硬菜可预先焯30–60秒。
+  - 鱿鱼回锅，加入轻盐汁，快速翻10–30秒；刚全部不透明、仍有弹性时立即关火。
+  - 孩子份把鱿鱼剪小，蔬菜切成易夹取的小段。
+  - 完成提示：海鲜刚熟、仍有弹性；酱汁薄薄附着，不靠长时间收浓。
+  - 安全提示：鱿鱼煮至肉体不透明、质地刚变紧实；避免继续久煮变老。
+child_serving: 如给孩子仅取非常小、嫩的部分；另配软蛋白。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
-cook_ingredients: [squid 450 g, bell pepper 200 g, onion 150 g, light stir-fry sauce]
+cook_ingredients:
+  - 鱿鱼：450 g
+  - 甜椒：300–450 g
+  - 洋葱：300–450 g
+  - 轻盐鱿鱼汁：水 2 Tbsp；生抽 2 tsp；蚝油 1 tsp；绍兴酒 1 Tbsp；糖 1/4 tsp

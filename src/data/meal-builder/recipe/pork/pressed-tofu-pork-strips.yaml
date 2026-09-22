@@ -3,7 +3,13 @@ type: recipe
 status: candidate
 name_zh: 香干肉丝
 name_en: Shredded Pork with Pressed Tofu
-tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-45, family-shared]
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-45
+  - family-shared
 fit_score: 5
 primary_role: protein
 main_protein_category: pork
@@ -14,14 +20,16 @@ meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
 child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids: [rice]
-active_minutes: 20
-meal_window_minutes: 35
-elapsed_minutes: 35
+active_minutes: 20–35
+meal_window_minutes: 30–45
+elapsed_minutes: 35–60
 advance_start_required: false
-equipment: [high-output burner, wok / iron pan]
-burner_plan: High-output burner for a quick stir-fry.
+equipment:
+  - high-output burner
+  - wok / iron pan
+burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: yes
-child_texture: Cut the cooked pork and tofu short.
+child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -33,8 +41,19 @@ ingredients:
     role: main-protein
   - ingredient_id: pressed-tofu
     role: supporting-protein
-steps: [Stir-fry the pork, then pressed tofu, and toss both with a light sauce until evenly coated.]
-child_serving: Cut into short pieces.
-adult_finish: Season at the table.
+steps:
+  - 准备：肉丝与腌料抓匀，静置15分钟；香干切与肉丝近似粗细，姜5 g、蒜2瓣切末，收尾调味预先混匀。
+  - 炒锅大火加1 Tbsp油；肉丝炒到完全变色、约八成熟，立即盛出。
+  - 原锅下姜蒜炒15秒；加入香干，大火翻炒1–2分钟让表面热透。
+  - 肉丝回锅，倒入收尾调味，快速翻炒30–60秒，直到香干和肉丝均匀着色、锅底没有多余水。
+  - 关火后再淋芝麻油（若已混入调味可省此步）；孩子份剪短肉丝。
+  - 完成提示：香干热透但不干硬；肉丝嫩；锅底基本干爽、表面只有薄薄调味。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；薄肉丝实际做至无生肉色。
+child_serving: 取较嫩、较淡的部分，必要时剪成小块。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
-cook_ingredients: [pork tenderloin 225 g, pressed tofu 225 g, light stir-fry sauce]
+cook_ingredients:
+  - 猪里脊：225 g，切细丝
+  - 香干：225 g，切细丝
+  - 肉丝腌料：玉米淀粉 1.5 tsp；水 3 Tbsp；糖 1/8 tsp；绍兴酒 2 tsp；生抽 1 Tbsp
+  - 收尾调味：老抽 1/2 tsp；糖 1/4 tsp；芝麻油 1 tsp；水 1 Tbsp

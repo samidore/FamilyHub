@@ -3,7 +3,13 @@ type: recipe
 status: candidate
 name_zh: 锅塌里脊
 name_en: Guo Ta Pork Tenderloin
-tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, lunch-45, family-shared]
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - pan-seared
+  - stovetop-nonstick
+  - lunch-45
+  - family-shared
 fit_score: 3
 primary_role: protein
 main_protein_category: pork
@@ -14,14 +20,16 @@ meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
 child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids: [rice]
-active_minutes: 20
-meal_window_minutes: 35
-elapsed_minutes: 35
+active_minutes: 20–35
+meal_window_minutes: 30–45
+elapsed_minutes: 35–60
 advance_start_required: false
-equipment: [medium burner, nonstick pan]
+equipment:
+  - medium burner
+  - nonstick pan or iron pan as appropriate
 burner_plan: Medium burner for setting the egg coating, then a short covered braise.
 child_suitable: yes
-child_texture: Cut the tender pork into short pieces.
+child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -33,8 +41,19 @@ ingredients:
     role: main-protein
   - ingredient_id: eggs
     role: supporting-protein
-steps: [Coat thin pork slices in beaten egg, pan-sear each side until set, then cover briefly with a light braising sauce until cooked through.]
-child_serving: Cut into short pieces and check for doneness.
-adult_finish: Serve with the reduced pan juices.
+steps:
+  - 准备：里脊切约5 mm片；加入生抽2 tsp、绍兴酒1 tsp、盐1/4 tsp、玉米淀粉1 Tbsp抓匀，静置15分钟；蛋衣和塌汁分别搅匀。
+  - 肉片逐片薄裹蛋衣；不粘锅中火加1 Tbsp油，单层排入，第一面蛋衣凝固并浅金黄后翻面，第二面定型后分批完成。
+  - 把全部肉片平铺回锅，沿锅边倒入塌汁，转中小火，盖盖焖2–3分钟，让肉片熟透并吸汁。
+  - 开盖轻晃锅；汁量剩薄薄一层、蛋衣软嫩而不泡烂时关火，静置3分钟。
+  - 完成提示：蛋衣完整软嫩；肉片熟透；锅底只留薄薄鲜汁，不是汤。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；薄肉片实际做至无生肉色。
+child_serving: 取较嫩、较淡的部分，必要时剪成小块。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
-cook_ingredients: [pork tenderloin 340 g, eggs 2, light braising sauce]
+cook_ingredients:
+  - 猪里脊：340 g，切约5 mm片
+  - 鸡蛋：2个用于腌肉；另2个用于蛋衣
+  - 肉片短腌：生抽 2 tsp；绍兴酒 1 tsp；盐 1/4 tsp；玉米淀粉 1 Tbsp
+  - 蛋衣：鸡蛋 2个；玉米淀粉 1 Tbsp
+  - 塌汁：水或低盐高汤 1/3 cup；生抽 1 Tbsp；绍兴酒 1 Tbsp；糖 1/2 tsp；芝麻油 1/2 tsp

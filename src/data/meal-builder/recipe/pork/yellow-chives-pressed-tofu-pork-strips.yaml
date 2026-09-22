@@ -3,7 +3,13 @@ type: recipe
 status: candidate
 name_zh: 韭黄香干肉丝
 name_en: Pork and Pressed Tofu with Yellow Chives
-tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-45, family-shared]
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-45
+  - family-shared
 fit_score: 5
 primary_role: mixed
 main_protein_category: pork
@@ -14,14 +20,16 @@ meal_contribution: { protein: 1, vegetable: 1, staple: 0 }
 child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids: [rice]
-active_minutes: 20
-meal_window_minutes: 35
-elapsed_minutes: 35
+active_minutes: 20–30
+meal_window_minutes: 30–45
+elapsed_minutes: 30–45
 advance_start_required: false
-equipment: [high-output burner, wok / iron pan]
-burner_plan: High-output burner for a quick mixed stir-fry.
+equipment:
+  - high-output burner
+  - wok / iron pan
+burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: yes
-child_texture: Cut the cooked pork short.
+child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -35,8 +43,20 @@ ingredients:
     role: supporting-protein
   - ingredient_id: yellow-chives
     role: vegetable
-steps: [Stir-fry pork, pressed tofu, and yellow chives in that order until the pork is fully cooked and the chives just tender.]
-child_serving: Cut the pork and chives short.
-adult_finish: Season at the table.
+steps:
+  - 准备：猪里脊逆纹切约3 mm薄片或细丝；腌料抓到水分基本被吸收，静置10–15分钟；香干切丝，韭黄切段，炒汁下锅前搅匀。
+  - 炒锅大火预热，加1 Tbsp中性油；猪肉摊成单层，约30–45秒底面变白后快速翻炒，炒到约七八成熟立即盛出。
+  - 原锅补1 tsp油，下姜末5 g和蒜末2瓣炒约15秒；加入香干、韭黄，炒到刚断生。
+  - 猪肉回锅，沿锅边倒入炒汁，持续翻炒30–60秒；汁变薄亮且不积水时关火。
+  - 离火静置约3分钟再盛孩子份；孩子份剪短肉丝，成人辣味另加。
+  - 完成提示：肉片嫩、无生中心；蔬菜刚熟仍有形；锅底只剩薄薄亮汁。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；薄肉丝实际做至无生肉色。
+child_serving: 取较嫩、较淡的部分，必要时剪成小块。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
-cook_ingredients: [pork tenderloin 340 g, pressed tofu 300 g, yellow chives 200 g]
+cook_ingredients:
+  - 猪里脊：340 g
+  - 香干：200 g
+  - 韭黄：300–450 g
+  - 肉片腌料：水 2 Tbsp；生抽 2 tsp；绍兴酒 2 tsp；玉米淀粉 2 tsp；中性油 1 tsp
+  - 家庭轻盐炒汁：水或低盐高汤 3 Tbsp；生抽 2 tsp；蚝油 2 tsp；糖 1/2 tsp；玉米淀粉 1 tsp

@@ -3,48 +3,25 @@ type: recipe
 status: candidate
 name_zh: 时蔬炒蛋
 name_en: Flexible Vegetable Scrambled Eggs
-tags:
-  - light-seasoning
-  - non-spicy-base
-  - stir-fried
-  - stovetop-wok
-  - lunch-30
-  - family-shared
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, family-shared]
 fit_score: 5
 primary_role: mixed
 main_protein_category: egg
-main_protein_ingredient_ids:
-  - eggs
+main_protein_ingredient_ids: [eggs]
 supporting_protein_ingredient_ids: []
-vegetable_ingredient_ids:
-  - tomato
-  - spinach
-  - luffa
-  - zucchini
-  - garlic-chives
-  - yellow-chives
-  - oyster-mushrooms
-meal_contribution:
-  protein: 0.5
-  vegetable: 1
-  staple: 0
-child_coverage:
-  protein: true
-  vegetable: ingredient-dependent
+vegetable_ingredient_ids: [tomato, spinach, luffa, zucchini, garlic-chives, yellow-chives, oyster-mushrooms]
+meal_contribution: { protein: 0.5, vegetable: 1, staple: 0 }
+child_coverage: { protein: true, vegetable: ingredient-dependent }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
-serving_options: [rice, noodles]
+recommended_staple_ingredient_ids: [rice]
 active_minutes: 15–25
-meal_window_minutes: 20–35
+meal_window_minutes: 20–40
 elapsed_minutes: 20–40
 advance_start_required: false
-equipment:
-  - high-output burner
-  - wok / iron pan
+equipment: [high-output burner, wok / iron pan]
 burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: yes
-child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
+child_texture: 可通过切小、炒软或剪碎形成适合孩子的质地。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -54,26 +31,18 @@ detail_level: cookable
 ingredients:
   - ingredient_id: eggs
     role: main-protein
-  - one_of:
-      - tomato
-      - spinach
-      - luffa
-      - zucchini
-      - garlic-chives
-      - yellow-chives
-      - oyster-mushrooms
+  - one_of: [tomato, spinach, luffa, zucchini, garlic-chives, yellow-chives, oyster-mushrooms]
     role: vegetable
 steps:
-  - 准备：鸡蛋加盐和水打匀；所选蔬菜按质地切成2–3 cm或适合快炒的大小，硬梗先焯，葱花可选。
+  - 准备：鸡蛋加盐和水打匀；所选蔬菜按质地切成适合快炒的大小，硬梗先焯。
   - 炒锅中大火加2 tsp油，倒蛋液；推成大块，约七成熟仍湿润时盛出。
-  - 原锅加1 tsp油，下所选蔬菜和1/4 tsp盐，按质地中大火炒到刚熟；蘑菇、瓜类或叶菜只需炒到失去生硬，硬梗材料可加2 Tbsp水短焖。
+  - 原锅加1 tsp油，下所选蔬菜和1/4 tsp盐，按质地炒到刚熟；硬梗材料可加2 Tbsp水短焖。
   - 鸡蛋回锅，轻轻翻折，让蔬菜的自然汁水薄薄裹住蛋块。
-  - 选择面条时，面条另行煮熟并沥干；将番茄炒蛋浇在面上拌匀后食用。
-  - 蛋液最后完全凝固、所选蔬菜仍有形时关火；不要让锅底积水。
-  - 完成提示：鸡蛋软嫩、完全凝固；所选蔬菜刚熟仍有形；锅底只有少量自然汁水。
+  - 蛋液完全凝固、蔬菜仍有形时关火；不要让锅底积水。
+  - 完成提示：鸡蛋软嫩、完全凝固；所选蔬菜刚熟仍有形。
   - 安全提示：含蛋菜按家庭安全底线做到蛋液完全凝固；蛋类菜中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+adult_finish: 孩子份盛出后，成人可另加辣椒油或更重调味。
 substitutions: []
 cook_ingredients:
   - 鸡蛋：4个

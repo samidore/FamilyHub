@@ -3,7 +3,12 @@ type: recipe
 status: candidate
 name_zh: 姜葱鱿鱼
 name_en: Ginger-Scallion Squid
-tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, family-shared]
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-30
 fit_score: 4
 primary_role: protein
 main_protein_category: shellfish
@@ -14,14 +19,17 @@ meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
 child_coverage: { protein: false, vegetable: false }
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids: [rice]
-active_minutes: 15
-meal_window_minutes: 25
-elapsed_minutes: 25
+active_minutes: 10–15
+meal_window_minutes: 15–25
+elapsed_minutes: 15–25
 advance_start_required: false
-equipment: [high-output burner, wok / iron pan]
-burner_plan: High heat for a very short squid stir-fry.
+equipment:
+  - high-output burner
+  - wok / iron pan
+  - saucepan for blanching
+burner_plan: Brief blanch on medium burner, then high-output wok.
 child_suitable: conditional
-child_texture: Squid is naturally springy; cut very small if served.
+child_texture: 鱿鱼天然较有嚼劲，不适合作为稳定的孩子软蛋白来源。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -31,8 +39,17 @@ detail_level: cookable
 ingredients:
   - ingredient_id: squid
     role: main-protein
-steps: [Sear dry squid briefly, stir-fry ginger and scallion, return squid, and toss for only a few seconds before serving.]
-child_serving: Serve only a small tender portion if appropriate.
-adult_finish: Add chili at the table.
+steps:
+  - 鱿鱼清理后切一口大小并擦干；姜切丝、葱切段；调味汁预混。
+  - 另锅水大开，鱿鱼下锅约30秒、刚开始卷曲就立即捞出彻底沥干。
+  - 炒锅大火预热，加2 tsp油，下姜丝和葱白10秒；下鱿鱼大火快速翻炒，沿锅边淋绍兴酒和调味汁。
+  - 汁一沸、鱿鱼全部不透明时立即关火，撒葱绿装盘；不要留在热锅中继续变韧。
+  - 完成提示：鱿鱼刚熟、仍有弹性；酱汁薄薄附着。
+  - 安全提示：鱿鱼煮至肉体不透明、质地刚变紧实；避免继续久煮变老。
+child_serving: 本 Recipe 不计 Child Protein。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒、黑胡椒或孜然。
 substitutions: []
-cook_ingredients: [squid 450 g, ginger, scallions, light soy sauce]
+cook_ingredients:
+  - 鱿鱼：450 g
+  - 姜：10 g；葱：3根；中性油 2 tsp
+  - 调味汁：生抽 2 tsp；绍兴酒 1 Tbsp；糖 1/4 tsp；水 1 Tbsp
