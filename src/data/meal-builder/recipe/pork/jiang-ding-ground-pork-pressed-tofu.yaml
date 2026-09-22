@@ -1,0 +1,40 @@
+id: jiang-ding-ground-pork-pressed-tofu
+type: recipe
+status: candidate
+name_zh: 酱丁
+name_en: Jiang Ding Ground Pork with Pressed Tofu
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, family-shared]
+fit_score: 5
+primary_role: protein
+main_protein_category: pork
+main_protein_ingredient_ids: [ground-pork]
+supporting_protein_ingredient_ids: [pressed-tofu]
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice, noodles]
+active_minutes: 15
+meal_window_minutes: 25
+elapsed_minutes: 25
+advance_start_required: false
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High-output burner for browning the ground pork.
+child_suitable: yes
+child_texture: Break the pork into fine pieces.
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: ground-pork
+    role: main-protein
+  - ingredient_id: pressed-tofu
+    role: supporting-protein
+steps: [Brown the ground pork, add diced pressed tofu, and toss with sweet bean sauce until the mixture is dry and evenly coated.]
+child_serving: Break into small pieces.
+adult_finish: Add chili at the table if wanted.
+substitutions: []
+cook_ingredients: [ground pork 300 g, pressed tofu 225 g, sweet bean sauce]

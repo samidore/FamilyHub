@@ -1,0 +1,42 @@
+id: yellow-chives-pressed-tofu-pork-strips
+type: recipe
+status: candidate
+name_zh: 韭黄香干肉丝
+name_en: Pork and Pressed Tofu with Yellow Chives
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-45, family-shared]
+fit_score: 5
+primary_role: mixed
+main_protein_category: pork
+main_protein_ingredient_ids: [whole-pork-tenderloin]
+supporting_protein_ingredient_ids: [pressed-tofu]
+vegetable_ingredient_ids: [yellow-chives]
+meal_contribution: { protein: 1, vegetable: 1, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 20
+meal_window_minutes: 35
+elapsed_minutes: 35
+advance_start_required: false
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High-output burner for a quick mixed stir-fry.
+child_suitable: yes
+child_texture: Cut the cooked pork short.
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: whole-pork-tenderloin
+    role: main-protein
+  - ingredient_id: pressed-tofu
+    role: supporting-protein
+  - ingredient_id: yellow-chives
+    role: vegetable
+steps: [Stir-fry pork, pressed tofu, and yellow chives in that order until the pork is fully cooked and the chives just tender.]
+child_serving: Cut the pork and chives short.
+adult_finish: Season at the table.
+substitutions: []
+cook_ingredients: [pork tenderloin 340 g, pressed tofu 300 g, yellow chives 200 g]

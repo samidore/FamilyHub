@@ -1,0 +1,40 @@
+id: vietnamese-thit-kho-eggs
+type: recipe
+status: candidate
+name_zh: 越南猪肉卤蛋
+name_en: Vietnamese Thit Kho Pork and Eggs
+tags: [light-seasoning, non-spicy-base, braised, stovetop-nonstick, lunch-45, family-shared]
+fit_score: 5
+primary_role: protein
+main_protein_category: pork
+main_protein_ingredient_ids: [pork-shoulder-chunks]
+supporting_protein_ingredient_ids: [eggs]
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 20
+meal_window_minutes: 60
+elapsed_minutes: 60
+advance_start_required: false
+equipment: [medium burner, covered pot / braiser]
+burner_plan: Medium burner for a covered pork braise.
+child_suitable: yes
+child_texture: Remove any tough pieces and cut the pork small.
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: pork-shoulder-chunks
+    role: main-protein
+  - ingredient_id: eggs
+    role: supporting-protein
+steps: [Brown the pork, add the braising liquid, cover and simmer until tender, then add boiled eggs to absorb the sauce.]
+child_serving: Serve soft pork and quartered egg with sauce lightly applied.
+adult_finish: Add pepper at the table.
+substitutions: []
+cook_ingredients: [pork shoulder chunks 600 g, boiled eggs 4, thit kho braising liquid]

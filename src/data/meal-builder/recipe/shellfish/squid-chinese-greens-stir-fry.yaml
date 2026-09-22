@@ -1,8 +1,8 @@
 id: squid-chinese-greens-stir-fry
 type: recipe
 status: candidate
-name_zh: 清炒鱿鱼
-name_en: Flexible Squid Stir-fry
+name_zh: 青菜炒鱿鱼
+name_en: Squid Stir-fried with Chinese Greens
 tags:
   - light-seasoning
   - non-spicy-base
@@ -45,6 +45,8 @@ detail_level: cookable
 ingredients:
   - ingredient_id: squid
     role: main-protein
+  - ingredient_id: chinese-greens
+    role: vegetable
 finish_options:
   - id: light-sauce
     label_zh: 清炒

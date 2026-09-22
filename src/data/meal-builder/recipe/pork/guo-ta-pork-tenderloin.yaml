@@ -1,0 +1,40 @@
+id: guo-ta-pork-tenderloin
+type: recipe
+status: candidate
+name_zh: 锅塌里脊
+name_en: Guo Ta Pork Tenderloin
+tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, lunch-45, family-shared]
+fit_score: 3
+primary_role: protein
+main_protein_category: pork
+main_protein_ingredient_ids: [whole-pork-tenderloin]
+supporting_protein_ingredient_ids: [eggs]
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 20
+meal_window_minutes: 35
+elapsed_minutes: 35
+advance_start_required: false
+equipment: [medium burner, nonstick pan]
+burner_plan: Medium burner for setting the egg coating, then a short covered braise.
+child_suitable: yes
+child_texture: Cut the tender pork into short pieces.
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: whole-pork-tenderloin
+    role: main-protein
+  - ingredient_id: eggs
+    role: supporting-protein
+steps: [Coat thin pork slices in beaten egg, pan-sear each side until set, then cover briefly with a light braising sauce until cooked through.]
+child_serving: Cut into short pieces and check for doneness.
+adult_finish: Serve with the reduced pan juices.
+substitutions: []
+cook_ingredients: [pork tenderloin 340 g, eggs 2, light braising sauce]

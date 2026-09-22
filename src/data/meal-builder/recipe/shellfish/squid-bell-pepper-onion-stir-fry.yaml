@@ -1,0 +1,42 @@
+id: squid-bell-pepper-onion-stir-fry
+type: recipe
+status: candidate
+name_zh: 甜椒洋葱炒鱿鱼
+name_en: Squid with Bell Pepper and Onion
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, family-shared]
+fit_score: 4
+primary_role: mixed
+main_protein_category: shellfish
+main_protein_ingredient_ids: [squid]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: [bell-pepper, onion]
+meal_contribution: { protein: 1, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: ingredient-dependent }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 15
+meal_window_minutes: 25
+elapsed_minutes: 25
+advance_start_required: false
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High heat for a short mixed stir-fry.
+child_suitable: conditional
+child_texture: Cut squid and vegetables into small pieces.
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: squid
+    role: main-protein
+  - ingredient_id: bell-pepper
+    role: vegetable
+  - ingredient_id: onion
+    role: vegetable
+steps: [Stir-fry onion and bell pepper until just tender, add briefly seared squid, and toss with light sauce until the squid is opaque.]
+child_serving: Cut the squid and vegetables small.
+adult_finish: Add chili at the table.
+substitutions: []
+cook_ingredients: [squid 450 g, bell pepper 200 g, onion 150 g, light stir-fry sauce]

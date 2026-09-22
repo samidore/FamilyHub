@@ -34,6 +34,7 @@ child_coverage:
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice
+serving_options: [rice, noodles]
 active_minutes: 15–25
 meal_window_minutes: 20–35
 elapsed_minutes: 20–40
@@ -67,6 +68,7 @@ steps:
   - 炒锅中大火加2 tsp油，倒蛋液；推成大块，约七成熟仍湿润时盛出。
   - 原锅加1 tsp油，下所选蔬菜和1/4 tsp盐，按质地中大火炒到刚熟；蘑菇、瓜类或叶菜只需炒到失去生硬，硬梗材料可加2 Tbsp水短焖。
   - 鸡蛋回锅，轻轻翻折，让蔬菜的自然汁水薄薄裹住蛋块。
+  - 选择面条时，面条另行煮熟并沥干；将番茄炒蛋浇在面上拌匀后食用。
   - 蛋液最后完全凝固、所选蔬菜仍有形时关火；不要让锅底积水。
   - 完成提示：鸡蛋软嫩、完全凝固；所选蔬菜刚熟仍有形；锅底只有少量自然汁水。
   - 安全提示：含蛋菜按家庭安全底线做到蛋液完全凝固；蛋类菜中心达到160°F/71°C。

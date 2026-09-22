@@ -1,0 +1,53 @@
+id: beijing-sauce-pork-strips
+type: recipe
+status: candidate
+name_zh: 京酱肉丝
+name_en: Beijing Sweet-Bean-Sauce Pork Strips
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-45, family-shared]
+fit_score: 5
+primary_role: protein
+main_protein_category: pork
+main_protein_ingredient_ids: [whole-pork-tenderloin]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 20
+meal_window_minutes: 35
+elapsed_minutes: 35
+advance_start_required: false
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High-output burner for a short pork-slice stir-fry.
+child_suitable: yes
+child_texture: Slice thinly and cut the cooked pork short for children.
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: whole-pork-tenderloin
+    role: main-protein
+finish_options:
+  - id: beijing-sauce
+    label_zh: 京酱
+    default: true
+    cook_ingredients: [sweet bean sauce, soy sauce, water]
+    steps: [Stir the sweet bean sauce smooth, return the pork, and coat briefly until glossy.]
+  - id: ginger
+    label_zh: 姜烧
+    default: false
+    display_name_zh: 日式姜烧猪肉
+    cook_ingredients: [ginger, soy sauce, mirin, sake]
+    steps: [Sear the pork slices, add ginger sauce, and reduce briefly without vegetables.]
+steps:
+  - Slice pork tenderloin thinly across the grain and marinate briefly.
+  - Stir-fry the pork in one layer until nearly cooked, then remove.
+  - Return pork with the selected finish and toss briefly until cooked through and glossy.
+child_serving: Cut the tender pork into short pieces.
+adult_finish: Add heat at the table if wanted.
+substitutions: []
+cook_ingredients: [pork tenderloin 340 g, finish sauce, neutral oil]

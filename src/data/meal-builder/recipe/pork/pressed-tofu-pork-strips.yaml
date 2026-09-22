@@ -1,0 +1,40 @@
+id: pressed-tofu-pork-strips
+type: recipe
+status: candidate
+name_zh: 香干肉丝
+name_en: Shredded Pork with Pressed Tofu
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-45, family-shared]
+fit_score: 5
+primary_role: protein
+main_protein_category: pork
+main_protein_ingredient_ids: [whole-pork-tenderloin]
+supporting_protein_ingredient_ids: [pressed-tofu]
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 20
+meal_window_minutes: 35
+elapsed_minutes: 35
+advance_start_required: false
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High-output burner for a quick stir-fry.
+child_suitable: yes
+child_texture: Cut the cooked pork and tofu short.
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: whole-pork-tenderloin
+    role: main-protein
+  - ingredient_id: pressed-tofu
+    role: supporting-protein
+steps: [Stir-fry the pork, then pressed tofu, and toss both with a light sauce until evenly coated.]
+child_serving: Cut into short pieces.
+adult_finish: Season at the table.
+substitutions: []
+cook_ingredients: [pork tenderloin 225 g, pressed tofu 225 g, light stir-fry sauce]

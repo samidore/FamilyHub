@@ -199,6 +199,35 @@ test('one-of bindings auto-select one available ingredient', () => {
   assert.equal(isFeasible(item, new Set(['leaf-b']), ['leaf-b']), true);
 });
 
+test('lost Meal Builder identities remain directly reachable after consolidation', async () => {
+  const kb = await loadMealData();
+  const byId = (id) => kb.recipes.find((item) => item.id === id);
+  const requirementIds = (id) => byId(id).requirements.flatMap((requirement) => requirement.anyOf);
+  const hasAll = (id, expected) => {
+    const ids = new Set(requirementIds(id));
+    for (const ingredientId of expected) assert.equal(ids.has(ingredientId), true, `${id} must require ${ingredientId}`);
+  };
+
+  hasAll('beijing-sauce-pork-strips', ['whole-pork-tenderloin']);
+  assert.equal(requirementIds('beijing-sauce-pork-strips').includes('button-cremini-mushrooms'), false);
+  assert.deepEqual(byId('beijing-sauce-pork-strips').finishOptions.map((finish) => finish.id), ['beijing-sauce', 'ginger']);
+  hasAll('pressed-tofu-pork-strips', ['whole-pork-tenderloin', 'pressed-tofu']);
+  hasAll('yellow-chives-pressed-tofu-pork-strips', ['whole-pork-tenderloin', 'pressed-tofu', 'yellow-chives']);
+  hasAll('guo-ta-pork-tenderloin', ['whole-pork-tenderloin', 'eggs']);
+  hasAll('jiang-ding-ground-pork-pressed-tofu', ['ground-pork', 'pressed-tofu']);
+  hasAll('vietnamese-thit-kho-eggs', ['pork-shoulder-chunks', 'eggs']);
+  hasAll('squid-chinese-greens-stir-fry', ['squid', 'chinese-greens']);
+  hasAll('ginger-scallion-squid', ['squid']);
+  hasAll('squid-bell-pepper-onion-stir-fry', ['squid', 'bell-pepper', 'onion']);
+
+  const soupAddons = kb.optionalGroups.find((group) => group.id === 'soup-addons');
+  assert.equal(soupAddons.ingredients.some((entry) => entry.ingredientId === 'potato' && entry.contribution.staple === 1), true);
+  assert.equal(requirementIds('chicken-broccoli-stir-fry').includes('garlic-chives'), true);
+  assert.deepEqual(byId('tomato-scrambled-eggs').servingOptions, ['rice', 'noodles']);
+  assert.equal(byId('tomato-scrambled-eggs').steps.some((step) => step.includes('面条') && step.includes('另行煮熟')), true);
+  assert.equal(byId('ground-pork-chinese-greens-stir-fry').finishOptions.some((finish) => finish.id === 'jiang-ding'), false);
+});
+
 test('ingredient-dependent child coverage follows the bound Ingredient and keeps unknown false', () => {
   const item = recipe('dependent', { protein: 0, vegetable: 1, staple: 0 }, { protein: false, vegetable: 'ingredient-dependent' }, [{ anyOf: ['known', 'unknown'], role: 'vegetable' }]);
   const ingredients = [{ id: 'known', childCoverage: { vegetable: true } }, { id: 'unknown', childCoverage: { vegetable: 'unknown' } }];

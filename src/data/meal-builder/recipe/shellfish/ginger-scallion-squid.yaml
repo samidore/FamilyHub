@@ -1,0 +1,38 @@
+id: ginger-scallion-squid
+type: recipe
+status: candidate
+name_zh: 姜葱鱿鱼
+name_en: Ginger-Scallion Squid
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, family-shared]
+fit_score: 4
+primary_role: protein
+main_protein_category: shellfish
+main_protein_ingredient_ids: [squid]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 15
+meal_window_minutes: 25
+elapsed_minutes: 25
+advance_start_required: false
+equipment: [high-output burner, wok / iron pan]
+burner_plan: High heat for a very short squid stir-fry.
+child_suitable: conditional
+child_texture: Squid is naturally springy; cut very small if served.
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: squid
+    role: main-protein
+steps: [Sear dry squid briefly, stir-fry ginger and scallion, return squid, and toss for only a few seconds before serving.]
+child_serving: Serve only a small tender portion if appropriate.
+adult_finish: Add chili at the table.
+substitutions: []
+cook_ingredients: [squid 450 g, ginger, scallions, light soy sauce]
