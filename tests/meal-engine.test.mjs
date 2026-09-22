@@ -230,8 +230,16 @@ test('lost Meal Builder identities remain directly reachable after consolidation
   assert.equal(byId('tomato-egg-noodles').steps.some((step) => step.includes('浇在面上')), true);
   assert.equal(byId('red-braised-beef-noodle-soup').requirements.some((item) => item.role === 'integral-staple' && item.anyOf.includes('noodles')), true);
   assert.equal(byId('red-braised-beef-noodle-soup').steps.some((step) => step.includes('卤汁兑')), true);
-  assert.equal(byId('gyudon').cookIngredientLines.some((item) => item.includes('rice')), false);
-  assert.equal(byId('gyudon').steps.some((step) => step.includes('Serving')), true);
+  assert.equal(byId('gyudon').requirements.some((item) => item.role === 'integral-staple' && item.anyOf.includes('rice')), true);
+  assert.deepEqual(byId('gyudon').servingOptions, []);
+  assert.deepEqual(byId('gyudon').finishOptions, []);
+  assert.equal(byId('sukiyaki-don').requirements.some((item) => item.role === 'integral-staple' && item.anyOf.includes('rice')), true);
+  assert.equal(byId('sukiyaki-don').cookIngredientLines.some((item) => item.includes('寿喜烧汁')), true);
+  assert.equal(byId('niku-udon').requirements.some((item) => item.role === 'integral-staple' && item.anyOf.includes('noodles')), true);
+  assert.equal(byId('niku-udon').cookIngredientLines.some((item) => item.includes('乌冬汤')), true);
+  assert.equal(byId('niku-udon').cookIngredientLines.some((item) => item.includes('牛肉甜咸汁')), true);
+  assert.equal(byId('niku-udon').steps.some((step) => step.includes('分在面上')), true);
+  assert.equal(kb.recipes.some((item) => item.finishOptions.some((finish) => ['gyudon', 'sukiyaki-don', 'niku-udon'].includes(finish.id))), false);
   assert.deepEqual(byId('mushroom-pork-slices-stir-fry').finishOptions.map((finish) => finish.id), ['light-sauce']);
   assert.equal(byId('squid-chinese-greens-stir-fry').primaryRole, 'mixed');
   assert.deepEqual(byId('squid-chinese-greens-stir-fry').contribution, { protein: 1, vegetable: 1, staple: 0 });

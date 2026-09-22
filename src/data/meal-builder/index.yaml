@@ -1,5 +1,5 @@
 schema_version: 2
-content_version: "1.35"
+content_version: "1.36"
 last_updated: 2026-09-22
 ingredients: ingredients/index.yaml
 recipes: recipe/index.yaml
