@@ -180,13 +180,14 @@ test('inventory timer refresh preserves DOM identity and bottom scroll position'
   await page.setViewportSize({ width: 375, height: 667 });
   await page.goto('meal-builder/');
   await page.locator('#meal-show-all').check();
-  await page.evaluate(() => document.fonts.ready);
+  await page.evaluate(async () => { await document.fonts.ready; });
 
   const item = page.locator('[data-inventory-item="thin-sliced-pork-belly"]');
   await expect(item).toBeVisible();
   await item.evaluate((element) => { element.dataset.scrollStabilityMarker = 'kept'; });
 
   const before = await page.evaluate(() => {
+    document.documentElement.style.scrollBehavior = 'auto';
     window.scrollTo(0, document.documentElement.scrollHeight);
     return {
       scrollHeight: document.documentElement.scrollHeight,
