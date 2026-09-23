@@ -315,10 +315,56 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
     function intakeButton(id: string, storage: 'inventory' | 'freezer', text: string) { const button = document.createElement('button'); button.type = 'button'; button.dataset.stockAdd = id; button.dataset.stockStorage = storage; button.dataset.stockQuantity = '1'; button.textContent = text; return button; }
     function stockRow(item: MealIngredient, storage: 'inventory' | 'freezer', value: true | number) { const row = document.createElement('div'); row.className = 'meal-stock-row'; const label = document.createElement('span'); label.textContent = `${storage === 'freezer' ? '冷冻' : '冷藏'}${typeof value === 'number' ? ` ${value}` : ''}`; row.append(label); if (item.inventoryTracking === 'presence-only') { label.textContent += value === true ? ' · 有' : ''; const button = document.createElement('button'); button.type = 'button'; button.dataset.stockToggle = item.id; button.textContent = value === true ? '移除' : '有'; row.append(button); return row; } const minus = document.createElement('button'); minus.type = 'button'; minus.textContent = '−'; minus.dataset.stockDelta = '-0.5'; minus.dataset.stockStorage = storage; minus.dataset.stockItem = item.id; const output = document.createElement('output'); output.dataset.inventoryValue = item.id; output.textContent = String(value); const plus = document.createElement('button'); plus.type = 'button'; plus.textContent = '+'; plus.dataset.stockDelta = '0.5'; plus.dataset.stockStorage = storage; plus.dataset.stockItem = item.id; row.append(minus, output, plus); if (storage === 'freezer' && item.freezerBehavior === 'thaw-required' && typeof value === 'number') { for (const quantity of [0.5, 1]) { const thaw = document.createElement('button'); thaw.type = 'button'; thaw.dataset.startThaw = item.id; thaw.dataset.thawQuantity = String(quantity); thaw.textContent = `化冻${quantity}`; thaw.disabled = value < quantity; row.append(thaw); } } if (storage === 'inventory' && item.inventoryFreshness === 'fifo') { const discard = document.createElement('button'); discard.type = 'button'; discard.dataset.discardStock = item.id; discard.dataset.discardStorage = storage; discard.textContent = '丢'; row.append(discard); } return row; }
     function stockBatches(item: MealIngredient, _storage: 'inventory', batches: Record<string, number> = {}) { const host = document.createElement('div'); const heading = document.createElement('strong'); heading.textContent = `冷藏 ${Object.values(batches).reduce((sum, quantity) => sum + quantity, 0)}`; host.append(heading); Object.entries(batches).sort(([a], [b]) => a.localeCompare(b)).forEach(([key, quantity]) => { const row = stockRow(item, 'inventory', quantity); row.dataset.batchKey = key; const ageDays = freshnessAgeDays(key); const expiring = item.freshnessPriorityDays !== undefined && ageDays > item.freshnessPriorityDays; row.firstChild!.textContent = `${Number(key.slice(5, 7))}/${Number(key.slice(8))} · ${quantity}${expiring ? ' · 临期' : ''}`; if (expiring) row.classList.add('is-expiring'); host.append(row); }); host.append(intakeButton(item.id, 'inventory', '+1')); return host; }
-    function thawRow(_item: MealIngredient, id: string, job: HouseholdState['thawingItems'][string]) { const row = document.createElement('div'); row.className = 'meal-stock-row'; row.append(`化冻 ${job.quantity} · ${Math.max(0, Math.ceil((job.readyAt - Date.now()) / 3600000))}h`); const enter = document.createElement('button'); enter.type = 'button'; enter.dataset.completeThaw = id; enter.textContent = '冷藏'; const cancel = document.createElement('button'); cancel.type = 'button'; cancel.dataset.cancelThaw = id; cancel.textContent = '取消'; row.append(enter, cancel); return row; }
+    function thawRow(_item: MealIngredient, id: string, job: HouseholdState['thawingItems'][string]) {
+      const row = document.createElement('div');
+      row.className = 'meal-stock-row';
+      const countdown = document.createElement('span');
+      countdown.dataset.thawCountdown = id;
+      countdown.dataset.thawReadyAt = String(job.readyAt);
+      countdown.dataset.thawQuantity = String(job.quantity);
+      row.append(countdown);
+      const enter = document.createElement('button');
+      enter.type = 'button';
+      enter.dataset.completeThaw = id;
+      enter.textContent = '冷藏';
+      const cancel = document.createElement('button');
+      cancel.type = 'button';
+      cancel.dataset.cancelThaw = id;
+      cancel.textContent = '取消';
+      row.append(enter, cancel);
+      return row;
+    }
+    function refreshInventoryTimers() {
+      const now = Date.now();
+      inventoryList.querySelectorAll<HTMLElement>('[data-thaw-countdown]').forEach((countdown) => {
+        const readyAt = Number(countdown.dataset.thawReadyAt);
+        if (!Number.isFinite(readyAt)) return;
+        countdown.textContent = `化冻 ${countdown.dataset.thawQuantity ?? ''} · ${Math.max(0, Math.ceil((readyAt - now) / 3600000))}h`;
+      });
+      undoNotices.querySelectorAll<HTMLElement>('[data-undo-countdown]').forEach((countdown) => {
+        const undoUntil = Number(countdown.dataset.undoUntil);
+        if (!Number.isFinite(undoUntil)) return;
+        countdown.textContent = `${Math.max(0, Math.ceil((undoUntil - now) / 1000))}秒`;
+      });
+    }
     function renderInventory() {
-      undoNotices.replaceChildren(); Object.entries(household.discardedStock).filter(([, record]) => record.undoUntil > Date.now()).forEach(([id, record]) => { const notice = document.createElement('div'); notice.className = 'meal-undo-notice'; notice.textContent = `已丢掉 ${ingredientById.get(record.ingredientId)?.nameZh ?? record.ingredientId} ${record.quantity ?? ''} · `; const button = document.createElement('button'); button.type = 'button'; button.dataset.undoDiscard = id; button.textContent = '撤销'; notice.append(button, ` · ${Math.ceil((record.undoUntil - Date.now()) / 1000)}秒`); undoNotices.append(notice); });
+      undoNotices.replaceChildren();
+      Object.entries(household.discardedStock).filter(([, record]) => record.undoUntil > Date.now()).forEach(([id, record]) => {
+        const notice = document.createElement('div');
+        notice.className = 'meal-undo-notice';
+        notice.textContent = `已丢掉 ${ingredientById.get(record.ingredientId)?.nameZh ?? record.ingredientId} ${record.quantity ?? ''} · `;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.dataset.undoDiscard = id;
+        button.textContent = '撤销';
+        const countdown = document.createElement('span');
+        countdown.dataset.undoCountdown = id;
+        countdown.dataset.undoUntil = String(record.undoUntil);
+        notice.append(button, ' · ', countdown);
+        undoNotices.append(notice);
+      });
       renderLifecycle();
+      refreshInventoryTimers();
     }
     function render() {
       connection.textContent = repositoryStatus.label;
@@ -450,7 +496,13 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
     openCheckout.addEventListener('click', async () => { if (!household.currentMeal || household.currentMeal.status !== 'cooking' || !canWrite()) return; await persistStep('checkout'); render(); });
     document.querySelector('#meal-back-cook')!.addEventListener('click', async () => { await persistStep('cook'); render(); });
     repository.subscribe((next, status) => { household = next; repositoryStatus = status; if (Object.values(next.thawingItems).some((job) => job.readyAt <= Date.now())) safeWrite(repository.transaction((current) => reconcileDueThawing(current, Date.now(), ingredients))); if (next.currentMeal) { state = reconcileMealState(mealStateFromCurrentMeal(next.currentMeal), recipes, ingredients, optionalGroups); view = next.activeStep === 'cook' || next.activeStep === 'checkout' ? 'cook' : 'build'; } else { state = defaultMealState(); draftBindings = {}; checkout.hidden = true; view = 'build'; } render(); });
-    window.setInterval(() => { if (canWrite()) { if (Object.values(household.thawingItems).some((job) => job.readyAt <= Date.now())) safeWrite(repository.transaction((current) => reconcileDueThawing(current, Date.now(), ingredients))); if (Object.values(household.discardedStock).some((record) => record.undoUntil <= Date.now())) safeWrite(repository.transaction((current) => cleanupDiscardedStock(current, Date.now()))); renderInventory(); } }, 1000);
+    window.setInterval(() => {
+      if (canWrite()) {
+        if (Object.values(household.thawingItems).some((job) => job.readyAt <= Date.now())) safeWrite(repository.transaction((current) => reconcileDueThawing(current, Date.now(), ingredients)));
+        if (Object.values(household.discardedStock).some((record) => record.undoUntil <= Date.now())) safeWrite(repository.transaction((current) => cleanupDiscardedStock(current, Date.now())));
+      }
+      refreshInventoryTimers();
+    }, 1000);
     repository.ready?.catch(() => render());
     render();
   </script>
