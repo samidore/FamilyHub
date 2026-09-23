@@ -73,6 +73,33 @@ test('inventory category jump bar is bottom-pinned, two-row, non-scrolling, data
   await expect(leafy).toHaveAttribute('open', '');
 });
 
+test('inventory bottom action remains reachable above the pinned category bar', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.goto('meal-builder/');
+  await page.locator('#meal-show-all').check();
+  await page.evaluate(() => document.fonts.ready);
+
+  const nav = page.locator('[data-inventory-jump-nav]');
+  const next = page.locator('#meal-start-current');
+  await expect(nav).toBeVisible();
+  await expect(next).toBeVisible();
+
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+
+  const geometry = await page.evaluate(() => {
+    const nav = document.querySelector<HTMLElement>('[data-inventory-jump-nav]')!.getBoundingClientRect();
+    const next = document.querySelector<HTMLElement>('#meal-start-current')!.getBoundingClientRect();
+    return {
+      navTop: nav.top,
+      nextBottom: next.bottom,
+      distanceFromBottom: document.documentElement.scrollHeight - window.innerHeight - window.scrollY,
+    };
+  });
+
+  expect(Math.abs(geometry.distanceFromBottom)).toBeLessThanOrEqual(2);
+  expect(geometry.nextBottom).toBeLessThanOrEqual(geometry.navTop);
+});
+
 test('Recipes targets default folded, summarize the live settings, and keep reset outside the fold', async ({ page }) => {
   await page.goto('meal-builder/');
   const startCurrent = page.locator('#meal-start-current');
