@@ -175,3 +175,35 @@ test('thawing workspace starts only stocked thaw-required ingredients', async ({
   await expect(page.locator('[data-cancel-thaw]')).toHaveCount(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
 });
+
+test('inventory timer refresh preserves DOM identity and bottom scroll position', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 667 });
+  await page.goto('meal-builder/');
+  await page.locator('#meal-show-all').check();
+  await page.evaluate(() => document.fonts.ready);
+
+  const item = page.locator('[data-inventory-item="thin-sliced-pork-belly"]');
+  await expect(item).toBeVisible();
+  await item.evaluate((element) => { element.dataset.scrollStabilityMarker = 'kept'; });
+
+  const before = await page.evaluate(() => {
+    window.scrollTo(0, document.documentElement.scrollHeight);
+    return {
+      scrollHeight: document.documentElement.scrollHeight,
+      distanceFromBottom: document.documentElement.scrollHeight - window.innerHeight - window.scrollY,
+    };
+  });
+
+  await page.waitForTimeout(1250);
+
+  const after = await page.evaluate(() => ({
+    marker: document.querySelector<HTMLElement>('[data-inventory-item="thin-sliced-pork-belly"]')?.dataset.scrollStabilityMarker ?? null,
+    scrollHeight: document.documentElement.scrollHeight,
+    distanceFromBottom: document.documentElement.scrollHeight - window.innerHeight - window.scrollY,
+  }));
+
+  expect(after.marker).toBe('kept');
+  expect(after.scrollHeight).toBe(before.scrollHeight);
+  expect(Math.abs(after.distanceFromBottom - before.distanceFromBottom)).toBeLessThanOrEqual(2);
+});
+
