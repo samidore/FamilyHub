@@ -77,14 +77,17 @@ test('inventory bottom action remains reachable above the pinned category bar', 
   await page.setViewportSize({ width: 375, height: 667 });
   await page.goto('meal-builder/');
   await page.locator('#meal-show-all').check();
-  await page.evaluate(() => document.fonts.ready);
+  await page.evaluate(async () => { await document.fonts.ready; });
 
   const nav = page.locator('[data-inventory-jump-nav]');
   const next = page.locator('#meal-start-current');
   await expect(nav).toBeVisible();
   await expect(next).toBeVisible();
 
-  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  await page.evaluate(() => {
+    document.documentElement.style.scrollBehavior = 'auto';
+    window.scrollTo(0, document.documentElement.scrollHeight);
+  });
 
   const geometry = await page.evaluate(() => {
     const nav = document.querySelector<HTMLElement>('[data-inventory-jump-nav]')!.getBoundingClientRect();
