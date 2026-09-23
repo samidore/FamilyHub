@@ -287,6 +287,9 @@
   .meal-ingredient-overall-fold[open] > .meal-ingredient-overall-fold__summary { margin-bottom: 16px; }
 
   .meal-builder-page #meal-inventory-view {
+    padding-bottom: 0;
+  }
+  .meal-builder-page #meal-inventory-view:not([hidden]) + .meal-current-tools {
     padding-bottom: calc(126px + env(safe-area-inset-bottom, 0px));
   }
   .meal-inventory-jump-nav {
