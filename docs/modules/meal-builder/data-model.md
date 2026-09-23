@@ -193,6 +193,33 @@ substitutions: []
 
 `finish_options` is an optional ordered list of Recipe-local cooking finishes. Each entry has a stable local `id`, `label_zh`, exactly one `default: true` entry per Recipe, and optional `display_name_zh`, `cook_ingredients`, and `steps`. The default Finish uses the base Recipe `name_zh`; a non-default `display_name_zh` is the resolved Cook/Checkout name. Finish choices are presentation and cooking guidance only: they never change planning totals, inventory availability, checkout consumption, or queue reservations.
 
+### Finish expansion families
+
+Finish families are a **central authoring reference**, not runtime data and not a Recipe inheritance system. Their purpose is to help expand a meat Recipe: identify the cooking path and protein form, then use the matching family as a shortlist of plausible flavor/dish directions. A family never creates a Finish automatically and is never stored in household state.
+
+The current authoring families are:
+
+| Family | Typical cooking path / protein form | Useful Finish directions to consider |
+| --- | --- | --- |
+| Thin-meat quick stir-fry | Thin beef, pork, lamb, or similarly quick-cooking whole-muscle slices; high heat, short cook, meat commonly leaves and returns to the pan | light sauce, scallion, oyster, cumin, ginger, Beijing sweet-bean, scallion-salt, black-pepper style |
+| Covered braise + reduce | Chicken thighs/drumsticks, pork ribs/belly, duck pieces, and other cuts that can braise gently in a covered pan before an uncovered reduction | oyster-soy, teriyaki, soy-aromatic, red-braise, vinegar/adobo-style, other pantry-based aromatic sauces |
+| Pressure tenderize + finish | Brisket/chuck/short rib, pork shoulder/feet, tougher lamb/goat, and similar collagen-rich cuts where pressure cooking establishes tenderness before a stovetop finish | red-braise, soy-aromatic, vinegar-fragrant, spice-forward, other inventory-neutral finishing sauces |
+| Pan-sear + sauce/glaze | Steak, pork chop, chicken breast/thigh, patties, and other portions whose identity is primarily a seared surface plus a short final sauce/glaze | plain/pan jus, garlic-butter style, black-pepper, shoyu-butter, teriyaki-style glaze |
+| Steam + dress | Whole fish/fillets and other proteins whose main cook is steaming and whose identity changes mostly in the dressing/aromatics | ginger-scallion, black-bean, light soy, other steam-compatible pantry dressings |
+| Ground/minced meat stir-fry | Ground pork/beef and similar minced meat cooked loose, then combined with a vegetable or tofu base | light sauce, sauce-diced style, ginger, scallion, other quick pantry seasoning profiles |
+
+These direction lists are deliberately broader than any one Recipe. Use them to **suggest possibilities**, then judge the specific ingredient, cut, texture, family preferences, and base cooking path before adding anything.
+
+Recipe identity stays local:
+
+- The Recipe's default path must already have a natural dish name in `name_zh`.
+- Every non-default Finish that changes the resolved dish identity must declare an explicit, natural `display_name_zh`. Do **not** derive names by concatenating a protein name, family name, or `label_zh`.
+- `label_zh` is a compact chooser label; it does not need to equal the full dish name. For example, a shared scallion direction may resolve to `葱爆牛肉`, `葱香肉片`, or `葱爆羊肉` depending on the Recipe.
+- Even when two Recipes draw from the same family, their `cook_ingredients` and `steps` remain Recipe-local and must be rewritten for the actual cut, quantity, heat, timing, and texture target.
+- A family is a discovery pool, not an obligation. Do not add every compatible direction to every Recipe.
+- Finish remains inventory-neutral. If a variation requires a tracked Ingredient to become part of the dish, model that Ingredient through hard/one-of composition, an applicable optional group, or a distinct Recipe rather than hiding it inside Finish.
+- Highly distinctive preparations may stay entirely Recipe-local even when a broad family is nearby; examples include 牛丼/寿喜烧, 可乐鸡翅/瑞士鸡翅, and specific steamed-fish preparations.
+
 `serving_options` is an optional list containing only `rice` and/or `noodles`. The Recipes Plan UI presents the available choices as one selection (`none`, `rice`, or `noodles`). A selected serving contributes one Staple in Plan and adds one selected serving Ingredient to Checkout Actual. It is not included in queued hard-Ingredient reservations. Checkout may switch or remove it against live stock without rewriting the Plan.
 
 `ingredients[]` is the hard availability contract, not a transcription of the full recipe. Put an inventory Ingredient there only when the dish stops being that dish without it. Recommended but omittable inventory items, pantry aromatics, and the complete version of the recipe stay in `cook_ingredients`/steps. Base `meal_contribution` counts only the hard Recipe composition; selected optionals add their central fixed contribution at runtime.

@@ -170,3 +170,6 @@ optional_groups:
       - ingredient_id: napa-cabbage
         meal_contribution: { protein: 0, vegetable: 1, staple: 0 }
         checkout_units: 1
+      - ingredient_id: potato
+        meal_contribution: { protein: 0, vegetable: 0, staple: 1 }
+        checkout_units: 1

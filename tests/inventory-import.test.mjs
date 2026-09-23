@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
+import { THAW_DURATION_MS } from '../src/lib/household.ts';
 import {
   INVENTORY_IMPORT_SCHEMA,
   INVENTORY_IMPORT_VERSION,
@@ -33,6 +34,8 @@ test('inventory import parses storage, merges only matching ingredient/storage r
       { ingredient_id: 'whole-pork-tenderloin', quantity: 1, storage: 'inventory' },
       { ingredient_id: 'whole-pork-tenderloin', quantity: 0.5, storage: 'freezer' },
       { ingredient_id: 'whole-pork-tenderloin', quantity: 0.5, storage: 'freezer' },
+      { ingredient_id: 'whole-pork-tenderloin', quantity: 1, storage: 'thawing' },
+      { ingredient_id: 'whole-pork-tenderloin', quantity: 0.5, storage: 'thawing' },
       { ingredient_id: 'broccoli', quantity: 1 },
       { ingredient_id: 'broccoli', quantity: 0.5, storage: 'inventory' },
       { ingredient_id: 'frozen-beef-patties', quantity: 1 },
@@ -45,6 +48,7 @@ test('inventory import parses storage, merges only matching ingredient/storage r
   assert.deepEqual(result.draft.items, [
     { ingredientId: 'whole-pork-tenderloin', quantity: 1, storage: 'inventory' },
     { ingredientId: 'whole-pork-tenderloin', quantity: 1, storage: 'freezer' },
+    { ingredientId: 'whole-pork-tenderloin', quantity: 1.5, storage: 'thawing' },
     { ingredientId: 'broccoli', quantity: 1.5, storage: 'inventory' },
     { ingredientId: 'frozen-beef-patties', quantity: 1, storage: 'freezer' },
   ]);
@@ -62,11 +66,17 @@ test('inventory import validates storage against canonical freezer behavior whil
   assert.equal(parseInventoryImport(json({ items: [{ ingredient_id: 'broccoli', quantity: 0.25 }] }), ingredients, '2026-08-24').ok, false);
   assert.equal(parseInventoryImport(json({ items: [{ ingredient_id: 'broccoli', quantity: 1, storage: 'cold' }] }), ingredients, '2026-08-24').ok, false);
   assert.equal(parseInventoryImport(json({ items: [{ ingredient_id: 'broccoli', quantity: 1, storage: 'freezer' }] }), ingredients, '2026-08-24').ok, false);
+  assert.equal(parseInventoryImport(json({ items: [{ ingredient_id: 'broccoli', quantity: 1, storage: 'thawing' }] }), ingredients, '2026-08-24').ok, false);
   assert.equal(parseInventoryImport(json({ items: [{ ingredient_id: 'frozen-beef-patties', quantity: 1, storage: 'inventory' }] }), ingredients, '2026-08-24').ok, false);
+  assert.equal(parseInventoryImport(json({ items: [{ ingredient_id: 'frozen-beef-patties', quantity: 1, storage: 'thawing' }] }), ingredients, '2026-08-24').ok, false);
 
   const thawRequiredDefault = parseInventoryImport(json({ items: [{ ingredient_id: 'whole-pork-tenderloin', quantity: 1 }] }), ingredients, '2026-08-24');
   assert.equal(thawRequiredDefault.ok, true);
   assert.equal(thawRequiredDefault.draft.items[0].storage, 'inventory');
+
+  const thawRequiredThawing = parseInventoryImport(json({ items: [{ ingredient_id: 'whole-pork-tenderloin', quantity: 1, storage: 'thawing' }] }), ingredients, '2026-08-24');
+  assert.equal(thawRequiredThawing.ok, true);
+  assert.equal(thawRequiredThawing.draft.items[0].storage, 'thawing');
 
   const directDefault = parseInventoryImport(json({ items: [{ ingredient_id: 'frozen-beef-patties', quantity: 1 }] }), ingredients, '2026-08-24');
   assert.equal(directDefault.ok, true);
@@ -79,7 +89,7 @@ test('inventory import validates storage against canonical freezer behavior whil
   assert.equal(isValidInventoryImportDate('2026-02-29', '2026-08-24'), false);
 });
 
-test('inventory import writes refrigerated, thaw-required freezer, and direct freezer stock atomically while preserving current meal', () => {
+test('inventory import writes refrigerated, frozen, thawing, and direct freezer stock atomically while preserving current meal', () => {
   const currentMeal = {
     mealId: 'meal-1', status: 'selecting', availableIngredientIds: ['broccoli'], ingredientFreshnessDates: { broccoli: '2026-08-20' },
     proteinTarget: 1, vegetableTarget: 1, stapleRequired: false, childMode: false, timePreference: 'any', selectedRecipeIds: [], recipeIngredientBindings: {}, selectedAddons: [], recipeFinishSelections: {}, recipeServingSelections: {}, excludedIngredientIds: [], checkoutDraft: {}, checkoutRecipeDrafts: {},
@@ -99,17 +109,19 @@ test('inventory import writes refrigerated, thaw-required freezer, and direct fr
     activeStep: 'inventory',
     recentMeals: [],
   };
+  const thawStartedAt = Date.UTC(2026, 7, 24, 12, 0, 0);
   const next = applyInventoryImport(state, {
     stockedOn: '2026-08-24',
     items: [
       { ingredientId: 'whole-pork-tenderloin', quantity: 1, storage: 'inventory' },
       { ingredientId: 'whole-pork-tenderloin', quantity: 2, storage: 'freezer' },
+      { ingredientId: 'whole-pork-tenderloin', quantity: 1.5, storage: 'thawing' },
       { ingredientId: 'broccoli', quantity: 0.5, storage: 'inventory' },
       { ingredientId: 'eggs', quantity: 4, storage: 'inventory' },
       { ingredientId: 'frozen-beef-patties', quantity: 1.5, storage: 'freezer' },
       { ingredientId: 'steamed-buns', quantity: 1, storage: 'freezer' },
     ],
-  }, ingredients, '2026-08-24');
+  }, ingredients, '2026-08-24', thawStartedAt);
 
   assert.deepEqual(next.inventory, {
     'whole-pork-tenderloin': 2,
@@ -124,6 +136,12 @@ test('inventory import writes refrigerated, thaw-required freezer, and direct fr
   });
   assert.deepEqual(next.freezerInventory, { 'whole-pork-tenderloin': 2.5 });
   assert.equal(next.freezerBatches, undefined);
+  assert.deepEqual(Object.values(next.thawingItems), [{
+    ingredientId: 'whole-pork-tenderloin',
+    quantity: 1.5,
+    startedAt: thawStartedAt,
+    readyAt: thawStartedAt + THAW_DURATION_MS,
+  }]);
   assert.deepEqual(next.currentMeal, currentMeal);
   assert.equal(next.activeStep, 'inventory');
 });
@@ -134,14 +152,16 @@ test('inventory import protocol documents storage-aware review and Meal Builder 
     readFile('src/layouts/BaseLayout.astro', 'utf8'),
     readFile('src/components/MealInventoryImport.astro', 'utf8'),
   ]);
-  assert.match(protocol, /whole-pork-tenderloin[^\n]*2 inventory units/);
+  assert.match(protocol, /whole-pork-tenderloin[^\n]*3 inventory units/);
   assert.match(protocol, /storage/);
   assert.match(protocol, /freezer/);
+  assert.match(protocol, /thawing/);
   assert.match(layout, /MealInventoryImport/);
   assert.match(layout, /meal-builder-page/);
   assert.match(component, /meal-inventory-import-json/);
   assert.match(component, /meal-inventory-import-review/);
   assert.match(component, /dataset\.importStorage/);
+  assert.match(component, /开始解冻/);
   assert.match(component, /meal-inventory-import-dialog/);
   assert.match(component, /applyInventoryImport/);
   assert.match(component, /repository\.transaction/);

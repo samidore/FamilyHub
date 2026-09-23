@@ -1,38 +1,24 @@
 id: squid-chinese-greens-stir-fry
 type: recipe
 status: candidate
-name_zh: 清炒鱿鱼
-name_en: Flexible Squid Stir-fry
-tags:
-  - light-seasoning
-  - non-spicy-base
-  - stir-fried
-  - stovetop-wok
-  - lunch-30
-  - child-support-protein
+name_zh: 青菜炒鱿鱼
+name_en: Squid Stir-fried with Chinese Greens
+tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30, child-support-protein]
 fit_score: 4
-primary_role: protein
+primary_role: mixed
 main_protein_category: shellfish
-main_protein_ingredient_ids:
-  - squid
+main_protein_ingredient_ids: [squid]
 supporting_protein_ingredient_ids: []
-meal_contribution:
-  protein: 1
-  vegetable: 0
-  staple: 0
-child_coverage:
-  protein: false
-  vegetable: false
+vegetable_ingredient_ids: [chinese-greens]
+meal_contribution: { protein: 1, vegetable: 1, staple: 0 }
+child_coverage: { protein: false, vegetable: true }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
+recommended_staple_ingredient_ids: [rice]
 active_minutes: 15–25
 meal_window_minutes: 20–35
 elapsed_minutes: 20–40
 advance_start_required: false
-equipment:
-  - high-output burner
-  - wok / iron pan
+equipment: [high-output burner, wok / iron pan]
 burner_plan: High-output burner for the wok; keep the medium burner free for a side/soup when possible.
 child_suitable: conditional
 child_texture: 鱿鱼天然较有嚼劲，不适合作为稳定的孩子软蛋白来源。
@@ -45,32 +31,20 @@ detail_level: cookable
 ingredients:
   - ingredient_id: squid
     role: main-protein
-finish_options:
-  - id: light-sauce
-    label_zh: 清炒
-    default: true
-  - id: ginger-scallion
-    label_zh: 姜葱
-    default: false
-    display_name_zh: 姜葱炒鱿鱼
-    cook_ingredients:
-      - 姜丝 15 g；葱段 3根
-    steps:
-      - 海鲜回锅前先把姜葱炒香，鱿鱼回锅后快速翻匀即关火。
+  - ingredient_id: chinese-greens
+    role: vegetable
 steps:
-  - 准备：鱿鱼彻底擦干，切成大小一致的片/圈；配菜如有则提前切好并彻底沥干；鱿鱼快炒时间很短，所有调味必须先准备好。
-  - 锅大火预热后加油；海鲜单层下锅，不要堆叠。
-  - 鱿鱼一面刚变不透明或形成焦色时立即翻动；第一轮只做到约七八成熟并盛出。
-  - 若有蔬菜，原锅先把蔬菜炒到刚断生；硬菜可预先焯30–60秒。
-  - 鱿鱼回锅，加入轻盐汁，快速翻10–30秒。
-  - 鱿鱼刚全部不透明、质地变紧实但仍有弹性时立即关火；不要继续为了收汁久煮。
-  - 孩子份把鱿鱼剪小；如有配菜也切成易夹取的小段。
+  - 准备：鱿鱼彻底擦干，切成大小一致的片/圈；青菜切好并彻底沥干；所有调味必须先准备好。
+  - 锅大火预热后加油；鱿鱼单层下锅，刚变不透明时立即翻动，第一轮做到约七八成熟并盛出。
+  - 原锅先把青菜炒到刚断生；硬菜可预先焯30–60秒。
+  - 鱿鱼回锅，加入轻盐汁，快速翻10–30秒；鱿鱼刚全部不透明且仍有弹性时立即关火。
+  - 孩子份把鱿鱼剪小，青菜切成易夹取的小段。
   - 完成提示：鱿鱼刚熟、仍有弹性；酱汁薄薄附着，不靠长时间收浓。
   - 安全提示：鱿鱼煮至肉体不透明、质地刚变紧实；避免继续久煮变老。
 child_serving: 如给孩子仅取非常小、嫩的部分；另配软蛋白。
-adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
+adult_finish: 孩子份盛出后，成人可另加辣椒油或更重调味。
 substitutions: []
 cook_ingredients:
   - 鱿鱼：450 g
-  - 配菜（可省略）：300–450 g
+  - 青菜：300–450 g
   - 轻盐鱿鱼汁：水 2 Tbsp；生抽 2 tsp；蚝油 1 tsp；绍兴酒 1 Tbsp；糖 1/4 tsp

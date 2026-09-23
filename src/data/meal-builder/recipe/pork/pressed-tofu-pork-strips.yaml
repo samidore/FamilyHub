@@ -1,6 +1,6 @@
 id: pressed-tofu-pork-strips
 type: recipe
-status: archived
+status: candidate
 name_zh: 香干肉丝
 name_en: Shredded Pork with Pressed Tofu
 tags:
@@ -13,21 +13,13 @@ tags:
 fit_score: 5
 primary_role: protein
 main_protein_category: pork
-main_protein_ingredient_ids:
-  - whole-pork-tenderloin
-supporting_protein_ingredient_ids:
-  - pressed-tofu
+main_protein_ingredient_ids: [whole-pork-tenderloin]
+supporting_protein_ingredient_ids: [pressed-tofu]
 vegetable_ingredient_ids: []
-meal_contribution:
-  protein: 1
-  vegetable: 0
-  staple: 0
-child_coverage:
-  protein: true
-  vegetable: false
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
+recommended_staple_ingredient_ids: [rice]
 active_minutes: 20–35
 meal_window_minutes: 30–45
 elapsed_minutes: 35–60
@@ -50,14 +42,13 @@ ingredients:
   - ingredient_id: pressed-tofu
     role: supporting-protein
 steps:
-  - 准备：肉丝与全部腌料抓匀，静置15分钟；香干切与肉丝近似粗细。；姜5 g、蒜2瓣切末；收尾调味预先混匀。
+  - 准备：肉丝与腌料抓匀，静置15分钟；香干切与肉丝近似粗细，姜5 g、蒜2瓣切末，收尾调味预先混匀。
   - 炒锅大火加1 Tbsp油；肉丝炒到完全变色、约八成熟，立即盛出。
-  - 原锅下姜蒜15秒；加入香干，大火翻炒1–2分钟让表面热透。
-  - 肉丝回锅，倒入收尾调味。
-  - 快速翻炒30–60秒，直到香干和肉丝都均匀着色、锅底没有多余水。
+  - 原锅下姜蒜炒15秒；加入香干，大火翻炒1–2分钟让表面热透。
+  - 肉丝回锅，倒入收尾调味，快速翻炒30–60秒，直到香干和肉丝均匀着色、锅底没有多余水。
   - 关火后再淋芝麻油（若已混入调味可省此步）；孩子份剪短肉丝。
   - 完成提示：香干热透但不干硬；肉丝嫩；锅底基本干爽、表面只有薄薄调味。
-  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；薄肉丝实际做至无生肉色。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []

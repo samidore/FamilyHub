@@ -1,10 +1,15 @@
 id: ginger-scallion-squid
 type: recipe
-status: archived
+status: candidate
 name_zh: 姜葱鱿鱼
 name_en: Ginger-Scallion Squid
-tags: [light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-30]
-fit_score: 3
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-30
+fit_score: 4
 primary_role: protein
 main_protein_category: shellfish
 main_protein_ingredient_ids: [squid]
@@ -18,10 +23,13 @@ active_minutes: 10–15
 meal_window_minutes: 15–25
 elapsed_minutes: 15–25
 advance_start_required: false
-equipment: [high-output burner, wok / iron pan, saucepan for blanching]
+equipment:
+  - high-output burner
+  - wok / iron pan
+  - saucepan for blanching
 burner_plan: Brief blanch on medium burner, then high-output wok.
-child_suitable: no
-child_texture: 快炒鱿鱼仍有弹性和嚼劲，不计 Child Protein。
+child_suitable: conditional
+child_texture: 鱿鱼天然较有嚼劲，不适合作为稳定的孩子软蛋白来源。
 spicy_in_base: false
 deep_fried: false
 salt_level: light
@@ -34,11 +42,12 @@ ingredients:
 steps:
   - 鱿鱼清理后切一口大小并擦干；姜切丝、葱切段；调味汁预混。
   - 另锅水大开，鱿鱼下锅约30秒、刚开始卷曲就立即捞出彻底沥干。
-  - 炒锅大火预热，加2 tsp油，下姜丝和葱白10秒。
-  - 下鱿鱼大火快速翻炒，沿锅边淋绍兴酒和调味汁；汁一沸、鱿鱼全部不透明时立即关火。
-  - 撒葱绿装盘；不要留在热锅中继续变韧。
+  - 炒锅大火预热，加2 tsp油，下姜丝和葱白10秒；下鱿鱼大火快速翻炒，沿锅边淋绍兴酒和调味汁。
+  - 汁一沸、鱿鱼全部不透明时立即关火，撒葱绿装盘；不要留在热锅中继续变韧。
+  - 完成提示：鱿鱼刚熟、仍有弹性；酱汁薄薄附着。
+  - 安全提示：鱿鱼煮至肉体不透明、质地刚变紧实；避免继续久煮变老。
 child_serving: 本 Recipe 不计 Child Protein。
-adult_finish: 成人可加辣椒、黑胡椒或孜然。
+adult_finish: 孩子份盛出后，成人可按菜式另加辣椒、黑胡椒或孜然。
 substitutions: []
 cook_ingredients:
   - 鱿鱼：450 g

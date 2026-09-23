@@ -65,14 +65,6 @@ finish_options:
       - 蚝油 1 tsp；白胡椒少许
     steps:
       - 用轻盐肉末炒汁快速裹匀肉末和所选蔬菜，收至锅底只剩薄薄湿润汁。
-  - id: jiang-ding
-    label_zh: 酱丁
-    default: false
-    display_name_zh: 酱丁肉末
-    cook_ingredients:
-      - 甜面酱 1 Tbsp；黄豆酱 1 tsp
-    steps:
-      - 肉末炒香后先把酱炒出香味，再加入蔬菜和少量水焖透。
 steps:
   - 准备：肉末提前从冰箱取出，只需解开大块，不需要腌；所选蔬菜按质地切细/切小，冷冻荠菜先掰散。把炒汁全部混匀。
   - 炒锅中大火预热，加2 tsp中性油；下姜末5 g炒10秒。

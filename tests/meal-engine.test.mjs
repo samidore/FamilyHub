@@ -199,6 +199,56 @@ test('one-of bindings auto-select one available ingredient', () => {
   assert.equal(isFeasible(item, new Set(['leaf-b']), ['leaf-b']), true);
 });
 
+test('lost Meal Builder identities remain directly reachable after consolidation', async () => {
+  const kb = await loadMealData();
+  const byId = (id) => kb.recipes.find((item) => item.id === id);
+  const requirementIds = (id) => byId(id).requirements.flatMap((requirement) => requirement.anyOf);
+  const hasAll = (id, expected) => {
+    const ids = new Set(requirementIds(id));
+    for (const ingredientId of expected) assert.equal(ids.has(ingredientId), true, `${id} must require ${ingredientId}`);
+  };
+
+  hasAll('beijing-sauce-pork-strips', ['whole-pork-tenderloin']);
+  assert.equal(requirementIds('beijing-sauce-pork-strips').includes('button-cremini-mushrooms'), false);
+  assert.deepEqual(byId('beijing-sauce-pork-strips').finishOptions.map((finish) => finish.id), ['beijing-sauce', 'ginger']);
+  hasAll('pressed-tofu-pork-strips', ['whole-pork-tenderloin', 'pressed-tofu']);
+  hasAll('yellow-chives-pressed-tofu-pork-strips', ['whole-pork-tenderloin', 'pressed-tofu', 'yellow-chives']);
+  hasAll('guo-ta-pork-tenderloin', ['whole-pork-tenderloin', 'eggs']);
+  const guoTaEggLines = byId('guo-ta-pork-tenderloin').cookIngredientLines.filter((item) => item.includes('鸡蛋'));
+  assert.deepEqual(guoTaEggLines, ['鸡蛋：2个，用于蛋衣']);
+  assert.equal(guoTaEggLines.some((item) => item.includes('腌肉')), false);
+  hasAll('jiang-ding-ground-pork-pressed-tofu', ['ground-pork', 'pressed-tofu']);
+  hasAll('vietnamese-thit-kho-eggs', ['pork-shoulder-chunks', 'eggs']);
+  hasAll('squid-chinese-greens-stir-fry', ['squid', 'chinese-greens']);
+  hasAll('ginger-scallion-squid', ['squid']);
+  hasAll('squid-bell-pepper-onion-stir-fry', ['squid', 'bell-pepper', 'onion']);
+
+  const soupAddons = kb.optionalGroups.find((group) => group.id === 'soup-addons');
+  assert.equal(soupAddons.ingredients.some((entry) => entry.ingredientId === 'potato' && entry.contribution.staple === 1), true);
+  assert.equal(requirementIds('chicken-broccoli-stir-fry').includes('garlic-chives'), true);
+  assert.deepEqual(byId('tomato-scrambled-eggs').servingOptions, []);
+  assert.equal(byId('ground-pork-chinese-greens-stir-fry').finishOptions.some((finish) => finish.id === 'jiang-ding'), false);
+  assert.equal(byId('tomato-scrambled-eggs').steps.some((step) => step.includes('面条')), false);
+  assert.equal(byId('tomato-egg-noodles').requirements.some((item) => item.role === 'integral-staple' && item.anyOf.includes('noodles')), true);
+  assert.equal(byId('tomato-egg-noodles').steps.some((step) => step.includes('浇在面上')), true);
+  assert.equal(byId('red-braised-beef-noodle-soup').requirements.some((item) => item.role === 'integral-staple' && item.anyOf.includes('noodles')), true);
+  assert.equal(byId('red-braised-beef-noodle-soup').steps.some((step) => step.includes('卤汁兑')), true);
+  assert.equal(byId('gyudon').requirements.some((item) => item.role === 'integral-staple' && item.anyOf.includes('rice')), true);
+  assert.deepEqual(byId('gyudon').servingOptions, []);
+  assert.deepEqual(byId('gyudon').finishOptions, []);
+  assert.equal(byId('sukiyaki-don').requirements.some((item) => item.role === 'integral-staple' && item.anyOf.includes('rice')), true);
+  assert.equal(byId('sukiyaki-don').cookIngredientLines.some((item) => item.includes('寿喜烧汁')), true);
+  assert.equal(byId('niku-udon').requirements.some((item) => item.role === 'integral-staple' && item.anyOf.includes('noodles')), true);
+  assert.equal(byId('niku-udon').cookIngredientLines.some((item) => item.includes('乌冬汤')), true);
+  assert.equal(byId('niku-udon').cookIngredientLines.some((item) => item.includes('牛肉甜咸汁')), true);
+  assert.equal(byId('niku-udon').steps.some((step) => step.includes('分在面上')), true);
+  assert.equal(kb.recipes.some((item) => item.finishOptions.some((finish) => ['gyudon', 'sukiyaki-don', 'niku-udon'].includes(finish.id))), false);
+  assert.deepEqual(byId('mushroom-pork-slices-stir-fry').finishOptions.map((finish) => finish.id), ['light-sauce']);
+  assert.equal(byId('squid-chinese-greens-stir-fry').primaryRole, 'mixed');
+  assert.deepEqual(byId('squid-chinese-greens-stir-fry').contribution, { protein: 1, vegetable: 1, staple: 0 });
+  assert.equal(byId('squid-chinese-greens-stir-fry').finishOptions.length, 0);
+});
+
 test('ingredient-dependent child coverage follows the bound Ingredient and keeps unknown false', () => {
   const item = recipe('dependent', { protein: 0, vegetable: 1, staple: 0 }, { protein: false, vegetable: 'ingredient-dependent' }, [{ anyOf: ['known', 'unknown'], role: 'vegetable' }]);
   const ingredients = [{ id: 'known', childCoverage: { vegetable: true } }, { id: 'unknown', childCoverage: { vegetable: 'unknown' } }];

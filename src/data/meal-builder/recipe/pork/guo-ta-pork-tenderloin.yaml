@@ -1,6 +1,6 @@
 id: guo-ta-pork-tenderloin
 type: recipe
-status: archived
+status: candidate
 name_zh: 锅塌里脊
 name_en: Guo Ta Pork Tenderloin
 tags:
@@ -13,21 +13,13 @@ tags:
 fit_score: 3
 primary_role: protein
 main_protein_category: pork
-main_protein_ingredient_ids:
-  - whole-pork-tenderloin
-supporting_protein_ingredient_ids:
-  - eggs
+main_protein_ingredient_ids: [whole-pork-tenderloin]
+supporting_protein_ingredient_ids: [eggs]
 vegetable_ingredient_ids: []
-meal_contribution:
-  protein: 1
-  vegetable: 0
-  staple: 0
-child_coverage:
-  protein: true
-  vegetable: false
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids:
-  - rice
+recommended_staple_ingredient_ids: [rice]
 active_minutes: 20–35
 meal_window_minutes: 30–45
 elapsed_minutes: 35–60
@@ -35,7 +27,7 @@ advance_start_required: false
 equipment:
   - medium burner
   - nonstick pan or iron pan as appropriate
-burner_plan: Medium burner by default; use the iron pan/high-output burner only when a hard sear is the point of the dish.
+burner_plan: Medium burner for setting the egg coating, then a short covered braise.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -50,20 +42,18 @@ ingredients:
   - ingredient_id: eggs
     role: supporting-protein
 steps:
-  - 准备：肉片与短腌料抓匀15分钟；蛋衣搅匀。；塌汁预先混匀。
-  - 肉片逐片薄裹蛋衣；不粘锅中火加1 Tbsp油，单层排入。
-  - 第一面蛋衣凝固并浅金黄后翻面；第二面也定型，分批完成。
-  - 把全部肉片平铺回锅，沿锅边倒入塌汁，转中小火。
-  - 盖盖焖2–3分钟，让肉片熟透并吸汁；开盖轻晃锅。
-  - 汁量剩薄薄一层、蛋衣软嫩而不泡烂时关火，静置3分钟。
+  - 准备：里脊切约5 mm片；加入生抽2 tsp、绍兴酒1 tsp、盐1/4 tsp、玉米淀粉1 Tbsp抓匀，静置15分钟；蛋衣和塌汁分别搅匀。
+  - 肉片逐片薄裹蛋衣；不粘锅中火加1 Tbsp油，单层排入，第一面蛋衣凝固并浅金黄后翻面，第二面定型后分批完成。
+  - 把全部肉片平铺回锅，沿锅边倒入塌汁，转中小火，盖盖焖2–3分钟，让肉片熟透并吸汁。
+  - 开盖轻晃锅；汁量剩薄薄一层、蛋衣软嫩而不泡烂时关火，静置3分钟。
   - 完成提示：蛋衣完整软嫩；肉片熟透；锅底只留薄薄鲜汁，不是汤。
-  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
+  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；薄肉片实际做至无生肉色。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
   - 猪里脊：340 g，切约5 mm片
-  - 鸡蛋：2个
+  - 鸡蛋：2个，用于蛋衣
   - 肉片短腌：生抽 2 tsp；绍兴酒 1 tsp；盐 1/4 tsp；玉米淀粉 1 Tbsp
-  - 蛋衣：鸡蛋 2个；玉米淀粉 1 Tbsp
+  - 蛋衣：玉米淀粉 1 Tbsp
   - 塌汁：水或低盐高汤 1/3 cup；生抽 1 Tbsp；绍兴酒 1 Tbsp；糖 1/2 tsp；芝麻油 1/2 tsp

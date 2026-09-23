@@ -20,6 +20,7 @@ vegetable_ingredient_ids:
   - broccoli
   - button-cremini-mushrooms
   - yellow-chives
+  - garlic-chives
 optional_groups:
   - change-it-up
 meal_contribution:
@@ -55,6 +56,7 @@ ingredients:
       - broccoli
       - button-cremini-mushrooms
       - yellow-chives
+      - garlic-chives
     role: vegetable
 steps:
   - 准备：鸡肉逆纹切约5 mm薄片；先加水抓到基本吸收，再加淀粉、油、盐抓匀，静置15–20分钟。所选蔬菜切成快炒大小；硬梗或厚片先焯30–60秒并彻底沥干；炒汁与薄芡分别混匀。
