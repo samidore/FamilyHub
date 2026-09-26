@@ -8,10 +8,10 @@ tags:
   - light-seasoning
   - non-spicy-base
   - braised
-  - stovetop-nonstick
   - lunch-45
   - family-shared
   - two-vegetable-ready
+  - instant-pot
 fit_score: 5
 primary_role: mixed
 main_protein_category: beef
@@ -34,13 +34,12 @@ integral_staple_ingredient_ids:
   - potato
 recommended_staple_ingredient_ids: []
 active_minutes: 20–35
-meal_window_minutes: 30–45
-elapsed_minutes: 35–60
+meal_window_minutes: 45?60
+elapsed_minutes: 60?90
 advance_start_required: false
 equipment:
-  - medium burner
-  - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
+  - 9-quart Instant Pot
+burner_plan: Pressure-cook the thin beef briefly first; cook potatoes and carrots separately in the broth under pressure so they remain intact.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -59,15 +58,13 @@ ingredients:
   - ingredient_id: carrot
     role: vegetable
 steps:
-  - 准备：土豆切4–5 cm块后用清水冲掉表面淀粉；胡萝卜与洋葱切块。；牛肉片解开成片。
-  - 厚锅中火加1 Tbsp油，下洋葱炒到边缘透明；加入牛肉快速炒到大部分变色。
-  - 加入土豆和胡萝卜翻1分钟，倒入全部煮汁。
-  - 煮开撇沫，落盖/盖盖留缝，中小火煮15分钟。
-  - 检查土豆：筷子能穿透但块形完整时即可；若仍硬再煮3–5分钟。
-  - 开盖只把汁减少到能舀起、约剩锅底1–2 cm，不收干。
-  - 关火静置10分钟后再上桌，味道会继续回吸。
+  - 土豆切4–5 cm块并冲掉表面淀粉；胡萝卜与洋葱切块，牛肉片解开。
+  - Instant Pot Sauté 加1 Tbsp油，将洋葱略炒软；加入火锅牛肉快速翻至大部分变色。加入约1 cup日式高汤并刮净锅底。
+  - 锁盖 High Pressure 1分钟并立即快速泄压；取出牛肉与洋葱，暂放一旁。
+  - 锅中加入土豆、胡萝卜、味醂、生抽、清酒、糖及剩余日式高汤；锁盖 High Pressure 3分钟并快速泄压。检查土豆可被筷子穿透但仍完整。
+  - 将牛肉和洋葱放回，用 Instant Pot Sauté 小火加热1–2分钟至热透；保留可舀汁，不收干。关火静置10分钟。
   - 完成提示：土豆软而不碎、胡萝卜熟、牛肉不柴；保留甜咸煮汁。
-  - 安全提示：整块牛肉可测处达到145°F/63°C并静置3分钟；薄片炒菜实际炒至无冷生中心。
+  - 安全提示：牛肉片无冷生中心。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
@@ -76,4 +73,4 @@ cook_ingredients:
   - 土豆：550 g，切大块
   - 胡萝卜：125 g，滚刀块
   - 洋葱：250 g，粗切
-  - 肉じゃが煮汁：日式高汤 2 cups；味醂 4 Tbsp；生抽 4 Tbsp；清酒 2 Tbsp；糖 1 Tbsp
+  - 压力煮汁：日式高汤 2 cups；味醂 4 Tbsp；生抽 4 Tbsp；清酒 2 Tbsp；糖 1 Tbsp

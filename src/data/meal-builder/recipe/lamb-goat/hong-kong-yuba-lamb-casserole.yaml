@@ -8,9 +8,9 @@ tags:
   - light-seasoning
   - non-spicy-base
   - braised
-  - stovetop-nonstick
   - advance-start
   - child-support-protein
+  - instant-pot
 fit_score: 2
 primary_role: protein
 main_protein_category: lamb
@@ -32,13 +32,12 @@ integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice
 active_minutes: 25–40
-meal_window_minutes: 25–40
-elapsed_minutes: 180–300
+meal_window_minutes: 90?120
+elapsed_minutes: 120?150
 advance_start_required: true
 equipment:
-  - medium burner
-  - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
+  - 9-quart Instant Pot
+burner_plan: Pressure-cook the lamb shoulder in the casserole base first; add soaked yuba after release and simmer only until tender.
 child_suitable: conditional
 child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
 spicy_in_base: false
@@ -53,19 +52,18 @@ ingredients:
   - ingredient_id: dried-yuba-sticks
     role: supporting-protein
 steps:
-  - 准备：腐竹提前泡到完全柔软，无硬芯后沥干。；羊肉冷水焯3–5分钟并冲净。
-  - 厚锅中火加1 Tbsp油，下姜葱炒香；加入羊肉翻到表面略干。
-  - 加入腐乳、柱候酱翻1分钟，再加绍兴酒、生抽老抽和冰糖。
-  - 加热水至接近没过肉，煮开后转小火盖盖炖60分钟。
-  - 羊肉开始软后加入泡软腐竹，再炖20–30分钟。
-  - 肉筷子能轻松插入、腐竹吸汁软而不烂时开盖略收。
+  - 腐竹提前泡至完全柔软、无硬芯后沥干；羊肉冷水焯3–5分钟并冲净。
+  - Instant Pot Sauté 加1 Tbsp油，将羊肉煎至表面略褐；加入姜葱炒香。
+  - 加入水1.5 cups并刮净锅底；锁盖 High Pressure 35分钟，自然泄压15分钟。检查肉开始软化，不够软时再加压8分钟并自然泄压10分钟。
+  - 开盖后加入南乳、柱侯酱、绍兴酒、生抽、老抽、冰糖和八角调匀；用 Instant Pot Sauté 轻煮2分钟让酱汁融合。
+  - 加入泡软腐竹，用 Instant Pot Sauté 小火煮20–30分钟至羊肉筷子能轻松插入、腐竹吸汁软而不烂；按需加少量热水保持汤汁可舀。
   - 汁能薄挂勺、锅底仍有可舀汁时关火。
   - 完成提示：羊肉软嫩、腐竹吸汁；煲汁浓香但仍可流动。
-  - 安全提示：整块羊/山羊肉可测处达到145°F/63°C并静置3分钟；炖菜以更高温度达到软烂质地。
+  - 安全提示：整块羊肉达到至少145°F/63°C并静置3分钟；继续炖至软烂质地。
 child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
   - 羊肩肉块：1100 g
   - 腐竹：100 g干重，提前泡软切段
-  - 枝竹羊腩煲汁：南乳/红腐乳 3块，压泥；柱候酱 1/4 cup；绍兴酒 3 Tbsp；老抽 1 tsp；生抽 2 Tbsp；冰糖 10 g；姜 15片；葱 6根；八角 1个，可省
+  - 煲汁（压力完成后加入）：南乳/红腐乳3块压泥；柱侯酱1/4 cup；绍兴酒3 Tbsp；老抽1 tsp；生抽2 Tbsp；冰糖10 g；姜15片；葱6根；八角1个可省；压力阶段只用水1.5 cups

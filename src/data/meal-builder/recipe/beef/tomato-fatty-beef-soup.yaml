@@ -7,9 +7,9 @@ tags:
   - light-seasoning
   - non-spicy-base
   - simmered
-  - stovetop-nonstick
   - lunch-30
   - child-support-protein
+  - instant-pot
 fit_score: 5
 primary_role: mixed
 main_protein_category: beef
@@ -29,13 +29,12 @@ integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice
 active_minutes: 15–25
-meal_window_minutes: 20–35
-elapsed_minutes: 20–40
+meal_window_minutes: 30?45
+elapsed_minutes: 45?60
 advance_start_required: false
 equipment:
-  - medium burner
-  - soup pot
-burner_plan: Medium burner for simmering; can be started earlier and leave the wok burner free.
+  - 9-quart Instant Pot
+burner_plan: Cook the thin beef very briefly under pressure in a measured clear broth, then finish tomatoes and seasoning after release.
 child_suitable: conditional
 child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
 spicy_in_base: false
@@ -50,18 +49,17 @@ ingredients:
   - ingredient_id: tomato
     role: vegetable
 steps:
-  - 准备：带骨肉/大块肉冷水下锅，加足量清水煮开2–4分钟；捞出后用温水冲去浮沫和碎骨。；番茄切成适合汤煮的一口大小；容易煮烂的材料单独放，后下。
-  - 番茄切块；汤锅中火加1 tsp油把番茄炒3–5分钟到明显出汁。
-  - 加入2.0 L清汤底中的水/低盐高汤和姜，煮开后转中火5分钟。
-  - 把火锅牛肉片逐片拨散加入，保持小沸，只煮到肉片全部变色且无冷生中心。
-  - 牛肉熟后立即关到小火；最后分次加盐和白胡椒，不让薄牛肉在汤里久滚。
+  - 番茄切块；Instant Pot Sauté 加1 tsp油把番茄炒3–5分钟至出汁，盛出备用。
+  - 锅中加入清汤底中的1 cup水或低盐高汤、姜和葱，放入火锅牛肉片并轻轻拨散；锁盖 High Pressure 1分钟，立即快速泄压。
+  - 检查牛肉片无冷生中心；未熟的片用 Sauté 短煮并逐片复查。
+  - 加入炒过的番茄和预留清汤，用 Sauté 小火煮至汤味融合；最后分次加盐和白胡椒，不让薄牛肉久滚。
   - 孩子份牛肉剪短，番茄压小。
-  - 完成提示：番茄汤味融合但仍清爽；牛肉片刚熟嫩、不因久滚卷紧发柴。
-  - 安全提示：整块牛肉可测处达到145°F/63°C并静置3分钟；薄片炒菜实际炒至无冷生中心。
+  - 完成提示：番茄汤味融合但仍清爽；牛肉片熟嫩、不因久滚卷紧发柴。
+  - 安全提示：牛肉片无冷生中心。
 child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
   - 火锅牛肉片：340 g
   - 番茄：300–450 g
-  - 清汤底：水 2.0 L；姜 5片；葱白 2段；盐 1–1.5 tsp，最后分次加；白胡椒 1小撮，可省
+  - 清汤底：水或低盐高汤 2.0 L；压力阶段先用1 cup；姜 5片；葱白 2段；盐 1–1.5 tsp最后分次加；白胡椒1小撮可省

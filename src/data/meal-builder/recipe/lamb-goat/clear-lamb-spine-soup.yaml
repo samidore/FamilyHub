@@ -7,9 +7,9 @@ tags:
   - light-seasoning
   - non-spicy-base
   - simmered
-  - stovetop-nonstick
   - advance-start
   - family-shared
+  - instant-pot
 fit_score: 2
 primary_role: protein
 main_protein_category: lamb
@@ -28,13 +28,12 @@ integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice
 active_minutes: 25–40
-meal_window_minutes: 25–40
-elapsed_minutes: 180–300
+meal_window_minutes: 90?120
+elapsed_minutes: 120?150
 advance_start_required: true
 equipment:
-  - medium burner
-  - soup pot
-burner_plan: Medium burner for simmering; can be started earlier and leave the wok burner free.
+  - 9-quart Instant Pot
+burner_plan: Pressure-cook lamb spine sections in measured clear broth, then add selected vegetables after release and simmer to their own texture.
 child_suitable: yes
 child_texture: 成品肉可软嫩，但必须由成人去骨。
 spicy_in_base: false
@@ -47,17 +46,16 @@ ingredients:
   - ingredient_id: lamb-spine-sections
     role: main-protein
 steps:
-  - 准备：带骨肉/大块肉冷水下锅，加足量清水煮开2–4分钟；捞出后用温水冲去浮沫和碎骨。；无额外蔬菜切成适合汤煮的一口大小；容易煮烂的材料单独放，后下。
-  - 焯洗后的肉放入汤锅，加2.0 L水、姜和葱，大火煮开后再次撇净浮沫。
-  - 转小火保持只有零星小泡，盖盖留一条缝；先以90–120分钟作为检查窗口，直到肉明显软化。
-  - 加入无额外蔬菜；冬瓜/山药通常从10–15分钟起检查，萝卜/土豆从15–25分钟起检查；最终以筷子能穿透且仍保持完整为准。
-  - 肉与配料都达到软嫩后再加盐，先加1 tsp，尝后每次补1/4 tsp；白胡椒可省。
-  - 关火前撇去表面明显浮油；孩子份先取无骨肉和软配料，再加少量清汤。
-  - 完成提示：汤保持清亮；肉软嫩；汤中配料能用筷子穿透但仍保持完整。
-  - 安全提示：整块羊/山羊肉可测处达到145°F/63°C并静置3分钟；炖菜以更高温度达到软烂质地。
+  - 羊蝎子冷水焯2–4分钟，温水冲去浮沫和碎骨；如加蔬菜，切成汤用大小并将易熟材料留到后放。
+  - Instant Pot 加入羊蝎子900 g、清水或低盐高汤6 cups、姜5片和葱白2段；锁盖 High Pressure 42分钟，自然泄压20分钟。检查肉软嫩并仍能成形；不够软时再加压8分钟、自然泄压10分钟。
+  - 开盖撇去明显浮油；加入无额外蔬菜，或按所选菜料硬度用 Sauté 小火煮：冬瓜/山药10–15分钟，萝卜/土豆15–25分钟，易熟菜最后10分钟加入。
+  - 肉与配料达到各自软度后分次加盐；白胡椒可省。孩子份先取无骨肉和软配料，再加少量清汤。
+  - 完成提示：汤保持清亮；羊蝎子软嫩；配料熟而仍保持完整。
+  - 安全提示：孩子份去骨并检查碎骨。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
   - 羊蝎子：900 g
-  - 清汤底：水 2.0 L；姜 5片；葱白 2段；盐 1–1.5 tsp，最后分次加；白胡椒 1小撮，可省
+  - 压力清汤底：水或低盐高汤6 cups；姜5片；葱白2段；盐1–1.5 tsp最后分次加；白胡椒1小撮可省
+  - 可选汤料按原 Option 选择，泄压后加入

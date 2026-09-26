@@ -8,9 +8,9 @@ tags:
   - light-seasoning
   - non-spicy-base
   - braised
-  - stovetop-nonstick
   - advance-start
   - child-support-protein
+  - instant-pot
 fit_score: 3
 primary_role: protein
 main_protein_category: beef
@@ -32,13 +32,12 @@ recommended_staple_ingredient_ids:
   - rice
   - noodles
 active_minutes: 25–40
-meal_window_minutes: 25–40
-elapsed_minutes: 180–300
+meal_window_minutes: 60?90
+elapsed_minutes: 120?180
 advance_start_required: true
 equipment:
-  - medium burner
-  - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
+  - 9-quart Instant Pot
+burner_plan: Sear the shank in the Instant Pot, pressure-braise to a firm sliceable texture, then reduce the braising liquid after release.
 child_suitable: conditional
 child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
 spicy_in_base: false
@@ -51,19 +50,16 @@ ingredients:
   - ingredient_id: beef-shank
     role: main-protein
 steps:
-  - 准备：牛腱保持整块或切成2大段；冷水焯3–5分钟，冲净浮沫。；把液体调料量好放在手边；糖单独放，避免炒糖时手忙脚乱。
-  - 厚底锅中火加1 tsp油；肉块分批把2–3个面煎到浅褐色，避免一次堆满出水。盛出。
-  - 原锅转中小火，下糖；糖刚融化成浅琥珀色时立刻加入姜葱，再把肉回锅翻匀。不要把糖烧到深褐发苦。
-  - 加入绍兴酒、生抽、老抽和水/高汤；液面应接近但不必完全淹没肉。煮开后撇沫，转小火盖盖。
-  - 保持最小火轻煨，直到竹签能穿入但牛腱仍紧实成形；不要炖到一夹就散。
-  - 肉已软嫩后开盖转中火；每2–3分钟翻一次，防止糖汁粘底。
-  - 当汁量约剩最初的1/4、从水状变成能在肉表面形成薄亮膜，锅底仍有少量可流动汁时关火；不要收到发黏发咸。
-  - 关火后让牛腱在卤汁中降温30分钟，再冷藏彻底变冷后逆纹薄切；孩子份不作为稳定软蛋白，沿用原 child coverage。
-  - 完成提示：牛腱熟透、冷却后能切薄片不散；卤汁有味但不收成糖浆。
-  - 安全提示：整块牛肉可测处达到145°F/63°C并静置3分钟；薄片炒菜实际炒至无冷生中心。
+  - 牛腱保持整块或切成2大段；冷水焯3–5分钟并冲净。Instant Pot Sauté 加1 tsp油，将肉分批煎至浅褐后取出。
+  - 加入糖并炒至浅琥珀色，放入姜葱；加入绍兴酒、生抽、老抽及水/低盐高汤3 cups，彻底刮净锅底。
+  - 放回牛腱，锁盖 High Pressure 55分钟，自然泄压20分钟。检查竹签能穿入但牛腱仍紧实成形；不够软时再加压8分钟并自然泄压10分钟。
+  - 取出牛腱；用 Instant Pot Sauté 将卤汁减少到能薄亮挂肉、仍可流动。牛腱在卤汁中降温30分钟，再冷藏彻底变冷后逆纹薄切。
+  - 孩子份沿用原 child coverage；薄片炒菜实际炒至无冷生中心。
+  - 完成提示：牛腱熟透、冷却后能薄切不散；卤汁有味但不收成糖浆。
+  - 安全提示：整块牛肉达到至少145°F/63°C并静置3分钟。
 child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
-  - 牛腱：900 g
-  - 家庭红烧汁：绍兴酒 1/4 cup；生抽 3 Tbsp；老抽 1 Tbsp；冰糖或白糖 2 Tbsp；水或低盐高汤 3 cups；姜 6片；葱白 3段；八角 1个，可省；桂皮 1小段，可省
+  - 牛腱：900 g，保持整块或切2大段
+  - 压力红烧汁：绍兴酒 1/4 cup；生抽 3 Tbsp；老抽 1 Tbsp；冰糖或白糖 2 Tbsp；水或低盐高汤 3 cups；姜 6片；葱白 3段；八角1个、桂皮1小段可省；另用油1 tsp煎肉

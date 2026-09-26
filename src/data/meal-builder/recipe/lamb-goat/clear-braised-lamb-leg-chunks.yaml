@@ -3,23 +3,31 @@ type: recipe
 status: candidate
 name_zh: 清炖羊腿肉
 name_en: Clear-Braised Lamb Leg Chunks
-tags: [light-seasoning, non-spicy-base, simmered, stovetop-nonstick, advance-start, family-shared, child-support-protein]
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - simmered
+  - advance-start
+  - family-shared
+  - child-support-protein
+  - instant-pot
 fit_score: 4
 primary_role: protein
 main_protein_category: lamb
-main_protein_ingredient_ids: [lamb-leg-chunks]
+main_protein_ingredient_ids: [ lamb-leg-chunks ]
 supporting_protein_ingredient_ids: []
 vegetable_ingredient_ids: []
 meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
 child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids: [rice]
+recommended_staple_ingredient_ids: [ rice ]
 active_minutes: 15–20
-meal_window_minutes: 20–30
-elapsed_minutes: 75–120
+meal_window_minutes: 60?75
+elapsed_minutes: 75?105
 advance_start_required: true
-equipment: [medium burner, soup pot]
-burner_plan: Medium burner; long simmer is passive.
+equipment:
+  - 9-quart Instant Pot
+burner_plan: Pressure-cook the lamb leg chunks in measured clear broth, then season and serve the broth after release.
 child_suitable: yes
 child_texture: 清炖到筷子能轻松夹断；孩子份去明显筋膜并剪小。
 spicy_in_base: false
@@ -32,15 +40,14 @@ ingredients:
   - ingredient_id: lamb-leg-chunks
     role: main-protein
 steps:
-  - 羊腿肉块冷水下锅，煮开2–3分钟，捞出用温水冲净浮沫。
-  - 汤锅加入500–700 g羊腿肉、约2 L水、姜4–6片和葱2段；大火煮开后再次撇净浮沫。
-  - 转小火保持零星小泡，盖盖约60分钟开始检查。
-  - 取一块用筷子测试；不能轻松夹断时继续每次15–20分钟，水位过低只补热水。
-  - 肉达到柔软后再加盐，煮5分钟；撇掉明显浮油。
+  - 羊腿肉块冷水下锅煮开2–3分钟，捞出用温水冲净浮沫。
+  - Instant Pot 加入500–700 g羊腿肉、清水或低盐高汤6 cups、姜4–6片和葱2段；锁盖 High Pressure 30分钟，自然泄压15分钟。
+  - 取一块用筷子测试；须柔软且可夹开。不够软时再加压6分钟并自然泄压10分钟；肉达到软度后分次加盐，撇掉明显浮油。
   - 孩子份去掉明显筋膜，剪小并加少量清汤保持湿润。
+  - 完成提示：羊肉软嫩但仍成形，汤清亮可舀。
 child_serving: 只取炖到容易夹断的软肉，剪小；本 Recipe 计入 Child Protein。
 adult_finish: 成人可另加白胡椒、香菜或辣椒。
 substitutions: []
 cook_ingredients:
   - 羊腿肉块：500–700 g
-  - 水：约2 L；姜 4–6片；葱白 2段；盐最后分次加
+  - 压力清汤底：水或低盐高汤6 cups；姜4–6片；葱白2段；盐最后分次加

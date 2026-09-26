@@ -6,9 +6,10 @@ name_en: Chicken and Fresh Shiitake Udon Soup
 tags:
   - light-seasoning
   - non-spicy-base
-  - stovetop-nonstick
   - lunch-45
   - family-shared
+  - instant-pot
+  - stovetop-nonstick
 fit_score: 5
 primary_role: mixed
 main_protein_category: chicken
@@ -28,14 +29,13 @@ integral_staple_ingredient_ids:
   - noodles
 recommended_staple_ingredient_ids: []
 active_minutes: 20–35
-meal_window_minutes: 30–45
-elapsed_minutes: 35–60
+meal_window_minutes: 45?60
+elapsed_minutes: 60?75
 advance_start_required: false
 equipment:
-  - medium burner
-  - pot
-  - wok/nonstick pan if stir-fried
-burner_plan: Pot on medium burner; use high-output wok only if the recipe is a stir-fried noodle.
+  - 9-quart Instant Pot
+  - medium burner for udon
+burner_plan: Pressure-cook the thin chicken briefly in a measured portion of the broth; use the remaining broth and finish the udon separately after release.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -52,20 +52,19 @@ ingredients:
   - ingredient_id: noodles
     role: integral-staple
 steps:
-  - 准备：鸡片加短腌抓匀10分钟；香菇切片。；乌冬按包装焯散，沥干分3碗。
-  - 汤锅把清汤乌冬底煮开，加入鲜香菇，中火煮3分钟到香菇软。
-  - 转小火保持轻沸，把鸡片逐片拨散下锅。
-  - 煮到鸡片全部变白，再从最厚片确认165°F/74°C；达到即关到最小火。
-  - 汤尝味后只补必要盐；不要让鸡胸继续在汤里久滚。
-  - 把热汤、香菇和鸡片浇入乌冬碗；孩子份剪短面条和鸡片。
-  - 完成提示：鸡片刚熟嫩、香菇软；汤清而可直接喝，乌冬不久泡发胀。
-  - 安全提示：最厚处达到165°F/74°C；带骨件测最厚肉处，避开骨头。
+  - 鸡胸切5 mm薄片，加盐1/4 tsp、玉米淀粉1 tsp和水1 Tbsp抓匀，短腌10分钟；香菇切片，乌冬按包装焯散沥干。
+  - Instant Pot 加入1 cup低盐鸡汤或日式高汤、鸡肉和姜；锁盖 High Pressure 1分钟，立即快速泄压。
+  - 检查最大鸡片达到165°F/74°C；未达温时用 Instant Pot Sauté 小火逐片煮熟并复测。
+  - 加入鲜香菇和剩余汤底、生抽及味醂；用 Sauté 小火煮3分钟至香菇软，尝味后只补必要盐。
+  - 将热汤、香菇和鸡片浇在另锅煮好的乌冬上；孩子份剪短面条和鸡片。
+  - 完成提示：鸡片熟嫩、香菇软；汤清而可直接喝，乌冬不久泡发胀。
+  - 安全提示：鸡肉最厚处达到165°F/74°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
   - 鸡胸：340 g，切5 mm薄片
   - 鲜香菇：180 g，切5 mm片
-  - 乌冬面：3人份，约600 g熟面
+  - 乌冬面：3人份，约600 g熟面，另锅煮
   - 鸡肉短腌：盐 1/4 tsp；玉米淀粉 1 tsp；水 1 Tbsp
-  - 清汤乌冬底：低盐鸡汤或日式高汤 5 cups；生抽 1.5 Tbsp；味醂 1 Tbsp；姜 3片
+  - 清汤乌冬底：低盐鸡汤或日式高汤 5 cups；压力阶段先用1 cup；生抽 1.5 Tbsp；味醂 1 Tbsp；姜 3片

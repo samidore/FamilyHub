@@ -7,9 +7,9 @@ tags:
   - child-all-ingredients-eaten
   - light-seasoning
   - non-spicy-base
-  - stovetop-nonstick
   - lunch-30
   - child-support-protein
+  - instant-pot
 fit_score: 4
 primary_role: mixed
 main_protein_category: beef
@@ -31,14 +31,13 @@ integral_staple_ingredient_ids:
   - rice
 recommended_staple_ingredient_ids: []
 active_minutes: 15–25
-meal_window_minutes: 20–35
-elapsed_minutes: 20–40
+meal_window_minutes: 30?45
+elapsed_minutes: 45?60
 advance_start_required: false
 equipment:
-  - medium burner
-  - nonstick pan
+  - 9-quart Instant Pot
   - separately cooked rice
-burner_plan: Medium burner for topping; rice is treated as an already-cooked or separately cooked staple.
+burner_plan: Pressure-cook the thin beef and onion very briefly in sukiyaki broth, release immediately, and serve over separately cooked rice.
 child_suitable: conditional
 child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
 spicy_in_base: false
@@ -55,20 +54,17 @@ ingredients:
   - ingredient_id: rice
     role: integral-staple
 steps:
-  - 准备：牛肉片解开；洋葱薄切；寿喜烧汁混匀。
-  - 宽锅放寿喜烧汁和洋葱，中火煮开后转中小火2–3分钟，让洋葱开始变软。
-  - 牛肉片逐片加入并拨散，避免叠成团。
-  - 保持小沸2–4分钟，轻翻一次；撇去明显浮沫。
-  - 牛肉无冷生中心后立即停火，锅内应保留可舀汁，不收浓。
-  - 分到3碗热饭上；每碗带2–3 Tbsp汁湿润米饭。
-  - 孩子份剪短牛肉片。
-  - 完成提示：洋葱软甜、牛肉刚熟；寿喜烧汁仍可流动、足以湿润米饭。
-  - 安全提示：整块牛肉可测处达到145°F/63°C并静置3分钟；薄片炒菜实际炒至无冷生中心。
+  - 牛肉片解开；洋葱薄切；寿喜烧汁混匀。
+  - Instant Pot 加入洋葱、寿喜烧汁和火锅牛肉片并拨散；锁盖 High Pressure 1分钟，完成后立即快速泄压。
+  - 检查牛肉无冷生中心；未熟时用 Instant Pot Sauté 短煮并逐片复查。锅中保留可舀汁，不收浓。
+  - 分到3碗热饭上，每碗带2–3 Tbsp汁湿润米饭；孩子份剪短牛肉片。
+  - 完成提示：洋葱软甜、牛肉熟嫩；寿喜烧汁仍可流动、足以湿润米饭。
+  - 安全提示：牛肉片无冷生中心。
 child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
   - 火锅牛肉片：340 g
   - 洋葱：200 g，薄切
-  - 米饭：3碗熟饭
-  - 寿喜烧汁：生抽 3 Tbsp；味醂 3 Tbsp；清酒 2 Tbsp；糖 1.5 Tbsp；水或日式高汤 1/2 cup
+  - 米饭：3碗熟饭，另行烹好
+  - 压力寿喜烧汁：生抽3 Tbsp；味醂3 Tbsp；清酒2 Tbsp；糖1.5 Tbsp；水或日式高汤1/2 cup

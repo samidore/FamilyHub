@@ -8,10 +8,10 @@ tags:
   - light-seasoning
   - non-spicy-base
   - braised
-  - stovetop-nonstick
   - advance-start
   - family-shared
   - two-vegetable-ready
+  - instant-pot
 fit_score: 3
 primary_role: mixed
 main_protein_category: beef
@@ -34,13 +34,12 @@ integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice
 active_minutes: 25–40
-meal_window_minutes: 25–40
-elapsed_minutes: 180–300
+meal_window_minutes: 60?90
+elapsed_minutes: 90?120
 advance_start_required: true
 equipment:
-  - medium burner
-  - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
+  - 9-quart Instant Pot
+burner_plan: Pressure-braise the beef short ribs first, then pressure-cook the vegetables briefly and reduce the sauce with Instant Pot Saut?.
 child_suitable: yes
 child_texture: 成品肉可软嫩，但必须由成人去骨。
 spicy_in_base: false
@@ -57,15 +56,13 @@ ingredients:
   - ingredient_id: daikon
     role: vegetable
 steps:
-  - 准备：牛小排冷水浸20–30分钟换水一次以去血水，冲净骨屑。；萝卜胡萝卜切大块，边角略削圆可减少久炖碎裂。
-  - 牛小排冷水下锅煮开3分钟，捞出冲净；换干净锅。
-  - 加入牛小排和煮汁，煮开后转小火盖盖炖45–60分钟，直到肉开始软。
-  - 加入萝卜和胡萝卜，继续小火20–30分钟。
-  - 肉达到软嫩、蔬菜筷子可穿透后开盖中火减少汤汁。
-  - 汁量减少到约原来的1/3、能薄挂肉但仍可舀时关火；撇掉明显浮油。
-  - 孩子份去骨、去硬筋，配软萝卜胡萝卜。
-  - 完成提示：牛肉接近脱骨、蔬菜软而完整；汁浓但仍可流动。
-  - 安全提示：整块牛肉可测处达到145°F/63°C并静置3分钟；薄片炒菜实际炒至无冷生中心。
+  - 牛小排冷水浸20–30分钟换水一次，冲净骨屑；萝卜和胡萝卜切大块、边角略削圆。
+  - 牛小排冷水下锅煮3分钟后冲净；Instant Pot 加入牛小排、生抽1/3 cup、水或低盐高汤1.5 cups、梨/苹果泥、糖、蒜、姜和芝麻油。
+  - 锁盖 High Pressure 35分钟，自然泄压15分钟。检查肉开始软化并仍能成形；不够软时再加压5分钟并自然泄压10分钟。
+  - 取出牛小排暂放；将萝卜、胡萝卜和约1 cup压力汁放回内锅，High Pressure 2分钟后快速泄压。
+  - 放回排骨，用 Instant Pot Sauté 减少汁液至薄挂肉但仍可舀；撇掉明显浮油。孩子份去骨、去硬筋，配软蔬菜。
+  - 完成提示：牛肉接近脱骨，蔬菜软而完整；汁浓但仍可流动。
+  - 安全提示：牛肉达到安全温度；带骨肉成人去骨并检查碎骨。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
@@ -73,4 +70,4 @@ cook_ingredients:
   - 横切牛小排：900 g
   - 白萝卜：350 g，切大块
   - 胡萝卜：250 g，切大块
-  - Galbijjim 煮汁：生抽 1/3 cup；水或低盐高汤 3 cups；梨/苹果泥 1/2 cup；糖 2 Tbsp；蒜末 1 Tbsp；姜末 1 tsp；芝麻油 1 tsp
+  - 压力煮汁：生抽 1/3 cup；水或低盐高汤 1.5 cups；梨/苹果泥 1/2 cup；糖 2 Tbsp；蒜末 1 Tbsp；姜末 1 tsp；芝麻油 1 tsp；泄压后再按需补少量压力汁

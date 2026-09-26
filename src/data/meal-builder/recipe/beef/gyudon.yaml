@@ -3,24 +3,32 @@ type: recipe
 status: candidate
 name_zh: 牛丼
 name_en: Gyudon Beef Rice Bowl
-tags: [child-all-ingredients-eaten, light-seasoning, non-spicy-base, stovetop-nonstick, lunch-30, child-support-protein]
+tags:
+  - child-all-ingredients-eaten
+  - light-seasoning
+  - non-spicy-base
+  - lunch-30
+  - child-support-protein
+  - instant-pot
 fit_score: 5
 primary_role: mixed
 main_protein_category: beef
-main_protein_ingredient_ids: [hot-pot-beef-slices, sliced-beef-brisket]
+main_protein_ingredient_ids: [ hot-pot-beef-slices, sliced-beef-brisket ]
 supporting_protein_ingredient_ids: []
-optional_groups: [one-pot-mix]
-vegetable_ingredient_ids: [onion]
+optional_groups: [ one-pot-mix ]
+vegetable_ingredient_ids: [ onion ]
 meal_contribution: { protein: 1, vegetable: 0.5, staple: 1 }
 child_coverage: { protein: true, vegetable: true }
-integral_staple_ingredient_ids: [rice]
+integral_staple_ingredient_ids: [ rice ]
 recommended_staple_ingredient_ids: []
 active_minutes: 15–25
-meal_window_minutes: 20–35
-elapsed_minutes: 20–40
+meal_window_minutes: 30?45
+elapsed_minutes: 45?60
 advance_start_required: false
-equipment: [medium burner, nonstick pan, separately cooked rice]
-burner_plan: Medium burner for topping; rice is treated as an already-cooked or separately cooked staple.
+equipment:
+  - 9-quart Instant Pot
+  - separately cooked rice
+burner_plan: Pressure-cook the thin beef and onion briefly in the gyudon broth, then release immediately and serve with separately cooked rice.
 child_suitable: yes
 child_texture: 薄牛肉在汁中煮熟后保持湿润；孩子份剪成短小段，洋葱煮软。
 spicy_in_base: false
@@ -30,25 +38,24 @@ oil_level: light
 servings: 3
 detail_level: cookable
 ingredients:
-  - one_of: [hot-pot-beef-slices, sliced-beef-brisket]
+  - one_of: [ hot-pot-beef-slices, sliced-beef-brisket ]
     role: main-protein
   - ingredient_id: onion
     role: vegetable
   - ingredient_id: rice
     role: integral-staple
 steps:
-  - 牛肉片若很长切短；洋葱薄切；牛丼汁全部放宽锅中。
-  - 冷锅加入牛丼汁和洋葱，中火煮开后转中小火，煮到洋葱透明柔软。
-  - 牛肉片逐片拨散加入，轻轻翻动让肉全部接触汤汁。
-  - 盖盖中小火3–4分钟；打开检查无冷生中心，再煮约1分钟。
-  - 锅中保留可流动汁，直接分到熟饭上，不收成浓酱。
-  - 孩子份把牛肉剪成短小段，连软洋葱和汁一起提供。
-  - 完成提示：洋葱软甜、牛肉熟而湿润；锅内保留足够丼汁。
+  - 牛肉片若很长切短；洋葱薄切；牛丼汁混匀。
+  - Instant Pot 加入洋葱、牛丼汁和火锅牛肉片，轻轻拨散；锁盖 High Pressure 1分钟，完成后立即快速泄压。
+  - 检查牛肉无冷生中心；若未熟，用 Instant Pot Sauté 短煮并逐片复查。锅内保留可流动汁，不收浓。
+  - 连软洋葱与丼汁分到熟饭上；孩子份把牛肉剪成短小段。
+  - 完成提示：洋葱软甜、牛肉熟而湿润；锅内留足够丼汁。
+  - 安全提示：牛肉无冷生中心；薄肉片用温度计时应从侧面测中心。
 child_serving: 牛肉剪短、洋葱煮软；本 Recipe 计入 Child Protein。
 adult_finish: 孩子份盛出后，成人可另加七味粉或更重调味。
 substitutions: []
 cook_ingredients:
   - 火锅牛肉片或牛胸肉薄片：340 g
   - 洋葱：约170 g，薄切
-  - 米饭：3碗熟饭
-  - 牛丼汁：日式高汤 3/4 cup；清酒 3 Tbsp；味醂 3 Tbsp；生抽 4.5 Tbsp；糖 1.5 Tbsp
+  - 米饭：3碗熟饭，另行烹好
+  - 压力丼汁：日式高汤 3/4 cup；清酒 3 Tbsp；味醂 3 Tbsp；生抽 4.5 Tbsp；糖 1.5 Tbsp

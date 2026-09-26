@@ -6,10 +6,10 @@ name_en: Xinjiang Lamb Pilaf
 tags:
   - light-seasoning
   - non-spicy-base
-  - stovetop-nonstick
   - advance-start
   - family-shared
   - two-vegetable-ready
+  - instant-pot
 fit_score: 4
 primary_role: mixed
 main_protein_category: lamb
@@ -30,13 +30,12 @@ integral_staple_ingredient_ids:
   - rice
 recommended_staple_ingredient_ids: []
 active_minutes: 20–35
-meal_window_minutes: 20–35
-elapsed_minutes: 90–180
+meal_window_minutes: 60?90
+elapsed_minutes: 90?120
 advance_start_required: true
 equipment:
-  - medium burner
-  - covered pot
-burner_plan: Covered pot on medium burner; no second burner required for the recipe itself.
+  - 9-quart Instant Pot
+burner_plan: Pressure-cook the lamb shoulder first, then cook the rice and vegetables in the pot after release to preserve the pilaf texture.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -55,15 +54,12 @@ ingredients:
   - ingredient_id: rice
     role: integral-staple
 steps:
-  - 准备：米洗净沥干；羊肉切块；胡萝卜洋葱切好。；水量按来源半份起始值，若家庭米种吸水不同以后再校准。
-  - 厚锅中大火加油，羊肉分批煎到多面褐色。
-  - 加入洋葱炒软，再加胡萝卜炒2分钟；加入盐、生抽、孜然。
-  - 倒入水/高汤煮开，转小火先煮羊肉15–20分钟。
-  - 把米均匀撒在表面，不搅到底；液体应略高于米面。
-  - 盖盖最小火煮到米熟且水被吸收；关火焖10分钟。
-  - 开盖从底部翻松，确认羊肉软熟、米无硬芯。
+  - 米洗净沥干；羊肉切2.5 cm块；胡萝卜、洋葱切好。Instant Pot Sauté 加油将羊肉分批煎至多面褐色。
+  - 加入水或低盐高汤1 cup、盐、生抽和孜然，刮净锅底；锁盖 High Pressure 18分钟，自然泄压10分钟。检查羊肉软熟；不够软时再加压5分钟并自然泄压8分钟。
+  - 取出羊肉及压力汁暂放；内锅加入洋葱炒软，再加胡萝卜炒2分钟。加入米和预留压力汁，再补水/高汤至原方总量2 cups。
+  - 把羊肉铺回米面，不搅到底；锁盖 High Pressure 4分钟，自然泄压10分钟。开盖翻松，确认米无硬芯、胡萝卜软甜、羊肉软熟；若米仍硬，盖上焖5分钟。
   - 完成提示：米饭熟而松、无游离水；羊肉软熟；胡萝卜软甜。
-  - 安全提示：整块羊/山羊肉可测处达到145°F/63°C并静置3分钟；炖菜以更高温度达到软烂质地。
+  - 安全提示：整块羊肉达到至少145°F/63°C并静置3分钟；炖至所需软度。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
@@ -72,4 +68,4 @@ cook_ingredients:
   - 羊肩肉块：450 g，切2.5 cm块
   - 胡萝卜：225 g，粗丝/条
   - 洋葱：1/2个，约100 g，切丝
-  - 抓饭调味：水或低盐高汤 2 cups；盐 1 tsp；生抽 1 tsp；孜然粉 1/2 tsp；中性油 1.5 Tbsp
+  - 抓饭调味：水或低盐高汤总量2 cups；盐1 tsp；生抽1 tsp；孜然粉1/2 tsp；中性油1.5 Tbsp；先以1 cup液体压力煮羊肉，余量供米饭阶段
