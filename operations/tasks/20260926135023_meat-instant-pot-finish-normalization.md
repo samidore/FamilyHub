@@ -155,3 +155,17 @@ Fix task-caused failures. If full verification is blocked only by an environment
 - Updated `behavior.md` with the path-based 9-quart Instant Pot household rule and pressure-base/late-Finish semantics. Updated `data-model.md` to replace the cut-gated covered-braise family, align the illustrative braised-chicken equipment, and state that pressure timing/liquid/release remain Recipe-specific.
 - Validation: `git diff --check` passed; `node scripts/validate.mjs` and `node scripts/validate-meal-privacy.mjs` both passed, including Meal Builder YAML validation (142 Ingredients / 153 Recipes) and privacy validation. `pnpm` is unavailable in this environment, so the equivalent Node scripts were invoked directly.
 - Checkpoint 1 result: COMPLETE. The checkpoint commit `4fd1fec71f7f95f194402031f6d371253aa632c1` is pushed to `origin/main`. Next checkpoint: normalize active wet meat Recipes and existing Finish semantics, including the explicit ribs Finish choices.
+### Checkpoint 2 execution
+
+- Git preflight starting local HEAD: `ed7ab5eba3fa7e27ff1bd615161d822b41b92a60`.
+- Fetched `origin/main` tip: `ed7ab5eba3fa7e27ff1bd615161d822b41b92a60`.
+- Origin, branch (`main`), upstream (`origin/main`), and equal local/remote ancestry verified; worktree was clean.
+#### Checkpoint 2 completion
+
+- Normalized all 37 audited wet-cook Recipes to measured, recipe-specific 9-quart Instant Pot pressure bases; updated tags, equipment, burner plans, timing, steps, and cook ingredients. Stir-fry, pan-sear, steam, roast, and other dry/quick identities remain unchanged.
+- Preserved Recipe IDs, tracked Ingredient bindings, contribution, optional groups, child-coverage meaning, and serving behavior. Pressure-based Finish families (`hong-shao-rou`, `oyster-sauce-braised-chicken`, and `coca-cola-chicken-wings`) now finish with late flavor/reduction only. Existing stir-fry Finish Recipes remain stir-fry.
+- Kept `shanghai-sweet-sour-ribs` as the sole ribs Recipe. Its default `sweet-sour` uses the root display identity `糖醋排骨`; non-default `red-braise` displays `红烧排骨`. Both use the same pressure base and servings; no standalone red-braised ribs Recipe was added.
+- No additional consolidation was mechanically safe from current bindings and serving identities. Unrepresented future directions using existing Finish flavors, left for user choice: `shanghai-braised-pork-chops` with `hong-shao-rou` Kakuni / Thit Kho / Adobo finishes; `cantonese-soy-sauce-chicken` with existing oyster-chicken Teriyaki / Adobo finishes. These were not added because the current ingredient bindings and dish identities differ. Wing Finish choices remain local to the current whole/party-wing Recipe.
+- Validation passed: Meal Data helper `verify-item` for every changed active Recipe (37/37); `node scripts/validate.mjs`; `node scripts/validate-meal-privacy.mjs`; `git diff --check`; direct structural audit for the 37 pressure routes, Instant Pot tags/equipment, UTF-8 text, and ribs Finish identities.
+- Checkpoint 2 data commits pushed to `origin/main`: `ecb1d0d5db289072ec7f3039d02a0067a2211a54`, `86a435dd60112077874453f8de9b1c1cde3c1341`, and UTF-8 correction `e04dc800c7ce3d611f15ba5a3c7a6cbb4a2ee57f`.
+- Checkpoint 2 result: COMPLETE. Next checkpoint: regression coverage and full validation (`pnpm run verify`).
