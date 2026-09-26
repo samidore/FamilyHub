@@ -12,7 +12,7 @@ test('Day Trips search filters cards and responds to the native search event', a
   await search.fill('Bergen County Zoo');
 
   await expect(visibleCards).toHaveCount(1);
-  await expect(visibleCards.locator('h2')).toContainText('Bergen County Zoo');
+  await expect(visibleCards).toHaveAttribute('data-search', /bergen county zoo/);
   await expect(page.locator('#trip-count')).toContainText(`显示 1 / ${total} 个地点`);
 
   await search.evaluate((input: HTMLInputElement) => {
