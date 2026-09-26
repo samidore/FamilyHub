@@ -25,6 +25,10 @@ const searchable = [
   d.city,
   d.state,
   ...d.locations.map((location) => location.name),
+  d.note,
+  d.notice ?? '',
+  d.parking?.fee ?? '',
+  d.parking?.note ?? '',
   ...originalTags,
   ...originalTags.map((tag) => activityLabels[tag]),
 ].join(' ').toLocaleLowerCase();

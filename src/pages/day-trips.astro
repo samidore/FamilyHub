@@ -147,7 +147,16 @@ const tripCount = dayTrips.length;
     const list = document.querySelector<HTMLElement>('#trip-list')!;
     const count = document.querySelector<HTMLElement>('#trip-count')!;
     const empty = document.querySelector<HTMLElement>('#trip-empty')!;
+    const filterDisclosure = document.querySelector<HTMLDetailsElement>('.filter-disclosure')!;
+    const desktopFilters = window.matchMedia('(min-width: 800px)');
 
+    const syncDesktopFilterDisclosure = () => {
+      if (desktopFilters.matches) filterDisclosure.open = true;
+    };
+    syncDesktopFilterDisclosure();
+    desktopFilters.addEventListener('change', syncDesktopFilterDisclosure);
+
+    const normalizeSearch = (value: string) => value.normalize('NFKC').trim().toLocaleLowerCase();
     const locationsFor = (card: HTMLElement) => JSON.parse(card.dataset.locations ?? '[]') as TripLocation[];
     const minutes = (time: string) => {
       const [hours, mins] = time.split(':').map(Number);
@@ -217,14 +226,14 @@ const tripCount = dayTrips.length;
     });
 
     const render = () => {
-      const query = controls.q.value.trim().toLocaleLowerCase();
+      const query = normalizeSearch(controls.q.value);
       const maxDrive = controls.drive.value ? Number(controls.drive.value) : Number.POSITIVE_INFINITY;
       const selected = selectedActivities();
       const now = new Date();
 
       const visible = cards.filter((card) => {
         if (driveFor(card) > maxDrive) return false;
-        if (query && !(card.dataset.search ?? '').includes(query)) return false;
+        if (query && !normalizeSearch(card.dataset.search ?? '').includes(query)) return false;
         if (selected.size === 0) return false;
 
         const originalLocations = locationsFor(card);
@@ -273,10 +282,14 @@ const tripCount = dayTrips.length;
 
     if ([controls.drive, controls.environment, controls.noPlayground, controls.bicycleFree, controls.stroller].some((control) => control.value) ||
         controls.weather.value !== 'sunny' || controls.open.value || controls.activities.value !== 'all') {
-      document.querySelector<HTMLDetailsElement>('.filter-disclosure')!.open = true;
+      filterDisclosure.open = true;
     }
 
     bindListState(controls, render);
+    controls.q.addEventListener('search', () => {
+      writeListState(controls);
+      render();
+    });
 
     activityButtons.forEach((button) => button.addEventListener('click', () => {
       const selected = selectedActivities();
