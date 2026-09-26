@@ -169,3 +169,10 @@ Fix task-caused failures. If full verification is blocked only by an environment
 - Validation passed: Meal Data helper `verify-item` for every changed active Recipe (37/37); `node scripts/validate.mjs`; `node scripts/validate-meal-privacy.mjs`; `git diff --check`; direct structural audit for the 37 pressure routes, Instant Pot tags/equipment, UTF-8 text, and ribs Finish identities.
 - Checkpoint 2 data commits pushed to `origin/main`: `ecb1d0d5db289072ec7f3039d02a0067a2211a54`, `86a435dd60112077874453f8de9b1c1cde3c1341`, and UTF-8 correction `e04dc800c7ce3d611f15ba5a3c7a6cbb4a2ee57f`.
 - Checkpoint 2 result: COMPLETE. Next checkpoint: regression coverage and full validation (`pnpm run verify`).
+
+### Checkpoint 3 execution
+
+- Added `tests/meal-meat-pressure.test.mjs` with data-level coverage for the 41 audited active wet-cook meat pressure Recipes, pressure-based Finish layering, and the two Shanghai ribs Finish identities and resolution.
+- Focused regression tests passed (3/3). `npm.cmd run validate`, `check`, `build`, `audit`, `test:unit` (218/218), and `test:browser` (54/54) passed. `git diff --check` passed.
+- The requested `pnpm run verify` could not start because `pnpm` is unavailable. Available equivalent steps were run. `test:rules` could not start its Firebase emulator because Java is unavailable (`Could not spawn java -version`); full release verification is therefore not claimed.
+- Checkpoint 3 result: COMPLETE with the environment blockers above documented. Task work is complete.
