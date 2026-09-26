@@ -163,8 +163,8 @@ active_minutes: 20–35
 meal_window_minutes: 30–45
 elapsed_minutes: 35–60
 advance_start_required: false
-equipment: [medium burner, covered pot / braiser]
-burner_plan: ''
+equipment: [9-quart Instant Pot, medium burner for reduction]
+burner_plan: Instant Pot cooks the chicken to its target texture; use the medium burner only for a separate post-pressure sauce reduction.
 child_suitable: yes
 child_texture: ''
 spicy_in_base: false
@@ -202,13 +202,14 @@ The current authoring families are:
 | Family | Typical cooking path / protein form | Useful Finish directions to consider |
 | --- | --- | --- |
 | Thin-meat quick stir-fry | Thin beef, pork, lamb, or similarly quick-cooking whole-muscle slices; high heat, short cook, meat commonly leaves and returns to the pan | light sauce, scallion, oyster, cumin, ginger, Beijing sweet-bean, scallion-salt, black-pepper style |
-| Covered braise + reduce | Chicken thighs/drumsticks, pork ribs/belly, duck pieces, and other cuts that can braise gently in a covered pan before an uncovered reduction | oyster-soy, teriyaki, soy-aromatic, red-braise, vinegar/adobo-style, other pantry-based aromatic sauces |
-| Pressure tenderize + finish | Brisket/chuck/short rib, pork shoulder/feet, tougher lamb/goat, and similar collagen-rich cuts where pressure cooking establishes tenderness before a stovetop finish | red-braise, soy-aromatic, vinegar-fragrant, spice-forward, other inventory-neutral finishing sauces |
+| 9-quart Instant Pot wet braise + finish | Any meat Recipe whose wet braise, stew, simmer, lu-style braise, casserole, or meat-soup phase cooks/tenderizes the meat; this path has no cut, tenderness, thickness, bone, or organ suitability gate | oyster-soy, teriyaki, soy-aromatic, red-braise, vinegar/adobo-style, vinegar-fragrant, spice-forward, and other inventory-neutral late sauces |
 | Pan-sear + sauce/glaze | Steak, pork chop, chicken breast/thigh, patties, and other portions whose identity is primarily a seared surface plus a short final sauce/glaze | plain/pan jus, garlic-butter style, black-pepper, shoyu-butter, teriyaki-style glaze |
 | Steam + dress | Whole fish/fillets and other proteins whose main cook is steaming and whose identity changes mostly in the dressing/aromatics | ginger-scallion, black-bean, light soy, other steam-compatible pantry dressings |
 | Ground/minced meat stir-fry | Ground pork/beef and similar minced meat cooked loose, then combined with a vegetable or tofu base | light sauce, sauce-diced style, ginger, scallion, other quick pantry seasoning profiles |
 
-These direction lists are deliberately broader than any one Recipe. Use them to **suggest possibilities**, then judge the specific ingredient, cut, texture, family preferences, and base cooking path before adding anything.
+These direction lists are deliberately broader than any one Recipe. Use them to **suggest possibilities**, then judge the specific ingredient, cut, texture, family preferences, and base cooking path before adding anything. Stir-fry, steam, roast, bake, pan-sear, and other identity-defining dry or quick routes keep their method. For a wet meat route, the Instant Pot base—not Finish—cooks the meat to target texture; a separate stovetop step may reduce or coat the cooked meat afterward. Pressure time, release, and liquid are Recipe-specific.
+
+On an Instant Pot Recipe with `finish_options`, shared base cooking must finish the main meat-cooking/tenderizing phase before the selected Finish begins. Finish steps are limited to late flavoring, dressing, coating, or reduction and must not tell the cook to simmer/braise raw meat until tender.
 
 Recipe identity stays local:
 

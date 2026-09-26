@@ -4,7 +4,11 @@
 
 The tool supports multiple adults and a young child without storing birthdays or identity details. The household prefers mild, low-oil, non-spicy shared food; adult heat is added after the child's portion is removed. Prefer one shared family dish over a separate child meal. Supported methods are braise, simmer, steam, roast, pan-sear, stir-fry, oven, air fryer, and Instant Pot; deep-frying is not used. Common equipment is a 9-quart Instant Pot, stovetop nonstick pan, strong-burner wok/iron pan, oven, and small air fryer.
 
-Time is a workload signal, not an automatic hard filter. Account for opening, washing, peeling, trimming, cutting, marinating, preheating, pan changes, and cleaning—not only heat time. `active_minutes`, `meal_window_minutes`, `elapsed_minutes`, and `advance_start_required` remain source/workflow ranges until the household measures them. Instant Pot meat pressure is commonly about 10–15 minutes, but release, liquid, rice ratio, and cut thickness stay recipe-specific.
+Cooking path determines the meat method. Keep stir-fry, steam, roast, bake, pan-sear, and other identity-defining dry or quick routes. When a Recipe cooks/tenderizes its meat through a wet braise, stew, simmer, lu-style braise, casserole, or meat-soup phase, use the household 9-quart Instant Pot for that meat-cooking phase regardless of cut, tenderness, thickness, bone, or organ form. Set pressure time, release, liquid, and target texture for the Recipe. A separate stovetop reduction or late finish may follow pressure cooking.
+
+For an Instant Pot Recipe with `finish_options`, the shared base cooks the meat to its target texture before Finish. Finish steps may add or change late flavor, dressing, coating, or reduction; they do not repeat the main meat-cooking/tenderizing phase.
+
+Time is a workload signal, not an automatic hard filter. Account for opening, washing, peeling, trimming, cutting, marinating, preheating, pan changes, and cleaning—not only heat time. `active_minutes`, `meal_window_minutes`, `elapsed_minutes`, and `advance_start_required` remain source/workflow ranges until the household measures them. Instant Pot pressure time, release, and liquid are Recipe-specific; do not use one pressure time for all meats.
 
 ## Shared four-step flow
 
