@@ -60,9 +60,9 @@ finish_options:
     label_zh: 红烧
     default: true
     cook_ingredients:
-      - 绍兴酒 1/4 cup；生抽 3 Tbsp；老抽 1 Tbsp；冰糖或白糖 2 Tbsp
+      - 绍兴酒 1/4 cup；生抽 3 Tbsp；蚝油 1 Tbsp；老抽 1 Tbsp；冰糖或白糖 2 Tbsp
     steps:
-      - 肉已在共享 Instant Pot 基底中软嫩；把绍兴酒、生抽、老抽和糖调匀后加入肉与少量压力汤汁，中火翻动收成薄亮红烧汁。
+      - 肉已在共享 Instant Pot 基底中软嫩；把绍兴酒、生抽、蚝油、老抽和糖调匀后加入肉与少量压力汤汁，中火翻动收成薄亮红烧汁。
   - id: kakuni
     label_zh: 角煮
     default: false
@@ -104,4 +104,3 @@ substitutions: []
 cook_ingredients:
   - 猪肩肉块 / 薄切五花肉：900 g；任选一种
   - 基础焖煮液：水或低盐高汤 2 cups；姜 6片；葱白 3段；八角 1个，可省
-  - 基础焖煮液：水或低盐高汤 2 cups；姜 6片；葱白 3段；八角 1个可省。压力段用全部2 cups薄液体；Finish 调味仅在压力完成后加入。

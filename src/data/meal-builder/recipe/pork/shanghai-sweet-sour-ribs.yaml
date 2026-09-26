@@ -38,7 +38,7 @@ advance_start_required: true
 equipment:
   - 9-quart Instant Pot
   - medium burner / wide pan for Finish reduction
-burner_plan: Use the Instant Pot shared base to soften the ribs; use a medium burner only for the selected late sweet-sour or red-braise sauce.
+burner_plan: Use the Instant Pot shared base to soften the ribs; use a medium burner only for the selected post-pressure Finish and reduction.
 child_suitable: yes
 child_texture: 成品肉可软嫩，但必须由成人去骨。
 spicy_in_base: false
@@ -56,7 +56,7 @@ steps:
   - 加入1 1/2 cups水或低盐高汤、姜和葱白并刮净锅底；排骨放回，锁盖 High Pressure 20分钟，自然泄压10分钟。
   - 检查最大排骨肉已软嫩、能较容易从骨上咬下；仍紧实时再 High Pressure 3–5分钟并快速泄压。保留约1/2 cup压力汤汁供 Finish 使用。
   - 把软排骨和所选 Finish 调味转入宽锅；只做晚段风味与收汁，不再把生肉焖至软。
-  - 完成提示：排骨肉软嫩；所选糖醋或红烧汁薄亮包裹、不成硬糖壳。
+  - 完成提示：排骨肉软嫩；所选 Finish 薄亮包裹、不成硬糖壳。
   - 孩子份先盛出并由成人彻底去骨、检查碎骨/硬软骨后剪小。
   - 安全提示：给孩子的排骨肉必须由成人去骨并检查碎骨；猪肉实际做至熟透。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
@@ -79,6 +79,22 @@ finish_options:
     default: false
     display_name_zh: 红烧排骨
     cook_ingredients:
-      - 绍兴酒 1 Tbsp；生抽 2 Tbsp；老抽 2 tsp；冰糖或白糖 1 Tbsp；压力汤汁 1/2 cup；姜 2片
+      - 绍兴酒 1 Tbsp；生抽 2 Tbsp；蚝油 1 Tbsp；老抽 2 tsp；冰糖或白糖 1 Tbsp；压力汤汁 1/2 cup；姜 2片
     steps:
-      - 排骨已在共享 Instant Pot 基底中软嫩。将绍兴酒、生抽、老抽、糖、姜和1/2 cup压力汤汁加入宽锅，中火翻动至糖溶、汁变薄亮并包裹排骨；锅底仍留少量可流动汁时关火。
+      - 排骨已在共享 Instant Pot 基底中软嫩。将绍兴酒、生抽、蚝油、老抽、糖、姜和1/2 cup压力汤汁加入宽锅，中火翻动至糖溶、汁变薄亮并包裹排骨；锅底仍留少量可流动汁时关火。
+  - id: thirteen-spice
+    label_zh: 十三香
+    default: false
+    display_name_zh: 十三香排骨
+    cook_ingredients:
+      - 十三香 1 tsp；生抽 1 Tbsp；糖 1 tsp；压力汤汁 1/2 cup
+    steps:
+      - 排骨已在共享 Instant Pot 基底中软嫩。将十三香、生抽、糖和压力汤汁加入宽锅，中火翻动至香料均匀、汁薄薄挂住排骨；保留少量可流动汁。
+  - id: adobo
+    label_zh: 醋香
+    default: false
+    display_name_zh: 醋香排骨
+    cook_ingredients:
+      - 米醋 1/4 cup；生抽 1 Tbsp；月桂叶 2片；蒜 3瓣；黑胡椒粒 1 tsp；压力汤汁 1/4 cup
+    steps:
+      - 排骨已在共享 Instant Pot 基底中软嫩。将米醋、生抽、月桂叶、蒜、黑胡椒和压力汤汁加入宽锅，轻煮3–5分钟使酸香变柔和，再翻动至薄薄挂汁。

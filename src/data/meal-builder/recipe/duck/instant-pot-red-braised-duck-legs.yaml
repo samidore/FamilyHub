@@ -1,8 +1,8 @@
 id: instant-pot-red-braised-duck-legs
 type: recipe
 status: candidate
-name_zh: Instant Pot 红烧鸭腿
-name_en: Instant Pot Red-Braised Duck Legs
+name_zh: 红烧鸭腿
+name_en: Red-Braised Duck Legs
 tags:
   - light-seasoning
   - non-spicy-base
@@ -51,16 +51,56 @@ ingredients:
 cook_ingredients:
   - 鸭腿：约900–1100 g，带骨带皮
   - 姜：5片；葱白：2段
-  - 水：1 1/2 cups；生抽：2 Tbsp；老抽：1 tsp；绍兴酒：1 Tbsp；糖：1 Tbsp
+  - 共享压力液：水 1 1/2 cups；姜 5片；葱白 2段
+finish_options:
+  - id: red-braise
+    label_zh: 红烧
+    default: true
+    cook_ingredients:
+      - 生抽 2 Tbsp；蚝油 1 Tbsp；老抽 1 tsp；绍兴酒 1 Tbsp；糖 2 tsp；压力汤汁 1/2 cup
+    steps:
+      - 鸭腿已在共享 Instant Pot 基底中软嫩。将生抽、蚝油、老抽、绍兴酒、糖和压力汤汁加入锅中，Sauté 收至薄亮汁并包裹鸭腿，保留少量可流动汁。
+  - id: adobo
+    label_zh: 醋香
+    default: false
+    display_name_zh: 醋香鸭腿
+    cook_ingredients:
+      - 米醋 1/4 cup；生抽 1 Tbsp；月桂叶 2片；黑胡椒粒 1 tsp；蒜 3瓣；压力汤汁 1/4 cup
+    steps:
+      - 鸭腿已在共享 Instant Pot 基底中软嫩。加入米醋、生抽、月桂叶、黑胡椒、蒜和少量压力汤汁，Sauté 轻煮3–5分钟让酸香柔和，再薄薄收汁。
+  - id: thirteen-spice
+    label_zh: 十三香
+    default: false
+    display_name_zh: 十三香鸭腿
+    cook_ingredients:
+      - 十三香 1 tsp；生抽 1 Tbsp；糖 1 tsp；压力汤汁 1/2 cup
+    steps:
+      - 鸭腿已在共享 Instant Pot 基底中软嫩。加入十三香、生抽、糖和压力汤汁，Sauté 煮至香料融合并薄薄挂汁。
+  - id: cola
+    label_zh: 可乐
+    default: false
+    display_name_zh: 可乐鸭腿
+    cook_ingredients:
+      - 可乐 1罐，12 fl oz / 355 mL；生抽 1 Tbsp；老抽 1 tsp；绍兴酒 1 Tbsp
+    steps:
+      - 鸭腿已在共享 Instant Pot 基底中软嫩。加入可乐、生抽、老抽和绍兴酒，Sauté 收至薄亮汁并包裹鸭腿。
+  - id: teriyaki
+    label_zh: 照烧
+    default: false
+    display_name_zh: 照烧鸭腿
+    cook_ingredients:
+      - 生抽 2 Tbsp；味醂 2 Tbsp；清酒 2 Tbsp；糖 1 Tbsp；压力汤汁 1/4 cup
+    steps:
+      - 鸭腿已在共享 Instant Pot 基底中软嫩。加入生抽、味醂、清酒、糖和少量压力汤汁，Sauté 收至薄亮挂汁。
 steps:
   - 鸭腿擦干。Instant Pot 选 Sauté，鸭皮朝下煎4–6分钟，让表面轻微上色并逼出部分鸭油；夹出鸭腿，倒掉多余鸭油，只留薄薄一层。
-  - 加姜、葱白、水、生抽、老抽、绍兴酒和糖，彻底刮净锅底焦化物；鸭腿放回，尽量让肉面接触汤汁。
+  - 加姜、葱白和水，彻底刮净锅底焦化物；鸭腿放回，尽量让肉面接触清汤。
   - 锁盖，High Pressure 15分钟；结束后自然泄压10分钟，再手动排余压。
   - 打开后从最厚处检查熟度和软嫩度；肉温至少165°F/74°C，且关节附近应明显松软。若仍紧实，再 High Pressure 3–5分钟并短暂自然泄压。
-  - 先把鸭腿夹出。如选择一锅乱炖加料，在原红烧汁里按耐煮程度分批焖熟：耐煮食材先下，豆制品或菌菇随后，叶菜最后1–3分钟；叶菜不要放进主压力段。
-  - 需要时继续 Sauté 收汁，只收到能薄薄挂勺、仍可流动；鸭腿回锅翻匀即可，不要把汁收成重咸糖浆。
+  - 先把鸭腿夹出。如选择一锅乱炖加料，在保留的清压力汤汁里按耐煮程度分批焖熟：耐煮食材先下，豆制品或菌菇随后，叶菜最后1–3分钟；叶菜不要放进主压力段。
+  - 按所选 Finish 选项加入调味料并用 Sauté 收汁；鸭腿回锅翻匀即可，不要把汁收成重咸糖浆。
   - 孩子份先盛出，由成人彻底拆骨、去硬软骨并检查碎骨，再把软肉剪小；成人份可在分餐后另加辣椒或更重调味。
-  - 完成提示：鸭腿酱色均匀、肉能轻松从骨边松开；加料已熟而不过烂，锅底保留少量可流动的红烧汁。
+  - 完成提示：鸭腿肉能轻松从骨边松开；所选 Finish 薄薄包裹，配料已熟而不过烂，锅底保留少量可流动汁。
 child_serving: 彻底去骨并检查碎骨和硬软骨，只给软肉；少带浓汁。
 adult_finish: 孩子份盛出后，成人可另加辣椒油、辣椒粉或更重调味。
 substitutions: []

@@ -34,7 +34,7 @@ elapsed_minutes: 60–90
 advance_start_required: false
 equipment:
   - 9-quart Instant Pot
-burner_plan: Pressure-cook duck wings in a measured thin soy braising liquid, then reduce the sauce after release.
+burner_plan: Pressure-cook duck wings in a neutral measured liquid, then add the selected Finish after release.
 child_suitable: yes
 child_texture: 焖至肉能轻松脱骨；孩子份必须由成人彻底去骨并检查碎骨。
 spicy_in_base: false
@@ -48,14 +48,54 @@ ingredients:
     role: main-protein
 cook_ingredients:
   - 鸭翅：约900–1100 g
-  - 压力卤汁：水 1.5 cups；姜 4片；葱 2根；生抽 2 Tbsp；老抽 1 tsp；绍兴酒 1 Tbsp；冰糖或白糖 1 tsp
+  - 共享压力液：水 1.5 cups；姜 4片；葱 2根
+finish_options:
+  - id: red-braise
+    label_zh: 红烧
+    default: true
+    cook_ingredients:
+      - 生抽 2 Tbsp；蚝油 1 Tbsp；老抽 1 tsp；绍兴酒 1 Tbsp；糖 2 tsp；压力汤汁 1/2 cup
+    steps:
+      - 鸭翅已在共享 Instant Pot 基底中软嫩。加入生抽、蚝油、老抽、绍兴酒、糖和压力汤汁，Sauté 收至薄亮汁并包裹鸭翅。
+  - id: adobo
+    label_zh: 醋香
+    default: false
+    display_name_zh: 醋香鸭翅
+    cook_ingredients:
+      - 米醋 1/4 cup；生抽 1 Tbsp；月桂叶 2片；黑胡椒粒 1 tsp；蒜 3瓣；压力汤汁 1/4 cup
+    steps:
+      - 鸭翅已在共享 Instant Pot 基底中软嫩。加入米醋、生抽、月桂叶、黑胡椒、蒜和少量压力汤汁，轻煮3–5分钟使酸香柔和，再薄薄收汁。
+  - id: thirteen-spice
+    label_zh: 十三香
+    default: false
+    display_name_zh: 十三香鸭翅
+    cook_ingredients:
+      - 十三香 1 tsp；生抽 1 Tbsp；糖 1 tsp；压力汤汁 1/2 cup
+    steps:
+      - 鸭翅已在共享 Instant Pot 基底中软嫩。加入十三香、生抽、糖和压力汤汁，Sauté 煮至香料融合并薄薄挂汁。
+  - id: cola
+    label_zh: 可乐
+    default: false
+    display_name_zh: 可乐鸭翅
+    cook_ingredients:
+      - 可乐 1罐，12 fl oz / 355 mL；生抽 1 Tbsp；老抽 1 tsp；绍兴酒 1 Tbsp
+    steps:
+      - 鸭翅已在共享 Instant Pot 基底中软嫩。加入可乐、生抽、老抽和绍兴酒，Sauté 收至薄亮汁并包裹鸭翅。
+  - id: teriyaki
+    label_zh: 照烧
+    default: false
+    display_name_zh: 照烧鸭翅
+    cook_ingredients:
+      - 生抽 2 Tbsp；味醂 2 Tbsp；清酒 2 Tbsp；糖 1 Tbsp；压力汤汁 1/4 cup
+    steps:
+      - 鸭翅已在共享 Instant Pot 基底中软嫩。加入生抽、味醂、清酒、糖和少量压力汤汁，Sauté 收至薄亮挂汁。
 steps:
   - 鸭翅冷水下锅煮开2–3分钟，捞出冲净浮沫并沥干。
-  - Instant Pot 加入鸭翅、姜、葱、生抽、老抽、绍兴酒、糖和水1.5 cups；锁盖 High Pressure 12分钟，自然泄压10分钟后快速泄压。
+  - Instant Pot 加入鸭翅、姜、葱和水1.5 cups；锁盖 High Pressure 12分钟，自然泄压10分钟后快速泄压。
   - 检查关节附近最厚处；鸭肉应软且能从骨边松开。若仍紧实，再 High Pressure 4分钟并自然泄压8分钟。
-  - 取出鸭翅；用 Instant Pot Sauté 将卤汁收至能薄薄挂在表面但不发咸，再放回轻轻翻裹。
+  - 取出鸭翅；如选择顺手焖配料，先在中性压力汤汁中按硬度焖至所需软度，再按所选 Finish 选项完成晚段调味与收汁。
   - 孩子份先盛出，成人彻底拆骨、去硬软骨并检查碎骨后再剪小。
-  - 完成提示：鸭翅酱色均匀、肉软而不散，锅底仍留少量可流动酱汁。
+  - 完成提示：鸭翅肉软而不散；所选 Finish 薄薄包裹，锅底仍留少量可流动汁。
 child_serving: 彻底去骨并检查碎骨和硬软骨，只给软肉；少带浓汁。
 adult_finish: 孩子份盛出后，成人可另加辣椒油或辣椒粉。
 substitutions: []

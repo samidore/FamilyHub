@@ -1,8 +1,8 @@
 id: oyster-sauce-braised-chicken
 type: recipe
 status: candidate
-name_zh: 蚝油焖鸡腿 / 鸡小腿
-name_en: Oyster-Sauce Braised Chicken Thighs or Drumsticks
+name_zh: 红烧鸡腿 / 鸡小腿
+name_en: Red-Braised Chicken Thighs or Drumsticks
 tags:
   - child-all-ingredients-eaten
   - light-seasoning
@@ -52,13 +52,13 @@ ingredients:
       - chicken-thighs
     role: main-protein
 finish_options:
-  - id: oyster
-    label_zh: 蚝油
+  - id: red-braise
+    label_zh: 红烧
     default: true
     cook_ingredients:
-      - 生抽 2 Tbsp；蚝油 3 Tbsp
+      - 绍兴酒 1 Tbsp；生抽 2 Tbsp；蚝油 2 Tbsp；老抽 1 tsp；糖 2 tsp；压力汤汁 1/3 cup
     steps:
-      - 鸡肉已在共享 Instant Pot 基底中达到165°F/74°C且软嫩；加入生抽和蚝油及少量压力汤汁，Sauté 收至薄亮汁，Finish 不再炖熟生鸡肉。
+      - 鸡肉已在共享 Instant Pot 基底中达到165°F/74°C且软嫩；加入绍兴酒、生抽、蚝油、老抽、糖及少量压力汤汁，用 Sauté 收至薄亮汁，Finish 不再炖熟生鸡肉。
   - id: teriyaki
     label_zh: 照烧
     default: false
@@ -67,14 +67,6 @@ finish_options:
       - 生抽 2 Tbsp；味醂 2 Tbsp；清酒 2 Tbsp；糖 1 Tbsp
     steps:
       - 鸡肉已在共享压力基底中熟透；加入生抽、味醂、清酒和糖，用 Sauté 收至薄亮挂肉。
-  - id: soy
-    label_zh: 酱油
-    default: false
-    display_name_zh: 酱油焖鸡
-    cook_ingredients:
-      - 生抽 3 Tbsp；老抽 1 tsp；八角 1个，可省
-    steps:
-      - 鸡肉已在共享压力基底中熟透；加入生抽、老抽和可选八角，以少量压力汤汁调开并薄薄挂肉。
   - id: adobo
     label_zh: 醋香
     default: false
@@ -83,6 +75,22 @@ finish_options:
       - 米醋 1/4 cup；月桂叶 2片；黑胡椒粒 1 tsp
     steps:
       - 鸡肉已在共享压力基底中熟透；加入米醋、月桂叶、黑胡椒和少量压力汤汁，Sauté 轻煮3–5分钟柔化酸香并薄薄收汁。
+  - id: cola
+    label_zh: 可乐
+    default: false
+    display_name_zh: 可乐鸡腿
+    cook_ingredients:
+      - 可乐 1罐，12 fl oz / 355 mL；生抽 1 Tbsp；老抽 1 tsp；绍兴酒 1 Tbsp
+    steps:
+      - 鸡肉已在共享 Instant Pot 基底中熟透；加入可乐、生抽、老抽和绍兴酒，用 Sauté 煮至薄亮汁并包裹鸡肉。
+  - id: thirteen-spice
+    label_zh: 十三香
+    default: false
+    display_name_zh: 十三香鸡腿
+    cook_ingredients:
+      - 十三香 1 tsp；生抽 1 Tbsp；鸡汤或压力汤汁 1/3 cup；糖 1 tsp
+    steps:
+      - 鸡肉已在共享 Instant Pot 基底中熟透；将十三香、生抽、汤汁和糖拌匀后加入，用 Sauté 煮至香料融合并薄薄挂肉。
 steps:
   - 准备：鸡小腿或鸡腿擦干；有皮版本可先用 Instant Pot Sauté 煎至浅金黄，取出并倒去多余油。姜蒜备用。
   - 加入1 cup低盐鸡汤并刮净锅底；放回鸡肉和姜蒜。带骨鸡小腿或鸡腿 High Pressure 8分钟，无骨鸡腿6分钟；自然泄压5分钟后快速泄压。
@@ -98,4 +106,4 @@ substitutions: []
 cook_ingredients:
   - 鸡腿 / 鸡小腿：约900–1100 g；鸡腿带骨或无骨均可
   - 共享压力液：低盐鸡汤 1 cup；姜 5片；蒜 3瓣；另预留最多1 cup低盐鸡汤供泄压后调整
-  - 所选 Finish 调味料仅在压力完成后加入：蚝油、照烧或酱油 Finish 按选项表；adobo Finish 按选项表
+  - 所选 Finish 调味料仅在压力完成后加入，按下方 Finish 选项表准备

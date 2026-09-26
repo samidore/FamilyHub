@@ -37,7 +37,7 @@ elapsed_minutes: 60–90
 advance_start_required: false
 equipment:
   - 9-quart Instant Pot
-burner_plan: Pressure-cook wings in measured thin liquid; add the selected cola, Swiss, or thirteen-spice Finish after release and reduce with Instant Pot Sauté.
+burner_plan: Pressure-cook wings in a neutral measured liquid; add the selected Finish after release and reduce with Instant Pot Sauté.
 child_suitable: yes
 child_texture: 成品肉可软嫩，但必须由成人去骨。
 spicy_in_base: false
@@ -75,6 +75,30 @@ finish_options:
       - 十三香 1 tsp；生抽 2 Tbsp；鸡汤 1 cup
     steps:
       - 鸡翅已在共享压力基底中熟透；加入十三香、生抽和鸡汤，以 Sauté 煮至风味融合并薄薄挂汁。
+  - id: red-braise
+    label_zh: 红烧
+    default: false
+    display_name_zh: 红烧鸡翅
+    cook_ingredients:
+      - 生抽 2 Tbsp；蚝油 1 Tbsp；老抽 1 tsp；糖 2 tsp；压力汤汁 1/2 cup
+    steps:
+      - 鸡翅已在共享 Instant Pot 基底中熟透；加入生抽、蚝油、老抽、糖和压力汤汁，用 Sauté 收至薄亮汁并包裹鸡翅。
+  - id: teriyaki
+    label_zh: 照烧
+    default: false
+    display_name_zh: 照烧鸡翅
+    cook_ingredients:
+      - 生抽 2 Tbsp；味醂 2 Tbsp；清酒 2 Tbsp；糖 1 Tbsp；压力汤汁 1/4 cup
+    steps:
+      - 鸡翅已在共享 Instant Pot 基底中熟透；加入生抽、味醂、清酒、糖和少量压力汤汁，用 Sauté 收至薄亮挂汁。
+  - id: adobo
+    label_zh: 醋香
+    default: false
+    display_name_zh: 醋香鸡翅
+    cook_ingredients:
+      - 米醋 1/4 cup；生抽 1 Tbsp；月桂叶 2片；黑胡椒粒 1 tsp；蒜 3瓣
+    steps:
+      - 鸡翅已在共享 Instant Pot 基底中熟透；加入米醋、生抽、月桂叶、黑胡椒和蒜，轻煮3–5分钟使酸香柔和并薄薄收汁。
 steps:
   - 准备：鸡翅擦干；关节处可不切。Instant Pot Sauté 少量煎至表面浅褐，分批操作后取出。
   - 加入1 cup水并刮净锅底，放入姜和鸡翅；锁盖 High Pressure 5分钟，自然泄压5分钟，再快速泄压。
@@ -82,7 +106,7 @@ steps:
   - 开盖后加入所选 Finish 调味料及顺手焖配料；配料按硬度煮到所需软度。Finish 不用于将生鸡翅焖熟。
   - 用 Instant Pot Sauté 翻动收至亮汁薄薄包裹鸡翅，锅底保留少量可流动汁；关火后盛出。
   - 孩子份彻底拆骨、去软骨并剪小。
-  - 完成提示：鸡翅已先在压力阶段熟透；可乐、瑞士或十三香 Finish 仅负责晚段风味与收汁。
+  - 完成提示：鸡翅已先在压力阶段熟透；所选 Finish 仅负责晚段风味与收汁。
   - 安全提示：最厚处达到165°F/74°C；带骨件避开骨头测温。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。

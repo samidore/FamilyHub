@@ -17,6 +17,7 @@ primary_role: protein
 main_protein_category: lamb
 main_protein_ingredient_ids:
   - lamb-shoulder-chunks
+  - lamb-leg-chunks
   - skin-on-bone-in-goat-pieces
 supporting_protein_ingredient_ids: []
 optional_groups:
@@ -52,21 +53,52 @@ detail_level: cookable
 ingredients:
   - one_of:
       - lamb-shoulder-chunks
+      - lamb-leg-chunks
       - skin-on-bone-in-goat-pieces
     role: main-protein
 steps:
-  - 准备：羊肩肉块切约4–5 cm大块；带骨山羊件冲洗后沥干。若骨渣/血沫明显，冷水下锅煮开2–3分钟，捞出冲净。
+  - 准备：羊肩肉块或羊腿肉块切约4–5 cm大块；带骨山羊件冲洗后沥干。若骨渣/血沫明显，冷水下锅煮开2–3分钟，捞出冲净。
   - 肉块放入 Instant Pot，加基础焖煮液；高压35–45分钟，按切块厚度自然泄压10–15分钟。打开后确认筷子能较轻松插入；仍硬时再高压8–10分钟。
   - 将肉和少量汤汁转入宽锅；若选择了顺手焖配料，按硬度加入，焖到软而不散。
-  - 加入家庭红烧汁，中大火翻动收汁；防止糖汁粘底。
-  - 当汁量约剩最初的1/4、从水状变成能在肉表面形成薄亮膜，锅底仍有少量可流动汁时关火；不要收到发黏发咸。
+  - 按所选 Finish 选项完成晚段调味与收汁；防止汁液粘底，锅底保留少量可流动汁。
   - 静置5分钟再盛；孩子份选瘦嫩、无骨部分剪小。
-  - 完成提示：肉块软嫩但仍成形；汁能薄薄挂肉且锅底仍有少量流动汁。
+  - 完成提示：肉块软嫩但仍成形；所选 Finish 薄薄挂肉且锅底仍有少量流动汁。
   - 安全提示：整块羊/山羊肉可测处达到145°F/63°C并静置3分钟；炖菜以更高温度达到软烂质地。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
-  - 羊肩肉块 / 带骨山羊件：900 g；任选一种
+  - 羊肩肉块 / 羊腿肉块 / 带骨山羊件：900 g；任选一种
   - 基础焖煮液：水或低盐高汤 2 cups；姜 6片；葱白 3段
-  - 家庭红烧汁：绍兴酒 1/4 cup；生抽 3 Tbsp；老抽 1 Tbsp；冰糖或白糖 2 Tbsp；八角 1个，可省；桂皮 1小段，可省
+finish_options:
+  - id: red-braise
+    label_zh: 红烧
+    default: true
+    cook_ingredients:
+      - 绍兴酒 1/4 cup；生抽 3 Tbsp；蚝油 1 Tbsp；老抽 1 Tbsp；冰糖或白糖 2 Tbsp；八角 1个可省；桂皮 1小段可省；压力汤汁 1/2 cup
+    steps:
+      - 羊肉已在共享压力基底中软嫩。将绍兴酒、生抽、蚝油、老抽、糖、可选香料和少量压力汤汁加入宽锅，中火翻动收至薄亮汁；锅底保留少量可流动汁。
+  - id: thirteen-spice
+    label_zh: 十三香
+    default: false
+    display_name_zh: 十三香羊肉
+    cook_ingredients:
+      - 十三香 1 tsp；生抽 1 Tbsp；糖 1 tsp；压力汤汁 1/2 cup
+    steps:
+      - 羊肉已在共享压力基底中软嫩。将十三香、生抽、糖和压力汤汁加入宽锅，翻动至香料融合、薄薄挂汁。
+  - id: cumin
+    label_zh: 孜然
+    default: false
+    display_name_zh: 孜然羊肉
+    cook_ingredients:
+      - 孜然粉 2 tsp；孜然粒 1 tsp；食用油 1 tsp；盐 1/2 tsp；压力汤汁 1/4 cup
+    steps:
+      - 羊肉已在共享压力基底中软嫩。在宽锅用油小火炒香孜然粉和孜然粒，加入熟羊肉与少量压力汤汁翻匀，让香料薄薄附着；不将生肉下锅炒制。
+  - id: adobo
+    label_zh: 醋香
+    default: false
+    display_name_zh: 醋香羊肉
+    cook_ingredients:
+      - 米醋 1/4 cup；生抽 1 Tbsp；月桂叶 2片；黑胡椒粒 1 tsp；蒜 3瓣；压力汤汁 1/4 cup
+    steps:
+      - 羊肉已在共享压力基底中软嫩。将米醋、生抽、月桂叶、黑胡椒、蒜和压力汤汁加入宽锅，轻煮3–5分钟使酸香柔和，再薄薄收汁。

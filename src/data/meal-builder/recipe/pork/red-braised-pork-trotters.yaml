@@ -38,7 +38,7 @@ advance_start_required: true
 equipment:
   - 9-quart Instant Pot
   - medium burner for reduction
-burner_plan: Brown and pressure-cook the trotters in the Instant Pot; reduce the red-braise sauce on the medium burner after the pressure stage.
+burner_plan: Brown and pressure-cook the trotters in a neutral Instant Pot base; add the selected Finish after the pressure stage.
 child_suitable: yes
 child_texture: 成品肉可软嫩，但必须由成人去骨。
 spicy_in_base: false
@@ -53,9 +53,10 @@ ingredients:
 steps:
   - 准备：猪脚切4–5 cm块，冲去碎骨；骨渣/血沫明显时先焯2–3分钟并冲净。
   - Instant Pot 选 Sauté，加1 tsp油把肉块分批煎至多面浅褐；盛出。
-  - 原锅加入糖、姜葱，炒到糖刚融化且呈浅琥珀色；加入绍兴酒、生抽、老抽和3 cups水/低盐高汤，刮净锅底。
+  - 原锅加入3 cups水或低盐高汤、姜和葱白，彻底刮净锅底；不在压力阶段加入 Finish 调味料。
   - 猪脚放回，锁盖 High Pressure 45分钟，自然泄压15分钟。检查皮筋软糯且筷子可较轻松插入；仍硬时再 High Pressure 8分钟并自然泄压5分钟。
-  - 把肉和压力汁转入宽锅；中火收至汁能薄薄挂肉、锅底仍有少量流动汁，不要收到发黏发咸。
+  - 把猪脚夹出；如选择顺手焖配料，先在中性压力汤汁中按硬度煮到所需软度。
+  - 按所选 Finish 选项加入晚段调味料并收汁；锅底保留少量流动汁，不要收到发黏发咸。
   - 静置5分钟；孩子份选无骨瘦嫩部分剪小。
   - 完成提示：猪脚软糯但仍成形；汁薄亮且可流动。
   - 安全提示：给孩子只取无骨部分；成人检查骨渣和硬软骨。
@@ -64,5 +65,36 @@ adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉
 substitutions: []
 cook_ingredients:
   - 猪脚：900 g
-  - 家庭红烧汁：绍兴酒 1/4 cup；生抽 3 Tbsp；老抽 1 Tbsp；冰糖或白糖 2 Tbsp；水或低盐高汤 3 cups；姜 6片；葱白 3段；八角 1个，可省；桂皮 1小段，可省
-  - 家庭红烧汁：所列水或低盐高汤 3 cups 为压力液体；其余调料照列。
+  - 共享压力液：水或低盐高汤 3 cups；姜 6片；葱白 3段
+finish_options:
+  - id: red-braise
+    label_zh: 红烧
+    default: true
+    cook_ingredients:
+      - 绍兴酒 1/4 cup；生抽 3 Tbsp；蚝油 1 Tbsp；老抽 1 Tbsp；冰糖或白糖 2 Tbsp；八角 1个可省；桂皮 1小段可省；压力汤汁 1/2 cup
+    steps:
+      - 猪脚已在共享 Instant Pot 基底中软糯。将绍兴酒、生抽、蚝油、老抽、糖、可选香料和少量压力汤汁加入宽锅，中火收至薄亮汁并包裹猪脚；保留少量可流动汁。
+  - id: ginger-vinegar
+    label_zh: 姜醋
+    default: false
+    display_name_zh: 姜醋猪脚
+    cook_ingredients:
+      - 老姜 40 g，切厚片；黑醋 1/3 cup；红糖 1 Tbsp；压力汤汁 1/2 cup
+    steps:
+      - 猪脚已在共享 Instant Pot 基底中软糯。宽锅中将老姜略煎出香，加入黑醋、红糖和压力汤汁轻煮3–5分钟；猪脚放回翻裹，保留可流动酸甜汁。
+  - id: thirteen-spice
+    label_zh: 十三香
+    default: false
+    display_name_zh: 十三香猪蹄
+    cook_ingredients:
+      - 十三香 1 tsp；生抽 1 Tbsp；糖 1 tsp；压力汤汁 1/2 cup
+    steps:
+      - 猪脚已在共享 Instant Pot 基底中软糯。将十三香、生抽、糖和压力汤汁加入宽锅，翻动至香料融合、薄薄挂汁。
+  - id: adobo
+    label_zh: 醋香
+    default: false
+    display_name_zh: 醋香猪蹄
+    cook_ingredients:
+      - 米醋 1/4 cup；生抽 1 Tbsp；月桂叶 2片；黑胡椒粒 1 tsp；蒜 3瓣；压力汤汁 1/4 cup
+    steps:
+      - 猪脚已在共享 Instant Pot 基底中软糯。将米醋、生抽、月桂叶、黑胡椒、蒜和压力汤汁加入宽锅，轻煮3–5分钟让酸香柔和，再薄薄收汁。
