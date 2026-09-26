@@ -7,9 +7,9 @@ tags:
   - light-seasoning
   - non-spicy-base
   - simmered
-  - stovetop-nonstick
   - advance-start
   - family-shared
+  - instant-pot
 fit_score: 5
 primary_role: mixed
 main_protein_category: pork
@@ -31,13 +31,12 @@ integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice
 active_minutes: 20–35
-meal_window_minutes: 20–35
-elapsed_minutes: 90–180
+meal_window_minutes: 45–60
+elapsed_minutes: 60–90
 advance_start_required: true
 equipment:
-  - medium burner
-  - soup pot
-burner_plan: Medium burner for simmering; can be started earlier and leave the wok burner free.
+  - 9-quart Instant Pot
+burner_plan: Pressure-cook the ribs with measured broth in the Instant Pot; add the selected soup ingredients after release using Instant Pot Saut? only as needed.
 child_suitable: yes
 child_texture: 成品肉可软嫩，但必须由成人去骨。
 spicy_in_base: false
@@ -50,14 +49,13 @@ ingredients:
   - ingredient_id: soft-pork-ribs
     role: main-protein
 steps:
-  - 准备：带骨肉冷水下锅，加足量清水煮开2–4分钟；捞出后用温水冲去浮沫和碎骨。所选汤料切成适合汤煮的一口大小；容易煮烂的材料单独放，后下。
-  - 焯洗后的肉放入汤锅，加2.0 L水、姜和葱，大火煮开后再次撇净浮沫。
-  - 转小火保持只有零星小泡，盖盖留一条缝；先以60–90分钟作为检查窗口，直到肉明显软化。
-  - 加入所选汤料；叶菜、番茄等易熟材料最后10–15分钟再放，根茎或玉米从15–25分钟起检查；最终以筷子能穿透且仍保持完整为准。
-  - 肉与配料都达到软嫩后再加盐，先加1 tsp，尝后每次补1/4 tsp；白胡椒可省。
-  - 关火前撇去表面明显浮油；孩子份先取无骨肉和软配料，再加少量清汤。
-  - 完成提示：汤保持清亮；肉软嫩；汤中配料能用筷子穿透但仍保持完整。
-  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
+  - 准备：排骨焯水2–4分钟，温水冲去浮沫和碎骨；所选汤料切成适合汤煮的一口大小，易熟材料后下。
+  - 排骨放入 Instant Pot，加入6 cups清水/低盐高汤、姜和葱；锁盖 High Pressure 22分钟，自然泄压15分钟。检查肉明显软化、仍能成形；不够软时再加压5分钟。
+  - 开盖撇去浮沫和明显浮油；按汤料需要补入预留热水/高汤。先放根茎或玉米，用 Sauté 小火煮至筷子可穿透；叶菜、番茄等最后10–15分钟再放。
+  - 所有材料达到各自软度后再分次加盐；白胡椒可省。
+  - 孩子份先取无骨肉和软配料，再加少量清汤。
+  - 完成提示：汤保持清亮；排骨软嫩；配料能用筷子穿透但仍保持完整。
+  - 安全提示：孩子份去骨并检查碎骨。
 child_serving: 成人彻底去骨并检查碎骨/硬软骨后剪小。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
@@ -65,3 +63,4 @@ cook_ingredients:
   - 软排骨：900 g
   - 所选汤料（可省略或按 Option 添加）：300–450 g
   - 清汤底：水 2.0 L；姜 5片；葱白 2段；盐 1–1.5 tsp，最后分次加；白胡椒 1小撮，可省
+  - 压力阶段使用清汤底中的水 6 cups、姜和葱；预留其余水及所选汤料供泄压后调整。

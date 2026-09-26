@@ -11,22 +11,25 @@ tags:
   - stovetop-nonstick
   - advance-start
   - family-shared
+  - instant-pot
 fit_score: 5
 primary_role: protein
 main_protein_category: pork
-main_protein_ingredient_ids: [pork-shoulder-chunks]
-supporting_protein_ingredient_ids: [eggs]
+main_protein_ingredient_ids: [ pork-shoulder-chunks ]
+supporting_protein_ingredient_ids: [ eggs ]
 vegetable_ingredient_ids: []
 meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
 child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
-recommended_staple_ingredient_ids: [rice]
+recommended_staple_ingredient_ids: [ rice ]
 active_minutes: 20–35
-meal_window_minutes: 20–35
-elapsed_minutes: 90–180
+meal_window_minutes: 45–60
+elapsed_minutes: 60–90
 advance_start_required: true
-equipment: [medium burner, covered pot / braiser]
-burner_plan: Medium burner for a covered pork braise.
+equipment:
+  - 9-quart Instant Pot
+  - medium burner for finishing
+burner_plan: Pressure-cook the pork in the Instant Pot; use the medium burner only to add the eggs and lightly reduce the sauce after the meat is tender.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -41,14 +44,14 @@ ingredients:
   - ingredient_id: eggs
     role: supporting-protein
 steps:
-  - 准备：鸡蛋煮熟剥壳；猪肉擦干；鱼露、椰子水和水分别量好，糖焦化时不要离锅。
-  - 厚锅中小火把1 Tbsp糖与1 Tbsp水煮到浅琥珀色，立即加入猪肉翻匀上色。
-  - 加入鱼露和其余糖翻1分钟，再加入椰子水与水；煮开撇沫，转小火盖盖炖约20分钟后加入鸡蛋。
-  - 继续小火炖到猪肉软嫩；若汁过多，最后开盖中火减少，每几分钟轻翻鸡蛋使上色均匀。
-  - 汁仍能流动、猪肉筷子可轻松插入且鸡蛋表面上色时关火；不要把鱼露汁收到咸稠。
-  - 孩子份优先猪肉瘦嫩部分和蛋黄/蛋白，少带浓汁。
-  - 完成提示：猪肉软嫩；鸡蛋均匀着色；汤汁浓香但仍是可舀的卤汁。
-  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；大块猪肉实际做至软嫩熟透。
+  - 准备：鸡蛋煮熟剥壳；猪肉擦干并切4–5 cm块；椰子水、水、鱼露和糖量好。
+  - Instant Pot 选 Sauté，中火把糖和1 Tbsp水煮至浅琥珀色，立刻加入猪肉翻匀；按批次煎，不堆满。
+  - 倒入鱼露、其余糖、2 cups椰子水和3/4 cup水；刮净锅底焦糖，液体不足时仅补至压力锅最低液量。
+  - 锁盖 High Pressure 25分钟，自然泄压10分钟。开盖检查最大肉块：筷子可较轻松插入且肉已软嫩；仍硬时再 High Pressure 5分钟并自然泄压5分钟。
+  - 把肉和汁转入宽锅或用 Instant Pot Sauté；加入熟鸡蛋，小火浸煮10–15分钟上色。若汁过多，只略微收浓，仍保持可舀。
+  - 孩子份先取软嫩瘦肉和蛋，剪小并少带浓汁。
+  - 完成提示：猪肉软嫩、鸡蛋均匀着色；鱼露汁浓香但仍能流动，不收成咸稠糖浆。
+  - 安全提示：大块猪肉实际做至软嫩熟透。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
@@ -57,3 +60,4 @@ cook_ingredients:
   - 鸡蛋：6个，煮熟剥壳
   - Thịt Kho卤汁：鱼露 5 Tbsp；糖 4 tsp；椰子水 4 cups；水 3/4 cup
   - 焦糖：糖 1 Tbsp；水 1 Tbsp
+  - 压力阶段液体：椰子水 2 cups + 水 3/4 cup（从所列卤汁总量取）；熟鸡蛋泄压后加入。

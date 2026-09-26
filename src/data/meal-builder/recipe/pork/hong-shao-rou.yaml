@@ -33,18 +33,15 @@ integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice
   - steamed-buns
-serving_options: [rice, noodles]
+serving_options: [ rice, noodles ]
 active_minutes: 25–40
-meal_window_minutes: 60–90
+meal_window_minutes: 45–60
 elapsed_minutes: 60–90
 advance_start_required: true
 equipment:
-  - Instant Pot / electric pressure cooker
-  - medium burner
-  - high-output burner
-  - wok / wide pan
-  - covered pot / braiser
-burner_plan: Use the Instant Pot for pork shoulder chunks; the medium/high-output burner is reserved for the thin-belly route and final reduction.
+  - 9-quart Instant Pot
+  - medium burner for optional ingredients and reduction
+burner_plan: Pressure-cook either selected pork Ingredient in the Instant Pot with its own time; use the medium burner only for optional add-ins and the selected late sauce reduction.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -65,7 +62,7 @@ finish_options:
     cook_ingredients:
       - 绍兴酒 1/4 cup；生抽 3 Tbsp；老抽 1 Tbsp；冰糖或白糖 2 Tbsp
     steps:
-      - 用绍兴酒、生抽、老抽和糖调成红烧汁，肉软后加入宽锅中收成薄亮汁。
+      - 肉已在共享 Instant Pot 基底中软嫩；把绍兴酒、生抽、老抽和糖调匀后加入肉与少量压力汤汁，中火翻动收成薄亮红烧汁。
   - id: kakuni
     label_zh: 角煮
     default: false
@@ -73,7 +70,7 @@ finish_options:
     cook_ingredients:
       - 清酒 1/4 cup；味醂 1/4 cup；生抽 1/4 cup
     steps:
-      - 用清酒、味醂和生抽替换部分红烧汁，最后保留薄亮汤汁。
+      - 肉已在共享 Instant Pot 基底中软嫩；加入清酒、味醂和生抽，中火轻煮至肉表面薄亮挂汁，保留少量可流动汤汁。
   - id: thit-kho
     label_zh: 越式
     default: false
@@ -81,7 +78,7 @@ finish_options:
     cook_ingredients:
       - 椰糖 2 Tbsp；椰水 2 cups；鱼露 1 Tbsp
     steps:
-      - 先炒糖上色，再用椰水焖至软嫩；鱼露最后少量调味。
+      - 肉已在共享 Instant Pot 基底中软嫩；把椰糖、椰水和鱼露加入肉与少量压力汤汁，小火煮至椰糖溶化、风味融合并薄薄挂肉，不再焖煮生肉至软。
   - id: adobo
     label_zh: 醋香
     default: false
@@ -89,15 +86,17 @@ finish_options:
     cook_ingredients:
       - 米醋 1/4 cup；月桂叶 2片；黑胡椒粒 1 tsp
     steps:
-      - 以醋和酱油同煮，开盖收汁前确认酸香柔和、肉已软透。
+      - 肉已在共享 Instant Pot 基底中软嫩；加入米醋、月桂叶和黑胡椒，中火轻煮3–5分钟让酸香变柔和，再薄薄收汁。
 steps:
-  - 准备：猪肩肉块切约4–5 cm大块；薄切五花肉按现有厚度整理。若骨渣/血沫明显，冷水下锅煮开2–3分钟，捞出冲净；把所选 Finish 的调味液量好放在手边。
-  - 猪肩肉块放入 Instant Pot，加基础焖煮液；高压25–30分钟，自然泄压10分钟。薄切五花肉不需高压，宽锅煎出脂香后加基础焖煮液，盖盖小火焖20–30分钟至软嫩。
-  - 将肉和少量汤汁转入宽锅；若选择了顺手焖配料，按硬度加入，焖到软而不散。
-  - 肉已软嫩后加入所选 Finish 的调味液，中大火翻动收汁；每2–3分钟翻一次，防止粘底。
-  - 当汁量约剩最初的1/4、从水状变成能在肉表面形成薄亮膜，锅底仍有少量可流动汁时关火；不要收到发黏发咸。
-  - 静置5分钟再盛；孩子份选瘦嫩、无骨部分剪小。
-  - 完成提示：肉块软嫩但仍成形；汁能薄薄挂肉且锅底仍有少量流动汁。
+  - 准备：按所选 Ingredient 处理猪肉。猪肩肉切4–5 cm块；薄切五花肉保持原切片厚度。把所选 Finish 的调味料单独量好。
+  - Instant Pot 选 Sauté；猪肩肉块分批煎至多面浅褐，薄切五花肉则快速煎至刚出油；取出备用。
+  - 加入2 cups基础焖煮液并彻底刮净锅底。猪肩肉块锁盖 High Pressure 25–30分钟、自然泄压10分钟；薄切五花肉锁盖 High Pressure 1分钟、完成后立即快速泄压。
+  - 开盖检查所选肉已达到目标软度；若猪肩肉仍硬，再 High Pressure 5分钟并自然泄压5分钟。薄切五花肉不要重复加压。
+  - 将肉和少量压力汤汁转入宽锅。若选择了顺手焖配料，按硬度加入并只煮到所需软度；不把未熟主肉留在此阶段。
+  - 加入所选 Finish 调味料，中大火翻动收成薄亮汁；每2–3分钟翻一次，防止粘底。
+  - 当汁能薄薄挂在软嫩的肉表面、锅底仍有少量可流动汁时关火；静置5分钟再盛。
+  - 孩子份选瘦嫩、无骨部分剪小；带骨件由成人去骨并检查碎骨。
+  - 完成提示：所选猪肉已在 Instant Pot 达到目标软度；Finish 只改变晚段风味和收汁。
   - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
@@ -105,3 +104,4 @@ substitutions: []
 cook_ingredients:
   - 猪肩肉块 / 薄切五花肉：900 g；任选一种
   - 基础焖煮液：水或低盐高汤 2 cups；姜 6片；葱白 3段；八角 1个，可省
+  - 基础焖煮液：水或低盐高汤 2 cups；姜 6片；葱白 3段；八角 1个可省。压力段用全部2 cups薄液体；Finish 调味仅在压力完成后加入。

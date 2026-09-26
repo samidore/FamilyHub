@@ -10,6 +10,7 @@ tags:
   - stovetop-nonstick
   - advance-start
   - child-support-protein
+  - instant-pot
 fit_score: 3
 primary_role: protein
 main_protein_category: pork
@@ -29,13 +30,13 @@ integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice
 active_minutes: 25–40
-meal_window_minutes: 25–40
-elapsed_minutes: 180–300
+meal_window_minutes: 60–90
+elapsed_minutes: 90–150
 advance_start_required: true
 equipment:
-  - medium burner
-  - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
+  - 9-quart Instant Pot
+  - medium burner for ginger-vinegar infusion
+burner_plan: Pressure-cook pork feet with measured water in the Instant Pot; infuse them with the ginger-vinegar sauce on the medium burner afterward.
 child_suitable: conditional
 child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
 spicy_in_base: false
@@ -50,15 +51,14 @@ ingredients:
   - ingredient_id: eggs
     role: supporting-protein
 steps:
-  - 准备：猪脚冷水下锅煮开3–5分钟，捞出冲净；尽量去除骨渣。；姜拍裂后干锅或极少油炒到表面略干；鸡蛋煮熟剥壳。
-  - 厚锅加入姜、甜醋和黑醋，煮开后转小火10分钟，让姜味进入醋汁。
-  - 加入焯洗猪脚和绍兴酒；液体应基本覆盖，必要时换更小的锅而不是大量加水。
-  - 小火盖盖炖到猪脚皮和筋开始变软；中途每20–30分钟翻动一次。
-  - 加入熟鸡蛋继续小火煮，让鸡蛋上色；猪脚最终应筷子能轻易穿透皮肉连接处。
-  - 尝汁后再决定是否需要盐；本菜以酸甜姜醋汁为主，不额外收成浓稠糖浆。
-  - 孩子若食用，只取去骨软肉；姜醋浓汁少量。
-  - 完成提示：猪脚皮筋软糯、肉易脱骨；姜醋汁仍为可舀液体、酸甜明显但不焦糖化。
-  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
+  - 准备：猪脚焯水3–5分钟并冲净骨渣；姜拍裂后干锅或极少油炒至表面略干；鸡蛋煮熟剥壳。
+  - 猪脚放入 Instant Pot，加入1 1/2 cups水和绍兴酒；锁盖 High Pressure 45分钟，自然泄压15分钟。检查皮筋已软糯、筷子能轻易穿透皮肉连接处；不够软时再 High Pressure 8分钟并自然泄压5分钟。
+  - 同时在厚锅中把姜、甜醋和黑醋煮开，转小火浸煮10分钟；不要把大量醋液倒入压力锅。
+  - 将已软的猪脚及少量压力汁加入姜醋锅；加入熟鸡蛋，小火浸煮15–20分钟上色入味，不再长时间炖软肉。
+  - 尝汁后再决定是否需要盐；保留可舀液体，不收成浓稠糖浆。
+  - 孩子若食用，只取去骨软肉并少带姜醋浓汁。
+  - 完成提示：猪脚皮筋软糯、肉易脱骨；姜醋汁仍为可舀液体，酸甜明显。
+  - 安全提示：给孩子的份量去骨并检查碎骨。
 child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
@@ -67,3 +67,4 @@ cook_ingredients:
   - 鸡蛋：6个，煮熟剥壳
   - 姜：450 g，去皮拍裂
   - 姜醋汁：甜醋 1200 mL；黑醋 120 mL；绍兴酒 2 Tbsp；盐 少量，最后再判断
+  - 压力阶段另用水 1 1/2 cups；甜醋 1200 mL、黑醋 120 mL 和姜 450 g 留作泄压后的姜醋浸煮。

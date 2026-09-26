@@ -7,9 +7,9 @@ tags:
   - light-seasoning
   - non-spicy-base
   - simmered
-  - stovetop-nonstick
   - lunch-45
   - family-shared
+  - instant-pot
 fit_score: 5
 primary_role: mixed
 main_protein_category: pork
@@ -30,12 +30,11 @@ recommended_staple_ingredient_ids:
   - rice
 active_minutes: 20–35
 meal_window_minutes: 30–45
-elapsed_minutes: 35–60
+elapsed_minutes: 35–50
 advance_start_required: false
 equipment:
-  - medium burner
-  - soup pot
-burner_plan: Medium burner for simmering; can be started earlier and leave the wok burner free.
+  - 9-quart Instant Pot
+burner_plan: Pressure-cook the raw pork meatballs in broth; add winter melon after release and finish with Instant Pot Sauté.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -50,14 +49,13 @@ ingredients:
   - ingredient_id: winter-melon
     role: vegetable
 steps:
-  - 准备：肉馅与全部丸子调味同一方向搅8–10分钟至明显发黏；冷藏10–15分钟更好成形。；冬瓜切均匀块。
-  - 汤锅加入高汤和水煮开，转中小火保持轻沸。
-  - 湿手或用勺挤出直径约3 cm丸子，逐个下锅；下完后不要立刻大力搅动。
-  - 丸子浮起后再煮3–4分钟；从最大的一个中心确认160°F/71°C。
-  - 加入冬瓜，中火煮到冬瓜从白色变半透明、筷子能穿透，约8–12分钟。
-  - 尝汤后再决定是否补盐；撇去明显浮油，孩子份先取丸子和软冬瓜。
-  - 完成提示：丸子熟透仍多汁；冬瓜半透明软嫩但不碎；汤清爽不过咸。
-  - 安全提示：绞肉或含绞肉馅中心达到160°F/71°C。
+  - 准备：肉馅与全部丸子调味同一方向搅8–10分钟至发黏，冷藏10–15分钟；冬瓜切2.5 cm块。
+  - 将4 cups高汤和2 cups水放入 Instant Pot。湿手挤出约3 cm肉丸，逐个放入热液体中。
+  - 锁盖 High Pressure 4分钟，自然泄压5分钟；从最大肉丸中心确认160°F/71°C，未达温时用 Sauté 轻煮并复测。
+  - 用 Instant Pot Sauté 加入冬瓜，保持轻沸8–12分钟至半透明且筷子可穿透；不要把冬瓜长时间加压煮烂。
+  - 尝汤后再决定是否补盐；撇去明显浮油，孩子份先取肉丸和软冬瓜。
+  - 完成提示：肉丸熟透仍多汁；冬瓜半透明软嫩但不碎；汤清爽不过咸。
+  - 安全提示：绞肉中心达到160°F/71°C。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
@@ -67,3 +65,4 @@ cook_ingredients:
   - 低盐高汤：4 cups
   - 水：2 cups
   - 丸子调味：水 2 Tbsp；生抽 2.5 Tbsp；绍兴酒 2 Tbsp；芝麻油 1 tsp；白胡椒 1/2 tsp；糖 1/2 tsp；蛋白 1个；姜末 1 Tbsp；葱末 1根；盐 1/4 tsp
+  - 压力阶段使用低盐高汤 4 cups + 水 2 cups；冬瓜泄压后加入。

@@ -7,9 +7,9 @@ tags:
   - light-seasoning
   - non-spicy-base
   - braised
-  - stovetop-nonstick
   - lunch-45
   - family-shared
+  - instant-pot
 fit_score: 5
 primary_role: mixed
 main_protein_category: pork
@@ -33,12 +33,11 @@ recommended_staple_ingredient_ids:
   - noodles
 active_minutes: 20–35
 meal_window_minutes: 30–45
-elapsed_minutes: 35–60
+elapsed_minutes: 45–60
 advance_start_required: false
 equipment:
-  - medium burner
-  - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
+  - 9-quart Instant Pot
+burner_plan: Layer the pork and napa cabbage in the Instant Pot; pressure-cook the wet nabe briefly, then release promptly to keep the layers intact.
 child_suitable: yes
 child_texture: 可通过切薄、炖软、蒸嫩或剪小形成适合孩子的质地；当前无已知拒绝。
 spicy_in_base: false
@@ -53,14 +52,14 @@ ingredients:
   - ingredient_id: napa-cabbage
     role: vegetable
 steps:
-  - 准备：白菜叶与猪肉片交替叠成4–5层；切成约5 cm段。；把叠好的段切面朝上紧密排入锅中；中间到外圈都尽量塞紧。
-  - 从锅边倒入日式清汤，不要直接冲散层次；盖盖中大火煮到明显沸腾。
-  - 转中小火保持稳定小沸约15分钟；白菜会明显塌下并释放水分。
-  - 从中心夹开一组检查，猪肉应全部变色且达到安全温度，白菜梗能轻松咬断。
-  - 若锅内汤太多不需要收干；本菜以清汤锅状态上桌。
-  - 孩子份先取完全熟的猪肉与软白菜，剪小；成人蘸汁另配。
-  - 完成提示：白菜软甜、层次仍可夹起；猪肉完全熟；锅内保留清汤，不收汁。
-  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
+  - 准备：白菜叶与薄切猪肉交替叠成4–5层，切成约5 cm段；将切面朝上紧密排入 Instant Pot 内胆。
+  - 从锅边加入2 cups日式清汤，不冲散层次；保留剩余清汤供开盖后调整。
+  - 锁盖 High Pressure 1分钟；压力结束立即快速泄压，避免白菜过软。
+  - 开盖从中心夹开一组，确认猪肉完全熟、白菜梗能轻松咬断；如肉未熟，使用 Sauté 小火短煮并逐片检查，不再次长时间加压。
+  - 若锅内汤量不足或盐味偏浓，加入预留清汤调整；本菜保留清汤锅状态，不收汁。
+  - 孩子份先取完全熟的猪肉与软白菜并剪小；成人蘸汁另配。
+  - 完成提示：白菜软甜、层次仍可夹起；猪肉完全熟；锅内保留清汤。
+  - 安全提示：猪肉片实际做至无生肉色。
 child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
@@ -68,3 +67,4 @@ cook_ingredients:
   - 薄切五花肉：680 g
   - 大白菜：1颗，约1.8 kg
   - 日式清汤：日式高汤 5 cups；清酒 2 Tbsp；生抽 1 Tbsp；盐 1/2 tsp；姜 3片
+  - 日式清汤 5 cups；压力阶段使用其中 2 cups，开盖后按需补回余下清汤。

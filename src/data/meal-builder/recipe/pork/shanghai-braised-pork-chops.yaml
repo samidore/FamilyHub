@@ -11,6 +11,7 @@ tags:
   - stovetop-nonstick
   - lunch-45
   - child-support-protein
+  - instant-pot
 fit_score: 3
 primary_role: protein
 main_protein_category: pork
@@ -32,13 +33,13 @@ recommended_staple_ingredient_ids:
   - rice
   - noodles
 active_minutes: 20–35
-meal_window_minutes: 30–45
-elapsed_minutes: 35–60
+meal_window_minutes: 35–50
+elapsed_minutes: 45–60
 advance_start_required: false
 equipment:
-  - medium burner
-  - covered pot / braiser
-burner_plan: Medium burner for covered braise; long passive phase does not occupy the high-output wok burner.
+  - 9-quart Instant Pot
+  - medium burner for sauce reduction
+burner_plan: Set the egg-coated chops in the Instant Pot pressure liquid; use the medium burner only to reduce the sauce after pressure cooking.
 child_suitable: conditional
 child_texture: 主菜质地、风味或当前接受度不足以稳定承担孩子的软蛋白。
 spicy_in_base: false
@@ -51,15 +52,14 @@ ingredients:
   - ingredient_id: pork-chops
     role: main-protein
 steps:
-  - 准备：猪排较厚时轻拍到约1–1.5 cm；加短腌15分钟。；蛋打散；猪排先蘸蛋再薄拍淀粉，抖掉厚粉。
-  - 不粘锅中大火加1 Tbsp油，猪排分批煎到两面蛋衣浅金黄；不需要像来源传统路线那样大量浅炸。
-  - 全部猪排回锅，倒入焖汁；煮开后转中小火。
-  - 盖盖焖5–8分钟，中途翻一次；厚排按温度判断而非死守时间。
-  - 中心达到145°F/63°C后开盖中火，让汁减少。
-  - 汁能薄薄挂在猪排表面、锅底仍有2–3 Tbsp流动汁时关火，静置3分钟。
+  - 准备：猪排较厚时轻拍到约1–1.5 cm；短腌15分钟。鸡蛋打散，猪排薄拍玉米淀粉后裹蛋衣。
+  - Instant Pot 选 Sauté，加1 Tbsp油将猪排分批煎至两面蛋衣浅金黄；盛出。
+  - 加入1 cup上海式焖汁并刮净锅底；放入猪排，锁盖 High Pressure 8分钟，自然泄压5分钟。
+  - 测最厚处达到145°F/63°C；未达时用 Sauté 短煮并继续测温，不长时间压力烹调。
+  - 取出猪排；把压力汤汁倒入宽锅，中火减少到薄薄挂表面、仍留2–3 Tbsp流动汁。
   - 孩子份去骨并剪小。
   - 完成提示：蛋衣软而不脱落；猪排内部熟而不柴；汁薄挂表面。
-  - 安全提示：整块/整肌猪肉可测处达到145°F/63°C并静置3分钟；给孩子的薄片/绞碎菜实际做至无生肉色。
+  - 安全提示：整块猪肉达到145°F/63°C并静置3分钟；给孩子的份量去骨。
 child_serving: 可少量尝试；Meal Combo 默认另配蒸蛋/嫩豆腐等软蛋白。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
@@ -68,3 +68,4 @@ cook_ingredients:
   - 短腌：绍兴酒 2 Tbsp；盐 1/2 tsp；生抽 1 Tbsp；水 3 Tbsp
   - 薄衣：鸡蛋 2个；玉米淀粉 1/3 cup
   - 上海式焖汁：水或低盐高汤 1 cup；生抽 1.5 Tbsp；糖 1 Tbsp；绍兴酒 1 Tbsp
+  - 上海式焖汁中的水或低盐高汤 1 cup 为压力液体；其余原料照列。
