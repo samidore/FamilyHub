@@ -230,7 +230,9 @@ Finish with exactly one canonical runner trailer:
 - Checkpoint 1: Recipe-local Finish data and red-braise consistency cleanup, with per-item validation.
 ## Result
 
-- Status: CONTINUE
-- Validation: `meal-data.mjs verify-item` passed for all nine changed active Recipes; `git diff --check` passed.
-- Checkpoint 1 complete: the eight requested Finish families, the `hong-shao-rou` red-braise update, duplicate Cook View line removal, and content version `1.40` are recorded in Recipe data.
-- Next checkpoint: document the shared-base red-braise rule, add focused data-level regressions, run the focused tests and `pnpm run verify`, then publish the final checkpoint.
+- Status: BLOCKED
+- Validation: all nine changed active Recipes passed `meal-data.mjs verify-item`; focused Meal Builder tests passed (11/11); `validate`, `check`, `build`, `audit`, unit tests (222/222), and browser tests (54/54) passed. `git diff --check` passed.
+- Checkpoint 1 complete and published: the eight requested Finish families, the `hong-shao-rou` red-braise update, duplicate Cook View line removal, and content version `1.40` are in Recipe data.
+- Checkpoint 2 complete: the canonical red-braise household rule and focused regressions are added.
+- Environment blocker: direct `pnpm run verify` cannot start because `pnpm` is not on PATH. `corepack pnpm run verify` reaches its nested `pnpm` command but that command is also unavailable. Running each equivalent script separately passed except `test:rules`, whose Firebase emulator cannot start because `java -version` cannot be spawned (`Java` is not installed/on PATH). The full verification gate is not claimed as passed.
+- Remaining: rerun `test:rules` and `pnpm run verify` after Java and the pnpm executable are available.

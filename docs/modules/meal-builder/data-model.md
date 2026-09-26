@@ -211,6 +211,8 @@ These direction lists are deliberately broader than any one Recipe. Use them to 
 
 On an Instant Pot Recipe with `finish_options`, shared base cooking must finish the main meat-cooking/tenderizing phase before the selected Finish begins. Finish steps are limited to late flavoring, dressing, coating, or reduction and must not tell the cook to simmer/braise raw meat until tender.
 
+On a shared Instant Pot meat base, `red-braise` means the household soy plus oyster-sauce direction. Do not offer separate soy and oyster Finish choices beside `red-braise` on the same base. This applies to shared-base Finish choices; distinct standalone dishes may still use soy or oyster-sauce ingredients when appropriate.
+
 Recipe identity stays local:
 
 - The Recipe's default path must already have a natural dish name in `name_zh`.
