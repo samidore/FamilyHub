@@ -137,7 +137,9 @@ test('structured data keeps key Ingredient, Recipe, and unified optional-group r
   assert.deepEqual(kb.optionalGroups.map((group) => group.id), ['add-some-richness', 'change-it-up', 'one-pot-mix', 'soup-addons']);
   assert.equal(kb.optionalGroups.find((group) => group.id === 'add-some-richness')?.ingredients.some((entry) => entry.ingredientId === 'ground-pork' && entry.contribution.protein === .5), true);
   assert.equal(kb.optionalGroups.find((group) => group.id === 'change-it-up')?.ingredients.some((entry) => entry.ingredientId === 'tomato' && entry.contribution.vegetable === 1), true);
-  assert.equal(kb.optionalGroups.find((group) => group.id === 'one-pot-mix')?.ingredients.length, 23);
+  const onePotIngredientIds = new Set(kb.optionalGroups.find((group) => group.id === 'one-pot-mix')?.ingredients.map((entry) => entry.ingredientId) ?? []);
+  assert.equal(onePotIngredientIds.has('fresh-mixed-mushrooms'), true);
+  for (const id of ['oyster-mushrooms', 'shimeji-mushrooms', 'maitake']) assert.equal(onePotIngredientIds.has(id), false);
   assert.equal(kb.recipes.find((item) => item.id === 'instant-pot-red-braised-duck-legs')?.optionalGroupIds?.includes('one-pot-mix'), true);
   for (const id of ['simple-stir-fried-leafy-greens', 'basic-egg-drop-soup', 'homestyle-tofu-family', 'shepherds-purse-soft-tofu-soup']) {
     assert.equal(kb.recipes.find((item) => item.id === id)?.optionalGroupIds?.includes('add-some-richness'), true, `${id} should support add-some-richness`);

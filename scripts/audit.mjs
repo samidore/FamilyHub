@@ -99,7 +99,9 @@ const expectedOptionalGroups = [
 ];
 assert(JSON.stringify(meals.optionalGroups.map((group) => [group.id, group.labelZh])) === JSON.stringify(expectedOptionalGroups), 'Meal Builder optional groups do not match the canonical registry');
 assert(meals.optionalGroups.every((group) => new Set(group.ingredients.map((entry) => entry.ingredientId)).size === group.ingredients.length), 'A Meal Builder optional group contains duplicate Ingredient IDs');
-assert(meals.optionalGroups.find((group) => group.id === 'one-pot-mix')?.ingredients.length === 23, 'One-pot-mix must keep the migrated 23-Ingredient membership');
+const onePotIngredientIds = new Set(meals.optionalGroups.find((group) => group.id === 'one-pot-mix')?.ingredients.map((entry) => entry.ingredientId) ?? []);
+assert(onePotIngredientIds.has('fresh-mixed-mushrooms'), 'One-pot-mix must include the canonical fresh mixed mushroom Ingredient');
+assert(['oyster-mushrooms', 'shimeji-mushrooms', 'maitake'].every((id) => !onePotIngredientIds.has(id)), 'One-pot-mix must not contain retired mushroom Ingredient IDs');
 assert(meals.recipes.find((recipe) => recipe.id === 'instant-pot-red-braised-duck-legs')?.optionalGroupIds?.includes('one-pot-mix'), 'Instant Pot red-braised duck legs must support one-pot-mix');
 const richnessRepresentatives = [
   'simple-stir-fried-leafy-greens',
