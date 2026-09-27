@@ -32,6 +32,8 @@ When an otherwise ambiguous raw receipt label is explicitly resolved by the user
 | `PORK SOFT BONE` | `soft-pork-ribs` |
 | `SAKURA GROUND PORK` | `ground-pork` |
 | `KYL PORK SAUSAGE` | `white-oil-sausage` |
+| `KING OYSTER MUSHROOM [SLICED]` | `king-oyster-mushrooms` |
+| `ANTLER MUSHROOM [200G]` | `fresh-mixed-mushrooms` |
 | `CHINESE LO BOK` | `daikon` |
 | `TAIWAN SPINACH` | `spinach` |
 | `A CHOY [TAIWAN LETTUCE]` | `youmai-cai` |

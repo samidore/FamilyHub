@@ -32,27 +32,16 @@ ingredients:
       section: mushroom
       order: 30
     tags: []
-  - id: oyster-mushrooms
+  - id: fresh-mixed-mushrooms
     type: ingredient
     inventory_tracking: counted
     status: candidate
-    name_zh: 平菇
-    name_en: Oyster Mushrooms
+    name_zh: 鲜杂菌菇
+    name_en: Fresh Mixed Mushrooms
     starter:
       visible: true
       section: mushroom
       order: 40
-    tags: []
-  - id: shimeji-mushrooms
-    type: ingredient
-    inventory_tracking: counted
-    status: candidate
-    name_zh: 蟹味菇（Shimeji）
-    name_en: Shimeji Mushrooms
-    starter:
-      visible: true
-      section: mushroom
-      order: 50
     tags: []
   - id: enoki-mushrooms
     type: ingredient
@@ -63,20 +52,8 @@ ingredients:
     starter:
       visible: true
       section: mushroom
-      order: 60
+      order: 50
     tags: []
-  - id: maitake
-    type: ingredient
-    inventory_tracking: counted
-    status: candidate
-    name_zh: 舞茸
-    name_en: Maitake
-    starter:
-      visible: true
-      section: mushroom
-      order: 70
-    tags:
-      - low-priority
   - id: fresh-wood-ear-mushrooms
     type: ingredient
     inventory_tracking: counted
@@ -86,6 +63,6 @@ ingredients:
     starter:
       visible: true
       section: mushroom
-      order: 80
+      order: 60
     tags:
       - fresh-only
