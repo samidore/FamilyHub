@@ -1,0 +1,11 @@
+id: oyster-mushrooms
+type: ingredient
+inventory_tracking: counted
+status: archived
+name_zh: 平菇
+name_en: Oyster Mushrooms
+starter:
+  visible: true
+  section: mushroom
+  order: 40
+tags: []

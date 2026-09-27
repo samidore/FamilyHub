@@ -1,0 +1,11 @@
+id: shimeji-mushrooms
+type: ingredient
+inventory_tracking: counted
+status: archived
+name_zh: 蟹味菇（Shimeji）
+name_en: Shimeji Mushrooms
+starter:
+  visible: true
+  section: mushroom
+  order: 50
+tags: []

@@ -1,0 +1,12 @@
+id: maitake
+type: ingredient
+inventory_tracking: counted
+status: archived
+name_zh: 舞茸
+name_en: Maitake
+starter:
+  visible: true
+  section: mushroom
+  order: 70
+tags:
+  - low-priority
