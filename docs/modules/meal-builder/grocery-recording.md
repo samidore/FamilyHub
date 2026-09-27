@@ -28,8 +28,10 @@ When an otherwise ambiguous raw receipt label is explicitly resolved by the user
 | `KONG KEE SMALL SOFT FRIED TO` | `fried-tofu-puffs` |
 | `KUNG KEE EGG TOFU [SQUARE]` | `egg-tofu` |
 | `SANSUI MULTI USE TOFU` | `soft-tofu` |
+| `NATURE SOY FIVE SPICE FLAVOR` | `pressed-tofu` |
 | `PORK SOFT BONE` | `soft-pork-ribs` |
 | `SAKURA GROUND PORK` | `ground-pork` |
+| `KYL PORK SAUSAGE` | `white-oil-sausage` |
 | `CHINESE LO BOK` | `daikon` |
 | `TAIWAN SPINACH` | `spinach` |
 | `A CHOY [TAIWAN LETTUCE]` | `youmai-cai` |
