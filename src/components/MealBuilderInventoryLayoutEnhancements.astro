@@ -433,7 +433,7 @@
           empty.dataset.inventoryViewEmpty = 'true';
           inventoryList.append(empty);
         }
-        empty.textContent = emptyCopy[activeView];
+        if (empty.textContent !== emptyCopy[activeView]) empty.textContent = emptyCopy[activeView];
         empty.hidden = false;
       } else if (empty) {
         empty.remove();
