@@ -49,8 +49,7 @@ async function inventoryItem(page: Page, id: string) {
 }
 
 async function setInventory(page: Page, ids: string[]) {
-  const showAll = page.locator('#meal-show-all');
-  if (!(await showAll.isChecked())) await showAll.check();
+  await page.locator('[data-inventory-tab="all"]').click();
   for (const id of ids) { const action = (await inventoryItem(page, id)).locator('[data-stock-add], [data-stock-toggle]').first(); await action.click(); }
 }
 
@@ -223,7 +222,7 @@ test('keyboard focus and 200% zoom remain usable', async ({ page }) => {
 
 test('meal builder filters live, completes a meal, and preserves state', async ({ page }) => {
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
   await expect(page.locator('[data-inventory-item]')).toHaveCount(visibleIngredientCount);
   await expect(page.locator('#meal-builder-view')).toBeHidden();
   await startMeal(page, ['chicken-breast', 'broccoli', 'green-cabbage', 'onion', 'noodles']);
@@ -390,7 +389,7 @@ test('household inventory keeps counted half-steps, presence-only values, and vi
   await expect(page.locator('#meal-google-login')).toBeHidden();
   await expect(page.locator('#meal-logout')).toBeHidden();
   await expect(page.locator('[data-inventory-item]')).toHaveCount(0);
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
   await expect(page.locator('[data-inventory-item]')).toHaveCount(visibleIngredientCount);
   await expect(page.locator('[data-inventory-section]')).toHaveCount(visibleSectionCount);
   expect(await page.locator('[data-inventory-section]').evaluateAll((groups) => groups.every((group) => group.hasAttribute('open')))).toBe(true);
@@ -412,7 +411,7 @@ test('household inventory keeps counted half-steps, presence-only values, and vi
 
 test('inventory lifecycle exposes frozen thaw actions and direct frozen stock once', async ({ page }) => {
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
 
   const thawRequired = page.locator('[data-inventory-item="chicken-breast"]');
   const thawRequiredPlus = thawRequired.locator('[data-stock-delta="0.5"][data-stock-storage="freezer"]');
@@ -428,7 +427,7 @@ test('inventory lifecycle exposes frozen thaw actions and direct frozen stock on
   await expect(direct.locator('.meal-stock-row')).toHaveCount(1);
   await expect(direct.locator('.meal-stock-row')).toContainText('冷冻');
   await expect(direct.locator('[data-start-thaw]')).toHaveCount(0);
-  await expect(page.locator('[data-inventory-tab]')).toHaveCount(0);
+  await expect(page.locator('[data-inventory-tab]')).toHaveCount(4);
 });
 
 test('turning a current-meal ingredient off does not change shared inventory', async ({ page }) => {
