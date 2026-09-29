@@ -325,8 +325,160 @@
     sync();
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', enhanceMealInventoryStorageBlocks, { once: true });
-  else enhanceMealInventoryStorageBlocks();
+  type InventoryView = 'cold' | 'freezer' | 'combined' | 'all';
+
+  function enhanceMealInventoryViews() {
+    const inventoryList = document.querySelector<HTMLElement>('#meal-inventory-list');
+    const showAllToggle = document.querySelector<HTMLInputElement>('#meal-show-all');
+    const legacyToggle = showAllToggle?.closest<HTMLElement>('.meal-inventory-toggle');
+    if (!inventoryList || !showAllToggle || !legacyToggle || document.querySelector('[data-inventory-view-tabs]')) return;
+
+    legacyToggle.hidden = true;
+    legacyToggle.dataset.inventoryLegacyToggle = 'true';
+
+    const tabs = document.createElement('div');
+    tabs.className = 'meal-inventory-tabs';
+    tabs.dataset.inventoryViewTabs = 'true';
+    tabs.setAttribute('role', 'group');
+    tabs.setAttribute('aria-label', '库存视图');
+
+    const options: { id: InventoryView; label: string }[] = [
+      { id: 'cold', label: '冷藏' },
+      { id: 'freezer', label: '冷冻' },
+      { id: 'combined', label: '冷藏+冷冻' },
+      { id: 'all', label: '全部' },
+    ];
+    let activeView: InventoryView = 'cold';
+
+    const buttons = new Map<InventoryView, HTMLButtonElement>();
+    options.forEach(({ id, label }) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.inventoryTab = id;
+      button.textContent = label;
+      button.setAttribute('aria-pressed', 'false');
+      tabs.append(button);
+      buttons.set(id, button);
+    });
+    legacyToggle.before(tabs);
+
+    const blockHasStock = (block: HTMLElement | null) => {
+      if (!block) return false;
+      const outputs = [...block.querySelectorAll<HTMLOutputElement>('output')];
+      if (outputs.some((output) => Number(output.textContent ?? 0) > 0)) return true;
+      const toggle = block.querySelector<HTMLButtonElement>('[data-stock-toggle]');
+      return toggle?.textContent?.trim() === '移除';
+    };
+
+    const emptyCopy: Record<InventoryView, string> = {
+      cold: '当前没有冷藏库存。',
+      freezer: '当前没有冷冻库存或化冻中的食材。',
+      combined: '当前没有冷藏、冷冻库存或化冻中的食材。',
+      all: '当前没有可显示的食材。',
+    };
+
+    const syncTabs = () => {
+      buttons.forEach((button, id) => {
+        const active = id === activeView;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+    };
+
+    let scheduled = false;
+    const sync = () => {
+      scheduled = false;
+      const cards = [...inventoryList.querySelectorAll<HTMLElement>('[data-inventory-item]')];
+      if (cards.some((card) => card.dataset.storageBlocksEnhanced !== 'true')) {
+        requestAnimationFrame(schedule);
+        return;
+      }
+
+      let visibleCount = 0;
+      cards.forEach((card) => {
+        const coldBlock = card.querySelector<HTMLElement>('[data-storage-block="inventory"]');
+        const freezerBlock = card.querySelector<HTMLElement>('[data-storage-block="freezer"]');
+        const thawJobs = card.querySelector<HTMLElement>('.meal-thaw-jobs');
+        const hasCold = blockHasStock(coldBlock);
+        const hasFrozen = blockHasStock(freezerBlock);
+        const hasThaw = Boolean(thawJobs?.querySelector('.meal-thaw-job'));
+
+        if (coldBlock) coldBlock.hidden = activeView === 'freezer';
+        if (freezerBlock) freezerBlock.hidden = activeView === 'cold';
+        if (thawJobs) thawJobs.hidden = activeView === 'cold';
+
+        const visible =
+          activeView === 'all' ? true :
+          activeView === 'cold' ? hasCold :
+          activeView === 'freezer' ? hasFrozen || hasThaw :
+          hasCold || hasFrozen || hasThaw;
+        card.hidden = !visible;
+        if (visible) visibleCount += 1;
+      });
+
+      inventoryList.querySelectorAll<HTMLDetailsElement>('details[data-inventory-section]').forEach((group) => {
+        group.hidden = ![...group.querySelectorAll<HTMLElement>('[data-inventory-item]')].some((card) => !card.hidden);
+      });
+
+      let empty = inventoryList.querySelector<HTMLElement>('[data-inventory-view-empty]');
+      if (visibleCount === 0) {
+        if (cards.length === 0) {
+          [...inventoryList.childNodes].forEach((node) => {
+            if (node.nodeType === Node.TEXT_NODE && node.textContent?.trim()) node.remove();
+          });
+        }
+        if (!empty) {
+          empty = document.createElement('p');
+          empty.className = 'empty-state meal-inventory-view-empty';
+          empty.dataset.inventoryViewEmpty = 'true';
+          inventoryList.append(empty);
+        }
+        empty.textContent = emptyCopy[activeView];
+        empty.hidden = false;
+      } else if (empty) {
+        empty.remove();
+      }
+    };
+
+    const schedule = () => {
+      if (scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(sync);
+    };
+
+    buttons.forEach((button, id) => {
+      button.addEventListener('click', () => {
+        if (activeView === id) return;
+        activeView = id;
+        syncTabs();
+        const showAll = activeView === 'all';
+        if (showAllToggle.checked !== showAll) {
+          showAllToggle.checked = showAll;
+          showAllToggle.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        schedule();
+      });
+    });
+
+    showAllToggle.addEventListener('change', () => {
+      if (showAllToggle.checked) activeView = 'all';
+      else if (activeView === 'all') activeView = 'cold';
+      syncTabs();
+      schedule();
+    });
+
+    new MutationObserver(schedule).observe(inventoryList, { childList: true, subtree: true });
+    syncTabs();
+    sync();
+  }
+
+  const enhanceMealInventory = () => {
+    enhanceMealInventoryStorageBlocks();
+    enhanceMealInventoryViews();
+  };
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', enhanceMealInventory, { once: true });
+  else enhanceMealInventory();
 </script>
 
 <style is:global>
@@ -437,5 +589,38 @@
   @media (max-width: 560px) {
     .meal-builder-page .meal-thaw-job { grid-template-columns: minmax(0, 1fr) !important; }
     .meal-builder-page .meal-thaw-job__actions { justify-content: flex-start; }
+  }
+
+  .meal-builder-page .meal-inventory-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    margin: 10px 0 16px;
+  }
+  .meal-builder-page .meal-inventory-tabs button {
+    min-width: 0;
+    min-height: 48px;
+    padding: 8px 6px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.1;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .meal-builder-page .meal-inventory-tabs button.is-active {
+    border-color: var(--ink, #332a2e);
+    background: var(--ink, #332a2e);
+    color: white;
+  }
+  .meal-builder-page [data-inventory-legacy-toggle] { display: none !important; }
+  .meal-builder-page .meal-inventory-view-empty { margin: 12px 0 0; }
+  @media (max-width: 380px) {
+    .meal-builder-page .meal-inventory-tabs { gap: 4px; }
+    .meal-builder-page .meal-inventory-tabs button { padding-inline: 4px; font-size: 13px; }
   }
 </style>

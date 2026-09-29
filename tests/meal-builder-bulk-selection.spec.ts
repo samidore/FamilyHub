@@ -21,7 +21,7 @@ async function selectRecipe(page: Page, id: string) {
 
 test('global and section bulk controls filter future candidates without changing inventory or selected recipes', async ({ page }) => {
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
   await setInventory(page, ['ground-pork', 'pork-chops', 'chicken-breast', 'broccoli']);
   await page.locator('#meal-start-current').click();
 

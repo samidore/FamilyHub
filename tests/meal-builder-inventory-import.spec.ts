@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test('Chat inventory import can route reviewed rows into refrigerated and frozen stock', async ({ page }) => {
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
 
   const dates = await page.evaluate(() => {
     const key = (value: Date) => {

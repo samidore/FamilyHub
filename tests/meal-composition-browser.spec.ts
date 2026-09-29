@@ -13,7 +13,7 @@ async function setInventory(page: Page, ids: string[]) {
 
 test('candidate composition stays draft-only until confirmation and supports optional multi-select', async ({ page }) => {
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
   await setInventory(page, ['green-cabbage', 'ground-pork', 'ground-beef']);
   await page.locator('#meal-start-current').click();
 
@@ -72,7 +72,7 @@ test('candidate composition stays draft-only until confirmation and supports opt
 
 test('cancel discards a new or edited Recipe draft and selected Plan edits require confirmation', async ({ page }) => {
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
   await setInventory(page, ['chicken-drumsticks', 'chicken-thighs']);
   await page.locator('#meal-start-current').click();
 
@@ -112,7 +112,7 @@ test('cancel discards a new or edited Recipe draft and selected Plan edits requi
 
 test('planned optional ingredient survives Cook into direct Checkout Actual composition', async ({ page }) => {
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
   await setInventory(page, ['green-cabbage', 'ground-pork', 'ground-beef']);
   await page.locator('#meal-start-current').click();
   await page.locator('[data-meal-target-fold] > summary').click();

@@ -30,7 +30,7 @@ test('Meal Builder keeps routine header and account chrome compact', async ({ pa
 test('inventory category jump bar is bottom-pinned, two-row, non-scrolling, data-driven, and opens the target section', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
 
   const nav = page.locator('[data-inventory-jump-nav]');
   await expect(nav).toBeVisible();
@@ -76,7 +76,7 @@ test('inventory category jump bar is bottom-pinned, two-row, non-scrolling, data
 test('inventory bottom action remains reachable above the pinned category bar', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 667 });
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
   await page.evaluate(async () => { await document.fonts.ready; });
 
   const nav = page.locator('[data-inventory-jump-nav]');

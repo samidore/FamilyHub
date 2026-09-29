@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 test('inventory and freezer controls stack below the name at mobile width', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
 
   const inventoryRow = page.locator('[data-inventory-item="whole-beef-brisket"]');
   await expect(inventoryRow).toBeVisible();
@@ -30,17 +30,46 @@ test('inventory and freezer controls stack below the name at mobile width', asyn
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
 });
 
-test('unified inventory defaults to live stock and reveals zero-stock ingredients', async ({ page }) => {
+test('inventory views default to refrigerated and separate frozen, combined, and all scopes', async ({ page }) => {
   await page.goto('meal-builder/');
-  await expect(page.locator('[data-inventory-tab]')).toHaveCount(0);
+
+  const cold = page.locator('[data-inventory-tab="cold"]');
+  const freezer = page.locator('[data-inventory-tab="freezer"]');
+  const combined = page.locator('[data-inventory-tab="combined"]');
+  const all = page.locator('[data-inventory-tab="all"]');
+  await expect(page.locator('[data-inventory-tab]')).toHaveCount(4);
+  await expect(cold).toHaveClass(/is-active/);
+  await expect(cold).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('[data-inventory-item]')).toHaveCount(0);
-  await page.locator('#meal-show-all').check();
-  await expect(page.locator('[data-inventory-item]')).not.toHaveCount(0);
+
+  await all.click();
+  const chicken = page.locator('[data-inventory-item="chicken-breast"]');
+  await expect(chicken).toBeVisible();
+  await chicken.locator('[data-stock-add][data-stock-storage="inventory"]').click();
+  await chicken.locator('[data-storage-block="freezer"] [data-stock-delta="0.5"]').click();
+
+  await cold.click();
+  await expect(chicken).toBeVisible();
+  await expect(chicken.locator('[data-storage-block="inventory"]')).toBeVisible();
+  await expect(chicken.locator('[data-storage-block="freezer"]')).toBeHidden();
+
+  await freezer.click();
+  await expect(chicken).toBeVisible();
+  await expect(chicken.locator('[data-storage-block="inventory"]')).toBeHidden();
+  await expect(chicken.locator('[data-storage-block="freezer"]')).toBeVisible();
+
+  await combined.click();
+  await expect(chicken.locator('[data-storage-block="inventory"]')).toBeVisible();
+  await expect(chicken.locator('[data-storage-block="freezer"]')).toBeVisible();
+  await expect(page.locator('[data-inventory-item="eggs"]')).toHaveCount(0);
+
+  await all.click();
+  await expect(page.locator('[data-inventory-item="eggs"]')).toBeVisible();
 });
 
 test('ordinary counted aggregate +/- changes through the inventory event path', async ({ page }) => {
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
   const row = page.locator('[data-inventory-item="salmon"]');
   await row.locator('[data-stock-add][data-stock-storage="inventory"]').click();
   await expect(row.locator('[data-inventory-value="salmon"]')).toHaveText('1');
@@ -52,7 +81,7 @@ test('ordinary counted aggregate +/- changes through the inventory event path', 
 
 test('FIFO refrigerated inventory has one whole-unit add action outside batch rows', async ({ page }) => {
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
   const row = page.locator('[data-inventory-item="chicken-thighs"]');
   await row.locator('[data-stock-add][data-stock-storage="inventory"]').click();
   await expect(row.locator('[data-stock-add][data-stock-storage="inventory"]')).toHaveCount(1);
@@ -66,12 +95,12 @@ test('presence-only rows show one state label and counted rows keep their contro
   await page.goto('meal-builder/');
 
   const inventoryPresence = page.locator('[data-inventory-item="eggs"]');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
   await expect(inventoryPresence.locator('[data-stock-toggle]')).toHaveText('入库');
   await inventoryPresence.locator('[data-stock-toggle]').click();
   await expect(inventoryPresence.locator('[data-stock-toggle]').first()).toHaveText('移除');
 
-  await expect(page.locator('[data-inventory-tab]')).toHaveCount(0);
+  await expect(page.locator('[data-inventory-tab]')).toHaveCount(4);
   await page.locator('[data-inventory-item="fresh-meat-mooncake"] [data-stock-toggle]').click();
   const freezerPresence = page.locator('[data-inventory-item="fresh-meat-mooncake"]');
   await expect(freezerPresence).toBeVisible();
@@ -84,7 +113,7 @@ test('presence-only rows show one state label and counted rows keep their contro
 
 test('thaw-required frozen stock keeps half-unit correction and one visible thaw action', async ({ page }) => {
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
   const row = page.locator('[data-inventory-item="chicken-breast"]');
   const freezer = row.locator('[data-storage-block="freezer"]');
   const freezerPlus = freezer.locator('[data-stock-delta="0.5"][data-stock-storage="freezer"]');
@@ -115,7 +144,7 @@ test('thaw-required frozen stock keeps half-unit correction and one visible thaw
 test('FIFO and freezer quantity controls share columns at mobile width', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
 
   const cold = page.locator('[data-inventory-item="whole-pork-tenderloin"]');
   await cold.locator('[data-stock-add][data-stock-storage="inventory"]').click();
@@ -160,7 +189,7 @@ test('FIFO and freezer quantity controls share columns at mobile width', async (
 test('thawing workspace starts only stocked thaw-required ingredients', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 900 });
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
   const row = page.locator('[data-inventory-item="chicken-breast"]');
   const freezerPlus = row.locator('[data-stock-delta="0.5"][data-stock-storage="freezer"]');
   const thawAction = row.locator('[data-thaw-action]');
@@ -179,7 +208,7 @@ test('thawing workspace starts only stocked thaw-required ingredients', async ({
 test('inventory timer refresh preserves DOM identity and bottom scroll position', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 667 });
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
   await page.evaluate(async () => { await document.fonts.ready; });
 
   const item = page.locator('[data-inventory-item="thin-sliced-pork-belly"]');

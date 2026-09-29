@@ -31,7 +31,7 @@ async function selectCabbageMeal(page: Page) {
 
 test('queued meal can be checked out from the warning without finishing the next meal', async ({ page }) => {
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
   await setInventory(page, ['green-cabbage', 'ground-pork', 'ground-beef']);
   await page.locator('#meal-start-current').click();
   await selectCabbageMeal(page);
@@ -69,7 +69,7 @@ test('queued meal can be checked out from the warning without finishing the next
 
 test('queue warning settles only pending meals even while the current meal is cooking; normal Checkout includes both', async ({ page }) => {
   await page.goto('meal-builder/');
-  await page.locator('#meal-show-all').check();
+  await page.locator('[data-inventory-tab="all"]').click();
   await setInventory(page, [
     'green-cabbage', 'green-cabbage',
     'ground-pork', 'ground-pork',

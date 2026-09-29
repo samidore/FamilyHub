@@ -10,8 +10,7 @@ async function inventoryItem(page: Page, id: string) {
 }
 
 async function setInventory(page: Page, ids: string[]) {
-  const showAll = page.locator('#meal-show-all');
-  if (!(await showAll.isChecked())) await showAll.check();
+  await page.locator('[data-inventory-tab="all"]').click();
   for (const id of ids) {
     const action = (await inventoryItem(page, id)).locator('[data-stock-add], [data-stock-toggle]').first();
     await action.click();

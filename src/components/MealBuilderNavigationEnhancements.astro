@@ -171,7 +171,7 @@
 
     let signature = '';
     const syncInventoryJumpNav = () => {
-      const groups = [...inventoryList.querySelectorAll<HTMLDetailsElement>('details[data-inventory-section]')];
+      const groups = [...inventoryList.querySelectorAll<HTMLDetailsElement>('details[data-inventory-section]')].filter((group) => !group.hidden);
       const entries = groups.flatMap((group) => {
         const id = group.dataset.inventorySection;
         if (!id) return [];
@@ -202,7 +202,7 @@
       });
     };
 
-    new MutationObserver(syncInventoryJumpNav).observe(inventoryList, { childList: true });
+    new MutationObserver(syncInventoryJumpNav).observe(inventoryList, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden'] });
     syncInventoryJumpNav();
   }
 
