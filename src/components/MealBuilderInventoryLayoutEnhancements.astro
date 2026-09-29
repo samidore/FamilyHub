@@ -591,6 +591,13 @@
     .meal-builder-page .meal-thaw-job__actions { justify-content: flex-start; }
   }
 
+  .meal-builder-page .meal-inventory-item[hidden],
+  .meal-builder-page .meal-inventory-group[hidden],
+  .meal-builder-page .meal-storage-block[hidden],
+  .meal-builder-page .meal-thaw-jobs[hidden] {
+    display: none !important;
+  }
+
   .meal-builder-page .meal-inventory-tabs {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
