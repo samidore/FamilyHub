@@ -8,7 +8,7 @@ test('central optional groups replace per-Recipe optional protein allow-lists wi
   const data = parseMealFiles(files);
   const richness = data.optionalGroups.find((group) => group.id === 'add-some-richness');
   assert(richness);
-  for (const id of ['whole-pork-tenderloin', 'pork-chops', 'thin-sliced-pork-belly', 'ground-pork', 'ground-beef', 'peeled-shrimp']) {
+  for (const id of ['whole-pork-tenderloin', 'pork-chops', 'thin-sliced-pork-belly', 'ground-pork', 'white-oil-sausage', 'ground-beef', 'peeled-shrimp']) {
     assert(richness.ingredients.some((entry) => entry.ingredientId === id), `${id} should be centrally available in add-some-richness`);
   }
 
