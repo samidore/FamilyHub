@@ -17,6 +17,9 @@ optional_groups:
       - ingredient_id: pork-chops
         meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
         checkout_units: 1
+      - ingredient_id: white-oil-sausage
+        meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
+        checkout_units: 1
       - ingredient_id: sliced-beef-brisket
         meal_contribution: { protein: 0.5, vegetable: 0, staple: 0 }
         checkout_units: 1
