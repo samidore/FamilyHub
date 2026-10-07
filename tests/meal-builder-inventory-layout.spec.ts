@@ -202,7 +202,7 @@ test('thawing workspace starts only stocked thaw-required ingredients', async ({
   await thawAction.click();
   const thawCountdown = page.locator('[data-thaw-countdown]');
   await expect(thawCountdown).toHaveCount(1);
-  await expect(thawCountdown).toHaveText(/化冻 1 · \\d+h/);
+  await expect(thawCountdown).toHaveText(/化冻 1 · \d+h/);
   await expect(page.locator('[data-complete-thaw]')).toHaveCount(1);
   await expect(page.locator('[data-cancel-thaw]')).toHaveCount(1);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
