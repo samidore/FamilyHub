@@ -49,6 +49,7 @@ test('leafy greens one-of remains complete after optional-group migration', asyn
     'youmai-cai',
     'choy-sum',
     'water-spinach',
+    'sweet-potato-leaves',
     'pea-shoots',
     'amaranth-greens',
     'tong-hao',
