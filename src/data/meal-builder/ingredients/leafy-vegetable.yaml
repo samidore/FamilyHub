@@ -128,6 +128,21 @@ ingredients:
       section: leafy-vegetable
       order: 90
     tags: []
+  - id: sweet-potato-leaves
+    type: ingredient
+    inventory_tracking: counted
+    inventory_freshness: fifo
+    freshness_priority_days: 5
+    status: candidate
+    name_zh: 地瓜叶
+    name_en: Sweet Potato Leaves
+    starter:
+      visible: true
+      section: leafy-vegetable
+      order: 95
+    tags: []
+    child_coverage:
+      vegetable: unknown
   - id: pea-shoots
     type: ingredient
     inventory_tracking: counted
