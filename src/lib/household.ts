@@ -284,7 +284,7 @@ export function adjustInventoryBatch(state: HouseholdState, ingredientId: string
 }
 export function adjustReadyAggregate(state: HouseholdState, ingredientId: string, delta: number, ingredients?: MealIngredient[] | Record<string, MealIngredient>): HouseholdState {
   const item = ingredientRecord(ingredientId, ingredients);
-  if (!item || item.inventoryTracking === 'presence-only' || item.inventoryFreshness === 'fifo' || item.freezerBehavior || !isStepAligned(delta)) return state;
+  if (!item || item.inventoryTracking === 'presence-only' || item.inventoryFreshness === 'fifo' || item.freezerBehavior === 'direct' || !isStepAligned(delta)) return state;
   if (delta < 0 && (state.inventory[ingredientId] as number ?? 0) + delta < (queuedReservationUnits(state, ingredients)[ingredientId] ?? 0)) return state;
   return { ...state, inventory: adjustInventoryItem(state.inventory, ingredientId, delta, 'counted') };
 }

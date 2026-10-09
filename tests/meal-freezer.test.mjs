@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { loadMealData } from '../scripts/load-meal-data.mjs';
 import { adjustFrozenAggregate, adjustInventoryBatch, adjustReadyAggregate, cancelThaw, completeThaw, discardStock, normalizeDiscardedStock, normalizeHouseholdState, reconcileDueThawing, startThaw, undoDiscard, STOCK_UNDO_WINDOW_MS, THAW_DURATION_MS } from '../src/lib/household.ts';
 
 const ingredients = [{ id: 'chicken-thighs', inventoryTracking: 'counted', inventoryFreshness: 'fifo', freezerBehavior: 'thaw-required' }, { id: 'frozen-patties', inventoryTracking: 'counted', freezerBehavior: 'direct' }, { id: 'steamed-buns', inventoryTracking: 'presence-only', freezerBehavior: 'direct' }];
@@ -9,6 +10,45 @@ test('ordinary counted ready stock uses aggregate +/- and protects queued reserv
   const state = normalizeHouseholdState({ inventory: { tomato: 1 }, pendingCheckoutMeals: [{ mealId: 'queued', selectedRecipeIds: ['recipe'], recipeIngredientBindings: { recipe: ['tomato'] } }] }, readyIngredients);
   assert.equal(adjustReadyAggregate(state, 'tomato', -0.5, readyIngredients).inventory.tomato, 1);
   assert.equal(adjustReadyAggregate(state, 'tomato', 0.5, readyIngredients).inventory.tomato, 1.5);
+});
+
+test('cold non-FIFO freezer-capable sausage stock adjusts without touching frozen stock', async () => {
+  const { ingredients: allIngredients } = await loadMealData();
+  const affected = allIngredients.filter(({ id }) => ['chinese-sausage', 'pork-meatballs'].includes(id));
+  assert.equal(affected.length, 2);
+  for (const item of affected) {
+    assert.equal(item.inventoryTracking, 'counted');
+    assert.equal(item.freezerBehavior, 'thaw-required');
+    assert.equal(item.inventoryFreshness, undefined);
+    const state = normalizeHouseholdState({ inventory: { [item.id]: 1 }, freezerInventory: { [item.id]: 2 } }, allIngredients);
+
+    const reduced = adjustReadyAggregate(state, item.id, -0.5, allIngredients);
+    assert.equal(reduced.inventory[item.id], 0.5);
+    assert.equal(reduced.freezerInventory[item.id], 2);
+    assert.equal(reduced.inventoryBatches[item.id], undefined);
+
+    const removed = adjustReadyAggregate(reduced, item.id, -0.5, allIngredients);
+    assert.equal(removed.inventory[item.id], undefined);
+    assert.equal(removed.freezerInventory[item.id], 2);
+
+    const restored = adjustReadyAggregate(removed, item.id, 0.5, allIngredients);
+    assert.equal(restored.inventory[item.id], 0.5);
+    assert.equal(restored.freezerInventory[item.id], 2);
+
+    const reserved = normalizeHouseholdState({
+      inventory: { [item.id]: 1 },
+      freezerInventory: { [item.id]: 2 },
+      pendingCheckoutMeals: [{ mealId: 'queued', selectedRecipeIds: ['recipe'], recipeIngredientBindings: { recipe: [item.id] } }],
+    }, allIngredients);
+    assert.equal(adjustReadyAggregate(reserved, item.id, -0.5, allIngredients).inventory[item.id], 1);
+    assert.equal(adjustReadyAggregate(reserved, item.id, 0.5, allIngredients).inventory[item.id], 1.5);
+    assert.equal(adjustReadyAggregate(reserved, item.id, 0.5, allIngredients).freezerInventory[item.id], 2);
+  }
+});
+
+test('direct freezer counted stock is not adjusted through the cold aggregate', () => {
+  const state = normalizeHouseholdState({ inventory: { 'frozen-patties': 1 } }, ingredients);
+  assert.equal(adjustReadyAggregate(state, 'frozen-patties', -0.5, ingredients).inventory['frozen-patties'], 1);
 });
 
 test('refrigerated batch +/- changes only the selected date and aggregate', () => {
