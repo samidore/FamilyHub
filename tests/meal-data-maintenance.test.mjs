@@ -152,4 +152,7 @@ test('diced pork belly, beef skirt steak, and mussel meat keep distinct standalo
   assert.equal(beef.childCoverage.protein, false);
   const mussel = data.recipes.find((item) => item.id === 'ginger-scallion-mussel-meat');
   assert.equal(mussel.childCoverage.protein, false);
+  const redBraised = data.recipes.find((item) => item.id === 'hong-shao-rou');
+  assert.ok(redBraised.requirements.some((req) => req.anyOf.includes('diced-pork-belly')));
+  assert.ok(redBraised.steps.some((step) => step.includes('五花肉丁') && step.includes('High Pressure 10分钟')));
 });

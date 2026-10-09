@@ -18,6 +18,7 @@ main_protein_category: pork
 main_protein_ingredient_ids:
   - pork-shoulder-chunks
   - thin-sliced-pork-belly
+  - diced-pork-belly
 supporting_protein_ingredient_ids: []
 optional_groups:
   - one-pot-mix
@@ -54,6 +55,7 @@ ingredients:
   - one_of:
       - pork-shoulder-chunks
       - thin-sliced-pork-belly
+      - diced-pork-belly
     role: main-protein
 finish_options:
   - id: red-braise
@@ -88,10 +90,10 @@ finish_options:
     steps:
       - 肉已在共享 Instant Pot 基底中软嫩；加入米醋、月桂叶和黑胡椒，中火轻煮3–5分钟让酸香变柔和，再薄薄收汁。
 steps:
-  - 准备：按所选 Ingredient 处理猪肉。猪肩肉切4–5 cm块；薄切五花肉保持原切片厚度。把所选 Finish 的调味料单独量好。
-  - Instant Pot 选 Sauté；猪肩肉块分批煎至多面浅褐，薄切五花肉则快速煎至刚出油；取出备用。
-  - 加入2 cups基础焖煮液并彻底刮净锅底。猪肩肉块锁盖 High Pressure 25–30分钟、自然泄压10分钟；薄切五花肉锁盖 High Pressure 1分钟、完成后立即快速泄压。
-  - 开盖检查所选肉已达到目标软度；若猪肩肉仍硬，再 High Pressure 5分钟并自然泄压5分钟。薄切五花肉不要重复加压。
+  - 准备：按所选 Ingredient 处理猪肉。猪肩肉切4–5 cm块；薄切五花肉保持原切片厚度；五花肉丁保持约1–2 cm丁。把所选 Finish 的调味料单独量好。
+  - Instant Pot 选 Sauté；猪肩肉块分批煎至多面浅褐；薄切五花肉快速煎至刚出油；五花肉丁煎至表面浅褐并略出油；取出备用。
+  - 加入2 cups基础焖煮液并彻底刮净锅底。猪肩肉块锁盖 High Pressure 25–30分钟、自然泄压10分钟；薄切五花肉锁盖 High Pressure 1分钟、完成后立即快速泄压；五花肉丁锁盖 High Pressure 10分钟、自然泄压5分钟。
+  - 开盖检查所选肉已达到目标软度；若猪肩肉仍硬，再 High Pressure 5分钟并自然泄压5分钟；若五花肉丁仍硬，再 High Pressure 3分钟并自然泄压5分钟。薄切五花肉不要重复加压。
   - 将肉和少量压力汤汁转入宽锅。若选择了顺手焖配料，按硬度加入并只煮到所需软度；不把未熟主肉留在此阶段。
   - 加入所选 Finish 调味料，中大火翻动收成薄亮汁；每2–3分钟翻一次，防止粘底。
   - 当汁能薄薄挂在软嫩的肉表面、锅底仍有少量可流动汁时关火；静置5分钟再盛。
@@ -102,5 +104,5 @@ child_serving: 取较嫩、较淡的部分，必要时剪成小块。
 adult_finish: 孩子份盛出后，成人可按菜式另加辣椒油、辣椒粉或更重调味；不需要则省略。
 substitutions: []
 cook_ingredients:
-  - 猪肩肉块 / 薄切五花肉：900 g；任选一种
+  - 猪肩肉块 / 薄切五花肉 / 五花肉丁：900 g；任选一种
   - 基础焖煮液：水或低盐高汤 2 cups；姜 6片；葱白 3段；八角 1个，可省
