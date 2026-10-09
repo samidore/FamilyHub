@@ -41,6 +41,20 @@ ingredients:
       section: pork
       order: 30
     tags: []
+  - id: diced-pork-belly
+    type: ingredient
+    inventory_tracking: counted
+    freezer_behavior: thaw-required
+    inventory_freshness: fifo
+    freshness_priority_days: 3
+    status: candidate
+    name_zh: 五花肉丁
+    name_en: Diced Pork Belly
+    starter:
+      visible: true
+      section: pork
+      order: 35
+    tags: []
   - id: extra-thin-sliced-pork-belly
     type: ingredient
     inventory_tracking: counted

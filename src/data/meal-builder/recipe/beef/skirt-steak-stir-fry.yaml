@@ -1,0 +1,57 @@
+id: skirt-steak-stir-fry
+type: recipe
+status: candidate
+name_zh: 爆炒牛肉片
+name_en: Wok-Fried Skirt Steak Slices
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-30
+  - child-support-protein
+fit_score: 4
+primary_role: protein
+main_protein_category: beef
+main_protein_ingredient_ids: [beef-skirt-steak]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 15–25
+meal_window_minutes: 20–35
+elapsed_minutes: 25–40
+advance_start_required: false
+equipment:
+  - high-output burner
+  - wok / iron pan
+burner_plan: 大火炉头爆炒牛肉，中火炉头留给配菜。
+child_suitable: conditional
+child_texture: 牛裙肉有明显肌理，爆炒后仍可能有嚼劲，不作为稳定的孩子软蛋白。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: beef-skirt-steak
+    role: main-protein
+steps:
+  - 牛裙肉去掉明显筋膜，辨认肉纹后逆纹切成2–3 mm薄片；与腌料抓匀，静置10–15分钟；把快炒汁提前调匀。
+  - 炒锅大火烧热，加1 Tbsp中性油；牛肉分批单层下锅，摊开约30秒后快速翻炒，表面变色即盛出，避免把锅挤满炒出水。
+  - 原锅下姜丝和蒜末，炒约10秒出香；快炒汁搅匀后沿锅边倒入并煮沸。
+  - 牛肉回锅再大火翻炒30–60秒，至肉片中心完全熟透、酱汁薄薄裹住肉片，立刻关火出锅。
+  - 给孩子尝试的部分需逆纹剪成短小片；本菜不计入 Child Protein。
+  - 完成提示：牛肉片嫩而不出水，汁薄亮、不堆积；如果原肉有长筋膜务必在切片时去除。
+  - 安全提示：牛肉薄片实际炒至中心无生肉色；未切的整肌牛肉适用145°F/63°C并静置3分钟的安全标准。
+child_serving: 可少量尝试切短薄片；另配蒸蛋或嫩豆腐等软蛋白。
+adult_finish: 成人份可另加辣椒或黑胡椒；基础做法不辣。
+substitutions: []
+cook_ingredients:
+  - 牛裙肉：450 g，去筋膜、逆纹切2–3 mm薄片
+  - 腌料：生抽 2 tsp；水 1 Tbsp；玉米淀粉 2 tsp；中性油 1 tsp
+  - 快炒汁：水或低盐高汤 2 Tbsp；蚝油 1 tsp；生抽 1 tsp；糖 1/4 tsp
+  - 姜：10 g切丝；蒜：2瓣切末；炒油：1 Tbsp

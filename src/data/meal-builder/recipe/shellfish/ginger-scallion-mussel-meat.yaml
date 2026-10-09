@@ -1,0 +1,57 @@
+id: ginger-scallion-mussel-meat
+type: recipe
+status: candidate
+name_zh: 姜葱炒青口肉
+name_en: Ginger-Scallion Mussel Meat
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - stir-fried
+  - stovetop-wok
+  - lunch-30
+  - child-support-protein
+fit_score: 4
+primary_role: protein
+main_protein_category: shellfish
+main_protein_ingredient_ids: [mussel-meat]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 10–20
+meal_window_minutes: 15–30
+elapsed_minutes: 20–30
+advance_start_required: false
+equipment:
+  - high-output burner
+  - wok / iron pan
+  - small saucepan
+burner_plan: 中火炉头先处理生青口肉，再用大火炉头快炒姜葱。
+child_suitable: conditional
+child_texture: 青口肉有弹性与嚼劲，不作为稳定的孩子软蛋白。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: mussel-meat
+    role: main-protein
+steps:
+  - 检查去壳青口肉，挑去残壳和须丝，沥干；先确认包装标注的是生肉还是已经煮熟的肉。
+  - 如果是生青口肉，另锅水烧开后下肉，煮到肉心全部不透明、肉质紧实且完全熟透，立即捞出沥干；如已熟则省略焯煮。
+  - 将生抽、水、绍兴酒和糖调匀；姜切丝、葱白切段，葱绿备用。
+  - 炒锅大火预热，加2 tsp油，下姜丝和葱白炒约10秒；倒入处理好的青口肉快速翻匀。
+  - 淋入调味汁，翻炒约30–60秒至全锅热透、汁薄薄附着；生肉必须已彻底煮熟，勿久炒到干缩发韧。
+  - 撒葱绿，立即盛出。孩子如尝试须剪小，本菜不计 Child Protein。
+  - 完成提示：青口肉熟透、饱满，姜葱香明显，锅底不积水。
+child_serving: 可少量尝试剪碎的熟透青口肉；另配软蛋白。
+adult_finish: 成人份可再加黑胡椒或辣椒。
+substitutions: []
+cook_ingredients:
+  - 去壳青口肉（贻贝肉）：450 g，生或预熟按包装确认
+  - 姜：10 g切丝；葱：3根，葱白葱绿分开；中性油 2 tsp
+  - 调味汁：生抽 2 tsp；绍兴酒 1 Tbsp；水 1 Tbsp；糖 1/4 tsp

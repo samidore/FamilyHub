@@ -122,3 +122,34 @@ test('read-only maintenance helper inspects names, references, ordering, and val
   assert.equal(recipeOrder.append_position, chickenRecipes.length + 1);
   assert.equal((await verifyItem('oyster-sauce-braised-chicken')).valid, true);
 });
+
+test('diced pork belly, beef skirt steak, and mussel meat keep distinct standalone Recipes', async () => {
+  const data = parseMealFiles(await readMealFiles());
+  const pairs = [
+    ['diced-pork-belly', 'taiwanese-braised-pork-belly-rice'],
+    ['beef-skirt-steak', 'skirt-steak-stir-fry'],
+    ['mussel-meat', 'ginger-scallion-mussel-meat'],
+  ];
+  for (const [ingredientId, recipeId] of pairs) {
+    const ingredient = data.ingredients.find((item) => item.id === ingredientId);
+    const recipe = data.recipes.find((item) => item.id === recipeId);
+    assert.ok(ingredient, `${ingredientId} must be active`);
+    assert.equal(ingredient.inventoryTracking, 'counted');
+    assert.ok(recipe, `${recipeId} must be active`);
+    assert.equal(recipe.detailLevel, 'cookable');
+    assert.ok(recipe.requirements.some((req) => req.anyOf.includes(ingredientId)));
+    assert.ok(recipe.steps.length >= 3);
+    assert.ok(recipe.cookIngredientLines.length >= 2);
+  }
+  const luRouFan = data.recipes.find((item) => item.id === 'taiwanese-braised-pork-belly-rice');
+  assert.equal(luRouFan.requirements.some((req) => req.anyOf.includes('ground-pork')), false);
+  assert.ok(luRouFan.requirements.some((req) => req.anyOf.includes('rice')));
+  assert.equal(luRouFan.contribution.staple, 1);
+  assert.equal(luRouFan.childCoverage.protein, true);
+  assert.ok(luRouFan.tags.includes('instant-pot'));
+  const beef = data.recipes.find((item) => item.id === 'skirt-steak-stir-fry');
+  assert.ok(beef.tags.includes('stir-fried'));
+  assert.equal(beef.childCoverage.protein, false);
+  const mussel = data.recipes.find((item) => item.id === 'ginger-scallion-mussel-meat');
+  assert.equal(mussel.childCoverage.protein, false);
+});

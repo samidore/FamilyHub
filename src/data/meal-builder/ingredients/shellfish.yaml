@@ -55,6 +55,17 @@ ingredients:
       order: 50
     tags:
       - low-priority
+  - id: mussel-meat
+    type: ingredient
+    inventory_tracking: counted
+    status: candidate
+    name_zh: 贻贝肉（青口贝肉）
+    name_en: Mussel Meat
+    starter:
+      visible: true
+      section: shellfish
+      order: 55
+    tags: []
   - id: shrimp-paste
     type: ingredient
     inventory_tracking: counted

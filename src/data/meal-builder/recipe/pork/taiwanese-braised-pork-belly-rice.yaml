@@ -1,0 +1,62 @@
+id: taiwanese-braised-pork-belly-rice
+type: recipe
+status: candidate
+name_zh: 卤肉饭
+name_en: Taiwanese Braised Diced Pork Belly Rice
+tags:
+  - child-all-ingredients-eaten
+  - light-seasoning
+  - non-spicy-base
+  - braised
+  - instant-pot
+  - stovetop-nonstick
+  - advance-start
+  - family-shared
+fit_score: 4
+primary_role: mixed
+main_protein_category: pork
+main_protein_ingredient_ids: [diced-pork-belly]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 0.5, vegetable: 0, staple: 1 }
+child_coverage: { protein: true, vegetable: false }
+integral_staple_ingredient_ids: [rice]
+recommended_staple_ingredient_ids: []
+active_minutes: 20–30
+meal_window_minutes: 45–60
+elapsed_minutes: 50–75
+advance_start_required: true
+equipment:
+  - 9-quart Instant Pot
+  - medium burner for sauce reduction
+burner_plan: Instant Pot 将五花肉丁焖软；开盖用 Sauté 或中火炉头收汁后浇饭。
+child_suitable: yes
+child_texture: 五花肉丁高压煮软；孩子份挑软嫩小块，必要时剪碎并减少浓汁。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: diced-pork-belly
+    role: main-protein
+  - ingredient_id: rice
+    role: integral-staple
+steps:
+  - 五花肉丁按需要修成约1–1.5 cm小丁，擦去多余水；红葱头或葱白切碎，姜蒜备好；卤汁预先量好。
+  - Instant Pot 选 Sauté，倒入五花肉丁煸出少量油脂，肉面略上色后加入红葱头或葱白、姜和蒜，炒香约1–2分钟。
+  - 加入生抽、老抽、绍兴酒、糖、五香粉与2 cups水或低盐高汤，刮净锅底避免焦化；确保达到压力锅最低液量。
+  - 锁盖 High Pressure 12分钟，自然泄压10分钟后释放余压；检查五花肉丁已熟透且筷子能轻松压软。若仍较硬，再 High Pressure 3分钟并自然泄压5分钟。
+  - 开盖用 Sauté 或转中火宽锅，小火翻动并收汁约8–15分钟，保留能渗入米饭的浓润卤汁，不收干。
+  - 盛3碗熟饭，每碗浇适量肉丁与卤汁；孩子份取软嫩小丁、剪小，少浇浓汁。
+  - 完成提示：肉丁保留颗粒但肥瘦都软，卤汁浓香仍能流动；这是五花肉丁卤肉饭，不是用猪绞肉的肉燥饭。
+  - 安全提示：猪肉丁须完全熟透；孩子份检查无硬筋并剪成适口大小。
+child_serving: 取软嫩、低盐部分，剪成小块后拌饭。
+adult_finish: 孩子份盛出后成人可另加辣椒油或胡椒。
+substitutions: []
+cook_ingredients:
+  - 五花肉丁：500–600 g，约1–1.5 cm丁
+  - 米饭：3碗熟饭
+  - 卤汁：生抽 2 Tbsp；老抽 1 tsp；绍兴酒 2 Tbsp；糖 1 Tbsp；五香粉 1/4 tsp；水或低盐高汤 2 cups
+  - 红葱头或葱白：约60 g；姜：2片；蒜：2瓣

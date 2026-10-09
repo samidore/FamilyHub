@@ -9,6 +9,7 @@ categories:
       - whole-pork-tenderloin
       - pork-shoulder-chunks
       - thin-sliced-pork-belly
+      - diced-pork-belly
       - extra-thin-sliced-pork-belly
       - ground-pork
       - soft-pork-ribs
@@ -58,6 +59,7 @@ categories:
       - denver-steak
       - boneless-beef-short-ribs
       - beef-steak
+      - beef-skirt-steak
   - id: lamb-goat
     label_zh: 羊 / 山羊
     label_en: Lamb / Goat
@@ -102,6 +104,7 @@ categories:
       - scallops
       - squid
       - oysters
+      - mussel-meat
       - shrimp-paste
       - fish-paste
       - fish-balls

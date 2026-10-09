@@ -30,6 +30,9 @@ When an otherwise ambiguous raw receipt label is explicitly resolved by the user
 | `SANSUI MULTI USE TOFU` | `soft-tofu` |
 | `NATURE SOY FIVE SPICE FLAVOR` | `pressed-tofu` |
 | `PORK SOFT BONE` | `soft-pork-ribs` |
+| `PORK BELLY [DICE]` | `diced-pork-belly` |
+| `BEEF INSIDE SKIRTS` | `beef-skirt-steak` |
+| `MUSSEL MEAT` | `mussel-meat` |
 | `SAKURA GROUND PORK` | `ground-pork` |
 | `KYL PORK SAUSAGE` | `white-oil-sausage` |
 | `KING OYSTER MUSHROOM [SLICED]` | `king-oyster-mushrooms` |
