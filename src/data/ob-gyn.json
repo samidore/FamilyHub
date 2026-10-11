@@ -248,7 +248,7 @@
   },
   {
     "id": "emily-howell",
-    "name": "Emily Ruth Howell, MD",
+    "name": "Emily Ruth Howell, DO",
     "practice": "HUMC Academic Practice",
     "location": "Hackensack, NJ",
     "scopes": ["ob", "gyn"],
@@ -431,7 +431,7 @@
   },
   {
     "id": "zachary-merriam",
-    "name": "Zachary Merriam, MD",
+    "name": "Zachary Merriam, DO",
     "practice": "Englewood Health Physician Network",
     "location": "Englewood area, NJ",
     "scopes": ["ob", "gyn"],
@@ -463,7 +463,7 @@
   },
   {
     "id": "sara-brescia",
-    "name": "Sara Brescia, MD",
+    "name": "Sara Brescia, DO",
     "practice": "Englewood Health Physician Network",
     "location": "Englewood area, NJ",
     "scopes": ["ob", "gyn"],

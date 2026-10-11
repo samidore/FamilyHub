@@ -37,10 +37,10 @@ Provider cards separate:
 
 ## Review-source policy
 
-Every provider has three fixed outbound review/reference actions:
+Provider cards offer the following review/reference actions. Healthgrades appears only when a matching direct physician page has been verified:
 
 1. **Official** — the health-system or practice source used for identity, scope, training, and current practice facts.
-2. **Healthgrades** — required for every provider. Use a direct doctor profile only after the current URL has been verified. If a reliable direct profile cannot be confirmed, use a working local Healthgrades specialty-directory search fallback and label it as search/directory rather than doctor-level evidence. Do not guess provider or group slugs.
+2. **Healthgrades** — link only to the verified matching physician's individual Healthgrades page. Never link a specialty directory, group page, general search, or a similarly named doctor. If no direct profile can be verified, omit the button and disclose that the link is unavailable.
 3. **Google · office** — a Maps search for the physician/practice/location. Treat resulting ratings as office/practice experience unless the review scope clearly identifies the individual physician.
 
 Zocdoc and WebMD are optional and appear only when a reliable direct provider profile has been identified. Vitals and RateMDs are research supplements rather than fixed UI links.

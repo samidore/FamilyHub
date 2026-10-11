@@ -35,8 +35,8 @@
 - Tier 2：整体合适，但有一两项需要电话确认。
 - Tier 3：备选；距离、证据、评论或用途匹配较弱。
 - 保留完整候选名单；写明排序理由、优势、风险、证据缺口和预约前问题。
-- 每位医生附官方网页、Healthgrades、Google Maps、州执照/纪律记录及其他使用过的来源。
-- Healthgrades 优先使用 direct doctor profile；找不到可可靠确认的 direct profile 时，可使用明确列出该医生的 Healthgrades group page；只有前两者均无法可靠确认时才使用 specialty-directory fallback，并明确链接 scope。
+- 每位医生附官方网页、Google Maps、州执照/纪律记录及其他使用过的来源；Healthgrades 仅在查到对应医生个人页面时附链接。
+- Healthgrades 只链接已核实属于对应医生本人的 direct profile；不允许以 group page、specialty directory、搜索页或同名医生作为 fallback。无法确认个人页面时不显示 Healthgrades 链接，明确标记 unavailable。
 - Google Maps 默认作为 office/practice 层面的体验证据；除非评论对象明确是该医生本人，不把 location rating 当医生个人评分。
 - 医院或医疗集团 patient survey 独立展示，不因样本更大就与 Healthgrades 合并或覆盖。
 - Zocdoc、WebMD 有可靠 direct provider profile 时可加入；Vitals、RateMDs 等作为补充研究来源，不要求固定占用页面 UI。
@@ -78,7 +78,7 @@
 
 - Healthgrades、Google Maps、Yelp、Zocdoc、WebMD 及医院/医疗集团自己的患者调查必须分别记录评分和样本量，不混合计算。
 - 医院或 practice 的评分不能冒充某位医生的评分。
-- Healthgrades 每名候选都保留可用入口，并区分 direct profile、明确列出医生的 group page、以及最后才使用的 directory fallback。
+- Healthgrades 仅提供对应医生本人、已核实可打开的 direct profile。未找到时显示 unavailable，不使用 group/directory/search fallback。
 - Zocdoc 若使用，优先保留其 verified-patient review 证据；WebMD 作为补充医生级 review source。没有可靠 direct profile 时不猜链接。
 - 负评除通用四类外，OB 额外关注 birth plan、induction、C-section pressure、labor management 和 consent；只有多个独立来源反复出现同类描述时才视为较强信号。
 - 单条患者评论中的临床或安全指控只能作为进一步核查线索，不能当作已证实事实。

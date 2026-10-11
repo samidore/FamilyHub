@@ -68,8 +68,15 @@ const obGynIds = obGyn.map((provider) => provider.id).sort();
 const obGynExternalIds = Object.keys(obGynExternalProfiles).sort();
 assert(obGynExternalIds.length === obGyn.length, 'OB/GYN external review-link directory must contain exactly one entry per unique provider');
 assert(JSON.stringify(obGynExternalIds) === JSON.stringify(obGynIds), 'OB/GYN external review-link directory provider IDs do not match the provider dataset');
-assert(Object.values(obGynExternalProfiles).every((entry) => entry.healthgradesUrl.startsWith('https://www.healthgrades.com/')), 'Every OB/GYN provider must have a Healthgrades link');
-assert(Object.values(obGynExternalProfiles).every((entry) => ['profile', 'group', 'directory'].includes(entry.healthgradesLinkKind)), 'An OB/GYN Healthgrades link is missing its scope label');
+// Healthgrades links must target the corresponding physician profile, not a search or directory.
+// Omit the link entirely when no identity-matched direct profile has been confirmed.
+const healthgradesProfileUrl = /^https:\/\/www\.healthgrades\.com\/(?:physician\/dr-|providers\/)([a-z0-9-]+)$/;
+for (const provider of obGyn) {
+  const url = obGynExternalProfiles[provider.id].healthgradesUrl;
+  if (!url) continue;
+  const slug = url.match(healthgradesProfileUrl)?.[1];
+  assert(slug?.startsWith(`${provider.id}-`), `${provider.id}: Healthgrades must link to the corresponding doctor profile, not a search or directory`);
+}
 assert(Object.values(obGynExternalProfiles).every((entry) => !entry.webmdUrl || entry.webmdUrl.startsWith('https://doctor.webmd.com/')), 'An OB/GYN WebMD link is invalid');
 assert(Object.values(obGynExternalProfiles).every((entry) => !entry.zocdocUrl || entry.zocdocUrl.startsWith('https://www.zocdoc.com/')), 'An OB/GYN Zocdoc link is invalid');
 
