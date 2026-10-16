@@ -3,6 +3,7 @@ import { moduleRegistry } from '../src/config/modules.ts';
 import { parseDayTrips } from '../src/data/dayTripSchema.mjs';
 import { parseAdultDermatologists, parseColonoscopySpecialists, parseLibraryEvents, parsePediatricDentists } from '../src/data/schemas.mjs';
 import { parseObGynProviders } from '../src/data/obGynSchema.mjs';
+import { parseBreastSurgeons } from '../src/data/breastSurgeonSchema.mjs';
 import { parseRestaurants } from '../src/data/restaurantSchema.mjs';
 import { obGynExternalProfiles } from '../src/data/obGynExternalProfiles.ts';
 import { loadMealData } from './load-meal-data.mjs';
@@ -14,6 +15,7 @@ const dentists = parsePediatricDentists(await readJson('src/data/pediatric-denti
 const dermatologists = parseAdultDermatologists(await readJson('src/data/adult-dermatologists.json'));
 const colonoscopy = parseColonoscopySpecialists(await readJson('src/data/colonoscopy-specialists.json'));
 const obGyn = parseObGynProviders(await readJson('src/data/ob-gyn.json'));
+const breastSurgeons = parseBreastSurgeons(await readJson('src/data/breast-surgeons.json'));
 const restaurants = parseRestaurants(await readJson('src/data/restaurants.json'));
 const obGynPlacements = obGyn.flatMap((provider) => provider.placements);
 const meals = await loadMealData();
@@ -27,6 +29,7 @@ const records = {
   'adult-dermatologists': dermatologists,
   'colonoscopy-specialists': colonoscopy,
   'ob-gyn': obGynPlacements,
+  'breast-surgeons': breastSurgeons,
   'meal-builder': meals.recipes,
   'restaurants': restaurants,
 };
@@ -37,6 +40,7 @@ const cardAttributes = {
   'adult-dermatologists': 'data-dermatologist',
   'colonoscopy-specialists': 'data-colonoscopy',
   'ob-gyn': 'data-ob-gyn',
+  'breast-surgeons': 'data-breast-surgeon',
   'meal-builder': 'data-meal-recipe',
   'restaurants': 'data-restaurant',
 };
@@ -98,6 +102,13 @@ assert(colonoscopy.every((item) => item.eligibility.decision !== 'excluded'), 'A
 assert(colonoscopy.filter((item) => item.tier === 1).every((item) => Object.values(item.evidenceBands).every((band) => band === 'strong' || band === 'adequate')), 'Tier 1 colonoscopy specialist contains a concern or unknown evidence band');
 assert([...colonoscopy].sort((a, b) => a.rank - b.rank).every((item, index) => item.rank === index + 1), 'Colonoscopy specialist ranks are not a complete deterministic order');
 
+assert(breastSurgeons.length >= 10 && breastSurgeons.length <= 12, 'Breast Surgeons must retain a meaningful shortlist');
+assert([...breastSurgeons].sort((a, b) => a.rank - b.rank).every((item, index) => item.rank === index + 1), 'Breast Surgeons ranks must be contiguous');
+assert(breastSurgeons.every((item) => item.tier !== 1 || (item.licenseStatus === 'verified' && item.disciplineStatus === 'screened-clear')), 'Tier 1 Breast Surgeon needs independently verified license and discipline');
+assert(breastSurgeons.every((item) => item.evidenceGaps.length > 0 && item.verificationQuestions.length > 0), 'A Breast Surgeon is missing evidence gaps or pre-visit questions');
+assert(breastSurgeons.every((item) => item.reviewEvidence.every((review) => review.scope === 'physician')), 'Breast Surgeon office/group ratings must not masquerade as physician ratings');
+assert(!/(memberId|groupNumber|insuranceId|insuranceCard|pathologyReport|imagingReport)/i.test(JSON.stringify(breastSurgeons)), 'Private data in Breast Surgeons');
+
 const expectedOptionalGroups = [
   ['add-some-richness', '加点油水'],
   ['change-it-up', '加番茄'],
@@ -137,4 +148,4 @@ for (const html of htmlFiles) {
   assert(externalLinks.every((match) => /target="_blank"/.test(match[0]) && /rel="[^"]*noopener[^"]*noreferrer[^"]*"/.test(match[0])), 'An external link is missing safe new-tab attributes');
 }
 
-console.log(`Registry audit passed: ${moduleRegistry.length} modules, ${trips.length} trips, ${events.length} activities, ${dentists.length} dentists, ${dermatologists.length} dermatologists, ${colonoscopy.length} colonoscopy specialists, ${obGyn.length} OB/GYN providers / ${obGynPlacements.length} placements, ${restaurants.length} restaurants, ${meals.recipes.length} meal recipes.`);
+console.log(`Registry audit passed: ${moduleRegistry.length} modules, ${trips.length} trips, ${events.length} activities, ${dentists.length} dentists, ${dermatologists.length} dermatologists, ${colonoscopy.length} colonoscopy specialists, ${obGyn.length} OB/GYN providers / ${obGynPlacements.length} placements, ${breastSurgeons.length} breast surgeons, ${restaurants.length} restaurants, ${meals.recipes.length} meal recipes.`);

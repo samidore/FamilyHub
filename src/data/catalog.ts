@@ -6,16 +6,19 @@ import rawPediatricDentists from './pediatric-dentists.json';
 import rawAdultDermatologists from './adult-dermatologists.json';
 import rawColonoscopySpecialists from './colonoscopy-specialists.json';
 import rawObGynProviders from './ob-gyn.json';
+import rawBreastSurgeons from './breast-surgeons.json';
 import rawRestaurants from './restaurants.json';
 import { mealRecipes } from './meal';
 import { parseDayTripParking, parseDayTrips } from './dayTripSchema.mjs';
 import { parseDayTripBikeExposure } from './dayTripBikeExposure';
 import { parseAdultDermatologists, parseColonoscopySpecialists, parseLibraryEvents, parsePediatricDentists } from './schemas.mjs';
 import { parseObGynProviders } from './obGynSchema.mjs';
+import { parseBreastSurgeons } from './breastSurgeonSchema.mjs';
 import { parseRestaurants } from './restaurantSchema.mjs';
 import type { DayTripParking, DayTripWithParking } from './dayTripParking';
 import type { AdultDermatologist, ColonoscopySpecialist, DayTrip, DayTripLocation, LibraryEvent, PediatricDentist } from './types';
 import type { ObGynProvider } from './obGynTypes';
+import type { BreastSurgeon } from './breastSurgeonTypes';
 import type { Restaurant } from './restaurantTypes';
 import type { ModuleId } from '../config/modules';
 
@@ -98,6 +101,7 @@ export const pediatricDentists = parsePediatricDentists(rawPediatricDentists) as
 export const adultDermatologists = parseAdultDermatologists(rawAdultDermatologists) as AdultDermatologist[];
 export const colonoscopySpecialists = parseColonoscopySpecialists(rawColonoscopySpecialists) as ColonoscopySpecialist[];
 export const restaurants = parseRestaurants(rawRestaurants) as Restaurant[];
+export const breastSurgeons = parseBreastSurgeons(rawBreastSurgeons) as BreastSurgeon[];
 
 const obGynNameCorrections: Partial<Record<string, string>> = {
   'emily-howell': 'Emily Ruth Howell, DO',
@@ -117,6 +121,7 @@ export const moduleRecords: Partial<Record<ModuleId, readonly unknown[]>> = {
   'adult-dermatologists': adultDermatologists,
   'colonoscopy-specialists': colonoscopySpecialists,
   'ob-gyn': obGynProviders,
+  'breast-surgeons': breastSurgeons,
   'meal-builder': mealRecipes,
   'restaurants': restaurants,
 };

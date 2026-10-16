@@ -5,7 +5,7 @@ export const categoryDefinitions = [
 ] as const;
 
 export type CategoryId = (typeof categoryDefinitions)[number]['id'];
-export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists' | 'adult-dermatologists' | 'colonoscopy-specialists' | 'ob-gyn' | 'meal-builder' | 'restaurants' | 'sami-notebook';
+export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists' | 'adult-dermatologists' | 'colonoscopy-specialists' | 'ob-gyn' | 'breast-surgeons' | 'meal-builder' | 'restaurants' | 'sami-notebook';
 export type ModuleAccent = 'evergreen' | 'lake' | 'ochre' | 'berry';
 export type ModuleIcon = 'compass' | 'calendar' | 'care' | 'meal' | 'notebook';
 export type ModulePrivacyClass = 'public-reference' | 'authenticated-household';
@@ -98,6 +98,19 @@ export const moduleRegistry = [
     summary: '按 Valley、Hackensack、Englewood 的接生关系、公开训练与患者体验比较 OB，并保留一份合并 GYN shortlist。',
     keywords: ['健康', '照护', '产科', '妇科', 'OB', 'GYN', 'OBGYN', 'pregnancy', 'delivery', 'Valley', 'Hackensack', 'Englewood', 'Premera'],
     itemLabel: '位去重医生',
+    accent: 'ochre',
+    icon: 'care',
+    privacyClass: 'public-reference',
+    status: 'active',
+  },
+  {
+    id: 'breast-surgeons',
+    route: '/breast-surgeons/',
+    categoryId: 'health-care',
+    title: 'Breast Surgeons',
+    summary: '乳腺肿块、异常影像与异常活检的诊断期外科医生比较，区分专科适配、患者体验与未核实的安全资料。',
+    keywords: ['乳腺', '肿块', '活检', '乳腺外科', 'breast', 'surgeon', 'breast lump', 'abnormal biopsy', 'abnormal mammogram', '乳腺癌'],
+    itemLabel: '位医生',
     accent: 'ochre',
     icon: 'care',
     privacyClass: 'public-reference',

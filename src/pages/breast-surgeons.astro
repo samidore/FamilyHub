@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import FilterShell from '../components/FilterShell.astro';
+import BreastSurgeonCard from '../modules/breast-surgeons/BreastSurgeonCard.astro';
+import { breastSurgeons } from '../data/catalog';
+
+const ranked = [...breastSurgeons].sort((a, b) => a.rank - b.rank);
+const total = ranked.length;
+const strongCount = ranked.filter((item) => item.clinicalFit === 'strong').length;
+const countText = `显示 ${total} / ${total} 位医生`;
+---
+<BaseLayout title="Breast Surgeons · 乳腺异常评估 | Family Hub" description="在 Fair Lawn 周边比较乳腺肿块、异常影像、异常活检的乳腺外科医生，区分用途匹配、资质、安全、患者体验和证据缺口。" pageClass="module-page theme-ochre" themeColor="#F4EDE0">
+  <SiteHeader eyebrow="健康与照护 · 公开资料比较" title="Breast Surgeons · 乳腺异常评估" description="面向乳腺肿块、异常影像或活检结果的进一步评估，不以乳腺癌手术量单独排序。先考察良性/高风险病变处理、影像—病理一致性评估和多学科支持。Tier 仅是家庭比较顺序，不是医学质量评分。当前所有候选仍待个人州级执照与纪律记录独立核查。" accent="ochre" icon="care">
+    <div class="summary-row"><span>{total} 位医生</span><span>{strongCount} 位有较直接的临床匹配证据</span><span>Fair Lawn / Bergen + 周边备选</span><span>正式安全记录：待核查</span></div>
+  </SiteHeader>
+
+  <div class="shell"><div class="note-box">
+    <strong>先分清诊断环节：</strong>摸到肿块或影像异常应和临床医生确认诊断性 mammogram / targeted ultrasound 是否完成；可疑影像需要按放射科建议及时安排活检。已有异常活检时，应询问 radiologic–pathologic concordance（影像与病理是否一致），决定观察、再次取样或手术。若报告已建议 BI-RADS 4/5 活检，不要因为等待本名单排序而延后检查。不同医院可能要求先完成乳腺影像再安排外科初诊。
+  </div></div>
+
+  <FilterShell accent="ochre" filterId="breast-surgeon-filter-panel" countId="breast-surgeon-count" clearId="breast-surgeon-clear" countText={countText}>
+    <div slot="primary" class="filter-primary__grid">
+      <label><span>搜索医生、地点或诊断方向</span><input id="breast-surgeon-search" type="search" autocomplete="off" placeholder="例如：abnormal biopsy、benign、MSK、Fair Lawn" /></label>
+      <label><span>排序</span><select id="breast-surgeon-sort" data-default="rank"><option value="rank">用途匹配与证据顺序</option><option value="rating">Healthgrades 评分</option><option value="reviews">Healthgrades 样本量</option><option value="name">医生姓名</option></select></label>
+    </div>
+    <div slot="filters" class="contents">
+      <label><span>地点范围</span><select id="breast-surgeon-location"><option value="">全部地点</option><option value="bergen-nj">Bergen County</option><option value="nearby-nj">附近 NJ</option><option value="ny-alternative">NY 备选</option></select></label>
+      <label><span>Tier（家庭比较）</span><select id="breast-surgeon-tier"><option value="">全部 Tier</option><option value="2">Tier 2 · 临床合适，安全核查未完</option><option value="3">Tier 3 · 诊断期证据有缺口</option></select></label>
+      <label><span>临床匹配证据</span><select id="breast-surgeon-fit"><option value="">全部方向</option><option value="strong">较直接支持肿块/异常病变评估</option><option value="adequate">乳腺专科适配，细节待确认</option><option value="oncology-focused">主要偏向癌症外科</option></select></label>
+      <label><span>接收新患者</span><select id="breast-surgeon-availability"><option value="">全部状态</option><option value="listed-accepting">官网明确列为接收</option><option value="needs-call">需电话确认</option></select></label>
+    </div>
+  </FilterShell>
+
+  <main id="main-content" class="shell listing-main">
+    <div id="breast-surgeon-list" class="record-grid">{ranked.map((surgeon) => <BreastSurgeonCard surgeon={surgeon} />)}</div>
+    <p id="breast-surgeon-empty" class="empty-state" hidden>没有符合这些条件的候选。请清除部分筛选；正式执照记录未核查前不设置 Tier 1。</p>
+  </main>
+  <footer class="module-footer"><div class="shell note-box">
+    <strong>预约电话清单：</strong>是否接受尚未确诊的肿块/异常影像/高风险活检；外院影像和病理切片能否复核；由谁判断影像病理一致性；何时需要重复活检或切除；能否提供非手术随访；首诊等待多久；医生、影像、穿刺、病理和 facility 的具体保险网络/预授权。Healthgrades 评分不是正式执照/事故记录。<a href="https://newjersey.mylicense.com/verification/" target="_blank" rel="noopener noreferrer">NJ 官方执照查询</a> · <a href="https://www.op.nysed.gov/verification-search" target="_blank" rel="noopener noreferrer">NY 官方执照查询</a>。本页仅收录公开医生资料，不保存患者影像、病理、保险或预约记录。
+  </div></footer>
+
+  <script>
+    import { bindListState, clearListState, restoreListState } from '../lib/listState';
+    const cards = [...document.querySelectorAll<HTMLElement>('[data-breast-surgeon]')];
+    const controls = {
+      q: document.querySelector<HTMLInputElement>('#breast-surgeon-search')!,
+      sort: document.querySelector<HTMLSelectElement>('#breast-surgeon-sort')!,
+      location: document.querySelector<HTMLSelectElement>('#breast-surgeon-location')!,
+      tier: document.querySelector<HTMLSelectElement>('#breast-surgeon-tier')!,
+      fit: document.querySelector<HTMLSelectElement>('#breast-surgeon-fit')!,
+      availability: document.querySelector<HTMLSelectElement>('#breast-surgeon-availability')!,
+    };
+    const list = document.querySelector<HTMLElement>('#breast-surgeon-list')!;
+    const count = document.querySelector<HTMLElement>('#breast-surgeon-count')!;
+    const empty = document.querySelector<HTMLElement>('#breast-surgeon-empty')!;
+    const num = (card: HTMLElement, key: string) => Number(card.dataset[key] ?? -1);
+    const render = () => {
+      const q = controls.q.value.trim().toLocaleLowerCase();
+      const visible = cards.filter((card) => (
+        (!q || card.dataset.search!.includes(q)) &&
+        (!controls.location.value || card.dataset.locationScope === controls.location.value) &&
+        (!controls.tier.value || card.dataset.tier === controls.tier.value) &&
+        (!controls.fit.value || card.dataset.clinicalFit === controls.fit.value) &&
+        (!controls.availability.value || card.dataset.availability === controls.availability.value)
+      ));
+      const sorters: Record<string, (a: HTMLElement, b: HTMLElement) => number> = {
+        rank: (a, b) => num(a, 'rank') - num(b, 'rank'),
+        rating: (a, b) => num(b, 'hgRating') - num(a, 'hgRating') || num(b, 'hgCount') - num(a, 'hgCount') || num(a, 'rank') - num(b, 'rank'),
+        reviews: (a, b) => num(b, 'hgCount') - num(a, 'hgCount') || num(b, 'hgRating') - num(a, 'hgRating') || num(a, 'rank') - num(b, 'rank'),
+        name: (a, b) => a.dataset.name!.localeCompare(b.dataset.name!),
+      };
+      cards.forEach((card) => { card.hidden = !visible.includes(card); });
+      visible.sort(sorters[controls.sort.value]).forEach((card) => list.append(card));
+      count.textContent = `显示 ${visible.length} / ${cards.length} 位医生`;
+      empty.hidden = visible.length > 0;
+    };
+    restoreListState(controls);
+    if (Object.values(controls).slice(2).some((control) => control.value))
+      document.querySelector<HTMLDetailsElement>('.filter-disclosure')!.open = true;
+    bindListState(controls, render);
+    document.querySelector('#breast-surgeon-clear')!.addEventListener('click', () => clearListState(controls, render));
+    render();
+  </script>
+</BaseLayout>

@@ -1,0 +1,545 @@
+[
+  {
+    "licenseStatus": "requires-confirmation",
+    "disciplineStatus": "requires-confirmation",
+    "verifiedDate": "2026-10-16",
+    "availability": "needs-call",
+    "negativeSummary": "没有完成跨平台逐条负评与正式州级记录核查；资料不足不能视为无投诉。",
+    "id": "jennifer-marti",
+    "name": "Jennifer Marti, MD",
+    "system": "Englewood Health",
+    "practice": "Breast Surgery at Fair Lawn",
+    "locationScope": "bergen-nj",
+    "address": "22-18 Broadway, Suite 301, Fair Lawn, NJ 07410",
+    "phone": "201-894-3893",
+    "tier": 2,
+    "rank": 1,
+    "clinicalFit": "strong",
+    "fitSignals": [
+      "异常乳腺活检",
+      "良性乳腺疾病",
+      "共同决策"
+    ],
+    "clinicalSummary": "官方明确列出 abnormal breast biopsies、良性与恶性乳腺病变，且强调避免过度诊断及过度治疗，最直接匹配肿块与异常活检的进一步评估。",
+    "trainingSummary": "官方列出 NYU 普外科住院医师、MSK 乳腺肿瘤外科 Fellowship、Yale 内分泌外科 Fellowship；美国外科委员会普通外科认证。",
+    "centerSummary": "Englewood Breast Care 提供乳腺诊断影像、穿刺活检与多学科乳腺照护；尚需电话确认影像—病理不一致时的个人复核安排。",
+    "strengths": [
+      "官网直接提及异常活检",
+      "良恶性疾病兼顾",
+      "Fair Lawn 本地门诊"
+    ],
+    "evidenceGaps": [
+      "未完成 NJ 个人执照和纪律查询",
+      "是否亲自协调外院影像与病理复核待确认"
+    ],
+    "verificationQuestions": [
+      "接受尚未确诊的 BI-RADS 异常或高风险活检结果吗？",
+      "由谁确认影像与活检病理一致性，以及何时考虑复穿或切除？"
+    ],
+    "reviewEvidence": [
+      {
+        "source": "Healthgrades",
+        "scope": "physician",
+        "rating": 4.5,
+        "reviewCount": 152,
+        "writtenCount": 130,
+        "url": "https://www.healthgrades.com/physician/dr-jennifer-marti-3vxrw",
+        "summary": "Healthgrades 医生个人页；患者体验数据不等于临床结局或正式安全记录。"
+      }
+    ],
+    "officialUrl": "https://www.englewoodhealth.org/providers/jennifer-marti",
+    "centerUrl": "https://www.englewoodhealth.org/service/breast-care"
+  },
+  {
+    "licenseStatus": "requires-confirmation",
+    "disciplineStatus": "requires-confirmation",
+    "verifiedDate": "2026-10-16",
+    "availability": "listed-accepting",
+    "negativeSummary": "没有完成跨平台逐条负评与正式州级记录核查；资料不足不能视为无投诉。",
+    "id": "laura-klein",
+    "name": "Laura Klein, MD",
+    "system": "Valley Health",
+    "practice": "VMG Breast Oncology - Paramus",
+    "locationScope": "bergen-nj",
+    "address": "1 Valley Health Plaza, First Floor A, Suite 1, Paramus, NJ 07652",
+    "phone": "201-634-5557",
+    "tier": 2,
+    "rank": 2,
+    "clinicalFit": "strong",
+    "fitSignals": [
+      "良性乳腺疾病",
+      "乳腺中心协调",
+      "高风险病变"
+    ],
+    "clinicalSummary": "官方明确表示治疗全部良性及恶性乳腺疾病，负责 Valley Breast Center；页面说明有护士导航和个体化计划，适合调查影像异常到外科决策的衔接。",
+    "trainingSummary": "Valley 官方列出一般外科住院医师训练、南加州大学 Breast Surgery Fellowship（2004）；独立 Board 与州执照检索尚待完成。",
+    "centerSummary": "Valley 乳腺中心具团队导航体系；具体影像/穿刺排期和病理复核由哪位医生承担需电话确认。",
+    "strengths": [
+      "乳腺中心负责人",
+      "良恶性疾病均明确列出",
+      "Paramus 本地门诊"
+    ],
+    "evidenceGaps": [
+      "未完成 NJ 个人执照和纪律查询",
+      "影像病理 discordance 处理流程未公开确认"
+    ],
+    "verificationQuestions": [
+      "能否复核已在外院完成的乳腺影像和活检病理？",
+      "如倾向观察而非手术，团队如何决定随访计划？"
+    ],
+    "reviewEvidence": [
+      {
+        "source": "Health system",
+        "scope": "physician",
+        "rating": 5,
+        "reviewCount": 123,
+        "writtenCount": 20,
+        "url": "https://doctors.valleyhealth.com/provider/laura-klein/2527686",
+        "summary": "医疗系统自有医生级患者问卷；与独立平台分开比较。"
+      },
+      {
+        "source": "Healthgrades",
+        "scope": "physician",
+        "rating": 4.3,
+        "reviewCount": 31,
+        "writtenCount": 10,
+        "url": "https://www.healthgrades.com/physician/dr-laura-klein-3jdyl",
+        "summary": "Healthgrades 医生个人页；患者体验数据不等于临床结局或正式安全记录。"
+      }
+    ],
+    "officialUrl": "https://doctors.valleyhealth.com/provider/laura-klein/2527686",
+    "centerUrl": "https://www.valleyhealth.com/locations/robert-and-audrey-luckow-pavilion"
+  },
+  {
+    "licenseStatus": "requires-confirmation",
+    "disciplineStatus": "requires-confirmation",
+    "verifiedDate": "2026-10-16",
+    "availability": "listed-accepting",
+    "negativeSummary": "没有完成跨平台逐条负评与正式州级记录核查；资料不足不能视为无投诉。",
+    "id": "jenna-gillen",
+    "name": "Jenna Gillen, DO",
+    "system": "Englewood Health",
+    "practice": "Breast Surgery at Englewood",
+    "locationScope": "bergen-nj",
+    "address": "350 Engle Street, Suite 4503, Englewood, NJ 07631",
+    "phone": "201-894-3893",
+    "tier": 2,
+    "rank": 3,
+    "clinicalFit": "strong",
+    "fitSignals": [
+      "良性乳腺疾病",
+      "乳腺增生风险",
+      "哺乳相关异常"
+    ],
+    "clinicalSummary": "官方明确覆盖 benign breast disease、乳腺癌高风险、哺乳相关疾病，强调解释诊断和可选方案；适合未确定性质的肿块及需要鉴别良恶性疾病的初诊。",
+    "trainingSummary": "Englewood 官方列出 Northwell 乳腺外科 Fellowship 及 American Board of Surgery 普外科认证。",
+    "centerSummary": "Englewood Breast Care 提供影像诊断、穿刺及多学科服务；医生本人是否管理病理与影像不一致尚需确认。",
+    "strengths": [
+      "明确治疗良性疾病",
+      "医生级双来源评价",
+      "同一系统诊断资源"
+    ],
+    "evidenceGaps": [
+      "未完成 NJ 个人执照和纪律查询",
+      "高风险活检病理管理流程未单独公布"
+    ],
+    "verificationQuestions": [
+      "对于未确诊肿块，是否先接诊还是必须先完成影像检查？",
+      "对乳头状瘤或非典型增生，会怎样核对影像和病理？"
+    ],
+    "reviewEvidence": [
+      {
+        "source": "Health system",
+        "scope": "physician",
+        "rating": 4.9,
+        "reviewCount": 182,
+        "writtenCount": 47,
+        "url": "https://www.englewoodhealth.org/providers/jenna-gillen",
+        "summary": "医疗系统自有医生级患者问卷；与独立平台分开比较。"
+      },
+      {
+        "source": "Healthgrades",
+        "scope": "physician",
+        "rating": 5,
+        "reviewCount": 37,
+        "writtenCount": 37,
+        "url": "https://www.healthgrades.com/physician/dr-jenna-gillen-xym888f",
+        "summary": "Healthgrades 医生个人页；患者体验数据不等于临床结局或正式安全记录。"
+      }
+    ],
+    "officialUrl": "https://www.englewoodhealth.org/providers/jenna-gillen",
+    "centerUrl": "https://www.englewoodhealth.org/service/breast-care"
+  },
+  {
+    "licenseStatus": "requires-confirmation",
+    "disciplineStatus": "requires-confirmation",
+    "verifiedDate": "2026-10-16",
+    "availability": "listed-accepting",
+    "negativeSummary": "没有完成跨平台逐条负评与正式州级记录核查；资料不足不能视为无投诉。",
+    "id": "zandra-cheng",
+    "name": "Zandra Cheng, MD",
+    "system": "Holy Name",
+    "practice": "Holy Name Breast Center",
+    "locationScope": "bergen-nj",
+    "address": "718 Teaneck Road, Cancer Center, Teaneck, NJ 07666",
+    "phone": "201-833-3357",
+    "tier": 2,
+    "rank": 4,
+    "clinicalFit": "strong",
+    "fitSignals": [
+      "良性乳腺疾病",
+      "乳腺超声",
+      "复杂炎症性乳腺疾病"
+    ],
+    "clinicalSummary": "Holy Name 官方明确良性与恶性乳腺病变、肉芽肿性乳腺炎经验，并列有美国乳腺外科医师协会乳腺超声认证；适合探索诊断范围较广的外科评估。",
+    "trainingSummary": "UC San Diego 医学院、Penn State 普外科住院训练、Anne Arundel 乳腺外科 Fellowship；官方表述为 board-certified。",
+    "centerSummary": "Holy Name Breast Center 有乳腺影像、病理及外科团队；具体 image-pathology concordance 复核流程尚需确认。",
+    "strengths": [
+      "覆盖良性和恶性疾病",
+      "乳腺超声认证",
+      "Teaneck 本地乳腺中心"
+    ],
+    "evidenceGaps": [
+      "未完成 NJ 个人执照和纪律查询",
+      "未获得本人异常活检处理频率"
+    ],
+    "verificationQuestions": [
+      "有外院穿刺病理和影像时，是否能做 radiology-pathology concordance review？",
+      "是否由乳腺影像专科和病理医师共同复核高风险结果？"
+    ],
+    "reviewEvidence": [
+      {
+        "source": "Healthgrades",
+        "scope": "physician",
+        "rating": 4.3,
+        "reviewCount": 18,
+        "writtenCount": null,
+        "url": "https://www.healthgrades.com/physician/dr-zandra-cheng-y8mwt",
+        "summary": "Healthgrades 医生个人页；患者体验数据不等于临床结局或正式安全记录。"
+      }
+    ],
+    "officialUrl": "https://www.holyname.org/physician/details.aspx?phyid=87783",
+    "centerUrl": "https://www.holyname.org/BreastCenter/breast-center-team.aspx"
+  },
+  {
+    "licenseStatus": "requires-confirmation",
+    "disciplineStatus": "requires-confirmation",
+    "verifiedDate": "2026-10-16",
+    "availability": "needs-call",
+    "negativeSummary": "没有完成跨平台逐条负评与正式州级记录核查；资料不足不能视为无投诉。",
+    "id": "erika-brinkmann",
+    "name": "Erika Brinkmann, MD",
+    "system": "Holy Name",
+    "practice": "Holy Name Breast Center",
+    "locationScope": "bergen-nj",
+    "address": "718 Teaneck Road, Cancer Center, Teaneck, NJ 07666",
+    "phone": "201-833-3357",
+    "tier": 2,
+    "rank": 5,
+    "clinicalFit": "adequate",
+    "fitSignals": [
+      "乳腺专科外科",
+      "多学科团队",
+      "手术方案判断"
+    ],
+    "clinicalSummary": "Holy Name 乳腺外科负责人，官方强调与完整乳腺团队合作；适合作为诊断结果异常后需要手术方案或第二意见的本地选项。",
+    "trainingSummary": "Yale MD、St Vincent’s 普外科住院训练、Northwestern 乳腺肿瘤外科 Fellowship，官方表述普外科 board-certified。",
+    "centerSummary": "Holy Name Breast Center 有乳腺影像、乳腺外科、肿瘤科和病理相关团队；不把整个中心的能力归为医生个人已证实技术。",
+    "strengths": [
+      "乳腺外科负责人",
+      "长期乳腺专科实践",
+      "同中心影像与外科协作"
+    ],
+    "evidenceGaps": [
+      "未完成 NJ 个人执照和纪律查询",
+      "Healthgrades 个人直接页面未核实，故不展示其评分",
+      "是否接受未确诊肿块待确认"
+    ],
+    "verificationQuestions": [
+      "目前仍亲自接诊未完成诊断的乳腺肿块或高风险活检吗？",
+      "是否可以不手术而采取影像监测；由谁设定计划？"
+    ],
+    "reviewEvidence": [],
+    "officialUrl": "https://www.holyname.org/physician/details.aspx?phyid=86449",
+    "centerUrl": "https://www.holyname.org/BreastCenter/breast-center-team.aspx"
+  },
+  {
+    "licenseStatus": "requires-confirmation",
+    "disciplineStatus": "requires-confirmation",
+    "verifiedDate": "2026-10-16",
+    "availability": "listed-accepting",
+    "negativeSummary": "没有完成跨平台逐条负评与正式州级记录核查；资料不足不能视为无投诉。",
+    "id": "oriana-petruolo",
+    "name": "Oriana Petruolo, MD",
+    "system": "Hackensack Meridian Health",
+    "practice": "HMH Breast Surgery - Hackensack",
+    "locationScope": "bergen-nj",
+    "address": "360 Essex Street, Suite 203, Hackensack, NJ 07601",
+    "phone": "551-996-8778",
+    "tier": 2,
+    "rank": 6,
+    "clinicalFit": "adequate",
+    "fitSignals": [
+      "乳腺专科",
+      "肿瘤外科",
+      "疑难结果转诊"
+    ],
+    "clinicalSummary": "HMH 官方确认乳腺外科专科、MSK 乳腺 Fellowship、开放新患者；其诊断期良性病变接诊范围还需要电话确认。",
+    "trainingSummary": "MSK 乳腺外科 Fellowship（2020）、NewYork-Presbyterian/Weill Cornell 普外科住院训练、American Board of Surgery 普外科认证（HMH 列出）。",
+    "centerSummary": "Hackensack University Medical Center 的乳腺外科团队；确认能否安排外院影像病理会诊及下一步活检。",
+    "strengths": [
+      "MSK 乳腺外科训练",
+      "Hackensack 本地中心",
+      "公开接收新患者"
+    ],
+    "evidenceGaps": [
+      "未完成 NJ 个人执照和纪律查询",
+      "Healthgrades 只有两条评分，不能据此推断技术质量",
+      "良性病变诊疗量未证实"
+    ],
+    "verificationQuestions": [
+      "接受尚未明确诊断的乳腺肿块或 BI-RADS 4 患者吗？",
+      "如影像与穿刺病理不一致，由谁作再次活检决定？"
+    ],
+    "reviewEvidence": [
+      {
+        "source": "Health system",
+        "scope": "physician",
+        "rating": 5,
+        "reviewCount": 73,
+        "writtenCount": 14,
+        "url": "https://www.getcare.hackensackmeridianhealth.org/provider/oriana-adele-petruolo/1805390",
+        "summary": "医疗系统自有医生级患者问卷；与独立平台分开比较。"
+      },
+      {
+        "source": "Healthgrades",
+        "scope": "physician",
+        "rating": 3,
+        "reviewCount": 2,
+        "writtenCount": null,
+        "url": "https://www.healthgrades.com/physician/dr-oriana-petruolo-g727l",
+        "summary": "仅 2 个医生级 ratings，样本过小，不能据此判定临床质量。"
+      }
+    ],
+    "officialUrl": "https://www.getcare.hackensackmeridianhealth.org/provider/oriana-adele-petruolo/1805390",
+    "centerUrl": "https://www.hackensackmeridianhealth.org/en/locations/hmh-breast-surgery-hackensack"
+  },
+  {
+    "licenseStatus": "requires-confirmation",
+    "disciplineStatus": "requires-confirmation",
+    "verifiedDate": "2026-10-16",
+    "availability": "needs-call",
+    "negativeSummary": "没有完成跨平台逐条负评与正式州级记录核查；资料不足不能视为无投诉。",
+    "id": "anita-mamtani",
+    "name": "Anita Mamtani, MD",
+    "system": "Memorial Sloan Kettering",
+    "practice": "MSK Bergen",
+    "locationScope": "bergen-nj",
+    "address": "225 Summit Avenue, Montvale, NJ 07645",
+    "phone": "800-525-2225",
+    "tier": 2,
+    "rank": 7,
+    "clinicalFit": "strong",
+    "fitSignals": [
+      "良性乳腺病变",
+      "癌前或高风险病变",
+      "复杂病理第二意见"
+    ],
+    "clinicalSummary": "MSK 官方明确列出 benign and pre-cancerous breast conditions，并担任 MSK Bergen Surgical Site Director；对高风险或边界性活检结果寻求第二意见有明确匹配证据。",
+    "trainingSummary": "Harvard/Beth Israel Deaconess 普外科住院训练、MSK Breast Surgical Oncology Fellowship、Surgery Board Certification，均来自 MSK 官方。",
+    "centerSummary": "MSK Bergen 可进行乳腺外科会诊与影像检查；MSK 官方说明如需手术通常前往曼哈顿，Bergen 可做术前/术后照护。需确认是否接受未确诊的普通影像异常。",
+    "strengths": [
+      "明确覆盖良性及癌前病变",
+      "MSK Bergen 复杂病例备选",
+      "乳腺外科 Fellowship"
+    ],
+    "evidenceGaps": [
+      "未完成 NJ 个人执照和纪律查询",
+      "MSK 官网暂无达到展示门槛的医生问卷",
+      "常规未确诊肿块接诊门槛未知",
+      "MSK Bergen 乳腺手术通常需要前往 Manhattan，不能视为本地手术"
+    ],
+    "verificationQuestions": [
+      "MSK Bergen 是否接受仅有异常影像或高风险活检的第二意见？",
+      "外院 pathology slides/影像是否可由 MSK 同步复核？"
+    ],
+    "reviewEvidence": [
+      {
+        "source": "Healthgrades",
+        "scope": "physician",
+        "rating": null,
+        "reviewCount": 0,
+        "writtenCount": null,
+        "url": "https://www.healthgrades.com/physician/dr-anita-mamtani-c4ejz",
+        "summary": "有对应个人主页，但暂无可引用评分；MSK 自有页面亦未显示足量患者问卷。"
+      }
+    ],
+    "officialUrl": "https://www.mskcc.org/cancer-care/doctors/anita-mamtani",
+    "centerUrl": "https://www.mskcc.org/locations/directory/msk-bergen"
+  },
+  {
+    "licenseStatus": "requires-confirmation",
+    "disciplineStatus": "requires-confirmation",
+    "verifiedDate": "2026-10-16",
+    "availability": "needs-call",
+    "negativeSummary": "没有完成跨平台逐条负评与正式州级记录核查；资料不足不能视为无投诉。",
+    "id": "adriana-suarez-ligon",
+    "name": "Adriana Suarez-Ligon, MD",
+    "system": "Montefiore Nyack",
+    "practice": "Highland Medical Breast Surgery",
+    "locationScope": "ny-alternative",
+    "address": "1 Crosfield Avenue, West Nyack, NY 10994",
+    "phone": "845-348-8507",
+    "tier": 2,
+    "rank": 8,
+    "clinicalFit": "strong",
+    "fitSignals": [
+      "良性乳腺疾病",
+      "异常结果解释",
+      "跨学科方案"
+    ],
+    "clinicalSummary": "Montefiore Nyack 当前官方资料明确治疗良性乳腺病变、负责 Breast Center，并参与从诊断到治疗的个体化决策；West Nyack 是纽约州备选，不是旧 Healthgrades 显示的 Westwood 门诊。",
+    "trainingSummary": "Rutgers 一般外科住院医师、Emory Breast Surgical Oncology Fellowship、American Board of Surgery certification（当前官方公布）。",
+    "centerSummary": "Montefiore Nyack Breast Center 提供乳腺影像与多学科协调；电话确认是否接受外院病理与影像复核。",
+    "strengths": [
+      "良性乳腺病变明确列出",
+      "Breast Center 医疗主任",
+      "纽约州跨系统备选"
+    ],
+    "evidenceGaps": [
+      "未完成 NY 执照和纪律官方查询",
+      "Healthgrades 医生个人页面地址仍为旧 NJ 门诊",
+      "NY insurance/out-of-state network 需要单独确认"
+    ],
+    "verificationQuestions": [
+      "实际就诊地址是否为 West Nyack，而非旧 Westwood？",
+      "当前门诊接受仅有异常影像、未确诊患者吗？"
+    ],
+    "reviewEvidence": [
+      {
+        "source": "Healthgrades",
+        "scope": "physician",
+        "rating": 5,
+        "reviewCount": 6,
+        "writtenCount": 6,
+        "url": "https://www.healthgrades.com/physician/dr-adriana-suarez-ligon-gfv3h",
+        "summary": "个人页面可匹配身份，但页面地址为旧 Westwood；勿依此确认当前门诊。"
+      }
+    ],
+    "officialUrl": "https://www.montefiorenyack.org/staff/suarez-ligon",
+    "centerUrl": "https://montefiorenyack.org/services/breastcenter/our-experts"
+  },
+  {
+    "licenseStatus": "requires-confirmation",
+    "disciplineStatus": "requires-confirmation",
+    "verifiedDate": "2026-10-16",
+    "availability": "listed-accepting",
+    "negativeSummary": "没有完成跨平台逐条负评与正式州级记录核查；资料不足不能视为无投诉。",
+    "id": "christopher-mcgreevy",
+    "name": "Christopher McGreevy, MD",
+    "system": "Hackensack Meridian Health",
+    "practice": "HMH Breast Surgery - Hackensack",
+    "locationScope": "bergen-nj",
+    "address": "360 Essex Street, Suite 203, Hackensack, NJ 07601",
+    "phone": "551-996-8778",
+    "tier": 3,
+    "rank": 9,
+    "clinicalFit": "oncology-focused",
+    "fitSignals": [
+      "手术活检",
+      "乳腺肿瘤外科",
+      "复杂病例备援"
+    ],
+    "clinicalSummary": "官方详述乳腺癌外科和 surgical breast biopsy，但未明确说明是否常规接诊尚未确诊的肿块；因此作为手术可能性较高或复杂病理情况下的备选。",
+    "trainingSummary": "美国外科委员会普外科认证、宾大乳腺肿瘤外科 Fellowship（HMH 官方）。",
+    "centerSummary": "依托 Hackensack University Medical Center 与 John Theurer Cancer Center 的多学科资源；不把医院整体能力视为医生个人诊断能力。",
+    "strengths": [
+      "乳腺专科外科",
+      "官网列有外科乳腺活检",
+      "Hackensack 本地医疗系统"
+    ],
+    "evidenceGaps": [
+      "未完成 NJ 个人执照和纪律查询",
+      "官网更侧重已确诊乳腺癌",
+      "未确诊病变初诊需确认"
+    ],
+    "verificationQuestions": [
+      "是否接受未做过穿刺、只有 BI-RADS 结果的患者？",
+      "可疑高风险病理是否会先复核再决定切除？"
+    ],
+    "reviewEvidence": [
+      {
+        "source": "Health system",
+        "scope": "physician",
+        "rating": 5,
+        "reviewCount": 226,
+        "writtenCount": 64,
+        "url": "https://www.getcare.hackensackmeridianhealth.org/provider/christopher-m-mcgreevy/2484193",
+        "summary": "医疗系统自有医生级患者问卷；与独立平台分开比较。"
+      },
+      {
+        "source": "Healthgrades",
+        "scope": "physician",
+        "rating": 5,
+        "reviewCount": 5,
+        "writtenCount": 5,
+        "url": "https://www.healthgrades.com/physician/dr-christopher-mcgreevy-gd2lf",
+        "summary": "Healthgrades 医生个人页；患者体验数据不等于临床结局或正式安全记录。"
+      }
+    ],
+    "officialUrl": "https://www.getcare.hackensackmeridianhealth.org/provider/christopher-m-mcgreevy/2484193",
+    "centerUrl": "https://www.hackensackmeridianhealth.org/en/locations/hmh-breast-surgery-hackensack"
+  },
+  {
+    "licenseStatus": "requires-confirmation",
+    "disciplineStatus": "requires-confirmation",
+    "verifiedDate": "2026-10-16",
+    "availability": "listed-accepting",
+    "negativeSummary": "Healthgrades 样本仅 9；可见旧评论涉及解释或办公室协调等体验问题。未核对正式纪律记录，不将个人评论当作已证实医疗事故。",
+    "id": "nadra-moulayes",
+    "name": "Nadra Moulayes, DO",
+    "system": "St. Joseph's Health",
+    "practice": "St. Joseph's Health Breast Surgery",
+    "locationScope": "nearby-nj",
+    "address": "225 Minnisink Road, Room 1253, Totowa, NJ 07512",
+    "phone": "973-754-4180",
+    "tier": 3,
+    "rank": 10,
+    "clinicalFit": "adequate",
+    "fitSignals": [
+      "乳腺疾病咨询",
+      "乳腺肿瘤专科",
+      "新患者入口"
+    ],
+    "clinicalSummary": "St. Joseph’s 官方列出乳腺外科肿瘤方向的独立专科门诊，接受新患者；对于单纯异常影像、疑似良性及异常活检的具体评估范围需要先致电确定。",
+    "trainingSummary": "官方列出 Grant Medical Center Breast Surgical Oncology Fellowship（2013）、American Osteopathic Board of Surgery 普外科认证。",
+    "centerSummary": "St. Joseph’s Health 乳腺门诊，另有 Wayne 站点；具体 MRI-guided biopsy、专科病理会诊协作需确认。",
+    "strengths": [
+      "公开接收新患者",
+      "Totowa/Wayne 两处门诊",
+      "乳腺专科 Fellowship"
+    ],
+    "evidenceGaps": [
+      "未完成 NJ 个人执照和纪律查询",
+      "未明确良性或高风险活检病变专项范围",
+      "部分低样本 Healthgrades 负评指向沟通/办公室流程，需要进一步核查"
+    ],
+    "verificationQuestions": [
+      "是否处理乳腺影像/穿刺结果不一致的初诊？",
+      "谁负责联系影像中心和提供转诊后的病理结果？"
+    ],
+    "reviewEvidence": [
+      {
+        "source": "Healthgrades",
+        "scope": "physician",
+        "rating": 3.6,
+        "reviewCount": 9,
+        "writtenCount": null,
+        "url": "https://www.healthgrades.com/physician/dr-nadra-moulayes-35dkk",
+        "summary": "样本很小，负评作为沟通或行政流程的核查线索，非正式安全结论。"
+      }
+    ],
+    "officialUrl": "https://doctors.stjosephshealth.org/provider/nadra-moulayes/2110632",
+    "centerUrl": "https://www.stjosephshealth.org/"
+  }
+]
