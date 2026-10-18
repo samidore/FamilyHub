@@ -165,5 +165,5 @@ test('Finish updates draft preview, selected recipe name, and cook title without
   await expect(selected.locator('.meal-selected-title > strong')).toHaveText('日式姜烧猪肉');
 
   await page.locator('#meal-force-next').click();
-  await expect(page.locator('[data-cook-recipe="' + recipeId + '"] summary strong')).toHaveText('日式姜烧猪肉');
+  await expect(page.locator('[data-cook-recipe="' + recipeId + '"] > summary > span > strong')).toHaveText('日式姜烧猪肉');
 });
