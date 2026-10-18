@@ -35,6 +35,7 @@ const recipeSelectionData = JSON.stringify({
     optionalGroupsForRecipe,
     rankCandidates,
     reconcileMealState,
+    resolvedRecipeName,
     selectedOptionalAddonsForRecipe,
     servingOptionsForRecipe,
     type MealIngredient,
@@ -234,6 +235,10 @@ const recipeSelectionData = JSON.stringify({
       const recipeId = card.dataset.mealRecipe!;
       const recipe = recipeById.get(recipeId);
       if (!recipe) return;
+      const draftFinishId = planDraft?.mode === 'new' && planDraft.recipeId === recipeId ? planDraft.finishId : undefined;
+      const finishId = draftFinishId ?? (meal?.selectedRecipeIds.includes(recipeId) ? meal.recipeFinishSelections[recipeId] : undefined);
+      const cardTitle = card.querySelector<HTMLElement>('.meal-recipe-card__heading h3');
+      if (cardTitle) cardTitle.textContent = resolvedRecipeName(recipe, finishId);
 
       const fixed = recipe.requirements
         .filter((requirement) => requirement.anyOf.length === 1)
@@ -285,6 +290,10 @@ const recipeSelectionData = JSON.stringify({
       if (!selected.has(recipeId)) return;
       const recipe = recipeById.get(recipeId);
       if (!recipe) return;
+      const title = row.querySelector<HTMLElement>('.meal-selected-title > strong');
+      if (title) title.textContent = resolvedRecipeName(recipe, meal.recipeFinishSelections[recipeId]);
+      const completedTitle = document.querySelector<HTMLElement>(`[data-complete-recipe="${CSS.escape(recipeId)}"] > strong`);
+      if (completedTitle) completedTitle.textContent = resolvedRecipeName(recipe, meal.recipeFinishSelections[recipeId]);
 
       const bindings = meal.recipeIngredientBindings[recipeId] ?? [];
       const optionals = selectedOptionalAddonsForRecipe({ selectedAddons: meal.selectedAddons }, recipe, optionalGroups);
@@ -328,7 +337,7 @@ const recipeSelectionData = JSON.stringify({
     const heading = document.createElement('div');
     heading.className = 'meal-recipe-plan-draft__heading';
     const strong = document.createElement('strong');
-    strong.textContent = '本次';
+    strong.textContent = `本次 · ${resolvedRecipeName(recipe, draft.finishId)}`;
     const preview = document.createElement('span');
     const boundText = draft.bindings.map(nameFor).join(' · ');
     const optionalText = draft.optionalAddons.map((addon) => `+${nameFor(addon.ingredientId)}`).join(' · ');
