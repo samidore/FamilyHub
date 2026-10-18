@@ -131,3 +131,39 @@ test('planned optional ingredient survives Cook into direct Checkout Actual comp
   await expect(card.locator('[data-actual-optional-ingredient="ground-pork"]')).toHaveAttribute('aria-pressed', 'true');
   await expect(card.locator('[data-actual-step-ingredient="ground-pork"]').first()).toBeVisible();
 });
+
+test('Finish updates draft preview, selected recipe name, and cook title without changing recipe identity', async ({ page }) => {
+  await page.goto('meal-builder/');
+  await page.locator('[data-inventory-tab="all"]').click();
+  await setInventory(page, ['whole-pork-tenderloin']);
+  await page.locator('#meal-start-current').click();
+
+  const recipeId = 'beijing-sauce-pork-strips';
+  const card = page.locator('[data-meal-recipe="' + recipeId + '"]');
+  await expect(card).toBeVisible();
+  await expect(card.locator('.meal-recipe-card__heading h3')).toHaveText('京酱肉丝');
+  await card.locator('[data-select-recipe]').click();
+
+  let draft = card.locator('[data-recipe-plan-draft]');
+  await draft.locator('[data-recipe-draft-finish-id="ginger"]').click();
+  await expect(card.locator('.meal-recipe-card__heading h3')).toHaveText('日式姜烧猪肉');
+  await expect(draft.locator('.meal-recipe-plan-draft__heading')).toContainText('日式姜烧猪肉');
+  await expect(page.locator('[data-selected-recipe="' + recipeId + '"]')).toBeHidden();
+
+  await draft.locator('[data-confirm-recipe-draft]').click();
+  const selected = page.locator('[data-selected-recipe="' + recipeId + '"]');
+  await expect(selected).toBeVisible();
+  await expect(selected.locator('.meal-selected-title > strong')).toHaveText('日式姜烧猪肉');
+  await expect(page.locator('[data-complete-recipe="' + recipeId + '"] > strong')).toHaveText('日式姜烧猪肉');
+
+  await selected.locator('[data-edit-recipe-plan]').click();
+  draft = selected.locator('[data-recipe-plan-draft]');
+  await draft.locator('[data-recipe-draft-finish-id="beijing-sauce"]').click();
+  await expect(draft.locator('.meal-recipe-plan-draft__heading')).toContainText('京酱肉丝');
+  await expect(selected.locator('.meal-selected-title > strong')).toHaveText('日式姜烧猪肉');
+  await draft.locator('[data-cancel-recipe-draft]').click();
+  await expect(selected.locator('.meal-selected-title > strong')).toHaveText('日式姜烧猪肉');
+
+  await page.locator('#meal-force-next').click();
+  await expect(page.locator('[data-cook-recipe="' + recipeId + '"] summary strong')).toHaveText('日式姜烧猪肉');
+});
