@@ -443,12 +443,15 @@
       ) => {
         group.section.hidden = lines.length === 0;
         group.heading.textContent = group.label + ' · ' + lines.length + '种';
+        const signature = JSON.stringify(lines);
+        if (group.list.dataset.stockAlertSignature === signature) return;
         group.list.replaceChildren(...lines.map(({ id, text }) => {
           const item = document.createElement('li');
           item.dataset.inventoryStockAlertItem = id;
           item.textContent = text;
           return item;
         }));
+        group.list.dataset.stockAlertSignature = signature;
       };
       updateGroup(freshnessGroup, expiring.map((item) => ({
         id: item.id,
