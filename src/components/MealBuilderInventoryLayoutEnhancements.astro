@@ -417,7 +417,8 @@
             badge.dataset.inventoryHighStock = 'true';
             card.querySelector('.meal-inventory-name')?.append(badge);
           }
-          if (badge) badge.textContent = '份数偏多 · ' + total + '份';
+          const badgeText = '份数偏多 · ' + total + '份';
+          if (badge && badge.textContent !== badgeText) badge.textContent = badgeText;
           highStock.push({ id, name, cold, frozen, total });
         } else badge?.remove();
 
