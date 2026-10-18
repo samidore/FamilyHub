@@ -240,3 +240,46 @@ test('inventory timer refresh preserves DOM identity and bottom scroll position'
   expect(Math.abs(after.distanceFromBottom - before.distanceFromBottom)).toBeLessThanOrEqual(2);
 });
 
+test('inventory reminder lists specific old batches and removes excess-stock flags below four units', async ({ page }) => {
+  await page.clock.setFixedTime(new Date('2026-10-01T12:00:00-04:00'));
+  await page.goto('meal-builder/');
+  await page.locator('[data-inventory-tab="all"]').click();
+
+  const chicken = page.locator('[data-inventory-item="chicken-thighs"]');
+  const name = (await chicken.locator('.meal-inventory-name strong').textContent())!.trim();
+  const add = chicken.locator('[data-stock-add][data-stock-storage="inventory"]');
+  await add.click();
+  await expect(page.locator('[data-inventory-stock-alert="freshness"]')).toBeHidden();
+
+  await page.clock.setFixedTime(new Date('2026-10-10T12:00:00-04:00'));
+  await page.locator('[data-inventory-tab="cold"]').click();
+  const freshness = page.locator('[data-inventory-stock-alert="freshness"]');
+  const oldStock = freshness.locator('[data-inventory-stock-alert-item="chicken-thighs"]');
+  await expect(oldStock).toBeVisible();
+  await expect(oldStock).toContainText(name);
+  await expect(oldStock).toContainText('冷藏 1份');
+  await expect(oldStock).toContainText(/最早入库 \d+天/);
+
+  for (let i = 0; i < 3; i++) await add.click();
+  const high = page.locator('[data-inventory-stock-alert="volume"]');
+  await expect(chicken.locator('[data-inventory-high-stock]')).toHaveText('份数偏多 · 4份');
+  await expect(high.locator('[data-inventory-stock-alert-item="chicken-thighs"]')).toContainText('共4份（冷藏4份）');
+  await expect(oldStock).toContainText('冷藏 1份');
+
+  await chicken.locator('[data-batch-key]').last().locator('[data-stock-delta="-0.5"]').click();
+  await expect(chicken.locator('[data-inventory-high-stock]')).toHaveCount(0);
+  await expect(high).toBeHidden();
+});
+
+test('frozen portions can trigger high-stock reminders but never FIFO freshness reminders', async ({ page }) => {
+  await page.goto('meal-builder/');
+  await page.locator('[data-inventory-tab="all"]').click();
+  const frozen = page.locator('[data-inventory-item="frozen-chicken-patties"]');
+  const add = frozen.locator('[data-stock-add][data-stock-storage="freezer"]');
+  for (let i = 0; i < 4; i++) await add.click();
+
+  await expect(frozen.locator('[data-inventory-high-stock]')).toHaveText('份数偏多 · 4份');
+  await expect(page.locator('[data-inventory-stock-alert="volume"] [data-inventory-stock-alert-item="frozen-chicken-patties"]'))
+    .toContainText('共4份（冷冻4份）');
+  await expect(page.locator('[data-inventory-stock-alert="freshness"]')).toBeHidden();
+});
