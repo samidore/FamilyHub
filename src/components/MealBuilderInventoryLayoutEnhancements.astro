@@ -5,6 +5,7 @@
     id: string;
     inventoryTracking?: 'counted' | 'presence-only';
     inventoryFreshness?: string;
+    freshnessPriorityDays?: number;
     freezerBehavior?: 'direct' | 'thaw-required';
   };
 
@@ -424,10 +425,14 @@
 
         let quantity = 0;
         let ageDays = 0;
-        coldBlock?.querySelectorAll<HTMLElement>('[data-batch-key].is-expiring').forEach((row) => {
+        const ingredient = ingredientById.get(id);
+        coldBlock?.querySelectorAll<HTMLElement>('[data-batch-key]').forEach((row) => {
           const batchQuantity = Number(row.querySelector('output')?.textContent);
           const batchAge = freshnessAgeDays(row.dataset.batchKey ?? '');
-          if (!Number.isFinite(batchQuantity) || batchQuantity <= 0 || batchAge <= 0) return;
+          const threshold = ingredient?.freshnessPriorityDays;
+          if (ingredient?.inventoryFreshness !== 'fifo' || threshold === undefined ||
+            !Number.isInteger(threshold) || threshold <= 0 || !Number.isFinite(batchQuantity) ||
+            batchQuantity <= 0 || batchAge <= threshold) return;
           quantity += batchQuantity;
           ageDays = Math.max(ageDays, batchAge);
         });
