@@ -1,4 +1,6 @@
 <script>
+  import { freshnessAgeDays } from '../lib/mealEngine';
+
   type InventoryLayoutIngredient = {
     id: string;
     inventoryTracking?: 'counted' | 'presence-only';
@@ -364,6 +366,103 @@
     });
     legacyToggle.before(tabs);
 
+    const HIGH_STOCK_UNITS = 4;
+    const alerts = document.createElement('div');
+    alerts.className = 'meal-inventory-stock-alerts';
+    alerts.dataset.inventoryStockAlerts = 'true';
+    alerts.setAttribute('aria-label', '库存提醒');
+    alerts.hidden = true;
+
+    const makeAlertGroup = (kind: 'freshness' | 'volume', label: string) => {
+      const section = document.createElement('section');
+      section.className = 'meal-inventory-stock-alert';
+      section.dataset.inventoryStockAlert = kind;
+      section.hidden = true;
+      const heading = document.createElement('strong');
+      heading.className = 'meal-inventory-stock-alert__heading';
+      const list = document.createElement('ul');
+      section.append(heading, list);
+      alerts.append(section);
+      return { section, heading, list, label };
+    };
+    const freshnessGroup = makeAlertGroup('freshness', '临期食材');
+    const volumeGroup = makeAlertGroup('volume', '份数偏多');
+    tabs.after(alerts);
+
+    const blockQuantity = (block: HTMLElement | null) =>
+      [...(block?.querySelectorAll<HTMLOutputElement>('output') ?? [])].reduce((sum, output) => {
+        const value = Number(output.textContent);
+        return sum + (Number.isFinite(value) && value > 0 ? value : 0);
+      }, 0);
+
+    const renderStockAlerts = (cards: HTMLElement[]) => {
+      const expiring: { id: string; name: string; quantity: number; ageDays: number }[] = [];
+      const highStock: { id: string; name: string; cold: number; frozen: number; total: number }[] = [];
+
+      cards.forEach((card) => {
+        const id = card.dataset.inventoryItem;
+        if (!id) return;
+        const name = card.querySelector<HTMLElement>('.meal-inventory-name strong')?.textContent?.trim() || id;
+        const coldBlock = card.querySelector<HTMLElement>('[data-storage-block="inventory"]');
+        const freezerBlock = card.querySelector<HTMLElement>('[data-storage-block="freezer"]');
+        const cold = blockQuantity(coldBlock);
+        const frozen = blockQuantity(freezerBlock);
+        const total = cold + frozen;
+        const tooMany = total >= HIGH_STOCK_UNITS && Boolean(card.querySelector('[data-stock-delta]'));
+        let badge = card.querySelector<HTMLElement>('[data-inventory-high-stock]');
+        if (tooMany) {
+          if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'meal-inventory-high-stock-badge';
+            badge.dataset.inventoryHighStock = 'true';
+            card.querySelector('.meal-inventory-name')?.append(badge);
+          }
+          if (badge) badge.textContent = '份数偏多 · ' + total + '份';
+          highStock.push({ id, name, cold, frozen, total });
+        } else badge?.remove();
+
+        let quantity = 0;
+        let ageDays = 0;
+        coldBlock?.querySelectorAll<HTMLElement>('[data-batch-key].is-expiring').forEach((row) => {
+          const batchQuantity = Number(row.querySelector('output')?.textContent);
+          const batchAge = freshnessAgeDays(row.dataset.batchKey ?? '');
+          if (!Number.isFinite(batchQuantity) || batchQuantity <= 0 || batchAge <= 0) return;
+          quantity += batchQuantity;
+          ageDays = Math.max(ageDays, batchAge);
+        });
+        if (quantity > 0) expiring.push({ id, name, quantity, ageDays });
+      });
+
+      expiring.sort((a, b) => b.ageDays - a.ageDays || a.name.localeCompare(b.name, 'zh-CN'));
+      highStock.sort((a, b) => b.total - a.total || a.name.localeCompare(b.name, 'zh-CN'));
+
+      const updateGroup = (
+        group: ReturnType<typeof makeAlertGroup>,
+        lines: { id: string; text: string }[],
+      ) => {
+        group.section.hidden = lines.length === 0;
+        group.heading.textContent = group.label + ' · ' + lines.length + '种';
+        group.list.replaceChildren(...lines.map(({ id, text }) => {
+          const item = document.createElement('li');
+          item.dataset.inventoryStockAlertItem = id;
+          item.textContent = text;
+          return item;
+        }));
+      };
+      updateGroup(freshnessGroup, expiring.map((item) => ({
+        id: item.id,
+        text: item.name + ' · 冷藏 ' + item.quantity + '份 · 最早入库 ' + item.ageDays + '天',
+      })));
+      updateGroup(volumeGroup, highStock.map((item) => ({
+        id: item.id,
+        text: item.name + ' · 共' + item.total + '份（' +
+          [item.cold > 0 ? '冷藏' + item.cold + '份' : '', item.frozen > 0 ? '冷冻' + item.frozen + '份' : '']
+            .filter(Boolean).join('、') + '）',
+      })));
+      alerts.hidden = expiring.length === 0 && highStock.length === 0;
+    };
+
+
     const blockHasStock = (block: HTMLElement | null) => {
       if (!block) return false;
       const outputs = [...block.querySelectorAll<HTMLOutputElement>('output')];
@@ -395,6 +494,8 @@
         requestAnimationFrame(schedule);
         return;
       }
+
+      renderStockAlerts(cards);
 
       let visibleCount = 0;
       cards.forEach((card) => {
@@ -597,6 +698,57 @@
   .meal-builder-page .meal-inventory-group[hidden],
   .meal-builder-page .meal-storage-block[hidden],
   .meal-builder-page .meal-thaw-jobs[hidden] {
+    display: none !important;
+  }
+
+
+  .meal-builder-page .meal-inventory-stock-alerts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: 10px;
+    margin: -4px 0 16px;
+  }
+  .meal-builder-page .meal-inventory-stock-alert {
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid #e6cfba;
+    border-radius: 12px;
+    background: #fffaf5;
+  }
+  .meal-builder-page .meal-inventory-stock-alert[data-inventory-stock-alert="freshness"] {
+    border-color: #e4c1c1;
+    background: #fff6f6;
+  }
+  .meal-builder-page .meal-inventory-stock-alert__heading {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 14px;
+    color: #795024;
+  }
+  .meal-builder-page [data-inventory-stock-alert="freshness"] .meal-inventory-stock-alert__heading {
+    color: #a12f2f;
+  }
+  .meal-builder-page .meal-inventory-stock-alert ul {
+    display: grid;
+    gap: 6px;
+    margin: 0;
+    padding-left: 18px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .meal-builder-page .meal-inventory-high-stock-badge {
+    margin-top: 3px;
+    padding: 2px 7px;
+    border: 1px solid #dfc397;
+    border-radius: 6px;
+    background: #fff6e5;
+    color: #855814;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+  .meal-builder-page .meal-inventory-stock-alerts[hidden],
+  .meal-builder-page .meal-inventory-stock-alert[hidden] {
     display: none !important;
   }
 
