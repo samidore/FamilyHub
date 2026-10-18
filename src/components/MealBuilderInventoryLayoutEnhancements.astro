@@ -333,10 +333,14 @@
   type InventoryView = 'cold' | 'freezer' | 'combined' | 'all';
 
   function enhanceMealInventoryViews() {
+    const dataNode = document.querySelector<HTMLScriptElement>('#meal-data');
     const inventoryList = document.querySelector<HTMLElement>('#meal-inventory-list');
     const showAllToggle = document.querySelector<HTMLInputElement>('#meal-show-all');
     const legacyToggle = showAllToggle?.closest<HTMLElement>('.meal-inventory-toggle');
-    if (!inventoryList || !showAllToggle || !legacyToggle || document.querySelector('[data-inventory-view-tabs]')) return;
+    if (!dataNode || !inventoryList || !showAllToggle || !legacyToggle || document.querySelector('[data-inventory-view-tabs]')) return;
+    let parsed: { ingredients?: InventoryLayoutIngredient[] } = {};
+    try { parsed = JSON.parse(dataNode.textContent || '{}'); } catch { return; }
+    const ingredientById = new Map((parsed.ingredients ?? []).map((item) => [item.id, item]));
 
     legacyToggle.hidden = true;
     legacyToggle.dataset.inventoryLegacyToggle = 'true';
