@@ -97,6 +97,10 @@ const queueData = JSON.stringify({
   const live = document.querySelector<HTMLElement>('#meal-live');
   const announce = (text: string) => { if (!live) return; live.textContent = ''; requestAnimationFrame(() => { live.textContent = text; }); };
   const checkoutMeals = () => queueOnlyCheckout ? [...(household.pendingCheckoutMeals ?? [])] : [...(household.pendingCheckoutMeals ?? []), ...(household.currentMeal ? [household.currentMeal] : [])];
+  function syncCookNoteVisibility() {
+    const note = document.querySelector<HTMLElement>('#meal-cook-note');
+    if (note) note.hidden = !(household.currentMeal?.note ?? '').trim() || queueOnlyCheckout || (household.activeStep === 'checkout' && household.pendingCheckoutMeals.length > 0);
+  }
 
   function ensureQueueUi() {
     let alert = document.querySelector<HTMLElement>('#meal-queue-alert');
@@ -165,12 +169,14 @@ const queueData = JSON.stringify({
     if (!queueReturnView) queueReturnView = captureQueueReturnView(); queueOnlyCheckout = true;
     const inventory = document.querySelector<HTMLElement>('#meal-inventory-view'); const tools = document.querySelector<HTMLElement>('.meal-current-tools'); const builder = document.querySelector<HTMLElement>('#meal-builder-view'); const complete = document.querySelector<HTMLElement>('#meal-complete-view'); const cook = document.querySelector<HTMLElement>('#meal-cook-view'); const checkout = document.querySelector<HTMLElement>('#meal-checkout'); const cookHeading = document.querySelector<HTMLElement>('#meal-cook-view > .meal-section-heading'); const cookList = document.querySelector<HTMLElement>('#meal-cook-view > .meal-cook-list'); const checkoutHeading = document.querySelector<HTMLElement>('#meal-checkout-heading'); const checkoutDescription = checkoutHeading?.parentElement?.querySelector('p'); const back = document.querySelector<HTMLButtonElement>('#meal-back-cook'); const confirm = document.querySelector<HTMLButtonElement>('#meal-confirm-checkout'); const finalize = document.querySelector<HTMLButtonElement>('#meal-finalize-checkout');
     if (inventory) inventory.hidden = true; if (tools) tools.hidden = true; if (builder) builder.hidden = true; if (complete) complete.hidden = true; if (cook) cook.hidden = false; if (checkout) checkout.hidden = false; if (cookHeading) cookHeading.hidden = true; if (cookList) cookList.hidden = true; if (checkoutHeading) checkoutHeading.textContent = '待结算'; if (checkoutDescription) checkoutDescription.textContent = '仅结算待结算餐；当前这顿不变'; if (back) { back.textContent = '返回'; back.disabled = false; } if (confirm) confirm.disabled = !canWrite(); if (finalize) finalize.textContent = '确认结算';
+    syncCookNoteVisibility();
   }
 
   function leaveQueueOnlyCheckout() {
     const saved = queueReturnView; queueOnlyCheckout = false; queueReturnView = null; if (!saved) return;
     const inventory = document.querySelector<HTMLElement>('#meal-inventory-view'); const tools = document.querySelector<HTMLElement>('.meal-current-tools'); const builder = document.querySelector<HTMLElement>('#meal-builder-view'); const complete = document.querySelector<HTMLElement>('#meal-complete-view'); const cook = document.querySelector<HTMLElement>('#meal-cook-view'); const checkout = document.querySelector<HTMLElement>('#meal-checkout'); const cookHeading = document.querySelector<HTMLElement>('#meal-cook-view > .meal-section-heading'); const cookList = document.querySelector<HTMLElement>('#meal-cook-view > .meal-cook-list'); const checkoutHeading = document.querySelector<HTMLElement>('#meal-checkout-heading'); const checkoutDescription = checkoutHeading?.parentElement?.querySelector('p'); const back = document.querySelector<HTMLButtonElement>('#meal-back-cook'); const confirm = document.querySelector<HTMLButtonElement>('#meal-confirm-checkout'); const finalize = document.querySelector<HTMLButtonElement>('#meal-finalize-checkout');
     if (inventory) inventory.hidden = saved.inventoryHidden; if (tools) tools.hidden = saved.toolsHidden; if (builder) builder.hidden = saved.builderHidden; if (complete) complete.hidden = saved.completeHidden; if (cook) cook.hidden = saved.cookHidden; if (checkout) checkout.hidden = saved.checkoutHidden; if (cookHeading) cookHeading.hidden = saved.cookHeadingHidden; if (cookList) cookList.hidden = saved.cookListHidden; if (checkoutHeading) checkoutHeading.textContent = saved.checkoutHeading; if (checkoutDescription) checkoutDescription.textContent = saved.checkoutDescription; if (back) { back.textContent = saved.backLabel; back.disabled = saved.backDisabled; } if (confirm) confirm.disabled = saved.confirmDisabled; if (finalize) { finalize.textContent = saved.finalizeLabel; finalize.hidden = true; finalize.disabled = true; }
+    syncCookNoteVisibility();
   }
 
   function allDrafts() {
@@ -201,6 +207,7 @@ const queueData = JSON.stringify({
     const pending = household.pendingCheckoutMeals ?? []; if (!pending.length || (!queueOnlyCheckout && (household.activeStep !== 'checkout' || !household.currentMeal))) return; const host = document.querySelector<HTMLElement>('#meal-checkout-list'); if (!host) return; if (queueOnlyCheckout) showQueueOnlyCheckout(); const all = allDrafts(); host.replaceChildren(); const meals = checkoutMeals();
     meals.forEach((meal, mealIndex) => {
       const mealBox = document.createElement('section'); mealBox.className = 'meal-queue-checkout-meal'; mealBox.dataset.queueCheckoutMeal = meal.mealId; const mealTitle = document.createElement('h3'); mealTitle.textContent = queueOnlyCheckout || mealIndex < meals.length - 1 ? `待结算 ${mealIndex + 1}` : '本顿'; mealBox.append(mealTitle);
+      if (meal.note.trim()) { const note = document.createElement('p'); note.className = 'meal-queue-meal-note'; note.textContent = meal.note; mealBox.append(note); }
       for (const recipeId of meal.selectedRecipeIds) {
         const recipe = recipeById.get(recipeId); const draft = all[meal.mealId]?.[recipeId]; if (!recipe || !draft) continue; const card = document.createElement('section'); card.className = 'meal-checkout-recipe'; const title = document.createElement('h4'); title.textContent = resolvedRecipeName(recipe, meal.recipeFinishSelections[recipeId]); card.append(title);
         const fixed = recipe.requirements.map((requirement, index) => ({ requirement, index })).filter(({ requirement }) => requirement.anyOf.length === 1); if (fixed.length) { const h = document.createElement('h5'); h.textContent = '主食材'; card.append(h); fixed.forEach(({ index }) => card.append(amountRow(meal.mealId, recipeId, draft.bindings[index], all))); }
@@ -223,7 +230,7 @@ const queueData = JSON.stringify({
     return { committed: true as const, state: { ...state, inventory: result.state.inventory, inventoryBatches: result.state.inventoryBatches, pendingCheckoutMeals: [], currentMeal, activeStep, recentMeals: result.state.recentMeals } };
   }
 
-  function scheduleRender() { if (renderQueued) return; renderQueued = true; requestAnimationFrame(() => { renderQueued = false; renderQueueWarning(); renderInventoryReservations(); renderCookPlan(); renderQueuedCheckout(); if (queueOnlyCheckout) showQueueOnlyCheckout(); }); }
+  function scheduleRender() { if (renderQueued) return; renderQueued = true; requestAnimationFrame(() => { renderQueued = false; renderQueueWarning(); renderInventoryReservations(); renderCookPlan(); renderQueuedCheckout(); if (queueOnlyCheckout) showQueueOnlyCheckout(); syncCookNoteVisibility(); }); }
 
   document.addEventListener('click', (event) => {
     const target = event.target as HTMLElement;
@@ -284,6 +291,7 @@ const queueData = JSON.stringify({
   .meal-queue-plan-none { color: var(--muted); }
   .meal-queue-checkout-meal { display: grid; gap: 12px; padding: 13px; border: 1.5px solid color-mix(in srgb, var(--berry) 40%, var(--line)); border-radius: 17px; background: color-mix(in srgb, var(--berry-soft) 35%, var(--paper)); }
   .meal-queue-checkout-meal > h3 { margin: 0; color: var(--berry); }
+  .meal-queue-meal-note { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
   .meal-queue-checkout-meal .meal-checkout-recipe > h4 { margin: 0; }
   .meal-queue-checkout-meal .meal-checkout-recipe h5 { margin: 8px 0 0; padding-left: 8px; border-left: 3px solid var(--berry); font-size: 1rem; }
   @media (max-width: 560px) { .meal-queue-cook-plan > div { grid-template-columns: 1fr; gap: 3px; } }

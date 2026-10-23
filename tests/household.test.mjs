@@ -4,6 +4,7 @@ import test from 'node:test';
 import {
   COUNTED_INVENTORY_STEP,
   RECENT_MEAL_LIMIT,
+  MEAL_NOTE_MAX_LENGTH,
   addStock,
   adjustInventoryBatch,
   adjustInventoryItem,
@@ -14,6 +15,7 @@ import {
   createCurrentMealFromInventory,
   defaultCheckoutConsumption,
   normalizeHouseholdState,
+  queueCurrentMealForCheckout,
   resetRecipeSelection,
   setCurrentMealStatus,
   startThaw,
@@ -124,6 +126,21 @@ test('current meal copies inventory once and recipe reset keeps availability', (
   assert.deepEqual(changed.selectedRecipeIds, []);
   assert.deepEqual(changed.checkoutRecipeDrafts, {});
   assert.equal(changed.status, 'selecting');
+});
+
+test('whole-meal note is preserved by recipe reset and checkout queue, not carried to the next meal', () => {
+  const fresh = createCurrentMealFromInventory({ pork: 2 }, { mealId: 'meal-1' }, ingredients);
+  assert.equal(fresh.note, '');
+  const note = '肉先炖\\n整顿少盐'.replace('\\n', '\n');
+  const cooking = { ...fresh, note, status: 'cooking', selectedRecipeIds: ['r1'], recipeIngredientBindings: { r1: ['pork'] } };
+  assert.equal(resetRecipeSelection(cooking).note, note);
+  const state = normalizeHouseholdState({ inventory: { pork: 2 }, currentMeal: cooking, activeStep: 'cook' }, ingredients);
+  const queued = queueCurrentMealForCheckout(state, ingredients, { nextMealId: 'meal-2', queuedAt: 100 });
+  assert.equal(queued.pendingCheckoutMeals[0]?.note, note);
+  assert.equal(queued.currentMeal?.note, '');
+  assert.equal(normalizeHouseholdState(queued, ingredients).pendingCheckoutMeals[0]?.note, note);
+  assert.equal(normalizeHouseholdState({ currentMeal: { ...fresh, note: 123 } }, ingredients).currentMeal?.note, '');
+  assert.equal(normalizeHouseholdState({ currentMeal: { ...fresh, note: 'x'.repeat(MEAL_NOTE_MAX_LENGTH + 1) } }, ingredients).currentMeal?.note.length, MEAL_NOTE_MAX_LENGTH);
 });
 
 test('Realtime Database round-trip restores omitted empty collections and safe scalar defaults', () => {

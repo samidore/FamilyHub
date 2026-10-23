@@ -35,8 +35,12 @@ test('queued meal can be checked out from the warning without finishing the next
   await setInventory(page, ['green-cabbage', 'ground-pork', 'ground-beef']);
   await page.locator('#meal-start-current').click();
   await selectCabbageMeal(page);
+  await page.locator('#meal-note').fill('整顿少盐\n炒菜最后做');
+  await page.locator('#meal-note').blur();
+  await expect(page.locator('#meal-note-status')).toHaveText('已同步');
   await page.locator('#meal-next').click();
 
+  await expect(page.locator('#meal-cook-note')).toContainText('整顿少盐');
   await expect(page.locator('#meal-shared-status')).toHaveText('做饭中');
   await expect(page.locator('[data-queue-cook-plan] > strong').first()).toContainText('本次');
   await expect(page.locator('#meal-queue-checkout')).toHaveText('排队结算');
@@ -47,12 +51,14 @@ test('queued meal can be checked out from the warning without finishing the next
   await expect(warning.locator('#meal-queue-open-checkout')).toHaveText('结算');
   await expect(page.locator('#meal-shared-status')).toHaveText('选菜中');
   await expect(page.locator('#meal-builder-view')).toBeVisible();
+  await expect(page.locator('#meal-note')).toHaveValue('');
 
   await warning.locator('#meal-queue-open-checkout').click();
   await expect(page.locator('#meal-checkout')).toBeVisible();
   await expect(page.locator('#meal-checkout-heading')).toHaveText('待结算');
   await expect(page.locator('[data-queue-checkout-meal]')).toHaveCount(1);
   await expect(page.locator('[data-queue-checkout-meal] > h3')).toHaveText('待结算 1');
+  await expect(page.locator('[data-queue-checkout-meal] .meal-queue-meal-note')).toHaveText('整顿少盐\n炒菜最后做');
   const queuedCard = page.locator('[data-queue-checkout-meal]').locator('.meal-checkout-recipe');
   await expect(queuedCard.locator('[data-queue-optional-ingredient="ground-pork"]')).toHaveAttribute('aria-pressed', 'true');
   await expect(queuedCard.locator('[data-queue-step-ingredient="ground-pork"]').first()).toBeVisible();
@@ -78,6 +84,9 @@ test('queue warning settles only pending meals even while the current meal is co
   await page.locator('#meal-start-current').click();
 
   await selectCabbageMeal(page);
+  await page.locator('#meal-note').fill('上一顿');
+  await page.locator('#meal-note').blur();
+  await expect(page.locator('#meal-note-status')).toHaveText('已同步');
   await page.locator('#meal-next').click();
   await page.locator('#meal-queue-checkout').click();
 
@@ -86,6 +95,9 @@ test('queue warning settles only pending meals even while the current meal is co
   await expect(page.locator('#meal-shared-status')).toHaveText('选菜中');
 
   await selectCabbageMeal(page);
+  await page.locator('#meal-note').fill('下一顿');
+  await page.locator('#meal-note').blur();
+  await expect(page.locator('#meal-note-status')).toHaveText('已同步');
   await page.locator('#meal-next').click();
   await expect(page.locator('#meal-shared-status')).toHaveText('做饭中');
 
@@ -95,6 +107,8 @@ test('queue warning settles only pending meals even while the current meal is co
   await expect(page.locator('[data-queue-checkout-meal] > h3')).toHaveText('待结算 1');
   await expect(page.locator('#meal-shared-status')).toHaveText('做饭中');
   await expect(page.locator('#meal-checkout-status')).toContainText('当前下一顿不会进入本次结算');
+  await expect(page.locator('[data-queue-checkout-meal] .meal-queue-meal-note')).toHaveText('上一顿');
+  await expect(page.locator('#meal-cook-note')).toBeHidden();
 
   await page.locator('#meal-back-cook').click();
   await expect(page.locator('#meal-cook-view')).toBeVisible();
@@ -105,4 +119,6 @@ test('queue warning settles only pending meals even while the current meal is co
   await expect(page.locator('[data-queue-checkout-meal]')).toHaveCount(2);
   await expect(page.locator('[data-queue-checkout-meal] > h3').nth(0)).toHaveText('待结算 1');
   await expect(page.locator('[data-queue-checkout-meal] > h3').nth(1)).toHaveText('本顿');
+  await expect(page.locator('[data-queue-checkout-meal] .meal-queue-meal-note').nth(0)).toHaveText('上一顿');
+  await expect(page.locator('[data-queue-checkout-meal] .meal-queue-meal-note').nth(1)).toHaveText('下一顿');
 });

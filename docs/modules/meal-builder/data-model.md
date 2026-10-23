@@ -233,6 +233,8 @@ Recipe identity stays local:
 
 The selected meal stores Plan separately from Checkout Actual.
 
+`currentMeal/note` stores an optional whole-meal free-text note (up to `MEAL_NOTE_MAX_LENGTH`, currently 1000 characters). It belongs to the meal rather than to a Recipe's Plan or Actual. Resetting selected Recipes preserves it; queueing carries it into `pendingCheckoutMeals`; checkout displays it per meal; the new meal starts with an empty note. `recentMeals` records only Recipe IDs and does not retain the note.
+
 Plan:
 
 ```text

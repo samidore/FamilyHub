@@ -17,6 +17,8 @@ export type CheckoutRecipeDrafts = Record<string, CheckoutRecipeDraft>;
 
 export interface CurrentMeal {
   mealId: string;
+  /** Free-text instructions shared by the entire meal, independent of Recipe composition. */
+  note: string;
   status: CurrentMealStatus;
   availableIngredientIds: string[];
   ingredientFreshnessDates: Record<string, string>;
@@ -57,6 +59,7 @@ export interface HouseholdState {
 
 export const COUNTED_INVENTORY_STEP = 0.5;
 export const RECENT_MEAL_LIMIT = 4;
+export const MEAL_NOTE_MAX_LENGTH = 1000;
 export const OPTIONAL_ADDON_INITIAL_UNITS = 1;
 export const SUPPORTING_PROTEIN_ADDON_TYPE = 'supporting-protein';
 export const LEGACY_FIFO_MIGRATION_DATE = '2026-08-18';
@@ -70,6 +73,7 @@ export const roundCountedInventoryValue = (value: number) => Math.round(value / 
 const quantitiesEqual = (left: number, right: number) => Math.abs(left - right) < 1e-9;
 const isRecord = (value: unknown): value is Record<string, unknown> => Boolean(value && typeof value === 'object' && !Array.isArray(value));
 const uniqueStrings = (value: unknown) => Array.isArray(value) ? [...new Set(value.filter((item): item is string => typeof item === 'string' && item.length > 0))] : [];
+export const normalizeMealNote = (value: unknown): string => typeof value === 'string' ? value.slice(0, MEAL_NOTE_MAX_LENGTH) : '';
 const validTimePreferences = new Set<MealState['timePreference']>(TIME_PREFERENCES);
 const validMealStatuses = new Set<CurrentMealStatus>(['selecting', 'ready', 'cooking']);
 const validActiveSteps = new Set<MealActiveStep>(['inventory', 'recipes', 'cook', 'checkout']);
@@ -249,7 +253,7 @@ export function normalizeCurrentMeal(value: unknown, ingredients?: MealIngredien
   const recipeFinishSelections = isRecord(value.recipeFinishSelections) ? Object.fromEntries(Object.entries(value.recipeFinishSelections).filter(([, finishId]) => typeof finishId === 'string' && /^[a-z0-9-]+$/.test(finishId))) as Record<string, string> : {};
   const recipeServingSelections = isRecord(value.recipeServingSelections) ? Object.fromEntries(Object.entries(value.recipeServingSelections).filter(([, serving]) => serving === 'rice' || serving === 'noodles')) as Record<string, ServingIngredientId> : {};
   const excludedIngredientIds = uniqueStrings(value.excludedIngredientIds).filter((id) => !known || known.has(id)); const checkoutDraft = normalizeCheckoutConsumption(value.checkoutDraft, ingredients); const checkoutRecipeDrafts = normalizeCheckoutRecipeDrafts(value.checkoutRecipeDrafts, ingredients); const ingredientFreshnessDates = normalizeDateMap(value.ingredientFreshnessDates, known);
-  return { mealId: value.mealId, status, availableIngredientIds: uniqueStrings(value.availableIngredientIds), ingredientFreshnessDates, proteinTarget, vegetableTarget, stapleRequired: typeof value.stapleRequired === 'boolean' ? value.stapleRequired : defaults.stapleRequired, childMode: typeof value.childMode === 'boolean' ? value.childMode : defaults.childMode, timePreference, selectedRecipeIds: uniqueStrings(value.selectedRecipeIds), recipeIngredientBindings, selectedAddons, recipeFinishSelections, recipeServingSelections, excludedIngredientIds, checkoutDraft, checkoutRecipeDrafts, ...(createdAt === undefined ? {} : { createdAt }) };
+  return { mealId: value.mealId, note: normalizeMealNote(value.note), status, availableIngredientIds: uniqueStrings(value.availableIngredientIds), ingredientFreshnessDates, proteinTarget, vegetableTarget, stapleRequired: typeof value.stapleRequired === 'boolean' ? value.stapleRequired : defaults.stapleRequired, childMode: typeof value.childMode === 'boolean' ? value.childMode : defaults.childMode, timePreference, selectedRecipeIds: uniqueStrings(value.selectedRecipeIds), recipeIngredientBindings, selectedAddons, recipeFinishSelections, recipeServingSelections, excludedIngredientIds, checkoutDraft, checkoutRecipeDrafts, ...(createdAt === undefined ? {} : { createdAt }) };
 }
 function normalizePendingCheckoutMeal(value: unknown, ingredients?: MealIngredient[] | Record<string, MealIngredient>): PendingCheckoutMeal | null {
   const meal = normalizeCurrentMeal(value, ingredients); if (!meal || !isRecord(value)) return null;
@@ -345,7 +349,7 @@ export function inventoryBatchesAfterQueuedReservations(state: Pick<HouseholdSta
 
 export function createCurrentMealFromInventory(inventory: Inventory, options: Partial<MealState> & { mealId?: string; createdAt?: number } = {}, ingredients?: MealIngredient[] | Record<string, MealIngredient>, inventoryBatches: InventoryBatches = {}): CurrentMeal {
   const base = defaultMealState(); const available = availableIngredientIds(inventory, ingredients);
-  return { mealId: options.mealId ?? createMealId(), status: 'selecting', availableIngredientIds: available, ingredientFreshnessDates: options.ingredientFreshnessDates ?? freshnessDatesForInventory(inventoryBatches, available, ingredients), proteinTarget: options.proteinTarget ?? base.proteinTarget, vegetableTarget: options.vegetableTarget ?? base.vegetableTarget, stapleRequired: options.stapleRequired ?? base.stapleRequired, childMode: options.childMode ?? base.childMode, timePreference: options.timePreference ?? base.timePreference, selectedRecipeIds: [], recipeIngredientBindings: {}, selectedAddons: [], recipeFinishSelections: {}, recipeServingSelections: {}, excludedIngredientIds: [], checkoutDraft: {}, checkoutRecipeDrafts: {}, createdAt: options.createdAt ?? Date.now() };
+  return { mealId: options.mealId ?? createMealId(), note: '', status: 'selecting', availableIngredientIds: available, ingredientFreshnessDates: options.ingredientFreshnessDates ?? freshnessDatesForInventory(inventoryBatches, available, ingredients), proteinTarget: options.proteinTarget ?? base.proteinTarget, vegetableTarget: options.vegetableTarget ?? base.vegetableTarget, stapleRequired: options.stapleRequired ?? base.stapleRequired, childMode: options.childMode ?? base.childMode, timePreference: options.timePreference ?? base.timePreference, selectedRecipeIds: [], recipeIngredientBindings: {}, selectedAddons: [], recipeFinishSelections: {}, recipeServingSelections: {}, excludedIngredientIds: [], checkoutDraft: {}, checkoutRecipeDrafts: {}, createdAt: options.createdAt ?? Date.now() };
 }
 export function createCurrentMealAfterReservations(state: Pick<HouseholdState, 'inventory' | 'inventoryBatches' | 'pendingCheckoutMeals'>, options: Partial<MealState> & { mealId?: string; createdAt?: number } = {}, ingredients?: MealIngredient[] | Record<string, MealIngredient>) {
   return createCurrentMealFromInventory(inventoryAfterQueuedReservations(state, ingredients), options, ingredients, inventoryBatchesAfterQueuedReservations(state, ingredients));

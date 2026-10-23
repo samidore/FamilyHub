@@ -70,6 +70,8 @@ households/{householdId}/state/currentMeal/ingredientFreshnessDates/{ingredientI
 
 Entering/resnapshotting Recipes refreshes this map from live batch state. Inventory edits afterward do not rewrite that current-meal snapshot. Checkout still reads the latest live inventory and FIFO batches and commits all deductions atomically.
 
+A whole-meal note is stored as `currentMeal/note` (optional free text, up to 1000 characters). It remains independent of Recipe composition, persists across devices, and follows a meal into `pendingCheckoutMeals` until checkout; the next meal starts without the previous note. It is not written to the short `recentMeals` history.
+
 ### Recipe Plan state
 
 The Plan selected in Recipes is stored as stable IDs only:

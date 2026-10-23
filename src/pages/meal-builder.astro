@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import { mealData } from '../data/meal';
 import { MEAL_TARGET_OPTIONS, TIME_PREFERENCES, defaultMealState } from '../lib/mealEngine';
+import { MEAL_NOTE_MAX_LENGTH } from '../lib/household';
 
 const visibleIngredients = mealData.ingredients.filter((ingredient) => ingredient.visible);
 const recipes = mealData.recipes;
@@ -86,6 +87,12 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
         </div>
       </section>
 
+      <section class="meal-notes-editor" aria-label="本顿饭备注">
+        <label for="meal-note"><strong>本顿饭备注</strong><small>整顿饭共用，不属于任何一道菜；可留空。</small></label>
+        <textarea id="meal-note" rows="3" maxlength={MEAL_NOTE_MAX_LENGTH} placeholder="例如：先炖肉，青菜最后炒；整顿少盐"></textarea>
+        <small id="meal-note-status" role="status">已同步</small>
+      </section>
+
       <section class="meal-ingredients" aria-labelledby="meal-ingredients-heading">
         <div class="meal-section-heading">
           <div><p class="eyebrow">02 · 今天有什么</p><h2 id="meal-ingredients-heading">可用食材</h2><p>只选这顿可以拿来做菜的食材。收起分组不会清除选择。</p></div>
@@ -164,6 +171,7 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
 
       <section id="meal-cook-view" class="shell meal-cook" hidden aria-labelledby="meal-cook-heading">
       <div class="meal-section-heading"><div><h2 id="meal-cook-heading">开始做饭</h2></div><div class="meal-cook-actions"><button id="meal-back-to-menu" class="button button--secondary" type="button">返回选菜</button><button id="meal-open-checkout" class="button button--primary" type="button">下一步：结算</button></div></div>
+      <section id="meal-cook-note" class="meal-note-display" hidden aria-label="本顿饭备注"><strong>本顿饭备注</strong><p id="meal-cook-note-text"></p></section>
       <div class="meal-cook-list">{recipes.map((recipe) => <details class="meal-cook-card" data-cook-recipe={recipe.id} hidden>
         <summary><span><strong>{recipe.nameZh}</strong><small>{recipe.nameEn}</small></span><span>{recipe.mealWindowMinutes || recipe.elapsedMinutes}</span></summary>
         <div class="meal-cook-card__body">
@@ -210,6 +218,10 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
     let household: HouseholdState = repository.getSnapshot();
     let state: MealState = household.currentMeal ? { ...mealStateFromCurrentMeal(household.currentMeal) } : defaultMealState(); let view: View = household.activeStep === 'cook' || household.activeStep === 'checkout' ? 'cook' : household.activeStep === 'recipes' ? 'build' : 'build';
     let repositoryStatus: RepositoryStatus = repository.getStatus(); let showAllInventory = false;
+    let mealNoteDraft: { mealId: string; value: string } | null = null;
+    let mealNoteTimer: number | undefined;
+    let mealNoteSaving = false;
+    let mealNoteWriteFailed = false;
     let draftBindings: Record<string, (string | null)[]> = {};
     try {
       const saved = JSON.parse(sessionStorage.getItem(storageKey) ?? 'null');
@@ -228,6 +240,10 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
     const protein = document.querySelector<HTMLSelectElement>('#meal-protein')!; const vegetable = document.querySelector<HTMLSelectElement>('#meal-vegetable')!; const time = document.querySelector<HTMLSelectElement>('#meal-time')!; const staple = document.querySelector<HTMLInputElement>('#meal-staple')!; const child = document.querySelector<HTMLInputElement>('#meal-child')!;
     const connection = document.querySelector<HTMLElement>('#meal-connection')!; const account = document.querySelector<HTMLElement>('#meal-account')!; const authDetail = document.querySelector<HTMLElement>('#meal-auth-detail')!; const googleLogin = document.querySelector<HTMLButtonElement>('#meal-google-login')!; const accessRefresh = document.querySelector<HTMLButtonElement>('#meal-access-refresh')!; const logout = document.querySelector<HTMLButtonElement>('#meal-logout')!; const sharedStatus = document.querySelector<HTMLElement>('#meal-shared-status')!; const inventoryList = document.querySelector<HTMLElement>('#meal-inventory-list')!; const undoNotices = document.querySelector<HTMLElement>('#meal-undo-notices')!;
     const checkout = document.querySelector<HTMLElement>('#meal-checkout')!; const openCheckout = document.querySelector<HTMLButtonElement>('#meal-open-checkout')!; const confirmCheckout = document.querySelector<HTMLButtonElement>('#meal-confirm-checkout')!;
+    const mealNoteInput = document.querySelector<HTMLTextAreaElement>('#meal-note')!;
+    const mealNoteStatus = document.querySelector<HTMLElement>('#meal-note-status')!;
+    const cookNote = document.querySelector<HTMLElement>('#meal-cook-note')!;
+    const cookNoteText = document.querySelector<HTMLElement>('#meal-cook-note-text')!;
     const save = () => { try { sessionStorage.setItem(storageKey, JSON.stringify({ state, view })); } catch { /* sessionStorage is only a compatibility mirror */ } };
     const announce = (message: string) => { live.textContent = ''; requestAnimationFrame(() => { live.textContent = message; }); };
     const canWrite = () => repositoryStatus.connection === 'local' || repositoryStatus.connection === 'connected';
@@ -407,6 +423,19 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
       confirmCheckout.disabled = !checkoutWritable;
       checkout.querySelectorAll<HTMLButtonElement | HTMLInputElement>('button, input').forEach((control) => { control.disabled = !checkoutWritable; });
       protein.value = String(state.proteinTarget); vegetable.value = String(state.vegetableTarget); time.value = state.timePreference; staple.checked = state.stapleRequired; child.checked = state.childMode;
+      if (mealNoteDraft && mealNoteDraft.mealId !== household.currentMeal?.mealId) {
+        mealNoteDraft = null;
+        mealNoteWriteFailed = false;
+        if (mealNoteTimer !== undefined) window.clearTimeout(mealNoteTimer);
+        mealNoteTimer = undefined;
+      }
+      const savedMealNote = household.currentMeal?.note ?? '';
+      const shownMealNote = mealNoteDraft?.value ?? savedMealNote;
+      if (mealNoteInput.value !== shownMealNote) mealNoteInput.value = shownMealNote;
+      mealNoteInput.disabled = !writesEnabled || !hasMeal;
+      mealNoteStatus.textContent = mealNoteWriteFailed ? '保存失败，请再次编辑' : mealNoteSaving ? '保存中…' : mealNoteDraft ? '未保存' : '已同步';
+      cookNoteText.textContent = savedMealNote;
+      cookNote.hidden = !savedMealNote.trim() || (household.activeStep === 'checkout' && household.pendingCheckoutMeals.length > 0);
       const available = new Set(state.availableIngredientIds);
       const stocked = new Set(stockedIds());
       document.querySelectorAll<HTMLButtonElement>('[data-ingredient-id]').forEach((button) => { const inStock = stocked.has(button.dataset.ingredientId!); button.hidden = !inStock; button.setAttribute('aria-pressed', String(inStock && available.has(button.dataset.ingredientId!))); });
@@ -456,6 +485,36 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
       cook.querySelector<HTMLElement>(':scope > .meal-section-heading')!.hidden = checkoutStep;
       cook.querySelector<HTMLElement>('.meal-cook-list')!.hidden = checkoutStep;
     }
+    function saveMealNote() {
+      if (mealNoteTimer !== undefined) window.clearTimeout(mealNoteTimer);
+      mealNoteTimer = undefined;
+      const draft = mealNoteDraft;
+      if (!draft || mealNoteSaving || !canWrite()) return;
+      mealNoteSaving = true;
+      mealNoteWriteFailed = false;
+      mealNoteStatus.textContent = '保存中…';
+      void repository.updateCurrentMeal((meal) => meal.mealId === draft.mealId ? { ...meal, note: draft.value } : meal).then((next) => {
+        household = next;
+        if (mealNoteDraft === draft) mealNoteDraft = null;
+        render();
+      }).catch((error) => {
+        if (mealNoteDraft === draft) mealNoteWriteFailed = true;
+        reportWriteError(error);
+      }).finally(() => {
+        mealNoteSaving = false;
+        if (mealNoteDraft && mealNoteDraft !== draft) saveMealNote();
+        else render();
+      });
+    }
+    mealNoteInput.addEventListener('input', () => {
+      if (!household.currentMeal || !canWrite()) return;
+      mealNoteDraft = { mealId: household.currentMeal.mealId, value: mealNoteInput.value };
+      mealNoteWriteFailed = false;
+      if (mealNoteTimer !== undefined) window.clearTimeout(mealNoteTimer);
+      mealNoteTimer = window.setTimeout(saveMealNote, 400);
+      mealNoteStatus.textContent = '未保存';
+    });
+    mealNoteInput.addEventListener('change', saveMealNote);
     googleLogin.addEventListener('click', () => safeWrite(repository.signInWithGoogle()));
     accessRefresh.addEventListener('click', () => safeWrite(repository.refreshAccess()));
     logout.addEventListener('click', () => safeWrite(repository.signOut()));
@@ -507,6 +566,14 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
     render();
   </script>
   <style>
+    .meal-notes-editor { display: grid; gap: 8px; padding: 14px; margin-bottom: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); }
+    .meal-notes-editor label { display: grid; gap: 4px; }
+    .meal-notes-editor label small, #meal-note-status { color: var(--muted); font-size: 13px; }
+    .meal-notes-editor textarea { width: 100%; box-sizing: border-box; min-height: 90px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--ink); font: inherit; line-height: 1.5; resize: vertical; }
+    .meal-notes-editor textarea:focus-visible { outline: 2px solid var(--berry); outline-offset: 2px; }
+    .meal-note-display { display: grid; gap: 7px; padding: 14px; margin-bottom: 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); }
+    .meal-note-display[hidden] { display: none; }
+    .meal-note-display p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
     .meal-inventory-controls button, .meal-stock-row button { min-height: 48px; }
     .meal-stock-states.meal-inventory-controls { display: grid; flex: 1 1 auto; align-items: stretch; gap: 6px; white-space: normal; }
     .meal-builder-app button, .meal-builder-app input, .meal-builder-app select, .meal-builder-app summary { min-height: 48px !important; }

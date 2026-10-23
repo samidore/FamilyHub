@@ -60,6 +60,9 @@ test('current meal accepts only integer planning targets', async () => {
   await assertFails(alice.ref(`${household}/state/currentMeal`).set({ ...meal, proteinTarget: 1.5 }));
   await assertFails(alice.ref(`${household}/state/currentMeal`).set({ ...meal, vegetableTarget: 2.5 }));
   await assertFails(alice.ref(`${household}/state/currentMeal`).set({ ...meal, status: 'finished' }));
+  await assertSucceeds(alice.ref(`${household}/state/currentMeal/note`).set('整顿少盐'));
+  await assertFails(alice.ref(`${household}/state/currentMeal/note`).set(123));
+  await assertFails(alice.ref(`${household}/state/currentMeal/note`).set('x'.repeat(1001)));
 });
 
 test('recent meal history accepts four strict entries and rejects overflow or malformed data', async () => {
