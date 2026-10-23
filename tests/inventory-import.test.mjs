@@ -91,7 +91,7 @@ test('inventory import validates storage against canonical freezer behavior whil
 
 test('inventory import writes refrigerated, frozen, thawing, and direct freezer stock atomically while preserving current meal', () => {
   const currentMeal = {
-    mealId: 'meal-1', status: 'selecting', availableIngredientIds: ['broccoli'], ingredientFreshnessDates: { broccoli: '2026-08-20' },
+    mealId: 'meal-1', note: '整顿少盐', status: 'selecting', availableIngredientIds: ['broccoli'], ingredientFreshnessDates: { broccoli: '2026-08-20' },
     proteinTarget: 1, vegetableTarget: 1, stapleRequired: false, childMode: false, timePreference: 'any', selectedRecipeIds: [], recipeIngredientBindings: {}, selectedAddons: [], recipeFinishSelections: {}, recipeServingSelections: {}, excludedIngredientIds: [], checkoutDraft: {}, checkoutRecipeDrafts: {},
   };
   const state = {
