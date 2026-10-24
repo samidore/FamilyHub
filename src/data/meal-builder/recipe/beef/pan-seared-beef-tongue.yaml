@@ -1,0 +1,48 @@
+id: pan-seared-beef-tongue
+type: recipe
+status: candidate
+name_zh: 香煎牛舌
+name_en: Pan-Seared Beef Tongue Slices
+tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, lunch-30, child-support-protein]
+fit_score: 4
+primary_role: protein
+main_protein_category: beef
+main_protein_ingredient_ids: [beef-tongue-slices]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: false, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 10–20
+meal_window_minutes: 15–30
+elapsed_minutes: 15–30
+advance_start_required: false
+equipment: [medium burner, nonstick pan or iron pan, instant-read thermometer suitable for thin meat]
+burner_plan: 中火炉头用平底锅分批香煎牛舌片，避免锅内拥挤出水。
+child_suitable: conditional
+child_texture: 牛舌片有明显弹韧口感，不作为稳定的孩子软质主蛋白。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: beef-tongue-slices
+    role: main-protein
+steps:
+  - 确认使用生牛舌薄片；去掉可见厚皮或硬筋，用厨房纸擦干，薄撒盐和黑胡椒。厚薄不均时尽量整理为相近厚度。
+  - 平底锅中大火预热；不粘锅不可空烧至冒烟。加少量中性油，转动锅面铺匀。
+  - 牛舌片分批单层下锅，每面先煎约1分钟，边缘微黄后翻面；实际时间按厚度调整，避免长期干煎。
+  - 用适用于薄肉的温度计从较厚肉片侧面测中心，达到160°F/71°C；不足时转中火继续煎并复测。牛舌按内脏肉安全标准，不套用牛排145°F标准。
+  - 全熟后立即盛出。可在上桌前挤少量柠檬汁；避免把薄片煎到焦黑发硬。
+  - 完成提示：肉片表面微焦、内部熟透，盘中无明显游离水。
+child_serving: 若提供给孩子，需剪成短小薄片；仍可能偏韧，本菜不计入 Child Protein，另配嫩豆腐或蒸蛋。
+adult_finish: 成人可单独加柠檬、黑胡椒或辣椒；基础做法不辣。
+substitutions: []
+cook_ingredients:
+  - 生牛舌薄片：400–500 g
+  - 中性油：2 tsp，分批使用
+  - 盐：1/4 tsp；黑胡椒少许
+  - 柠檬角：可选，上桌前使用
