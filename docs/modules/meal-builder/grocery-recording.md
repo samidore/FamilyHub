@@ -32,6 +32,7 @@ When an otherwise ambiguous raw receipt label is explicitly resolved by the user
 | `PORK SOFT BONE` | `soft-pork-ribs` |
 | `PORK BELLY [DICE]` | `diced-pork-belly` |
 | `BEEF INSIDE SKIRTS` | `beef-skirt-steak` |
+| `BF SLICED TONGUE` | `beef-tongue-slices` |
 | `MUSSEL MEAT` | `mussel-meat` |
 | `SAKURA GROUND PORK` | `ground-pork` |
 | `KYL PORK SAUSAGE` | `white-oil-sausage` |

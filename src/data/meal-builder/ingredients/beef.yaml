@@ -210,3 +210,17 @@ ingredients:
       section: beef
       order: 150
     tags: []
+  - id: beef-tongue-slices
+    type: ingredient
+    inventory_tracking: counted
+    freezer_behavior: thaw-required
+    inventory_freshness: fifo
+    freshness_priority_days: 3
+    status: candidate
+    name_zh: 牛舌片
+    name_en: Sliced Beef Tongue
+    starter:
+      visible: true
+      section: beef
+      order: 160
+    tags: []
