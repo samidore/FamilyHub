@@ -116,12 +116,17 @@ exports.onNotebookUrgentChanged = onValueWritten({
   const before = object(object(event.data.before.val()).items);
   const after = object(object(event.data.after.val()).items);
   const tomorrow = tomorrowInNewYork();
+  const hour = Number(new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/New_York', hour: '2-digit', hourCycle: 'h23',
+  }).format(new Date()));
+  const afterEveningReminder = hour >= 19;
   const entered = Object.entries(after).filter(([id, item]) => {
     if (!active(item)) return false;
-    const nowRelevant = item.priority === 'urgent' || item.dueDate === tomorrow;
-    if (!nowRelevant) return false;
-    const old = before[id];
-    return !active(old) || (old.priority !== 'urgent' && old.dueDate !== tomorrow);
+    const newlyUrgent = item.priority === 'urgent' && (!active(before[id]) || before[id].priority !== 'urgent');
+    // Due-tomorrow tasks entered before 7 PM are handled by the evening digest.
+    const lateDue = afterEveningReminder && item.dueDate === tomorrow
+      && (!active(before[id]) || before[id].dueDate !== tomorrow);
+    return newlyUrgent || lateDue;
   });
   if (!entered.length) return;
   const hid = event.params.hid;
