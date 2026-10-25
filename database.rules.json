@@ -38,10 +38,10 @@
                   ".validate": "newData.isString() && newData.val().length > 15 && newData.val().length <= 2048 && newData.val().matches(/^https:\\/\\//)"
                 },
                 "p256dh": {
-                  ".validate": "newData.isString() && newData.val().length > 40 && newData.val().length <= 256 && newData.val().matches(/^[A-Za-z0-9_-]+$/)"
+                  ".validate": "newData.isString() && newData.val().length > 40 && newData.val().length <= 256"
                 },
                 "auth": {
-                  ".validate": "newData.isString() && newData.val().length > 8 && newData.val().length <= 128 && newData.val().matches(/^[A-Za-z0-9_-]+$/)"
+                  ".validate": "newData.isString() && newData.val().length > 8 && newData.val().length <= 128"
                 },
                 "updatedAt": {
                   ".validate": "newData.isNumber() && newData.val() > 0"
