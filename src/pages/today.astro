@@ -23,6 +23,7 @@ const firebaseConfig = JSON.stringify({
   projectId: import.meta.env.PUBLIC_FIREBASE_PROJECT_ID ?? '',
   databaseURL: import.meta.env.PUBLIC_FIREBASE_DATABASE_URL ?? '',
   appId: import.meta.env.PUBLIC_FIREBASE_APP_ID ?? '',
+  webPushPublicKey: import.meta.env.PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY ?? '',
   householdId: import.meta.env.PUBLIC_FAMILY_HOUSEHOLD_ID ?? '',
 }).replace(/</g, '\\u003c');
 ---
@@ -43,6 +44,13 @@ const firebaseConfig = JSON.stringify({
         <button id="today-sign-in" type="button" hidden>使用 Google 登录</button>
         <button id="today-refresh-access" type="button" hidden>重新检查权限</button>
         <button id="today-sign-out" type="button" hidden>退出登录</button>
+      </div>
+    </section>
+    <section id="today-push" class="today-push" hidden>
+      <div><strong>手机通知</strong><p id="today-push-status">正在检查设备通知状态…</p></div>
+      <div class="today-auth-actions">
+        <button id="today-enable-push" type="button" hidden>开启通知</button>
+        <button id="today-disable-push" type="button" hidden>关闭通知</button>
       </div>
     </section>
     <div id="today-dashboard" class="today-dashboard" hidden>
@@ -79,10 +87,11 @@ const firebaseConfig = JSON.stringify({
     import { normalizeNotebookState, type NotebookState, type NotebookItem } from '../lib/notebookDomain.ts';
     import { getNotebookDueSoonState, notebookLocalDateKey, notebookNextLocalMidnight } from '../lib/notebookDueSoon.ts';
     import { buildTodaySummary, type TodayCatalog } from '../lib/todayDomain.ts';
+    import { disableTodayPush, enableTodayPush, todayPushAvailable, todayPushIsEnabled } from '../lib/todayPush.ts';
 
     const readJson = <T,>(id: string): T => JSON.parse(document.getElementById(id)!.textContent!) as T;
     const catalog = readJson<TodayCatalog>('today-catalog');
-    const config = readJson<FirebaseConfig>('today-firebase');
+    const config = readJson<FirebaseConfig & { webPushPublicKey?: string }>('today-firebase');
     const base = import.meta.env.BASE_URL;
     const notebookHref = `${base.replace(/\/$/, '')}/sami-notebook/`;
     const dashboard = document.getElementById('today-dashboard')!;
@@ -90,6 +99,11 @@ const firebaseConfig = JSON.stringify({
     const loginButton = document.getElementById('today-sign-in') as HTMLButtonElement;
     const refreshButton = document.getElementById('today-refresh-access') as HTMLButtonElement;
     const logoutButton = document.getElementById('today-sign-out') as HTMLButtonElement;
+    const pushPanel = document.getElementById('today-push')!;
+    const pushStatus = document.getElementById('today-push-status')!;
+    const pushEnable = document.getElementById('today-enable-push') as HTMLButtonElement;
+    const pushDisable = document.getElementById('today-disable-push') as HTMLButtonElement;
+    let pushCheckedUid = '';
     const session = hasCompleteFirebaseConfig(config) ? new FirebaseHouseholdSession(config) : null;
     let meal: HouseholdState | null = null;
     let notebook: NotebookState | null = null;
@@ -169,14 +183,46 @@ const firebaseConfig = JSON.stringify({
       stopMeal?.(); stopNotebook?.(); stopMeal = undefined; stopNotebook = undefined;
       connectedUid = ''; meal = null; notebook = null; dashboard.hidden = true;
     }
+    function setPushState(enabled: boolean, message = '') {
+      pushEnable.hidden = enabled || !todayPushAvailable() || !config.webPushPublicKey;
+      pushDisable.hidden = !enabled;
+      pushStatus.textContent = message || (enabled ? '此设备已开启家庭通知。' : !config.webPushPublicKey
+        ? '推送服务器尚未完成配置，Today 看板仍可正常使用。'
+        : todayPushAvailable() ? '在此设备开启点菜变化和到期提醒。' : 'iPhone 请从 Safari 添加到主屏幕后再开启。');
+    }
+    pushEnable.addEventListener('click', () => {
+      if (!session) return;
+      pushEnable.disabled = true;
+      void enableTodayPush(session, config.webPushPublicKey ?? '', base).then(() => setPushState(true))
+        .catch((error: Error) => setPushState(false, error.message))
+        .finally(() => { pushEnable.disabled = false; });
+    });
+    pushDisable.addEventListener('click', () => {
+      if (!session) return;
+      pushDisable.disabled = true;
+      void disableTodayPush(session).then(() => setPushState(false))
+        .catch((error: Error) => setPushState(true, error.message))
+        .finally(() => { pushDisable.disabled = false; });
+    });
     function showAuth(status: HouseholdSessionStatus) {
       loginButton.hidden = !(status.connection === 'signed-out' || (status.connection === 'error' && !status.email));
       refreshButton.hidden = !(status.connection === 'pending' || (status.connection === 'error' && Boolean(status.email)));
       logoutButton.hidden = !status.email;
       authMessage.textContent = errorMessage || (status.connection === 'connected' ? '家庭数据实时同步中' : status.error || status.label);
+      pushPanel.hidden = status.connection !== 'connected';
       if (status.connection !== 'connected' || !status.uid) {
+        pushCheckedUid = '';
         if (connectedUid) stopListening();
         return;
+      }
+      if (pushCheckedUid !== status.uid) {
+        pushCheckedUid = status.uid;
+        setPushState(false);
+        if (session && todayPushAvailable() && config.webPushPublicKey) {
+          void todayPushIsEnabled(session).then((enabled) => {
+            if (session.getStatus().uid === status.uid) setPushState(enabled);
+          }).catch(() => { /* User may choose to re-enable this device. */ });
+        }
       }
       errorMessage = '';
       if (connectedUid === status.uid) return;
@@ -195,7 +241,12 @@ const firebaseConfig = JSON.stringify({
     }
     loginButton.addEventListener('click', () => { void session?.signInWithGoogle().catch((error: Error) => { errorMessage = error.message; if (session) showAuth(session.getStatus()); }); });
     refreshButton.addEventListener('click', () => { void session?.refreshAccess().catch((error: Error) => { errorMessage = error.message; if (session) showAuth(session.getStatus()); }); });
-    logoutButton.addEventListener('click', () => { void session?.signOut().catch((error: Error) => { errorMessage = error.message; if (session) showAuth(session.getStatus()); }); });
+    logoutButton.addEventListener('click', () => {
+      if (!session) return;
+      void (async () => {
+        try { await disableTodayPush(session); } finally { await session.signOut(); }
+      })().catch((error: Error) => { errorMessage = error.message; showAuth(session.getStatus()); });
+    });
     if (session) {
       session.subscribe(showAuth);
       void session.ready.catch((error: Error) => { errorMessage = error.message; showAuth(session.getStatus()); });
