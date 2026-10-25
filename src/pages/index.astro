@@ -28,6 +28,10 @@ const visibleCategories = categoryDefinitions.filter((category) => moduleRegistr
       <p class="eyebrow">A shared family field guide</p>
       <h1>Family Hub</h1>
       <p class="home-lead">把经常需要查找、筛选和比较的家庭资料放在一个清楚的入口里。先选择需要解决的问题，再进入适合它的列表。</p>
+      <a class="home-today-entry" href={withBase('/today/')}>
+        <span><strong>打开家庭今日看板</strong><small>已选菜品 · Urgent · 明天到期 · 库存提醒</small></span>
+        <span aria-hidden="true">→</span>
+      </a>
       <label class="home-search">
         <span>查找一个工具</span>
         <input id="module-search" type="search" placeholder="例如：公园、storytime、牙医、todo…" autocomplete="off" />
@@ -72,4 +76,11 @@ const visibleCategories = categoryDefinitions.filter((category) => moduleRegistr
     };
     search.addEventListener('input', render);
   </script>
+  <style>
+    .home-today-entry { display: flex; align-items: center; justify-content: space-between; gap: 15px; max-width: 700px; padding: 18px 22px; margin-top: 26px; background: #24573f; color: white; border-radius: 15px; text-decoration: none; box-shadow: 0 9px 22px rgb(36 87 63 / 15%); }
+    .home-today-entry span:first-child { display: grid; gap: 4px; }
+    .home-today-entry strong { font-size: 22px; line-height: 1.3; }
+    .home-today-entry small { color: #dbede1; font-size: 14px; }
+    .home-today-entry > span:last-child { font-size: 25px; }
+  </style>
 </BaseLayout>
