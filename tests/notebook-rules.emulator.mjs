@@ -212,3 +212,23 @@ test('root notebook writes preserve immutable historical skip events', async () 
     await assertFails(existingRef.update(mutation));
   }
 });
+
+test('push subscriptions are private per verified member and validate their payload', async () => {
+  await resetWithMember();
+  await env.withSecurityRulesDisabled(async (context) => {
+    await context.database().ref(`${household}/members/bob`).set({ email: 'bob@gmail.com', displayName: 'Bob' });
+  });
+  const alice = google('alice', 'alice@gmail.com');
+  const bob = google('bob', 'bob@gmail.com');
+  const subscription = { endpoint: 'https://web.push.apple.com/ABC123', p256dh: 'a'.repeat(88), auth: 'b'.repeat(24), updatedAt: 100 };
+  const target = `${household}/notificationDevices/alice/device1`;
+  await assertSucceeds(alice.ref(target).set(subscription));
+  await assertSucceeds(alice.ref(target).get());
+  await assertFails(bob.ref(target).get());
+  await assertFails(bob.ref(target).set(subscription));
+  await assertFails(google('stranger', 'stranger@gmail.com').ref(target).get());
+  await assertFails(password('alice', 'alice@gmail.com').ref(target).get());
+  await assertFails(alice.ref(`${household}/notificationDevices/alice/missing`).set({ ...subscription, extra: true }));
+  await assertFails(alice.ref(target).update({ endpoint: 'http://localhost/private' }));
+  await assertSucceeds(alice.ref(target).remove());
+});
