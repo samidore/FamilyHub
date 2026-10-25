@@ -1,0 +1,211 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/today.css';
+import { mealData } from '../data/meal';
+
+const base = import.meta.env.BASE_URL;
+const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
+const payload = JSON.stringify({
+  ingredients: mealData.ingredients.map((item) => ({
+    id: item.id, nameZh: item.nameZh, inventoryTracking: item.inventoryTracking,
+    inventoryFreshness: item.inventoryFreshness, freshnessPriorityDays: item.freshnessPriorityDays,
+  })),
+  recipes: mealData.recipes.map((recipe) => ({
+    id: recipe.id, nameZh: recipe.nameZh,
+    finishOptions: recipe.finishOptions?.map((finish) => ({
+      id: finish.id, default: finish.default, displayNameZh: finish.displayNameZh,
+    })),
+  })),
+}).replace(/</g, '\\u003c');
+const firebaseConfig = JSON.stringify({
+  apiKey: import.meta.env.PUBLIC_FIREBASE_API_KEY ?? '',
+  authDomain: import.meta.env.PUBLIC_FIREBASE_AUTH_DOMAIN ?? '',
+  projectId: import.meta.env.PUBLIC_FIREBASE_PROJECT_ID ?? '',
+  databaseURL: import.meta.env.PUBLIC_FIREBASE_DATABASE_URL ?? '',
+  appId: import.meta.env.PUBLIC_FIREBASE_APP_ID ?? '',
+  householdId: import.meta.env.PUBLIC_FAMILY_HOUSEHOLD_ID ?? '',
+}).replace(/</g, '\\u003c');
+---
+<BaseLayout title="今日看板 | FamilyHub" description="登录后查看这顿饭、紧急事项、反复干和家庭库存提醒。" pageClass="today-page theme-evergreen" themeColor="#e7efe8">
+  <main id="main-content" class="shell today-shell">
+    <nav class="today-nav" aria-label="页面导航">
+      <a href={withBase('/')}>FamilyHub</a>
+      <span aria-hidden="true">/</span>
+      <span>今日看板</span>
+    </nav>
+    <header class="today-hero">
+      <div><p class="eyebrow">Home at a glance</p><h1>家庭今日看板</h1><p>今晚和明天的事、家里点的菜、要优先处理的事项。</p></div>
+      <time id="today-date"></time>
+    </header>
+    <section id="today-connection" class="today-connection" aria-live="polite">
+      <p id="today-auth-message">正在确认家庭登录状态…</p>
+      <div class="today-auth-actions">
+        <button id="today-sign-in" type="button" hidden>使用 Google 登录</button>
+        <button id="today-refresh-access" type="button" hidden>重新检查权限</button>
+        <button id="today-sign-out" type="button" hidden>退出登录</button>
+      </div>
+    </section>
+    <div id="today-dashboard" class="today-dashboard" hidden>
+      <section class="today-card today-card--upcoming" aria-labelledby="today-upcoming-title">
+        <div class="today-card-heading"><div><p class="today-kicker">COMING UP</p><h2 id="today-upcoming-title">今晚与接下来七天</h2></div><a href={withBase('/sami-notebook/')}>小本本</a></div>
+        <ul id="today-upcoming" class="today-list"></ul>
+        <p id="today-upcoming-more" class="today-more" hidden></p>
+      </section>
+      <section class="today-card today-card--meal" aria-labelledby="today-meal-title">
+        <div class="today-card-heading"><div><p class="today-kicker">MEAL PLAN</p><h2 id="today-meal-title">这顿吃什么</h2></div><a href={withBase('/meal-builder/')}>点菜 / 做饭</a></div>
+        <p id="today-meal-status" class="today-muted"></p>
+        <ul id="today-meal-dishes" class="today-list"></ul>
+        <p id="today-meal-note" class="today-meal-note" hidden></p>
+        <p id="today-meal-queue" class="today-queue" hidden></p>
+      </section>
+      <section class="today-card today-card--urgent" aria-labelledby="today-urgent-title">
+        <div class="today-card-heading"><div><p class="today-kicker">ACTION NEEDED</p><h2 id="today-urgent-title">Urgent</h2></div><a href={withBase('/sami-notebook/')}>处理事项</a></div>
+        <ul id="today-urgent" class="today-list"></ul>
+        <p id="today-urgent-more" class="today-more" hidden></p>
+      </section>
+      <section class="today-card today-card--stock" aria-labelledby="today-stock-title">
+        <div class="today-card-heading"><div><p class="today-kicker">KITCHEN</p><h2 id="today-stock-title">食材与化冻</h2></div><a href={withBase('/meal-builder/')}>管理库存</a></div>
+        <div id="today-stock" class="today-stock-groups"></div>
+      </section>
+    </div>
+    <p class="today-footer">家庭数据仅在已验证的成员登录后，从 Firebase 读取；这里不保存第二份家庭清单。</p>
+  </main>
+  <script id="today-catalog" type="application/json" is:inline set:html={payload}></script>
+  <script id="today-firebase" type="application/json" is:inline set:html={firebaseConfig}></script>
+  <script>
+    import { onValue, ref } from 'firebase/database';
+    import { FirebaseHouseholdSession, hasCompleteFirebaseConfig, type FirebaseConfig, type HouseholdSessionStatus } from '../lib/householdSession.ts';
+    import { normalizeHouseholdState, type HouseholdState } from '../lib/household.ts';
+    import { normalizeNotebookState, type NotebookState, type NotebookItem } from '../lib/notebookDomain.ts';
+    import { getNotebookDueSoonState, notebookLocalDateKey, notebookNextLocalMidnight } from '../lib/notebookDueSoon.ts';
+    import { buildTodaySummary, type TodayCatalog } from '../lib/todayDomain.ts';
+
+    const readJson = <T,>(id: string): T => JSON.parse(document.getElementById(id)!.textContent!) as T;
+    const catalog = readJson<TodayCatalog>('today-catalog');
+    const config = readJson<FirebaseConfig>('today-firebase');
+    const base = import.meta.env.BASE_URL;
+    const notebookHref = `${base.replace(/\/$/, '')}/sami-notebook/`;
+    const dashboard = document.getElementById('today-dashboard')!;
+    const authMessage = document.getElementById('today-auth-message')!;
+    const loginButton = document.getElementById('today-sign-in') as HTMLButtonElement;
+    const refreshButton = document.getElementById('today-refresh-access') as HTMLButtonElement;
+    const logoutButton = document.getElementById('today-sign-out') as HTMLButtonElement;
+    const session = hasCompleteFirebaseConfig(config) ? new FirebaseHouseholdSession(config) : null;
+    let meal: HouseholdState | null = null;
+    let notebook: NotebookState | null = null;
+    let connectedUid = '';
+    let errorMessage = '';
+    let stopMeal: (() => void) | undefined;
+    let stopNotebook: (() => void) | undefined;
+
+    const showText = (id: string, text: string) => {
+      const node = document.getElementById(id)!;
+      node.textContent = text;
+      node.hidden = !text;
+    };
+    const dateLabel = (item: NotebookItem, today: string) => {
+      const due = getNotebookDueSoonState(item, today);
+      if (due === 'overdue') return '已过期';
+      if (due === 'today') return '今天';
+      if (due === 'tomorrow') return '明天';
+      return item.dueDate ? `${Number(item.dueDate.slice(5, 7))}/${Number(item.dueDate.slice(8))}` : '待处理';
+    };
+    function renderTasks(id: string, items: NotebookItem[], empty: string, today: string, limit: number) {
+      const target = document.getElementById(id)!;
+      target.replaceChildren();
+      if (!items.length) {
+        const li = document.createElement('li'); li.className = 'today-empty'; li.textContent = empty; target.append(li);
+      }
+      for (const item of items.slice(0, limit)) {
+        const li = document.createElement('li');
+        const link = document.createElement('a'); link.href = notebookHref; link.className = 'today-task-link';
+        const title = document.createElement('span'); title.textContent = item.title;
+        const when = document.createElement('small'); when.textContent = [dateLabel(item, today), item.dueTime].filter(Boolean).join(' · ');
+        link.append(title, when); li.append(link); target.append(li);
+      }
+      const moreId = id === 'today-urgent' ? 'today-urgent-more' : 'today-upcoming-more';
+      showText(moreId, items.length > limit ? `另外还有 ${items.length - limit} 项，请打开小本本查看。` : '');
+    }
+    function renderStockGroup(host: HTMLElement, label: string, rows: string[]) {
+      if (!rows.length) return;
+      const group = document.createElement('section'); group.className = 'today-stock-group';
+      const header = document.createElement('h3'); header.textContent = label; group.append(header);
+      const list = document.createElement('ul'); list.className = 'today-list';
+      for (const text of rows.slice(0, 4)) {
+        const li = document.createElement('li'); li.textContent = text; list.append(li);
+      }
+      if (rows.length > 4) {
+        const li = document.createElement('li'); li.className = 'today-muted'; li.textContent = `还有 ${rows.length - 4} 项…`; list.append(li);
+      }
+      group.append(list); host.append(group);
+    }
+    function render() {
+      const now = Date.now();
+      const today = notebookLocalDateKey(now);
+      const date = document.getElementById('today-date')!;
+      date.textContent = new Intl.DateTimeFormat('zh-CN', { month: 'long', day: 'numeric', weekday: 'long' }).format(new Date(now));
+      if (!meal || !notebook || !connectedUid) { dashboard.hidden = true; return; }
+      const summary = buildTodaySummary(meal, notebook, catalog, now);
+      dashboard.hidden = false;
+      renderTasks('today-upcoming', summary.upcoming, '未来七天暂无到期事项。', today, 6);
+      renderTasks('today-urgent', summary.urgent, '目前没有紧急或临近截止的事项。', today, 6);
+      const mealStatus = summary.meal?.status === 'cooking' ? '已经开始做饭' : summary.meal?.status === 'ready' ? '已选好这顿饭' : '正在点菜';
+      showText('today-meal-status', summary.meal ? mealStatus : '目前没有已选的菜。');
+      const dishes = document.getElementById('today-meal-dishes')!;
+      dishes.replaceChildren();
+      for (const name of summary.meal?.dishes ?? []) {
+        const li = document.createElement('li'); li.textContent = name; dishes.append(li);
+      }
+      showText('today-meal-note', summary.meal?.note ? `整顿备注：${summary.meal.note}` : '');
+      showText('today-meal-queue', summary.queuedMeals ? `还有 ${summary.queuedMeals} 顿等待结算。` : '');
+      const stock = document.getElementById('today-stock')!;
+      stock.replaceChildren();
+      renderStockGroup(stock, '临期优先使用', summary.expiring.map((item) => `${item.name} · ${item.quantity} 份 · 最早 ${item.ageDays} 天`));
+      renderStockGroup(stock, '库存份数偏多', summary.highStock.map((item) => `${item.name} · ${item.quantity} 份`));
+      renderStockGroup(stock, '正在化冻', summary.thawing.map((item) => `${item.name} · ${item.quantity} 份 · ${item.readyAt <= now ? '已可转冷藏' : new Intl.DateTimeFormat('zh-CN', { month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(item.readyAt)}`));
+      if (!stock.childElementCount) stock.textContent = '目前没有需要优先处理的库存或化冻任务。';
+    }
+    function stopListening() {
+      stopMeal?.(); stopNotebook?.(); stopMeal = undefined; stopNotebook = undefined;
+      connectedUid = ''; meal = null; notebook = null; dashboard.hidden = true;
+    }
+    function showAuth(status: HouseholdSessionStatus) {
+      loginButton.hidden = !(status.connection === 'signed-out' || (status.connection === 'error' && !status.email));
+      refreshButton.hidden = !(status.connection === 'pending' || (status.connection === 'error' && Boolean(status.email)));
+      logoutButton.hidden = !status.email;
+      authMessage.textContent = errorMessage || (status.connection === 'connected' ? '家庭数据实时同步中' : status.error || status.label);
+      if (status.connection !== 'connected' || !status.uid) {
+        if (connectedUid) stopListening();
+        return;
+      }
+      errorMessage = '';
+      if (connectedUid === status.uid) return;
+      stopListening(); connectedUid = status.uid;
+      const path = `households/${config.householdId}`;
+      stopMeal = onValue(ref(session!.database, `${path}/state`), (snapshot) => {
+        if (session!.getStatus().connection !== 'connected') return;
+        meal = normalizeHouseholdState(snapshot.val(), catalog.ingredients);
+        render();
+      }, (error) => { errorMessage = `点菜状态读取失败：${error.message}`; showAuth(session!.getStatus()); });
+      stopNotebook = onValue(ref(session!.database, `${path}/notebook`), (snapshot) => {
+        if (session!.getStatus().connection !== 'connected') return;
+        notebook = normalizeNotebookState(snapshot.val());
+        render();
+      }, (error) => { errorMessage = `小本本读取失败：${error.message}`; showAuth(session!.getStatus()); });
+    }
+    loginButton.addEventListener('click', () => { void session?.signInWithGoogle().catch((error: Error) => { errorMessage = error.message; if (session) showAuth(session.getStatus()); }); });
+    refreshButton.addEventListener('click', () => { void session?.refreshAccess().catch((error: Error) => { errorMessage = error.message; if (session) showAuth(session.getStatus()); }); });
+    logoutButton.addEventListener('click', () => { void session?.signOut().catch((error: Error) => { errorMessage = error.message; if (session) showAuth(session.getStatus()); }); });
+    if (session) {
+      session.subscribe(showAuth);
+      void session.ready.catch((error: Error) => { errorMessage = error.message; showAuth(session.getStatus()); });
+    } else {
+      authMessage.textContent = 'FamilyHub 的 Firebase 配置不完整，无法读取私人家庭数据。';
+    }
+    const refreshAtMidnight = () => {
+      window.setTimeout(() => { render(); refreshAtMidnight(); }, Math.max(1000, notebookNextLocalMidnight() - Date.now() + 100));
+    };
+    refreshAtMidnight();
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) render(); });
+  </script>
+</BaseLayout>
