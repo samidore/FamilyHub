@@ -35,6 +35,8 @@ test('queued meal can be checked out from the warning without finishing the next
   await setInventory(page, ['green-cabbage', 'ground-pork', 'ground-beef']);
   await page.locator('#meal-start-current').click();
   await selectCabbageMeal(page);
+  await expect(page.locator('#meal-selected-panel [data-edit-recipe-plan]')).toHaveCount(1);
+  await expect(page.locator('#meal-selected-panel + .meal-notes-editor #meal-note')).toBeVisible();
   await page.locator('#meal-note').fill('整顿少盐\n炒菜最后做');
   await page.locator('#meal-note').blur();
   await expect(page.locator('#meal-note-status')).toHaveText('已同步');

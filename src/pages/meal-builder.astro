@@ -87,12 +87,6 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
         </div>
       </section>
 
-      <section class="meal-notes-editor" aria-label="本顿饭备注">
-        <label for="meal-note"><strong>本顿饭备注</strong><small>整顿饭共用，不属于任何一道菜；可留空。</small></label>
-        <textarea id="meal-note" rows="3" maxlength={MEAL_NOTE_MAX_LENGTH} placeholder="例如：先炖肉，青菜最后炒；整顿少盐"></textarea>
-        <small id="meal-note-status" role="status">已同步</small>
-      </section>
-
       <section class="meal-ingredients" aria-labelledby="meal-ingredients-heading">
         <div class="meal-section-heading">
           <div><p class="eyebrow">02 · 今天有什么</p><h2 id="meal-ingredients-heading">可用食材</h2><p>只选这顿可以拿来做菜的食材。收起分组不会清除选择。</p></div>
@@ -147,6 +141,12 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
           <h3>已选的菜</h3>
           <ul>{recipes.map((recipe) => <li data-selected-recipe={recipe.id} hidden><span><span class="meal-selected-title"><strong>{recipe.nameZh}</strong><span class="meal-freshness-badge" data-selected-freshness-badge={recipe.id} hidden><svg viewBox="0 0 16 14" aria-hidden="true" data-freshness-icon="hourglass"><path d="M5 3h6c0 1.9-.9 3.1-3 4 2.1.9 3 2.1 3 4H5c0-1.9.9-3.1 3-4-2.1-.9-3-2.1-3-4Z"></path><path d="M4 2h8M4 12h8"></path></svg><span>临期</span></span></span><small>{contributionText(recipe)}</small><small data-selected-bindings={recipe.id}></small></span><button type="button" data-remove-recipe={recipe.id}>移除</button></li>)}</ul>
         </div>
+
+      <section class="meal-notes-editor" aria-label="本顿饭备注">
+        <label for="meal-note"><strong>本顿饭备注</strong><small>整顿饭共用，不属于任何一道菜；可留空。</small></label>
+        <textarea id="meal-note" rows="3" maxlength={MEAL_NOTE_MAX_LENGTH} placeholder="例如：先炖肉，青菜最后炒；整顿少盐"></textarea>
+        <small id="meal-note-status" role="status">已同步</small>
+      </section>
 
         <div class="meal-section-heading"><div><p class="eyebrow">03 · 逐步补齐</p><h2 id="meal-results-heading">候选菜</h2><p id="meal-guidance">先选择可用食材，候选菜会在这里出现。</p></div><span id="meal-result-count" class="meal-count" aria-live="polite">0 道可选</span></div>
         <div id="meal-recipe-grid" class="meal-recipe-grid">
