@@ -10,6 +10,9 @@
 .today-connection p { margin: 0; }
 .today-auth-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .today-auth-actions button { min-height: 38px; padding: 6px 12px; border: 1px solid #bbcbbf; border-radius: 9px; background: #fff; color: #24573f; font-size: 14px; }
+.today-push { display: flex; gap: 15px; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: 18px; padding: 13px 16px; background: #ecf3ec; border: 1px solid #cbdacd; border-radius: 12px; }
+.today-push strong { font-size: 15px; }
+.today-push p { margin: 2px 0 0; font-size: 13px; color: #506458; }
 .today-dashboard { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 16px; }
 .today-card { min-width: 0; padding: 22px 22px 18px; border: 1px solid #cad8cd; border-radius: 18px; box-shadow: 0 9px 24px rgb(28 47 31 / 6%); background: #fff; }
 .today-card--upcoming { border-top: 4px solid #3a7157; }
