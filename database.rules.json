@@ -28,6 +28,30 @@
             "$other": { ".validate": false }
           }
         },
+        "notificationDevices": {
+            "$uid": {
+              "$deviceId": {
+                ".read": "auth != null && auth.uid == $uid && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email",
+                ".write": "auth != null && auth.uid == $uid && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email",
+                ".validate": "newData.hasChildren(['endpoint', 'p256dh', 'auth', 'updatedAt']) && newData.childrenCount == 4",
+                "endpoint": {
+                  ".validate": "newData.isString() && newData.val().length > 15 && newData.val().length <= 2048 && newData.val().matches(/^https:\\/\\//)"
+                },
+                "p256dh": {
+                  ".validate": "newData.isString() && newData.val().length > 40 && newData.val().length <= 256 && newData.val().matches(/^[A-Za-z0-9_-]+$/)"
+                },
+                "auth": {
+                  ".validate": "newData.isString() && newData.val().length > 8 && newData.val().length <= 128 && newData.val().matches(/^[A-Za-z0-9_-]+$/)"
+                },
+                "updatedAt": {
+                  ".validate": "newData.isNumber() && newData.val() > 0"
+                },
+                "$other": {
+                  ".validate": false
+                }
+              }
+            }
+          },
         "state": {
           ".read": "auth != null && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email",
           ".write": "auth != null && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email",
