@@ -1,0 +1,13 @@
+{
+  "name": "FamilyHub · 家庭今日看板",
+  "short_name": "FamilyHub",
+  "id": "./today/",
+  "start_url": "./today/",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f6f1",
+  "theme_color": "#e7efe8",
+  "icons": [
+    { "src": "./familyhub-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
