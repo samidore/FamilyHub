@@ -107,6 +107,45 @@ test('expiring feasible candidates sort before otherwise stronger candidates, ol
   assert.deepEqual(rankCandidates([fresh, staleNewer, staleOld], state, ingredients, {}, [], '2026-08-27').map((item) => item.id), ['r1', 'r2', 'r3']);
 });
 
+test('expiring broccoli keeps 清炒时蔬 available after the vegetable target is met', async () => {
+  const data = await loadMealData();
+  const stirFry = data.recipes.find((item) => item.id === 'simple-stir-fried-leafy-greens');
+  assert.ok(stirFry?.requirements.some((requirement) => requirement.role === 'vegetable' && requirement.anyOf.includes('broccoli')));
+
+  const selectedVegetable = recipe('planned-vegetable', { protein: 0, vegetable: 1, staple: 0 }, { protein: false, vegetable: true }, [{ anyOf: ['cucumber'], role: 'vegetable' }]);
+  const base = {
+    ...defaultMealState(),
+    proteinTarget: 1,
+    vegetableTarget: 1,
+    stapleRequired: false,
+    childMode: false,
+    selectedRecipeIds: [selectedVegetable.id],
+    recipeIngredientBindings: { [selectedVegetable.id]: ['cucumber'] },
+    availableIngredientIds: ['cucumber', 'chinese-greens', 'broccoli'],
+    ingredientFreshnessDates: { broccoli: '2026-10-19', 'chinese-greens': '2026-10-26' },
+  };
+  const today = '2026-10-26';
+  const binding = {};
+  assert.deepEqual(rankCandidates([selectedVegetable, stirFry], base, data.ingredients, binding, [], today).map((item) => item.id), [stirFry.id]);
+  assert.deepEqual(binding[stirFry.id], ['broccoli']);
+
+  // Fresh stock, filtered-out broccoli, and an explicit non-expiring one-of choice do not bypass targets.
+  assert.deepEqual(rankCandidates([selectedVegetable, stirFry], { ...base, ingredientFreshnessDates: { ...base.ingredientFreshnessDates, broccoli: '2026-10-21' } }, data.ingredients, {}, [], today), []);
+  assert.deepEqual(rankCandidates([selectedVegetable, stirFry], { ...base, availableIngredientIds: ['cucumber', 'chinese-greens'] }, data.ingredients, {}, [], today), []);
+  assert.deepEqual(rankCandidates([selectedVegetable, stirFry], base, data.ingredients, { [stirFry.id]: ['chinese-greens'] }, [], today), []);
+});
+
+test('expiring meat does not revive a protein-only candidate after Protein is filled', () => {
+  const selected = recipe('planned-main', { protein: 1, vegetable: 1, staple: 0 });
+  const extraMeat = recipe('extra-meat', { protein: 1, vegetable: 0, staple: 0 }, undefined, [{ anyOf: ['meat'], role: 'main-protein' }]);
+  const state = {
+    ...defaultMealState(), proteinTarget: 1, vegetableTarget: 1, stapleRequired: false, childMode: false,
+    selectedRecipeIds: [selected.id], availableIngredientIds: ['meat'], ingredientFreshnessDates: { meat: '2026-10-19' },
+  };
+  const ingredients = [{ id: 'meat', inventoryTracking: 'counted', inventoryFreshness: 'fifo', freshnessPriorityDays: 3 }];
+  assert.deepEqual(rankCandidates([selected, extraMeat], state, ingredients, {}, [], '2026-10-26'), []);
+});
+
 test('candidates reusing a selected bound ingredient move behind candidates using a different ingredient', () => {
   const selectedTofu = recipe('r1', { protein: 1, vegetable: 0, staple: 0 }, { protein: false, vegetable: false }, [{ anyOf: ['tofu'], role: 'main-protein' }]);
   const moreTofu = { ...recipe('r2', { protein: 1, vegetable: 0, staple: 0 }, { protein: false, vegetable: false }, [{ anyOf: ['tofu'], role: 'main-protein' }]), fitScore: 5 };
