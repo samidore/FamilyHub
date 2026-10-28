@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 
 test('Today dashboard is a private shell with links to existing household modules', async ({ page }) => {
   await page.goto('today/');
@@ -9,15 +10,13 @@ test('Today dashboard is a private shell with links to existing household module
   await expect(page.locator('#today-auth-message')).not.toHaveText('家庭数据实时同步中');
 });
 
-test('Home provides an obvious Today entry and the manifest opens Today', async ({ page, request }) => {
+test('Home provides an obvious Today entry and the manifest opens Today', async ({ page }) => {
   await page.goto('');
   await expect(page.getByRole('link', { name: /打开家庭今日看板/ })).toHaveAttribute('href', /today\/$/);
   const manifestLink = page.locator('link[rel="manifest"]');
   const manifestHref = await manifestLink.getAttribute('href');
-  expect(manifestHref).toContain('manifest.webmanifest');
-  const response = await request.get(new URL('/manifest.webmanifest', page.url()).toString());
-  expect(response.ok()).toBe(true);
-  const manifest = await response.json();
+  expect(manifestHref).toBe(new URL('manifest.webmanifest', page.url()).pathname);
+  const manifest = JSON.parse(await readFile(new URL('../dist/manifest.webmanifest', import.meta.url), 'utf8'));
   expect(manifest.start_url).toBe('./today/');
   expect(manifest.display).toBe('standalone');
 });
