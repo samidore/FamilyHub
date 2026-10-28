@@ -1,0 +1,60 @@
+id: suan-cai-yu
+type: recipe
+status: candidate
+name_zh: 酸菜鱼
+name_en: Fish Fillets with Pickled Mustard Greens
+tags:
+  - family-shared
+  - light-seasoning
+  - non-spicy-base
+  - instant-pot
+  - lunch-45
+fit_score: 4
+primary_role: protein
+main_protein_category: fish
+main_protein_ingredient_ids: [fish-fillets]
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 0 }
+child_coverage: { protein: true, vegetable: false }
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids: [rice]
+active_minutes: 20–30
+meal_window_minutes: 30–45
+elapsed_minutes: 30–50
+advance_start_required: false
+equipment:
+  - 9-quart Instant Pot (Sauté mode, lid off)
+  - small mixing bowl
+  - instant-read thermometer
+burner_plan: Instant Pot Sauté 完成炒酸菜、煮汤和轻沸烫鱼；不对薄鱼片加压，两个炉头留给配菜。
+child_suitable: yes
+child_texture: 轻煮后的鱼片柔软易分开；孩子份逐片检查并去除鱼刺，剪碎后配少量不辣汤汁。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: fish-fillets
+    role: main-protein
+steps:
+  - 鱼片如在冷冻状态，提前放冷藏解冻；确认完全解冻后检查并去除明显鱼刺，沥干。鱼片加入玉米淀粉、少量盐和水轻轻抓匀，静置约10分钟，不用重盐腌制。
+  - 酸菜切成短段；先尝酸咸程度。若过咸，快速冲洗并攥干；酸菜是本菜必备调味食材，需另行备好。
+  - Instant Pot 开 Sauté，中档加入中性油、姜片和蒜末，炒约30秒；加入酸菜翻炒2–3分钟至香气明显，但不炒焦。
+  - 加入清水或无盐高汤，烧开后保持温和沸腾约5分钟，尝汤后再决定是否补盐；鱼片下锅前把汤调整成清淡酸香，不放辣椒。
+  - 将鱼片逐片放入汤中，调低 Sauté 火力使汤保持轻微沸腾，不搅碎鱼片、不盖压力盖。约3–5分钟开始检查最厚处中心温度，达到145°F/63°C且鱼肉不透明、易分片即可；较厚鱼片继续加热并复查。
+  - 先盛出孩子份鱼肉，逐片仔细去刺，剪碎并配少量清淡汤汁；成人碗再按口味淋辣椒油或加辣椒粉。
+  - 完成提示：汤汁酸香、鱼片保持完整且熟透；如果汤煮得过咸，可加少量热水调淡，避免久煮鱼片变老。
+child_serving: 基础版不辣，鱼片彻底熟透并逐片去刺后剪小；本菜计入 Child Protein，不把酸菜计入蔬菜份额。
+adult_finish: 孩子份先盛出；成人碗可另加辣椒油、花椒油或辣椒粉，避免整锅加辣。
+substitutions: []
+cook_ingredients:
+  - 鱼片：450–500 g；冷冻的先冷藏解冻
+  - 酸菜（酸芥菜）：约200–250 g，切短段；咸时冲洗并攥干
+  - 清水或无盐高汤：800 mL
+  - 姜：15 g切片；蒜：2瓣切末
+  - 鱼片浆料：玉米淀粉 2 tsp；水 1 Tbsp；盐 1/4 tsp
+  - 炒酸菜用中性油：2 tsp；汤的盐量最后尝味再定
+  - 成人另加辣椒油或花椒油：可选，分别在碗里加

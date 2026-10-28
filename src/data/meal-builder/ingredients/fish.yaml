@@ -91,3 +91,15 @@ ingredients:
       order: 80
     tags:
       - exploratory
+  - id: fish-fillets
+    type: ingredient
+    inventory_tracking: counted
+    freezer_behavior: thaw-required
+    status: candidate
+    name_zh: 鱼片
+    name_en: Fish Fillets
+    starter:
+      visible: true
+      section: fish
+      order: 90
+    tags: []

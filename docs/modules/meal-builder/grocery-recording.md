@@ -48,6 +48,13 @@ When an otherwise ambiguous raw receipt label is explicitly resolved by the user
 | `YOU CHOY SUM` | `choy-sum` |
 | `BEAN SPROUT` | `bean-sprouts` |
 | `CHINESE EGGPLANT` | `eggplant` |
+| `BABY CABBAGE` | `chinese-greens` |
+| `BEEF RIB EYE SLICED` | `hot-pot-beef-slices` |
+| `LAMB SHOULDER SLICED` | `hot-pot-lamb-slices` |
+| `PORK SPARE RIB` | `soft-pork-ribs` |
+| `BEEF DROP FLANK` | `whole-beef-brisket` |
+| `FROZEN KUNG FU SNAKEHEAD FIS` | `fish-fillets` |
+| `SHANGHAI STYLE RICE DUMPLING` | `zongzi` |
 
 ## Recording items
 
