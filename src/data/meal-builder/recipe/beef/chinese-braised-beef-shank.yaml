@@ -32,8 +32,8 @@ recommended_staple_ingredient_ids:
   - rice
   - noodles
 active_minutes: 25–40
-meal_window_minutes: 60?90
-elapsed_minutes: 120?180
+meal_window_minutes: 180 分钟
+elapsed_minutes: 180 分钟
 advance_start_required: true
 equipment:
   - 9-quart Instant Pot

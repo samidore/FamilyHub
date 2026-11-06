@@ -26,8 +26,8 @@ integral_staple_ingredient_ids:
   - zongzi
 recommended_staple_ingredient_ids: []
 active_minutes: 未记录
-meal_window_minutes: 15
-elapsed_minutes: 15
+meal_window_minutes: 30 分钟
+elapsed_minutes: 30 分钟
 advance_start_required: false
 equipment:
   - 9-quart Instant Pot or steamer

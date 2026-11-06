@@ -29,8 +29,8 @@ recommended_staple_ingredient_ids:
   - rice
   - noodles
 active_minutes: 15–25
-meal_window_minutes: 15–25
-elapsed_minutes: 45–75 + marination
+meal_window_minutes: 80 分钟
+elapsed_minutes: 80 分钟
 advance_start_required: true
 equipment:
   - gas oven

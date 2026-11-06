@@ -15,8 +15,8 @@ child_coverage: { protein: false, vegetable: false }
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids: [rice]
 active_minutes: 15–20
-meal_window_minutes: 20–30
-elapsed_minutes: 75–90
+meal_window_minutes: 85 分钟
+elapsed_minutes: 85 分钟
 advance_start_required: true
 equipment: [high-output burner, wok / iron pan]
 burner_plan: High-output burner; sear in one layer.

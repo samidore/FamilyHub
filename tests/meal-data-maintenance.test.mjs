@@ -79,6 +79,16 @@ test('vegetable-centered is an explicit Recipe tag', async () => {
   assert.equal(chicken?.vegetableCentered, false);
 });
 
+test('all active recipes expose one consistent estimated total duration', async () => {
+  const data = parseMealFiles(await readMealFiles());
+  assert.ok(data.recipes.length > 0);
+  for (const recipe of data.recipes) {
+    assert.match(recipe.mealWindowMinutes, /^[1-9]\d* 分钟$/, `${recipe.id} needs one total time`);
+    assert.equal(recipe.elapsedMinutes, recipe.mealWindowMinutes, `${recipe.id} has inconsistent total times`);
+  }
+  assert.equal(data.recipes.find((recipe) => recipe.id === 'taro-rice')?.advanceStartRequired, false);
+});
+
 test('active Meal Builder records exclude retired metadata', async () => {
   const files = await readMealFiles();
   for (const [path, text] of Object.entries(files)) {

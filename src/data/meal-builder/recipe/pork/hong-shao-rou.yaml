@@ -36,8 +36,8 @@ recommended_staple_ingredient_ids:
   - steamed-buns
 serving_options: [ rice, noodles ]
 active_minutes: 25–40
-meal_window_minutes: 45–60
-elapsed_minutes: 60–90
+meal_window_minutes: 85 分钟
+elapsed_minutes: 85 分钟
 advance_start_required: true
 equipment:
   - 9-quart Instant Pot

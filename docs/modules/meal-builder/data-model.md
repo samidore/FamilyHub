@@ -160,8 +160,8 @@ child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids: [rice]
 active_minutes: 20–35
-meal_window_minutes: 30–45
-elapsed_minutes: 35–60
+meal_window_minutes: 60 分钟
+elapsed_minutes: 60 分钟
 advance_start_required: false
 equipment: [9-quart Instant Pot, medium burner for reduction]
 burner_plan: Instant Pot cooks the chicken to its target texture; use the medium burner only for a separate post-pressure sauce reduction.

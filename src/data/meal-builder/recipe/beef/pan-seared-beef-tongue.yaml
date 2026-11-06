@@ -15,8 +15,8 @@ child_coverage: { protein: false, vegetable: false }
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids: [rice]
 active_minutes: 10–20
-meal_window_minutes: 15–30
-elapsed_minutes: 15–30
+meal_window_minutes: 25 分钟
+elapsed_minutes: 25 分钟
 advance_start_required: false
 equipment: [medium burner, nonstick pan or iron pan, instant-read thermometer suitable for thin meat]
 burner_plan: 中火炉头用平底锅分批香煎牛舌片，避免锅内拥挤出水。

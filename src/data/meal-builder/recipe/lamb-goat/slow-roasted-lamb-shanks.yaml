@@ -29,8 +29,8 @@ recommended_staple_ingredient_ids:
   - potato
   - rice
 active_minutes: 25–40
-meal_window_minutes: 25–40
-elapsed_minutes: 180–300
+meal_window_minutes: 240 分钟
+elapsed_minutes: 240 分钟
 advance_start_required: true
 equipment:
   - gas oven

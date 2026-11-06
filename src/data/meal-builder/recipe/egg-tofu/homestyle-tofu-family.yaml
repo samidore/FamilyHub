@@ -18,8 +18,8 @@ child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids: [rice]
 active_minutes: 20–35
-meal_window_minutes: 30–45
-elapsed_minutes: 35–60
+meal_window_minutes: 40 分钟
+elapsed_minutes: 40 分钟
 advance_start_required: false
 equipment: [medium burner, covered nonstick pan / shallow braiser]
 burner_plan: Medium burner for a gentle braise; keep the high-output burner free when possible.

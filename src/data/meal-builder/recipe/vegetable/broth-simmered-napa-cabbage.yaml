@@ -30,8 +30,8 @@ integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice
 active_minutes: 10–15
-meal_window_minutes: 20–30
-elapsed_minutes: 20–35
+meal_window_minutes: 25 分钟
+elapsed_minutes: 25 分钟
 advance_start_required: false
 equipment:
   - medium burner

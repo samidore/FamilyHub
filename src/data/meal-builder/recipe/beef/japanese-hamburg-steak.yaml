@@ -15,8 +15,8 @@ child_coverage: { protein: true, vegetable: false }
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids: [rice, bread]
 active_minutes: 20–35
-meal_window_minutes: 30–45
-elapsed_minutes: 35–60
+meal_window_minutes: 45 分钟
+elapsed_minutes: 45 分钟
 advance_start_required: false
 equipment: [medium burner, nonstick pan or iron pan as appropriate]
 burner_plan: Medium burner by default.

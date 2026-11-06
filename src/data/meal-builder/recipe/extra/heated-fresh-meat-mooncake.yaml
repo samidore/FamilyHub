@@ -15,8 +15,8 @@ child_coverage: { protein: false, vegetable: false }
 integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids: []
 active_minutes: 5–10
-meal_window_minutes: 20–35
-elapsed_minutes: 20–35
+meal_window_minutes: 30 分钟
+elapsed_minutes: 30 分钟
 advance_start_required: false
 equipment: [oven or air fryer]
 burner_plan: ''

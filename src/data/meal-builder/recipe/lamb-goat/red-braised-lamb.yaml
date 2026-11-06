@@ -34,8 +34,8 @@ integral_staple_ingredient_ids: []
 recommended_staple_ingredient_ids:
   - rice
 active_minutes: 25–40
-meal_window_minutes: 60–90
-elapsed_minutes: 60–90
+meal_window_minutes: 105 分钟
+elapsed_minutes: 105 分钟
 advance_start_required: true
 equipment:
   - Instant Pot / electric pressure cooker

@@ -8,7 +8,7 @@ Cooking path determines the meat method. Keep stir-fry, steam, roast, bake, pan-
 
 For an Instant Pot Recipe with `finish_options`, the shared base cooks the meat to its target texture before Finish. Finish steps may add or change late flavor, dressing, coating, or reduction; they do not repeat the main meat-cooking/tenderizing phase.
 
-Time is a workload signal, not an automatic hard filter. Account for opening, washing, peeling, trimming, cutting, marinating, preheating, pan changes, and cleaning—not only heat time. `active_minutes`, `meal_window_minutes`, `elapsed_minutes`, and `advance_start_required` remain source/workflow ranges until the household measures them. Instant Pot pressure time, release, and liquid are Recipe-specific; do not use one pressure time for all meats.
+Time is a workload signal, not an automatic hard filter. Candidate and Cook views show just one approximate total duration per Recipe (`meal_window_minutes`), from beginning preparation until serving. Include washing, cutting, marinating done on the day, preheating, Instant Pot pressure build/release, cooking, finishing, and required rests—not only active heat time. `elapsed_minutes` mirrors that estimate for compatibility; `active_minutes` remains internal. Long advance marination, thawing, or chilling is called out in the cooking steps and `advance_start_required` rather than being hidden inside the on-day estimate. Instant Pot pressure time, release, and liquid are Recipe-specific.
 
 ## Shared four-step flow
 

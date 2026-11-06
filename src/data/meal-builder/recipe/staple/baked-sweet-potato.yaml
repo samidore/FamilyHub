@@ -28,8 +28,8 @@ integral_staple_ingredient_ids:
   - sweet-potato
 recommended_staple_ingredient_ids: []
 active_minutes: 20–35
-meal_window_minutes: 20–35
-elapsed_minutes: 90–180
+meal_window_minutes: 120 分钟
+elapsed_minutes: 120 分钟
 advance_start_required: true
 equipment:
   - gas oven
