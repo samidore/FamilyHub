@@ -171,7 +171,7 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
 
       <section id="meal-cook-view" class="shell meal-cook" hidden aria-labelledby="meal-cook-heading">
       <div class="meal-section-heading"><div><h2 id="meal-cook-heading">开始做饭</h2></div><div class="meal-cook-actions"><button id="meal-back-to-menu" class="button button--secondary" type="button">返回选菜</button><button id="meal-open-checkout" class="button button--primary" type="button">下一步：结算</button></div></div>
-      <section id="meal-cook-note" class="meal-note-display" hidden aria-label="本顿饭备注"><strong>本顿饭备注</strong><p id="meal-cook-note-text"></p></section>
+      <section id="meal-cook-note" class="meal-note-display" hidden aria-label="本顿饭备注"><div class="meal-note-display__heading"><span class="meal-note-display__icon" aria-hidden="true">!</span><h3>本顿饭备注 <span class="meal-note-display__hint">做饭前先看</span></h3></div><p id="meal-cook-note-text"></p></section>
       <div class="meal-cook-list">{recipes.map((recipe) => <details class="meal-cook-card" data-cook-recipe={recipe.id} hidden>
         <summary><span><strong>{recipe.nameZh}</strong><small>{recipe.nameEn}</small></span><span>{recipe.mealWindowMinutes || recipe.elapsedMinutes}</span></summary>
         <div class="meal-cook-card__body">
@@ -571,9 +571,13 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
     .meal-notes-editor label small, #meal-note-status { color: var(--muted); font-size: 13px; }
     .meal-notes-editor textarea { width: 100%; box-sizing: border-box; min-height: 90px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--ink); font: inherit; line-height: 1.5; resize: vertical; }
     .meal-notes-editor textarea:focus-visible { outline: 2px solid var(--berry); outline-offset: 2px; }
-    .meal-note-display { display: grid; gap: 7px; padding: 14px; margin-bottom: 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); }
+    .meal-note-display { display: grid; gap: 12px; padding: 18px 20px; margin-bottom: 24px; border: 2px solid #d2a256; border-left: 8px solid var(--ochre); border-radius: 14px; background: #fff2ce; box-shadow: 0 8px 20px rgb(108 69 21 / 12%); }
     .meal-note-display[hidden] { display: none; }
-    .meal-note-display p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .meal-note-display__heading { display: flex; align-items: center; gap: 10px; }
+    .meal-note-display__icon { display: grid; flex: 0 0 32px; width: 32px; height: 32px; place-items: center; border-radius: 50%; background: var(--ochre); color: #fff; font-size: 22px; font-weight: 900; line-height: 1; }
+    .meal-note-display h3 { margin: 0; color: #633c0e; font-size: 20px; font-weight: 800; line-height: 1.35; }
+    .meal-note-display__hint { display: block; margin-top: 2px; color: #6c4a22; font-size: 15px; font-weight: 700; }
+    .meal-note-display p { margin: 0; color: #2f291e; font-size: 20px; font-weight: 700; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
     .meal-inventory-controls button, .meal-stock-row button { min-height: 48px; }
     .meal-stock-states.meal-inventory-controls { display: grid; flex: 1 1 auto; align-items: stretch; gap: 6px; white-space: normal; }
     .meal-builder-app button, .meal-builder-app input, .meal-builder-app select, .meal-builder-app summary { min-height: 48px !important; }
