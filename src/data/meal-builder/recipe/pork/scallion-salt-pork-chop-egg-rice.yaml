@@ -1,0 +1,61 @@
+id: scallion-salt-pork-chop-egg-rice
+type: recipe
+status: candidate
+name_zh: 滑蛋盐葱猪扒饭
+name_en: Scallion-Salt Pork Chop Rice with Soft Eggs
+tags: [light-seasoning, non-spicy-base, pan-seared, stovetop-nonstick, family-shared]
+fit_score: 5
+primary_role: mixed
+main_protein_category: pork
+main_protein_ingredient_ids: [pork-chops, pork-shoulder-chunks, whole-pork-tenderloin]
+supporting_protein_ingredient_ids: [eggs]
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 1 }
+child_coverage: { protein: true, vegetable: false }
+integral_staple_ingredient_ids: [rice]
+recommended_staple_ingredient_ids: []
+active_minutes: 30–40
+meal_window_minutes: 50 分钟
+elapsed_minutes: 50 分钟
+advance_start_required: false
+equipment:
+  - rice cooker or covered pot
+  - medium burner
+  - nonstick frying pan
+  - instant-read thermometer
+burner_plan: Cook rice in parallel; pan-sear thin pork steaks in batches, rest them, then make the scallion dressing and soft scrambled eggs over medium-low heat.
+child_suitable: yes
+child_texture: 滑蛋提供本菜的软蛋白；孩子的蛋完全凝固，猪扒逆纹剪成薄小片，若肉质偏韧则孩子只取滑蛋配饭。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - one_of: [pork-chops, pork-shoulder-chunks, whole-pork-tenderloin]
+    role: main-protein
+  - ingredient_id: eggs
+    role: supporting-protein
+  - ingredient_id: rice
+    role: integral-staple
+steps:
+  - 先煮3人份米饭。猪排去明显筋膜，梅花肉块或里脊则逆纹切成约1–1.5 cm厚的小肉扒；过厚的轻拍至厚薄均匀，带骨猪排给孩子食用前必须去骨。
+  - 猪肉加入姜片、生抽、蚝油、少量糖、白胡椒、玉米淀粉与约1 tsp花生油，抓匀静置10–15分钟；家庭基础版不再额外加盐。
+  - 葱末、蒜末、姜末、红葱头末混合；柠檬汁、少量柠檬皮屑、白芝麻、糖及少许黑胡椒另备。酱汁参考截图的柠檬葱盐风味，但减少盐和鸡粉。
+  - 不粘锅中大火预热后薄涂油，肉扒单层下锅分批煎；厚约1–1.5 cm时每面先煎约2–4分钟，再按厚度调整火力，以内部达到145°F/63°C为准。
+  - 猪扒取出静置至少3分钟；锅里留约2 tsp油，转中小火把葱蒜姜和红葱头炒香约30–60秒，关火拌入柠檬汁、皮屑和芝麻，做成清爽葱盐酱。先留孩子所需的淡口份，成人再单独补盐、黑胡椒。
+  - 鸡蛋3个打匀，加1–2 Tbsp水；不粘锅中小火加约1 tsp油，推炒成大块滑嫩蛋。孩子那份继续加热至蛋液全部凝固，成人份不要过度炒老。
+  - 热饭上铺滑蛋，放逆纹切片的香煎猪扒，浇少量柠檬葱盐酱；孩子份优先取全熟滑蛋和软饭，只放适合咀嚼的肉片与少量熟葱汁。
+  - 完成提示：肉扒表面焦香但内部多汁，滑蛋成软块而不水汪汪，葱盐酱有柠檬清香。本菜葱花不计蔬菜份，另搭一份蔬菜。
+  - 安全提示：整块猪肉达到145°F/63°C并静置至少3分钟；儿童鸡蛋完全凝固，带骨肉去骨。
+child_serving: 全熟滑蛋和软米饭作为主份；猪扒逆纹剪薄剪小，质地偏韧时不勉强，葱盐酱少放并避免生蒜辛辣。
+adult_finish: 孩子份盛出后，成人可增加盐、现磨黑胡椒和柠檬汁，喜欢焦香的可把猪扒表面再短煎。
+substitutions: []
+cook_ingredients:
+  - 猪排、梅花肉块或整条里脊三选一：约600–750 g，切成适合香煎的肉扒
+  - 鸡蛋：3个；加水1–2 Tbsp制滑蛋
+  - 熟米饭：3碗；若现煮先启动
+  - 猪扒短腌：姜4片；糖3 g；生抽10 g；蚝油8 g；白胡椒少许；玉米淀粉3 g；花生油约5 g；不额外加盐
+  - 柠檬盐葱酱：葱末30 g；蒜末10–15 g；姜末5 g；红葱头15 g；柠檬汁10–15 g；柠檬皮屑1–2 g；白芝麻5 g；糖2–3 g；黑胡椒少许；花生油约10 g
+  - 原截图的盐与黑胡椒用量偏重，家庭基础版省去酱料额外的盐和鸡粉；成人分盘后自行补味

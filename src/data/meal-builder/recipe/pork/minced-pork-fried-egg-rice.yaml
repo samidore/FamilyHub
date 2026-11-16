@@ -1,0 +1,60 @@
+id: minced-pork-fried-egg-rice
+type: recipe
+status: candidate
+name_zh: 鸡蛋肉末拌饭
+name_en: Minced Pork and Fried Egg Rice
+tags: [child-all-ingredients-eaten, light-seasoning, non-spicy-base, stir-fried, stovetop-wok, lunch-45, family-shared]
+fit_score: 5
+primary_role: mixed
+main_protein_category: pork
+main_protein_ingredient_ids: [ground-pork]
+supporting_protein_ingredient_ids: [eggs]
+vegetable_ingredient_ids: []
+meal_contribution: { protein: 1, vegetable: 0, staple: 1 }
+child_coverage: { protein: true, vegetable: false }
+integral_staple_ingredient_ids: [rice]
+recommended_staple_ingredient_ids: []
+active_minutes: 20–30
+meal_window_minutes: 40 分钟
+elapsed_minutes: 40 分钟
+advance_start_required: false
+equipment:
+  - rice cooker or covered pot
+  - high-output burner
+  - wok / iron pan
+  - medium burner and nonstick pan for eggs
+burner_plan: Start the rice first; brown and glaze the ground pork over high heat, then fry the eggs in a nonstick pan over medium heat.
+child_suitable: yes
+child_texture: 肉末炒散并留少量酱汁，孩子的煎蛋做至蛋白和蛋黄全部凝固；与软饭拌匀即可。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - ingredient_id: ground-pork
+    role: main-protein
+  - ingredient_id: eggs
+    role: supporting-protein
+  - ingredient_id: rice
+    role: integral-staple
+steps:
+  - 如果没有现成米饭，先淘米下锅，按日常水量煮3人份；煮饭与后面的备料、炒肉并行。
+  - 姜蒜切末、葱切花；把生抽、蚝油、糖、水及玉米淀粉调成薄芡汁；猪绞肉用铲子预先拨松，不需要长时间腌制。
+  - 炒锅中大火加约2 tsp油，下姜蒜末炒香10–15秒；加入肉末压散、翻炒6–8分钟，直到不见生粉红色、蒸出的水分基本收干且局部微焦。
+  - 倒入薄芡汁，中火翻炒1–2分钟至肉末均匀挂上薄薄湿润的酱汁，仍有少量汁能渗入米饭；检查绞肉达到160°F/71°C，关火保温。
+  - 不粘锅中火加约1 tsp油，分批煎3个鸡蛋；孩子那份翻面或加盖煎到蛋黄和蛋白完全凝固，成人若偏爱流心蛋可把自己的鸡蛋单独提前盛出。
+  - 每碗盛热米饭，铺上肉末和煎蛋，撒少量葱花；孩子份先剪散鸡蛋、与肉末软饭拌匀。
+  - 完成提示：肉末松散、有焦香而不干硬；酱汁薄亮不积水；米饭热透。另配一份蒸软或清炒蔬菜，本菜本身不计蔬菜份。
+  - 安全提示：猪绞肉中心达到160°F/71°C；孩子的鸡蛋完全凝固。
+child_serving: 盛出淡口肉末、全熟煎蛋和软米饭，切碎拌匀；葱花可不加，另搭配软蔬菜。
+adult_finish: 孩子份盛出后，成人可追加生抽、黑胡椒或辣椒油；流心蛋仅用于成人个人份。
+substitutions: []
+cook_ingredients:
+  - 猪绞肉：约350–400 g
+  - 鸡蛋：3个
+  - 熟米饭：约3碗，若现煮则预留25–30分钟
+  - 香料：姜末约5 g；蒜末约8 g；葱花少量
+  - 轻盐拌饭汁：生抽 2 tsp；蚝油 1 tsp；糖 1/2 tsp；水75 ml；玉米淀粉 1 tsp
+  - 中性油：约3 tsp，分炒肉与煎蛋使用
