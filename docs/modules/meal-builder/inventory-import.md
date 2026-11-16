@@ -6,6 +6,18 @@ Meal Builder accepts a small JSON payload produced by Chat after recognizing gro
 
 This protocol is the canonical contract between the Chat producer and the Meal Builder consumer.
 
+## Optional one-tap review link
+
+When the user specifically asks for a clickable import link instead of copy/paste, Chat may encode the **same v1 JSON object** in the URL fragment of the existing Meal Builder page:
+
+```text
+https://samidore.github.io/FamilyHub/meal-builder/#inventory-import=<encodeURIComponent(JSON.stringify(payload))>
+```
+
+The fragment is parsed locally on page load, removed from the address bar via `history.replaceState`, and shown in the existing editable review. It stays visible even if the household is currently on Recipes, Cook, or Checkout; opening the link does not change the shared `activeStep`. No image recognition, credential, or inventory write is performed by the link. Only the authenticated user's existing two-step `确认入库` process commits the current reviewed draft through the normal atomic household transaction.
+
+Never put the payload in a query string or commit it to the public repository. The link contains household shopping details and should not be shared publicly. Reopening the original link can create another additive transaction if confirmed again; the current import design intentionally has no import history or persistent deduplication. The pasteable JSON code block remains the default handoff, including when the user explicitly requests JSON.
+
 ## Producer protocol
 
 Before producing an import payload, read the current Meal Builder Ingredient index and only the category records needed to resolve the recognized items. Match only active Ingredients whose `starter.visible` is true. Use canonical stable IDs; never invent an ID or substitute a merely similar Ingredient when identity is uncertain.

@@ -292,6 +292,28 @@
       }
     });
 
+    // A Chat-generated link only pre-fills the existing review; it never writes inventory.
+    // Keep the payload in the fragment so it is not included in the HTTP request.
+    const chatImportPrefix = '#inventory-import=';
+    if (window.location.hash.startsWith(chatImportPrefix)) {
+      const encodedPayload = window.location.hash.slice(chatImportPrefix.length);
+      window.history.replaceState(window.history.state, '', window.location.pathname + window.location.search);
+      // A cooking/checkout session may hide the Inventory step. Keep its import review visible
+      // without changing the household's shared activeStep.
+      inventoryView.before(panel);
+      panel.classList.add('shell');
+      panel.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+      try {
+        if (encodedPayload.length > 32768) throw new Error('入库链接过长，请重新生成。');
+        textarea.value = decodeURIComponent(encodedPayload);
+        parseButton.click();
+      } catch (error) {
+        setMessage(error instanceof Error ? error.message : '入库链接无法读取。', true);
+      }
+      window.requestAnimationFrame(() => panel.scrollIntoView({ block: 'start' }));
+    }
+
     window.addEventListener('pagehide', () => repository.dispose(), { once: true });
   }
 
