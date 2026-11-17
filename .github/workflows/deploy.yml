@@ -42,6 +42,7 @@ jobs:
           PUBLIC_FIREBASE_APP_ID: ${{ vars.PUBLIC_FIREBASE_APP_ID }}
           PUBLIC_FAMILY_HOUSEHOLD_ID: ${{ vars.PUBLIC_FAMILY_HOUSEHOLD_ID }}
           PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY: ${{ vars.PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY }}
+          PUBLIC_NOVEL_SITE_URL: ${{ vars.PUBLIC_NOVEL_SITE_URL }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
