@@ -73,7 +73,7 @@ test('home groups and searches the active modules', async ({ page }) => {
   await page.goto('./');
   await expect(page.locator('[data-module]')).toHaveCount(moduleRegistry.length);
   const sections = page.locator('[data-category-section]');
-  await expect(sections).toHaveCount(3);
+  await expect(sections).toHaveCount(4);
   await expect(sections.nth(0)).toHaveAttribute('data-category-section', 'food-home');
   await expect(sections.nth(0).locator('.category-index')).toHaveText('01');
   await expect(sections.nth(0).locator('[data-module]').first()).toHaveAttribute('href', /\/meal-builder\/$/);
@@ -81,6 +81,9 @@ test('home groups and searches the active modules', async ({ page }) => {
   await expect(sections.nth(1).locator('.category-index')).toHaveText('02');
   await expect(sections.nth(2)).toHaveAttribute('data-category-section', 'health-care');
   await expect(sections.nth(2).locator('.category-index')).toHaveText('03');
+  await expect(sections.nth(3)).toHaveAttribute('data-category-section', 'novel-archive');
+  await expect(sections.nth(3).locator('.category-index')).toHaveText('04');
+  await expect(sections.nth(3).locator('[data-module]')).toHaveAttribute('href', /\/novel-archive\/$/);
   await expect(page.getByRole('heading', { name: '出行与玩乐' })).toBeVisible();
   await expect(page.getByRole('heading', { name: '健康与照护' })).toBeVisible();
   await page.getByLabel('查找一个工具').fill('牙医');
@@ -88,6 +91,19 @@ test('home groups and searches the active modules', async ({ page }) => {
   await expect(page.getByText('找到 1 个工具')).toBeVisible();
   await page.getByLabel('查找一个工具').fill('不存在');
   await expect(page.getByText('没有找到对应工具')).toBeVisible();
+});
+
+test('novel archive is the last section and exposes only private-site links', async ({ page }) => {
+  await page.goto('novel-archive/');
+  await expect(page.getByRole('heading', { name: '小离总周报' })).toBeVisible();
+  const links = page.locator('[data-private-novel-link]');
+  await expect(links).toHaveCount(3);
+  for (const link of await links.all()) {
+    await expect(link).toHaveAttribute('href', /^https:\/\//);
+    await expect(link).toHaveAttribute('target', '_blank');
+    await expect(link).toHaveAttribute('rel', /noopener.*noreferrer/);
+  }
+  await expect(page.getByText('小说正文和故事记忆存放在独立私有仓库', { exact: false })).toBeVisible();
 });
 
 test('day-trip filters combine, persist in the URL, and clear', async ({ page }) => {
