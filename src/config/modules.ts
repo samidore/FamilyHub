@@ -2,10 +2,11 @@ export const categoryDefinitions = [
   { id: 'food-home', title: '饮食与家庭', description: '根据现有食材和家庭目标，减少每天组餐时的重复判断。', accent: 'berry', order: 1 },
   { id: 'explore-play', title: '出行与玩乐', description: '找一个适合今天的去处、活动或轻松安排。', accent: 'evergreen', order: 2 },
   { id: 'health-care', title: '健康与照护', description: '把公开资料、家庭判断和需要确认的事项分开比较。', accent: 'ochre', order: 3 },
+  { id: 'novel-archive', title: '小离总周报', description: '私人小说知识库：从事件、人物和时间线回到原文。', accent: 'lake', order: 4 },
 ] as const;
 
 export type CategoryId = (typeof categoryDefinitions)[number]['id'];
-export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists' | 'adult-dermatologists' | 'colonoscopy-specialists' | 'ob-gyn' | 'breast-surgeons' | 'meal-builder' | 'restaurants' | 'sami-notebook';
+export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists' | 'adult-dermatologists' | 'colonoscopy-specialists' | 'ob-gyn' | 'breast-surgeons' | 'meal-builder' | 'restaurants' | 'sami-notebook' | 'novel-archive';
 export type ModuleAccent = 'evergreen' | 'lake' | 'ochre' | 'berry';
 export type ModuleIcon = 'compass' | 'calendar' | 'care' | 'meal' | 'notebook';
 export type ModulePrivacyClass = 'public-reference' | 'authenticated-household';
@@ -151,6 +152,19 @@ export const moduleRegistry = [
     keywords: ['家庭', '记事', 'todo', '任务', '项目', '电影', '电视', 'notebook', 'board'],
     itemLabel: '个事项',
     accent: 'berry',
+    icon: 'notebook',
+    privacyClass: 'authenticated-household',
+    status: 'active',
+  },
+  {
+    id: 'novel-archive',
+    route: '/novel-archive/',
+    categoryId: 'novel-archive',
+    title: '小说知识库',
+    summary: '独立私人站点；按事件、人物、时间线与段号原文逐层浏览。',
+    keywords: ['小说', '知识库', '创作', '时间线', '事件', '正文', 'novel', 'story memory', 'archivist'],
+    itemLabel: '个档案',
+    accent: 'lake',
     icon: 'notebook',
     privacyClass: 'authenticated-household',
     status: 'active',
