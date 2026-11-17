@@ -119,6 +119,30 @@ test('Chat link opens inventory review without a paste or an automatic write', a
   await expect(page.locator('#meal-inventory-import-review')).toBeHidden();
 });
 
+
+test('Chat import link also opens on fresh navigation', async ({ page }) => {
+  await page.goto('meal-builder/');
+  const stockedOn = await page.evaluate(() => {
+    const now = new Date();
+    return [now.getFullYear(), String(now.getMonth() + 1).padStart(2, '0'), String(now.getDate()).padStart(2, '0')].join('-');
+  });
+  const payload = {
+    schema: 'meal-builder-inventory-import',
+    version: 1,
+    stocked_on: stockedOn,
+    items: [{ ingredient_id: 'broccoli', quantity: 1, storage: 'inventory' }],
+    unmatched: [],
+  };
+  await page.goto('about:blank');
+  await page.goto(`meal-builder/#inventory-import=${encodeURIComponent(JSON.stringify(payload))}`);
+
+  await expect(page.locator('#meal-inventory-import')).toBeVisible();
+  await expect(page.locator('#meal-inventory-import-review')).toBeVisible();
+  await expect(page.locator('[data-import-ingredient="broccoli"]')).toContainText('本次 +1');
+  await expect(page.locator('#meal-inventory-import-dialog')).not.toBeVisible();
+  expect(await page.evaluate(() => location.hash)).toBe('');
+});
+
 test('Invalid Chat link does not open an importable review', async ({ page }) => {
   await page.goto('meal-builder/#inventory-import=%7Binvalid');
   await expect(page.locator('#meal-inventory-import')).toBeVisible();
