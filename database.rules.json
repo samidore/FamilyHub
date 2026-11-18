@@ -97,6 +97,10 @@
           },
           "activeStep": { ".validate": "newData.isString() && (newData.val() == 'inventory' || newData.val() == 'recipes' || newData.val() == 'cook' || newData.val() == 'checkout')" }
         },
+        "novelArchive": {
+          ".read": "auth != null && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email",
+          ".write": false
+        },
         "notebook": {
           ".read": "auth != null && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email",
           ".write": "auth != null && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email",
