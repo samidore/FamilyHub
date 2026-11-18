@@ -93,17 +93,13 @@ test('home groups and searches the active modules', async ({ page }) => {
   await expect(page.getByText('没有找到对应工具')).toBeVisible();
 });
 
-test('novel archive is the last section and exposes only private-site links', async ({ page }) => {
+test('novel archive stays private until the existing household login is verified', async ({ page }) => {
   await page.goto('novel-archive/');
   await expect(page.getByRole('heading', { name: '小离总周报' })).toBeVisible();
-  const links = page.locator('[data-private-novel-link]');
-  await expect(links).toHaveCount(3);
-  for (const link of await links.all()) {
-    await expect(link).toHaveAttribute('href', /^https:\/\//);
-    await expect(link).toHaveAttribute('target', '_blank');
-    await expect(link).toHaveAttribute('rel', /noopener.*noreferrer/);
-  }
-  await expect(page.getByText('小说正文和故事记忆存放在独立私有仓库', { exact: false })).toBeVisible();
+  await expect(page.locator('#novel-app')).toBeHidden();
+  await expect(page.locator('#novel-content')).toBeEmpty();
+  await expect(page.locator('[data-private-novel-link]')).toHaveCount(0);
+  await expect(page.getByText('与 Sami 小本本使用同一组家庭成员权限', { exact: false })).toBeVisible();
 });
 
 test('day-trip filters combine, persist in the URL, and clear', async ({ page }) => {
