@@ -13,6 +13,8 @@ test('Realtime Database rules require Google identity, matching email, and scope
   assert.match(household.accessRequests.$uid['.write'], /enrollmentOpen.*!= true/);
   assert.match(household.state['.read'], /child\('email'\).*auth\.token\.email/);
   assert.match(household.state['.write'], /google\.com/);
+  assert.equal(household.novelArchive['.write'], false);
+  assert.equal(household.novelArchive['.read'], household.notebook['.read']);
   assert.match(household.state.inventory.$ingredientId['.validate'], /0\.5/);
   assert.match(household.state.currentMeal['.validate'], /mealId/);
   assert.match(household.state.currentMeal.note['.validate'], /length <= 1000/);
