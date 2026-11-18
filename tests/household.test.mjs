@@ -326,3 +326,9 @@ test('legacy flat checkout remains stale-safe and consumes counted values once',
   assert.equal(second.committed, false);
   assert.equal(second.reason, 'stale-meal');
 });
+
+
+test('ChatGPT Issue import acknowledgements normalize only positive numeric keys with true values', () => {
+  const normalized = normalizeHouseholdState({ chatImportedIssueIds: { '123': true, '124': false, '-1': true, foo: true, '0': true } });
+  assert.deepEqual(normalized.chatImportedIssueIds, { '123': true });
+});

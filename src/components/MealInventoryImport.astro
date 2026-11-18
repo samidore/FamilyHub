@@ -226,10 +226,68 @@
       else if (messageIsError && message.startsWith('入库日期')) setMessage('', false);
     };
 
-    repository.subscribe((next) => {
+    // ChatGPT posts a user-approved import command as a GitHub Issue. The public
+    // issue has no Firebase credentials or live household state; Firebase remains
+    // writable only through the current signed-in household session.
+    const syncStatus = document.createElement('p');
+    syncStatus.className = 'shell note-box';
+    syncStatus.id = 'meal-chat-import-sync-status';
+    syncStatus.setAttribute('role', 'status');
+    syncStatus.hidden = true;
+    inventoryView.before(syncStatus);
+
+    let syncBusy = false;
+    let syncLastAttempt = 0;
+    const reportSync = (message: string, error = false) => {
+      syncStatus.hidden = !message;
+      syncStatus.textContent = message;
+      syncStatus.dataset.error = error ? 'true' : 'false';
+    };
+    const syncChatImports = async () => {
+      if (repository.kind !== 'firebase' || repository.getStatus().connection !== 'connected' || syncBusy || document.hidden) return;
+      if (Date.now() - syncLastAttempt < 60_000) return;
+      syncBusy = true;
+      syncLastAttempt = Date.now();
+      try {
+        const { CHAT_IMPORT_ISSUES_URL, scanChatInventoryIssues } = await import('../lib/chatInventoryIssues');
+        const response = await fetch(CHAT_IMPORT_ISSUES_URL, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`GitHub 返回 ${response.status}`);
+        const scanned = scanChatInventoryIssues(await response.json(), ingredients, repository.getSnapshot().chatImportedIssueIds ?? {});
+        let imported = 0;
+        for (const issue of scanned.ready) {
+          const issueId = String(issue.issueNumber);
+          const thawStartedAt = Date.now();
+          // Mark processed inside the same Firebase transaction as the inventory
+          // additions, so reconnects and other household devices cannot duplicate it.
+          const next = await repository.transaction((current) => {
+            if (current.chatImportedIssueIds?.[issueId]) return current;
+            return {
+              ...applyInventoryImport(current, issue.draft, ingredients, undefined, thawStartedAt),
+              chatImportedIssueIds: { ...current.chatImportedIssueIds, [issueId]: true },
+            };
+          });
+          if (next.chatImportedIssueIds?.[issueId]) imported += 1;
+        }
+        if (scanned.errors.length) {
+          reportSync(`ChatGPT 入库待处理：${scanned.errors.join('；')}`, true);
+        } else if (imported) {
+          reportSync(`已自动同步 ${imported} 条 ChatGPT 入库记录到共享库存。`);
+          announce('ChatGPT 买菜记录已自动入库。');
+        }
+      } catch (error) {
+        reportSync(`ChatGPT 入库同步失败：${error instanceof Error ? error.message : '请稍后重新打开 FamilyHub'}`, true);
+      } finally {
+        syncBusy = false;
+      }
+    };
+
+    repository.subscribe((next, connection) => {
       household = next;
       if (draft) renderReview();
+      if (connection.connection === 'connected') void syncChatImports();
     });
+    window.addEventListener('focus', () => void syncChatImports());
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) void syncChatImports(); });
 
     toggle.addEventListener('click', () => {
       panel.hidden = !panel.hidden;

@@ -108,6 +108,10 @@ The rules validate only the storage shape and primitive constraints. Application
 
 The older flat `checkoutDraft/{ingredientId}` shape is retained only for persisted-state compatibility. New composition Checkout uses `checkoutRecipeDrafts`.
 
+### ChatGPT Issue import deduplication
+
+`households/{householdId}/state/chatImportedIssueIds/{issueNumber} = true` records a processed public GitHub Issue number. It is written in the **same** Firebase root transaction as the added stock so the same Issue cannot increase inventory again on reconnect or another device. The value contains no grocery details. The page reads trusted, owner-authored one-off commands from the public `samidore/FamilyHub` GitHub Issues API only when the household's existing Google login is connected. The Firebase rules' existing authenticated `state` write access is reused; **do not** enable anonymous Firebase writes.
+
 ## State and privacy invariants
 
 - Store stable Ingredient/Recipe/group IDs and household operating state only. Do not copy Recipe facts, source URLs, Gmail addresses, UIDs, tokens, private schedules, or family profile data into the public repository or meal state.

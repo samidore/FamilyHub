@@ -55,6 +55,8 @@ export interface HouseholdState {
   pendingCheckoutMeals: PendingCheckoutMeal[];
   activeStep: MealActiveStep;
   recentMeals: CompletedMeal[];
+  /** GitHub Issue numbers already applied to Firebase, stored atomically with each import. */
+  chatImportedIssueIds?: Record<string, true>;
 }
 
 export const COUNTED_INVENTORY_STEP = 0.5;
@@ -265,8 +267,14 @@ export function normalizeHouseholdState(value: unknown, ingredients?: MealIngred
   if (currentMeal && (!isRecord(record.currentMeal) || !('ingredientFreshnessDates' in record.currentMeal))) currentMeal = { ...currentMeal, ingredientFreshnessDates: freshnessDatesForInventory(inventoryBatches, currentMeal.availableIngredientIds, ingredients) };
   const pendingCheckoutMeals = Array.isArray(record.pendingCheckoutMeals) ? record.pendingCheckoutMeals.map((entry) => normalizePendingCheckoutMeal(entry, ingredients)).filter((entry): entry is PendingCheckoutMeal => Boolean(entry)).filter((entry, index, all) => all.findIndex((candidate) => candidate.mealId === entry.mealId) === index) : [];
   const recentMeals = Array.isArray(record.recentMeals) ? record.recentMeals.flatMap((entry) => { if (!isRecord(entry) || typeof entry.mealId !== 'string' || !entry.mealId.trim() || typeof entry.completedAt !== 'number' || !Number.isFinite(entry.completedAt)) return []; const recipeIds = uniqueStrings(entry.recipeIds); return recipeIds.length ? [{ mealId: entry.mealId, completedAt: entry.completedAt, recipeIds }] : []; }).slice(0, RECENT_MEAL_LIMIT) : [];
+  const chatImportedIssueIds: Record<string, true> = {};
+  if (isRecord(record.chatImportedIssueIds)) {
+    for (const [id, value] of Object.entries(record.chatImportedIssueIds)) {
+      if (/^[1-9][0-9]{0,9}$/.test(id) && value === true) chatImportedIssueIds[id] = true;
+    }
+  }
   const legacyStep: MealActiveStep = currentMeal?.status === 'cooking' ? 'cook' : currentMeal?.status === 'ready' ? 'recipes' : 'inventory'; const activeStep = typeof record.activeStep === 'string' && validActiveSteps.has(record.activeStep as MealActiveStep) ? record.activeStep as MealActiveStep : legacyStep;
-  return { inventory, inventoryBatches, freezerInventory, thawingItems, discardedStock, currentMeal, pendingCheckoutMeals, activeStep: currentMeal ? activeStep : 'inventory', recentMeals };
+  return { inventory, inventoryBatches, freezerInventory, thawingItems, discardedStock, currentMeal, pendingCheckoutMeals, activeStep: currentMeal ? activeStep : 'inventory', recentMeals, chatImportedIssueIds };
 }
 
 export function toggleInventoryItem(inventory: Inventory, ingredientId: string, tracking: InventoryTracking = trackingForIngredient(ingredientId), on?: boolean): Inventory {

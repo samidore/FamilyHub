@@ -6,6 +6,16 @@ Meal Builder accepts a small JSON payload produced by Chat after recognizing gro
 
 This protocol is the canonical contract between the Chat producer and the Meal Builder consumer.
 
+## ChatGPT direct-to-inventory via GitHub Issue bridge
+
+When the user explicitly requests **direct entry into FamilyHub** instead of JSON/link handoff, ChatGPT may create **one GitHub Issue per confirmed shopping session** in `samidore/FamilyHub`. The title must begin with `[familyhub-inventory-import-v1]` and the issue body is the exact v1 JSON payload (no Markdown fences). Use the connected GitHub account authorized as repo owner; never claim that the Firebase write succeeded merely because GitHub accepted the issue. If no GitHub connection is available, the fallback remains the JSON contract.
+
+The authenticated Meal Builder page reads the repository's public Issues API on connection and when revisited. It accepts only Issues authored by `samidore` with `author_association: OWNER`, the exact title prefix, valid active ingredient IDs, and **no unmatched items**. Every accepted command is added using `applyInventoryImport` and atomically marked under `state/chatImportedIssueIds/{issueNumber} = true` in the same Firebase transaction. This is a minimal idempotency ledger, not a second inventory store. Reopening another device does not add the same Issue again. Invalid commands are not partly imported, and failures remain visible in the UI.
+
+The user has explicitly opted to expose these one-off *shopping commands* through public GitHub Issues. Their contents can be viewed by others, so never place addresses, personal or medical information, tokens, UIDs, Gmail addresses, live inventory snapshots, or Chat transcripts in the issue body. Only one-off canonical Ingredient IDs, quantities, destinations, and intake date are allowed. The live household inventory, FIFO batches, and meal state remain authenticated in Firebase.
+
+This transport does not provide immediate writes when no authenticated FamilyHub page is open: the next visit/focus performs the sync. It requires no Business plugin, new token, public Firebase write permissions, or user interaction with a long URL.
+
 ## Optional one-tap review link
 
 When the user specifically asks for a clickable import link instead of copy/paste, Chat may encode the **same v1 JSON object** in the URL fragment of the existing Meal Builder page:

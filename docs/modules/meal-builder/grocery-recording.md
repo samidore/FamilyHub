@@ -83,6 +83,10 @@ Priority for reconciliation is:
 3. reliable receipt evidence used for checking or filling omissions;
 4. no guessing.
 
+## Direct-entry alternative
+
+When the user explicitly requests **direct FamilyHub entry** (for example, `直接入库`), use the GitHub Issue bridge defined in `inventory-import.md` instead of making them open an import link. A successful GitHub Issue creation means **queued for sync**, not that Firebase has already updated. The authenticated site commits it automatically when opened, with atomic idempotency. If the user asks for `出 JSON`, continue to use the JSON-only contract.
+
 ## Finish
 
 When the user says `结束记录`, `出 JSON`, or clearly asks to finish the recording session:
