@@ -112,3 +112,22 @@ test('discarded stock transaction accepts inventory removal and its undo record'
     },
   }));
 });
+
+test('private novel KB requires current household membership and blocks all client writes', async () => {
+  await env.withSecurityRulesDisabled(async (context) => {
+    await context.database().ref().set(null);
+    await context.database().ref(`${household}/members/alice`).set({ email: 'alice@gmail.com' });
+    await context.database().ref(`${household}/novelArchive/catalog/maritime-story`).set({ title: 'Maritime Story', pageCount: 1 });
+    await context.database().ref(`${household}/novelArchive/books/maritime-story/pages/ZW50cnk`).set('<h1>Private</h1>');
+  });
+  const path = `${household}/novelArchive`;
+  const alice = google('alice', 'alice@gmail.com');
+  await assertSucceeds(alice.ref(`${path}/catalog`).get());
+  await assertSucceeds(alice.ref(`${path}/books/maritime-story/pages/ZW50cnk`).get());
+  await assertFails(alice.ref(`${path}/books/maritime-story/pages/ZW50cnk`).set('changed'));
+  await assertFails(alice.ref(`${path}/catalog/new-book`).set({ title: 'Injected' }));
+  await assertFails(google('bob', 'bob@gmail.com').ref(path).get());
+  await assertFails(password('alice', 'alice@gmail.com').ref(path).get());
+  await assertFails(google('alice', 'wrong@gmail.com').ref(path).get());
+  await assertFails(env.unauthenticatedContext().database().ref(path).get());
+});
