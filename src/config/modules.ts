@@ -161,7 +161,7 @@ export const moduleRegistry = [
     route: '/novel-archive/',
     categoryId: 'novel-archive',
     title: '小说知识库',
-    summary: '独立私人站点；按事件、人物、时间线与段号原文逐层浏览。',
+    summary: '使用现有家庭登录，在 FamilyHub 内阅读人物、事件、时间线与段号原文。',
     keywords: ['小说', '知识库', '创作', '时间线', '事件', '正文', 'novel', 'story memory', 'archivist'],
     itemLabel: '个档案',
     accent: 'lake',
