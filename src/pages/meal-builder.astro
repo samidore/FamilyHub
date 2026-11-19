@@ -453,7 +453,7 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
         button.disabled = !writesEnabled || !hasMeal || ids.length === 0 || (button.dataset.ingredientBulk === 'select' ? selectedCount === ids.length : selectedCount === 0);
       });
       document.querySelector<HTMLElement>('#meal-ingredient-count')!.textContent = `已选 ${available.size}`;
-      const selected = selectedRecipes(); const totals = aggregateSelection(recipes, state, ingredients);
+      const selected = selectedRecipes(); const totals = aggregateSelection(recipes, state, ingredients, optionalGroups);
       document.querySelector('#progress-protein')!.textContent = `${totals.protein} / ${state.proteinTarget}`; document.querySelector('#progress-vegetable')!.textContent = `${totals.vegetable} / ${state.vegetableTarget}`;
       document.querySelector('#progress-staple')!.textContent = state.stapleRequired ? (totals.staple >= 1 ? '✓' : '●') : '不需要'; document.querySelector('#progress-child-protein')!.textContent = totals.childProtein ? '✓' : '●'; document.querySelector('#progress-child-vegetable')!.textContent = totals.childVegetable ? '✓' : '●';
       document.querySelectorAll<HTMLElement>('[data-child-progress]').forEach((item) => item.hidden = !state.childMode);

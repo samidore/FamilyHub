@@ -35,6 +35,15 @@ test('queued meal can be checked out from the warning without finishing the next
   await setInventory(page, ['green-cabbage', 'ground-pork', 'ground-beef']);
   await page.locator('#meal-start-current').click();
   await selectCabbageMeal(page);
+  // Check the target-change render before a later animation frame can replace it.
+  const completion = await page.locator('#meal-protein').evaluate((control) => {
+    control.dispatchEvent(new Event('change', { bubbles: true }));
+    return {
+      protein: document.querySelector('#progress-protein')?.textContent,
+      nextDisabled: document.querySelector<HTMLButtonElement>('#meal-next')?.disabled,
+    };
+  });
+  expect(completion).toEqual({ protein: '1 / 1', nextDisabled: false });
   await expect(page.locator('#meal-selected-panel [data-edit-recipe-plan]')).toHaveCount(1);
   await expect(page.locator('#meal-selected-panel + .meal-notes-editor #meal-note')).toBeVisible();
   await page.locator('#meal-note').fill('整顿少盐\n炒菜最后做');
