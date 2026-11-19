@@ -1,6 +1,6 @@
 # Sami的小本本 — module design
 
-Status: Phase 4 is implemented; Phase 5 release verification is pending.
+Status: implemented module; release validation uses `pnpm run verify`.
 
 ## Goal
 
@@ -587,7 +587,7 @@ Firebase rules should authorize the notebook path only to existing verified hous
 
 ## Current implementation status
 
-Phase 4 is implemented, including Inbox edit/delete/copy-all, schema-validated atomic Developer patches, and portable database export. Phase 5 release verification remains pending.
+The implemented runtime includes Inbox edit/delete/copy-all, schema-validated atomic Developer patches, and portable database export.
 
 The repository release gate is:
 
