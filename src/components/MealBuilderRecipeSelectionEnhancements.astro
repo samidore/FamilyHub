@@ -1,30 +1,3 @@
----
-import { mealData } from '../data/meal';
-
-const recipeSelectionData = JSON.stringify({
-  ingredients: mealData.ingredients,
-  optionalGroups: mealData.optionalGroups,
-  recipes: mealData.recipes.map((recipe) => ({
-    id: recipe.id,
-    nameZh: recipe.nameZh,
-    contribution: recipe.contribution,
-    childCoverage: recipe.childCoverage,
-    requirements: recipe.requirements,
-    optionalGroupIds: recipe.optionalGroupIds,
-    finishOptions: recipe.finishOptions,
-    servingOptions: recipe.servingOptions,
-    checkoutUnits: recipe.checkoutUnits,
-    ingredientChildCoverage: recipe.ingredientChildCoverage,
-    mealWindowMinutes: recipe.mealWindowMinutes,
-    elapsedMinutes: recipe.elapsedMinutes,
-    advanceStartRequired: recipe.advanceStartRequired,
-    fitScore: recipe.fitScore,
-    order: recipe.order,
-    tags: recipe.tags,
-  })),
-});
----
-<script id="meal-recipe-selection-data" type="application/json" is:inline set:html={recipeSelectionData}></script>
 <script>
   import {
     bindRecipeIngredients,
@@ -69,7 +42,7 @@ const recipeSelectionData = JSON.stringify({
     servingIngredientId?: ServingIngredientId;
   };
 
-  const source = document.querySelector<HTMLScriptElement>('#meal-recipe-selection-data');
+  const source = document.querySelector<HTMLScriptElement>('#meal-data');
   const firebaseSource = document.querySelector<HTMLScriptElement>('#meal-firebase-config');
   if (!source || !firebaseSource) throw new Error('Meal recipe-selection bootstrap data is missing.');
 
@@ -743,7 +716,6 @@ const recipeSelectionData = JSON.stringify({
 <style is:global>
   .meal-recipe-card > .meal-recipe-bindings { display: none !important; }
   .meal-selected [data-selected-bindings] { display: none !important; }
-  .meal-selected [data-composition-editor] { display: none !important; }
 
   .meal-recipe-composition-summary {
     display: grid;

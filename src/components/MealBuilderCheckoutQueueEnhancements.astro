@@ -1,30 +1,3 @@
----
-import { mealData } from '../data/meal';
-
-const queueData = JSON.stringify({
-  ingredients: mealData.ingredients,
-  optionalGroups: mealData.optionalGroups,
-  recipes: mealData.recipes.map((recipe) => ({
-    id: recipe.id,
-    nameZh: recipe.nameZh,
-    requirements: recipe.requirements,
-    optionalGroupIds: recipe.optionalGroupIds,
-    finishOptions: recipe.finishOptions,
-    servingOptions: recipe.servingOptions,
-    checkoutUnits: recipe.checkoutUnits,
-    contribution: recipe.contribution,
-    childCoverage: recipe.childCoverage,
-    ingredientChildCoverage: recipe.ingredientChildCoverage,
-    mealWindowMinutes: recipe.mealWindowMinutes,
-    elapsedMinutes: recipe.elapsedMinutes,
-    advanceStartRequired: recipe.advanceStartRequired,
-    fitScore: recipe.fitScore,
-    order: recipe.order,
-    tags: recipe.tags,
-  })),
-});
----
-<script id="meal-checkout-queue-data" type="application/json" is:inline set:html={queueData}></script>
 <script>
   import {
     finishForRecipe,
@@ -74,7 +47,7 @@ const queueData = JSON.stringify({
     confirmDisabled: boolean;
     finalizeLabel: string;
   };
-  const source = document.querySelector<HTMLScriptElement>('#meal-checkout-queue-data');
+  const source = document.querySelector<HTMLScriptElement>('#meal-data');
   const firebaseSource = document.querySelector<HTMLScriptElement>('#meal-firebase-config');
   if (!source || !firebaseSource) throw new Error('Meal checkout queue bootstrap data is missing.');
   const payload = JSON.parse(source.textContent || '{}') as Payload;

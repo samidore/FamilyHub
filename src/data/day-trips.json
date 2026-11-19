@@ -22,8 +22,7 @@
         ],
         "notFor": [],
         "stroller": true,
-        "hours": "unknown",
-        "bicycleAccess": "unknown"
+        "hours": "unknown"
       },
       {
         "name": "Sanctuary Grounds",
@@ -36,8 +35,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=J.A.+McFaul+Environmental+Center+150+Crescent+Ave+Wyckoff+NJ",
@@ -107,8 +105,7 @@
               "16:00"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       },
       {
         "name": "Reservation Trails",
@@ -121,8 +118,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Trailside+Nature+%26+Science+Center+Mountainside+NJ",
@@ -198,8 +194,7 @@
               "17:00"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       },
       {
         "name": "Nature Center Preserve Trails",
@@ -213,8 +208,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Flat+Rock+Brook+Nature+Center+443+Van+Nostrand+Ave+Englewood+NJ",
@@ -252,8 +246,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       },
       {
         "name": "Orange Loop",
@@ -266,8 +259,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Flat+Rock+Brook+-+Oritani+playground+Englewood+NJ&query_place_id=ChIJUwFrJwDxwokRz50o1ocd_VU",
@@ -299,8 +291,7 @@
         ],
         "notFor": [],
         "stroller": true,
-        "hours": "unknown",
-        "bicycleAccess": "unknown"
+        "hours": "unknown"
       },
       {
         "name": "Wetland Trails",
@@ -313,8 +304,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Essex+County+Environmental+Center+Roseland+NJ&query_place_id=ChIJzY108Oqpw4kRbP5EtGMDaQc",
@@ -384,8 +374,7 @@
               "16:00"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       },
       {
         "name": "Grounds",
@@ -400,8 +389,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Nature+Center+at+Greenburgh+Scarsdale+NY",
@@ -438,8 +426,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatown+Lake+Reservation+1600+Spring+Valley+Road+Ossining+NY",
@@ -475,8 +462,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=85+Teatown+Road+Croton-on-Hudson+NY",
@@ -511,8 +497,7 @@
           "rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       },
       {
         "name": "Playground",
@@ -526,8 +511,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Saddle+River+County+Park+Dunkerhook+Area+Paramus+NJ&query_place_id=ChIJs5M4kxX7wokRe7f0GUf87co",
@@ -558,8 +542,7 @@
           "heat"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       },
       {
         "name": "Playground",
@@ -573,8 +556,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Saddle+River+County+Park+Glen+Rock+Area+Prospect+Ave+Glen+Rock+NJ&query_place_id=ChIJJ3S_-E_7wokRUTYWDmTJmRc",
@@ -659,8 +641,7 @@
               "16:30"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       },
       {
         "name": "Education & Discovery Center",
@@ -714,8 +695,7 @@
               "16:00"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       },
       {
         "name": "Harmony Playground",
@@ -729,8 +709,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       },
       {
         "name": "Splash Pad",
@@ -785,8 +764,7 @@
               "18:30"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Van+Saun+County+Park+216+Forest+Ave+Paramus+NJ",
@@ -818,8 +796,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Thielke+Arboretum+Glen+Rock+NJ",
@@ -854,8 +831,7 @@
           "heat"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=New+Jersey+Botanical+Garden+at+Skylands+Ringwood+NJ",
@@ -885,8 +861,7 @@
           "rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Frelinghuysen+Arboretum+Morristown+NJ",
@@ -958,8 +933,7 @@
               "17:30"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Wave+Hill+4900+Independence+Ave+Bronx+NY",
@@ -993,8 +967,7 @@
           "rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Rockefeller+State+Park+Preserve+125+Phelps+Way+Pleasantville+NY",
@@ -1027,8 +1000,7 @@
           "rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Rockwood+Hall+Kendal+Way+Sleepy+Hollow+NY",
@@ -1063,8 +1035,7 @@
           "heat"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Bear+Mountain+State+Park+%E2%80%94+Hessian+Lake+Bear+Mountain+NY",
@@ -1128,8 +1099,7 @@
             ]
           ],
           "sunday": []
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Duke+Farms+Hillsborough+NJ",
@@ -1206,8 +1176,7 @@
               "17:00"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Liberty+Science+Center+222+Jersey+City+Boulevard+Jersey+City+NJ",
@@ -1273,8 +1242,7 @@
               "17:00"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=New+York+Hall+of+Science+%28NYSCI%29+Queens+NY",
@@ -1338,8 +1306,7 @@
               "17:00"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Morris+Museum+%E2%80%94+Spark%21Lab+Junior+Morristown+NJ",
@@ -1413,8 +1380,7 @@
               "17:30"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=American+Museum+of+Natural+History+New+York+NY",
@@ -1485,8 +1451,7 @@
               "18:00"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Intrepid+Museum+New+York+NY",
@@ -1555,8 +1520,7 @@
               "16:45"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=New+Jersey+State+Museum+%E2%80%94+Natural+History+%2F+Planetarium+Trenton+NJ",
@@ -1592,8 +1556,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       },
       {
         "name": "Pool & Spray Park",
@@ -1648,8 +1611,7 @@
               "19:00"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Memorial+Park+Fair+Lawn+NJ",
@@ -1682,8 +1644,7 @@
           "rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Berdan+Grove+Park+Playground+Fair+Lawn+NJ",
@@ -1718,8 +1679,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Gregory+Park+Playground+Fair+Lawn+NJ&query_place_id=ChIJXyoIFwD7wokR881DN4u1SJY",
@@ -1754,8 +1714,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Cresthill+Park+Playground+Fair+Lawn+NJ&query_place_id=ChIJ____GGf7wokRcMlOBdjb33Q",
@@ -1789,8 +1748,7 @@
           "rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       },
       {
         "name": "Playground",
@@ -1803,8 +1761,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Saddle+River+County+Park+Wild+Duck+Pond+1133+East+Ridgewood+Ave+Ridgewood+NJ&query_place_id=ChIJJ4OgzM7kwokR192j6FSPr7s",
@@ -1838,8 +1795,7 @@
           "rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       },
       {
         "name": "Playground",
@@ -1853,8 +1809,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Saddle+River+County+Park+Otto+C.+Pehle+Area+Saddle+Brook+NJ&query_place_id=ChIJ38YdGgv7wokRoNoZsQZ7hSI",
@@ -1887,8 +1842,7 @@
           "rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       },
       {
         "name": "ADA Playground",
@@ -1902,8 +1856,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Saddle+River+County+Park+40+Railroad+Avenue+Rochelle+Park+NJ&query_place_id=ChIJLVOiT8z7wokR4eiV_uwF8CM",
@@ -1937,8 +1890,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       },
       {
         "name": "Playground",
@@ -1952,8 +1904,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Irene+Habernickel+Family+Park+Ridgewood+NJ",
@@ -1988,8 +1939,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Ridgewood+YMCA+Community+Playground+Ridgewood+NJ",
@@ -2062,8 +2012,7 @@
               "16:30"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       },
       {
         "name": "Forest Preserve",
@@ -2076,8 +2025,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Tenafly+Nature+Center+Tenafly+NJ",
@@ -2149,8 +2097,7 @@
               "16:00"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       },
       {
         "name": "Sanctuary Trails",
@@ -2163,8 +2110,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Lorrimer+Sanctuary+Franklin+Lakes+NJ",
@@ -2199,8 +2145,7 @@
           "heat"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       },
       {
         "name": "Splash Pad",
@@ -2255,8 +2200,7 @@
               "20:00"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Milton+A.+Votee+Park+Teaneck+NJ",
@@ -2288,8 +2232,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       },
       {
         "name": "Spray Park",
@@ -2344,8 +2287,7 @@
               "20:00"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "notice": "Spray Park 标准时段为每日 8:00–20:00，但官方说明会因 staffing 和天气调整，出发前可电话确认。",
@@ -2381,8 +2323,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       },
       {
         "name": "Splash Pad",
@@ -2394,8 +2335,7 @@
           "rain"
         ],
         "stroller": true,
-        "hours": "unknown",
-        "bicycleAccess": "unknown"
+        "hours": "unknown"
       }
     ],
     "notice": "Splash Pad 为季节性设施；如果专门为玩水出发，先确认当天是否运行。停车以周边车库/合法街位为主。",
@@ -2429,8 +2369,7 @@
           "rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Brookside+Park+River+Edge+NJ",
@@ -2465,8 +2404,7 @@
           "heat"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Overpeck+County+Park+%E2%80%94+Henry+Hoebel+Area+North+Leonia+NJ&query_place_id=ChIJT9Vmt1H3wokRdQBr-H5DyAU",
@@ -2501,8 +2439,7 @@
           "heat"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       },
       {
         "name": "Playground",
@@ -2516,8 +2453,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Overpeck+County+Park+199+Challenger+Road+Ridgefield+Park+NJ",
@@ -2553,8 +2489,7 @@
           "post-rain"
         ],
         "stroller": true,
-        "hours": "unknown",
-        "bicycleAccess": "unknown"
+        "hours": "unknown"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Abma%27s+Farm+700+Lawlins+Road+Wyckoff+NJ",
@@ -2589,8 +2524,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "unknown",
-        "bicycleAccess": "unknown"
+        "hours": "unknown"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Demarest+Farms+244+Wierimus+Road+Hillsdale+NJ",
@@ -2626,8 +2560,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "unknown",
-        "bicycleAccess": "unknown"
+        "hours": "unknown"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Dr.+Davies+Farm+306+Route+304+Congers+NY",
@@ -2663,8 +2596,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "unknown",
-        "bicycleAccess": "unknown"
+        "hours": "unknown"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=The+Orchards+of+Concklin+1010+Route+45+Pomona+NY",
@@ -2699,8 +2631,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "unknown",
-        "bicycleAccess": "unknown"
+        "hours": "unknown"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Ochs+Orchard+4+Ochs+Lane+Warwick+NY",
@@ -2735,8 +2666,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "unknown",
-        "bicycleAccess": "unknown"
+        "hours": "unknown"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Masker+Orchards+45+Ball+Road+Warwick+NY",
@@ -2771,8 +2701,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "unknown",
-        "bicycleAccess": "unknown"
+        "hours": "unknown"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Alstede+Farms+1+Alstede+Farms+Lane+Chester+NJ",
@@ -2808,8 +2737,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "unknown",
-        "bicycleAccess": "unknown"
+        "hours": "unknown"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Stony+Hill+U-Pick+15+North+Road+Chester+NJ",
@@ -2888,8 +2816,7 @@
               "18:30"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=SEA+LIFE+New+Jersey+Aquarium+1+American+Dream+Way+East+Rutherford+NJ",
@@ -2968,8 +2895,7 @@
               "16:00"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Essex+County+Turtle+Back+Zoo+560+Northfield+Ave+West+Orange+NJ",
@@ -3047,8 +2973,7 @@
               "17:00"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=The+Maritime+Aquarium+at+Norwalk+10+North+Water+Street+Norwalk+CT",
@@ -3127,8 +3052,7 @@
               "18:00"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=New+York+Aquarium+602+Surf+Ave+Brooklyn+NY",
@@ -3207,8 +3131,7 @@
               "22:00"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Jenkinson%27s+Aquarium+300+Ocean+Ave+Point+Pleasant+Beach+NJ",
@@ -3285,8 +3208,7 @@
               "17:00"
             ]
           ]
-        },
-        "bicycleAccess": "unknown"
+        }
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Adventure+Aquarium+1+Riverside+Drive+Camden+NJ",
@@ -3321,8 +3243,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Bergen+County+Campgaw+Mountain+Reservation+200+Campgaw+Rd+Mahwah+NJ",
@@ -3332,7 +3253,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/hemlock-trail-orange"
   },
   {
     "id": "ramapo-valley-scarlet-oak-pond",
@@ -3357,8 +3279,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Ramapo+Valley+County+Reservation+608+Ramapo+Valley+Rd+Mahwah+NJ",
@@ -3368,7 +3289,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/scarlet-oak-pond-orange-and-yellow-loop"
   },
   {
     "id": "mills-reservation-trail",
@@ -3392,8 +3314,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Mills+Reservation+Parking+Lot+Normal+Ave+Cedar+Grove+NJ",
@@ -3403,7 +3324,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/west-glen-and-eastview-trail-loop"
   },
   {
     "id": "rifle-camp-park-red-trail",
@@ -3427,8 +3349,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Carnie+Bragg+Picnic+Area+387+Rifle+Camp+Rd+Woodland+Park+NJ",
@@ -3438,7 +3359,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/rifle-camp-park-red-trail-and-yellow-red-trail"
   },
   {
     "id": "garrett-mountain-barbour-pond",
@@ -3463,8 +3385,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Pat+Di+Ianni+Boat+House+Garret+Mountain+Reservation+Woodland+Park+NJ",
@@ -3474,7 +3395,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/barbour-pond-loop"
   },
   {
     "id": "donch-preserve-haledon-reservoir",
@@ -3499,8 +3421,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=G+Thomas+Donch+Nature+Preserve+1+Russ+Schroeder+Way+Franklin+Lakes+NJ",
@@ -3510,7 +3431,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/haledon-reservoir-white-trail-loop"
   },
   {
     "id": "ringwood-shepherd-lake",
@@ -3534,8 +3456,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Shepherd+Lake+Main+Parking+Lot+Morris+Rd+Ringwood+NJ",
@@ -3545,7 +3466,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/shepherd-lake-loop"
   },
   {
     "id": "tallman-mountain-outer-loop",
@@ -3569,8 +3491,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Tallman+Mountain+State+Park+Route+9W+Sparkill+NY",
@@ -3580,7 +3501,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-york/tallman-mountain-outer-loop"
   },
   {
     "id": "blauvelt-state-park-camp-bluefields",
@@ -3605,8 +3527,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Tackamack+North+Park+68+Clausland+Mountain+Rd+Blauvelt+NY",
@@ -3616,7 +3537,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-york/blauvelt-camp-bluefields"
   },
   {
     "id": "clausland-mountain-orange-trail",
@@ -3640,8 +3562,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Clausland+Mountain+County+Park+10+Nike+Lane+Upper+Grandview+NY",
@@ -3651,7 +3572,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-york/orange-trail--3"
   },
   {
     "id": "south-mountain-hemlock-falls",
@@ -3676,8 +3598,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Falls+Parking+Lot+South+Mountain+Reservation+40.752610+-74.294778",
@@ -3687,7 +3608,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/hobble-falls-and-hemlock-falls-via-lenape-trail"
   },
   {
     "id": "south-mountain-rahway-maple-falls",
@@ -3712,8 +3634,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Locust+Grove+Parking+Lot+Glen+Ave+Millburn+NJ",
@@ -3723,7 +3644,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/rahway-and-maple-falls-trail-loop"
   },
   {
     "id": "south-mountain-crest-trail",
@@ -3748,8 +3670,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=South+Mountain+Dog+Park+Bear+Lane+Millburn+NJ",
@@ -3759,7 +3680,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/crest-trail-to-crest-loop"
   },
   {
     "id": "watchung-lake-surprise",
@@ -3784,8 +3706,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Lake+Surprise+Parking+W+R+Tracy+Drive+Mountainside+NJ",
@@ -3795,7 +3716,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/lake-surprise-loop-via-w-r-tracy-drive"
   },
   {
     "id": "mountain-way-white-trail",
@@ -3819,8 +3741,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Mountain+Way+Park+Parking+50+Mountain+Way+Morris+Plains+NJ",
@@ -3830,7 +3751,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/mountain-way-white-trail-loop"
   },
   {
     "id": "jonathans-woods-purple-white",
@@ -3854,8 +3776,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Jonathan%27s+Woods+Parking+Old+Beach+Glen+Road+Denville+NJ",
@@ -3865,7 +3786,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/jonathan-s-woods-purple-and-white-trail-loop"
   },
   {
     "id": "cranberry-lake-preserve-loop",
@@ -3889,8 +3811,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Cranberry+Lake+Preserve+1609+Old+Orchard+St+West+Harrison+NY",
@@ -3900,7 +3821,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-york/cranberry-lake-red-purple-and-yellow-loop"
   },
   {
     "id": "kennedy-dells-park",
@@ -3924,8 +3846,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=355+North+Main+Street+New+City+NY",
@@ -3935,7 +3856,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-york/kennedy-dells-park"
   },
   {
     "id": "saxon-woods-yellow-trail",
@@ -3959,8 +3881,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Saxon+Woods+Park+1800+Mamaroneck+Ave+White+Plains+NY",
@@ -3970,7 +3891,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-york/mamaroneck-reservoir-via-yellow-trail-loop"
   },
   {
     "id": "cascade-lake-red-trail",
@@ -3994,8 +3916,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Cascade+Lake+Park+Cascade+Lake+Road+Warwick+NY",
@@ -4005,7 +3926,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-york/cascade-lake-loop-red-trail"
   },
   {
     "id": "macy-park-irvington-reservoir",
@@ -4029,8 +3951,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=V+E+Macy+Park+550+Saw+Mill+River+Rd+Ardsley+NY",
@@ -4040,7 +3961,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-york/light-hike-to-the-lake"
   },
   {
     "id": "old-croton-aqueduct-dam",
@@ -4064,8 +3986,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Croton+Gorge+Park+35+Yorktown+Rd+Croton-on-Hudson+NY",
@@ -4075,7 +3996,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-york/old-croton-aqueduct-dam"
   },
   {
     "id": "india-brook-buttermilk-falls",
@@ -4100,8 +4022,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=49+Combs+Hollow+Road+Mendham+NJ",
@@ -4111,7 +4032,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/buttermilk-falls-and-frog-pond-loop"
   },
   {
     "id": "tourne-red-decamp-loop",
@@ -4135,8 +4057,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Tourne+County+Park+54+McCaffrey+Lane+Boonton+NJ",
@@ -4146,7 +4067,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/the-tourne-via-red-and-yellow-trail-loop"
   },
   {
     "id": "lord-stirling-red-green-blue",
@@ -4170,8 +4092,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Environmental+Education+Center+190+Lord+Stirling+Road+Basking+Ridge+NJ",
@@ -4181,7 +4102,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/the-great-swamp-red-trail"
   },
   {
     "id": "ringwood-manor-trail",
@@ -4206,8 +4128,7 @@
           "post-rain"
         ],
         "stroller": false,
-        "hours": "always",
-        "bicycleAccess": "unknown"
+        "hours": "always"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Ringwood+Manor+Parking+Lot+A+Ringwood+NJ",
@@ -4217,7 +4138,8 @@
       "checkedDate": "2026-08-30",
       "primarySource": "Google Maps",
       "status": "verified"
-    }
+    },
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/ringwood-manor-trail"
   },
   {
     "id": "great-swamp-wildlife-observation-center",
@@ -4233,26 +4155,26 @@
       "primarySource": "Google Maps",
       "status": "unknown"
     },
-    "note": "约 1.5 英里的步道和木栈道，设有信息亭、野生动物观察盲区和卫生间；公共区域通常日出至日落开放，出发前查看公告。",
-    "notice": "宠物不得进入 refuge trails 或 Wildlife Observation Center 木栈道。",
+    "note": "Wildlife Observation Center 是湿地森林里的木栈道和石粉步道网络；路线平缓，适合短走、看鸟和观察湿地野生动物。",
     "locations": [
       {
         "name": "Wildlife Observation Center Boardwalks & Trails",
         "environment": "outdoor",
         "tags": [
+          "woody-walk",
           "animals"
         ],
         "notFor": [
           "rain",
           "heat"
         ],
-        "stroller": false,
-        "hours": "unknown",
-        "bicycleAccess": "prohibited"
+        "stroller": true,
+        "hours": "unknown"
       }
     ],
     "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Wildlife+Observation+Center%2C+220+Long+Hill+Road%2C+Harding+Township%2C+NJ+07976",
     "officialUrl": "https://www.fws.gov/refuge/great-swamp/visit-us",
-    "verifiedDate": "2026-09-03"
+    "verifiedDate": "2026-09-03",
+    "trailUrl": "https://www.alltrails.com/trail/us/new-jersey/wildlife-observation-center-trails"
   }
 ]

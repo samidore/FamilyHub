@@ -45,6 +45,8 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
   const ingredientIds = new Set();
   const ingredientRaw = ingredientRecords.map((record) => {
     assertKeys(record, INGREDIENT_KEYS);
+    assert(typeof record.name_zh === 'string' && record.name_zh.trim().length > 0, `${record.id} requires name_zh`);
+    assert(typeof record.name_en === 'string' && record.name_en.trim().length > 0, `${record.id} requires name_en`);
     assert(/^[a-z0-9-]+$/.test(record.id), `ingredient ${record.id} has invalid ID`);
     assert(ACTIVE_STATUSES.has(record.status) || record.status === 'archived', `${record.id} has invalid status`);
     assert(!ingredientIds.has(record.id), `duplicate ingredient ID ${record.id}`);
@@ -111,6 +113,9 @@ function parseMealRecords(metadata, sectionRecords, ingredientRecords, recipeRec
   const recipeIds = new Set();
   const recipes = recipeRecords.map((record, order) => {
     assertKeys(record, RECIPE_KEYS);
+    assert(typeof record.name_zh === 'string' && record.name_zh.trim().length > 0, `${record.id} requires name_zh`);
+    assert(typeof record.name_en === 'string' && record.name_en.trim().length > 0, `${record.id} requires name_en`);
+    assert(typeof record.primary_role === 'string' && record.primary_role.trim().length > 0, `${record.id} requires primary_role`);
     assert(/^[a-z0-9-]+$/.test(record.id), `recipe ${record.id} has invalid ID`);
     assert(ACTIVE_STATUSES.has(record.status) || record.status === 'archived', `${record.id} has invalid status`);
     assert(!recipeIds.has(record.id), `duplicate recipe ID ${record.id}`);

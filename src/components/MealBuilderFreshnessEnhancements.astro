@@ -14,7 +14,7 @@
   type Payload = { ingredients: MealIngredient[]; optionalGroups: MealOptionalGroup[]; recipes: MealRecipe[] };
   type FreshnessSignal = { ingredientId: string; label: string; ageDays: number };
 
-  const source = document.querySelector<HTMLScriptElement>('#meal-composition-data');
+  const source = document.querySelector<HTMLScriptElement>('#meal-data');
   const firebaseSource = document.querySelector<HTMLScriptElement>('#meal-firebase-config');
   if (!source || !firebaseSource) throw new Error('Meal freshness bootstrap data is missing.');
 

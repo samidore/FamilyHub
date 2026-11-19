@@ -8,15 +8,14 @@ const destinationRequired = [
   'id', 'name', 'city', 'state', 'driveMinutes', 'driveTimeProvenance', 'note', 'locations',
   'googleMapsUrl', 'officialUrl', 'verifiedDate',
 ];
-const destinationOptional = ['aliases', 'notice'];
-const locationKeys = ['name', 'environment', 'tags', 'notFor', 'stroller', 'hours', 'bicycleAccess'];
+const destinationOptional = ['aliases', 'notice', 'trailUrl'];
+const locationKeys = ['name', 'environment', 'tags', 'notFor', 'stroller', 'hours'];
 const activityTags = ['woody-walk', 'playground', 'indoor-visit', 'animals', 'water-play', 'aquarium', 'pick-your-own'];
 const weatherExclusions = ['rain', 'heat', 'post-rain'];
 const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 const parkingRequired = ['fee', 'schedule', 'sourceUrl', 'verifiedDate'];
 const parkingOptional = ['payment', 'note'];
 const parkingPayments = ['cash-only', 'automated-pay-station'];
-const bicycleAccessValues = ['prohibited', 'allowed', 'unknown'];
 
 const fail = (path, message) => { throw new Error(`${path}: ${message}`); };
 const isObject = (value) => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -162,12 +161,12 @@ export function parseDayTrips(value) {
       location.notFor.forEach((weather, weatherIndex) => enumValue(weather, weatherExclusions, `${locationPath}.notFor[${weatherIndex}]`));
 
       if (typeof location.stroller !== 'boolean') fail(`${locationPath}.stroller`, 'expected a boolean');
-      enumValue(location.bicycleAccess, bicycleAccessValues, `${locationPath}.bicycleAccess`);
       hours(location.hours, `${locationPath}.hours`);
     });
 
     googleMaps(record.googleMapsUrl, `${path}.googleMapsUrl`);
     https(record.officialUrl, `${path}.officialUrl`);
+    if (record.trailUrl !== undefined) https(record.trailUrl, `${path}.trailUrl`);
     verifiedDate(record.verifiedDate, `${path}.verifiedDate`);
   });
 

@@ -28,6 +28,7 @@ export interface DayTrip {
   locations: DayTripLocation[];
   googleMapsUrl: string;
   officialUrl: string;
+  trailUrl?: string;
   verifiedDate: string;
 }
 

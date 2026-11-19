@@ -34,6 +34,26 @@ test('operational Recipe requirements reject obsolete tracking fields', async ()
   }
 });
 
+test('Recipe display names and primary role require nonempty text', async () => {
+  for (const field of ['name_zh', 'name_en', 'primary_role']) {
+    for (const value of [undefined, null, '', '   ']) {
+      const files = await withCookableRecipe((record) => { record[field] = value; });
+      assert.throws(() => parseMealFiles(files), new RegExp(`requires ${field}`));
+    }
+  }
+});
+
+test('Ingredient display names require nonempty text', async () => {
+  const files = await readMealFiles();
+  for (const field of ['name_zh', 'name_en']) {
+    for (const value of [undefined, null, '', '   ']) {
+      const chicken = parse(files['ingredients/chicken.yaml']);
+      chicken.ingredients[0][field] = value;
+      assert.throws(() => parseMealFiles({ ...files, 'ingredients/chicken.yaml': stringify(chicken) }), new RegExp(`requires ${field}`));
+    }
+  }
+});
+
 test('Ingredient inventory tracking is data-driven rather than ID-whitelisted', async () => {
   const files = await readMealFiles();
   const chicken = parse(files['ingredients/chicken.yaml']);

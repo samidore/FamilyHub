@@ -159,10 +159,9 @@ test('one_of prefers older stock only when that does not lose required child cov
 test('Recipes freshness badges show ingredient names and frozen stock ages in red outlined hourglass controls', async () => {
   const page = await readFile('src/pages/meal-builder.astro', 'utf8');
   const enhancement = await readFile('src/components/MealBuilderFreshnessEnhancements.astro', 'utf8');
-  const layout = await readFile('src/layouts/BaseLayout.astro', 'utf8');
   assert.match(page, /data-selected-freshness-badge/);
   assert.match(page, /data-candidate-freshness-badge/);
-  assert.match(layout, /MealBuilderFreshnessEnhancements/);
+  assert.match(page, /MealBuilderFreshnessEnhancements/);
   assert.match(enhancement, /freshnessAgeDays\(meal\.ingredientFreshnessDates\[ingredientId\]/);
   assert.match(enhancement, /text\.textContent = `\$\{signal\.label\} \$\{signal\.ageDays\}天`;/);
   assert.match(enhancement, /for \(const signal of signals\)/);

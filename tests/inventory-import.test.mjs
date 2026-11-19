@@ -147,17 +147,17 @@ test('inventory import writes refrigerated, frozen, thawing, and direct freezer 
 });
 
 test('inventory import protocol documents storage-aware review and Meal Builder mounts review confirmation UI', async () => {
-  const [protocol, layout, component] = await Promise.all([
+  const [protocol, page, component] = await Promise.all([
     readFile('docs/modules/meal-builder/inventory-import.md', 'utf8'),
-    readFile('src/layouts/BaseLayout.astro', 'utf8'),
+    readFile('src/pages/meal-builder.astro', 'utf8'),
     readFile('src/components/MealInventoryImport.astro', 'utf8'),
   ]);
   assert.match(protocol, /whole-pork-tenderloin[^\n]*3 inventory units/);
   assert.match(protocol, /storage/);
   assert.match(protocol, /freezer/);
   assert.match(protocol, /thawing/);
-  assert.match(layout, /MealInventoryImport/);
-  assert.match(layout, /meal-builder-page/);
+  assert.match(page, /MealInventoryImport/);
+  assert.match(page, /meal-builder-page/);
   assert.match(component, /meal-inventory-import-json/);
   assert.match(component, /meal-inventory-import-review/);
   assert.match(component, /dataset\.importStorage/);

@@ -28,6 +28,17 @@ test('completion gaps are reported in stable order', () => {
   assert.deepEqual(unmetCompletionRequirements(state, { protein: 1, vegetable: 2, staple: 1, childProtein: false, childVegetable: false }), []);
 });
 
+test('selected rice and noodles servings close the staple gap in candidate ranking', () => {
+  const selected = { ...recipe('r1', { protein: 1, vegetable: 1, staple: 0 }), servingOptions: ['rice', 'noodles'] };
+  const staple = recipe('r2', { protein: 0, vegetable: 0, staple: 1 });
+  const state = { ...defaultMealState(), childMode: false, vegetableTarget: 1, selectedRecipeIds: [selected.id] };
+  assert.deepEqual(rankCandidates([selected, staple], state).map((item) => item.id), [staple.id]);
+  for (const serving of selected.servingOptions) {
+    state.recipeServingSelections = { [selected.id]: serving };
+    assert.deepEqual(rankCandidates([selected, staple], state), []);
+  }
+});
+
 test('child gap ranks efficient mixed filler before half protein and full fallback', () => {
   const steak = recipe('r1', { protein: 1, vegetable: 0, staple: 0 });
   const mixed = recipe('r2', { protein: .5, vegetable: 1, staple: 0 }, { protein: true, vegetable: true });
