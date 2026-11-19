@@ -20,6 +20,8 @@ const restaurants = parseRestaurants(await readJson('src/data/restaurants.json')
 const obGynPlacements = obGyn.flatMap((provider) => provider.placements);
 const meals = await loadMealData();
 const home = await readFile('dist/index.html', 'utf8');
+const today = await readFile('dist/today/index.html', 'utf8');
+const notebookDeveloper = await readFile('dist/sami-notebook/developer/index.html', 'utf8');
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 
 const records = {
@@ -139,7 +141,9 @@ assert(!meals.ingredients.find((ingredient) => ingredient.id === 'pork-feet')?.t
 assert(!/(memberId|groupNumber|insuranceId|insuranceCard|cardImage|codex-remote-attachments)/i.test(JSON.stringify(colonoscopy)), 'Private insurance fields or attachment paths were found in colonoscopy data');
 assert(!/(memberId|groupNumber|insuranceId|insuranceCard|cardImage|codex-remote-attachments)/i.test(JSON.stringify(obGyn)), 'Private insurance fields or attachment paths were found in OB/GYN data');
 
-const htmlFiles = [home, ...moduleOutputs];
+const htmlFiles = [home, today, notebookDeveloper, ...moduleOutputs];
+assert(today.includes('id="main-content"'), 'today is missing the main-content target');
+assert(notebookDeveloper.includes('id="main-content"'), 'sami-notebook/developer is missing the main-content target');
 assert(htmlFiles.every((html) => !/(memberId|groupNumber|insuranceId|insuranceCard|cardImage|codex-remote-attachments)/i.test(html)), 'Private insurance fields or attachment paths were found in build output');
 assert(htmlFiles.every((html) => !/(2024\s*年\s*8\s*月|\bwife\b|\bhusband\b|妻子|丈夫|\buser\s+(likes?|reports?)\b)/i.test(html)), 'Private household phrasing was found in build output');
 assert(htmlFiles.every((html) => !/<iframe|google-analytics|googletagmanager|fonts\.googleapis/i.test(html)), 'A forbidden embed, analytics script, or remote font was found');

@@ -5,3 +5,4 @@ test-results/
 playwright-report/
 functions/.env*
 .firebase/
+database-debug.log
