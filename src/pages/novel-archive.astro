@@ -1,11 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/SiteHeader.astro';
+import { novelViews } from '../lib/novelArchiveRoute.ts';
+import '../styles/novelTimeline.css';
 const base = import.meta.env.BASE_URL;
 const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
 ---
 <BaseLayout title="小离总周报 · Family Hub" description="仅家庭成员可访问的小说故事记忆、人物、事件、时间线与章节原文。" pageClass="novel-archive-page">
-  <SiteHeader eyebrow="Novel Archivist" title="小离总周报" description="小说故事记忆 · 人物与关系 · 时间线 · 事件与原文" accent="lake" icon="notebook" />
+  <SiteHeader eyebrow="小离总周报" title="小离总周报" titleId="novel-book-title" description="小说故事记忆 · 人物与关系 · 时间线 · 事件与原文" accent="lake" icon="notebook" />
   <main id="main-content" class="shell novel-shell">
     <section id="novel-auth" class="novel-auth">
       <h2>私人小说知识库</h2>
@@ -25,22 +27,29 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
         <p id="novel-scope" class="novel-muted"></p>
       </div>
 
-      <nav class="novel-section-nav" id="novel-nav" aria-label="小说知识库导航"></nav>
-
-      <form id="novel-search-form" class="novel-search-form">
-        <label for="novel-search">搜索小说知识库</label>
-        <div class="novel-search-row">
-          <input id="novel-search" type="search" placeholder="人物、事件、伏笔、原文…" autocomplete="off" />
-          <button type="submit">搜索</button>
-        </div>
-      </form>
-      <div id="novel-results" class="novel-search-results" aria-live="polite"></div>
-
+      <nav class="novel-views" id="novel-views" aria-label="视图">
+        {novelViews.map((view) => <a href="#" data-novel-view={view.id}>{view.label}</a>)}
+      </nav>
       <p id="novel-live" class="novel-muted" role="status" aria-live="polite"></p>
-      <div class="novel-reader">
-        <h2 id="novel-page-title"></h2>
-        <article id="novel-content" class="novel-content"></article>
+
+      <div id="novel-reader-view">
+        <nav class="novel-section-nav" id="novel-nav" aria-label="小说知识库导航"></nav>
+
+        <form id="novel-search-form" class="novel-search-form">
+          <label for="novel-search">搜索小说知识库</label>
+          <div class="novel-search-row">
+            <input id="novel-search" type="search" placeholder="人物、事件、伏笔、原文…" autocomplete="off" />
+            <button type="submit">搜索</button>
+          </div>
+        </form>
+        <div id="novel-results" class="novel-search-results" aria-live="polite"></div>
+
+        <div class="novel-reader">
+          <h2 id="novel-page-title"></h2>
+          <article id="novel-content" class="novel-content"></article>
+        </div>
       </div>
+      <div id="novel-timeline-view" hidden></div>
     </section>
     <p class="novel-home"><a href={withBase('/')}>← 返回 Family Hub</a></p>
   </main>
@@ -71,6 +80,11 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
     .novel-toolbar select, .novel-search-row input { width: 100%; min-height: 50px; border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; background: #fff; color: var(--ink); }
     .novel-toolbar select { font-size: 19px; }
     .novel-toolbar p { margin: 8px 0 0; }
+    .novel-views { display: flex; gap: 6px; margin-top: 18px; padding: 5px; width: fit-content; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); scroll-margin-top: 8px; }
+    .novel-views a { display: inline-flex; align-items: center; min-height: 48px; padding: 7px 20px; border-radius: 9px; color: #23495c; text-decoration: none; font-size: 17px; font-weight: 700; }
+    .novel-views a[aria-current='page'] { background: var(--lake); color: white; }
+    #novel-live:empty { display: none; }
+    #novel-timeline-view { margin-top: 14px; }
     .novel-section-nav { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 18px; }
     .novel-section-nav :global(a) { display: inline-flex; align-items: center; min-height: 48px; padding: 7px 14px; background: var(--lake-soft); color: #23495c; border-radius: 10px; text-decoration: none; font-size: 16px; font-weight: 700; }
     .novel-search-form { max-width: 820px; margin-top: 23px; }

@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ModuleCard from '../components/ModuleCard.astro';
-import { categoryDefinitions, moduleRegistry, type ModuleId } from '../config/modules';
+import { categoryDefinitions, moduleRegistry, novelBooks, type ModuleId } from '../config/modules';
 import { adultDermatologists, colonoscopySpecialists, dayTrips, libraryEvents, obGynProviders, pediatricDentists, restaurants, latestVerifiedDate, moduleRecords } from '../data/catalog';
 import { mealData } from '../data/meal';
 
@@ -21,6 +21,11 @@ const publicCounts: Partial<Record<ModuleId, number>> = Object.fromEntries(
   Object.entries(moduleRecords).map(([id, records]) => [id, records?.length ?? 0]),
 ) as Partial<Record<ModuleId, number>>;
 const visibleCategories = categoryDefinitions.filter((category) => moduleRegistry.some((module) => module.categoryId === category.id));
+// The Novel Archive shows one card per book; every other module has one card.
+const cards = (module: (typeof moduleRegistry)[number]) => module.id === 'novel-archive'
+  ? novelBooks.map((book) => ({ title: book.title, href: withBase(`${module.route}?book=${book.slug}`) }))
+  : [{ title: module.title, href: withBase(module.route) }];
+const cardCount = moduleRegistry.reduce((total, module) => total + cards(module).length, 0);
 ---
 <BaseLayout title="Family Hub" description="适合手机使用的家庭出行、活动、照护与共享工具入口。" pageClass="home-page">
   <main id="main-content">
@@ -36,7 +41,7 @@ const visibleCategories = categoryDefinitions.filter((category) => moduleRegistr
         <span>查找一个工具</span>
         <input id="module-search" type="search" placeholder="例如：公园、storytime、牙医、todo…" autocomplete="off" />
       </label>
-      <p id="module-search-status" class="search-status" aria-live="polite">{moduleRegistry.length} 个可用工具</p>
+      <p id="module-search-status" class="search-status" aria-live="polite">{cardCount} 个可用工具</p>
     </header>
 
     <div class="home-directory shell">
@@ -48,7 +53,7 @@ const visibleCategories = categoryDefinitions.filter((category) => moduleRegistr
             <div><h2>{category.title}</h2><p>{category.description}</p></div>
           </div>
           <div class="module-list">
-            {modules.map((module) => <ModuleCard module={module} href={withBase(module.route)} count={publicCounts[module.id]} verifiedDate={verifiedDates[module.id]} />)}
+            {modules.flatMap((module) => cards(module).map((card) => <ModuleCard module={module} href={card.href} title={card.title} count={publicCounts[module.id]} verifiedDate={verifiedDates[module.id]} />))}
           </div>
         </section>;
       })}

@@ -5,6 +5,12 @@ export const categoryDefinitions = [
   { id: 'novel-archive', title: '小离总周报', description: '私人小说知识库：从事件、人物和时间线回到原文。', accent: 'lake', order: 4 },
 ] as const;
 
+// Public book list for the 小离总周报 section: titles may be shown before login, and each
+// slug must match the private Firebase sync (novelArchive/books/<slug>). Add one line per book.
+export const novelBooks = [
+  { slug: 'maritime-story', title: 'Maritime Story' },
+] as const satisfies readonly { slug: string; title: string }[];
+
 export type CategoryId = (typeof categoryDefinitions)[number]['id'];
 export type ModuleId = 'day-trips' | 'library-activities' | 'pediatric-dentists' | 'adult-dermatologists' | 'colonoscopy-specialists' | 'ob-gyn' | 'breast-surgeons' | 'meal-builder' | 'restaurants' | 'sami-notebook' | 'novel-archive';
 export type ModuleAccent = 'evergreen' | 'lake' | 'ochre' | 'berry';
