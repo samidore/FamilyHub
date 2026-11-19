@@ -54,6 +54,18 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+  rules:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Deploy Realtime Database rules
+        run: |
+          printf '%s' "$SA" > "$RUNNER_TEMP/sa.json"
+          GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/sa.json" npx --yes firebase-tools@15 deploy --only database --project "$PROJECT" --non-interactive
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          PROJECT: ${{ vars.PUBLIC_FIREBASE_PROJECT_ID }}
   deploy:
     environment:
       name: github-pages

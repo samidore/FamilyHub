@@ -22,7 +22,7 @@
 
 ## 上线顺序
 
-1. 使用现有 Firebase 项目管理员权限部署本仓库的 `database.rules.json`（仅提交代码不会更新线上规则）：`firebase deploy --only database --project <现有项目ID>`。
+1. `database.rules.json` 随 main 的部署流程自动部署（`.github/workflows/deploy.yml` 的 rules job，用仓库 secret `FIREBASE_SERVICE_ACCOUNT`）。
 2. 在私有 Novel 仓库按其 `site/README.md` 执行一次同步（需要 Firebase Admin 凭证）。后续每次正式 `chain.py publish` 后再同步。
 3. 在已验证家庭成员的 Google 账号登录 FamilyHub，打开「小离总周报」，确认小说清单、正文和跳转；未登录、未批准的账号不能读取。
 
