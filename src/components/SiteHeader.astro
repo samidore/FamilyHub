@@ -1,8 +1,8 @@
 ---
 import ModuleIcon from './ModuleIcon.astro';
 import type { ModuleAccent, ModuleIcon as IconName } from '../config/modules';
-interface Props { eyebrow: string; title: string; description: string; accent: ModuleAccent; icon: IconName; }
-const { eyebrow, title, description, accent, icon } = Astro.props;
+interface Props { eyebrow: string; title: string; description: string; accent: ModuleAccent; icon: IconName; titleId?: string; }
+const { eyebrow, title, description, accent, icon, titleId } = Astro.props;
 const base = import.meta.env.BASE_URL;
 ---
 <header class:list={['module-hero', `theme-${accent}`]}>
@@ -12,7 +12,7 @@ const base = import.meta.env.BASE_URL;
       <div class="field-tab"><ModuleIcon icon={icon} /><span>{eyebrow}</span></div>
       <div class="module-hero__copy">
         <p class="eyebrow">{eyebrow}</p>
-        <h1>{title}</h1>
+        <h1 id={titleId}>{title}</h1>
         <p>{description}</p>
         <slot />
       </div>
