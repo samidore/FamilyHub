@@ -1,6 +1,6 @@
 # Sami的小本本 — module design
 
-Status: implemented through Phase 4; Phase 5 release verification pending.
+Status: Phase 4 is implemented; Phase 5 release verification is pending.
 
 ## Goal
 
@@ -585,51 +585,15 @@ The notebook repository should reuse the existing Firebase project, Google authe
 
 Firebase rules should authorize the notebook path only to existing verified household members and validate both legacy-read-compatible recurrence data and the modern `scheduled` / `afterCompletion` shapes. Keep notebook rule tests separate from Meal Builder state assertions where practical.
 
-## Implementation sequence
+## Current implementation status
 
-### Phase 0 — privacy/auth boundary
+Phase 4 is implemented, including Inbox edit/delete/copy-all, schema-validated atomic Developer patches, and portable database export. Phase 5 release verification remains pending.
 
-- Add `authenticated-household` as an explicit module privacy class.
-- Update shared privacy documentation/validation to permit an authenticated private module without permitting private committed/static data.
-- Define the rule that the static route contains only a locked shell until household auth succeeds.
-
-### Phase 1 — notebook domain + repository
-
-- Add typed normalization/validation for boards, items, memberships, comments, completion events, inbox, and settings.
-- Add notebook Firebase repository at the separate notebook path.
-- Add database rules and emulator tests.
-- Add private display-name resolution for item/comment author and completion-actor snapshots.
-
-### Phase 2 — core mobile page
-
-- Add `Sami的小本本` as its own top-level module registry entry immediately after Meal Builder.
-- Add its own authenticated top-level page shell and connection/error states.
-- Add Active/Completed/All, smart Urgent, board registry, board visibility/order/collapse, fixed priority sections, item controls, comments, and quick Inbox.
-- Add touch/keyboard-safe reorder controls. Drag must not be the only accessible way to reorder ordinary Board items or the shared Board layout.
-
-### Phase 3 — recurrence + media
-
-- Add recurrence completion events and due-date advancement.
-- Add computed `反复干` with exclusive ordinary-Board visibility, a shared reorderable Board-level position, remaining-day groups/colors, automatic group/priority/date item ordering, scheduled calendar recurrence, and after-completion recurrence.
-- Preserve old recurrence records without requiring a migration write.
-- Add media-field UI for `kind = media` boards with no `mediaType` field.
-
-### Phase 4 — Developer workflow + export
-
-- Add Inbox edit/delete/copy-all.
-- Add schema-validated atomic Chat patch apply for direct new items, Inbox conversion, unique-title/ID Board resolution, modern recurrence creation, and safe existing-item metadata updates.
-- Add portable database export.
-
-### Phase 5 — release verification
-
-Run focused checks during implementation, then the repository release gate:
+The repository release gate is:
 
 ```bash
 pnpm run verify
 ```
-
-Verify mobile widths, two-phone realtime synchronization, member authorization, rule rejection for non-members, item/comment author names, completion-actor snapshots/icons, comment collapsing, all ordinary ordering transitions, item deletion cleanup, recurrence schedule advancement, after-completion date reset, `反复干` exclusivity/grouping/priority/date sorting/colors and Board-level placement, queue-age calendar math and midnight rollover, due-soon/Smart Urgent inclusion, Board `showQueueAge` rules, preset single-active-instance publish/cancel/complete/undo behavior, direct/Inbox patch atomicity and Board-reference resolution, modern recurrence patch validation, legacy recurrence read compatibility, and export exclusion of auth identity data.
-
 ## Design acceptance criteria
 
 This design is ready for implementation when all of the following are fixed:
