@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 import { loadMealData } from '../scripts/load-meal-data.mjs';
-import { moduleRegistry, novelBooks } from '../src/config/modules';
+import { moduleRegistry } from '../src/config/modules';
 
 const mealData = await loadMealData();
 const visibleIngredientCount = mealData.ingredients.filter((ingredient) => ingredient.visible).length;
@@ -71,9 +71,9 @@ async function selectRecipe(page: Page, id: string) {
 
 test('home groups and searches the active modules', async ({ page }) => {
   await page.goto('./');
-  await expect(page.locator('[data-module]')).toHaveCount(moduleRegistry.length - 1 + novelBooks.length);
+  await expect(page.locator('[data-module]')).toHaveCount(moduleRegistry.length);
   const sections = page.locator('[data-category-section]');
-  await expect(sections).toHaveCount(4);
+  await expect(sections).toHaveCount(3);
   await expect(sections.nth(0)).toHaveAttribute('data-category-section', 'food-home');
   await expect(sections.nth(0).locator('.category-index')).toHaveText('01');
   await expect(sections.nth(0).locator('[data-module]').first()).toHaveAttribute('href', /\/meal-builder\/$/);
@@ -81,14 +81,9 @@ test('home groups and searches the active modules', async ({ page }) => {
   await expect(sections.nth(1).locator('.category-index')).toHaveText('02');
   await expect(sections.nth(2)).toHaveAttribute('data-category-section', 'health-care');
   await expect(sections.nth(2).locator('.category-index')).toHaveText('03');
-  await expect(sections.nth(3)).toHaveAttribute('data-category-section', 'novel-archive');
-  await expect(sections.nth(3).locator('.category-index')).toHaveText('04');
-  await expect(sections.nth(3).locator('[data-module]')).toHaveCount(novelBooks.length);
-  for (const [index, book] of novelBooks.entries()) {
-    const card = sections.nth(3).locator('[data-module]').nth(index);
-    await expect(card).toHaveAttribute('href', new RegExp(`/novel-archive/\\?book=${book.slug}$`));
-    await expect(card.locator('strong')).toHaveText(book.title);
-  }
+  const writingDesk = page.locator('[data-external-site="sami-writing-desk"]');
+  await expect(writingDesk).toHaveAttribute('href', 'https://samidore.github.io/sami-writing-desk/');
+  await expect(writingDesk.locator('strong')).toHaveText('小离总周报');
   await expect(page.getByRole('heading', { name: '出行与玩乐' })).toBeVisible();
   await expect(page.getByRole('heading', { name: '健康与照护' })).toBeVisible();
   await page.getByLabel('查找一个工具').fill('牙医');
@@ -96,25 +91,6 @@ test('home groups and searches the active modules', async ({ page }) => {
   await expect(page.getByText('找到 1 个工具')).toBeVisible();
   await page.getByLabel('查找一个工具').fill('不存在');
   await expect(page.getByText('没有找到对应工具')).toBeVisible();
-});
-
-test('novel archive stays private until the existing household login is verified', async ({ page }) => {
-  await page.goto('novel-archive/');
-  await expect(page.getByRole('heading', { name: '小离总周报' })).toBeVisible();
-  await expect(page.locator('#novel-app')).toBeHidden();
-  await expect(page.locator('#novel-content')).toBeEmpty();
-  await expect(page.locator('[data-private-novel-link]')).toHaveCount(0);
-  await expect(page.getByText('与 Sami 小本本使用同一组家庭成员权限', { exact: false })).toBeVisible();
-});
-
-test('a book page shows its public title and no private content before login', async ({ page }) => {
-  const [book] = novelBooks;
-  await page.goto(`novel-archive/?book=${book.slug}&view=timeline`);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText(book.title);
-  await expect(page).toHaveTitle(new RegExp(book.title));
-  await expect(page.locator('#novel-app')).toBeHidden();
-  await expect(page.locator('#novel-content')).toBeEmpty();
-  await expect(page.locator('#novel-timeline-view')).toBeEmpty();
 });
 
 test('day-trip filters combine, persist in the URL, and clear', async ({ page }) => {

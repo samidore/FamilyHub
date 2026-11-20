@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ModuleCard from '../components/ModuleCard.astro';
-import { categoryDefinitions, moduleRegistry, novelBooks, type ModuleId } from '../config/modules';
+import ModuleIcon from '../components/ModuleIcon.astro';
+import { categoryDefinitions, moduleRegistry, type ModuleId } from '../config/modules';
 import { adultDermatologists, colonoscopySpecialists, dayTrips, libraryEvents, obGynProviders, pediatricDentists, restaurants, latestVerifiedDate, moduleRecords } from '../data/catalog';
 import { mealData } from '../data/meal';
 
@@ -21,11 +22,6 @@ const publicCounts: Partial<Record<ModuleId, number>> = Object.fromEntries(
   Object.entries(moduleRecords).map(([id, records]) => [id, records?.length ?? 0]),
 ) as Partial<Record<ModuleId, number>>;
 const visibleCategories = categoryDefinitions.filter((category) => moduleRegistry.some((module) => module.categoryId === category.id));
-// The Novel Archive shows one card per book; every other module has one card.
-const cards = (module: (typeof moduleRegistry)[number]) => module.id === 'novel-archive'
-  ? novelBooks.map((book) => ({ title: book.title, href: withBase(`${module.route}?book=${book.slug}`) }))
-  : [{ title: module.title, href: withBase(module.route) }];
-const cardCount = moduleRegistry.reduce((total, module) => total + cards(module).length, 0);
 ---
 <BaseLayout title="Family Hub" description="适合手机使用的家庭出行、活动、照护与共享工具入口。" pageClass="home-page">
   <main id="main-content">
@@ -41,7 +37,7 @@ const cardCount = moduleRegistry.reduce((total, module) => total + cards(module)
         <span>查找一个工具</span>
         <input id="module-search" type="search" placeholder="例如：公园、storytime、牙医、todo…" autocomplete="off" />
       </label>
-      <p id="module-search-status" class="search-status" aria-live="polite">{cardCount} 个可用工具</p>
+      <p id="module-search-status" class="search-status" aria-live="polite">{moduleRegistry.length} 个可用工具</p>
     </header>
 
     <div class="home-directory shell">
@@ -53,12 +49,24 @@ const cardCount = moduleRegistry.reduce((total, module) => total + cards(module)
             <div><h2>{category.title}</h2><p>{category.description}</p></div>
           </div>
           <div class="module-list">
-            {modules.flatMap((module) => cards(module).map((card) => <ModuleCard module={module} href={card.href} title={card.title} count={publicCounts[module.id]} verifiedDate={verifiedDates[module.id]} />))}
+            {modules.map((module) => <ModuleCard module={module} href={withBase(module.route)} count={publicCounts[module.id]} verifiedDate={verifiedDates[module.id]} />)}
           </div>
         </section>;
       })}
       <p id="module-empty" class="empty-state" hidden>没有找到对应工具。试试“出行”、“library”、“牙医”、“todo”或“皮肤科”。</p>
     </div>
+
+    <!-- 小离总周报 lives on its own site (same household login); not a module, so search and counts skip it. -->
+    <section class="shell external-sites theme-lake" aria-label="其他网站">
+      <a class="module-card" href="https://samidore.github.io/sami-writing-desk/" target="_blank" rel="noopener noreferrer" data-external-site="sami-writing-desk">
+        <span class="module-card__tab" aria-hidden="true"><ModuleIcon icon="notebook" /></span>
+        <span class="module-card__body">
+          <span class="module-card__heading"><strong>小离总周报</strong><span aria-hidden="true">↗</span></span>
+          <span class="module-card__summary">私人小说阅读器与时间线，在 Sami Writing Desk 网站打开。</span>
+          <span class="module-card__meta"><b>私人资料</b><span>同一家庭登录</span></span>
+        </span>
+      </a>
+    </section>
   </main>
   <footer class="site-footer"><div class="shell"><p>公开目录不包含家庭私有数据；需要登录的家庭工具只在授权后读取共享状态。</p></div></footer>
   <script>
@@ -87,5 +95,6 @@ const cardCount = moduleRegistry.reduce((total, module) => total + cards(module)
     .home-today-entry strong { font-size: 22px; line-height: 1.3; }
     .home-today-entry small { color: #dbede1; font-size: 14px; }
     .home-today-entry > span:last-child { font-size: 25px; }
+    .external-sites { display: grid; padding-bottom: 32px; }
   </style>
 </BaseLayout>
