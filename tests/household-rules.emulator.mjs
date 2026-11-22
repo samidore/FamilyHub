@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { assertFails, assertSucceeds, initializeTestEnvironment } from '@firebase/rules-unit-testing';
+import './proofdesk-rules.emulator.mjs';
 
 const rules = await readFile('database.rules.json', 'utf8');
 const env = await initializeTestEnvironment({ projectId: 'family-hub-rules', database: { host: '127.0.0.1', port: 9000, rules } });

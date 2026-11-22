@@ -107,11 +107,12 @@
           "$slug": {
             ".validate": "$slug.matches(/^[a-z0-9][a-z0-9-]*$/)",
             "$id": {
-              ".validate": "$id.matches(/^[0-9]{8}-[0-9]{6}-[0-9a-z]{4}$/) && newData.hasChildren(['id', 'title', 'createdAt', 'updatedAt', 'source', 'status', 'checks']) && newData.child('id').val() == $id && ((newData.child('source').val() == 'paste' && newData.child('draft').exists()) || (newData.child('source').val() == 'drive' && newData.child('driveName').exists())) && (!data.exists() || data.child('status').val() == 'queued' || data.child('status').val() == 'done' || data.child('status').val() == 'failed') && (!data.child('reports').exists() || newData.child('reports').exists())",
+              ".validate": "$id.matches(/^[0-9]{8}-[0-9]{6}-[0-9a-z]{4}$/) && newData.hasChildren(['id', 'title', 'createdAt', 'updatedAt', 'source', 'status', 'checks']) && newData.child('id').val() == $id && ((newData.child('source').val() == 'paste' && newData.child('draft').exists()) || (newData.child('source').val() == 'drive' && newData.child('driveName').exists())) && (!data.exists() || data.child('status').val() == 'queued' || data.child('status').val() == 'done' || data.child('status').val() == 'failed') && (!data.child('reports').exists() || newData.child('reports').exists()) && (!data.exists() || newData.child('skipProse').val() == data.child('skipProse').val())",
               "id": { ".validate": "newData.isString() && newData.val() == $id" },
               "title": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 200 && (!data.exists() || newData.val() == data.val())" },
               "createdAt": { ".validate": "newData.isNumber() && newData.val() > 0 && (!data.exists() || newData.val() == data.val())" },
               "updatedAt": { ".validate": "newData.isNumber() && newData.val() > 0" },
+              "skipProse": { ".validate": "newData.isBoolean()" },
               "source": { ".validate": "newData.isString() && (newData.val() == 'paste' || newData.val() == 'drive') && (!data.exists() || newData.val() == data.val())" },
               "draft": { ".validate": "newData.isString() && newData.val().length <= 200000 && !data.exists()" },
               "driveName": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 200 && (!data.exists() || newData.val() == data.val())" },
