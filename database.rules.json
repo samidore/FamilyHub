@@ -120,7 +120,7 @@
             },
             "kept": {
               ".write": "auth != null && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email && newData.parent().child('live/base').val() == data.parent().child('live/rev').val()",
-              ".validate": "newData.hasChildren(['rev', 'at', 'uid', 'plot', 'plan']) && newData.child('rev').val() == data.parent().child('live/rev').val() && newData.child('at').val() == data.parent().child('live/at').val() && newData.child('uid').val() == data.parent().child('live/uid').val() && newData.child('plot').val() == data.parent().child('live/plot').val() && newData.child('plan').val() == data.parent().child('live/plan').val()",
+              ".validate": "newData.hasChildren(['rev', 'at', 'uid', 'plot', 'plan']) && newData.child('rev').val() == data.parent().child('live/rev').val() && newData.child('plot').val() == data.parent().child('live/plot').val() && newData.child('plan').val() == data.parent().child('live/plan').val()",
               "rev": { ".validate": "newData.isString() && newData.val().matches(/^[0-9a-z]{12}$/)" },
               "at": { ".validate": "newData.isNumber()" },
               "uid": { ".validate": "newData.isString() && newData.val() == auth.uid" },

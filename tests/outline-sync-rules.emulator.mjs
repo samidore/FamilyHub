@@ -64,3 +64,14 @@ test('slug and payload constraints reject malformed writes', async () => {
   await assertFails(alice.ref(path).child('live').set({ ...valid, plot: 1 }));
   await assertFails(alice.ref(path).child('live').set({ ...valid, plan: 'x'.repeat(2000001) }));
 });
+
+test('every explicit replacement works over a repo-written live', async () => {
+  const alice = google('alice').ref(path);
+  for (const extra of [{}, { over: 'tree-from-repo' }]) {
+    await reset();
+    const repo = { rev: 'aaaaaaaaaaaa', base: '', at: 1700000000000, by: 'repo', plot: 'repo-plot', plan: 'repo-plan' };
+    await env.withSecurityRulesDisabled((ctx) => ctx.database().ref(path).set({ live: repo }));
+    const kept = { rev: repo.rev, at: 1700000009999, uid: 'alice', plot: repo.plot, plan: repo.plan };
+    await assertSucceeds(alice.update({ live: { ...live('bbbbbbbbbbbb', repo.rev), ...extra }, kept }));
+  }
+});
