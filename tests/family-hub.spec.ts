@@ -82,7 +82,7 @@ test('home groups and searches the active modules', async ({ page }) => {
   await expect(sections.nth(2)).toHaveAttribute('data-category-section', 'health-care');
   await expect(sections.nth(2).locator('.category-index')).toHaveText('03');
   const writingDesk = page.locator('[data-external-site="sami-writing-desk"]');
-  await expect(writingDesk).toHaveAttribute('href', 'https://samidore.github.io/sami-writing-desk/');
+  await expect(writingDesk).toHaveAttribute('href', 'https://sami-wild-hub.github.io/sami-writing-desk/');
   await expect(writingDesk.locator('strong')).toHaveText('小离总周报');
   await expect(page.getByRole('heading', { name: '出行与玩乐' })).toBeVisible();
   await expect(page.getByRole('heading', { name: '健康与照护' })).toBeVisible();
