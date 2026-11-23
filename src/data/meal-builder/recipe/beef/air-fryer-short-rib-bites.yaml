@@ -1,0 +1,65 @@
+id: air-fryer-short-rib-bites
+type: recipe
+status: candidate
+name_zh: 空气炸锅烤牛肉粒
+name_en: Air-Fryer Short Rib Bites
+tags:
+  - light-seasoning
+  - non-spicy-base
+  - air-fryer
+  - lunch-45
+  - child-support-protein
+fit_score: 4
+primary_role: protein
+main_protein_category: beef
+main_protein_ingredient_ids:
+  - boneless-beef-short-ribs
+  - beef-rib-fingers
+  - cross-cut-beef-short-ribs
+supporting_protein_ingredient_ids: []
+vegetable_ingredient_ids: []
+meal_contribution:
+  protein: 1
+  vegetable: 0
+  staple: 0
+child_coverage:
+  protein: false
+  vegetable: false
+integral_staple_ingredient_ids: []
+recommended_staple_ingredient_ids:
+  - rice
+active_minutes: 15–20
+meal_window_minutes: 45 分钟
+elapsed_minutes: 45 分钟
+advance_start_required: false
+equipment:
+  - small air fryer
+burner_plan: 空气炸锅负责烤制；小炸篮分批单层摆放，灶台可同时做蔬菜。
+child_suitable: conditional
+child_texture: 短烤牛肉粒可能有韧筋，不稳定满足幼儿软蛋白；带骨版本须由成人彻底去骨。
+spicy_in_base: false
+deep_fried: false
+salt_level: light
+oil_level: light
+servings: 3
+detail_level: cookable
+ingredients:
+  - one_of:
+      - boneless-beef-short-ribs
+      - beef-rib-fingers
+      - cross-cut-beef-short-ribs
+    role: main-protein
+steps:
+  - 牛肉完全解冻后擦干。无骨牛小排或牛肋条逆纹切约1.5–2 cm小块，厚筋尽量修掉；薄切横切带骨牛小排保留原片，不要连骨剁成肉粒，冲净可能的骨屑后擦干。
+  - 肉与基础调味抓匀，静置10–15分钟。糖可省；不要让湿腌汁大量积在炸篮底部。
+  - 空气炸锅预热390°F/200°C约3分钟。肉单层铺开留缝隙；小炸篮按量分批，不要堆叠。
+  - 无骨牛小排或牛肋条肉粒：390°F/200°C先烤7分钟，翻动后再烤3–6分钟；按肉块大小和实际熟度调整，避免把边缘烤干。
+  - 薄切横切带骨牛小排（约0.8–1.2 cm厚）或同等厚度的无骨薄片：390°F/200°C先烤4–5分钟，翻面再烤3–5分钟；厚件继续每次加2分钟检查。带骨片不要按肉粒时间盲烤。
+  - 最厚可测肉处达到145°F/63°C后取出并静置至少3分钟；很薄的肉片应烤到无冷生中心。发现表面酱糖过快变黑时降低温度。
+  - 成品表面略焦、内部仍有肉汁。孩子如要吃，成人先完全去骨并检查碎骨和韧筋，只挑软嫩部分剪小；不够嫩则另配蒸蛋或嫩豆腐作为软蛋白。
+child_serving: 仅选软嫩无骨的小块；带骨片必须彻底去骨、检查骨屑，不作为稳定的儿童软蛋白。
+adult_finish: 孩子份盛出后，成人可撒孜然或辣椒粉；基础版不放辣。
+substitutions: []
+cook_ingredients:
+  - 无骨牛小排 / 牛肋条 / 横切带骨牛小排：约450–600 g，三选一；无骨切粒，薄切带骨保留整片
+  - 基础轻盐调味：生抽2 tsp；中性油2 tsp；蒜粉1/2 tsp；黑胡椒1/4 tsp；糖1/2 tsp可省
