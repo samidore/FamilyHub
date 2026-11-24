@@ -116,16 +116,18 @@
               "uid": { ".validate": "newData.isString() && newData.val() == auth.uid" },
               "plot": { ".validate": "newData.isString() && newData.val().length <= 2000000" },
               "plan": { ".validate": "newData.isString() && newData.val().length <= 2000000" },
+              "foreshadow": { ".validate": "newData.isString() && newData.val().length <= 2000000" },
               "$other": { ".validate": false }
             },
             "kept": {
               ".write": "auth != null && auth.token.firebase.sign_in_provider == 'google.com' && auth.token.email_verified == true && root.child('households').child($householdId).child('members').child(auth.uid).child('email').val() == auth.token.email && newData.parent().child('live/base').val() == data.parent().child('live/rev').val()",
-              ".validate": "newData.hasChildren(['rev', 'at', 'uid', 'plot', 'plan']) && newData.child('rev').val() == data.parent().child('live/rev').val() && newData.child('plot').val() == data.parent().child('live/plot').val() && newData.child('plan').val() == data.parent().child('live/plan').val()",
+              ".validate": "newData.hasChildren(['rev', 'at', 'uid', 'plot', 'plan']) && newData.child('rev').val() == data.parent().child('live/rev').val() && newData.child('plot').val() == data.parent().child('live/plot').val() && newData.child('plan').val() == data.parent().child('live/plan').val() && newData.child('foreshadow').val() == data.parent().child('live/foreshadow').val()",
               "rev": { ".validate": "newData.isString() && newData.val().matches(/^[0-9a-z]{12}$/)" },
               "at": { ".validate": "newData.isNumber()" },
               "uid": { ".validate": "newData.isString() && newData.val() == auth.uid" },
               "plot": { ".validate": "newData.isString() && newData.val().length <= 2000000" },
               "plan": { ".validate": "newData.isString() && newData.val().length <= 2000000" },
+              "foreshadow": { ".validate": "newData.isString() && newData.val().length <= 2000000" },
               "$other": { ".validate": false }
             }
           }
