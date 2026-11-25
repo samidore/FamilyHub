@@ -11,7 +11,7 @@ const path = `${household}/proofdesk/book/20261121-153012-abcd`;
 const queued = (source, option) => ({
   id: '20261121-153012-abcd', title: 'Test draft', createdAt: 1, updatedAt: 1, source,
   ...(source === 'paste' ? { draft: 'Test paragraph.' } : { driveName: 'Chapter 1' }),
-  status: 'queued', checks: { manuscript: { status: 'queued' }, open: { status: 'queued' } },
+  status: 'queued', checks: { ...(source === 'drive' ? { manuscript: { status: 'queued' } } : {}), open: { status: 'queued' } },
   ...option,
 });
 const reset = () => env.withSecurityRulesDisabled(async (ctx) => {
@@ -43,10 +43,27 @@ test('option cannot be added, toggled or removed after creation, including a res
     await assertFails(alice.update({ skipProse: changed }));
     if (option.skipProse !== undefined) await assertFails(alice.child('skipProse').remove());
     await env.withSecurityRulesDisabled((ctx) => ctx.database().ref(path).update({
-      status: 'done', 'checks/manuscript/status': 'done', 'checks/open/status': 'done',
+      status: 'done', 'checks/open/status': 'done',
     }));
     await assertFails(alice.update({ skipProse: changed, status: 'queued', 'checks/open/status': 'queued' }));
     if (option.skipProse !== undefined) await assertFails(alice.update({ skipProse: null, status: 'queued' }));
     await assertSucceeds(alice.update({ status: 'queued', updatedAt: 2, 'checks/open/status': 'queued' }));
   }
+});
+
+test('Drive needs both checks; paste requires open and cannot gain manuscript on resend', async () => {
+  await reset();
+  const alice = google('alice').ref(path);
+  const drive = queued('drive');
+  delete drive.checks.manuscript;
+  await assertFails(alice.set(drive));
+  await assertFails(alice.set({ ...queued('paste'), checks: { manuscript: { status: 'queued' } } }));
+  await assertSucceeds(alice.set(queued('paste')));
+  await assertFails(alice.update({ 'checks/manuscript/status': 'queued' }));
+  await assertFails(alice.update({ draft: 'Edited paragraph.' }));
+  await assertFails(alice.child('draft').remove());
+  await env.withSecurityRulesDisabled((ctx) => ctx.database().ref(path).update({
+    status: 'done', 'checks/manuscript/status': 'done', 'checks/open/status': 'done',
+  }));
+  await assertSucceeds(alice.update({ status: 'queued', updatedAt: 2, 'checks/manuscript/status': 'queued', 'checks/open/status': 'queued' }));
 });
