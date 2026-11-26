@@ -29,6 +29,7 @@ export interface DayTripInteractionStatus {
   displayName?: string;
   enrollmentOpen?: boolean;
   error?: string;
+  networkConnected?: boolean;
 }
 export type DayTripInteractionListener = (state: DayTripInteractionState, status: DayTripInteractionStatus) => void;
 
@@ -282,21 +283,29 @@ export class FirebaseDayTripInteractionRepository implements DayTripInteractionR
 
   private async initialize() {
     await this.session.ready.catch(() => undefined);
-    await this.handleSessionStatus(this.session.getStatus());
-    this.unsubscribeSession = this.session.subscribe((status) => { if (!this.disposed) void this.handleSessionStatus(status); });
+    let initialLoad: Promise<void> | undefined;
+    this.unsubscribeSession = this.session.subscribe((status) => {
+      if (this.disposed) return;
+      const loading = this.handleSessionStatus(status).catch((error) => {
+        if (!this.disposed && this.session.getStatus().uid === status.uid) this.fail('家庭评价读取失败，请重新检查权限后重试', error);
+      });
+      initialLoad ??= loading;
+    });
+    await initialLoad;
   }
   private async handleSessionStatus(sessionStatus: HouseholdSessionStatus) {
     if (sessionStatus.connection === 'connected' && sessionStatus.uid) {
-      if (this.connectedUid === sessionStatus.uid && this.status.connection === 'connected') {
-        this.setStatus({ ...sessionStatus, connection: 'connected' });
+      if (this.connectedUid === sessionStatus.uid && ['connecting', 'connected'].includes(this.status.connection)) {
+        this.setStatus(this.status.connection === 'connected' ? { ...sessionStatus, connection: 'connected' } : { ...this.status, networkConnected: sessionStatus.networkConnected });
         return;
       }
       this.stopInteractionSubscription();
-      const snapshot = await get(this.interactionsRef);
-      if (this.disposed || this.session.getStatus().connection !== 'connected') return;
       this.connectedUid = sessionStatus.uid;
+      this.setStatus({ ...sessionStatus, connection: 'connecting', label: '正在读取家庭评价…' });
+      const snapshot = await get(this.interactionsRef);
+      if (this.disposed || this.connectedUid !== sessionStatus.uid || this.session.getStatus().connection !== 'connected') return;
       this.setStateFromSnapshot(snapshot);
-      this.setStatus({ ...sessionStatus, connection: 'connected' });
+      this.setStatus({ ...this.session.getStatus(), connection: 'connected' });
       this.unsubscribeInteractions = onValue(this.interactionsRef, (next) => this.setStateFromSnapshot(next), (error) => { if (!this.disposed) this.fail('Day Trips 家庭数据连接中断', error); });
       return;
     }

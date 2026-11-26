@@ -14,6 +14,14 @@
 .today-push strong { font-size: 15px; }
 .today-push p { margin: 2px 0 0; font-size: 13px; color: #506458; }
 .today-dashboard { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 16px; }
+.today-dashboard:not([hidden]) { animation: today-enter var(--motion-enter) var(--motion-ease-out); }
+@keyframes today-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .today-dashboard:not([hidden]) { animation: none; }
+}
 .today-card { min-width: 0; padding: 22px 22px 18px; border: 1px solid #cad8cd; border-radius: 18px; box-shadow: 0 9px 24px rgb(28 47 31 / 6%); background: #fff; }
 .today-card--upcoming { border-top: 4px solid #3a7157; }
 .today-card--meal { border-top: 4px solid #9c687a; }

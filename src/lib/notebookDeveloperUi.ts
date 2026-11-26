@@ -1,3 +1,4 @@
+/** Connects Inbox sorting and validated patch feedback to the notebook. */
 import { cloneNotebookState, type NotebookState } from './notebookDomain.ts';
 import { createNotebookRepository, type CreateNotebookRepositoryOptions } from './notebookRepository.ts';
 import type { FirebaseConfig } from './householdRepository.ts';
@@ -86,6 +87,7 @@ export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, option
   const exportButton = get<HTMLButtonElement>('#developer-export');
   let state = repository.getSnapshot();
   let validatedPatch: ValidatedDeveloperPatch | null = null;
+  let applyingPatch = false;
 
   const status = (message: string, error = false) => {
     live.textContent = message;
@@ -107,6 +109,10 @@ export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, option
     }
   };
   const mutatePatch = async (label: string, fn: (current: NotebookState) => NotebookState) => {
+    applyingPatch = true;
+    applyButton.disabled = true;
+    validateButton.disabled = true;
+    patchInput.readOnly = true;
     try {
       patchStatus(`${label}…`);
       await repository.transaction(fn);
@@ -115,6 +121,11 @@ export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, option
     } catch (error) {
       patchStatus(error instanceof Error ? error.message : String(error), true);
       return false;
+    } finally {
+      applyingPatch = false;
+      applyButton.disabled = false;
+      validateButton.disabled = false;
+      patchInput.readOnly = false;
     }
   };
 
@@ -169,8 +180,9 @@ export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, option
     refresh.hidden = current.connection !== 'pending' && !(current.connection === 'error' && Boolean(current.email));
     signOut.hidden = !current.email;
     if (connected) {
+      get<HTMLElement>('#developer-sync-status').textContent = current.networkConnected === false ? '连接暂时中断，正在自动重连；显示上次读取的内容。' : '';
       renderInbox();
-      if (validatedPatch) validateAndRenderPatch();
+      if (validatedPatch && !applyingPatch) validateAndRenderPatch();
     }
   };
 
@@ -180,7 +192,7 @@ export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, option
   });
   signIn.addEventListener('click', () => void repository.signInWithGoogle().catch((error) => status(String(error), true)));
   refresh.addEventListener('click', () => void repository.refreshAccess().catch((error) => status(String(error), true)));
-  signOut.addEventListener('click', () => void repository.signOut());
+  signOut.addEventListener('click', () => void repository.signOut().catch((error) => status(`退出失败，请重试：${String(error)}`, true)));
 
   inboxList.addEventListener('click', (event) => {
     const target = event.target as HTMLElement;
@@ -220,6 +232,7 @@ export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, option
   });
   validateButton.addEventListener('click', validateAndRenderPatch);
   applyButton.addEventListener('click', () => {
+    if (applyingPatch) return;
     const latest = parseDeveloperPatch(patchInput.value.trim(), state);
     if (!latest.ok) { clearPatchPreview(); patchStatus(latest.error, true); return; }
     const now = stamp();

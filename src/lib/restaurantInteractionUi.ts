@@ -22,6 +22,7 @@ import {
 import { escapeHouseholdHtml, householdCommentWindow, householdPersonIconHtml } from './householdPeople.ts';
 import { RESTAURANT_CAT_WANT_DATA_URI, RESTAURANT_DOG_WANT_DATA_URI } from './restaurantWantAssets.ts';
 import type { FirebaseConfig } from './householdSession.ts';
+import { updateHouseholdCommentHtml } from './householdCommentUi.ts';
 
 const stamp = () => Date.now();
 const makeId = (prefix: string) => `${prefix}-${crypto.randomUUID()}`;
@@ -141,6 +142,17 @@ export function mountRestaurantInteractionUi(config: Partial<FirebaseConfig>, op
     live.textContent = message;
     live.dataset.error = error ? 'true' : 'false';
   };
+  const mutate = async (label: string, action: (snapshot: RestaurantInteractionState) => RestaurantInteractionState) => {
+    statusMessage(`${label}…`);
+    try {
+      await repository.transaction(action);
+      statusMessage(`${label}完成`);
+      return true;
+    } catch {
+      statusMessage(`${label}失败，请重试。`, true);
+      return false;
+    }
+  };
 
   const renderCards = () => {
     const uid = repository.getCurrentUid();
@@ -162,7 +174,7 @@ export function mountRestaurantInteractionUi(config: Partial<FirebaseConfig>, op
       const wantPeople = card.querySelector<HTMLElement>('[data-restaurant-want-people]');
       if (wantPeople) wantPeople.innerHTML = wantPeopleHtml(state, restaurantId);
       const comments = card.querySelector<HTMLElement>('[data-restaurant-comments]');
-      if (comments) comments.innerHTML = commentsHtml(restaurantCommentsFor(state, restaurantId), restaurantId, displayName, connected);
+      if (comments) updateHouseholdCommentHtml(comments, commentsHtml(restaurantCommentsFor(state, restaurantId), restaurantId, displayName, connected), '[data-restaurant-comment-add]');
     }
     window.dispatchEvent(new Event('restaurantinteractionschange'));
   };
@@ -185,7 +197,7 @@ export function mountRestaurantInteractionUi(config: Partial<FirebaseConfig>, op
     const connected = isConnected();
     if (connected) {
       authShell.dataset.state = 'connected';
-      authMessage.textContent = status.displayName ? `家庭口味 · ${status.displayName}` : '家庭口味已连接 · 尚未配置显示名字';
+      authMessage.textContent = status.networkConnected === false ? '连接暂时中断，正在自动重连；显示上次读取的内容。' : status.displayName ? `家庭口味 · ${status.displayName}` : '家庭口味已连接 · 尚未配置显示名字';
     } else if (status.connection === 'error') {
       authShell.dataset.state = 'error';
       authMessage.textContent = status.error ? `${status.label}：${status.error}` : status.label;
@@ -207,7 +219,7 @@ export function mountRestaurantInteractionUi(config: Partial<FirebaseConfig>, op
 
   signIn.addEventListener('click', () => void repository.signInWithGoogle().catch((error) => statusMessage(error instanceof Error ? error.message : String(error), true)));
   refresh.addEventListener('click', () => void repository.refreshAccess().catch((error) => statusMessage(error instanceof Error ? error.message : String(error), true)));
-  signOut.addEventListener('click', () => void repository.signOut());
+  signOut.addEventListener('click', () => void repository.signOut().catch(() => statusMessage('退出失败，请重试。', true)));
 
   host.addEventListener('click', (event) => {
     const target = event.target as HTMLElement;
@@ -222,7 +234,7 @@ export function mountRestaurantInteractionUi(config: Partial<FirebaseConfig>, op
       const score = Number(ratingButton.dataset.restaurantRatingScore) as RestaurantRatingScore;
       if (!uid || !authorName || !Number.isInteger(score) || score < 1 || score > 5) return;
       const nextScore = ratingButton.getAttribute('aria-pressed') === 'true' ? null : score;
-      void repository.transaction((snapshot) => setRestaurantRating(snapshot, restaurantId, uid, authorName, nextScore, stamp()));
+      void mutate('保存评分', (snapshot) => setRestaurantRating(snapshot, restaurantId, uid, authorName, nextScore, stamp()));
       return;
     }
 
@@ -232,7 +244,7 @@ export function mountRestaurantInteractionUi(config: Partial<FirebaseConfig>, op
       const authorName = repository.getCurrentMemberDisplayName();
       if (!uid || !authorName) return;
       const active = !Boolean(state.wants[restaurantId]?.[uid]);
-      void repository.transaction((snapshot) => setRestaurantWant(snapshot, restaurantId, uid, authorName, active, stamp()));
+      void mutate('保存想吃', (snapshot) => setRestaurantWant(snapshot, restaurantId, uid, authorName, active, stamp()));
       return;
     }
 
@@ -241,7 +253,7 @@ export function mountRestaurantInteractionUi(config: Partial<FirebaseConfig>, op
       const comment = state.comments[edit.dataset.restaurantEditComment];
       if (!comment || comment.authorName !== repository.getCurrentMemberDisplayName()) return;
       const body = window.prompt('修改评论', comment.body)?.trim();
-      if (body && body !== comment.body) void repository.transaction((snapshot) => editRestaurantComment(snapshot, comment.id, body, stamp()));
+      if (body && body !== comment.body) void mutate('修改评论', (snapshot) => editRestaurantComment(snapshot, comment.id, body, stamp()));
       return;
     }
 
@@ -249,7 +261,7 @@ export function mountRestaurantInteractionUi(config: Partial<FirebaseConfig>, op
     if (remove?.dataset.restaurantDeleteComment && window.confirm('删除这条评论？')) {
       const comment = state.comments[remove.dataset.restaurantDeleteComment];
       if (!comment || comment.authorName !== repository.getCurrentMemberDisplayName()) return;
-      void repository.transaction((snapshot) => deleteRestaurantComment(snapshot, comment.id));
+      void mutate('删除评论', (snapshot) => deleteRestaurantComment(snapshot, comment.id));
     }
   });
 
@@ -257,11 +269,16 @@ export function mountRestaurantInteractionUi(config: Partial<FirebaseConfig>, op
     const form = (event.target as HTMLElement).closest<HTMLFormElement>('[data-restaurant-comment-add]');
     if (!form?.dataset.restaurantCommentAdd) return;
     event.preventDefault();
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    if (submit.disabled) return;
     const body = String(new FormData(form).get('comment') ?? '').trim();
     const authorName = repository.getCurrentMemberDisplayName();
     if (!body || !authorName) return;
+    submit.disabled = true;
     const comment: RestaurantComment = { id: makeId('restaurant-comment'), restaurantId: form.dataset.restaurantCommentAdd, body, authorName, createdAt: stamp() };
-    void repository.transaction((snapshot) => addRestaurantComment(snapshot, comment)).then(() => form.reset());
+    void mutate('添加评论', (snapshot) => addRestaurantComment(snapshot, comment)).then((saved) => {
+      if (saved && form.querySelector<HTMLTextAreaElement>('textarea')!.value.trim() === body) form.reset();
+    }).finally(() => { submit.disabled = false; });
   });
 
   inboxForm.addEventListener('submit', (event) => {
@@ -284,11 +301,11 @@ export function mountRestaurantInteractionUi(config: Partial<FirebaseConfig>, op
     if (!ticket) return;
     if (target.closest('[data-restaurant-edit-ticket]')) {
       const text = window.prompt('修改随手记', ticket.text)?.trim();
-      if (text && text !== ticket.text) void repository.transaction((snapshot) => editRestaurantInboxTicket(snapshot, ticketId, text, stamp()));
+      if (text && text !== ticket.text) void mutate('修改随手记', (snapshot) => editRestaurantInboxTicket(snapshot, ticketId, text, stamp()));
       return;
     }
     if (target.closest('[data-restaurant-delete-ticket]') && window.confirm('删除这条随手记？')) {
-      void repository.transaction((snapshot) => deleteRestaurantInboxTicket(snapshot, ticketId));
+      void mutate('删除随手记', (snapshot) => deleteRestaurantInboxTicket(snapshot, ticketId));
     }
   });
 
@@ -299,7 +316,7 @@ export function mountRestaurantInteractionUi(config: Partial<FirebaseConfig>, op
 
   clearAll.addEventListener('click', () => {
     if (!Object.keys(state.inbox).length || !window.confirm('清空全部 Restaurants 随手记？复制给 GPT 后也不会自动清空。')) return;
-    void repository.transaction(clearRestaurantInbox).then(() => statusMessage('随手记已清空'));
+    void mutate('清空随手记', clearRestaurantInbox);
   });
 
   window.addEventListener('beforeunload', () => repository.dispose(), { once: true });

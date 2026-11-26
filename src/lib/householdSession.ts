@@ -1,3 +1,4 @@
+/** Shares verified household access and visible connection progress across tools. */
 import { getApps, initializeApp, type FirebaseApp } from 'firebase/app';
 import {
   GoogleAuthProvider,
@@ -41,6 +42,7 @@ export interface HouseholdSessionStatus {
   displayName?: string;
   enrollmentOpen?: boolean;
   error?: string;
+  networkConnected?: boolean;
 }
 export type HouseholdSessionListener = (status: HouseholdSessionStatus) => void;
 
@@ -70,6 +72,7 @@ export class FirebaseHouseholdSession {
   private email = '';
   private displayName = '';
   private unsubscribeMember?: () => void;
+  private unsubscribeConnection?: () => void;
   private disposed = false;
 
   constructor(config: FirebaseConfig) {
@@ -78,6 +81,9 @@ export class FirebaseHouseholdSession {
     this.app = getApps().find((candidate) => candidate.name === appName) ?? initializeApp(config, appName);
     this.auth = getAuth(this.app);
     this.database = getDatabase(this.app, config.databaseURL);
+    this.unsubscribeConnection = onValue(ref(this.database, '.info/connected'), (snapshot) => {
+      if (!this.disposed) this.setStatus({ ...this.status, networkConnected: snapshot.val() === true });
+    });
     this.ready = this.initialize();
   }
 
@@ -100,19 +106,20 @@ export class FirebaseHouseholdSession {
   }
 
   async signInWithGoogle() {
-    await setPersistence(this.auth, browserLocalPersistence);
-    if (this.auth.currentUser?.isAnonymous) await firebaseSignOut(this.auth);
     this.setStatus({ connection: 'connecting', label: '正在打开 Google 登录…' });
-    const provider = new GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: 'select_account' });
     try {
-      await signInWithPopup(this.auth, provider);
-      await this.resolveCurrentUser();
-    } catch (error) {
-      if (shouldUseRedirectFallback(error)) {
+      await setPersistence(this.auth, browserLocalPersistence);
+      if (this.auth.currentUser?.isAnonymous) await firebaseSignOut(this.auth);
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      try { await signInWithPopup(this.auth, provider); }
+      catch (error) {
+        if (!shouldUseRedirectFallback(error)) throw error;
         await signInWithRedirect(this.auth, provider);
         return;
       }
+      await this.resolveCurrentUser();
+    } catch (error) {
       this.fail('Google 登录失败', error);
       throw error;
     }
@@ -137,6 +144,7 @@ export class FirebaseHouseholdSession {
   dispose() {
     this.disposed = true;
     this.stopMemberSubscription();
+    this.unsubscribeConnection?.();
     this.listeners.clear();
   }
 
@@ -161,7 +169,7 @@ export class FirebaseHouseholdSession {
       }
       await this.resolveAccess(user);
     } catch (error) {
-      this.fail('Firebase 连接失败', error);
+      this.fail('家庭连接失败，请重试', error);
       throw error;
     }
   }
@@ -201,7 +209,7 @@ export class FirebaseHouseholdSession {
     }
 
     await set(ref(this.database, `households/${this.householdId}/accessRequests/${this.uid}`), { email: this.email });
-    this.setStatus({ connection: 'pending', label: '等待家庭管理员批准', uid: this.uid, email: this.email, enrollmentOpen: false });
+    this.setStatus({ connection: 'pending', label: '申请已发送，等待家庭管理员批准；批准后会自动连接。', uid: this.uid, email: this.email, enrollmentOpen: false });
     this.unsubscribeMember = onValue(memberRef, (next) => {
       if (this.disposed || next.child('email').val() !== this.email) return;
       this.connectMember(memberRef, next.child('displayName').val(), false);
@@ -212,7 +220,7 @@ export class FirebaseHouseholdSession {
     this.displayName = normalizeHouseholdDisplayName(rawDisplayName) ?? '';
     this.setStatus({
       connection: 'connected',
-      label: '已连接 Firebase',
+      label: '家庭已连接',
       uid: this.uid,
       email: this.email,
       displayName: this.displayName || undefined,
@@ -227,9 +235,9 @@ export class FirebaseHouseholdSession {
         return;
       }
       const nextDisplayName = normalizeHouseholdDisplayName(next.child('displayName').val()) ?? '';
-      if (nextDisplayName !== this.displayName) {
+      if (nextDisplayName !== this.displayName || this.status.connection === 'pending') {
         this.displayName = nextDisplayName;
-        this.setStatus({ ...this.status, displayName: this.displayName || undefined });
+        this.setStatus({ ...this.status, connection: 'connected', label: '家庭已连接', displayName: this.displayName || undefined });
       }
     }, (error) => this.fail('成员资料同步失败', error));
   }
@@ -250,12 +258,21 @@ export class FirebaseHouseholdSession {
   }
 
   private setStatus(status: HouseholdSessionStatus) {
-    this.status = status;
+    this.status = { networkConnected: this.status.networkConnected, ...status };
     this.emit();
   }
 
   private fail(label: string, error: unknown) {
-    const message = error instanceof Error ? error.message : String(error);
+    const messages: Record<string, string> = {
+      'auth/popup-closed-by-user': '登录窗口已关闭，点击 Google 登录可重试。',
+      'auth/cancelled-popup-request': '登录已取消，点击 Google 登录可重试。',
+      'auth/network-request-failed': '网络连接失败，请联网后重试。',
+      'auth/web-storage-unsupported': '浏览器未允许保存登录，请允许网站存储后重试。',
+      'auth/unauthorized-domain': '此网址尚未开通 Google 登录，请联系家庭管理员。',
+      'auth/operation-not-allowed': 'Google 登录尚未开通，请联系家庭管理员。',
+    };
+    const code = (error as { code?: string } | null)?.code ?? '';
+    const message = messages[code] ?? (error instanceof Error ? error.message : String(error));
     this.setStatus({
       connection: 'error',
       label,

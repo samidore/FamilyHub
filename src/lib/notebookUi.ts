@@ -9,6 +9,7 @@ import { setupNotebookItemUi } from './notebookItemUi.ts';
 import { setupNotebookPointerReorder } from './notebookPointerReorder.ts';
 import { setupNotebookPresetUi } from './notebookPresetUi.ts';
 import type { FirebaseConfig } from './householdRepository.ts';
+import { updateHouseholdCommentHtml } from './householdCommentUi.ts';
 
 const get = <T extends Element>(selector: string) => {
   const element = document.querySelector<T>(selector);
@@ -88,7 +89,7 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
     const ticketCount = Object.keys(state.inbox).length;
     inboxCount.textContent = ticketCount ? `${ticketCount} 条待整理` : '暂无待整理';
     presets.render();
-    boardsHost.innerHTML = renderNotebookBoards(state, displayName, now);
+    updateHouseholdCommentHtml(boardsHost, renderNotebookBoards(state, displayName, now), '[data-comment-add]');
     if (manager.dialog.open) manager.render();
 
     const refreshAt: number[] = [];
@@ -110,6 +111,7 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
     signIn.hidden = current.connection !== 'signed-out' && !(current.connection === 'error' && !current.email);
     refresh.hidden = current.connection !== 'pending' && !(current.connection === 'error' && Boolean(current.email));
     signOut.hidden = !current.email;
+    get<HTMLElement>('#notebook-sync-status').textContent = current.networkConnected === false ? '连接暂时中断，正在自动重连；显示上次读取的内容。' : '';
     if (connected) renderApp();
     else clearRenderTimer();
   };
@@ -117,7 +119,7 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
   repository.subscribe((next, repoStatus) => { state = next; renderStatus(repoStatus); });
   signIn.addEventListener('click', () => void repository.signInWithGoogle().catch((error) => status(String(error), true)));
   refresh.addEventListener('click', () => void repository.refreshAccess().catch((error) => status(String(error), true)));
-  signOut.addEventListener('click', () => void repository.signOut());
+  signOut.addEventListener('click', () => void repository.signOut().catch((error) => status(`退出失败，请重试：${String(error)}`, true)));
 
   document.querySelectorAll<HTMLButtonElement>('[data-view-filter]').forEach((button) => button.addEventListener('click', () => {
     const viewFilter = button.dataset.viewFilter as NotebookViewFilter;
@@ -136,15 +138,17 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
 
   inboxForm.addEventListener('submit', (event) => {
     event.preventDefault();
+    const submit = inboxForm.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    if (submit.disabled) return;
     const text = inboxInput.value.trim();
     if (!text) return;
+    submit.disabled = true;
     const ticketId = makeId('ticket');
     const time = stamp();
     void mutate('记下来了', (current) => ({ ...current, inbox: { ...current.inbox, [ticketId]: { id: ticketId, text, createdAt: time, updatedAt: time } } })).then((saved) => {
       if (!saved) return;
-      inboxInput.value = '';
-      inboxInput.focus();
-    });
+      if (inboxInput.value.trim() === text) inboxInput.value = '';
+    }).finally(() => { submit.disabled = false; });
   });
   window.addEventListener('beforeunload', () => { clearRenderTimer(); repository.dispose(); }, { once: true });
   renderStatus();

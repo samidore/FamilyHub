@@ -36,6 +36,7 @@ export interface RepositoryStatus {
   displayName?: string;
   enrollmentOpen?: boolean;
   error?: string;
+  networkConnected?: boolean;
 }
 export type StateListener = (state: HouseholdState, status: RepositoryStatus) => void;
 
@@ -243,23 +244,31 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
 
   private async initialize() {
     await this.session.ready.catch(() => undefined);
-    await this.handleSessionStatus(this.session.getStatus());
-    this.unsubscribeSession = this.session.subscribe((status) => { if (!this.disposed) void this.handleSessionStatus(status); });
+    let initialLoad: Promise<void> | undefined;
+    this.unsubscribeSession = this.session.subscribe((status) => {
+      if (this.disposed) return;
+      const loading = this.handleSessionStatus(status).catch((error) => {
+        if (!this.disposed && this.session.getStatus().uid === status.uid) this.fail('家庭数据读取失败，请重新检查权限后重试', error);
+      });
+      initialLoad ??= loading;
+    });
+    await initialLoad;
   }
 
   private async handleSessionStatus(sessionStatus: HouseholdSessionStatus) {
     if (sessionStatus.connection === 'connected' && sessionStatus.uid) {
-      if (this.connectedUid === sessionStatus.uid && this.status.connection === 'connected') {
-        this.setStatus(this.fromSessionStatus(sessionStatus));
+      if (this.connectedUid === sessionStatus.uid && ['connecting', 'connected'].includes(this.status.connection)) {
+        this.setStatus(this.status.connection === 'connected' ? this.fromSessionStatus(sessionStatus) : { ...this.status, networkConnected: sessionStatus.networkConnected });
         return;
       }
       this.stopStateSubscription();
-      const snapshot = await import('firebase/database').then(({ get }) => get(this.stateRef));
-      if (this.disposed || this.session.getStatus().connection !== 'connected') return;
       this.connectedUid = sessionStatus.uid;
+      this.setStatus({ ...sessionStatus, connection: 'connecting', label: '正在读取家庭数据…' });
+      const snapshot = await import('firebase/database').then(({ get }) => get(this.stateRef));
+      if (this.disposed || this.connectedUid !== sessionStatus.uid || this.session.getStatus().connection !== 'connected') return;
       if (hasLegacyChickenThighIngredientIds(snapshot.val()) || hasLegacyFrozenMetadata(snapshot.val())) {
         const migration = await runTransaction(this.stateRef, (value) => normalizePersistedState(value, this.ingredients));
-        if (this.disposed || this.session.getStatus().connection !== 'connected') return;
+        if (this.disposed || this.connectedUid !== sessionStatus.uid || this.session.getStatus().connection !== 'connected') return;
         this.setState(normalizePersistedState(migration.snapshot.val(), this.ingredients));
       } else {
         this.setStateFromSnapshot(snapshot);
@@ -267,9 +276,10 @@ export class FirebaseHouseholdRepository implements HouseholdRepository {
       const current = this.getSnapshot();
       if (hasExpiredDiscardedStock(current)) {
         const cleaned = await runTransaction(this.stateRef, (value) => cleanupDiscardedStock(normalizePersistedState(value, this.ingredients)));
+        if (this.disposed || this.connectedUid !== sessionStatus.uid || this.session.getStatus().connection !== 'connected') return;
         this.setState(normalizePersistedState(cleaned.snapshot.val(), this.ingredients));
       }
-      this.setStatus(this.fromSessionStatus(sessionStatus));
+      this.setStatus(this.fromSessionStatus(this.session.getStatus()));
       this.unsubscribeState = onValue(this.stateRef, (next) => { this.setStateFromSnapshot(next); this.cleanupExpiredDiscardedStock(); }, (error) => { if (!this.disposed) this.fail('Firebase 实时连接中断', error); });
       return;
     }

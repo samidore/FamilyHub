@@ -245,13 +245,19 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
     const commentForm = (event.target as HTMLElement).closest('[data-comment-add]') as HTMLFormElement | null;
     if (!commentForm?.dataset.commentAdd) return;
     event.preventDefault();
+    const submit = commentForm.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    if (submit.disabled) return;
     const body = String(new FormData(commentForm).get('comment') ?? '').trim();
     const authorName = context.repository.getCurrentMemberDisplayName();
     if (!body || !authorName) { context.status('评论显示名字尚未配置', true); return; }
+    submit.disabled = true;
     const commentId = makeId('comment');
     const time = stamp();
     const itemId = commentForm.dataset.commentAdd;
-    void context.mutate('添加评论', (current) => ({ ...current, comments: { ...current.comments, [commentId]: { id: commentId, itemId, body, authorName, createdAt: time } } })).then((saved) => { if (saved) commentForm.reset(); });
+    void context.mutate('添加评论', (current) => ({ ...current, comments: { ...current.comments, [commentId]: { id: commentId, itemId, body, authorName, createdAt: time } } })).then((saved) => {
+      const input = commentForm.querySelector<HTMLTextAreaElement>('textarea')!;
+      if (saved && input.value.trim() === body) commentForm.reset();
+    }).finally(() => { submit.disabled = false; });
   });
 
   host.addEventListener('dragstart', (event) => {

@@ -21,6 +21,7 @@ export interface NotebookRepositoryStatus {
   displayName?: string;
   enrollmentOpen?: boolean;
   error?: string;
+  networkConnected?: boolean;
 }
 export type NotebookStateListener = (state: NotebookState, status: NotebookRepositoryStatus) => void;
 
@@ -134,22 +135,30 @@ export class FirebaseNotebookRepository implements NotebookRepository {
 
   private async initialize() {
     await this.session.ready.catch(() => undefined);
-    await this.handleSessionStatus(this.session.getStatus());
-    this.unsubscribeSession = this.session.subscribe((status) => { if (!this.disposed) void this.handleSessionStatus(status); });
+    let initialLoad: Promise<void> | undefined;
+    this.unsubscribeSession = this.session.subscribe((status) => {
+      if (this.disposed) return;
+      const loading = this.handleSessionStatus(status).catch((error) => {
+        if (!this.disposed && this.session.getStatus().uid === status.uid) this.fail('小本本读取失败，请重新检查权限后重试', error);
+      });
+      initialLoad ??= loading;
+    });
+    await initialLoad;
   }
 
   private async handleSessionStatus(sessionStatus: HouseholdSessionStatus) {
     if (sessionStatus.connection === 'connected' && sessionStatus.uid) {
-      if (this.connectedUid === sessionStatus.uid && this.status.connection === 'connected') {
-        this.setStatus(this.fromSessionStatus(sessionStatus));
+      if (this.connectedUid === sessionStatus.uid && ['connecting', 'connected'].includes(this.status.connection)) {
+        this.setStatus(this.status.connection === 'connected' ? this.fromSessionStatus(sessionStatus) : { ...this.status, networkConnected: sessionStatus.networkConnected });
         return;
       }
       this.stopNotebookSubscription();
-      const snapshot = await get(this.notebookRef);
-      if (this.disposed || this.session.getStatus().connection !== 'connected') return;
       this.connectedUid = sessionStatus.uid;
+      this.setStatus({ ...sessionStatus, connection: 'connecting', label: '正在读取小本本…' });
+      const snapshot = await get(this.notebookRef);
+      if (this.disposed || this.connectedUid !== sessionStatus.uid || this.session.getStatus().connection !== 'connected') return;
       this.setStateFromSnapshot(snapshot);
-      this.setStatus(this.fromSessionStatus(sessionStatus));
+      this.setStatus(this.fromSessionStatus(this.session.getStatus()));
       this.unsubscribeNotebook = onValue(this.notebookRef, (next) => this.setStateFromSnapshot(next), (error) => { if (!this.disposed) this.fail('Firebase 实时连接中断', error); });
       return;
     }

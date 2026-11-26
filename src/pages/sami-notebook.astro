@@ -19,7 +19,7 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
   <main id="main-content" class="shell notebook-shell">
     <section id="notebook-auth-shell" class="notebook-auth" data-authenticated-shell>
       <h2>家庭共享内容</h2>
-      <p id="notebook-auth-message">正在检查登录状态…</p>
+      <p id="notebook-auth-message" aria-live="polite">正在检查登录状态…</p>
       <div class="notebook-auth__actions">
         <button id="notebook-sign-in" type="button" hidden>使用 Google 登录</button>
         <button id="notebook-refresh-access" type="button" hidden>重新检查权限</button>
@@ -29,6 +29,7 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
     </section>
 
     <section id="notebook-app" hidden>
+      <p id="notebook-sync-status" class="notebook-live" aria-live="polite"></p>
       <div id="notebook-display-name-panel" class="display-name-panel"></div>
 
       <section class="notebook-toolbar" aria-label="小本本控制">

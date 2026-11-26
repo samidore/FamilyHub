@@ -14,6 +14,7 @@ import {
 } from './dayTripInteractionAliases.ts';
 import { escapeHouseholdHtml, householdCommentWindow, householdPersonIconHtml } from './householdPeople.ts';
 import type { FirebaseConfig } from './householdSession.ts';
+import { updateHouseholdCommentHtml } from './householdCommentUi.ts';
 
 const stamp = () => Date.now();
 const makeId = (prefix: string) => `${prefix}-${crypto.randomUUID()}`;
@@ -64,6 +65,17 @@ export function mountDayTripInteractionUi(config: Partial<FirebaseConfig>, optio
   let state = repository.getSnapshot();
   let currentStatus = repository.getStatus();
   const isConnected = () => currentStatus.connection === 'connected' || currentStatus.connection === 'local';
+  const act = async (label: string, action: () => Promise<unknown>) => {
+    authMessage.textContent = `${label}…`;
+    try {
+      await action();
+      authMessage.textContent = `${label}完成`;
+      return true;
+    } catch {
+      authMessage.textContent = `${label}失败，请重试。`;
+      return false;
+    }
+  };
 
   const renderCards = () => {
     const uid = repository.getCurrentUid();
@@ -84,7 +96,7 @@ export function mountDayTripInteractionUi(config: Partial<FirebaseConfig>, optio
       const people = card.querySelector<HTMLElement>('[data-trip-reaction-people]');
       if (people) people.innerHTML = reactionPeopleHtml(reactions);
       const comments = card.querySelector<HTMLElement>('[data-trip-comments]');
-      if (comments) comments.innerHTML = commentsHtml(dayTripCommentsForDestination(state, destinationId), destinationId, displayName, connected);
+      if (comments) updateHouseholdCommentHtml(comments, commentsHtml(dayTripCommentsForDestination(state, destinationId), destinationId, displayName, connected), '[data-trip-comment-add]');
     }
     window.dispatchEvent(new Event('daytripinteractionschange'));
   };
@@ -94,7 +106,7 @@ export function mountDayTripInteractionUi(config: Partial<FirebaseConfig>, optio
     const connected = isConnected();
     if (connected) {
       authShell.dataset.state = 'connected';
-      authMessage.textContent = status.displayName ? `家庭评价 · ${status.displayName}` : '家庭评价已连接 · 尚未配置显示名字';
+      authMessage.textContent = status.networkConnected === false ? '连接暂时中断，正在自动重连；显示上次读取的内容。' : status.displayName ? `家庭评价 · ${status.displayName}` : '家庭评价已连接 · 尚未配置显示名字';
     } else if (status.connection === 'error') {
       authShell.dataset.state = 'error';
       authMessage.textContent = status.error ? `${status.label}：${status.error}` : status.label;
@@ -113,9 +125,9 @@ export function mountDayTripInteractionUi(config: Partial<FirebaseConfig>, optio
     renderStatus(status);
   });
 
-  signIn.addEventListener('click', () => void repository.signInWithGoogle());
-  refresh.addEventListener('click', () => void repository.refreshAccess());
-  signOut.addEventListener('click', () => void repository.signOut());
+  signIn.addEventListener('click', () => void repository.signInWithGoogle().catch(() => { authMessage.textContent = repository.getStatus().error || '登录失败，请重试。'; }));
+  refresh.addEventListener('click', () => void repository.refreshAccess().catch(() => { authMessage.textContent = repository.getStatus().error || '权限检查失败，请重试。'; }));
+  signOut.addEventListener('click', () => void act('退出登录', () => repository.signOut()));
 
   host.addEventListener('click', (event) => {
     const target = event.target as HTMLElement;
@@ -131,10 +143,10 @@ export function mountDayTripInteractionUi(config: Partial<FirebaseConfig>, optio
       const current = reactions[uid]?.value;
       const nextValue = current === value ? null : value;
       const legacyIds = dayTripLegacyInteractionIds(destinationId).filter((legacyId) => Boolean(state.reactions[legacyId]?.[uid]));
-      void (async () => {
+      void act('保存家庭评价', async () => {
         for (const legacyId of legacyIds) await repository.setReaction(legacyId, null);
         await repository.setReaction(destinationId, nextValue);
-      })();
+      });
       return;
     }
 
@@ -143,13 +155,14 @@ export function mountDayTripInteractionUi(config: Partial<FirebaseConfig>, optio
       const comment = state.comments[edit.dataset.tripEditComment];
       if (!comment) return;
       const body = window.prompt('修改评论', comment.body)?.trim();
-      if (body && body !== comment.body) void repository.editComment(comment.id, body, stamp());
+      if (body && body !== comment.body) void act('修改评论', () => repository.editComment(comment.id, body, stamp()));
       return;
     }
 
     const remove = target.closest<HTMLButtonElement>('[data-trip-delete-comment]');
     if (remove?.dataset.tripDeleteComment && window.confirm('删除这条评论？')) {
-      void repository.deleteComment(remove.dataset.tripDeleteComment);
+      const commentId = remove.dataset.tripDeleteComment;
+      void act('删除评论', () => repository.deleteComment(commentId));
     }
   });
 
@@ -157,12 +170,17 @@ export function mountDayTripInteractionUi(config: Partial<FirebaseConfig>, optio
     const form = (event.target as HTMLElement).closest<HTMLFormElement>('[data-trip-comment-add]');
     if (!form?.dataset.tripCommentAdd) return;
     event.preventDefault();
+    const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    if (submit.disabled) return;
     const body = String(new FormData(form).get('comment') ?? '').trim();
     const authorName = repository.getCurrentMemberDisplayName();
     if (!body || !authorName) return;
+    submit.disabled = true;
     const id = makeId('trip-comment');
     const comment: DayTripComment = { id, destinationId: form.dataset.tripCommentAdd, body, authorName, createdAt: stamp() };
-    void repository.addComment(comment).then(() => form.reset());
+    void act('添加评论', () => repository.addComment(comment)).then((saved) => {
+      if (saved && form.querySelector<HTMLTextAreaElement>('textarea')!.value.trim() === body) form.reset();
+    }).finally(() => { submit.disabled = false; });
   });
 
   window.addEventListener('beforeunload', () => repository.dispose(), { once: true });

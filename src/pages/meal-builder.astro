@@ -401,7 +401,8 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
       googleLogin.hidden = repository.kind !== 'firebase' || (repositoryStatus.connection !== 'signed-out' && !(repositoryStatus.connection === 'error' && !repositoryStatus.email));
       accessRefresh.hidden = repositoryStatus.connection !== 'pending' && !(repositoryStatus.connection === 'error' && Boolean(repositoryStatus.email));
       logout.hidden = repository.kind !== 'firebase' || !repositoryStatus.email;
-      if (repositoryStatus.connection === 'connected' && repositoryStatus.enrollmentOpen) connection.textContent = '家庭已连接 · 开放加入中';
+      if (repositoryStatus.connection === 'connected' && repositoryStatus.networkConnected === false) connection.textContent = '连接暂时中断，正在自动重连；显示上次读取的内容。';
+      else if (repositoryStatus.connection === 'connected' && repositoryStatus.enrollmentOpen) connection.textContent = '家庭已连接 · 开放加入中';
       else if (repositoryStatus.connection === 'connected') connection.textContent = '家庭已连接';
       else if (repositoryStatus.connection === 'local') connection.textContent = '本地家庭同步';
       else if (repositoryStatus.connection === 'signed-out') connection.textContent = '请登录以连接家庭';

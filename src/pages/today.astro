@@ -43,14 +43,16 @@ const firebaseConfig = JSON.stringify({
       <div class="today-auth-actions">
         <button id="today-sign-in" type="button" hidden>使用 Google 登录</button>
         <button id="today-refresh-access" type="button" hidden>重新检查权限</button>
+        <button id="today-retry-data" type="button" hidden>重新读取家庭数据</button>
         <button id="today-sign-out" type="button" hidden>退出登录</button>
       </div>
     </section>
     <section id="today-push" class="today-push" hidden>
-      <div><strong>手机通知</strong><p id="today-push-status">正在检查设备通知状态…</p></div>
+      <div><strong>手机通知</strong><p id="today-push-status" aria-live="polite">正在检查设备通知状态…</p></div>
       <div class="today-auth-actions">
         <button id="today-enable-push" type="button" hidden>开启通知</button>
         <button id="today-disable-push" type="button" hidden>关闭通知</button>
+        <button id="today-check-push" type="button" hidden>重新检查通知</button>
       </div>
     </section>
     <div id="today-dashboard" class="today-dashboard" hidden>
@@ -98,17 +100,22 @@ const firebaseConfig = JSON.stringify({
     const authMessage = document.getElementById('today-auth-message')!;
     const loginButton = document.getElementById('today-sign-in') as HTMLButtonElement;
     const refreshButton = document.getElementById('today-refresh-access') as HTMLButtonElement;
+    const retryButton = document.getElementById('today-retry-data') as HTMLButtonElement;
     const logoutButton = document.getElementById('today-sign-out') as HTMLButtonElement;
     const pushPanel = document.getElementById('today-push')!;
     const pushStatus = document.getElementById('today-push-status')!;
     const pushEnable = document.getElementById('today-enable-push') as HTMLButtonElement;
     const pushDisable = document.getElementById('today-disable-push') as HTMLButtonElement;
+    const pushCheck = document.getElementById('today-check-push') as HTMLButtonElement;
     let pushCheckedUid = '';
     const session = hasCompleteFirebaseConfig(config) ? new FirebaseHouseholdSession(config) : null;
     let meal: HouseholdState | null = null;
     let notebook: NotebookState | null = null;
     let connectedUid = '';
     let errorMessage = '';
+    let dataError = '';
+    let mealLoading = true;
+    let notebookLoading = true;
     let stopMeal: (() => void) | undefined;
     let stopNotebook: (() => void) | undefined;
 
@@ -126,6 +133,9 @@ const firebaseConfig = JSON.stringify({
     };
     function renderTasks(id: string, items: NotebookItem[], empty: string, today: string, limit: number) {
       const target = document.getElementById(id)!;
+      const contentKey = JSON.stringify([items, today]);
+      if (target.dataset.contentKey === contentKey) return;
+      target.dataset.contentKey = contentKey;
       target.replaceChildren();
       if (!items.length) {
         const li = document.createElement('li'); li.className = 'today-empty'; li.textContent = empty; target.append(li);
@@ -178,37 +188,63 @@ const firebaseConfig = JSON.stringify({
       renderStockGroup(stock, '库存份数偏多', summary.highStock.map((item) => `${item.name} · ${item.quantity} 份`));
       renderStockGroup(stock, '正在化冻', summary.thawing.map((item) => `${item.name} · ${item.quantity} 份 · ${item.readyAt <= now ? '已可转冷藏' : new Intl.DateTimeFormat('zh-CN', { month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(item.readyAt)}`));
       if (!stock.childElementCount) stock.textContent = '目前没有需要优先处理的库存或化冻任务。';
+      if (session) showAuth(session.getStatus());
     }
     function stopListening() {
       stopMeal?.(); stopNotebook?.(); stopMeal = undefined; stopNotebook = undefined;
       connectedUid = ''; meal = null; notebook = null; dashboard.hidden = true;
+      dataError = '';
     }
-    function setPushState(enabled: boolean, message = '') {
-      pushEnable.hidden = enabled || !todayPushAvailable() || !config.webPushPublicKey;
-      pushDisable.hidden = !enabled;
+    function setPushState(enabled: boolean | null, message = '') {
+      const denied = todayPushAvailable() && Notification.permission === 'denied';
+      pushEnable.hidden = enabled !== false || !todayPushAvailable() || !config.webPushPublicKey || denied;
+      pushDisable.hidden = enabled !== true;
+      pushCheck.hidden = enabled !== null || !message;
       pushStatus.textContent = message || (enabled ? '此设备已开启家庭通知。' : !config.webPushPublicKey
-        ? '推送服务器尚未完成配置，Today 看板仍可正常使用。'
-        : todayPushAvailable() ? '在此设备开启点菜变化和到期提醒。' : 'iPhone 请从 Safari 添加到主屏幕后再开启。');
+        ? '通知服务尚未配置完成，今日看板仍可正常使用。'
+        : denied ? '通知权限已关闭。请在浏览器或手机设置中允许 FamilyHub 通知，再重新打开此页。'
+        : todayPushAvailable() ? '在此设备开启点菜变化和到期提醒。' : '此浏览器暂不支持通知。iPhone 请从 Safari 添加到主屏幕后再开启。');
     }
+    const isCurrentMember = (uid: string | undefined) => session?.getStatus().connection === 'connected' && session.getStatus().uid === uid;
+    function checkPushState() {
+      const uid = session?.getStatus().uid;
+      if (!session || !uid) return;
+      if (!todayPushAvailable()) { setPushState(false); return; }
+      setPushState(null);
+      pushStatus.textContent = '正在检查设备通知状态…';
+      void todayPushIsEnabled(session, base).then((enabled) => {
+        if (isCurrentMember(uid)) setPushState(enabled);
+      }).catch(() => {
+        if (isCurrentMember(uid)) setPushState(null, '暂时无法确认通知状态，请重新检查。');
+      });
+    }
+    pushCheck.addEventListener('click', checkPushState);
     pushEnable.addEventListener('click', () => {
       if (!session) return;
+      const uid = session.getStatus().uid;
       pushEnable.disabled = true;
-      void enableTodayPush(session, config.webPushPublicKey ?? '', base).then(() => setPushState(true))
-        .catch((error: Error) => setPushState(false, error.message))
+      pushStatus.textContent = '正在开启通知，请确认通知权限…';
+      void enableTodayPush(session, config.webPushPublicKey ?? '', base).then(() => { if (isCurrentMember(uid)) setPushState(true); })
+        .catch(() => { if (isCurrentMember(uid)) setPushState(false, Notification.permission === 'denied' ? '通知权限已关闭，请在浏览器或手机设置中允许 FamilyHub 通知。' : '开启通知失败，请重试。'); })
         .finally(() => { pushEnable.disabled = false; });
     });
     pushDisable.addEventListener('click', () => {
       if (!session) return;
+      const uid = session.getStatus().uid;
       pushDisable.disabled = true;
-      void disableTodayPush(session).then(() => setPushState(false))
-        .catch((error: Error) => setPushState(true, error.message))
+      pushStatus.textContent = '正在关闭此设备的通知…';
+      void disableTodayPush(session, base).then(() => { if (isCurrentMember(uid)) setPushState(false); })
+        .catch(() => { if (isCurrentMember(uid)) setPushState(true, '关闭通知失败，请重试。'); })
         .finally(() => { pushDisable.disabled = false; });
     });
     function showAuth(status: HouseholdSessionStatus) {
       loginButton.hidden = !(status.connection === 'signed-out' || (status.connection === 'error' && !status.email));
       refreshButton.hidden = !(status.connection === 'pending' || (status.connection === 'error' && Boolean(status.email)));
       logoutButton.hidden = !status.email;
-      authMessage.textContent = errorMessage || (status.connection === 'connected' ? '家庭数据实时同步中' : status.error || status.label);
+      retryButton.hidden = status.connection !== 'connected' || !dataError;
+      authMessage.textContent = errorMessage || (status.connection === 'connected'
+        ? dataError || (status.networkConnected === false ? '连接暂时中断，正在自动重连；显示上次读取的内容。' : mealLoading || notebookLoading ? '正在读取家庭数据…' : '家庭数据已同步')
+        : status.error || status.label);
       pushPanel.hidden = status.connection !== 'connected';
       if (status.connection !== 'connected' || !status.uid) {
         pushCheckedUid = '';
@@ -217,35 +253,50 @@ const firebaseConfig = JSON.stringify({
       }
       if (pushCheckedUid !== status.uid) {
         pushCheckedUid = status.uid;
-        setPushState(false);
-        if (session && todayPushAvailable() && config.webPushPublicKey) {
-          void todayPushIsEnabled(session).then((enabled) => {
-            if (session.getStatus().uid === status.uid) setPushState(enabled);
-          }).catch(() => { /* User may choose to re-enable this device. */ });
-        }
+        checkPushState();
       }
-      errorMessage = '';
       if (connectedUid === status.uid) return;
       stopListening(); connectedUid = status.uid;
+      listenToData();
+    }
+    function listenToData() {
+      stopMeal?.(); stopNotebook?.();
+      mealLoading = true; notebookLoading = true;
+      const uid = connectedUid;
       const path = `households/${config.householdId}`;
       stopMeal = onValue(ref(session!.database, `${path}/state`), (snapshot) => {
-        if (session!.getStatus().connection !== 'connected') return;
+        if (!isCurrentMember(uid)) return;
         meal = normalizeHouseholdState(snapshot.val(), catalog.ingredients);
+        mealLoading = false;
         render();
-      }, (error) => { errorMessage = `点菜状态读取失败：${error.message}`; showAuth(session!.getStatus()); });
+      }, () => { if (isCurrentMember(uid)) { dataError = '点菜状态读取失败，请重新读取家庭数据。'; showAuth(session!.getStatus()); } });
       stopNotebook = onValue(ref(session!.database, `${path}/notebook`), (snapshot) => {
-        if (session!.getStatus().connection !== 'connected') return;
+        if (!isCurrentMember(uid)) return;
         notebook = normalizeNotebookState(snapshot.val());
+        notebookLoading = false;
         render();
-      }, (error) => { errorMessage = `小本本读取失败：${error.message}`; showAuth(session!.getStatus()); });
+      }, () => { if (isCurrentMember(uid)) { dataError = '小本本读取失败，请重新读取家庭数据。'; showAuth(session!.getStatus()); } });
     }
-    loginButton.addEventListener('click', () => { void session?.signInWithGoogle().catch((error: Error) => { errorMessage = error.message; if (session) showAuth(session.getStatus()); }); });
-    refreshButton.addEventListener('click', () => { void session?.refreshAccess().catch((error: Error) => { errorMessage = error.message; if (session) showAuth(session.getStatus()); }); });
+    retryButton.addEventListener('click', () => {
+      if (!session || !connectedUid) return;
+      dataError = ''; errorMessage = '';
+      listenToData(); showAuth(session.getStatus());
+    });
+    function runAuth(button: HTMLButtonElement, action: () => Promise<void>, message: string) {
+      if (!session || button.disabled) return;
+      button.disabled = true; errorMessage = '';
+      authMessage.textContent = message;
+      void action().catch(() => {
+        errorMessage = session.getStatus().error || '操作失败，请重试。'; showAuth(session.getStatus());
+      }).finally(() => { button.disabled = false; });
+    }
+    loginButton.addEventListener('click', () => runAuth(loginButton, () => session!.signInWithGoogle(), '正在打开 Google 登录…'));
+    refreshButton.addEventListener('click', () => runAuth(refreshButton, () => session!.refreshAccess(), '正在重新检查家庭权限…'));
     logoutButton.addEventListener('click', () => {
       if (!session) return;
-      void (async () => {
-        try { await disableTodayPush(session); } finally { await session.signOut(); }
-      })().catch((error: Error) => { errorMessage = error.message; showAuth(session.getStatus()); });
+      runAuth(logoutButton, async () => {
+        try { await disableTodayPush(session, base); } finally { await session.signOut(); }
+      }, '正在关闭此设备通知并退出登录…');
     });
     if (session) {
       session.subscribe(showAuth);

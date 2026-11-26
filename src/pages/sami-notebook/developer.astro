@@ -12,7 +12,7 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
 
     <section id="developer-auth-shell" class="notebook-auth" data-authenticated-shell>
       <h2>家庭共享内容</h2>
-      <p id="developer-auth-message">正在检查登录状态…</p>
+      <p id="developer-auth-message" aria-live="polite">正在检查登录状态…</p>
       <div class="notebook-auth__actions">
         <button id="developer-sign-in" type="button" hidden>使用 Google 登录</button>
         <button id="developer-refresh-access" type="button" hidden>重新检查权限</button>
@@ -22,6 +22,7 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
     </section>
 
     <section id="developer-app" class="developer-app" hidden>
+      <p id="developer-sync-status" class="notebook-live" aria-live="polite"></p>
       <p id="developer-live-status" class="notebook-live" aria-live="polite"></p>
 
       <section class="developer-panel" aria-labelledby="developer-inbox-title">
