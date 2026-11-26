@@ -34,8 +34,8 @@ test('Restaurants renders restaurant metadata and Meal Builder-style tag bulk fi
     }),
   })));
   expect(ratingGeometry).toEqual([
-    { slots: Array(5).fill([40, 48]), icons: Array(5).fill([24, 24]) },
-    { slots: Array(5).fill([40, 48]), icons: Array(5).fill([24, 24]) },
+    { slots: Array(5).fill([40, 48]), icons: Array(5).fill([22, 22]) },
+    { slots: Array(5).fill([40, 48]), icons: Array(5).fill([22, 22]) },
   ]);
 
   const disclosure = page.locator('.filter-disclosure');

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/mealPresentation.css';
 import MealInventoryImport from '../components/MealInventoryImport.astro';
 import MealBuilderNavigationEnhancements from '../components/MealBuilderNavigationEnhancements.astro';
 import MealBuilderCompositionEnhancements from '../components/MealBuilderCompositionEnhancements.astro';
@@ -22,7 +23,7 @@ const clientData = JSON.stringify({
   optionalGroups: mealData.optionalGroups,
   ingredients: mealData.ingredients.map((ingredient) => ({ id: ingredient.id, nameZh: ingredient.nameZh, nameEn: ingredient.nameEn, visible: ingredient.visible, section: ingredient.section, tags: ingredient.tags, inventoryTracking: ingredient.inventoryTracking, inventoryFreshness: ingredient.inventoryFreshness, freshnessPriorityDays: ingredient.freshnessPriorityDays, freezerBehavior: ingredient.freezerBehavior, childCoverage: ingredient.childCoverage })),
   recipes: recipes.map((recipe) => ({
-    id: recipe.id, nameZh: recipe.nameZh, checkoutUnits: recipe.checkoutUnits, order: recipe.order, fitScore: recipe.fitScore, contribution: recipe.contribution,
+    id: recipe.id, nameZh: recipe.nameZh, nameEn: recipe.nameEn, equipment: recipe.equipment, activeMinutes: recipe.activeMinutes, checkoutUnits: recipe.checkoutUnits, order: recipe.order, fitScore: recipe.fitScore, contribution: recipe.contribution,
     childCoverage: recipe.childCoverage, requirements: recipe.requirements, optionalGroupIds: recipe.optionalGroupIds, finishOptions: recipe.finishOptions, servingOptions: recipe.servingOptions, tags: recipe.tags,
     ingredientChildCoverage: recipe.ingredientChildCoverage, mealWindowMinutes: recipe.mealWindowMinutes,
     elapsedMinutes: recipe.elapsedMinutes, advanceStartRequired: recipe.advanceStartRequired,
@@ -50,12 +51,12 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
     <div class="summary-row"><span>{visibleIngredients.length} 种可选食材</span><span>{recipes.length} 道候选菜</span></div>
   </SiteHeader>
 
-  <main id="main-content" class="meal-builder-app" data-enhanced="false">
+  <main id="main-content" class="meal-builder-app" data-enhanced="false" data-household-ready="false">
     <noscript><div class="shell meal-noscript note-box"><strong>当前是阅读模式。</strong>启用 JavaScript 后可以选择食材、实时组餐和开始做饭；下方仍完整列出食材与菜谱。</div></noscript>
     <div id="meal-live" class="sr-only" aria-live="polite"></div>
     <nav class="shell meal-step-band" aria-label="组餐步骤"><ol><li data-step="inventory"><button type="button" data-step-target="inventory">1 库存</button></li><li data-step="recipes"><button type="button" data-step-target="recipes">2 选菜</button></li><li data-step="cook"><button type="button" data-step-target="cook">3 做饭</button></li><li data-step="checkout"><button type="button" data-step-target="checkout">4 结算</button></li></ol></nav>
 
-    <section class="shell meal-household-bar" aria-label="家庭共享状态">
+    <section class="shell meal-household-bar household-status" aria-label="家庭共享状态">
       <div>
         <p id="meal-connection" class="meal-connection" role="status">家庭同步准备中</p>
         <p id="meal-account" class="meal-uid" hidden></p>
@@ -82,9 +83,9 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
     </section>
 
     <section id="meal-builder-view" class="shell meal-workspace" aria-label="组餐设置与候选菜">
-      <div class="meal-step-actions"><button id="meal-back-inventory" class="button button--secondary" type="button">返回库存</button></div>
+      <div class="meal-step-actions"><button id="meal-back-inventory" class="button button--secondary" type="button">返回库存</button><button id="meal-reset" class="clear-button" type="button">重置本顿选菜</button></div>
       <section class="meal-targets" aria-labelledby="meal-targets-heading">
-        <div class="meal-section-heading"><div><p class="eyebrow">01 · 这顿需要什么</p><h2 id="meal-targets-heading">组餐目标</h2></div><button id="meal-reset" class="clear-button" type="button">重置本顿选菜</button></div>
+        <div class="meal-section-heading"><div><p class="eyebrow">01 · 这顿需要什么</p><h2 id="meal-targets-heading">组餐目标</h2></div></div>
         <div class="meal-target-grid">
           <label><span>Protein</span><select id="meal-protein">{MEAL_TARGET_OPTIONS.map((value) => <option value={value} selected={value === initialMealState.proteinTarget}>{value}</option>)}</select></label>
           <label><span>Vegetable</span><select id="meal-vegetable">{MEAL_TARGET_OPTIONS.map((value) => <option value={value} selected={value === initialMealState.vegetableTarget}>{value}</option>)}</select></label>
@@ -158,15 +159,22 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
         <div class="meal-section-heading"><div><p class="eyebrow">03 · 逐步补齐</p><h2 id="meal-results-heading">候选菜</h2><p id="meal-guidance">先选择可用食材，候选菜会在这里出现。</p></div><span id="meal-result-count" class="meal-count" aria-live="polite">0 道可选</span></div>
         <div id="meal-recipe-grid" class="meal-recipe-grid">
           {recipes.map((recipe) => <article class="meal-recipe-card" data-meal-recipe={recipe.id}>
-            <div class="meal-recipe-card__heading"><div><h3>{recipe.nameZh}</h3><p>{recipe.nameEn}</p></div><div class="meal-recipe-card__signals"><span class="meal-freshness-badge" data-candidate-freshness-badge hidden><svg viewBox="0 0 16 14" aria-hidden="true" data-freshness-icon="hourglass"><path d="M5 3h6c0 1.9-.9 3.1-3 4 2.1.9 3 2.1 3 4H5c0-1.9.9-3.1 3-4-2.1-.9-3-2.1-3-4Z"></path><path d="M4 2h8M4 12h8"></path></svg><span>临期</span></span><span class="meal-role">{recipe.primaryRole}</span></div></div>
-            <div class="badges"><span class="badge">{contributionText(recipe)}</span>{recipe.childCoverage.protein === true && <span class="badge">孩子蛋白 ✓</span>}{recipe.childCoverage.vegetable === true && <span class="badge">孩子蔬菜 ✓</span>}{recipe.childCoverage.vegetable === 'ingredient-dependent' && <span class="badge" data-child-vegetable-badge>孩子蔬菜：按食材</span>}<span class="badge" data-time-badge hidden></span></div>
+            <div class="meal-recipe-card__heading"><div><h3><span data-candidate-name>{recipe.nameZh}</span><small>{recipe.nameEn}</small></h3></div><div class="meal-recipe-card__signals"><span class="meal-freshness-badge" data-candidate-freshness-badge hidden><svg viewBox="0 0 16 14" aria-hidden="true" data-freshness-icon="hourglass"><path d="M5 3h6c0 1.9-.9 3.1-3 4 2.1.9 3 2.1 3 4H5c0-1.9.9-3.1 3-4-2.1-.9-3-2.1-3-4Z"></path><path d="M4 2h8M4 12h8"></path></svg><span>临期</span></span></div></div>
+            <div class="gives">
+              {recipe.contribution.protein > 0 && <span class="give">Protein +{recipe.contribution.protein}</span>}
+              {recipe.contribution.vegetable > 0 && <span class="give">Vegetable +{recipe.contribution.vegetable}</span>}
+              {recipe.contribution.staple > 0 && <span class="give">Staple ✓</span>}
+              {recipe.childCoverage.protein === true && <span class="give">孩子蛋白 ✓</span>}
+              {recipe.childCoverage.vegetable === true && <span class="give">孩子蔬菜 ✓</span>}
+              {recipe.childCoverage.vegetable === 'ingredient-dependent' && <span class="give">孩子蔬菜：按食材</span>}
+            </div>
+            <p class="uses"><span data-candidate-uses>{recipe.requirements.map((requirement) => requirement.anyOf.map((id) => mealData.ingredients.find((item) => item.id === id)?.nameZh ?? id).join(' / ') + (requirement.anyOf.length > 1 ? ' 选一' : '')).join(' · ')}</span><span class="meal-timing"> · {recipe.mealWindowMinutes || recipe.elapsedMinutes || recipe.activeMinutes}{recipe.advanceStartRequired ? ' · 需提前开始' : ''}</span><span data-time-badge hidden></span></p>
+            <details class="comp" data-candidate-composition={recipe.id}><summary><span class="disclosure-closed">构成</span><span class="disclosure-open">收起构成</span></summary><dl>{recipe.equipment.length > 0 && <div><dt>器具</dt><dd>{recipe.equipment.join(' · ')}</dd></div>}</dl></details>
             <div class="meal-recipe-bindings" data-recipe-bindings={recipe.id}></div>
-            <p class="meal-timing">{recipe.mealWindowMinutes || recipe.elapsedMinutes || recipe.activeMinutes}{recipe.advanceStartRequired ? ' · 需提前开始' : ''}</p>
-            <p class="meal-equipment">{recipe.equipment.join(' · ')}</p>
-            <button class="button button--primary" type="button" data-select-recipe={recipe.id}>选择这道菜</button>
+            <button class="button button--primary" type="button" data-select-recipe={recipe.id} disabled>选择这道菜</button>
           </article>)}
         </div>
-        <p id="meal-empty" class="empty-state" hidden>目前没有能补齐缺口的候选菜。增加可用食材，或调整组餐目标。</p>
+        <div id="meal-empty" class="empty-state" hidden><p>目前没有能补齐缺口的候选菜。增加可用食材，或调整组餐目标。</p><button class="button button--secondary" id="meal-empty-back" type="button">回到可用食材</button></div>
       </section>
     </section>
 
@@ -417,6 +425,7 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
       document.querySelector<HTMLElement>('#meal-inventory-view')!.hidden = household.activeStep !== 'inventory';
       document.querySelector<HTMLElement>('.meal-current-tools')!.hidden = household.activeStep !== 'inventory';
       const writesEnabled = canWrite();
+      document.querySelector<HTMLElement>('.meal-builder-app')!.dataset.householdReady = String(writesEnabled);
       const startCurrent = document.querySelector<HTMLButtonElement>('#meal-start-current')!;
       startCurrent.disabled = !writesEnabled || (hasMeal && household.activeStep !== 'inventory');
       document.querySelector<HTMLButtonElement>('#meal-inventory-reset')!.disabled = !writesEnabled;
@@ -550,6 +559,7 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
     document.querySelectorAll<HTMLButtonElement>('[data-remove-recipe]').forEach((button) => button.addEventListener('click', () => { if (!household.currentMeal || !canWrite()) return; const id = button.dataset.removeRecipe!; state = reconcileMealState({ ...state, selectedRecipeIds: state.selectedRecipeIds.filter((selectedId) => selectedId !== id) }, recipes, ingredients, optionalGroups); void persistMeal((meal) => reconcileCurrentMeal({ ...meal, selectedRecipeIds: meal.selectedRecipeIds.filter((selectedId) => selectedId !== id), checkoutDraft: {} }, recipes, ingredients, optionalGroups)); render(); announce('已移除一道菜。'); }));
     protein.addEventListener('change', () => { if (!canWrite() || !household.currentMeal) return; const value = Number(protein.value); state = { ...state, proteinTarget: value }; void persistMeal((meal) => ({ ...meal, proteinTarget: value })); render(); }); vegetable.addEventListener('change', () => { if (!canWrite() || !household.currentMeal) return; const value = Number(vegetable.value); state = { ...state, vegetableTarget: value }; void persistMeal((meal) => ({ ...meal, vegetableTarget: value })); render(); }); time.addEventListener('change', () => { if (!canWrite() || !household.currentMeal) return; const value = time.value as TimePreference; state = { ...state, timePreference: value }; void persistMeal((meal) => ({ ...meal, timePreference: value })); render(); }); staple.addEventListener('change', () => { if (!canWrite() || !household.currentMeal) return; const value = staple.checked; state = { ...state, stapleRequired: value }; void persistMeal((meal) => ({ ...meal, stapleRequired: value })); render(); }); child.addEventListener('change', () => { if (!canWrite() || !household.currentMeal) return; const value = child.checked; state = { ...state, childMode: value }; void persistMeal((meal) => ({ ...meal, childMode: value })); render(); });
     const resetRecipes = () => { if (!household.currentMeal || !canWrite()) return; state = { ...state, selectedRecipeIds: [], recipeIngredientBindings: {} }; view = 'build'; void persistMeal((meal) => resetRecipeSelection(meal)); render(); announce('已重置本顿选菜；库存和本顿可用食材未改变。'); };
+    document.querySelector('#meal-empty-back')!.addEventListener('click', () => document.querySelector<HTMLButtonElement>('#meal-back-inventory')!.click());
     document.querySelector('#meal-reset')!.addEventListener('click', resetRecipes); document.querySelector('#meal-recipe-reset')!.addEventListener('click', resetRecipes);
     document.querySelector('#meal-inventory-reset')!.addEventListener('click', () => { if (canWrite() && window.confirm('确定清空共享库存吗？')) { safeWrite(repository.resetInventory().then((next) => { household = next; render(); })); announce('已清空库存；本顿可用食材保持不变。'); } });
     document.querySelectorAll<HTMLButtonElement>('[data-step-target]').forEach((button) => button.addEventListener('click', async () => { if (button.disabled) return; const target = button.dataset.stepTarget as 'inventory' | 'recipes' | 'cook' | 'checkout'; await persistStep(target); render(); announce(`已进入第 ${target === 'inventory' ? '一' : target === 'recipes' ? '二' : target === 'cook' ? '三' : '四'} 步。`); }));

@@ -10,6 +10,7 @@ import { setupNotebookPointerReorder } from './notebookPointerReorder.ts';
 import { setupNotebookPresetUi } from './notebookPresetUi.ts';
 import type { FirebaseConfig } from './householdRepository.ts';
 import { updateHouseholdCommentHtml } from './householdCommentUi.ts';
+import { setupNotebookTaskUi } from './notebookTaskUi.ts';
 
 const get = <T extends Element>(selector: string) => {
   const element = document.querySelector<T>(selector);
@@ -34,8 +35,10 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
   const itemForm = get<HTMLFormElement>('#notebook-item-form');
   const inboxCount = get<HTMLElement>('#notebook-inbox-count');
   const displayNamePanel = get<HTMLElement>('#notebook-display-name-panel');
+  const tasks = setupNotebookTaskUi(boardsHost);
   let state = repository.getSnapshot();
   let renderTimer: number | undefined;
+  let linkedTargetFocused = false;
 
   const clearRenderTimer = () => {
     if (renderTimer !== undefined) window.clearTimeout(renderTimer);
@@ -57,7 +60,8 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
     }
     if (error) feedback?.scrollIntoView({ block: 'nearest' });
   };
-  const mutate = async (label: string, fn: (current: NotebookState) => NotebookState): Promise<boolean> => {
+  const mutate = async (label: string, fn: (current: NotebookState) => NotebookState, itemId?: string): Promise<boolean> => {
+    if (itemId) tasks.setPending(itemId, true);
     try {
       status(`${label}…`);
       await repository.transaction(fn);
@@ -66,6 +70,8 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
     } catch (error) {
       status(error instanceof Error ? error.message : String(error), true);
       return false;
+    } finally {
+      if (itemId) tasks.setPending(itemId, false);
     }
   };
   const context = { repository, getState: () => state, mutate, status };
@@ -77,19 +83,30 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
   const renderApp = () => {
     clearRenderTimer();
     const now = Date.now();
+    const params = new URLSearchParams(location.search);
+    const linkedBoard = params.get('board');
+    const linkedRecurring = params.get('recurring') === '1';
+    const viewState = linkedBoard && state.boards[linkedBoard] ? { ...state, settings: { ...state.settings, viewFilter: 'all' as const }, boards: { ...state.boards, [linkedBoard]: { ...state.boards[linkedBoard], visible: true, collapsed: false } } } : linkedRecurring ? { ...state, settings: { ...state.settings, viewFilter: 'all' as const } } : state;
     const displayName = repository.getCurrentMemberDisplayName();
     displayNamePanel.innerHTML = displayName
       ? `<p>评论显示名：<strong>${escapeNotebookHtml(displayName)}</strong></p>`
       : '<p class="notebook-warning">评论显示名字尚未配置。任务、Board 和 Inbox 可正常使用，但新增评论会保持关闭。</p>';
     document.querySelectorAll<HTMLButtonElement>('[data-view-filter]').forEach((button) => {
-      const active = button.dataset.viewFilter === state.settings.viewFilter;
+      const active = button.dataset.viewFilter === viewState.settings.viewFilter;
       button.classList.toggle('is-active', active);
       button.setAttribute('aria-pressed', active ? 'true' : 'false');
     });
     const ticketCount = Object.keys(state.inbox).length;
     inboxCount.textContent = ticketCount ? `${ticketCount} 条待整理` : '暂无待整理';
     presets.render();
-    updateHouseholdCommentHtml(boardsHost, renderNotebookBoards(state, displayName, now), '[data-comment-add]');
+    tasks.beforeRender();
+    updateHouseholdCommentHtml(boardsHost, renderNotebookBoards(viewState, displayName, now), '[data-comment-add]');
+    tasks.afterRender();
+    const destination = linkedRecurring ? 'notebook-recurring' : linkedBoard && state.boards[linkedBoard] ? `notebook-board-${linkedBoard}` : '';
+    if (destination && !linkedTargetFocused) {
+      linkedTargetFocused = true;
+      requestAnimationFrame(() => document.getElementById(destination)?.scrollIntoView({ block: 'start' }));
+    }
     if (manager.dialog.open) manager.render();
 
     const refreshAt: number[] = [];
@@ -122,6 +139,7 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
   signOut.addEventListener('click', () => void repository.signOut().catch((error) => status(`退出失败，请重试：${String(error)}`, true)));
 
   document.querySelectorAll<HTMLButtonElement>('[data-view-filter]').forEach((button) => button.addEventListener('click', () => {
+    const url = new URL(location.href); url.searchParams.delete('board'); url.searchParams.delete('recurring'); history.replaceState(null, '', url);
     const viewFilter = button.dataset.viewFilter as NotebookViewFilter;
     void mutate('切换筛选', (current) => ({ ...current, settings: { ...current.settings, viewFilter } }));
   }));

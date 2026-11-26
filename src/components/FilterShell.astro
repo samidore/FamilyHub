@@ -5,14 +5,15 @@ interface Props {
   countId: string;
   clearId: string;
   countText: string;
+  compact?: boolean;
 }
-const { accent, filterId, countId, clearId, countText } = Astro.props;
+const { accent, filterId, countId, clearId, countText, compact = false } = Astro.props;
 ---
-<section class:list={['filter-shell', `theme-${accent}`]} aria-label="筛选与排序">
+<section class:list={['filter-shell', `theme-${accent}`, { 'filter-shell--medical': compact }]} aria-label="筛选与排序">
   <div class="shell filter-shell__inner">
     <div class="filter-primary"><slot name="primary" /></div>
     <details class="filter-disclosure">
-      <summary><span>更多筛选</span><span class="filter-summary-state" aria-hidden="true">展开</span></summary>
+      <summary><span><span class="disclosure-closed">更多筛选</span><span class="disclosure-open">收起筛选</span> <b data-filter-badge hidden></b></span><span class="filter-summary-state" aria-hidden="true">展开 ▾</span></summary>
       <div class="filter-grid" id={filterId}><slot name="filters" /></div>
     </details>
     <div class="filter-footer">

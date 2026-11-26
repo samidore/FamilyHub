@@ -1,3 +1,4 @@
+/** Renders Notebook boards and task presentation from canonical state. */
 import {
   NOTEBOOK_PRIORITIES,
   isAfterCompletionNotebookRecurrence,
@@ -19,6 +20,7 @@ import {
   notebookRecurringGroupKey,
   notebookRecurringRemainingDays,
   notebookSectionEntries,
+  notebookItemsForSection,
   notebookUrgentActiveItems,
   notebookUrgentVisibleItems,
   orderedNotebookBoardLayout,
@@ -167,6 +169,7 @@ function commentsHtml(comments: NotebookComment[], itemId: string, displayName: 
 }
 
 function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | null, movable: boolean, displayName: string | null, showGrace: boolean, now: number, today: string, showQueueAge: boolean, recurringRemainingDays?: number | null) {
+  if (!item.recurrence) return ordinaryItemHtml(state, item, boardId, movable, displayName, showGrace, now, today, showQueueAge);
   const e = escapeNotebookHtml;
   const comments = commentsFor(state, item.id);
   const moves = movable && item.status === 'active' && boardId ? `<button type="button" class="icon-button" data-move-item="up" aria-label="上移 ${e(item.title)}">↑</button><button type="button" class="icon-button" data-move-item="down" aria-label="下移 ${e(item.title)}">↓</button><button type="button" class="drag-handle" draggable="true" data-item-drag-handle aria-label="拖动排序">↕</button>` : '';
@@ -191,6 +194,24 @@ function itemHtml(state: NotebookState, item: NotebookItem, boardId: string | nu
   const body = `${item.details ? `<p class="notebook-details-text">${e(item.details)}</p>` : ''}${media.text ? `<section class="notebook-media-detail">${media.text}</section>` : ''}${commentsHtml(comments, item.id, displayName)}`;
   const recurringClass = corner.recurringGroup ? ` notebook-item--recurring-${corner.recurringGroup}` : '';
   return `<article class="notebook-item${graceMinutes ? ' notebook-item--grace' : ''}${recurringClass}"${corner.cardStyle} data-item-id="${e(item.id)}" data-board-id="${e(boardId ?? '')}">${corner.html}<div class="notebook-item__topline"><div class="notebook-item__heading">${authorIconHtml(item)}<strong${corner.titleStyle}>${e(item.title)}</strong></div><div class="notebook-inline-actions">${moves}<button type="button" class="quiet-button" data-edit-item="${e(item.id)}">编辑</button></div></div><div class="notebook-item__controls"><label>优先级<select data-item-priority="${e(item.id)}">${NOTEBOOK_PRIORITIES.map((p) => `<option value="${p}" ${item.priority === p ? 'selected' : ''}>${NOTEBOOK_PRIORITY_LABELS[p]}</option>`).join('')}</select></label>${statusControl}</div>${(due || completed || recurrence || grace || media.summary) ? `<div class="notebook-item__meta">${due}${completed}${recurrence}${grace}${media.summary}</div>` : ''}<div class="notebook-item__body">${body}</div></article>`;
+}
+
+function ordinaryItemHtml(state: NotebookState, item: NotebookItem, boardId: string | null, movable: boolean, displayName: string | null, showGrace: boolean, now: number, today: string, showQueueAge: boolean) {
+  const e = escapeNotebookHtml;
+  const comments = commentsFor(state, item.id);
+  const active = item.status === 'active';
+  const media = mediaDetails(item);
+  const age = active && showQueueAge ? notebookQueueAgeDays(state, item, now) : null;
+  const grace = showGrace && item.completedAt ? Math.max(1, Math.ceil((item.completedAt + NOTEBOOK_COMPLETION_GRACE_MS - now) / 60000)) : null;
+  const ids = boardId ? notebookItemsForSection(state, boardId, item.priority, 'active').map((entry) => entry.id) : [];
+  const index = ids.indexOf(item.id);
+  const priority = item.priority === 'normal' ? '' : `<span class="task-priority">${NOTEBOOK_PRIORITY_LABELS[item.priority]}</span>`;
+  const due = item.dueDate ? `<span>截止 ${e(item.dueDate)}${item.dueTime ? ` ${e(item.dueTime)}` : ''}</span>` : '';
+  const completion = item.completedAt ? completionMetaHtml({ completedAt: item.completedAt, completedByName: item.completedByName }) : '';
+  const meta = `${authorIconHtml(item)}${priority}${due}${completion}${media.summary}${active ? dueSoonIconHtml(item, today) : ''}${age === null ? '' : `<span aria-label="已排队 ${age} 天">${age}天</span>`}${comments.length ? `<span>评论 ${comments.length}</span>` : ''}${grace ? `<span class="notebook-grace-note">已完成 · 还会在这里保留 ${grace} 分钟</span>` : ''}`;
+  const menu = active ? `<button type="button" class="task-more" data-task-menu-toggle aria-label="更多操作 ${e(item.title)}" aria-haspopup="menu" aria-expanded="false">⋯</button><div class="task-menu" role="menu" aria-label="事项操作" inert><button role="menuitem" type="button" data-edit-item="${e(item.id)}">编辑</button><hr/><p>优先级</p><div class="task-priorities">${NOTEBOOK_PRIORITIES.map((value) => `<button role="menuitem" type="button" data-task-priority="${value}" aria-pressed="${item.priority === value}">${NOTEBOOK_PRIORITY_LABELS[value]}</button>`).join('')}</div><hr/>${movable && boardId ? `<button role="menuitem" type="button" data-move-item="up" aria-label="上移 ${e(item.title)}" aria-disabled="${index <= 0}">↑ 上移</button><button role="menuitem" type="button" data-move-item="down" aria-label="下移 ${e(item.title)}" aria-disabled="${index < 0 || index === ids.length - 1}">↓ 下移</button>` : ''}</div>` : '';
+  const body = `${item.details ? `<p class="notebook-details-text">${e(item.details)}</p>` : ''}${media.text ? `<section class="notebook-media-detail">${media.text}</section>` : ''}${commentsHtml(comments, item.id, displayName)}`;
+  return `<article class="notebook-item notebook-task task--${item.priority}${active ? '' : ' task--done'}" data-item-id="${e(item.id)}" data-board-id="${e(boardId ?? '')}"><button type="button" class="task-complete" ${active ? `data-complete-item="${e(item.id)}"` : 'disabled'} aria-label="${active ? '完成' : '已完成'} ${e(item.title)}"><span aria-hidden="true">${active ? '' : '✓'}</span></button><button type="button" class="task-main" data-task-expand aria-expanded="false"><strong class="task-title">${e(item.title)}</strong>${item.details ? `<span class="task-summary">${e(item.details)}</span>` : ''}<span class="task-meta">${meta}</span></button>${menu}${active && movable ? '<button type="button" class="drag-handle task-grip" draggable="true" data-item-drag-handle aria-label="拖动排序">⋮⋮</button>' : ''}${!active && isNotebookCompletionInGrace(item, now) ? `<button type="button" class="task-undo" data-restore-item="${e(item.id)}">撤销完成</button>` : ''}<div class="notebook-item__body task-body" hidden>${body}</div></article>`;
 }
 
 function historyHtml(entry: NotebookSectionEntry) {
@@ -220,7 +241,7 @@ function recurringBoardHtml(state: NotebookState, displayName: string | null, no
   const historyHtmlBlock = history.length ? `<section class="notebook-recurring-history"><h3>循环记录 <span>${history.length}</span></h3><div class="notebook-item-list">${history.map(historyHtml).join('')}</div></section>` : '';
   const count = active.length + history.length;
   const body = groups || historyHtmlBlock ? `${groups}${historyHtmlBlock}` : '<p class="notebook-empty">这个筛选下没有反复事项。</p>';
-  return `<section class="notebook-board notebook-board--recurring" data-recurring-board><header class="notebook-board__header"><div class="notebook-board__heading"><p class="eyebrow">Recurring</p><h2>反复干</h2><p>按剩余日数分组；组内按优先级和剩余天数自动排序。</p></div><span class="notebook-board__count notebook-board__count--recurring">${count}</span></header><div class="notebook-board__body">${body}</div></section>`;
+  return `<section id="notebook-recurring" class="notebook-board notebook-board--recurring" data-recurring-board><header class="notebook-board__header"><div class="notebook-board__heading"><p class="eyebrow">循环</p><h2>反复干</h2><p>按剩余日数分组；组内按优先级和剩余天数自动排序。</p></div><span class="notebook-board__count notebook-board__count--recurring">${count}</span></header><div class="notebook-board__body">${body}</div></section>`;
 }
 
 function ordinaryBoardHtml(state: NotebookState, board: ReturnType<typeof orderedNotebookBoards>[number], displayName: string | null, filter: string, now: number, today: string) {
@@ -232,7 +253,7 @@ function ordinaryBoardHtml(state: NotebookState, board: ReturnType<typeof ordere
     count += entries.length;
     return `<section class="notebook-priority" data-priority-section data-board-id="${escapeNotebookHtml(board.id)}" data-priority="${priority}"><h3>${NOTEBOOK_PRIORITY_LABELS[priority]} <span>${entries.length}</span></h3><div class="notebook-item-list" data-item-list data-board-id="${escapeNotebookHtml(board.id)}" data-priority="${priority}">${entries.map((entry) => sectionEntryHtml(state, entry, board.id, displayName, filter, now, today, showQueueAge)).join('')}</div></section>`;
   }).join('');
-  return `<section class="notebook-board" data-board-id="${escapeNotebookHtml(board.id)}"><header class="notebook-board__header"><button type="button" class="collapse-button" data-toggle-board="${escapeNotebookHtml(board.id)}" aria-expanded="${board.collapsed ? 'false' : 'true'}" aria-label="${board.collapsed ? '展开' : '收起'} ${escapeNotebookHtml(board.title)}">${board.collapsed ? '＋' : '−'}</button><div class="notebook-board__heading"><h2>${escapeNotebookHtml(board.title)}</h2>${board.description ? `<p>${escapeNotebookHtml(board.description)}</p>` : ''}</div><button type="button" class="quiet-button" data-new-item="${escapeNotebookHtml(board.id)}">＋事项</button></header><div class="notebook-board__body" ${board.collapsed ? 'hidden' : ''}>${count ? sections : '<p class="notebook-empty">这个筛选下没有事项。</p>'}</div></section>`;
+  return `<section class="notebook-board" id="notebook-board-${escapeNotebookHtml(board.id)}" data-board-id="${escapeNotebookHtml(board.id)}"><header class="notebook-board__header"><button type="button" class="collapse-button" data-toggle-board="${escapeNotebookHtml(board.id)}" aria-expanded="${board.collapsed ? 'false' : 'true'}" aria-label="${board.collapsed ? '展开' : '收起'} ${escapeNotebookHtml(board.title)}">${board.collapsed ? '＋' : '−'}</button><div class="notebook-board__heading"><h2>${escapeNotebookHtml(board.title)}</h2>${board.description ? `<p>${escapeNotebookHtml(board.description)}</p>` : ''}</div><button type="button" class="quiet-button" data-new-item="${escapeNotebookHtml(board.id)}">＋事项</button></header><div class="notebook-board__body" ${board.collapsed ? 'hidden' : ''}>${count ? sections : `<p class="notebook-empty">${!Object.values(state.memberships[board.id] ?? {}).length && filter === 'active' ? '还没有事项。点右上角“＋事项”新建，或在下方“随手记”里记一句再整理。' : '这个筛选下没有事项。'}</p>`}</div></section>`;
 }
 
 export function renderNotebookBoards(state: NotebookState, displayName: string | null, now = Date.now()) {

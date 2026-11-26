@@ -4,6 +4,7 @@ import { mountNotebook } from './helpers/householdUi';
 
 test('a remote notebook update preserves the open comment draft and focus', async ({ page }) => {
   await mountNotebook(page);
+  await page.locator('[data-task-expand]').click();
   const editor = page.locator('[data-comment-add="task"]');
   await editor.locator('..').locator('summary').click();
   const input = editor.locator('textarea');

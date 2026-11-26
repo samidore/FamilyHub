@@ -735,7 +735,7 @@
   .meal-builder-page .meal-inventory-stock-alert__heading {
     display: block;
     margin-bottom: 7px;
-    font-size: 14px;
+    font-size: var(--fs-sm);
     color: #795024;
   }
   .meal-builder-page [data-inventory-stock-alert="freshness"] .meal-inventory-stock-alert__heading {
@@ -746,7 +746,7 @@
     gap: 6px;
     margin: 0;
     padding-left: 18px;
-    font-size: 13px;
+    font-size: var(--fs-xs);
     line-height: 1.5;
   }
   .meal-builder-page .meal-inventory-high-stock-badge {
@@ -756,8 +756,8 @@
     border-radius: 6px;
     background: #fff6e5;
     color: #855814;
-    font-size: 12px;
-    font-weight: 800;
+    font-size: var(--fs-xs);
+    font-weight: 700;
     line-height: 1.3;
   }
   .meal-builder-page .meal-inventory-stock-alerts[hidden],
@@ -780,8 +780,8 @@
     background: var(--surface);
     color: var(--ink);
     font: inherit;
-    font-size: 14px;
-    font-weight: 800;
+    font-size: var(--fs-sm);
+    font-weight: 700;
     line-height: 1.1;
     white-space: nowrap;
     cursor: pointer;
@@ -795,6 +795,6 @@
   .meal-builder-page .meal-inventory-view-empty { margin: 12px 0 0; }
   @media (max-width: 380px) {
     .meal-builder-page .meal-inventory-tabs { gap: 4px; }
-    .meal-builder-page .meal-inventory-tabs button { padding-inline: 4px; font-size: 13px; }
+    .meal-builder-page .meal-inventory-tabs button { padding-inline: 4px; font-size: var(--fs-xs); }
   }
 </style>

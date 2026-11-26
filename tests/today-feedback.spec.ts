@@ -2,11 +2,13 @@
 import { expect, test } from '@playwright/test';
 import { mountToday } from './helpers/householdUi';
 
-test('Today waits for both sources, offers read retry, and reports reconnection', async ({ page }) => {
+test('Today shows ready sources independently, offers read retry, and reports reconnection', async ({ page }) => {
   await mountToday(page);
   await expect(page.locator('#today-auth-message')).toContainText('正在读取');
   await page.evaluate(() => (window as any).today.emit('state', null));
-  await expect(page.locator('#today-dashboard')).toBeHidden();
+  await expect(page.locator('#today-dashboard')).toBeVisible();
+  await expect(page.locator('.today-card--meal')).toHaveAttribute('data-ready', 'true');
+  await expect(page.locator('.today-card--upcoming')).toHaveAttribute('data-ready', 'false');
   await page.evaluate(() => (window as any).today.fail('notebook'));
   await expect(page.locator('#today-retry-data')).toBeVisible();
   await page.locator('#today-retry-data').click();

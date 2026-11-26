@@ -1,0 +1,43 @@
+/* Ordinary Notebook task cards; recurring cards keep their existing layout. */
+.notebook-task { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr) 40px 24px; gap: 4px; padding: 8px; border-radius: var(--r-inner); }
+.notebook-task.task--urgent { border-left: 4px solid var(--risk); }
+.notebook-task.task--high { border-left: 4px solid var(--ochre); }
+.notebook-task .task-complete, .notebook-task .task-more, .notebook-task .task-grip { padding: 0; min-width: 0; border: 0; background: none; }
+.notebook-task .task-complete { width: 44px; min-height: 44px; display: grid; place-items: center; }
+.task-complete span { width: 24px; height: 24px; display: grid; place-items: center; border: 2px solid var(--line-strong); border-radius: 50%; transition: background-color 160ms var(--motion-ease-out); }
+.notebook-task .task-complete:active { transform: scale(.9); }
+.notebook-task .task-main { min-height: 44px; padding: 4px 0; border: 0; background: none; color: var(--ink); text-align: left; font-weight: 400; min-width: 0; }
+.task-title { display: block; font-size: 17px; line-height: 1.35; overflow-wrap: anywhere; }
+.task-summary { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 4px; font-size: var(--fs-sm); color: var(--muted); }
+.task-main[aria-expanded="true"] .task-summary { display: none; }
+.task-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; margin-top: 6px; font-size: var(--fs-xs); color: var(--muted); }
+.task-meta .notebook-author-icon { width: 20px; height: 20px; flex-basis: 20px; }
+.task-meta .task-priority { padding: 1px 6px; border-radius: var(--r-pill); background: var(--surface-sunk); color: var(--ink-2); }
+.task--urgent .task-priority { color: var(--risk); }
+.task--high .task-priority { color: var(--ochre); }
+.notebook-task .task-more { width: 40px; min-height: 44px; font-size: 24px; color: var(--muted); }
+.notebook-task[data-menu-open="true"] .task-more { background: var(--evergreen-soft); color: var(--evergreen); }
+.notebook-task .task-grip { width: 24px; min-height: 44px; color: var(--line-strong); }
+.notebook-task .task-body { grid-column: 2 / -1; margin: 0; padding-top: 12px; font-size: var(--fs-sm); }
+.task-body:not([hidden]) { animation: content-enter var(--motion-enter) var(--motion-ease-out); }
+.notebook-task .task-undo { grid-column: 2 / -1; justify-self: start; margin-top: 4px; }
+.task--done .task-title { color: var(--muted); text-decoration: line-through; }
+.task--done .task-complete { opacity: 1; }
+.task--done .task-complete span { background: var(--evergreen); border-color: var(--evergreen); color: white; }
+.notebook-task[aria-busy="true"] .task-complete span { border-color: var(--line); border-top-color: var(--evergreen); animation: task-saving 700ms linear infinite; }
+@keyframes task-saving { to { transform: rotate(360deg); } }
+.task-menu { position: absolute; top: 52px; right: 8px; z-index: 5; width: min(248px, calc(100% - 16px)); padding: 6px; border: 1px solid var(--line); border-radius: var(--r-inner); background: var(--surface); transform-origin: top right; opacity: 0; transform: scale(.96) translateY(-4px); visibility: hidden; transition: opacity var(--motion-exit) var(--motion-ease-in), transform var(--motion-exit) var(--motion-ease-in), visibility var(--motion-exit); }
+[data-menu-open="true"] .task-menu { opacity: 1; transform: scale(1) translateY(0); visibility: visible; transition: opacity 160ms var(--motion-ease-out), transform 160ms var(--motion-ease-out), visibility 0s; }
+.task-menu > button { width: 100%; min-height: 44px; text-align: left; border: 0; background: none; color: var(--ink); }
+.task-menu hr { border: 0; border-top: 1px solid var(--line); margin: 4px 6px; }
+.task-menu p { margin: 6px 10px; font-size: var(--fs-xs); color: var(--muted); }
+.task-priorities { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.task-priorities button { padding: 4px 0; min-height: 40px; font-size: var(--fs-sm); }
+.task-priorities button[aria-pressed="true"] { border-color: var(--evergreen); background: var(--evergreen-soft); }
+@media (prefers-reduced-motion: reduce) {
+  .task-menu, .task-complete span { transition: none; }
+  .task-body:not([hidden]), .notebook-task[aria-busy="true"] .task-complete span { animation: none; }
+  .notebook-task[aria-busy="true"] .task-complete span { border-color: var(--muted); }
+}
+
+.task-menu [aria-disabled="true"] { opacity: .45; cursor: default; }

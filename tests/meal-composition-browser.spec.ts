@@ -25,9 +25,10 @@ test('candidate composition stays draft-only until confirmation and supports opt
   const recipe = page.locator('[data-meal-recipe="simple-stir-fried-leafy-greens"]');
   await expect(recipe).toBeVisible();
   const summary = recipe.locator('[data-candidate-composition]');
-  await expect(summary).toContainText('必需 Required');
-  await expect(summary).toContainText('选一 One of');
-  await expect(summary).toContainText('可加 Optional');
+  await summary.locator('summary').click();
+  await expect(summary.locator('dt')).not.toContainText(['必需']);
+  await expect(summary).toContainText('选一');
+  await expect(summary).toContainText('可加');
   await expect(summary).toContainText('加点油水');
 
   await expect(page.locator('#progress-protein')).toHaveText('0 / 1');
@@ -39,9 +40,9 @@ test('candidate composition stays draft-only until confirmation and supports opt
   await expect(page.locator('#progress-protein')).toHaveText('0 / 1');
   await expect(page.locator('#progress-vegetable')).toHaveText('0 / 1');
 
-  await expect(draft.getByRole('heading', { name: '必需 Required' })).toBeVisible();
+  await expect(draft.getByRole('heading', { name: '必需', exact: true })).toHaveCount(0);
   await expect(draft).toContainText('卷心菜');
-  await expect(draft.getByRole('heading', { name: '可加 Optional' })).toBeVisible();
+  await expect(draft.getByRole('heading', { name: '可加' })).toBeVisible();
   await expect(draft.getByRole('heading', { name: '加点油水' })).toBeVisible();
 
   const pork = draft.locator('[data-recipe-draft-optional-ingredient="ground-pork"]');
@@ -141,12 +142,12 @@ test('Finish updates draft preview, selected recipe name, and cook title without
   const recipeId = 'beijing-sauce-pork-strips';
   const card = page.locator('[data-meal-recipe="' + recipeId + '"]');
   await expect(card).toBeVisible();
-  await expect(card.locator('.meal-recipe-card__heading h3')).toHaveText('京酱肉丝');
+  await expect(card.locator('[data-candidate-name]')).toHaveText('京酱肉丝');
   await card.locator('[data-select-recipe]').click();
 
   let draft = card.locator('[data-recipe-plan-draft]');
   await draft.locator('[data-recipe-draft-finish-id="ginger"]').click();
-  await expect(card.locator('.meal-recipe-card__heading h3')).toHaveText('日式姜烧猪肉');
+  await expect(card.locator('[data-candidate-name]')).toHaveText('日式姜烧猪肉');
   await expect(draft.locator('.meal-recipe-plan-draft__heading')).toContainText('日式姜烧猪肉');
   await expect(page.locator('[data-selected-recipe="' + recipeId + '"]')).toBeHidden();
 

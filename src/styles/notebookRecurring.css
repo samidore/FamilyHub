@@ -7,9 +7,9 @@
 .notebook-recurring-group h3,
 .notebook-recurring-history h3 { display: flex; gap: .45rem; align-items: baseline; margin: 0 0 .55rem; font-size: 1.05rem; letter-spacing: .03em; }
 .notebook-recurring-group h3 span,
-.notebook-recurring-history h3 span { color: #746b61; font-size: .9rem; }
+.notebook-recurring-history h3 span { color: var(--muted); font-size: .9rem; }
 .notebook-corner-status { position: absolute; top: .5rem; right: .5rem; z-index: 1; }
-.notebook-remaining-badge { display: inline-flex; align-items: center; white-space: nowrap; border: 1px solid currentColor; border-radius: 999px; padding: .22rem .5rem; font-size: .82rem; font-weight: 800; line-height: 1.2; background: white; }
+.notebook-remaining-badge { display: inline-flex; align-items: center; white-space: nowrap; border: 1px solid currentColor; border-radius: 999px; padding: .22rem .5rem; font-size: .82rem; font-weight: 700; line-height: 1.2; background: var(--surface); }
 .notebook-remaining-badge--overdue { color: #8f2d25; background: #fff1ef; }
 .notebook-remaining-badge--today { color: #b43b31; background: #fff3f0; }
 .notebook-remaining-badge--soon { color: #a95618; background: #fff7ed; }
@@ -30,10 +30,10 @@
   .notebook-recurring-actions { justify-content: stretch; }
   .notebook-recurring-actions button { flex: 1 1 8rem; }
 }
-.recurrence-panel { display: grid; gap: .75rem; border: 1px solid #d7cec1; border-radius: 12px; padding: .75rem; background: #fffdfa; }
+.recurrence-panel { display: grid; gap: .75rem; border: 1px solid var(--line); border-radius: 12px; padding: .75rem; background: var(--surface); }
 .recurrence-panel[hidden], #notebook-weekday-fields[hidden], #notebook-due-date-label[hidden] { display: none; }
 .notebook-weekday-list { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .35rem; }
-.notebook-weekday-list label { display: flex; justify-content: center; align-items: center; gap: .2rem; min-height: 42px; border: 1px solid #d7cec1; border-radius: 9px; background: white; }
+.notebook-weekday-list label { display: flex; justify-content: center; align-items: center; gap: .2rem; min-height: 42px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); }
 .notebook-weekday-list input { width: 1.1rem; min-height: 1.1rem; }
 @media (max-width: 640px) {
   .notebook-weekday-list { grid-template-columns: repeat(4, minmax(0, 1fr)); }

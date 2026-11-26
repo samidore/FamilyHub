@@ -20,13 +20,13 @@ const sectionCount = (section: ObGynSection) => recordsFor(section).length;
 const headerDescription = `OB 按 Valley ${sectionCount('valley-ob')} 位、Hackensack ${sectionCount('hackensack-ob')} 位、Englewood ${sectionCount('englewood-ob')} 位；普通 GYN 合并 ${sectionCount('gyn')} 位。医院 affiliation 可以进入候选，查不到当前接生关系不淘汰，只标为需要电话确认。家庭筛选分与 Tier 只是比较顺序，不是医疗质量评级。`;
 ---
 <BaseLayout title="OB / GYN · Valley / Hackensack / Englewood | Family Hub" description="按医院接生关系、公开资格与训练、患者体验、实际可用性和证据缺口比较附近 OB 与普通 GYN。" pageClass="module-page theme-ochre" themeColor="#F4EDE0">
-  <SiteHeader eyebrow="健康与照护 · 公开资料比较" title="OB / GYN · V / H / E" description={headerDescription} accent="ochre" icon="care">
-    <div class="summary-row"><span>{obGynProviders.length} 位去重医生</span><span>{placements.length} 个比较席位</span><span>{sections.length} 个可折叠医生区块</span><span>Premera / NJ safety 未猜测</span></div>
+  <SiteHeader lede="家庭筛选分与 Tier 只是比较顺序，不是医疗质量评级；查不到当前接生关系的只标为需要电话确认。" eyebrow="健康与照护 · 公开资料比较" title="OB / GYN · V / H / E" description={headerDescription} accent="ochre" icon="care">
+    <div class="summary-row meta-line"><span>{obGynProviders.length} 位去重医生</span><span>{placements.length} 个比较席位</span><span>{sections.length} 个可折叠医生区块</span><span>Premera / NJ safety 未猜测</span></div>
   </SiteHeader>
 
-  <FilterShell accent="ochre" filterId="obgyn-filter-panel" countId="obgyn-count" clearId="obgyn-clear" countText={`显示 ${placements.length} / ${placements.length} 个比较席位`}>
+  <FilterShell compact accent="ochre" filterId="obgyn-filter-panel" countId="obgyn-count" clearId="obgyn-clear" countText={`显示 ${placements.length} / ${placements.length} 个比较席位`}>
     <div slot="primary" class="filter-primary__grid">
-      <label><span>搜索医生、practice、地点或证据</span><input id="obgyn-search" type="search" placeholder="Fair Lawn、high-risk、menopause…" autocomplete="off" /></label>
+      <label><span>搜索医生、practice、地点或证据</span><input id="obgyn-search" type="search" placeholder="搜索医生、practice、地点或证据" autocomplete="off" /></label>
     </div>
     <div slot="filters" class="contents">
       <label><span>区块</span><select id="obgyn-section"><option value="">全部</option>{sections.map((section) => <option value={section.id}>{section.short}</option>)}</select></label>

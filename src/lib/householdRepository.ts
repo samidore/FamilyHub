@@ -23,6 +23,7 @@ import {
   type HouseholdSessionStatus,
 } from './householdSession.ts';
 import { onValue, ref, runTransaction, type DatabaseReference, type DataSnapshot } from 'firebase/database';
+import { createMockHousehold, mockName } from '../dev/householdMock.ts';
 
 export type { FirebaseConfig } from './householdSession.ts';
 export { firebaseConfigKeys, googleIdentity, hasAnyFirebaseConfig, hasCompleteFirebaseConfig, shouldUseRedirectFallback } from './householdSession.ts';
@@ -349,10 +350,14 @@ class ConfigurationErrorRepository implements HouseholdRepository {
 }
 
 export function createHouseholdRepository(config: Partial<FirebaseConfig> | null | undefined, options: LocalRepositoryOptions & { firebase?: FirebaseRepositoryOptions } = {}): HouseholdRepository {
+  if (import.meta.env?.DEV && mockName().startsWith('meal-')) {
+    return mockRepository ??= createMockHousehold(Array.isArray(options.ingredients) ? options.ingredients : Object.values(options.ingredients ?? {}), options.recipes);
+  }
   if (hasCompleteFirebaseConfig(config)) return new FirebaseHouseholdRepository(config, options.firebase);
   if (hasAnyFirebaseConfig(config)) return new ConfigurationErrorRepository(config?.householdId?.trim() || 'family-household', '请完整设置家庭连接信息和家庭编号。');
   return new LocalHouseholdRepository(config?.householdId?.trim() || 'local-household', options);
 }
+let mockRepository: HouseholdRepository | undefined;
 
 // Keep the long-standing named exports available to existing callers and tests.
 void googleIdentity;

@@ -133,7 +133,7 @@ test('completed cards show undo only during the one-hour grace period', () => {
 
   const expired = renderNotebookBoards(state, '猫猫', 1000 + NOTEBOOK_COMPLETION_GRACE_MS);
   assert.doesNotMatch(expired, /data-restore-item="done"/);
-  assert.match(expired, /<span>已完成<\/span>/);
+  assert.match(expired, /aria-label="已完成/);
 });
 
 test('Firebase rules allow immutable item authors tied to the creating member display name', () => {

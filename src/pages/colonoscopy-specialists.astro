@@ -15,14 +15,14 @@ const rankedSpecialists = [...colonoscopySpecialists].sort((a, b) => networkPrio
 const reviewLabels: Record<string, string> = { 'very-limited': 'very-limited', limited: 'limited', moderate: 'moderate', strong: 'strong', 'very-strong': 'very-strong', unavailable: 'unavailable' };
 ---
 <BaseLayout title="Colonoscopy Specialists | Family Hub" description="按复杂息肉切除能力、医院级 Facility、Healthgrades 负面证据和 NY 正式安全记录比较 NYC 肠镜专家。" pageClass="module-page theme-ochre" themeColor="#F4EDE0">
-  <SiteHeader eyebrow="健康与照护 · 公开资料比较" title="Colonoscopy Specialists" description="这是一份面向复杂息肉情境的 NYC 肠镜医生–Facility 清单。复杂息肉切除能力、医院级备援和正式安全记录是核心；Healthgrades 作为主要患者体验来源，负面评论按临床安全、切除/残留、沟通、行政与未核实指控分开标记。Tier 是比较工具，不是医疗质量评级。" accent="ochre" icon="care">
-    <div class="summary-row"><span>18 位医生–Facility</span><span>约 45–90 分钟非高峰车程</span><span>复杂息肉优先</span><span>Healthgrades + NY safety screen</span></div>
+  <SiteHeader lede="面向复杂息肉情境，看切除能力、医院级备援和正式安全记录。Tier 是比较工具，不是医疗质量评级。" eyebrow="健康与照护 · 公开资料比较" title="Colonoscopy Specialists" description="这是一份面向复杂息肉情境的 NYC 肠镜医生–Facility 清单。复杂息肉切除能力、医院级备援和正式安全记录是核心；Healthgrades 作为主要患者体验来源，负面评论按临床安全、切除/残留、沟通、行政与未核实指控分开标记。Tier 是比较工具，不是医疗质量评级。" accent="ochre" icon="care">
+    <div class="summary-row meta-line"><span>18 位医生–Facility</span><span>约 45–90 分钟非高峰车程</span><span>复杂息肉优先</span><span>Healthgrades + NY safety screen</span></div>
   </SiteHeader>
   <div class="shell"><div class="note-box"><strong>计划参考：BlueCard PPO</strong>　公开 Facility 网络资料只用于比较排序，不等于最终承保确认；医生、麻醉、病理、具体 procedure 和 prior authorization 仍需预约前逐项核实。</div></div>
 
-  <FilterShell accent="ochre" filterId="colonoscopy-filter-panel" countId="colonoscopy-count" clearId="colonoscopy-clear" countText="显示 18 / 18 位医生">
+  <FilterShell compact accent="ochre" filterId="colonoscopy-filter-panel" countId="colonoscopy-count" clearId="colonoscopy-clear" countText="显示 18 / 18 位医生">
     <div slot="primary" class="filter-primary__grid">
-      <label><span>搜索医生、Facility 或能力</span><input id="colonoscopy-search" type="search" placeholder="例如：ESD、EMR、Mount Sinai、complex polyp" autocomplete="off" /></label>
+      <label><span>搜索医生、Facility 或能力</span><input id="colonoscopy-search" type="search" placeholder="搜索医生、Facility 或能力" autocomplete="off" /></label>
       <label><span>排序</span><select id="colonoscopy-sort" data-default="rank"><option value="rank">家庭比较顺序（临床 + 网络）</option><option value="drive">车程较短</option><option value="rating">Healthgrades 评分</option><option value="reviews">Healthgrades reviews</option><option value="name">姓名</option></select></label>
     </div>
     <div slot="filters" class="contents">
@@ -30,9 +30,9 @@ const reviewLabels: Record<string, string> = { 'very-limited': 'very-limited', l
       <label><span>比较 Tier</span><select id="colonoscopy-tier"><option value="">全部 Tier</option>{tiers.map((tier) => <option value={tier}>Tier {tier}</option>)}</select></label>
       <label><span>车程上限</span><select id="colonoscopy-drive"><option value="">不限制车程</option><option value="45">45 分钟内</option><option value="60">60 分钟内</option><option value="90">90 分钟内</option></select></label>
       <label><span>Hospital system</span><select id="colonoscopy-system"><option value="">全部系统</option>{systems.map((system) => <option value={system}>{system}</option>)}</select></label>
-      <label><span>复杂息肉能力</span><select id="colonoscopy-polyp-fit"><option value="">全部 evidence</option><option value="strong">Strong</option><option value="adequate">Adequate</option><option value="concern">Concern</option><option value="unknown">Unknown</option></select></label>
+      <label><span>复杂息肉能力</span><select id="colonoscopy-polyp-fit"><option value="">全部证据</option><option value="strong">Strong</option><option value="adequate">Adequate</option><option value="concern">Concern</option><option value="unknown">Unknown</option></select></label>
       <label><span>能力关键词</span><select id="colonoscopy-capability"><option value="">全部能力</option><option value="EMR">EMR</option><option value="ESD">ESD</option><option value="FTR">FTR</option><option value="surgical">surgical / CELS</option></select></label>
-      <label><span>Review confidence</span><select id="colonoscopy-confidence"><option value="">全部 confidence</option>{confidences.map((item) => <option value={item}>{reviewLabels[item]}</option>)}</select></label>
+      <label><span>Review confidence</span><select id="colonoscopy-confidence"><option value="">全部可信度</option>{confidences.map((item) => <option value={item}>{reviewLabels[item]}</option>)}</select></label>
       <label><span>当前 provider 状态</span><select id="colonoscopy-current"><option value="">全部状态</option><option value="verified">已核实 current</option><option value="conditional">需确认</option><option value="unknown">未知</option></select></label>
       <label><span>关注程度</span><select id="colonoscopy-concern"><option value="">全部程度</option>{concerns.map((item) => <option value={item}>{item}</option>)}</select></label>
     </div>

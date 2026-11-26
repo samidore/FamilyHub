@@ -9,13 +9,13 @@ const confidences = [...new Set(pediatricDentists.map((item) => item.reviewConfi
 const reviewLabels: Record<string, string> = { 'very-limited': 'very limited', limited: 'limited', moderate: 'moderate', stronger: 'stronger', unavailable: 'unavailable' };
 ---
 <BaseLayout title="Pediatric Dentists | Family Hub" description="按 pediatric specialty、幼儿照护、安全、Healthgrades 评价可信度和长期连续性比较附近儿童牙医。" pageClass="module-page theme-ochre" themeColor="#F4EDE0">
-  <SiteHeader eyebrow="健康与照护 · 公开资料比较" title="Pediatric Dentists" description="Healthgrades 主要用于 patient-experience 证据；整体 Tier 还要看 pediatric specialty、幼儿照护、安全与 consent、长期 dental-home 连续性，以及预约前需要确认的未知信息。Tier 是家庭比较工具，不是医疗质量评级。" accent="ochre" icon="care">
-    <div class="summary-row"><span>10 家诊所</span><span>约 5–30 分钟车程</span><span>Healthgrades 优先</span></div>
+  <SiteHeader lede="Healthgrades 主要作 patient-experience 证据；Tier 是家庭比较工具，不是医疗质量评级。" eyebrow="健康与照护 · 公开资料比较" title="Pediatric Dentists" description="Healthgrades 主要用于 patient-experience 证据；整体 Tier 还要看 pediatric specialty、幼儿照护、安全与 consent、长期 dental-home 连续性，以及预约前需要确认的未知信息。Tier 是家庭比较工具，不是医疗质量评级。" accent="ochre" icon="care">
+    <div class="summary-row meta-line"><span>10 家诊所</span><span>约 5–30 分钟车程</span><span>Healthgrades 优先</span></div>
   </SiteHeader>
 
-  <FilterShell accent="ochre" filterId="dentist-filter-panel" countId="dentist-count" clearId="dentist-clear" countText="显示 10 / 10 家诊所">
+  <FilterShell compact accent="ochre" filterId="dentist-filter-panel" countId="dentist-count" clearId="dentist-clear" countText="显示 10 / 10 家诊所">
     <div slot="primary" class="filter-primary__grid">
-      <label><span>搜索 provider 或证据</span><input id="dentist-search" type="search" placeholder="board certified、toddler、Columbia…" autocomplete="off" /></label>
+      <label><span>搜索 provider 或证据</span><input id="dentist-search" type="search" placeholder="搜索 provider 或证据" autocomplete="off" /></label>
       <label><span>排序</span><select id="dentist-sort" data-default="rank"><option value="rank">家庭比较顺序</option><option value="drive">最短车程</option><option value="rating">Healthgrades 评分</option><option value="reviews">Healthgrades 评分数量</option><option value="name">名称</option></select></label>
     </div>
     <div slot="filters" class="contents">

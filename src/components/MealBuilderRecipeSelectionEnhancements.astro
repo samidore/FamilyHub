@@ -26,6 +26,8 @@
   } from '../lib/household';
   import { createHouseholdRepository, type RepositoryStatus } from '../lib/householdRepository';
 
+  import { renderCandidateContributions } from '../lib/mealCandidateUi.ts';
+
   type Payload = {
     ingredients: MealIngredient[];
     optionalGroups: MealOptionalGroup[];
@@ -190,10 +192,10 @@
   function summaryRow(label: string, value: string) {
     const row = document.createElement('div');
     row.className = 'meal-recipe-composition-summary__row';
-    const key = document.createElement('strong');
+    const key = document.createElement('dt');
     key.textContent = label;
-    const text = document.createElement('span');
-    text.textContent = value || '—';
+    const text = document.createElement('dd');
+    text.textContent = value;
     row.append(key, text);
     return row;
   }
@@ -201,51 +203,37 @@
   function renderCandidateSummaries() {
     const meal = household.currentMeal;
     const selectable = meal ? selectableIngredientIds(household, meal) : new Set<string>();
+    const ready = canWrite() && Boolean(meal);
+    const state = meal ? engineState(meal) : null;
     recipeGrid?.querySelectorAll<HTMLElement>('[data-meal-recipe]').forEach((card) => {
-      card.querySelector('[data-candidate-composition]')?.remove();
       card.querySelector('[data-recipe-plan-draft]')?.remove();
-
       const recipeId = card.dataset.mealRecipe!;
       const recipe = recipeById.get(recipeId);
       if (!recipe) return;
-      const draftFinishId = planDraft?.mode === 'new' && planDraft.recipeId === recipeId ? planDraft.finishId : undefined;
-      const finishId = draftFinishId ?? (meal?.selectedRecipeIds.includes(recipeId) ? meal.recipeFinishSelections[recipeId] : undefined);
-      const cardTitle = card.querySelector<HTMLElement>('.meal-recipe-card__heading h3');
+      const finishId = planDraft?.mode === 'new' && planDraft.recipeId === recipeId ? planDraft.finishId : meal?.recipeFinishSelections[recipeId];
+      const cardTitle = card.querySelector<HTMLElement>('[data-candidate-name]');
       if (cardTitle) cardTitle.textContent = resolvedRecipeName(recipe, finishId);
-
-      const fixed = recipe.requirements
-        .filter((requirement) => requirement.anyOf.length === 1)
-        .map((requirement) => nameFor(requirement.anyOf[0]));
-      const oneOf = recipe.requirements
-        .filter((requirement) => requirement.anyOf.length > 1)
-        .map((requirement) => requirement.anyOf.filter((id) => selectable.has(id)).map(nameFor).join(' / '));
-      const optional = optionalGroupsForRecipe(recipe, optionalGroups).map((group) => group.labelZh);
+      renderCandidateContributions(card, recipe, state, recipes, ingredients, optionalGroups, ready);
+      const fixed = recipe.requirements.filter((requirement) => requirement.anyOf.length === 1).map((requirement) => nameFor(requirement.anyOf[0]));
+      const oneOf = recipe.requirements.filter((requirement) => requirement.anyOf.length > 1).map((requirement) => requirement.anyOf.filter((id) => !ready || selectable.has(id)).map(nameFor).join(' / ')).filter(Boolean);
+      const optional = optionalGroupsForRecipe(recipe, optionalGroups).filter((group) => !ready || group.ingredients.some((entry) => selectable.has(entry.ingredientId))).map((group) => group.labelZh);
       const finishes = finishOptionsForRecipe(recipe).map((finish) => finish.labelZh);
-      const servings = recipe.servingOptions?.map((id) => id === 'rice' ? '米饭' : '面条') ?? [];
-
-      const summary = document.createElement('div');
-      summary.className = 'meal-recipe-composition-summary';
-      summary.dataset.candidateComposition = recipeId;
-      summary.append(
-        summaryRow('必需 Required', fixed.join(' · ')),
-        summaryRow('选一 One of', oneOf.join('；')),
-        summaryRow('可加 Optional', optional.join(' · ')),
-        summaryRow('完成 Finish', finishes.join(' / ')),
-        summaryRow('主食 Serving', servings.join(' / ')),
-      );
-
-      const badges = card.querySelector('.badges');
-      if (badges) badges.after(summary);
-      else card.prepend(summary);
-
+      const servings = (ready ? servingOptionsForRecipe(recipe, selectable) : recipe.servingOptions ?? []).map((id) => id === 'rice' ? '米饭' : '面条');
+      card.querySelector<HTMLElement>('[data-candidate-uses]')!.textContent = [...fixed, ...oneOf.map((text) => `${text} 选一`)].join(' · ');
+      const details = card.querySelector<HTMLDetailsElement>('[data-candidate-composition]')!;
+      const summary = details.querySelector<HTMLElement>('.disclosure-closed')!;
+      const counts = [optional.length ? `可加 ${optional.length}` : '', servings.length ? `主食 ${servings.length}` : '', finishes.length ? `做法 ${finishes.length}` : ''].filter(Boolean);
+      summary.textContent = ready && counts.length ? counts.join(' · ') : '构成';
+      const content = details.querySelector('dl')!;
+      content.replaceChildren();
+      const equipment = recipe.equipment as string[];
+      for (const [label, value] of [['必需', fixed.join(' · ')], ['选一', oneOf.join('；')], ['可加', optional.join(' · ')], ['做法', finishes.join(' / ')], ['主食', servings.join(' / ')], ['器具', equipment.join(' · ')]]) {
+        if (value) content.append(summaryRow(label, value));
+      }
       const select = card.querySelector<HTMLButtonElement>('[data-select-recipe]');
       const active = planDraft?.mode === 'new' && planDraft.recipeId === recipeId;
-      if (select) select.hidden = active;
-      if (active) {
-        const editor = renderDraftEditor(recipe, planDraft!);
-        if (select) select.before(editor);
-        else card.append(editor);
-      }
+      if (select) { select.hidden = active; select.disabled = !ready; }
+      if (active) select?.before(renderDraftEditor(recipe, planDraft!));
     });
   }
 
@@ -323,7 +311,7 @@
     const finishes = finishOptionsForRecipe(recipe);
     if (finishes.length) {
       const finishHeading = document.createElement('h4');
-      finishHeading.textContent = '完成 Finish';
+      finishHeading.textContent = '做法';
       const finishGrid = document.createElement('div');
       finishGrid.className = 'meal-chip-grid meal-recipe-draft-grid';
       finishes.forEach((finish) => finishGrid.append(makeChoice(
@@ -336,7 +324,7 @@
     }
 
     const servingHeading = document.createElement('h4');
-    servingHeading.textContent = '主食 Serving';
+    servingHeading.textContent = '主食';
     const servingGrid = document.createElement('div');
     servingGrid.className = 'meal-chip-grid meal-recipe-draft-grid';
     const servingChoices: Array<{ id: ServingIngredientId | null; label: string }> = [
@@ -348,20 +336,20 @@
       (draft.servingIngredientId ?? null) === choice.id,
       { recipeDraftServing: recipe.id, recipeDraftServingId: choice.id ?? 'none' },
     )));
-    editor.append(servingHeading, servingGrid);
+    if (servingChoices.length > 1) editor.append(servingHeading, servingGrid);
 
     const fixed = recipe.requirements.filter((requirement) => requirement.anyOf.length === 1);
     const fixedHeading = document.createElement('h4');
-    fixedHeading.textContent = '必需 Required';
+    fixedHeading.textContent = '必需';
     const fixedLine = document.createElement('p');
     fixedLine.className = 'meal-recipe-plan-fixed';
     fixedLine.textContent = fixed.length ? fixed.map((requirement) => nameFor(requirement.anyOf[0])).join(' · ') : '—';
-    editor.append(fixedHeading, fixedLine);
+    if (fixed.length) editor.append(fixedHeading, fixedLine);
 
     recipe.requirements.forEach((requirement, index) => {
       if (requirement.anyOf.length <= 1) return;
       const h = document.createElement('h4');
-      h.textContent = '选一 One of';
+      h.textContent = '选一';
       const grid = document.createElement('div');
       grid.className = 'meal-chip-grid meal-recipe-draft-grid';
       const persisted = draft.mode === 'edit' ? meal?.recipeIngredientBindings[recipe.id]?.[index] : undefined;
@@ -381,49 +369,18 @@
     });
 
     const groups = optionalGroupsForRecipe(recipe, optionalGroups);
-    const optionalHeading = document.createElement('h4');
-    optionalHeading.textContent = '可加 Optional';
-    editor.append(optionalHeading);
-    if (!groups.length) {
-      const empty = document.createElement('p');
-      empty.className = 'meal-recipe-plan-fixed';
-      empty.textContent = '—';
-      editor.append(empty);
-    } else {
-      const boundIds = new Set(draft.bindings);
-      for (const group of groups) {
-        const groupLabel = document.createElement('h5');
-        groupLabel.textContent = group.labelZh;
-        editor.append(groupLabel);
-        const choices = group.ingredients.filter((entry) =>
-          !boundIds.has(entry.ingredientId) &&
-          (selectable.has(entry.ingredientId) || (
-            draft.mode === 'edit' && Boolean(meal && persistedOptional(meal, recipe.id, group.id, entry.ingredientId))
-          ))
-        );
-        if (!choices.length) {
-          const empty = document.createElement('p');
-          empty.className = 'meal-recipe-plan-empty';
-          empty.textContent = '本顿没有可选食材';
-          editor.append(empty);
-          continue;
-        }
-        const grid = document.createElement('div');
-        grid.className = 'meal-chip-grid meal-recipe-draft-grid';
-        choices.forEach((entry) => {
-          grid.append(makeChoice(
-            nameFor(entry.ingredientId),
-            draftOptionalSelected(group.id, entry.ingredientId),
-            {
-              recipeDraftOptional: recipe.id,
-              recipeDraftOptionalGroup: group.id,
-              recipeDraftOptionalIngredient: entry.ingredientId,
-            },
-            contributionText(entry),
-          ));
-        });
-        editor.append(grid);
+    let optionalHeadingAdded = false;
+    const boundIds = new Set(draft.bindings);
+    for (const group of groups) {
+      const choices = group.ingredients.filter((entry) => !boundIds.has(entry.ingredientId) && (selectable.has(entry.ingredientId) || (draft.mode === 'edit' && Boolean(meal && persistedOptional(meal, recipe.id, group.id, entry.ingredientId)))));
+      if (!choices.length) continue;
+      if (!optionalHeadingAdded) {
+        const h = document.createElement('h4'); h.textContent = '可加'; editor.append(h); optionalHeadingAdded = true;
       }
+      const label = document.createElement('h5'); label.textContent = group.labelZh; editor.append(label);
+      const grid = document.createElement('div'); grid.className = 'meal-chip-grid meal-recipe-draft-grid';
+      choices.forEach((entry) => grid.append(makeChoice(nameFor(entry.ingredientId), draftOptionalSelected(group.id, entry.ingredientId), { recipeDraftOptional: recipe.id, recipeDraftOptionalGroup: group.id, recipeDraftOptionalIngredient: entry.ingredientId }, contributionText(entry))));
+      editor.append(grid);
     }
 
     const actions = document.createElement('div');
@@ -717,29 +674,6 @@
   .meal-recipe-card > .meal-recipe-bindings { display: none !important; }
   .meal-selected [data-selected-bindings] { display: none !important; }
 
-  .meal-recipe-composition-summary {
-    display: grid;
-    gap: 4px;
-    margin: 10px 0 12px;
-    padding: 9px 10px;
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    background: color-mix(in srgb, var(--paper) 88%, var(--berry-soft));
-  }
-  .meal-recipe-composition-summary__row {
-    display: grid;
-    grid-template-columns: minmax(98px, auto) minmax(0, 1fr);
-    gap: 8px;
-    align-items: baseline;
-    font-size: .84rem;
-    line-height: 1.35;
-  }
-  .meal-recipe-composition-summary__row strong {
-    color: var(--muted);
-    font-size: .76rem;
-    white-space: nowrap;
-  }
-  .meal-recipe-composition-summary__row span { min-width: 0; color: var(--ink); }
 
   .meal-selected-plan-summary {
     display: block;
@@ -754,7 +688,7 @@
     border-radius: 10px;
     background: var(--paper);
     color: var(--berry);
-    font-weight: 800;
+    font-weight: 700;
   }
 
   .meal-recipe-plan-draft {
@@ -810,7 +744,7 @@
   .meal-recipe-draft-chip small {
     display: block;
     font-size: .72rem;
-    font-weight: 500;
+    font-weight: 700;
   }
   .meal-recipe-plan-draft__actions {
     display: grid;
@@ -820,7 +754,6 @@
   }
 
   @media (max-width: 520px) {
-    .meal-recipe-composition-summary__row { grid-template-columns: 92px minmax(0, 1fr); }
-    .meal-recipe-draft-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .meal-recipe-draft-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 </style>

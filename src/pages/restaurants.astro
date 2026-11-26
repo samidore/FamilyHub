@@ -45,7 +45,7 @@ const restaurantCount = restaurants.length;
     </div>
   </FilterShell>
 
-  <section id="restaurant-household-auth" class="shell restaurant-household-auth" data-state="connecting" aria-live="polite">
+  <section id="restaurant-household-auth" class="shell restaurant-household-auth household-status" data-state="connecting" aria-live="polite">
     <p id="restaurant-household-auth-message">正在恢复家庭口味登录状态…</p>
     <div class="restaurant-household-auth__actions">
       <button id="restaurant-household-sign-in" type="button" hidden>使用 Google 登录</button>
@@ -191,7 +191,7 @@ const restaurantCount = restaurants.length;
 
   <style>
     .restaurant-tag-field { display: grid; grid-column: 1 / -1; gap: 9px; min-width: 0; margin: 0; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: rgb(255 255 255 / 60%); }
-    .restaurant-tag-field legend { color: #5e5260; font-size: 14px; font-weight: 800; }
+    .restaurant-tag-field legend { color: #5e5260; font-size: 14px; font-weight: 700; }
     .restaurant-tag-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .restaurant-tag-heading > span { color: var(--muted); font-size: 13px; font-weight: 700; }
     .restaurant-tag-bulk { display: flex; gap: 7px; }
@@ -201,11 +201,7 @@ const restaurantCount = restaurants.length;
     .restaurant-tag-buttons button { min-height: 48px; padding: 7px 14px; border: 1px solid #c4b7c2; border-radius: 999px; background: #fff; color: var(--ink); font-weight: 750; cursor: pointer; }
     .restaurant-tag-buttons button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: #fff; }
 
-    .restaurant-household-auth { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: rgb(255 255 255 / 72%); }
-    .restaurant-household-auth p { margin: 0; color: #5e5260; font-size: 13px; font-weight: 700; }
-    .restaurant-household-auth[data-state="error"] p { color: #8e2c21; }
     .restaurant-household-auth__actions { display: flex; gap: 7px; flex-wrap: wrap; }
-    .restaurant-household-auth__actions button { min-height: 48px; border: 1px solid #c4b7c2; border-radius: 9px; background: #fff; color: var(--accent); padding: 6px 10px; font-weight: 700; cursor: pointer; }
     .restaurant-household-live { min-height: 18px; margin-top: 5px; margin-bottom: 0; color: var(--muted); font-size: 13px; }
     .restaurant-household-live[data-error="true"] { color: #8e2c21; }
 
@@ -214,14 +210,14 @@ const restaurantCount = restaurants.length;
     .restaurant-inbox__heading h2 { margin: 2px 0 3px; }
     .restaurant-inbox__heading p { margin: 0; }
     .restaurant-inbox__actions { display: flex; gap: 8px; flex-wrap: wrap; }
-    .restaurant-inbox__actions button, .restaurant-inbox-form button { min-height: 48px; border: 1px solid var(--accent); border-radius: 9px; padding: 8px 13px; background: var(--accent); color: #fff; font-weight: 800; cursor: pointer; }
+    .restaurant-inbox__actions button, .restaurant-inbox-form button { min-height: 48px; border: 1px solid var(--accent); border-radius: 9px; padding: 8px 13px; background: var(--accent); color: #fff; font-weight: 700; cursor: pointer; }
     .restaurant-inbox__actions button:last-child { background: #fff; color: var(--accent); }
     .restaurant-inbox__actions button:disabled { opacity: .45; cursor: default; }
     .restaurant-inbox-form { display: grid; gap: 6px; }
-    .restaurant-inbox-form label { color: #5e5260; font-size: 14px; font-weight: 800; }
+    .restaurant-inbox-form label { color: #5e5260; font-size: 14px; font-weight: 700; }
     .restaurant-inbox-form > div { display: flex; gap: 8px; }
     .restaurant-inbox-form input { min-width: 0; min-height: 48px; flex: 1 1 auto; border: 1px solid #c4b7c2; border-radius: 9px; padding: 8px 10px; font: inherit; }
-    .restaurant-inbox-details summary { min-height: 48px; display: flex; align-items: center; width: fit-content; color: var(--accent); font-weight: 800; cursor: pointer; }
+    .restaurant-inbox-details summary { min-height: 48px; display: flex; align-items: center; width: fit-content; color: var(--accent); font-weight: 700; cursor: pointer; }
     .restaurant-inbox-list { display: grid; gap: 8px; margin-top: 6px; }
     :global(.restaurant-inbox-row) { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 9px 0; border-top: 1px solid var(--line); }
     :global(.restaurant-inbox-row p) { margin: 0; white-space: pre-wrap; }

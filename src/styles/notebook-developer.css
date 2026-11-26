@@ -1,11 +1,11 @@
 .developer-shell { padding-top: 1.4rem; padding-bottom: 4rem; }
 .developer-shell > h1 { margin: .3rem 0 1.2rem; font-size: clamp(2.2rem, 8vw, 4rem); }
 .developer-app { display: grid; gap: 1rem; }
-.developer-panel { display: grid; min-width: 0; gap: .8rem; border: 1px solid #cfc5b5; border-radius: 18px; background: #fffdf8; padding: 1rem; }
+.developer-panel { display: grid; min-width: 0; gap: .8rem; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); padding: 1rem; }
 .developer-panel h2, .developer-panel h3, .developer-panel p { margin-block: 0; }
 .developer-panel__header { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .8rem; align-items: start; }
 .developer-inbox-list { display: grid; gap: .65rem; }
-.developer-inbox-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .7rem; align-items: start; border: 1px solid #ddd4c8; border-radius: 12px; background: white; padding: .75rem; }
+.developer-inbox-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .7rem; align-items: start; border: 1px solid #ddd4c8; border-radius: 12px; background: var(--surface); padding: .75rem; }
 .developer-inbox-row p { min-width: 0; overflow-wrap: anywhere; white-space: pre-wrap; }
 .developer-row-actions, .developer-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
 #developer-patch-input { width: 100%; min-width: 0; max-width: 100%; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 1rem; resize: none; overflow: auto; }
@@ -20,3 +20,5 @@
   .developer-panel__header > button { justify-self: start; }
   .developer-inbox-row { grid-template-columns: 1fr; }
 }
+
+.developer-inbox-row form { display: grid; gap: 12px; grid-column: 1 / -1; min-width: 0; }

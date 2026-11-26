@@ -1,0 +1,40 @@
+/* Candidate-card hierarchy and meal step layout from the supplied design. */
+.meal-step-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 16px 0; }
+.meal-progress > div:last-child:nth-child(odd) { grid-column: 1 / -1; }
+#meal-completion-status { border: 0; border-left: 4px solid var(--berry); background: var(--berry-soft); font-size: var(--fs-sm); }
+.meal-recipe-card h3 { font-size: 21px; line-height: 1.25; }
+.meal-recipe-card h3 small { display: block; margin-top: 4px; color: var(--muted); font-size: var(--fs-xs); font-weight: 400; }
+.gives { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.give { display: inline-flex; align-items: center; border: 1px solid var(--line-strong); border-radius: var(--r-pill); padding: 3px 8px; color: var(--muted); font-size: var(--fs-xs); line-height: 1.4; font-weight: 700; transition: background-color 150ms var(--motion-ease-out), color 150ms var(--motion-ease-out); }
+.give--needed { background: var(--berry); border-color: var(--berry); color: white; }
+.uses { margin: 12px 0; font-size: var(--fs-md); line-height: 1.5; color: var(--ink-2); }
+.uses .meal-timing { color: var(--muted); font-size: var(--fs-sm); }
+.comp { margin-bottom: 12px; font-size: var(--fs-sm); }
+.comp summary { display: flex; align-items: center; justify-content: space-between; min-height: 48px; cursor: pointer; color: var(--berry); font-weight: 700; list-style: none; }
+.comp summary::after { content: '⌄'; transition: transform 180ms var(--motion-ease-out); }
+.comp:not([open]) summary::after { transition-duration: var(--motion-exit); transition-timing-function: var(--motion-ease-in); }
+.comp[open] summary::after { transform: rotate(180deg); }
+.comp dl { margin: 0; padding: 8px 0; border-top: 1px solid var(--line); }
+.comp dl > div { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; margin-block: 6px; }
+.comp dt { color: var(--muted); font-weight: 700; }
+.comp dd { margin: 0; color: var(--ink-2); }
+.meal-recipe-card > [data-select-recipe] { width: 100%; min-height: 44px; margin-top: auto; animation: candidate-button var(--motion-feedback) var(--motion-ease-out); }
+@keyframes candidate-button { from { opacity: 0; } to { opacity: 1; } }
+.meal-cook-card summary { display: grid; grid-template-columns: minmax(0, 1fr) auto; }
+.meal-cook-card summary > .meal-queue-cook-plan { grid-column: 1 / -1; min-width: 0; }
+.meal-cook-card summary > span:nth-child(2) { white-space: nowrap; font-size: var(--fs-sm); color: var(--muted); }
+.meal-cook-card summary small { font-size: var(--fs-xs); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.meal-checkout h4 { font-size: var(--fs-sm); }
+@media (min-width: 560px) { .meal-progress > div:last-child:nth-child(odd) { grid-column: auto; } }
+@media (max-width: 559px) {
+  .meal-cook .meal-section-heading { flex-direction: column; align-items: stretch; }
+  .meal-cook-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .meal-cook-actions #meal-open-checkout { grid-column: 1 / -1; order: 3; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .give, .comp summary::after { transition: none; }
+  .meal-recipe-card > [data-select-recipe] { animation: none; }
+}
+
+.meal-builder-app[data-household-ready="false"] #meal-completion-status { position: relative; color: transparent; }
+.meal-builder-app[data-household-ready="false"] #meal-completion-status::after { content: ""; position: absolute; inset: 12px 25% 12px 16px; border-radius: var(--r-control); background: var(--line); }

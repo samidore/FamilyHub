@@ -19,6 +19,7 @@
         const warning = ['signed-out', 'pending', 'error'].includes(connection.dataset.connection ?? '');
         householdBar.hidden = !warning;
         householdBar.dataset.mealAuthWarning = String(warning);
+        householdBar.dataset.state = connection.dataset.connection ?? 'connecting';
         footer.hidden = logout.hidden;
       };
       const authObserver = new MutationObserver(syncAuthChrome);
@@ -218,26 +219,27 @@
   .meal-builder-page .module-hero__copy > .eyebrow,
   .meal-builder-page .summary-row { display: none; }
   .meal-builder-page .module-hero__copy { padding-top: 0; }
-  .meal-builder-page .module-hero__copy h1 { margin: 0 0 4px; font-size: clamp(38px, 11vw, 56px); line-height: 1; }
-  .meal-builder-page .module-hero__copy > p:not(.eyebrow) { font-size: 16px; line-height: 1.35; }
+  .meal-builder-page .module-hero__copy h1 { margin: 0 0 4px; font-size: var(--fs-h1); line-height: 1.02; letter-spacing: -.04em; }
+  .meal-builder-page .module-hero__copy > p:not(.eyebrow) { font-size: var(--fs-md); line-height: 1.35; }
   .meal-builder-page .meal-step-band { margin-top: 12px; }
 
   .meal-builder-page .meal-household-bar { display: none; }
   .meal-builder-page .meal-household-bar[data-meal-auth-warning="true"] {
-    display: block;
-    margin-top: 12px;
-    padding: 10px 12px;
-    border: 1px solid #e1ba6c;
-    border-radius: 12px;
-    background: #fff7df;
+    display: flex;
+    margin-top: 16px;
+    padding: 10px 0;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 0;
+    background: transparent;
   }
   .meal-builder-page .meal-household-bar #meal-account,
   .meal-builder-page .meal-household-bar .meal-shared-status { display: none !important; }
   .meal-builder-page .meal-household-bar .meal-connection { margin: 0; }
-  .meal-builder-page .meal-household-bar .meal-connection::before { content: '⚠ '; }
+
   .meal-builder-page .meal-household-bar .meal-auth-actions { margin-top: 6px; }
   .meal-auth-footer { display: flex; justify-content: flex-end; padding-block: 18px 34px; }
-  .meal-auth-footer .meal-auth-footer__logout { min-height: 48px; color: var(--muted); font-size: 14px; font-weight: 600; }
+  .meal-auth-footer .meal-auth-footer__logout { min-height: 48px; color: var(--muted); font-size: var(--fs-sm); font-weight: 700; }
 
   .meal-targets { margin-bottom: 22px; }
   .meal-target-fold { border: 0; }
@@ -256,9 +258,9 @@
     cursor: pointer;
   }
   .meal-target-fold__label { display: grid; min-width: 0; gap: 2px; }
-  .meal-target-fold__label strong { color: var(--ink); font-size: 20px; line-height: 1.2; }
-  .meal-target-fold__label small { color: var(--muted); font-size: 13px; font-weight: 700; line-height: 1.25; }
-  .meal-target-fold__action { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 5px; color: var(--berry); font-size: 14px; font-weight: 800; }
+  .meal-target-fold__label strong { color: var(--ink); font-size: var(--fs-lg); line-height: 1.2; }
+  .meal-target-fold__label small { color: var(--muted); font-size: var(--fs-xs); font-weight: 700; line-height: 1.25; }
+  .meal-target-fold__action { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 5px; color: var(--berry); font-size: var(--fs-sm); font-weight: 700; }
   .meal-target-fold__action > span:last-child { display: inline-block; font-size: 18px; transition: transform .15s ease; }
   .meal-target-fold[open] .meal-target-fold__action > span:last-child { transform: rotate(180deg); }
   .meal-target-fold[open] > .meal-target-fold__summary { border-color: color-mix(in srgb, var(--berry) 35%, var(--line)); background: var(--berry-soft); }
@@ -283,7 +285,7 @@
     cursor: pointer;
   }
   .meal-ingredient-overall-fold__summary > span:first-child { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
-  .meal-ingredient-overall-fold__summary small { color: var(--muted); font-size: .86rem; font-weight: 600; }
+  .meal-ingredient-overall-fold__summary small { color: var(--muted); font-size: .86rem; font-weight: 700; }
   .meal-ingredient-overall-fold[open] > .meal-ingredient-overall-fold__summary { margin-bottom: 16px; }
 
   .meal-builder-page #meal-inventory-view {
@@ -338,11 +340,11 @@
 
   @media (max-width: 560px) {
     .meal-builder-page .module-hero { padding-block: 8px 12px; }
-    .meal-builder-page .module-hero__copy h1 { font-size: clamp(36px, 11vw, 44px); }
+    .meal-builder-page .module-hero__copy h1 { font-size: var(--fs-h1); }
     .meal-target-fold__summary { min-height: 70px; padding: 10px 12px; }
-    .meal-target-fold__label strong { font-size: 19px; }
-    .meal-target-fold__label small { font-size: 12px; }
+    .meal-target-fold__label strong { font-size: var(--fs-lg); }
+    .meal-target-fold__label small { font-size: var(--fs-xs); }
     .meal-target-fold > .meal-target-grid { padding: 10px; }
-    .meal-target-fold > .meal-target-grid > label:not(.meal-toggle) { gap: 3px; font-size: 12px; }
+    .meal-target-fold > .meal-target-grid > label:not(.meal-toggle) { gap: 3px; font-size: var(--fs-xs); }
   }
 </style>

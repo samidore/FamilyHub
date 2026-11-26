@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { moduleRegistry } from '../src/config/modules.ts';
 import { parseDayTrips } from '../src/data/dayTripSchema.mjs';
 import { parseAdultDermatologists, parseColonoscopySpecialists, parseLibraryEvents, parsePediatricDentists } from '../src/data/schemas.mjs';
@@ -23,6 +23,13 @@ const home = await readFile('dist/index.html', 'utf8');
 const today = await readFile('dist/today/index.html', 'utf8');
 const notebookDeveloper = await readFile('dist/sami-notebook/developer/index.html', 'utf8');
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
+
+// Development fixtures and URL-controlled sessions must be absent from every production asset.
+for (const file of await readdir('dist', { recursive: true })) {
+  if (!/\.(js|html|map)$/.test(file)) continue;
+  const output = await readFile(`dist/${file}`, 'utf8');
+  assert(!/FamilyHub development preview|preview-task-0|today-push-checking|householdMock/.test(output), `Development mock leaked into production: ${file}`);
+}
 
 const records = {
   'day-trips': trips,

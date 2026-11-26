@@ -2,7 +2,9 @@
 :root {
   --motion-feedback: 120ms;
   --motion-enter: 200ms;
-  --motion-ease-out: ease-out;
+  --motion-exit: 150ms;
+  --motion-ease-out: cubic-bezier(0.2, 0, 0, 1);
+  --motion-ease-in: cubic-bezier(0.4, 0, 1, 1);
 }
 
 button:not(.drag-handle) { transition: transform var(--motion-feedback) var(--motion-ease-out); }
@@ -10,6 +12,11 @@ button:not(:disabled):not(.drag-handle):active { transform: translateY(1px); }
 .notebook-dialog[open] { animation: dialog-enter var(--motion-enter) var(--motion-ease-out); }
 .notebook-dialog[open]::backdrop { animation: backdrop-enter var(--motion-enter) var(--motion-ease-out); }
 [data-notebook-dialog-status] { flex-basis: 100%; }
+details[open] > :not(summary), .meal-recipe-plan-draft { animation: content-enter var(--motion-enter) var(--motion-ease-out); }
+@keyframes content-enter {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
 @keyframes dialog-enter {
   from { opacity: 0; transform: translateY(8px); }
@@ -24,4 +31,6 @@ button:not(:disabled):not(.drag-handle):active { transform: translateY(1px); }
   button:not(.drag-handle) { transition: none; }
   button:not(:disabled):not(.drag-handle):active { transform: none; }
   .notebook-dialog[open], .notebook-dialog[open]::backdrop { animation: none; }
+  details[open] > :not(summary), .meal-recipe-plan-draft { animation: none; }
+  .about summary::after, .guidance summary::after { transition: none; }
 }

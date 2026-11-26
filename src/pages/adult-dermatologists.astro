@@ -13,22 +13,22 @@ const capabilityLabels: Record<string, string> = { 'eczema-dermatitis': 'eczema 
 const rankedDermatologists = [...adultDermatologists].sort((a, b) => a.rank - b.rank);
 ---
 <BaseLayout title="Adult Dermatologists · 肛周皮炎/湿疹 | Family Hub" description="按一般皮肤科基础、肛周皮炎鉴别能力、患者体验、安全资料和预约条件比较女性成人皮肤科医生。" pageClass="module-page theme-ochre" themeColor="#F4EDE0">
-  <SiteHeader eyebrow="健康与照护 · 公开资料比较" title="Adult Dermatologists · 肛周皮炎/湿疹" description="这是一份女性成人皮肤科医生比较清单。肛周皮炎可能涉及 irritant/allergic contact dermatitis、eczema、infection、psoriasis、lichen disorders 或其他原因；本页比较诊断广度和公开证据，不把“湿疹”当成已确认诊断。Healthgrades 只作 patient-experience 证据，Tier 是家庭比较工具，不是医疗质量评级。" accent="ochre" icon="care">
-    <div class="summary-row"><span>10 位女性 MD/DO</span><span>本地 + 4 位 NYC 专科备选</span><span>资格、安全与负评分开核实</span></div>
+  <SiteHeader lede="比较诊断广度和公开证据，不把“湿疹”当成已确认诊断。Tier 是家庭比较工具，不是医疗质量评级。" eyebrow="健康与照护 · 公开资料比较" title="Adult Dermatologists · 肛周皮炎/湿疹" description="这是一份女性成人皮肤科医生比较清单。肛周皮炎可能涉及 irritant/allergic contact dermatitis、eczema、infection、psoriasis、lichen disorders 或其他原因；本页比较诊断广度和公开证据，不把“湿疹”当成已确认诊断。Healthgrades 只作 patient-experience 证据，Tier 是家庭比较工具，不是医疗质量评级。" accent="ochre" icon="care">
+    <div class="summary-row meta-line"><span>10 位女性 MD/DO</span><span>本地 + 4 位 NYC 专科备选</span><span>资格、安全与负评分开核实</span></div>
   </SiteHeader>
 
-  <FilterShell accent="ochre" filterId="dermatologist-filter-panel" countId="dermatologist-count" clearId="dermatologist-clear" countText="显示 10 / 10 位医生">
+  <FilterShell compact accent="ochre" filterId="dermatologist-filter-panel" countId="dermatologist-count" clearId="dermatologist-clear" countText="显示 10 / 10 位医生">
     <div slot="primary" class="filter-primary__grid">
-      <label><span>搜索医生、地点或诊断能力</span><input id="dermatologist-search" type="search" placeholder="contact dermatitis、patch testing、Englewood…" autocomplete="off" /></label>
+      <label><span>搜索医生、地点或诊断能力</span><input id="dermatologist-search" type="search" placeholder="搜索医生、地点或诊断能力" autocomplete="off" /></label>
       <label><span>排序</span><select id="dermatologist-sort" data-default="rank"><option value="rank">家庭综合顺序</option><option value="fit">肛周皮炎适配</option><option value="drive">最短已知车程</option><option value="rating">主要评分</option><option value="reviews">评分数量</option><option value="name">名称</option></select></label>
     </div>
     <div slot="filters" class="contents">
       <label><span>地点</span><select id="dermatologist-location"><option value="">本地与 NYC</option><option value="local">附近医生</option><option value="nyc">NYC 专科备选</option></select></label>
       <label><span>比较 Tier</span><select id="dermatologist-tier"><option value="">全部 Tier</option><option value="1">Tier 1 · strongest choices</option><option value="2">Tier 2 · good alternatives</option><option value="3">Tier 3 · meaningful tradeoffs</option></select></label>
       <label><span>车程</span><select id="dermatologist-drive"><option value="">不限已知车程</option><option value="15">15 分钟内</option><option value="20">20 分钟内</option><option value="30">30 分钟内</option></select></label>
-      <label><span>肛周皮炎适配</span><select id="dermatologist-fit"><option value="">全部 evidence</option><option value="strong">strong</option><option value="adequate">adequate</option></select></label>
+      <label><span>肛周皮炎适配</span><select id="dermatologist-fit"><option value="">全部证据</option><option value="strong">strong</option><option value="adequate">adequate</option></select></label>
       <label><span>诊断能力</span><select id="dermatologist-capability"><option value="">全部能力</option>{capabilities.map((item) => <option value={item}>{capabilityLabels[item]}</option>)}</select></label>
-      <label><span>Review confidence</span><select id="dermatologist-confidence"><option value="">全部 confidence</option>{confidences.map((item) => <option value={item}>{reviewLabels[item]}</option>)}</select></label>
+      <label><span>Review confidence</span><select id="dermatologist-confidence"><option value="">全部可信度</option>{confidences.map((item) => <option value={item}>{reviewLabels[item]}</option>)}</select></label>
       <label><span>新患者</span><select id="dermatologist-availability"><option value="">全部状态</option><option value="verified">已核实入口</option><option value="conditional">需确认</option><option value="unknown">未知</option></select></label>
       <label><span>关注程度</span><select id="dermatologist-concern"><option value="">全部程度</option>{concerns.map((item) => <option value={item}>{item}</option>)}</select></label>
     </div>

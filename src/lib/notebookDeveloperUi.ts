@@ -1,5 +1,5 @@
 /** Connects Inbox sorting and validated patch feedback to the notebook. */
-import { cloneNotebookState, type NotebookState } from './notebookDomain.ts';
+import { type NotebookState } from './notebookDomain.ts';
 import { createNotebookRepository, type CreateNotebookRepositoryOptions } from './notebookRepository.ts';
 import type { FirebaseConfig } from './householdRepository.ts';
 import {
@@ -17,6 +17,7 @@ import {
   type NotebookItemUpdatePatch,
 } from './notebookItemUpdatePatch.ts';
 import { serializeNotebookExport } from './notebookExport.ts';
+import { setupDeveloperInbox } from './notebookDeveloperInbox.ts';
 
 const get = <T extends Element>(selector: string) => {
   const element = document.querySelector<T>(selector);
@@ -129,13 +130,18 @@ export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, option
     }
   };
 
+  const inbox = setupDeveloperInbox({ host: inboxList, getState: () => state, mutate });
   const renderInbox = () => {
-    const tickets = Object.values(state.inbox).sort((left, right) => left.createdAt - right.createdAt || left.id.localeCompare(right.id));
-    inboxCount.textContent = tickets.length ? `${tickets.length} 条待整理` : '暂无待整理';
-    copyAll.disabled = tickets.length === 0;
-    inboxList.innerHTML = tickets.length
-      ? tickets.map((ticket) => `<article class="developer-inbox-row" data-ticket-id="${escapeHtml(ticket.id)}"><p>${escapeHtml(ticket.text)}</p><div class="developer-row-actions"><button type="button" class="quiet-button" data-edit-ticket>编辑</button><button type="button" class="quiet-button" data-delete-ticket>删除</button></div></article>`).join('')
-      : '<p class="notebook-muted">Inbox 现在是空的。</p>';
+    const count = Object.keys(state.inbox).length;
+    inboxCount.textContent = count ? `${count} 条待整理` : '暂无待整理';
+    copyAll.disabled = count === 0;
+    inbox.render();
+  };
+  const showDestinations = (title: string, boardIds: string[], recurring = false) => {
+    const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+    previewHost.innerHTML = `<h3>${escapeHtml(title)}</h3><p>已保存到小本本：</p><ul>${[...new Set(boardIds)].map((id) => `<li><a href="${base}/sami-notebook/?board=${encodeURIComponent(id)}#notebook-board-${encodeURIComponent(id)}">打开 ${escapeHtml(state.boards[id]?.title ?? id)}</a></li>`).join('')}</ul>`;
+    previewHost.hidden = false;
+    if (recurring) previewHost.insertAdjacentHTML('beforeend', `<p><a href="${base}/sami-notebook/?recurring=1#notebook-recurring">打开循环事项 · 反复干</a></p>`);
   };
 
   const clearPatchPreview = () => {
@@ -194,33 +200,6 @@ export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, option
   refresh.addEventListener('click', () => void repository.refreshAccess().catch((error) => status(String(error), true)));
   signOut.addEventListener('click', () => void repository.signOut().catch((error) => status(`退出失败，请重试：${String(error)}`, true)));
 
-  inboxList.addEventListener('click', (event) => {
-    const target = event.target as HTMLElement;
-    const row = target.closest<HTMLElement>('[data-ticket-id]');
-    const ticketId = row?.dataset.ticketId;
-    if (!ticketId) return;
-    const ticket = state.inbox[ticketId];
-    if (!ticket) return;
-    if (target.closest('[data-edit-ticket]')) {
-      const text = window.prompt('修改 Inbox', ticket.text)?.trim();
-      if (!text || text === ticket.text) return;
-      void mutate('修改 Inbox', (current) => {
-        const existing = current.inbox[ticketId];
-        if (!existing) throw new Error('Inbox ticket 已不存在');
-        return { ...current, inbox: { ...current.inbox, [ticketId]: { ...existing, text, updatedAt: stamp() } } };
-      });
-      return;
-    }
-    if (target.closest('[data-delete-ticket]') && window.confirm('删除这条 Inbox？')) {
-      void mutate('删除 Inbox', (current) => {
-        if (!current.inbox[ticketId]) throw new Error('Inbox ticket 已不存在');
-        const next = cloneNotebookState(current);
-        delete next.inbox[ticketId];
-        return next;
-      });
-    }
-  });
-
   copyAll.addEventListener('click', () => {
     const text = createNotebookInboxChatPrompt(state, localDate());
     void copyText(text).then(() => status('ChatGPT prompt 已复制')).catch((error) => status(error instanceof Error ? error.message : String(error), true));
@@ -242,6 +221,9 @@ export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, option
         if (!ok) return;
         patchInput.value = '';
         clearPatchPreview();
+        const updatedIds = new Set(patch.itemUpdates.map((item) => item.itemId));
+        const ids = Object.entries(state.memberships).filter(([, members]) => Object.keys(members).some((id) => updatedIds.has(id) && !state.items[id]?.recurrence)).map(([id]) => id);
+        showDestinations('事项已更新', ids, [...updatedIds].some((id) => Boolean(state.items[id]?.recurrence)));
       });
       return;
     }
@@ -251,6 +233,7 @@ export function mountNotebookDeveloperUi(config: Partial<FirebaseConfig>, option
       if (!ok) return;
       patchInput.value = '';
       clearPatchPreview();
+      showDestinations(`已创建 ${patch.items.length} 个事项`, patch.items.flatMap((item) => item.recurrence ? [] : item.boardIds), patch.items.some((item) => Boolean(item.recurrence)));
     });
   });
 

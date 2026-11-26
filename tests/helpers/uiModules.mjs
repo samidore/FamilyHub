@@ -8,7 +8,7 @@ export async function compileUiModules(entry, source) {
   async function visit(filename, override) {
     if (modules[filename]) return;
     const input = override ?? await readFile(filename, 'utf8');
-    const output = ts.transpileModule(input.replaceAll('import.meta.env.BASE_URL', "'/'"), {
+    const output = ts.transpileModule(input.replaceAll('import.meta.env.BASE_URL', "'/'").replaceAll('import.meta.env?.DEV', 'false').replaceAll('import.meta.env.DEV', 'false'), {
       compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
       fileName: filename,
     }).outputText;

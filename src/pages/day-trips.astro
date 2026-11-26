@@ -24,7 +24,7 @@ const tripCount = dayTrips.length;
   <FilterShell accent="evergreen" filterId="trip-filter-panel" countId="trip-count" clearId="trip-clear" countText={`显示 ${tripCount} / ${tripCount} 个地点`}>
     <div slot="primary" class="filter-primary__grid">
       <label><span>搜索地点</span><input id="trip-search" type="search" placeholder="Bergen、动物园、摘棉花…" autocomplete="off" /></label>
-      <label><span>排序</span><select id="trip-sort" data-default="drive"><option value="drive">车程近 → 远</option><option value="reaction">👍 优先</option><option value="name">名称 A–Z</option></select></label>
+      <label><span>排序</span><select id="trip-sort" data-default="drive"><option value="drive">车程近 → 远</option><option value="reaction">家庭点赞优先</option><option value="name">名称 A–Z</option></select></label>
     </div>
 
     <div slot="filters" class="contents">
@@ -90,7 +90,7 @@ const tripCount = dayTrips.length;
     </div>
   </FilterShell>
 
-  <section id="trip-household-auth" class="shell trip-household-auth" data-state="connecting" aria-live="polite">
+  <section id="trip-household-auth" class="shell trip-household-auth household-status" data-state="connecting" aria-live="polite">
     <p id="trip-household-auth-message">正在恢复家庭评价登录状态…</p>
     <div class="trip-household-auth__actions">
       <button id="trip-household-sign-in" type="button" hidden>使用 Google 登录</button>
@@ -376,11 +376,7 @@ const tripCount = dayTrips.length;
     .trip-small-button { padding-inline: 12px; color: var(--accent); }
     .trip-activity-buttons button { flex: 1 1 135px; padding: 8px 12px; }
 
-    .trip-household-auth { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: rgb(255 255 255 / 72%); }
-    .trip-household-auth p { margin: 0; color: #4f5d55; font-size: 13px; font-weight: 700; }
-    .trip-household-auth[data-state="error"] p { color: #8e2c21; }
     .trip-household-auth__actions { display: flex; gap: 7px; flex-wrap: wrap; }
-    .trip-household-auth__actions button { min-height: 48px; border: 1px solid #b8c5bc; border-radius: 9px; background: #fff; color: var(--accent); padding: 6px 10px; font-weight: 700; cursor: pointer; }
     @media (max-width: 600px) { .trip-household-auth { align-items: flex-start; flex-direction: column; } }
   </style>
 </BaseLayout>

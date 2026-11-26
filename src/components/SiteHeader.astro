@@ -1,19 +1,21 @@
 ---
 import ModuleIcon from './ModuleIcon.astro';
 import type { ModuleAccent, ModuleIcon as IconName } from '../config/modules';
-interface Props { eyebrow: string; title: string; description: string; accent: ModuleAccent; icon: IconName; titleId?: string; }
-const { eyebrow, title, description, accent, icon, titleId } = Astro.props;
+interface Props { eyebrow: string; title: string; description: string; lede?: string; accent: ModuleAccent; icon: IconName; titleId?: string; }
+const { eyebrow, title, description, lede, accent, icon, titleId } = Astro.props;
+const [mainTitle, ...subtitle] = title.split(' · ');
 const base = import.meta.env.BASE_URL;
 ---
-<header class:list={['module-hero', `theme-${accent}`]}>
+<header class:list={['module-hero', `theme-${accent}`, { 'module-hero--medical': Boolean(lede) }]}>
   <div class="shell">
     <nav class="module-nav" aria-label="页面导航"><a class="back-link" href={base}>← Family Hub</a></nav>
     <div class="module-hero__grid">
       <div class="field-tab"><ModuleIcon icon={icon} /><span>{eyebrow}</span></div>
       <div class="module-hero__copy">
         <p class="eyebrow">{eyebrow}</p>
-        <h1 id={titleId}>{title}</h1>
-        <p>{description}</p>
+        <h1 id={titleId}>{mainTitle}{subtitle.length > 0 && <span class="title-sub">{subtitle.join(' · ')}</span>}</h1>
+        <p>{lede ?? description}</p>
+        {lede && <details class="about"><summary><span class="disclosure-closed">关于本页与证据局限</span><span class="disclosure-open">收起说明</span></summary><div>{description}</div></details>}
         <slot />
       </div>
     </div>

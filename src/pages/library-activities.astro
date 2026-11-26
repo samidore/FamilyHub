@@ -28,7 +28,7 @@ const eventCount = libraryEvents.length;
 
   <main id="main-content" class="shell listing-main">
     <div id="event-list" class="event-list">{libraryEvents.map((event) => <LibraryEventCard event={event} />)}</div>
-    <div id="event-empty" class="empty-state" hidden={eventCount > 0}>
+    <div id="event-empty" class="empty-state note-box" hidden={eventCount > 0}>
       <p id="event-empty-message">这里暂时没有尚未过期的 Fair Lawn 儿童活动。</p>
       <p><a class="button button--secondary" href="https://www.fairlawnlibrary.org/children" target="_blank" rel="noopener noreferrer">查看官方儿童活动页</a></p>
     </div>

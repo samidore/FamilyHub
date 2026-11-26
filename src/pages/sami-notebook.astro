@@ -4,10 +4,11 @@ import '../styles/notebook.css';
 import '../styles/notebookRecurring.css';
 import '../styles/notebookQuickAdd.css';
 import '../styles/notebookPresets.css';
+import '../styles/notebookTask.css';
 const base = import.meta.env.BASE_URL;
 const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
 ---
-<BaseLayout title="Sami的小本本 · Family Hub" description="家庭共享的事项、项目、影视清单和随手记。" pageClass="notebook-page" themeColor="#F5F1E8">
+<BaseLayout title="Sami的小本本 · Family Hub" description="家庭共享的事项、项目、影视清单和随手记。" pageClass="notebook-page" themeColor="#E7EFE8">
   <header class="notebook-site-header shell">
     <a class="back-link" href={withBase('/')}>← Family Hub</a>
     <div>
@@ -41,7 +42,7 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
         <div class="notebook-toolbar__actions">
           <button id="notebook-collapse-all" type="button" class="secondary-button">全部收起</button>
           <button id="notebook-manage-boards" type="button" class="secondary-button">管理 Boards</button>
-          <a class="button-link secondary-button" href={withBase('/sami-notebook/developer/')}>Developer</a>
+          <a class="button-link secondary-button" href={withBase('/sami-notebook/developer/')}>开发者</a>
         </div>
       </section>
 
@@ -51,7 +52,7 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
 
       <section class="notebook-inbox" aria-labelledby="notebook-inbox-title">
         <div>
-          <p class="eyebrow">Inbox</p>
+          <p class="eyebrow">收件箱</p>
           <h2 id="notebook-inbox-title">随手记</h2>
           <p>一句话就可以，之后再到 Developer 页整理。</p>
         </div>

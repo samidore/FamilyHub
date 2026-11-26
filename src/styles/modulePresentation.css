@@ -1,0 +1,74 @@
+/* Shared disclosures, medical first screens, and household connection feedback. */
+.home-search input:focus { outline: 3px solid color-mix(in srgb, var(--evergreen) 18%, transparent); }
+.home-search input, .filter-shell input, .filter-shell select,
+.meal-target-grid select, .meal-binding-control select, .meal-addon-choice select { font-weight: 400; }
+.module-card__meta { font-size: var(--fs-xs); }
+.clear-button, .filter-summary-state { font-size: var(--fs-sm); }
+.filter-summary-state { font-weight: 400; color: var(--muted); }
+.actions--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.actions--three .button { padding-inline: 8px; font-size: var(--fs-sm); }
+.note-box:empty, [role="status"]:empty.note-box { display: none; }
+.metric-grid > div, .evidence-bands li { border-radius: var(--r-inner); }
+.title-sub { display: block; font-size: 30px; line-height: 1.3; margin-top: 6px; }
+.module-hero--medical h1 { font-size: 56px; }
+.module-hero--medical .module-hero__copy > p:not(.eyebrow) { font-size: 16px; line-height: 1.55; }
+.module-hero--medical .summary-row { font-size: var(--fs-xs); }
+.about, .guidance details { font-size: var(--fs-sm); color: var(--ink-2); }
+.about summary, .guidance summary { min-height: 48px; display: flex; align-items: center; gap: 8px; color: var(--accent); font-weight: 700; cursor: pointer; list-style: none; }
+.about summary::after, .guidance summary::after { content: '⌄'; transition: transform 180ms var(--motion-ease-out); }
+.about:not([open]) summary::after, .guidance details:not([open]) summary::after { transition-duration: var(--motion-exit); transition-timing-function: var(--motion-ease-in); }
+.about[open] summary::after, .guidance details[open] summary::after { transform: rotate(180deg); }
+.about > div, .guidance details > div { padding-bottom: 12px; }
+.disclosure-open { display: none; }
+details[open] > summary .disclosure-open { display: inline; }
+details[open] > summary .disclosure-closed { display: none; }
+.guidance { margin-block: 16px; padding: 12px 16px; border-left: 4px solid var(--risk); background: var(--surface); border-radius: var(--r-inner); }
+.guidance p { margin: 0; font-size: var(--fs-sm); }
+[data-filter-badge] { padding: 2px 7px; border-radius: var(--r-pill); background: var(--accent); color: white; font-size: var(--fs-xs); }
+.filter-shell--medical .clear-button { opacity: 0; visibility: hidden; transition: opacity var(--motion-feedback) var(--motion-ease-in), visibility 0s var(--motion-feedback); }
+.filter-shell--medical .clear-button[data-active="true"] { opacity: 1; visibility: visible; transition: opacity var(--motion-feedback) var(--motion-ease-out), visibility 0s; }
+.household-status { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; margin-top: 16px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.household-status p { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--muted); font-size: var(--fs-sm); font-weight: 400; }
+.household-status p::before { content: ''; width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: var(--muted); }
+.household-status[data-state="connected"] p::before { background: var(--evergreen); }
+.household-status[data-state="error"] p { color: var(--risk); }
+.household-status[data-state="error"] p::before { background: var(--risk); }
+.household-status button { min-height: 48px; padding: 6px 12px; border: 1px solid var(--line-strong); border-radius: var(--r-control); background: var(--surface); color: var(--accent, var(--evergreen)); font-size: var(--fs-sm); font-weight: 700; }
+#event-empty { margin: 24px 0; padding: 24px 20px; text-align: left; color: var(--ink-2); font-size: var(--fs-md); }
+#event-empty p { margin: 0; }
+#event-empty p + p { margin-top: 16px; }
+@media (max-width: 799px) {
+  .module-hero--medical { padding-block: 8px; }
+  .module-hero--medical .module-hero__grid { margin-top: 0; }
+  .module-hero--medical .module-hero__copy { padding-top: 0; }
+  .module-hero--medical h1 { margin: 0 0 8px; }
+  .module-hero--medical .summary-row { margin-top: 8px; line-height: 1.4; }
+  .module-hero--medical .module-hero__grid { display: block; }
+  .module-hero--medical .field-tab { display: none; }
+  .module-hero--medical h1 { font-size: 30px; }
+  .module-hero--medical .title-sub { font-size: 20px; }
+  .filter-shell--medical .filter-shell__inner { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding-block: 12px; }
+  .filter-shell--medical .filter-primary, .filter-shell--medical .filter-primary__grid { display: contents; }
+  .filter-shell--medical .filter-primary__grid > label:nth-child(2) { grid-column: 1; grid-row: 2; align-self: start; z-index: 1; }
+  .filter-shell--medical .filter-disclosure { grid-column: 1 / -1; grid-row: 2; min-width: 0; margin: 0; }
+  .filter-shell--medical .filter-primary__grid > label:first-child { grid-column: 1 / -1; }
+  .filter-shell--medical .filter-primary__grid > label > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .filter-shell--medical .filter-disclosure summary { width: calc(50% - var(--sp-1)); margin-left: auto; min-width: 0; padding-inline: 10px; font-size: var(--fs-sm); }
+  .filter-shell--medical .filter-summary-state { display: none; }
+  .filter-shell--medical:has(.filter-primary__grid > label:only-child) .filter-disclosure summary { width: 100%; }
+  .filter-shell--medical .filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 8px; }
+  .filter-shell--medical input, .filter-shell--medical select { min-height: 48px; }
+  .filter-shell--medical + .listing-main { padding-top: 16px; }
+  .filter-shell--medical .filter-footer { grid-column: 1 / -1; margin: 0; }
+}
+@media (max-width: 559px) {
+  .eyebrow { font-size: var(--fs-xs); }
+  .module-hero:not(.module-hero--medical) .module-hero__grid { grid-template-columns: 6px minmax(0, 1fr); gap: 14px; }
+  .module-hero:not(.module-hero--medical) .field-tab { min-height: 0; padding: 0; border-radius: 3px; }
+  .module-hero:not(.module-hero--medical) .field-tab > * { display: none; }
+  .home-lead, .module-hero:not(.module-hero--medical) .module-hero__copy > p:not(.eyebrow) { font-size: var(--fs-md); line-height: 1.6; }
+}
+@media (prefers-reduced-motion: reduce) { .filter-shell--medical .clear-button { transition: none; } }
+
+.meal-undo-notice { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; padding: 12px 16px; border: 1px solid var(--line); border-radius: var(--r-inner); background: var(--surface); font-size: var(--fs-sm); }
+.meal-undo-notice button { min-height: 48px; padding: 4px 12px; border: 1px solid var(--line-strong); border-radius: var(--r-control); background: var(--surface); color: var(--evergreen); font-weight: 700; }

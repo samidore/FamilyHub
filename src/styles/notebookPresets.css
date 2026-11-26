@@ -1,8 +1,8 @@
 .notebook-presets {
   margin: .35rem 0 1rem;
-  border: 1px solid #cfc5b5;
-  border-radius: 16px;
-  background: #fffdf8;
+  border: 1px solid var(--line);
+  border-radius: var(--r-inner);
+  background: var(--surface);
   padding: .75rem .85rem;
 }
 .notebook-presets__header {
@@ -14,17 +14,17 @@
 }
 .notebook-presets__header h2 {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: var(--fs-md);
 }
 .notebook-preset-add,
 .notebook-preset-edit {
-  min-height: 36px;
-  min-width: 36px;
+  min-height: 40px;
+  min-width: 40px;
   padding: .2rem .5rem;
   border-radius: 999px;
-  background: #fffdf8;
-  color: #2f4f45;
-  border-color: #b6aa99;
+  background: var(--surface);
+  color: var(--evergreen);
+  border-color: var(--line-strong);
 }
 .notebook-preset-list {
   display: flex;
@@ -41,19 +41,19 @@
   min-height: 38px;
   padding: .35rem .7rem;
   border-radius: 999px;
-  background: #fffdf8;
-  color: #2f4f45;
-  border-color: #9f9485;
+  background: var(--surface);
+  color: var(--evergreen);
+  border-color: var(--line-strong);
 }
 .notebook-preset-chip.is-active {
-  background: #2f4f45;
+  background: var(--evergreen);
   color: #fff;
-  border-color: #2f4f45;
+  border-color: var(--evergreen);
 }
 .notebook-preset-edit {
   font-size: .9rem;
 }
 .notebook-presets__empty {
   margin: 0;
-  font-size: .92rem;
+  font-size: var(--fs-xs); color: var(--muted);
 }

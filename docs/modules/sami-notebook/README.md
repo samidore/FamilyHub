@@ -109,7 +109,7 @@ Queue age is derived display state; it is not stored as `queuedAt` and does not 
 - Only active live items show queue age. Completed items, one-time grace cards, and recurring completion-history rows do not.
 - Smart Urgent always shows queue age.
 - An ordinary Board shows queue age when its effective `showQueueAge` setting is true.
-- The card displays only the compact text `x天` in the upper-right status area. The page's existing local-midnight rerender updates the number automatically.
+- Ordinary task cards show compact `x天` text in their metadata row. The page's existing local-midnight rerender updates it automatically.
 
 `反复干` does not use queue age as its primary status. Its card status is the recurrence `remainingDays` value described below.
 
@@ -207,6 +207,10 @@ Each ordinary board has fixed priority sections in this order:
 2. High
 3. Normal
 4. Low
+
+### Ordinary task cards
+
+Ordinary cards use a completion circle, an expandable title/summary/metadata button, a `⋯` menu, and the existing drag handle. The menu contains edit, priority, and within-section moves. Expansion survives rerenders; comments stay inside the expanded body. Completion keeps the existing grace-period undo. Recurring cards keep their separate layout. Successful Developer conversion retains counts and links to the destination Boards or `反复干`.
 
 ### Ordinary Active ordering
 
@@ -435,8 +439,8 @@ The Developer page uses the same household authentication and contains:
 ### Inbox management
 
 - List every current ticket.
-- Edit ticket text.
-- Delete a ticket.
+- Edit ticket text in place; drafts survive repository updates.
+- Delete a ticket with an inline undo notice available until leaving/reloading the page.
 - `Copy all` button.
 
 `Copy all` copies a self-contained prompt that can be pasted directly to ChatGPT. It contains only the current ordinary Board IDs/titles/kinds and Inbox ticket IDs/text that ChatGPT needs for classification; it does not expose the rest of the private notebook database. The prompt requires live IMDb verification for media items, forbids guessed ratings, requires `myRating` to come only from an explicit user rating, and tells ChatGPT it may use a unique exact Board title instead of copying an opaque Board UUID.

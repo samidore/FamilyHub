@@ -21,7 +21,7 @@ import type { NotebookRepository } from './notebookRepository.ts';
 export interface NotebookItemUiContext {
   repository: NotebookRepository;
   getState(): NotebookState;
-  mutate(label: string, fn: (current: NotebookState) => NotebookState): Promise<boolean>;
+  mutate(label: string, fn: (current: NotebookState) => NotebookState, itemId?: string): Promise<boolean>;
   status(message: string, error?: boolean): void;
 }
 
@@ -190,19 +190,25 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
     const complete = target.closest('[data-complete-item]') as HTMLButtonElement | null;
     if (complete?.dataset.completeItem) {
       const itemId = complete.dataset.completeItem;
-      void context.mutate('完成事项', (current) => setNotebookItemStatus(current, itemId, 'completed', stamp()));
+      void context.mutate('完成事项', (current) => setNotebookItemStatus(current, itemId, 'completed', stamp()), itemId);
       return;
     }
     const restore = target.closest('[data-restore-item]') as HTMLButtonElement | null;
     if (restore?.dataset.restoreItem) {
       const itemId = restore.dataset.restoreItem;
-      void context.mutate('撤销完成', (current) => setNotebookItemStatus(current, itemId, 'active', stamp()));
+      void context.mutate('撤销完成', (current) => setNotebookItemStatus(current, itemId, 'active', stamp()), itemId);
       return;
     }
     const add = target.closest('[data-new-item]') as HTMLButtonElement | null;
     if (add?.dataset.newItem) { openItem(undefined, add.dataset.newItem); return; }
     const edit = target.closest('[data-edit-item]') as HTMLButtonElement | null;
     if (edit?.dataset.editItem) { openItem(edit.dataset.editItem); return; }
+    const priority = target.closest<HTMLButtonElement>('[data-task-priority]');
+    const itemId = priority?.closest<HTMLElement>('[data-item-id]')?.dataset.itemId;
+    if (priority && itemId) {
+      void context.mutate('修改优先级', (current) => setNotebookItemPriority(current, itemId, priority.dataset.taskPriority as NotebookPriority, stamp()), itemId);
+      return;
+    }
     const move = target.closest('[data-move-item]') as HTMLButtonElement | null;
     if (move) {
       const card = move.closest<HTMLElement>('[data-item-id]');
@@ -216,7 +222,7 @@ export function setupNotebookItemUi(context: NotebookItemUiContext) {
       const swap = move.dataset.moveItem === 'up' ? index - 1 : index + 1;
       if (index < 0 || swap < 0 || swap >= ids.length) return;
       [ids[index], ids[swap]] = [ids[swap], ids[index]];
-      void context.mutate('调整事项顺序', (current) => reorderNotebookSection(current, boardId, priority, ids));
+      void context.mutate('调整事项顺序', (current) => reorderNotebookSection(current, boardId, priority, ids), itemId);
       return;
     }
     const editComment = target.closest('[data-edit-comment]') as HTMLButtonElement | null;

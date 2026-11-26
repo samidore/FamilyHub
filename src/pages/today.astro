@@ -30,15 +30,13 @@ const firebaseConfig = JSON.stringify({
 <BaseLayout title="今日看板 | FamilyHub" description="登录后查看这顿饭、紧急事项、反复干和家庭库存提醒。" pageClass="today-page theme-evergreen" themeColor="#e7efe8">
   <main id="main-content" class="shell today-shell">
     <nav class="today-nav" aria-label="页面导航">
-      <a href={withBase('/')}>FamilyHub</a>
-      <span aria-hidden="true">/</span>
-      <span>今日看板</span>
+      <a class="back-link" href={withBase('/')}>← Family Hub</a>
     </nav>
     <header class="today-hero">
       <div><p class="eyebrow">Home at a glance</p><h1>家庭今日看板</h1><p>今晚和明天的事、家里点的菜、要优先处理的事项。</p></div>
       <time id="today-date"></time>
     </header>
-    <section id="today-connection" class="today-connection" aria-live="polite">
+    <section id="today-connection" class="today-connection household-status" aria-live="polite">
       <p id="today-auth-message">正在确认家庭登录状态…</p>
       <div class="today-auth-actions">
         <button id="today-sign-in" type="button" hidden>使用 Google 登录</button>
@@ -56,25 +54,29 @@ const firebaseConfig = JSON.stringify({
       </div>
     </section>
     <div id="today-dashboard" class="today-dashboard" hidden>
-      <section class="today-card today-card--upcoming" aria-labelledby="today-upcoming-title">
+      <section data-source="notebook" class="today-card today-card--upcoming" aria-labelledby="today-upcoming-title">
         <div class="today-card-heading"><div><p class="today-kicker">COMING UP</p><h2 id="today-upcoming-title">今晚与接下来七天</h2></div><a href={withBase('/sami-notebook/')}>小本本</a></div>
+        <div class="today-source-status" role="status"><p></p><button class="button button--secondary" data-retry-source="notebook" type="button" hidden>重新读取</button></div>
         <ul id="today-upcoming" class="today-list"></ul>
         <p id="today-upcoming-more" class="today-more" hidden></p>
       </section>
-      <section class="today-card today-card--meal" aria-labelledby="today-meal-title">
+      <section data-source="state" class="today-card today-card--meal" aria-labelledby="today-meal-title">
         <div class="today-card-heading"><div><p class="today-kicker">MEAL PLAN</p><h2 id="today-meal-title">这顿吃什么</h2></div><a href={withBase('/meal-builder/')}>点菜 / 做饭</a></div>
+        <div class="today-source-status" role="status"><p></p><button class="button button--secondary" data-retry-source="state" type="button" hidden>重新读取</button></div>
         <p id="today-meal-status" class="today-muted"></p>
         <ul id="today-meal-dishes" class="today-list"></ul>
         <p id="today-meal-note" class="today-meal-note" hidden></p>
         <p id="today-meal-queue" class="today-queue" hidden></p>
       </section>
-      <section class="today-card today-card--urgent" aria-labelledby="today-urgent-title">
+      <section data-source="notebook" class="today-card today-card--urgent" aria-labelledby="today-urgent-title">
         <div class="today-card-heading"><div><p class="today-kicker">ACTION NEEDED</p><h2 id="today-urgent-title">Urgent</h2></div><a href={withBase('/sami-notebook/')}>处理事项</a></div>
+        <div class="today-source-status" role="status"><p></p><button class="button button--secondary" data-retry-source="notebook" type="button" hidden>重新读取</button></div>
         <ul id="today-urgent" class="today-list"></ul>
         <p id="today-urgent-more" class="today-more" hidden></p>
       </section>
-      <section class="today-card today-card--stock" aria-labelledby="today-stock-title">
+      <section data-source="state" class="today-card today-card--stock" aria-labelledby="today-stock-title">
         <div class="today-card-heading"><div><p class="today-kicker">KITCHEN</p><h2 id="today-stock-title">食材与化冻</h2></div><a href={withBase('/meal-builder/')}>管理库存</a></div>
+        <div class="today-source-status" role="status"><p></p><button class="button button--secondary" data-retry-source="state" type="button" hidden>重新读取</button></div>
         <div id="today-stock" class="today-stock-groups"></div>
       </section>
     </div>
@@ -108,12 +110,15 @@ const firebaseConfig = JSON.stringify({
     const pushDisable = document.getElementById('today-disable-push') as HTMLButtonElement;
     const pushCheck = document.getElementById('today-check-push') as HTMLButtonElement;
     let pushCheckedUid = '';
-    const session = hasCompleteFirebaseConfig(config) ? new FirebaseHouseholdSession(config) : null;
+    const mockRequested = import.meta.env.DEV && new URLSearchParams(location.search).get('mock')?.startsWith('today-');
+    let session = !mockRequested && hasCompleteFirebaseConfig(config) ? new FirebaseHouseholdSession(config) : null;
+    let preview: Awaited<ReturnType<typeof import('../dev/householdMock.ts').createTodayMock>> | undefined;
     let meal: HouseholdState | null = null;
     let notebook: NotebookState | null = null;
     let connectedUid = '';
     let errorMessage = '';
     let dataError = '';
+    const sourceErrors = { state: '', notebook: '' };
     let mealLoading = true;
     let notebookLoading = true;
     let stopMeal: (() => void) | undefined;
@@ -168,8 +173,9 @@ const firebaseConfig = JSON.stringify({
       const today = notebookLocalDateKey(now);
       const date = document.getElementById('today-date')!;
       date.textContent = new Intl.DateTimeFormat('zh-CN', { month: 'long', day: 'numeric', weekday: 'long' }).format(new Date(now));
-      if (!meal || !notebook || !connectedUid) { dashboard.hidden = true; return; }
-      const summary = buildTodaySummary(meal, notebook, catalog, now);
+      if (!connectedUid) { dashboard.hidden = true; return; }
+      updateSourceStatus();
+      const summary = buildTodaySummary(meal ?? normalizeHouseholdState(null), notebook ?? normalizeNotebookState(null), catalog, now);
       dashboard.hidden = false;
       renderTasks('today-upcoming', summary.upcoming, '未来七天暂无到期事项。', today, 6);
       renderTasks('today-urgent', summary.urgent, '目前没有紧急或临近截止的事项。', today, 6);
@@ -188,32 +194,38 @@ const firebaseConfig = JSON.stringify({
       renderStockGroup(stock, '库存份数偏多', summary.highStock.map((item) => `${item.name} · ${item.quantity} 份`));
       renderStockGroup(stock, '正在化冻', summary.thawing.map((item) => `${item.name} · ${item.quantity} 份 · ${item.readyAt <= now ? '已可转冷藏' : new Intl.DateTimeFormat('zh-CN', { month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' }).format(item.readyAt)}`));
       if (!stock.childElementCount) stock.textContent = '目前没有需要优先处理的库存或化冻任务。';
-      if (session) showAuth(session.getStatus());
+      if (session) showAuth(session!.getStatus());
     }
     function stopListening() {
       stopMeal?.(); stopNotebook?.(); stopMeal = undefined; stopNotebook = undefined;
       connectedUid = ''; meal = null; notebook = null; dashboard.hidden = true;
-      dataError = '';
+      dataError = ''; sourceErrors.state = ''; sourceErrors.notebook = '';
     }
     function setPushState(enabled: boolean | null, message = '') {
-      const denied = todayPushAvailable() && Notification.permission === 'denied';
-      pushEnable.hidden = enabled !== false || !todayPushAvailable() || !config.webPushPublicKey || denied;
+      const denied = preview ? preview.push.denied : todayPushAvailable() && Notification.permission === 'denied';
+      const available = preview ? preview.push.available : todayPushAvailable();
+      const configured = preview ? preview.push.configured : Boolean(config.webPushPublicKey);
+      pushEnable.hidden = enabled !== false || !available || !configured || denied;
       pushDisable.hidden = enabled !== true;
       pushCheck.hidden = enabled !== null || !message;
-      pushStatus.textContent = message || (enabled ? '此设备已开启家庭通知。' : !config.webPushPublicKey
+      pushStatus.textContent = message || (enabled ? '此设备已开启家庭通知。' : !configured
         ? '通知服务尚未配置完成，今日看板仍可正常使用。'
         : denied ? '通知权限已关闭。请在浏览器或手机设置中允许 FamilyHub 通知，再重新打开此页。'
-        : todayPushAvailable() ? '在此设备开启点菜变化和到期提醒。' : '此浏览器暂不支持通知。iPhone 请从 Safari 添加到主屏幕后再开启。');
+        : available ? '在此设备开启点菜变化和到期提醒。' : '此浏览器暂不支持通知。iPhone 请从 Safari 添加到主屏幕后再开启。');
     }
-    const isCurrentMember = (uid: string | undefined) => session?.getStatus().connection === 'connected' && session.getStatus().uid === uid;
+    const isCurrentMember = (uid: string | undefined) => session?.getStatus().connection === 'connected' && session!.getStatus().uid === uid;
     function checkPushState() {
       const uid = session?.getStatus().uid;
       if (!session || !uid) return;
-      if (!todayPushAvailable()) { setPushState(false); return; }
+      if (!(preview ? preview.push.available : todayPushAvailable())) { setPushState(false); return; }
       setPushState(null);
       pushStatus.textContent = '正在检查设备通知状态…';
-      void todayPushIsEnabled(session, base).then((enabled) => {
-        if (isCurrentMember(uid)) setPushState(enabled);
+      void (preview ? preview.push.check() : todayPushIsEnabled(session, base)).then((enabled) => {
+        if (isCurrentMember(uid)) {
+          setPushState(enabled);
+          if (preview?.push.action === 'enable') pushEnable.click();
+          if (preview?.push.action === 'disable') pushDisable.click();
+        }
       }).catch(() => {
         if (isCurrentMember(uid)) setPushState(null, '暂时无法确认通知状态，请重新检查。');
       });
@@ -221,19 +233,19 @@ const firebaseConfig = JSON.stringify({
     pushCheck.addEventListener('click', checkPushState);
     pushEnable.addEventListener('click', () => {
       if (!session) return;
-      const uid = session.getStatus().uid;
+      const uid = session!.getStatus().uid;
       pushEnable.disabled = true;
       pushStatus.textContent = '正在开启通知，请确认通知权限…';
-      void enableTodayPush(session, config.webPushPublicKey ?? '', base).then(() => { if (isCurrentMember(uid)) setPushState(true); })
+      void (preview ? preview.push.enable() : enableTodayPush(session, config.webPushPublicKey ?? '', base)).then(() => { if (isCurrentMember(uid)) setPushState(true); })
         .catch(() => { if (isCurrentMember(uid)) setPushState(false, Notification.permission === 'denied' ? '通知权限已关闭，请在浏览器或手机设置中允许 FamilyHub 通知。' : '开启通知失败，请重试。'); })
         .finally(() => { pushEnable.disabled = false; });
     });
     pushDisable.addEventListener('click', () => {
       if (!session) return;
-      const uid = session.getStatus().uid;
+      const uid = session!.getStatus().uid;
       pushDisable.disabled = true;
       pushStatus.textContent = '正在关闭此设备的通知…';
-      void disableTodayPush(session, base).then(() => { if (isCurrentMember(uid)) setPushState(false); })
+      void (preview ? preview.push.disable() : disableTodayPush(session, base)).then(() => { if (isCurrentMember(uid)) setPushState(false); })
         .catch(() => { if (isCurrentMember(uid)) setPushState(true, '关闭通知失败，请重试。'); })
         .finally(() => { pushDisable.disabled = false; });
     });
@@ -242,6 +254,7 @@ const firebaseConfig = JSON.stringify({
       refreshButton.hidden = !(status.connection === 'pending' || (status.connection === 'error' && Boolean(status.email)));
       logoutButton.hidden = !status.email;
       retryButton.hidden = status.connection !== 'connected' || !dataError;
+      document.getElementById('today-connection')!.dataset.state = status.connection === 'error' || dataError ? 'error' : status.connection;
       authMessage.textContent = errorMessage || (status.connection === 'connected'
         ? dataError || (status.networkConnected === false ? '连接暂时中断，正在自动重连；显示上次读取的内容。' : mealLoading || notebookLoading ? '正在读取家庭数据…' : '家庭数据已同步')
         : status.error || status.label);
@@ -259,35 +272,53 @@ const firebaseConfig = JSON.stringify({
       stopListening(); connectedUid = status.uid;
       listenToData();
     }
-    function listenToData() {
-      stopMeal?.(); stopNotebook?.();
-      mealLoading = true; notebookLoading = true;
-      const uid = connectedUid;
-      const path = `households/${config.householdId}`;
-      stopMeal = onValue(ref(session!.database, `${path}/state`), (snapshot) => {
-        if (!isCurrentMember(uid)) return;
-        meal = normalizeHouseholdState(snapshot.val(), catalog.ingredients);
-        mealLoading = false;
-        render();
-      }, () => { if (isCurrentMember(uid)) { dataError = '点菜状态读取失败，请重新读取家庭数据。'; showAuth(session!.getStatus()); } });
-      stopNotebook = onValue(ref(session!.database, `${path}/notebook`), (snapshot) => {
-        if (!isCurrentMember(uid)) return;
-        notebook = normalizeNotebookState(snapshot.val());
-        notebookLoading = false;
-        render();
-      }, () => { if (isCurrentMember(uid)) { dataError = '小本本读取失败，请重新读取家庭数据。'; showAuth(session!.getStatus()); } });
+    function updateSourceStatus() {
+      dataError = Object.values(sourceErrors).filter(Boolean).join(' ');
+      document.querySelectorAll<HTMLElement>('[data-source]').forEach((card) => {
+        const source = card.dataset.source as 'state' | 'notebook';
+        const ready = source === 'state' ? Boolean(meal) : Boolean(notebook);
+        const loading = source === 'state' ? mealLoading : notebookLoading;
+        card.dataset.ready = String(ready);
+        const panel = card.querySelector<HTMLElement>('.today-source-status')!;
+        panel.hidden = !loading && !sourceErrors[source];
+        panel.querySelector('p')!.textContent = sourceErrors[source] || (source === 'state' ? '正在读取点菜与库存…' : '正在读取小本本…');
+        panel.querySelector<HTMLButtonElement>('button')!.hidden = !sourceErrors[source];
+      });
     }
-    retryButton.addEventListener('click', () => {
+    function listenToData(source?: 'state' | 'notebook') {
+      const uid = connectedUid;
+      for (const key of source ? [source] : ['state', 'notebook'] as const) {
+        if (key === 'state') { stopMeal?.(); mealLoading = true; } else { stopNotebook?.(); notebookLoading = true; }
+        sourceErrors[key] = '';
+        const success = (value: unknown) => {
+          if (!isCurrentMember(uid)) return;
+          if (key === 'state') { meal = normalizeHouseholdState(value, catalog.ingredients); mealLoading = false; }
+          else { notebook = normalizeNotebookState(value); notebookLoading = false; }
+          sourceErrors[key] = ''; render();
+        };
+        const failure = () => {
+          if (!isCurrentMember(uid)) return;
+          if (key === 'state') mealLoading = false; else notebookLoading = false;
+          sourceErrors[key] = key === 'state' ? '点菜状态读取失败，请重新读取家庭数据。' : '小本本读取失败，请重新读取家庭数据。';
+          render();
+        };
+        const stop = preview ? preview.listen(key, success, failure) : onValue(ref(session!.database, `households/${config.householdId}/${key}`), (snapshot) => success(snapshot.val()), failure);
+        if (key === 'state') stopMeal = stop; else stopNotebook = stop;
+      }
+      render();
+    }
+    const retrySource = (source?: 'state' | 'notebook') => {
       if (!session || !connectedUid) return;
-      dataError = ''; errorMessage = '';
-      listenToData(); showAuth(session.getStatus());
-    });
+      preview?.retry(); errorMessage = ''; listenToData(source); showAuth(session!.getStatus());
+    };
+    retryButton.addEventListener('click', () => retrySource());
+    document.querySelectorAll<HTMLButtonElement>('[data-retry-source]').forEach((button) => button.addEventListener('click', () => retrySource(button.dataset.retrySource as 'state' | 'notebook')));
     function runAuth(button: HTMLButtonElement, action: () => Promise<void>, message: string) {
       if (!session || button.disabled) return;
       button.disabled = true; errorMessage = '';
       authMessage.textContent = message;
       void action().catch(() => {
-        errorMessage = session.getStatus().error || '操作失败，请重试。'; showAuth(session.getStatus());
+        errorMessage = session!.getStatus().error || '操作失败，请重试。'; showAuth(session!.getStatus());
       }).finally(() => { button.disabled = false; });
     }
     loginButton.addEventListener('click', () => runAuth(loginButton, () => session!.signInWithGoogle(), '正在打开 Google 登录…'));
@@ -295,13 +326,19 @@ const firebaseConfig = JSON.stringify({
     logoutButton.addEventListener('click', () => {
       if (!session) return;
       runAuth(logoutButton, async () => {
-        try { await disableTodayPush(session, base); } finally { await session.signOut(); }
+        try { await (preview ? preview.push.disable() : disableTodayPush(session!, base)); } finally { await session!.signOut(); }
       }, '正在关闭此设备通知并退出登录…');
     });
-    if (session) {
+    if (import.meta.env.DEV && mockRequested) {
+      void import('../dev/householdMock.ts').then(({ createTodayMock }) => {
+        preview = createTodayMock(catalog.ingredients, catalog.recipes);
+        session = preview.session; session.subscribe(showAuth);
+      });
+    } else if (session) {
       session.subscribe(showAuth);
-      void session.ready.catch((error: Error) => { errorMessage = error.message; showAuth(session.getStatus()); });
+      void session.ready.catch((error: Error) => { errorMessage = error.message; showAuth(session!.getStatus()); });
     } else {
+      document.getElementById('today-connection')!.dataset.state = 'error';
       authMessage.textContent = 'FamilyHub 的 Firebase 配置不完整，无法读取私人家庭数据。';
     }
     const refreshAtMidnight = () => {

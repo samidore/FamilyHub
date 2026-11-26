@@ -11,6 +11,7 @@ import {
 } from './householdSession.ts';
 import { get, onValue, ref, runTransaction, type DatabaseReference, type DataSnapshot } from 'firebase/database';
 import type { User } from 'firebase/auth';
+import { createMockNotebook, mockName } from '../dev/householdMock.ts';
 
 export type NotebookRepositoryConnection = 'local' | 'signed-out' | 'connecting' | 'pending' | 'connected' | 'error';
 export interface NotebookRepositoryStatus {
@@ -208,6 +209,7 @@ class ConfigurationErrorNotebookRepository implements NotebookRepository {
 }
 
 export function createNotebookRepository(config: Partial<FirebaseConfig> | null | undefined, options: CreateNotebookRepositoryOptions = {}): NotebookRepository {
+  if (import.meta.env?.DEV && /^(notebook|developer)-/.test(mockName())) return createMockNotebook();
   if (hasCompleteNotebookFirebaseConfig(config)) return new FirebaseNotebookRepository(config);
   if (options.allowLocal && !hasAnyNotebookFirebaseConfig(config)) return new LocalNotebookRepository(config?.householdId?.trim() || 'local-household', options);
   return new ConfigurationErrorNotebookRepository(

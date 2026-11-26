@@ -232,9 +232,10 @@ test('meal builder filters live, completes a meal, and preserves state', async (
   const chicken = page.locator('[data-meal-recipe="chicken-broccoli-stir-fry"]');
   const udon = page.locator('[data-meal-recipe="yaki-udon"]');
   await expect(chicken).toBeVisible();
-  await expect(chicken.locator('[data-candidate-composition]')).toContainText('必需 Required');
-  await expect(chicken.locator('[data-candidate-composition]')).toContainText('选一 One of');
-  await expect(chicken.locator('[data-candidate-composition]')).toContainText('可加 Optional');
+  await chicken.locator('[data-candidate-composition] > summary').click();
+  await expect(chicken.locator('[data-candidate-composition]')).toContainText('必需');
+  await expect(chicken.locator('[data-candidate-composition]')).not.toContainText('One of');
+  await expect(chicken.locator('[data-candidate-composition] dt').filter({ hasText: '可加' })).toHaveCount(0);
   await chicken.getByRole('button', { name: '选择这道菜' }).click();
   await expect(chicken.locator('[data-recipe-plan-draft]')).toBeVisible();
   await expect(page.locator('[data-selected-recipe="chicken-broccoli-stir-fry"]')).toBeHidden();

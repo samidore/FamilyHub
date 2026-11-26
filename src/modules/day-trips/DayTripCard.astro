@@ -91,8 +91,8 @@ const searchable = [
     <section class="trip-household-interactions" aria-label="家庭评价">
       <div class="trip-reactions">
         <div class="trip-reaction-buttons">
-          <button type="button" data-trip-reaction="up" aria-label={`赞成 ${d.name}`} aria-pressed="false" disabled>👍</button>
-          <button type="button" data-trip-reaction="down" aria-label={`不赞成 ${d.name}`} aria-pressed="false" disabled>👎</button>
+          <button type="button" data-trip-reaction="up" aria-label={`赞成 ${d.name}`} aria-pressed="false" disabled><svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M7 10v11H3V10h4Zm0 0 5-8c2 0 3 2 2 5l-1 3h6a2 2 0 0 1 2 2l-2 7a3 3 0 0 1-3 2H7"/></svg></button>
+          <button type="button" data-trip-reaction="down" aria-label={`不赞成 ${d.name}`} aria-pressed="false" disabled><svg viewBox="0 0 24 24" aria-hidden="true" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" transform="rotate(180 12 12)"><path d="M7 10v11H3V10h4Zm0 0 5-8c2 0 3 2 2 5l-1 3h6a2 2 0 0 1 2 2l-2 7a3 3 0 0 1-3 2H7"/></svg></button>
         </div>
         <div class="trip-reaction-people" data-trip-reaction-people aria-label="家庭成员评价"></div>
       </div>
@@ -116,11 +116,11 @@ const searchable = [
   .trip-parking--cash { border-color: #a34d27; background: #fff5ec; }
   .trip-parking__headline { display: flex; align-items: center; gap: 7px 10px; flex-wrap: wrap; }
   .trip-parking__headline > strong { font-size: 15px; }
-  .trip-parking__fee { font-weight: 800; }
-  .trip-parking__payment { display: inline-flex; align-items: center; min-height: 28px; padding: 3px 8px; border-radius: 999px; background: #7d351d; color: #fff; font-size: 13px; font-weight: 900; letter-spacing: .01em; }
+  .trip-parking__fee { font-weight: 700; }
+  .trip-parking__payment { display: inline-flex; align-items: center; min-height: 28px; padding: 3px 8px; border-radius: 999px; background: #7d351d; color: #fff; font-size: 13px; font-weight: 700; letter-spacing: .01em; }
   .trip-parking:not(.trip-parking--cash) .trip-parking__payment { background: var(--accent); }
   .trip-parking p { margin: 0; font-size: 14px; line-height: 1.4; }
-  .trip-parking a { width: fit-content; color: var(--accent); font-size: 13px; font-weight: 800; }
+  .trip-parking a { width: fit-content; color: var(--accent); font-size: 13px; font-weight: 700; }
   .trip-parking--cash a { color: #7d351d; }
   .trip-note { margin: 0 0 18px; color: #35433a; }
   .trip-notice { margin-top: 4px; }
@@ -129,8 +129,8 @@ const searchable = [
   .trip-household-interactions { display: grid; gap: 12px; margin: 16px 0; padding-top: 14px; border-top: 1px solid var(--line); }
   .trip-reactions { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
   .trip-reaction-buttons { display: flex; gap: 8px; }
-  .trip-reaction-buttons button { width: 48px; min-height: 48px; border: 1px solid #b8c5bc; border-radius: 12px; background: #fff; font-size: 20px; cursor: pointer; }
-  .trip-reaction-buttons button[aria-pressed="true"] { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 13%, white); box-shadow: inset 0 0 0 1px var(--accent); }
+  .trip-reaction-buttons button { width: 48px; min-height: 48px; border: 1px solid #b8c5bc; border-radius: var(--r-control); background: #fff; color: var(--accent); display: inline-grid; place-items: center; cursor: pointer; }
+  .trip-reaction-buttons button[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
   .trip-reaction-buttons button:disabled { cursor: default; opacity: .42; }
   .trip-reaction-people { display: flex; align-items: center; gap: 9px; min-height: 32px; }
   :global(.trip-household-auth__actions button) { min-height: 48px; }
@@ -143,8 +143,8 @@ const searchable = [
   :global(.trip-comment) { border-left: 3px solid #c6b9a7; padding-left: 10px; }
   :global(.trip-comment__meta) { display: flex; justify-content: space-between; align-items: center; gap: 8px; color: #665f56; font-size: 13px; }
   :global(.trip-comment p) { margin: 5px 0; white-space: pre-wrap; }
-  :global(.trip-comment__actions) { display: flex; gap: 8px; }
-  :global(.trip-comment__actions button) { min-height: 48px; border: 0; background: none; padding: 5px 0; color: var(--accent); cursor: pointer; font-weight: 700; }
+  :global(.trip-comment__actions) { display: flex; gap: 16px; }
+  :global(.trip-comment__actions button) { font-size: var(--fs-sm); min-height: 48px; border: 0; background: none; padding: 5px 0; color: var(--accent); cursor: pointer; font-weight: 700; }
   :global(.trip-comment-expand-row) { list-style: none; }
   :global(.trip-comment-expand), :global(.trip-comment-add) { border: 0; margin: 0; padding: 0; }
   :global(.trip-comment-expand > summary), :global(.trip-comment-add > summary) { width: fit-content; min-height: 48px; display: flex; align-items: center; cursor: pointer; color: var(--accent); font-weight: 700; list-style: none; }
