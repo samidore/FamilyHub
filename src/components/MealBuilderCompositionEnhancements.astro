@@ -1,4 +1,5 @@
 <script>
+  import { mealGoalLabel } from '../lib/mealCandidateUi';
   import {
     aggregateSelection,
     calendarDateKey,
@@ -91,7 +92,7 @@
     if (staple) staple.textContent = state.stapleRequired ? (totals.staple >= 1 ? '✓' : '●') : '不需要';
     if (childProtein) childProtein.textContent = totals.childProtein ? '✓' : '●';
     if (childVegetable) childVegetable.textContent = totals.childVegetable ? '✓' : '●';
-    const unmet = unmetCompletionRequirements(state, totals); const status = document.querySelector<HTMLElement>('#meal-completion-status'); if (status) status.textContent = unmet.length ? `还缺：${unmet.join('、')}` : '目标已满足，可以进入下一步。';
+    const unmet = unmetCompletionRequirements(state, totals); const status = document.querySelector<HTMLElement>('#meal-completion-status'); if (status) status.textContent = unmet.length ? `还缺：${unmet.map(mealGoalLabel).join('、')}` : '目标已满足，可以进入下一步。';
     const next = document.querySelector<HTMLButtonElement>('#meal-next'); if (next) next.disabled = unmet.length > 0 || !canWrite();
 
     if (recipeGrid && household.activeStep === 'recipes') {

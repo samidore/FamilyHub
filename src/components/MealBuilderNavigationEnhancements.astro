@@ -73,8 +73,8 @@
         const child = document.querySelector<HTMLInputElement>('#meal-child');
         const syncTargetSummary = () => {
           const timeLabel = time?.selectedOptions[0]?.textContent?.trim() || time?.value || '不限';
-          primary.textContent = `Protein ${protein?.value ?? '—'} · Vegetable ${vegetable?.value ?? '—'} · ${timeLabel}`;
-          secondary.textContent = `Staple ${staple?.checked ? '✓' : '—'} · 孩子一起吃 ${child?.checked ? '✓' : '—'}`;
+          primary.textContent = `蛋白质 ${protein?.value ?? '—'} · 蔬菜 ${vegetable?.value ?? '—'} · ${timeLabel}`;
+          secondary.textContent = `主食 ${staple?.checked ? '✓' : '—'} · 孩子一起吃 ${child?.checked ? '✓' : '—'}`;
         };
         syncTargetSummary();
         targetSection.addEventListener('change', syncTargetSummary);

@@ -1,14 +1,14 @@
 ---
 import ModuleIcon from './ModuleIcon.astro';
 import type { ModuleAccent, ModuleIcon as IconName } from '../config/modules';
-interface Props { eyebrow: string; title: string; description: string; lede?: string; accent: ModuleAccent; icon: IconName; titleId?: string; }
-const { eyebrow, title, description, lede, accent, icon, titleId } = Astro.props;
+interface Props { eyebrow: string; title: string; description: string; lede?: string; accent: ModuleAccent; icon: IconName; titleId?: string; backLabel?: string; }
+const { eyebrow, title, description, lede, accent, icon, titleId, backLabel = 'Family Hub' } = Astro.props;
 const [mainTitle, ...subtitle] = title.split(' · ');
 const base = import.meta.env.BASE_URL;
 ---
 <header class:list={['module-hero', `theme-${accent}`, { 'module-hero--medical': Boolean(lede) }]}>
   <div class="shell">
-    <nav class="module-nav" aria-label="页面导航"><a class="back-link" href={base}>← Family Hub</a></nav>
+    <nav class="module-nav" aria-label="页面导航"><a class="back-link" href={base}>← {backLabel}</a></nav>
     <div class="module-hero__grid">
       <div class="field-tab"><ModuleIcon icon={icon} /><span>{eyebrow}</span></div>
       <div class="module-hero__copy">

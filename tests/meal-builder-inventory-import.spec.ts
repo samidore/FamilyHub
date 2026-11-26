@@ -147,7 +147,7 @@ test('Invalid Chat link does not open an importable review', async ({ page }) =>
   await page.goto('meal-builder/#inventory-import=%7Binvalid');
   await expect(page.locator('#meal-inventory-import')).toBeVisible();
   await expect(page.locator('#meal-inventory-import-review')).toBeHidden();
-  await expect(page.locator('#meal-inventory-import-status')).toContainText('不是有效的 JSON');
+  await expect(page.locator('#meal-inventory-import-status')).toContainText('不是有效的 入库内容');
   await expect(page.locator('#meal-inventory-import-open-confirm')).toBeDisabled();
   expect(await page.evaluate(() => location.hash)).toBe('');
 });

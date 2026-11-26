@@ -161,9 +161,9 @@
 
   function contributionText(entry: { contribution: { protein: number; vegetable: number; staple: number } }) {
     return [
-      entry.contribution.protein ? `Protein ${entry.contribution.protein}` : '',
-      entry.contribution.vegetable ? `Vegetable ${entry.contribution.vegetable}` : '',
-      entry.contribution.staple ? `Staple ${entry.contribution.staple}` : '',
+      entry.contribution.protein ? `蛋白质 ${entry.contribution.protein}` : '',
+      entry.contribution.vegetable ? `蔬菜 ${entry.contribution.vegetable}` : '',
+      entry.contribution.staple ? `主食 ${entry.contribution.staple}` : '',
     ].filter(Boolean).join(' · ') || '不增加组餐格';
   }
 
