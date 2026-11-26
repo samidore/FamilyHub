@@ -21,3 +21,12 @@ const { accent, filterId, countId, clearId, countText } = Astro.props;
     </div>
   </div>
 </section>
+
+<script>
+  const desktop = window.matchMedia('(min-width: 800px)');
+  const openDesktopFilters = () => {
+    if (desktop.matches) document.querySelectorAll<HTMLDetailsElement>('.filter-disclosure').forEach((disclosure) => { disclosure.open = true; });
+  };
+  desktop.addEventListener('change', openDesktopFilters);
+  openDesktopFilters();
+</script>

@@ -210,7 +210,7 @@
     const queue = target.closest<HTMLButtonElement>('#meal-queue-checkout');
     if (queue) { event.preventDefault(); event.stopImmediatePropagation(); if (!canWrite()) return; void repository.transaction((state) => queueCurrentMealForCheckout(state, ingredients)).then((next) => { household = next; announce('本顿已加入待结算，主材料各预留 1 份。'); scheduleRender(); }).catch((error) => announce(error instanceof Error ? error.message : '排队结算失败。')); return; }
     const openQueued = target.closest<HTMLButtonElement>('#meal-queue-open-checkout');
-    if (openQueued) { event.preventDefault(); event.stopImmediatePropagation(); if (!canWrite() || !household.pendingCheckoutMeals.length) return; showQueueOnlyCheckout(); renderQueuedCheckout(); document.querySelector('#meal-checkout')?.scrollIntoView({ block: 'start', behavior: 'smooth' }); return; }
+    if (openQueued) { event.preventDefault(); event.stopImmediatePropagation(); if (!canWrite() || !household.pendingCheckoutMeals.length) return; showQueueOnlyCheckout(); renderQueuedCheckout(); document.querySelector('#meal-checkout')?.scrollIntoView({ block: 'start' }); return; }
     const back = target.closest<HTMLButtonElement>('#meal-back-cook');
     if (back && queueOnlyCheckout) { event.preventDefault(); event.stopImmediatePropagation(); leaveQueueOnlyCheckout(); scheduleRender(); return; }
     const recipesTarget = target.closest<HTMLButtonElement>('#meal-start-current, [data-step-target="recipes"]');

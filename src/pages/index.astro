@@ -88,6 +88,7 @@ const visibleCategories = categoryDefinitions.filter((category) => moduleRegistr
       empty.hidden = visibleCount > 0;
     };
     search.addEventListener('input', render);
+    search.addEventListener('search', render);
   </script>
   <style>
     .home-today-entry { display: flex; align-items: center; justify-content: space-between; gap: 15px; max-width: 700px; padding: 18px 22px; margin-top: 26px; background: #24573f; color: white; border-radius: 15px; text-decoration: none; box-shadow: 0 9px 22px rgb(36 87 63 / 15%); }

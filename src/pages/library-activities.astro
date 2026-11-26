@@ -29,7 +29,7 @@ const eventCount = libraryEvents.length;
   <main id="main-content" class="shell listing-main">
     <div id="event-list" class="event-list">{libraryEvents.map((event) => <LibraryEventCard event={event} />)}</div>
     <div id="event-empty" class="empty-state" hidden={eventCount > 0}>
-      <p>这里暂时没有尚未过期的 Fair Lawn 儿童活动。</p>
+      <p id="event-empty-message">这里暂时没有尚未过期的 Fair Lawn 儿童活动。</p>
       <p><a class="button button--secondary" href="https://www.fairlawnlibrary.org/children" target="_blank" rel="noopener noreferrer">查看官方儿童活动页</a></p>
     </div>
   </main>
@@ -50,6 +50,7 @@ const eventCount = libraryEvents.length;
     const count = document.querySelector<HTMLElement>('#event-count')!;
     const total = document.querySelector<HTMLElement>('#event-total')!;
     const empty = document.querySelector<HTMLElement>('#event-empty')!;
+    const emptyMessage = document.querySelector<HTMLElement>('#event-empty-message')!;
     const number = (card: HTMLElement, key: string) => Number(card.dataset[key]);
     const fairLawnDate = () => {
       const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date());
@@ -68,6 +69,9 @@ const eventCount = libraryEvents.length;
       count.textContent = `显示 ${visible.length} / ${active.length} 个活动`;
       total.textContent = `${active.length} 个当前活动`;
       empty.hidden = visible.length > 0;
+      emptyMessage.textContent = active.length > 0
+        ? '没有符合这些条件的活动。清除部分筛选后再试。'
+        : '这里暂时没有尚未过期的 Fair Lawn 儿童活动。';
     };
     restoreListState(controls);
     if (Object.values(controls).slice(2).some((control) => control.value)) document.querySelector<HTMLDetailsElement>('.filter-disclosure')!.open = true;

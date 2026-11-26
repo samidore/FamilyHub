@@ -149,7 +149,7 @@
     renderAll();
     requestAnimationFrame(() => {
       const editor = document.querySelector<HTMLElement>(`[data-recipe-plan-draft="${CSS.escape(recipeId)}"]`);
-      editor?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      editor?.scrollIntoView({ block: 'nearest' });
     });
   }
 

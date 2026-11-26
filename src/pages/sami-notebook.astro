@@ -75,6 +75,7 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
       <label>名称<input name="title" required /></label>
       <label>类型<select name="kind"><option value="task">任务</option><option value="media">影视</option></select></label>
       <label>说明（可选）<input name="description" /></label>
+      <p class="notebook-live" data-notebook-dialog-status aria-live="polite" hidden></p>
       <button type="submit">创建 Board</button>
     </form>
   </dialog>
@@ -95,6 +96,7 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
         <fieldset><legend>发布到哪些任务 Boards</legend><div id="notebook-preset-board-choices" class="board-choice-list"></div></fieldset>
       </details>
       <div class="notebook-item-dialog__actions">
+        <p class="notebook-live" data-notebook-dialog-status aria-live="polite" hidden></p>
         <button type="submit">保存预设</button>
         <button id="notebook-delete-preset" type="button" class="danger-button" hidden>删除预设</button>
       </div>
@@ -150,6 +152,7 @@ const withBase = (path: string) => `${base.replace(/\/$/, '')}/${path.replace(/^
         <label>看后评价<textarea name="review" rows="4"></textarea></label>
       </fieldset>
       <div class="notebook-item-dialog__actions">
+        <p class="notebook-live" data-notebook-dialog-status aria-live="polite" hidden></p>
         <button type="submit">保存事项</button>
         <button id="notebook-delete-item" type="button" class="danger-button" hidden>删除事项</button>
       </div>

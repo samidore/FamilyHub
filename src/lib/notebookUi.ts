@@ -1,3 +1,4 @@
+/** Connects notebook controls and feedback to the household repository. */
 import { cloneNotebookState, type NotebookState, type NotebookViewFilter } from './notebookDomain.ts';
 import { notebookNextGraceExpiry } from './notebookActions.ts';
 import { notebookNextLocalMidnight } from './notebookDueSoon.ts';
@@ -39,7 +40,22 @@ export function mountNotebookUi(config: Partial<FirebaseConfig>, options: Create
     if (renderTimer !== undefined) window.clearTimeout(renderTimer);
     renderTimer = undefined;
   };
-  const status = (message: string, error = false) => { live.textContent = message; live.dataset.error = error ? 'true' : 'false'; };
+  document.querySelectorAll<HTMLDialogElement>('.notebook-dialog').forEach((dialog) => {
+    dialog.addEventListener('close', () => {
+      const feedback = dialog.querySelector<HTMLElement>('[data-notebook-dialog-status]')!;
+      feedback.textContent = '';
+      feedback.hidden = true;
+    });
+  });
+  const status = (message: string, error = false) => {
+    const feedback = document.querySelector<HTMLElement>('.notebook-dialog[open] [data-notebook-dialog-status]');
+    for (const target of feedback ? [live, feedback] : [live]) {
+      target.textContent = message;
+      target.dataset.error = String(error);
+      target.hidden = false;
+    }
+    if (error) feedback?.scrollIntoView({ block: 'nearest' });
+  };
   const mutate = async (label: string, fn: (current: NotebookState) => NotebookState): Promise<boolean> => {
     try {
       status(`${label}…`);

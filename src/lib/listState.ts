@@ -1,3 +1,4 @@
+/** Keeps list controls and bookmarkable query state in sync. */
 export type ListControl = HTMLInputElement | HTMLSelectElement;
 export type ListControls = Record<string, ListControl>;
 
@@ -23,7 +24,11 @@ export function writeListState(controls: ListControls) {
 }
 
 export function bindListState(controls: ListControls, render: () => void) {
-  Object.values(controls).forEach((control) => control.addEventListener('input', () => { writeListState(controls); render(); }));
+  const update = () => { writeListState(controls); render(); };
+  Object.values(controls).forEach((control) => {
+    control.addEventListener('input', update);
+    if (control instanceof HTMLInputElement && control.type === 'search') control.addEventListener('search', update);
+  });
 }
 
 export function clearListState(controls: ListControls, render: () => void) {

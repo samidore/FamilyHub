@@ -296,7 +296,7 @@ const contributionText = (recipe: (typeof recipes)[number]) => [
       const ingredientFreshnessDates = inventoryBatches ? freshnessDatesForInventory(inventoryBatches, availableIngredientIds, ingredients) : meal.ingredientFreshnessDates;
       return reconcileCurrentMeal({ ...meal, availableIngredientIds, ingredientFreshnessDates, excludedIngredientIds: excluded }, recipes, ingredients, optionalGroups);
     };
-    const setView = (next: View) => { view = next; builder.hidden = next !== 'build'; complete.hidden = next !== 'complete'; cook.hidden = next !== 'cook'; save(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+    const setView = (next: View) => { view = next; builder.hidden = next !== 'build'; complete.hidden = next !== 'complete'; cook.hidden = next !== 'cook'; save(); window.scrollTo({ top: 0 }); };
     const bindingIsExpiring = (binding: (string | null | undefined)[]) => freshnessPriorityAgeDays(binding, state.ingredientFreshnessDates, ingredients) > 0;
 
     function draftBindingFor(recipe: MealRecipe, available: Set<string>) {

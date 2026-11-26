@@ -196,7 +196,7 @@
           const target = inventoryList.querySelector<HTMLDetailsElement>(`details[data-inventory-section="${CSS.escape(id)}"]`);
           if (!target) return;
           target.open = true;
-          requestAnimationFrame(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+          requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }));
         });
         track.append(button);
       });

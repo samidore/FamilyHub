@@ -1,0 +1,27 @@
+/* Shared press feedback and modal entry motion; no layout animation. */
+:root {
+  --motion-feedback: 120ms;
+  --motion-enter: 200ms;
+  --motion-ease-out: ease-out;
+}
+
+button:not(.drag-handle) { transition: transform var(--motion-feedback) var(--motion-ease-out); }
+button:not(:disabled):not(.drag-handle):active { transform: translateY(1px); }
+.notebook-dialog[open] { animation: dialog-enter var(--motion-enter) var(--motion-ease-out); }
+.notebook-dialog[open]::backdrop { animation: backdrop-enter var(--motion-enter) var(--motion-ease-out); }
+[data-notebook-dialog-status] { flex-basis: 100%; }
+
+@keyframes dialog-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes backdrop-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button:not(.drag-handle) { transition: none; }
+  button:not(:disabled):not(.drag-handle):active { transform: none; }
+  .notebook-dialog[open], .notebook-dialog[open]::backdrop { animation: none; }
+}
