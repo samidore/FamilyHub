@@ -63,7 +63,7 @@ details[open] > summary .disclosure-closed { display: none; }
 }
 @media (max-width: 559px) {
   .eyebrow { font-size: var(--fs-xs); }
-  .module-hero:not(.module-hero--medical) .module-hero__grid { grid-template-columns: 6px minmax(0, 1fr); gap: 14px; }
+  :where(.module-hero:not(.module-hero--medical)) .module-hero__grid { grid-template-columns: 6px minmax(0, 1fr); gap: 14px; }
   .module-hero:not(.module-hero--medical) .field-tab { min-height: 0; padding: 0; border-radius: 3px; }
   .module-hero:not(.module-hero--medical) .field-tab > * { display: none; }
   .home-lead, .module-hero:not(.module-hero--medical) .module-hero__copy > p:not(.eyebrow) { font-size: var(--fs-md); line-height: 1.6; }
