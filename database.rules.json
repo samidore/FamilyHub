@@ -149,9 +149,9 @@
               "driveName": { ".validate": "newData.isString() && newData.val().length > 0 && newData.val().length <= 200 && (!data.exists() || newData.val() == data.val())" },
               "status": { ".validate": "newData.val() == 'queued'" },
               "checks": {
-                ".validate": "newData.hasChildren(['open']) && (newData.parent().child('source').val() == 'paste' || newData.hasChildren(['manuscript'])) && (!data.exists() || newData.child('manuscript').exists() == data.child('manuscript').exists())",
+                ".validate": "newData.hasChildren()",
                 "$check": {
-                  ".validate": "$check == 'manuscript' || $check == 'open'",
+                  ".validate": "$check.matches(/^[a-z0-9][a-z0-9-]{0,19}$/) && newData.exists() && (!data.parent().parent().exists() || data.exists())",
                   "status": { ".validate": "newData.val() == 'queued' && (!data.exists() || data.val() == 'queued' || data.val() == 'done' || data.val() == 'failed')" },
                   "$other": { ".validate": false }
                 }
